@@ -6,16 +6,22 @@ import operations.OP_Swap;
 import wrapper.Operation;
 
 /**
- * 
+ * The Interpreter class contains methods for consolidating read/write operations into more complex operations.
+ * The class would typically be used by creating a new instance, setting the list of low level operations and then
+ * calling getConsolidatedOperations(). The list of consolidated operations is never cleared, so once all low level
+ * operations have been processed a new list of low level operations may be added. The consolidated operations resulting
+ * from the new list will be appended and the end of the list of consolidated operations held by this Interpreter.
  * @author Richard
  *
  */
+//TODO: Create add handling for all high level operations encounter in lowLevelOperations when calling
+// consolidateOperations(), make it possible to reconsolidate the operations found in consolidatedOperations. 
+// This will allow combination of low level operations originally found in different lowLevelOperations lists.
 public class Interpreter {
 	
 	private List<Operation> lowLevelOperations;
-	
-	private final List<OP_ReadWrite> workingSet;
-	private final List<Operation> consolidatedOperations;
+	private List<OP_ReadWrite> workingSet;
+	private List<Operation> consolidatedOperations;
 
 	/**
 	 * Create a new Interpreter. 
@@ -28,13 +34,23 @@ public class Interpreter {
 	
 	/**
 	 * Consolidate the list of low level operations (read/write) held by this Interpreter. May still contain
-	 * read/write operations if they cannot be consolidated into more complex operations. Initilizations'
-	 * and messages are added to the list of high level operations as they are found.
+	 * read/write operations if they cannot be consolidated into more complex operations. Initilizations
+	 * and messages are added to the list of high level operations as they are found. When this method returns,
+	 * getLowLevelOperations.size() will be 0. You may then supply a new list to be consolidated and appended to the list
+	 * of consolidated operations. The list of consolidated operations will never be cleared automatically.
 	 * @return A consolidated list of operations.
 	 */
 	public List<Operation> getConsolidatedOperations(){
 		consolidateOperations();
 		return consolidatedOperations;
+	}
+	
+	/**
+	 * Clear the list of consolidated operations. This method must be called manually if you do not wish
+	 * for the result of several consolidated list of low level operations to be combined.
+	 */
+	public void clearConsoloidatedOperations(){
+		consolidatedOperations.clear();
 	}
 	
 	/**
@@ -59,7 +75,7 @@ public class Interpreter {
 	
 	/**
 	 * Build and evaluate working sets until all operations in lowLevelOperations have been processed.
-	 * 
+	 * When this method returns, lowLevelOperations.size() will be 0.
 	 */
 	private void consolidateOperations(){
 		//TODO: Ta fram min/max working size automagiskt.
