@@ -57,23 +57,27 @@ public class Interpreter {
 		this.lowLevelOperations = lowLevelOperations;
 	}
 	
+	/**
+	 * Build and evaluate working sets until all operations in lowLevelOperations have been processed.
+	 * 
+	 */
 	private void consolidateOperations(){
 		//TODO: Ta fram min/max working size automagiskt.
 		int minWorkingSetSize = 3; //Must be > 0.
-		int maxWorkingSetSize = 3;
-		
-		//Expand working set until the minimum size is reached.
-		while(workingSet.size() < minWorkingSetSize){
-			if (tryExpandWorkingSet() == false){
-				return; //Body processed. Consolidation completed.
-			}
-		}
+		int maxWorkingSetSize = 3; //Must be >= minWorkingSetSize.
 		
 		//Continue until all operations are handled
 		outer: while(true){
-
+			//Expand working set until the minimum size is reached.
+			while(workingSet.size() < minWorkingSetSize){
+				if (tryExpandWorkingSet() == false){
+					return; //Body processed. Consolidation completed.
+				}
+			}
+			
 			while (workingSet.size() <= maxWorkingSetSize) {
 				if(attemptConsolidateWorkingSet() == true){ //Attempt to consolidate the set.
+					workingSet.clear();
 					continue outer; //Working set converted to a more complex operation. Begin work on new set.
 				}
 				
@@ -90,6 +94,7 @@ public class Interpreter {
 				reduceWorkingSet();
 			}
 		}
+		
 	}
 	
 	/**
