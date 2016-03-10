@@ -3,7 +3,7 @@ import java.util.List;
 
 import javax.swing.JFileChooser;
 
-import operations.Operation;
+import wrapper.Operation;
 
 /**
  * 

@@ -3,6 +3,7 @@ package operations;
 import java.util.HashMap;
 
 import wrapper.ArrayVariable;
+import wrapper.Operation;
 
 /**
  * Create a new Write operation, from the variable at index specified by {@code source}

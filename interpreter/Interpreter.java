@@ -3,8 +3,7 @@ import java.util.List;
 
 import operations.OP_ReadWrite;
 import operations.OP_Swap;
-import operations.Operation;
-import wrapper.*;
+import wrapper.Operation;
 
 /**
  * 
@@ -53,49 +52,65 @@ public class Interpreter {
 	 */
 	public void setLowLevelOperations(List<Operation> lowLevelOperations) {
 		if (lowLevelOperations == null){
-			throw new IllegalArgumentException("List of low level operations cannot be null.");
+			throw new NullPointerException("List of low level operations cannot be null.");
 		}
 		this.lowLevelOperations = lowLevelOperations;
 	}
 	
-	
-	
-	
-	/**
-	 * 
-	 */
 	private void consolidateOperations(){
+		//TODO: Ta fram min/max working size automagiskt.
 		int minWorkingSetSize = 3;
 		int maxWorkingSetSize = 3;
 		
+		//Expand working set until the minimum size is reached.
+		while(workingSet.size() < minWorkingSetSize){
+			if (tryExpandWorkingSet() == false){
+				return; //Body processed. Consolidation completed.
+			}
+		}
+		
 		//Continue until all operations are handled
 		outer: while(true){
-			workingSet.clear();
-			
-			//Expand working set until the minimum size is reached.
-			while(workingSet.size() < minWorkingSetSize){
-				if (tryExpandWorkingSet() == false){
-					return; //Body processed. Consolidation completed.
-				}
-			}
 
-			//Expand working set until the minimum size is reached.
-			while (workingSet.size() < maxWorkingSetSize){
-				if(attemptConsolidateWorkingSet() == true){
+			while (workingSet.size() < maxWorkingSetSize) {
+				if(attemptConsolidateWorkingSet() == true){ //Attempt to consolidate the set.
 					continue outer; //Working set converted to a more complex operation. Begin work on new set.
 				}
 				
 				if (tryExpandWorkingSet() == false){
 					return; //Body processed. Consolidation completed.
 				}
+			} 
+			
+			consolidatedOperations.add(workingSet.remove(0)); //Add the first operation of working set to consolidated operations.
+			
+			while(workingSet.size() > minWorkingSetSize){
+				if (reduceWorkingSet() == false){
+					return; //Body processed. Consolidation completed.
+				}
 			}
 		}
 	}
 	
 	/**
+	 * Try to reduce the working set. If it fails (because the working set is already depleted)
+	 * this function will add the remaining operations in lowLevelOperations to consolidatedOperations.
+	 * @return False if the working set could not be reduced.
+	 */
+	private boolean reduceWorkingSet() {
+		if (workingSet.isEmpty()){
+			consolidatedOperations.addAll(lowLevelOperations);
+			return false;			
+		}
+		//Add the last element of working set to the first position in low level operations.
+		lowLevelOperations.add(0, workingSet.remove(workingSet.size()-1)); 
+		return true;
+	}
+
+	/**
 	 * Try to expend the current working set. Messages are immediately added to high level operations,
-	 * as are initiatlizations. 
-	 * @return false if the working set could not be expanded
+	 * as are initialization. 
+	 * @return False if the working set could not be expanded.
 	 */
 	private boolean tryExpandWorkingSet() {
 		if(lowLevelOperations.isEmpty()){
@@ -127,18 +142,9 @@ public class Interpreter {
 		return true;
 	}
 	
-	
-	
-	
-	
 	private boolean isReadOrWrite(Operation op){
 		return op.operation.equals("read") || op.operation.equals("write") || op.operation.equals("readwrite");
 	}
-	
-	
-	
-	
-	
 	
 	private boolean attemptConsolidateWorkingSet(){
 		switch(workingSet.size()){

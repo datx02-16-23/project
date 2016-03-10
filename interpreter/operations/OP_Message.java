@@ -1,6 +1,8 @@
 package operations;
 import java.util.HashMap;
 
+import wrapper.Operation;
+
 /**
  * Creates an operation to initialize an {@code AnnotatedVariable}.
  */

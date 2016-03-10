@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import wrapper.ArrayVariable;
+import wrapper.Operation;
 
 /**
  * Creates an operation to initialize an {@code AnnotatedVariable}.

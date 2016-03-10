@@ -4,8 +4,6 @@ package wrapper;
 
 import java.util.List;
 
-import operations.Operation;
-
 /**
  * Wrapper class for GLO and HOG files on the JSON format.
  */

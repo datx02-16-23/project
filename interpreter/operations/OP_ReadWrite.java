@@ -2,6 +2,7 @@ package operations;
 import java.util.HashMap;
 
 import wrapper.ArrayVariable;
+import wrapper.Operation;
 
 
 public abstract class OP_ReadWrite extends Operation{

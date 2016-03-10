@@ -17,7 +17,6 @@ import operations.OP_Init;
 import operations.OP_Message;
 import operations.OP_Read;
 import operations.OP_Write;
-import operations.Operation;
 import wrapper.*;
 
 /**
@@ -42,8 +41,8 @@ public class LogFileManager {
 	
 	
 	/**
-	 * Get the list of operations used by this LogFileManager.
-	 * @return A list of operations.
+	 * Returns the list of operations used by this LogFileManager.
+	 * @return The list of operations used by this LogFileManager.
 	 */
 	public List<Operation> getOperations(){
 		return operations;
@@ -51,7 +50,7 @@ public class LogFileManager {
 	
 	/**
 	 * Set the list of operations used by this LogFileManager.
-	 * @param operations A new list of operations.
+	 * @param operations A new list of operations to be used by this LogFileManager.
 	 */
 	public void setOperations (List<Operation> operations){
 		this.operations = operations;
@@ -100,7 +99,7 @@ public class LogFileManager {
 		    out.flush();
 		    out.close();
 		} catch (FileNotFoundException e) {
-			System.out.println("printLog(..) failed: " + e.getMessage());
+			System.out.println("printLog() failed: " + e.getMessage());
 		}
 	}
 	
@@ -115,26 +114,6 @@ public class LogFileManager {
 			}
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	private void unpackOperation(Operation op){
 			switch(op.operation){

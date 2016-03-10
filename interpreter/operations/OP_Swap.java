@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import wrapper.ArrayVariable;
+import wrapper.Operation;
 
 /**
  * Create a new Swap operation, shifting the values of {@code var1} and {@code var2}.
