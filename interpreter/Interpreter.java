@@ -59,7 +59,7 @@ public class Interpreter {
 	
 	private void consolidateOperations(){
 		//TODO: Ta fram min/max working size automagiskt.
-		int minWorkingSetSize = 3;
+		int minWorkingSetSize = 3; //Must be > 0.
 		int maxWorkingSetSize = 3;
 		
 		//Expand working set until the minimum size is reached.
@@ -72,7 +72,7 @@ public class Interpreter {
 		//Continue until all operations are handled
 		outer: while(true){
 
-			while (workingSet.size() < maxWorkingSetSize) {
+			while (workingSet.size() <= maxWorkingSetSize) {
 				if(attemptConsolidateWorkingSet() == true){ //Attempt to consolidate the set.
 					continue outer; //Working set converted to a more complex operation. Begin work on new set.
 				}
@@ -82,29 +82,23 @@ public class Interpreter {
 				}
 			} 
 			
-			consolidatedOperations.add(workingSet.remove(0)); //Add the first operation of working set to consolidated operations.
+			//Add the first operation of working set to consolidated operations.
+			consolidatedOperations.add(workingSet.remove(0));
 			
+			//Reduce the working set.
 			while(workingSet.size() > minWorkingSetSize){
-				if (reduceWorkingSet() == false){
-					return; //Body processed. Consolidation completed.
-				}
+				reduceWorkingSet();
 			}
 		}
 	}
 	
 	/**
-	 * Try to reduce the working set. If it fails (because the working set is already depleted)
-	 * this function will add the remaining operations in lowLevelOperations to consolidatedOperations.
-	 * @return False if the working set could not be reduced.
+	 * Reduce the size of the working set by removing the last element and adding it first 
+	 * to the list of low level operations.
 	 */
-	private boolean reduceWorkingSet() {
-		if (workingSet.isEmpty()){
-			consolidatedOperations.addAll(lowLevelOperations);
-			return false;			
-		}
+	private void reduceWorkingSet() {
 		//Add the last element of working set to the first position in low level operations.
 		lowLevelOperations.add(0, workingSet.remove(workingSet.size()-1)); 
-		return true;
 	}
 
 	/**
