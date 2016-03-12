@@ -5,10 +5,9 @@ import javax.swing.JFileChooser;
 
 import wrapper.Operation;
 
-/**
- * 
- * @author Richard
+/** 
  * Demo klass för tolken.
+ * @author Richard
  */
 public class Main {
 	public static void main(String[] args) throws Exception{
@@ -20,7 +19,7 @@ public class Main {
 			JFileChooser jfc = new JFileChooser();
 			jfc.showOpenDialog(null);
 			lowOrderGrammarFile = jfc.getSelectedFile();
-			System.out.println("lowOrderGrammarFile: " + lowOrderGrammarFile);
+			System.out.println("Low-Order grammar file: " + lowOrderGrammarFile);
 			
 			if (lowOrderGrammarFile == null){
 				System.out.println("No file selected.");
@@ -35,12 +34,12 @@ public class Main {
 		
 		//Consolidate into a combination of high and low level operations
 		Interpreter interpreter = new Interpreter();
-		interpreter.setLowLevelOperations(operations);
+		interpreter.setOperations(operations);
 		operations = interpreter.getConsolidatedOperations();
 		
 		//Change to list of consolidated operations, then create a high-order grammar log file
 		logFM.setOperations(operations);
 		logFM.PRETTY_PRINTING = true;
-		logFM.printLog("C:\\Users\\Richard\\Desktop\\consolidated.json");
+		logFM.printLog("C:\\Users\\Richard\\Desktop\\");
 	}
 }

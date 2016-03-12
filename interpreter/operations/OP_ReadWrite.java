@@ -5,6 +5,11 @@ import wrapper.ArrayVariable;
 import wrapper.Operation;
 
 
+/**
+ * A primitive operation from which all other operations on data structures may be constructed.
+ * @author Richard
+ *
+ */
 public abstract class OP_ReadWrite extends Operation{
 	private static final String KEY_TARGET = "target";
 	private static final String KEY_SOURCE = "source";
@@ -13,6 +18,7 @@ public abstract class OP_ReadWrite extends Operation{
 	
 	/**
 	 * Create a new ReadWrite operation. Note that you must set the target, source and value.
+	 * @param operation The name of the operation. Should be "read" or "write".
 	 */
 	public OP_ReadWrite(String operation) {
 		super(operation, new HashMap<String, Object>());

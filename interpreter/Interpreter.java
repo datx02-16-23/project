@@ -9,41 +9,37 @@ import wrapper.Operation;
 /**
  * The Interpreter class contains methods for consolidating read/write operations into more complex operations.
  * The class would typically be used by creating a new instance, setting the list of low level operations and then
- * calling getConsolidatedOperations(). The list of consolidated operations is never cleared, so once all low level
- * operations have been processed a new list of low level operations may be added. The consolidated operations resulting
- * from the new list will be appended and the end of the list of consolidated operations held by this Interpreter.
+ * calling getConsolidatedOperations().
  * @author Richard
  *
  */
 //TODO: Create add handling for all high level operations encounter in lowLevelOperations when calling
 // consolidateOperations(), make it possible to reconsolidate the operations found in consolidatedOperations. 
-// This will allow combination of low level operations originally found in different lowLevelOperations lists.
 public class Interpreter {
 	
-	private List<Operation> lowLevelOperations;
+	private List<Operation> unprocessedOperations;
 	private List<OP_ReadWrite> workingSet;
-	private List<Operation> consolidatedOperations;
+	private List<Operation> processedOperations;
 
 	/**
-	 * Create a new Interpreter. 
+	 * Create a new Interpreter. Use the setOperations() and getConsolidatedOperations() methods to
+	 * interpret lists of operations.
 	 */
 	public Interpreter(){
-		lowLevelOperations = new ArrayList<Operation>();
+		unprocessedOperations = new ArrayList<Operation>();
 		workingSet = new ArrayList<OP_ReadWrite>();
-		consolidatedOperations = new ArrayList<Operation>();
-	}
-	
+		processedOperations = new ArrayList<Operation>();
+		//Different list types? Array lists may become a performance issue in the future.
+	} 
 	/**
-	 * Consolidate the list of low level operations (read/write) held by this Interpreter. May still contain
-	 * read/write operations if they cannot be consolidated into more complex operations. Initilizations
-	 * and messages are added to the list of high level operations as they are found. When this method returns,
-	 * getLowLevelOperations.size() will be 0. You may then supply a new list to be consolidated and appended to the list
-	 * of consolidated operations. The list of consolidated operations will never be cleared automatically.
+	 * Attempt to consolidate the list of low level operations (read/write) held by this Interpreter.
+	 * When this method returns, getLowLevelOperations.size() will be 0. You may then supply a new list
+	 * to be consolidated and appended to the list of consolidated operations.
 	 * @return A consolidated list of operations.
 	 */
 	public List<Operation> getConsolidatedOperations(){
 		consolidateOperations();
-		return consolidatedOperations;
+		return processedOperations;
 	}
 	
 	/**
@@ -51,7 +47,7 @@ public class Interpreter {
 	 * for the result of several consolidated list of low level operations to be combined.
 	 */
 	public void clearConsoloidatedOperations(){
-		consolidatedOperations.clear();
+		processedOperations.clear();
 	}
 	
 	/**
@@ -59,19 +55,19 @@ public class Interpreter {
 	 * @return The list of low level operations held by this Interpreter.
 	 */
 	public List<Operation> getLowLevelOperations() {
-		return lowLevelOperations;
+		return unprocessedOperations;
 	}
 
 	/**
 	 * Set the list of low level operations used by this Interpreter.
 	 * The interpreter can handle read/write, message and init.
-	 * @param lowLevelOperations A new list of low level operations held by this interpreter.
+	 * @param operations A new list of low level operations held by this interpreter.
 	 */
-	public void setLowLevelOperations(List<Operation> lowLevelOperations) {
-		if (lowLevelOperations == null){
+	public void setOperations(List<Operation> operations) {
+		if (operations == null){
 			throw new NullPointerException("List of low level operations cannot be null.");
 		}
-		this.lowLevelOperations = lowLevelOperations;
+		this.unprocessedOperations = operations;
 	}
 	
 	/**
@@ -84,7 +80,7 @@ public class Interpreter {
 		int maxWorkingSetSize = 3; //Must be >= minWorkingSetSize.
 		
 		//Continue until all operations are handled
-		outer: while(lowLevelOperations.isEmpty() == false){
+		outer: while(unprocessedOperations.isEmpty() == false || workingSet.isEmpty() == false){
 			//Expand working set.
 			while(workingSet.size() < minWorkingSetSize){
 				if (tryExpandWorkingSet() == false){
@@ -105,15 +101,15 @@ public class Interpreter {
 			} 
 			
 			//Add the first operation of working set to consolidated operations.
-			consolidatedOperations.add(workingSet.remove(0));
+			Operation op = workingSet.remove(0);
+			processedOperations.add(op);
 			
 			//Reduce the working set.
 			while(workingSet.size() > minWorkingSetSize){
 				reduceWorkingSet();
 			}
 		}
-		consolidatedOperations.addAll(workingSet);
-		
+		processedOperations.addAll(workingSet);
 	}
 	
 	/**
@@ -122,7 +118,7 @@ public class Interpreter {
 	 */
 	private void reduceWorkingSet() {
 		//Add the last element of working set to the first position in low level operations.
-		lowLevelOperations.add(0, workingSet.remove(workingSet.size()-1)); 
+		unprocessedOperations.add(0, workingSet.remove(workingSet.size()-1)); 
 	}
 
 	/**
@@ -131,21 +127,21 @@ public class Interpreter {
 	 * @return False if the working set could not be expanded.
 	 */
 	private boolean tryExpandWorkingSet() {
-		if(lowLevelOperations.isEmpty()){
+		if(unprocessedOperations.isEmpty()){
 			return false;
 		}
 		
-		Operation op = lowLevelOperations.remove(0);
+		Operation op = unprocessedOperations.remove(0);
 		
 		//Found a message. Add qne continue expansion.
 		if (op.operation.equals("message")){
-			consolidatedOperations.add(op);
+			processedOperations.add(op);
 			return tryExpandWorkingSet(); //Call self until working set has been expanded.
 			
 		//Found an init operation. Flush working set into high level operations, then add the init.
 		} else if (op.operation.equals("init")){ //TODO: Do this for any high level operations?
-			consolidatedOperations.addAll(workingSet);
-			consolidatedOperations.add(op);
+			processedOperations.addAll(workingSet);
+			processedOperations.add(op);
 			return tryExpandWorkingSet(); //Call self until working set has been expanded.
 			
 		//Only read/write operations should remain at this point.
@@ -167,7 +163,7 @@ public class Interpreter {
 			case 3:
 				OP_Swap op_swap = OP_Swap.consolidate(workingSet);
 				if (op_swap != null){
-					consolidatedOperations.add(op_swap);
+					processedOperations.add(op_swap);
 					return true;
 				}
 				break;

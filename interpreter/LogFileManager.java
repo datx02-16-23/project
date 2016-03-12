@@ -3,7 +3,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,13 +105,17 @@ public class LogFileManager {
 	 */
 	public void printLog(String targetPath, Wrapper wrapper){
 		Gson GSON;
+		DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd_HHmmss");
+		Calendar cal = Calendar.getInstance();
+		String fileName = dateFormat.format(cal.getTime()) + ".json";
 		if (PRETTY_PRINTING){
 			GSON = new GsonBuilder().setPrettyPrinting().create();
 		} else {
 			GSON = LogFileManager.GSON;
 		}
-		try (PrintStream out = new PrintStream(new FileOutputStream(targetPath))) {
+		try (PrintStream out = new PrintStream(new FileOutputStream(targetPath+fileName))) {
 		    out.print(GSON.toJson(wrapper));
+		    System.out.println("Log printed: " + targetPath + fileName);
 		    out.flush();
 		    out.close();
 		} catch (Exception e) {
@@ -122,10 +129,8 @@ public class LogFileManager {
 		}
 		
 		if (wrapper.body != null){
-			for(Operation op : wrapper.body){
-				//unpackOperation(op); //TODO: Redundant? Could just add to operations as-is.
-				operations.add(op);
-			}
+			operations.addAll(wrapper.body);
+			//TODO: Unwrap instead of adding raw.
 		}
 	}
 }
