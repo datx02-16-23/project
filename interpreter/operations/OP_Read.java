@@ -1,5 +1,4 @@
 package operations;
-import java.util.HashMap;
 
 import wrapper.ArrayVariable;
 import wrapper.Operation;
@@ -18,7 +17,7 @@ public class OP_Read extends OP_ReadWrite{
 	 * Create a new Read operation. Note that you must set the target, source and value.
 	 */
 	public OP_Read() {
-		super(OPERATION, new HashMap<String, Object>());
+		super(OPERATION);
 	}
 	
 	/**

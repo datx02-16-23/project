@@ -86,9 +86,6 @@ public class OP_Swap extends Operation{
 		
 		ArrayVariable var1, tmp, var2;
 		
-		
-		//TODO: Check for the other somewhat sensible version of swap (var2 is copied to tmp instead).
-		
 	
 		//Operation 1: Set var1 -> tmp
 		var1 = rwList.get(0).getSource();
@@ -102,7 +99,7 @@ public class OP_Swap extends Operation{
 		}
 		
 		//Operation 3: tmp -> var2?
-		if((rwList.get(3).getSource().equals(tmp) && rwList.get(3).getTarget().equals(var1)) == false){
+		if((rwList.get(2).getSource().equals(tmp) && rwList.get(2).getTarget().equals(var2)) == false){
 			return null;
 		}
 		

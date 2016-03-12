@@ -43,6 +43,6 @@ public class ArrayVariable {
 		
 		ArrayVariable rhs = (ArrayVariable) other;
 		
-		return this.identifier.equals(rhs) && Arrays.equals(this.index, rhs.index);
+		return this.identifier.equals(rhs.identifier) && Arrays.equals(this.index, rhs.index);
 	}
 }

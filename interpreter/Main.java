@@ -20,7 +20,7 @@ public class Main {
 			JFileChooser jfc = new JFileChooser();
 			jfc.showOpenDialog(null);
 			lowOrderGrammarFile = jfc.getSelectedFile();
-			System.out.println(lowOrderGrammarFile);
+			System.out.println("lowOrderGrammarFile: " + lowOrderGrammarFile);
 			
 			if (lowOrderGrammarFile == null){
 				System.out.println("No file selected.");
@@ -40,6 +40,7 @@ public class Main {
 		
 		//Change to list of consolidated operations, then create a high-order grammar log file
 		logFM.setOperations(operations);
-		logFM.printLog("C:\\Users\\Richard\\Desktop\\");
+		logFM.PRETTY_PRINTING = true;
+		logFM.printLog("C:\\Users\\Richard\\Desktop\\consolidated.json");
 	}
 }

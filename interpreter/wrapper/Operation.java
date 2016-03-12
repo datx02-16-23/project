@@ -6,7 +6,7 @@ import java.util.HashMap;
  * Abstract wrapper class containing the necessary data to recreate a given operation.
  * Should be inherited to create specific operations.
  */
-public abstract class Operation {
+public class Operation {
 	/**
 	 * The literal name of the operation, such as "init" (initialize) or "read".
 	 */

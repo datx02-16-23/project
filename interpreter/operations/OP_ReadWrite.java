@@ -6,7 +6,6 @@ import wrapper.Operation;
 
 
 public abstract class OP_ReadWrite extends Operation{
-	private static final String OPERATION = "ReadWrite";
 	private static final String KEY_TARGET = "target";
 	private static final String KEY_SOURCE = "source";
 	private static final String KEY_VALUE = "value";
@@ -15,15 +14,8 @@ public abstract class OP_ReadWrite extends Operation{
 	/**
 	 * Create a new ReadWrite operation. Note that you must set the target, source and value.
 	 */
-	public OP_ReadWrite(String operation, HashMap<String, Object> operationBody) {
-		super(operation, operationBody);
-	}
-	
-	/**
-	 * Create a new ReadWrite operation. Note that you must set the target, source and value.
-	 */
-	public OP_ReadWrite() {
-		super(OPERATION, new HashMap<String, Object>());
+	public OP_ReadWrite(String operation) {
+		super(operation, new HashMap<String, Object>());
 	}
 	
 	/**
@@ -64,10 +56,4 @@ public abstract class OP_ReadWrite extends Operation{
 	public String getValue(){
 		return (String)this.operationBody.get(KEY_VALUE);
 	}
-
-	@Override
-	public String toString() {
-		return "{ \"operation\": "+OPERATION+", \"operationBody\":"+Operation.printOperationBody(this)+"}";
-	}
-	
 }

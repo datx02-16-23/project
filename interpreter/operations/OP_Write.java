@@ -19,7 +19,7 @@ public class OP_Write extends OP_ReadWrite{
 	 * Create a new Write operation.  Note that you must set the target, source and value.
 	 */
 	public OP_Write() {
-		super(OPERATION, new HashMap<String, Object>());
+		super(OPERATION);
 	}
 	
 	/**

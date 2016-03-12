@@ -3,6 +3,7 @@ import java.util.List;
 
 import operations.OP_ReadWrite;
 import operations.OP_Swap;
+import operations.OperationParser;
 import wrapper.Operation;
 
 /**
@@ -83,14 +84,15 @@ public class Interpreter {
 		int maxWorkingSetSize = 3; //Must be >= minWorkingSetSize.
 		
 		//Continue until all operations are handled
-		outer: while(true){
-			//Expand working set until the minimum size is reached.
+		outer: while(lowLevelOperations.isEmpty() == false){
+			//Expand working set.
 			while(workingSet.size() < minWorkingSetSize){
 				if (tryExpandWorkingSet() == false){
-					return; //Body processed. Consolidation completed.
+					break;
 				}
 			}
 			
+			//Expand working set and attempt consolidation.
 			while (workingSet.size() <= maxWorkingSetSize) {
 				if(attemptConsolidateWorkingSet() == true){ //Attempt to consolidate the set.
 					workingSet.clear();
@@ -98,7 +100,7 @@ public class Interpreter {
 				}
 				
 				if (tryExpandWorkingSet() == false){
-					return; //Body processed. Consolidation completed.
+					break;
 				}
 			} 
 			
@@ -110,6 +112,7 @@ public class Interpreter {
 				reduceWorkingSet();
 			}
 		}
+		consolidatedOperations.addAll(workingSet);
 		
 	}
 	
@@ -129,23 +132,21 @@ public class Interpreter {
 	 */
 	private boolean tryExpandWorkingSet() {
 		if(lowLevelOperations.isEmpty()){
-			consolidatedOperations.addAll(workingSet); //Add unconsolidated read/write operations.
 			return false;
 		}
 		
 		Operation op = lowLevelOperations.remove(0);
 		
-		//Found a message. Add to high level oprations.
+		//Found a message. Add qne continue expansion.
 		if (op.operation.equals("message")){
 			consolidatedOperations.add(op);
 			return tryExpandWorkingSet(); //Call self until working set has been expanded.
 			
-		//Found an init operation. Flush working set into high level operations, then add the init as well.
-		} else if (op.operation.equals("init")){
-			consolidatedOperations.addAll(workingSet); //Add unconsolidated read/write operations.
-			consolidatedOperations.add(op); //Add the init.
-			return false;
-			//return tryExpandWorkingSet(); //Call self until working set has been expanded.
+		//Found an init operation. Flush working set into high level operations, then add the init.
+		} else if (op.operation.equals("init")){ //TODO: Do this for any high level operations?
+			consolidatedOperations.addAll(workingSet);
+			consolidatedOperations.add(op);
+			return tryExpandWorkingSet(); //Call self until working set has been expanded.
 			
 		//Only read/write operations should remain at this point.
 		} else if (isReadOrWrite(op) == false){
@@ -153,7 +154,7 @@ public class Interpreter {
 		}
 		
 		//Add the read/write operation to the working set.
-		workingSet.add((OP_ReadWrite)op);
+		workingSet.add(OperationParser.parseReadWrite(op));
 		return true;
 	}
 	
@@ -174,7 +175,7 @@ public class Interpreter {
 			default:
 				break;
 		}
-		
+
 		return false;
 	}
 }

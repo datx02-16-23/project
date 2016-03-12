@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
@@ -24,6 +25,10 @@ import wrapper.*;
  * @author Richard
  */
 public class LogFileManager {	
+	/**
+	 * Set to true to enable human readable printing of log files. False by default to increase performance.
+	 */
+	public boolean PRETTY_PRINTING = false;
 	private static final Gson GSON = new Gson();
 	
 	private Wrapper wrapper;
@@ -80,7 +85,8 @@ public class LogFileManager {
 	}
 	
 	/**
-	 * Print the operations and header information currently held by this LogFileManager.
+	 * Print the operations and header information currently held by this LogFileManager.  Set the public variable
+	 * PRETTY_PRINTING to true to enable human-readable output.
 	 * @param targetPath The location to print the log file.
 	 */
 	public void printLog(String targetPath){
@@ -89,16 +95,23 @@ public class LogFileManager {
 	}
 	
 	/**
-	 * Print the operations and header container in the wrapper given as argument.
+	 * Print the operations and header container in the wrapper given as argument. Set the public variable
+	 * PRETTY_PRINTING to true to enable human-readable output.
 	 * @param targetPath The location to print the log file.
 	 * @param wrapper The wrapper to convert into a log file.
 	 */
 	public void printLog(String targetPath, Wrapper wrapper){
+		Gson GSON;
+		if (PRETTY_PRINTING){
+			GSON = new GsonBuilder().setPrettyPrinting().create();
+		} else {
+			GSON = LogFileManager.GSON;
+		}
 		try (PrintStream out = new PrintStream(new FileOutputStream(targetPath))) {
 		    out.print(GSON.toJson(wrapper));
 		    out.flush();
 		    out.close();
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			System.out.println("printLog() failed: " + e.getMessage());
 		}
 	}
@@ -110,63 +123,10 @@ public class LogFileManager {
 		
 		if (wrapper.body != null){
 			for(Operation op : wrapper.body){
-				unpackOperation(op); //TODO: Redundant? Could just add to operations as-is.
+				//unpackOperation(op); //TODO: Redundant? Could just add to operations as-is.
+				operations.add(op);
 			}
 		}
-	}
-	
-	private void unpackOperation(Operation op){
-			switch(op.operation){
-				case "read":
-					operations.add(unpackRead(op));
-					break;
-				
-				case "write":
-					operations.add(unpackWrite(op));
-					break;
-					
-				case "init":
-					operations.add(unpackInit(op));
-					break;
-				
-				case "message":
-					operations.add(unpackMessage(op));
-					break;
-				
-				default:
-					System.out.print("Skipping operation: " + op);
-					break;
-			}
-	}
-	
-	private OP_Init unpackInit(Operation initOperation){
-		OP_Init ans = new OP_Init();
-		ans.setTarget((ArrayVariable) initOperation.operationBody.get("target"));
-		ans.setValue((String) initOperation.operationBody.get("value"));
-		ans.setSize((int[]) initOperation.operationBody.get("size"));
-		return ans;
-	}
-	
-	private OP_Read unpackRead(Operation readOperation){
-		OP_Read ans = new OP_Read();
-		ans.setSource((ArrayVariable) readOperation.operationBody.get("source"));
-		ans.setTarget((ArrayVariable) readOperation.operationBody.get("target"));
-		ans.setValue((String) readOperation.operationBody.get("value"));
-		return ans;
-	}
-	
-	private OP_Write unpackWrite(Operation readOperation){
-		OP_Write ans = new OP_Write();
-		ans.setSource((ArrayVariable) readOperation.operationBody.get("source"));
-		ans.setTarget((ArrayVariable) readOperation.operationBody.get("target"));
-		ans.setValue((String) readOperation.operationBody.get("value"));
-		return ans;
-	}
-	
-	private OP_Message unpackMessage(Operation op){
-		OP_Message ans = new OP_Message();
-		ans.setMessage((String) op.operationBody.get("value"));
-		return ans;
 	}
 }
 
