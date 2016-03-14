@@ -101,8 +101,7 @@ public class Interpreter {
 			} 
 			
 			//Add the first operation of working set to consolidated operations.
-			Operation op = workingSet.remove(0);
-			processedOperations.add(op);
+			processedOperations.add(workingSet.remove(0));
 			
 			//Reduce the working set.
 			while(workingSet.size() > minWorkingSetSize){
@@ -155,7 +154,7 @@ public class Interpreter {
 	}
 	
 	private boolean isReadOrWrite(Operation op){
-		return op.operation.equals("read") || op.operation.equals("write") || op.operation.equals("readwrite");
+		return op.operation.equals("read") || op.operation.equals("write");
 	}
 	
 	private boolean attemptConsolidateWorkingSet(){

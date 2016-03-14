@@ -91,6 +91,10 @@ public class OP_Swap extends Operation{
 		var1 = rwList.get(0).getSource();
 		tmp = rwList.get(0).getTarget();
 		
+		if(tmp.index != null){
+			return null; //tmp should not be another array.§1
+		}
+		
 		//Operation 2: x -> var1?
 		if(rwList.get(1).getTarget().equals(var1)){
 			var2 = rwList.get(1).getSource(); //Set x = var2

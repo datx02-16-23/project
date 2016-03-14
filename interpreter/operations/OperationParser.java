@@ -17,17 +17,16 @@ public class OperationParser {
 	
 	private OperationParser(){};
 	
-	@SuppressWarnings("unchecked")
-	public static ArrayVariable unpackArrayVariable(Object ltm){
-		if (ltm == null){
+	public static ArrayVariable unpackArrayVariable(Object arrayVariable){
+		if (arrayVariable == null){
 			return null;
 		}
-		LinkedTreeMap<String, Object> linkedTreeMap = (LinkedTreeMap<String, Object>)ltm;
+		LinkedTreeMap<String, Object> linkedTreeMap = (LinkedTreeMap<String, Object>)arrayVariable;
 		
 		
 		Object identifier = linkedTreeMap.get(KEY_IDENTIFIER);
 		if (identifier == null){
-			return null;
+			return null; //No identifier -> return null.
 		}
 		
 		Object indexAL = linkedTreeMap.get(KEY_INDEX);
@@ -41,7 +40,6 @@ public class OperationParser {
 				i++;
 			}
 		}
-		
 		return new ArrayVariable((String)identifier, index);
 	}
 	
