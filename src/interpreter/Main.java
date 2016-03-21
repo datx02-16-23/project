@@ -1,3 +1,5 @@
+package interpreter;
+
 import java.io.File;
 import java.util.List;
 
@@ -6,7 +8,7 @@ import javax.swing.JFileChooser;
 import interpreter.wrapper.Operation;
 
 /** 
- * Demo klass f�r tolken.
+ * Demo klass för tolken.
  * @author Richard
  */
 public class Main {

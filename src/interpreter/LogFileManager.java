@@ -1,3 +1,5 @@
+package interpreter;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -17,11 +19,10 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
-import interpreter.operations.OP_Init;
-import interpreter.operations.OP_Message;
-import interpreter.operations.OP_Read;
-import interpreter.operations.OP_Write;
-import wrapper.*;
+import interpreter.wrapper.AnnotatedVariable;
+import interpreter.wrapper.Header;
+import interpreter.wrapper.Operation;
+import interpreter.wrapper.Wrapper;
 
 /**
  * A LogFileManager can read and print logs adhering to <our standard> on a JSON format.
