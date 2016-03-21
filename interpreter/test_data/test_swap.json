@@ -2,12 +2,12 @@
 	"header": {
 		"version": 0,
 		"annotatedVariables": {
-			"var1": {
-				"identifier": "var1",
+			"a1": {
+				"identifier": "a1",
 				"rawType": "array"
 			},
-			"var2": {
-				"identifier": "var2",
+			"a2": {
+				"identifier": "a2",
 				"rawType": "array"
 			},
 			"tmp": {
@@ -24,7 +24,7 @@
 			],
 			"value": "[1,2,3]",
 			"target": {
-				"identifier": "var1"
+				"identifier": "a1"
 			}
 		}
 	}, {
@@ -35,7 +35,7 @@
 			],
 			"value": "[4,5,6]",
 			"target": {
-				"identifier": "var2"
+				"identifier": "a2"
 			}
 		}
 	}, {
@@ -43,10 +43,43 @@
 
 
 
+		"operation": "read",
+		"operationBody": {
+			"source": {
+				"identifier": "a1",
+				"index": [
+					0
+				]
+			},
+			"value": "2",
+			"target": {
+				"identifier": "a2",
+				"index": [
+					2
+				]
+			}
+		}
+
+			
+	}, {
+	
+		"operation": "read",
+		"operationBody": {
+			"source": {
+				"identifier": "a2",
+				"index": [
+					0
+				]
+			}
+		}
+
+
+	}, {
+
 		"operation": "write",
 		"operationBody": {
 			"source": {
-				"identifier": "var1",
+				"identifier": "a1",
 				"index": [
 					1
 				]
@@ -68,14 +101,14 @@
 		"operation": "write",
 		"operationBody": {
 			"source": {
-				"identifier": "var2",
+				"identifier": "a2",
 				"index": [
 					1
 				]
 			},
 			"value": "4",
 			"target": {
-				"identifier": "var1",
+				"identifier": "a1",
 				"index": [
 					1
 				]
@@ -96,7 +129,7 @@
 				"identifier": "tmp"
 			},
 			"target": {
-				"identifier": "var2",
+				"identifier": "a2",
 				"index": [
 					1
 				]
@@ -104,7 +137,27 @@
 			"value": "2"
 		}
 
+	}, {
 
+
+
+
+		"operation": "write",
+		"operationBody": {
+			"source": {
+				"identifier": "a1",				
+				"index": [
+					2
+				]
+			},
+			"target": {
+				"identifier": "a2",
+				"index": [
+					2
+				]
+			},
+			"value": "2"
+		}
 
 
 

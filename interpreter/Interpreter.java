@@ -130,26 +130,25 @@ public class Interpreter {
 			return false;
 		}
 		
-		Operation op = unprocessedOperations.remove(0);
-		
-		//Found a message. Add qne continue expansion.
-		if (op.operation.equals("message")){
-			processedOperations.add(op);
+		Operation candidate = unprocessedOperations.remove(0); 
+		//Found a message. Add continue expansion.
+		if (candidate.operation.equals("message")){
+			processedOperations.add(candidate);
 			return tryExpandWorkingSet(); //Call self until working set has been expanded.
 			
 		//Found an init operation. Flush working set into high level operations, then add the init.
-		} else if (op.operation.equals("init")){ //TODO: Do this for any high level operations?
+		} else if (candidate.operation.equals("init")){ //TODO: Do this for any high level operations?
 			processedOperations.addAll(workingSet);
-			processedOperations.add(op);
+			processedOperations.add(candidate);
 			return tryExpandWorkingSet(); //Call self until working set has been expanded.
 			
 		//Only read/write operations should remain at this point.
-		} else if (isReadOrWrite(op) == false){
-			throw new IllegalArgumentException("Interpreter cannot handle operations of type: " + op.operation);
+		} else if (isReadOrWrite(candidate) == false){
+			throw new IllegalArgumentException("Interpreter cannot handle operations of type: " + candidate.operation);
 		}
 		
 		//Add the read/write operation to the working set.
-		workingSet.add(OperationParser.parseReadWrite(op));
+		workingSet.add(OperationParser.parseReadWrite(candidate));
 		return true;
 	}
 	
