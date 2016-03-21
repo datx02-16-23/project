@@ -1,10 +1,10 @@
-package operations;
+package interpreter.operations;
 
 import java.util.HashMap;
 import java.util.List;
 
-import wrapper.ArrayVariable;
-import wrapper.Operation;
+import interpreter.wrapper.ArrayVariable;
+import interpreter.wrapper.Operation;
 
 /**
  * Create a new Swap operation, shifting the values of {@code var1} and {@code var2}.
@@ -92,7 +92,7 @@ public class OP_Swap extends Operation{
 		tmp = rwList.get(0).getTarget();
 		
 		if(tmp.index != null){
-			return null; //tmp should not be another array.§1
+			return null; //tmp should not be another array.ï¿½1
 		}
 		
 		//Operation 2: x -> var1?

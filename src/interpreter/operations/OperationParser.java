@@ -1,12 +1,12 @@
-package operations;
+package interpreter.operations;
 import java.util.ArrayList;
 
 import org.omg.Messaging.SyncScopeHelper;
 
 import com.google.gson.internal.LinkedTreeMap;
 
-import wrapper.ArrayVariable;
-import wrapper.Operation;
+import interpreter.wrapper.ArrayVariable;
+import interpreter.wrapper.Operation;
 
 public class OperationParser {
 	private static final String KEY_TARGET = "target";

@@ -17,10 +17,10 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
-import operations.OP_Init;
-import operations.OP_Message;
-import operations.OP_Read;
-import operations.OP_Write;
+import interpreter.operations.OP_Init;
+import interpreter.operations.OP_Message;
+import interpreter.operations.OP_Read;
+import interpreter.operations.OP_Write;
 import wrapper.*;
 
 /**

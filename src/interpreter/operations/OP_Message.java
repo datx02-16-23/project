@@ -1,7 +1,7 @@
-package operations;
+package interpreter.operations;
 import java.util.HashMap;
 
-import wrapper.Operation;
+import interpreter.wrapper.Operation;
 
 /**
  * Creates an operation to initialize an {@code AnnotatedVariable}.

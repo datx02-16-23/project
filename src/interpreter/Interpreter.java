@@ -1,10 +1,10 @@
 import java.util.ArrayList;
 import java.util.List;
 
-import operations.OP_ReadWrite;
-import operations.OP_Swap;
-import operations.OperationParser;
-import wrapper.Operation;
+import interpreter.operations.OP_ReadWrite;
+import interpreter.operations.OP_Swap;
+import interpreter.operations.OperationParser;
+import interpreter.wrapper.Operation;
 
 /**
  * The Interpreter class contains methods for consolidating read/write operations into more complex operations.

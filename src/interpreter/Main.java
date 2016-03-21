@@ -3,10 +3,10 @@ import java.util.List;
 
 import javax.swing.JFileChooser;
 
-import wrapper.Operation;
+import interpreter.wrapper.Operation;
 
 /** 
- * Demo klass för tolken.
+ * Demo klass fï¿½r tolken.
  * @author Richard
  */
 public class Main {

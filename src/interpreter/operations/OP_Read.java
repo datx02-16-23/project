@@ -1,7 +1,7 @@
-package operations;
+package interpreter.operations;
 
-import wrapper.ArrayVariable;
-import wrapper.Operation;
+import interpreter.wrapper.ArrayVariable;
+import interpreter.wrapper.Operation;
 
 /**
  * Create a new Read operation, from the variable at index specified by {@code source}
