@@ -1,7 +1,5 @@
 package interpreter.operations;
 
-import java.util.HashMap;
-
 import interpreter.wrapper.ArrayVariable;
 import interpreter.wrapper.Operation;
 

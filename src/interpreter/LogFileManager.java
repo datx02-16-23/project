@@ -19,6 +19,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
+import interpreter.operations.OperationParser;
 import interpreter.wrapper.AnnotatedVariable;
 import interpreter.wrapper.Header;
 import interpreter.wrapper.Operation;
@@ -130,13 +131,15 @@ public class LogFileManager {
 	 * @param wrapper The wrapper to unwrap.
 	 */
 	private void unwrap(Wrapper wrapper){
-		//TODO: Unwrap instead of adding raw.
 		if (wrapper.header != null){
+			//TODO: Unwrap instead of adding raw.
 			knownVariables.putAll(wrapper.header.annotatedVariables);
 		}
 		
 		if (wrapper.body != null){
-			operations.addAll(wrapper.body);
+			for (Operation op : wrapper.body){
+				operations.add(OperationParser.unpackOperation(op));
+			}
 		}
 	}
 }

@@ -8,6 +8,7 @@ import interpreter.wrapper.Operation;
  */
 public class OP_Message extends Operation{
 	private static final String OPERATION = "message";
+	private static final String KEY_VALUE = "value";
 
 	/**
 	 * Creates a new Init operation. Note that you must set the target, maxSize and initial values.
@@ -27,10 +28,10 @@ public class OP_Message extends Operation{
 	 * @param value The value(s) with which to initialize this variable.
 	 */
 	public void setValue(String value){
-		this.operationBody.put(OPERATION, value);
+		this.operationBody.put(KEY_VALUE, value);
 	}
 	public String getValue(){
-		return (String)this.operationBody.get(OPERATION);
+		return (String)this.operationBody.get(KEY_VALUE);
 	}
 	
 	

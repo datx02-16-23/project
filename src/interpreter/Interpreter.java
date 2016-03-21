@@ -5,7 +5,6 @@ import java.util.List;
 
 import interpreter.operations.OP_ReadWrite;
 import interpreter.operations.OP_Swap;
-import interpreter.operations.OperationParser;
 import interpreter.wrapper.Operation;
 
 /**
@@ -150,7 +149,7 @@ public class Interpreter {
 		}
 		
 		//Add the read/write operation to the working set.
-		workingSet.add(OperationParser.parseReadWrite(candidate));
+		workingSet.add((OP_ReadWrite) candidate);
 		return true;
 	}
 	
