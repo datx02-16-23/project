@@ -43,6 +43,7 @@ hs_err_pid*
 .idea/mongoSettings.xml
 
 .idea/
+libs/
 
 ## File-based project format:
 *.iws
