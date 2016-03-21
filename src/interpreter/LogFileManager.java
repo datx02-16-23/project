@@ -32,6 +32,7 @@ public class LogFileManager {
 	 * Set to true to enable human readable printing of log files. False by default to increase performance.
 	 */
 	public boolean PRETTY_PRINTING = false;
+	
 	private static final Gson GSON = new Gson();
 	
 	private Wrapper wrapper;
@@ -123,14 +124,18 @@ public class LogFileManager {
 		}
 	}
 	
+	/**
+	 * Unwrap a wrapper, add contents to knownVariables and operations.
+	 * @param wrapper The wrapper to unwrap.
+	 */
 	private void unwrap(Wrapper wrapper){
+		//TODO: Unwrap instead of adding raw.
 		if (wrapper.header != null){
 			knownVariables.putAll(wrapper.header.annotatedVariables);
 		}
 		
 		if (wrapper.body != null){
 			operations.addAll(wrapper.body);
-			//TODO: Unwrap instead of adding raw.
 		}
 	}
 }

@@ -92,7 +92,7 @@ public class OP_Swap extends Operation{
 		tmp = rwList.get(0).getTarget();
 		
 		if(tmp.index != null){
-			return null; //tmp should not be another array.�1
+			return null; //tmp should not be another array.
 		}
 		
 		//Operation 2: x -> var1?
