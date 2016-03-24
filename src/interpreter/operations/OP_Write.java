@@ -64,7 +64,7 @@ public class OP_Write extends OP_ReadWrite{
 
 	@Override
 	public String toString() {
-		return "{ \"operation\": "+OPERATION+", \"operationBody\":"+Operation.printOperationBody(this)+"}";
+		return "{ \"operation\": "+OPERATION+", \"operationBody\":"+printOperationBody()+"}";
 	}
 	
 	

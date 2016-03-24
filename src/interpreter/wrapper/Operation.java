@@ -27,11 +27,15 @@ public class Operation {
 		this.operationBody = operationBody;
 	}
 	
-	public static String printOperationBody(Operation op){
+	public String printOperationBody(){
 		StringBuilder builder = new StringBuilder();
 		builder.append("{");
-		for( String key : op.operationBody.keySet()){
-			builder.append("\""+key+"\": "+ op.operationBody.get(key).toString() +",\n");
+		for( String key : operationBody.keySet()){
+			if (operationBody.get(key) != null){
+				builder.append("\""+key+"\": "+ operationBody.get(key).toString() +",\n");
+			} else {
+				builder.append("\""+key+"\": NULL");
+			}
 		}
 		builder.delete(builder.length()-2, builder.length());
 		builder.append("}");

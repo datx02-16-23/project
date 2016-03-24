@@ -63,7 +63,7 @@ public class OP_Swap extends Operation{
 
 	@Override
 	public String toString() {
-		return "{ \"operation\": "+OPERATION+", \"operationBody\":"+Operation.printOperationBody(this)+"}";
+		return "{ \"operation\": "+OPERATION+", \"operationBody\":"+printOperationBody()+"}";
 	}
 	
 	/**
