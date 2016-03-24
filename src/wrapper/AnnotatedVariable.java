@@ -21,11 +21,11 @@ public class AnnotatedVariable {
 	 * The type of data structure this variable logically represents. For example, a variable
 	 * could have the {@code rawType} array but the {@code abstractType} binaryTree.
 	 */
-	public final String abstractType;
+	public String abstractType;
 	/**
 	 * The preferred graphical representation for this variable, such as BarChart.
 	 */
-	public final String visual;
+	public String visual;
 	/**
 	 * A map of attribute names and their values for this variable, such as maximum size.
 	 */
