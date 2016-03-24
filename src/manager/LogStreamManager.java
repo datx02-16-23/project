@@ -1,4 +1,4 @@
-package interpreter;
+package manager;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,21 +19,21 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
-import interpreter.operations.OperationParser;
-import interpreter.wrapper.AnnotatedVariable;
-import interpreter.wrapper.Header;
-import interpreter.wrapper.Operation;
-import interpreter.wrapper.Wrapper;
+import wrapper.AnnotatedVariable;
+import wrapper.Header;
+import wrapper.Operation;
+import wrapper.Wrapper;
+import wrapper.operations.OperationParser;
 
 /**
- * A LogFileManager can read and print logs adhering to <our standard> on a JSON format.
+ * A LogStreamManager can read and print logs adhering to <our standard> on a JSON format.
  * @author Richard
  */
-public class LogFileManager {	
+public class LogStreamManager {	
 	/**
 	 * Set to true to enable human readable printing of log files. False by default to increase performance.
 	 */
-	public boolean PRETTY_PRINTING = false;
+	public boolean PRETTY_PRINTING;
 	
 	private static final Gson GSON = new Gson();
 	
@@ -43,25 +43,50 @@ public class LogFileManager {
 	private List<Operation> operations;
 
 	/**
-	 * Creates a new LogFileManager. You may read a log file using the readLog() methods.
+	 * Creates a new LogStreamManager. You may read a log file using the readLog() methods.
 	 */
-	public LogFileManager(){
+	public LogStreamManager(){
+		restoreDefaultState();
+	}
+	
+	/**
+	 * Restores this LogStreamManager to its initial state.
+	 */
+	public void restoreDefaultState(){
+		wrapper = null;
+		PRETTY_PRINTING = false;
 		knownVariables = new HashMap<String, AnnotatedVariable>();
 		operations = new ArrayList<Operation>();
 	}
 	
+	/**
+	 * Returns the map of known variables held by this LogStreamManager.
+	 * @return The list of known variables used by this LogStreamManager.
+	 */
+	public Map<String, AnnotatedVariable> getKnownVariables() {
+		return knownVariables;
+	}
+
+
+	/**
+	 * Set the map of known variables used by this LogStreamManager.
+	 * @param knownVariables A new map of known variables to be used by this LogStreamManager.
+	 */
+	public void setKnownVariables(Map<String, AnnotatedVariable> knownVariables) {
+		this.knownVariables = knownVariables;
+	}
 	
 	/**
-	 * Returns the list of operations used by this LogFileManager.
-	 * @return The list of operations used by this LogFileManager.
+	 * Returns the list of operations used by this LogStreamManager.
+	 * @return The list of operations used by this LogStreamManager.
 	 */
 	public List<Operation> getOperations(){
 		return operations;
 	}
 	
 	/**
-	 * Set the list of operations used by this LogFileManager.
-	 * @param operations A new list of operations to be used by this LogFileManager.
+	 * Set the list of operations used by this LogStreamManager.
+	 * @param operations A new list of operations to be used by this LogStreamManager.
 	 */
 	public void setOperations (List<Operation> operations){
 		this.operations = operations;
@@ -80,18 +105,18 @@ public class LogFileManager {
 	
 	/**
 	 * 
-	 * @param logFile The file to read.
+	 * @param LogStream The file to read.
 	 * @throws JsonIOException This exception is raised when Gson was unable to read an input stream or write to one.
 	 * @throws JsonSyntaxException This exception is raised when Gson attempts to read (or write) a malformed JSON element.
-	 * @throws FileNotFoundException Signals that logFile could not be opened.
+	 * @throws FileNotFoundException Signals that LogStream could not be opened.
 	 */
-	public void readLog(File logFile) throws JsonIOException, JsonSyntaxException, FileNotFoundException{
-		wrapper = GSON.fromJson(new JsonReader(new FileReader(logFile)), Wrapper.class);
+	public void readLog(File LogStream) throws JsonIOException, JsonSyntaxException, FileNotFoundException{
+		wrapper = GSON.fromJson(new JsonReader(new FileReader(LogStream)), Wrapper.class);
 		unwrap(wrapper);
 	}
 	
 	/**
-	 * Print the operations and header information currently held by this LogFileManager.  Set the public variable
+	 * Print the operations and header information currently held by this LogStreamManager.  Set the public variable
 	 * PRETTY_PRINTING to true to enable human-readable output.
 	 * @param targetPath The location to print the log file.
 	 */
@@ -114,7 +139,7 @@ public class LogFileManager {
 		if (PRETTY_PRINTING){
 			GSON = new GsonBuilder().setPrettyPrinting().create();
 		} else {
-			GSON = LogFileManager.GSON;
+			GSON = LogStreamManager.GSON;
 		}
 		try (PrintStream out = new PrintStream(new FileOutputStream(targetPath+fileName))) {
 		    out.print(GSON.toJson(wrapper));

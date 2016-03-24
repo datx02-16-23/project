@@ -3,8 +3,9 @@ package application; /**
  */
 
 
-import javax.swing.*;
 import java.io.File;
+
+import javax.swing.*;
 
 public class Main {
 

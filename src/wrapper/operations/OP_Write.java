@@ -1,7 +1,7 @@
-package interpreter.operations;
+package wrapper.operations;
 
-import interpreter.wrapper.ArrayVariable;
-import interpreter.wrapper.Operation;
+import wrapper.ArrayVariable;
+import wrapper.Operation;
 
 /**
  * Create a new Write operation, from the variable at index specified by {@code source}

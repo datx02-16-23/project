@@ -1,10 +1,10 @@
-package interpreter.operations;
+package wrapper.operations;
 import java.util.ArrayList;
 
 import com.google.gson.internal.LinkedTreeMap;
 
-import interpreter.wrapper.ArrayVariable;
-import interpreter.wrapper.Operation;
+import wrapper.ArrayVariable;
+import wrapper.Operation;
 
 public class OperationParser {
 	private static final String KEY_TARGET = "target";
@@ -109,7 +109,7 @@ public class OperationParser {
 	private static Operation parseInit(Operation op) {
 		OP_Init op_init = new OP_Init();
 		ArrayList<Double> listOfDoubles = (ArrayList<Double>) op.operationBody.get(KEY_SIZE);
-		op_init.setSize(doubleListToIntArray(listOfDoubles)); //TODO prase to array from list
+		op_init.setSize(doubleListToIntArray(listOfDoubles));
 		op_init.setTarget(unpackArrayVariable(op.operationBody.get(KEY_TARGET)));
 		op_init.setValue((String) op.operationBody.get(KEY_VALUE));
 		return op_init;

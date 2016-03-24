@@ -3,9 +3,9 @@ package interpreter;
 import java.util.ArrayList;
 import java.util.List;
 
-import interpreter.operations.OP_ReadWrite;
-import interpreter.operations.OP_Swap;
-import interpreter.wrapper.Operation;
+import wrapper.Operation;
+import wrapper.operations.OP_ReadWrite;
+import wrapper.operations.OP_Swap;
 
 /**
  * The Interpreter class contains methods for consolidating read/write operations into more complex operations.
@@ -145,7 +145,7 @@ public class Interpreter {
 			
 		//Only read/write operations should remain at this point.
 		} else if (isReadOrWrite(candidate) == false){
-			throw new IllegalArgumentException("Interpreter cannot handle operations of type: " + candidate.operation);
+			throw new IllegalArgumentException("Cannot consolidate operations of type: " + candidate.operation);
 		}
 		
 		//Add the read/write operation to the working set.

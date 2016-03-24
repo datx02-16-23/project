@@ -5,7 +5,8 @@ import java.util.List;
 
 import javax.swing.JFileChooser;
 
-import interpreter.wrapper.Operation;
+import manager.LogStreamManager;
+import wrapper.Operation;
 
 /** 
  * Demo klass för tolken.
@@ -30,7 +31,7 @@ public class Main {
 		}
 		
 		//Unpack low level operations
-		LogFileManager logFM = new LogFileManager();
+		LogStreamManager logFM = new LogStreamManager();
 		logFM.readLog(lowOrderGrammarFile);
 		List<Operation> operations = logFM.getOperations();
 		

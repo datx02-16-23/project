@@ -1,10 +1,10 @@
-package interpreter.operations;
+package wrapper.operations;
 
 import java.util.Arrays;
 import java.util.HashMap;
 
-import interpreter.wrapper.ArrayVariable;
-import interpreter.wrapper.Operation;
+import wrapper.ArrayVariable;
+import wrapper.Operation;
 
 /**
  * Creates an operation to initialize an {@code AnnotatedVariable}.

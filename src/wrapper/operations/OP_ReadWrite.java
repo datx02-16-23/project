@@ -1,8 +1,8 @@
-package interpreter.operations;
+package wrapper.operations;
 import java.util.HashMap;
 
-import interpreter.wrapper.ArrayVariable;
-import interpreter.wrapper.Operation;
+import wrapper.ArrayVariable;
+import wrapper.Operation;
 
 
 /**

@@ -1,4 +1,4 @@
-package interpreter.wrapper;
+package wrapper;
 
 import java.util.Arrays;
 
