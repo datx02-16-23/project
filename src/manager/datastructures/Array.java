@@ -17,9 +17,9 @@ import wrapper.Locator;
  */
 //TODO: Add handling of multi-dimensional arrays.
 //TODO: Add access logging to enable presenting statistics.
-public class Array extends AnnotatedVariable{
+public class Array extends AnnotatedVariable implements DataStructure{
 
-	private final ArrayList<ArrayElement> elements;
+	private final List<Element> elements;
 	private int[] size;
 	
 	/**
@@ -30,16 +30,15 @@ public class Array extends AnnotatedVariable{
 	 */
 	public Array(String identifier, String abstractType, String visual) {
 		super(identifier, "array", abstractType, visual);
-		
-		elements = new ArrayList<ArrayElement>();
+		elements = new ArrayList<Element>();
 		size = new int[]{-1};
 	}
 	
 	/**
-	 * Returns the list of elements held by this Array.
+	 * Returns the list of elements held by this Array. Used when drawing.
 	 * @return The list of elements held by this Array. 
 	 */
-	public List<ArrayElement> getElements(){
+	public List<Element> getElements(){
 		return elements;
 	}
 	
@@ -64,7 +63,7 @@ public class Array extends AnnotatedVariable{
 		if (op_init.getValue() == null){
 			
 			//Initialize any new values to zero, if the new size is greater than the old one.
-			if (this.size[0] < oldSize){
+			if (this.size[0] > oldSize){
 				for(int i = oldSize+1; i < size[0]; i++){
 					elements.add(new ArrayElement(0, new int[]{i}));
 				}
@@ -107,7 +106,8 @@ public class Array extends AnnotatedVariable{
 	 */
 	public ArrayElement getElement(int[] index){
 		
-		for(ArrayElement ae : elements){
+		for(Element e : elements){
+			ArrayElement ae = (ArrayElement) e;
 			if (Arrays.equals(index, ae.index)){
 				return ae; //Found the element with the same index.
 			}
@@ -144,7 +144,7 @@ public class Array extends AnnotatedVariable{
 	 * @author Richard
 	 *
 	 */
-	public class ArrayElement{
+	public class ArrayElement implements Element{
 		protected double value;
 		protected int[] index;
 		

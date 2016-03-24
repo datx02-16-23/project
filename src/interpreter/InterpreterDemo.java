@@ -12,7 +12,7 @@ import wrapper.Operation;
  * Demo klass för tolken.
  * @author Richard
  */
-public class Main {
+public class InterpreterDemo {
 	public static void main(String[] args) throws Exception{
 		
 		File lowOrderGrammarFile;

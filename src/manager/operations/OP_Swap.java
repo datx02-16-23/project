@@ -111,7 +111,7 @@ public class OP_Swap extends Operation{
 		OP_Swap op_swap = new OP_Swap();
 		op_swap.setVar1(var1);;
 		op_swap.setVar2(var2);
-		//TODO: setValue() op_swap.setValues("");
+		//TODO: setValue() op_swap.setValues("[v1, v2]");
 		return op_swap;
 	}
 

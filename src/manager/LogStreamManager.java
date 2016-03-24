@@ -69,7 +69,6 @@ public class LogStreamManager {
 		return knownVariables;
 	}
 
-
 	/**
 	 * Set the map of known variables used by this LogStreamManager.
 	 * @param knownVariables A new map of known variables to be used by this LogStreamManager.
