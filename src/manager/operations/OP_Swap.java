@@ -1,9 +1,9 @@
-package wrapper.operations;
+package manager.operations;
 
 import java.util.HashMap;
 import java.util.List;
 
-import wrapper.ArrayVariable;
+import wrapper.Locator;
 import wrapper.Operation;
 
 /**
@@ -27,7 +27,7 @@ public class OP_Swap extends Operation{
 	 * The identifier of the variable should be previously declared in the header.
 	 * @param var1 Variable 1 for this Swap operation.
 	 */
-	public void setVar1(ArrayVariable var1){
+	public void setVar1(Locator var1){
 		this.operationBody.put(KEY_VAR1, var1);
 	}
 	
@@ -36,7 +36,7 @@ public class OP_Swap extends Operation{
 	 * The identifier of the variable should be previously declared in the header.
 	 * @param var2 Variable 2 for this Swap operation.
 	 */
-	public void setVar2(ArrayVariable var2){
+	public void setVar2(Locator var2){
 		this.operationBody.put(KEY_VAR2, var2);
 	}
 	
@@ -51,11 +51,11 @@ public class OP_Swap extends Operation{
 	
 	
 	
-	public ArrayVariable getTarget(){
-		return (ArrayVariable)this.operationBody.get(KEY_VAR1);
+	public Locator getTarget(){
+		return (Locator)this.operationBody.get(KEY_VAR1);
 	}
-	public ArrayVariable getSource(){
-		return (ArrayVariable)this.operationBody.get(KEY_VAR2);
+	public Locator getSource(){
+		return (Locator)this.operationBody.get(KEY_VAR2);
 	}
 	public String getValue(){
 		return (String)this.operationBody.get(KEY_VALUE);
@@ -84,7 +84,7 @@ public class OP_Swap extends Operation{
 			return null; //All sources/targets must be known.
 		}
 		
-		ArrayVariable var1, tmp, var2;
+		Locator var1, tmp, var2;
 		
 	
 		//Operation 1: Set var1 -> tmp

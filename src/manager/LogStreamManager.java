@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +20,12 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
+import manager.datastructures.DataStructureParser;
+import manager.operations.OperationParser;
 import wrapper.AnnotatedVariable;
 import wrapper.Header;
 import wrapper.Operation;
 import wrapper.Wrapper;
-import wrapper.operations.OperationParser;
 
 /**
  * A LogStreamManager can read and print logs adhering to <our standard> on a JSON format.
@@ -156,9 +158,11 @@ public class LogStreamManager {
 	 * @param wrapper The wrapper to unwrap.
 	 */
 	private void unwrap(Wrapper wrapper){
-		if (wrapper.header != null){
-			//TODO: Unwrap instead of adding raw.
-			knownVariables.putAll(wrapper.header.annotatedVariables);
+		if (wrapper.header != null && wrapper.header.annotatedVariables != null){
+			Collection<AnnotatedVariable> avList = wrapper.header.annotatedVariables.values();
+			for (AnnotatedVariable av : avList){
+				knownVariables.put(av.identifier, DataStructureParser.unpackAnnotatedVariable(av));
+			}
 		}
 		
 		if (wrapper.body != null){

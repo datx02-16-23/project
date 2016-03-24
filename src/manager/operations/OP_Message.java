@@ -1,4 +1,4 @@
-package wrapper.operations;
+package manager.operations;
 import java.util.HashMap;
 
 import wrapper.Operation;

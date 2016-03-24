@@ -1,11 +1,16 @@
-package wrapper.operations;
+package manager.operations;
 import java.util.ArrayList;
 
 import com.google.gson.internal.LinkedTreeMap;
 
-import wrapper.ArrayVariable;
+import wrapper.Locator;
 import wrapper.Operation;
 
+/**
+ * Contains methods to parse operations. Cannot be instantiated.
+ * @author Richard
+ *
+ */
 public class OperationParser {
 	private static final String KEY_TARGET = "target";
 	private static final String KEY_IDENTIFIER = "identifier";
@@ -20,7 +25,6 @@ public class OperationParser {
 	
 	
 	public static Operation unpackOperation(Operation op){
-		//TODO: Set public. Add unpack operations to OP_Read, OP_Write, OP_Init, OP_Message.
 		switch(op.operation){
 			case "read":
 			case "write":
@@ -36,7 +40,7 @@ public class OperationParser {
 				return parseSwap(op);
 			
 			default:
-				System.out.print("Unknown operation type: " + op);
+				System.out.print("Unknown operation type: " + op.operation);
 				break;
 		}
 		return null;
@@ -49,7 +53,7 @@ public class OperationParser {
 	 * @param arrayVariable The array variable to unpack.
 	 * @return An array variable, if parsing was successful. Null otherwise.
 	 */
-	public static ArrayVariable unpackArrayVariable(Object arrayVariable){
+	public static Locator unpackArrayVariable(Object arrayVariable){
 		if (arrayVariable == null){
 			return null;
 		}
@@ -72,7 +76,7 @@ public class OperationParser {
 				i++;
 			}
 		}
-		return new ArrayVariable((String)identifier, index);
+		return new Locator((String)identifier, index);
 	}
 	
 	public static OP_ReadWrite parseReadWrite(Operation op){
@@ -123,6 +127,16 @@ public class OperationParser {
 			i++;
 		}
 		return array;
+	}
+	
+	public static double[] stringToDoubleArray(String str){
+		str = str.substring(1, str.length()-1);
+		String[] strs = str.split(",");
+		double[] dbls = new double[strs.length];
+		for(int i = 0; i < strs.length; i++){
+			dbls[i] = Double.parseDouble(strs[i]);			
+		}
+		return dbls;
 	}
 	
 }

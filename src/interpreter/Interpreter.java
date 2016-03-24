@@ -3,9 +3,9 @@ package interpreter;
 import java.util.ArrayList;
 import java.util.List;
 
+import manager.operations.OP_ReadWrite;
+import manager.operations.OP_Swap;
 import wrapper.Operation;
-import wrapper.operations.OP_ReadWrite;
-import wrapper.operations.OP_Swap;
 
 /**
  * The Interpreter class contains methods for consolidating read/write operations into more complex operations.

@@ -39,6 +39,9 @@ public class AnnotatedVariable {
 	 * @param visual The preferred graphical representation for this variable.
 	 */
 	public AnnotatedVariable(String identifier, String rawType, String abstractType, String visual){
+		if (identifier == null){
+			throw new NullPointerException("Identifier may not be null!");
+		}
 		this.identifier = identifier;
 		this.rawType = rawType;
 		this.abstractType = abstractType;

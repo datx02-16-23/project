@@ -1,6 +1,6 @@
-package wrapper.operations;
+package manager.operations;
 
-import wrapper.ArrayVariable;
+import wrapper.Locator;
 
 /**
  * Create a new Read operation, from the variable at index specified by {@code source}
@@ -24,7 +24,7 @@ public class OP_Read extends OP_ReadWrite{
 	 * The identifier of the variable should be previously declared in the header.
 	 * @param target The target variable for this Read operation.
 	 */
-	public void setTarget(ArrayVariable target){
+	public void setTarget(Locator target){
 		this.operationBody.put(KEY_TARGET, target);
 	}
 	
@@ -33,7 +33,7 @@ public class OP_Read extends OP_ReadWrite{
 	 * The identifier of the variable should be previously declared in the header.
 	 * @param source The source variable for this Read operation.
 	 */
-	public void setSource(ArrayVariable source){
+	public void setSource(Locator source){
 		if (source == null){
 			throw new IllegalArgumentException("Source cannot be null in a Read operation!");
 		}
@@ -51,11 +51,11 @@ public class OP_Read extends OP_ReadWrite{
 	
 	
 	
-	public ArrayVariable getTarget(){
-		return (ArrayVariable)this.operationBody.get(KEY_TARGET);
+	public Locator getTarget(){
+		return (Locator)this.operationBody.get(KEY_TARGET);
 	}
-	public ArrayVariable getSource(){
-		return (ArrayVariable)this.operationBody.get(KEY_SOURCE);
+	public Locator getSource(){
+		return (Locator)this.operationBody.get(KEY_SOURCE);
 	}
 	public String getValue(){
 		return (String)this.operationBody.get(KEY_VALUE);

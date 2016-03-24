@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * A variable used by the {@code Operation} class.
  */
-public class ArrayVariable {
+public class Locator {
 	
 	/**
 	 * The identifier for this variable. Will generally match one of the identifiers used as
@@ -18,11 +18,11 @@ public class ArrayVariable {
 	public final int[] index;
 	
 	/**
-	 * Create a new ArrayVariable with a given identifier and index.
+	 * Create a new Locator with a given identifier and index.
 	 * @param identifier The identifier for this variable.
 	 * @param index The index from which the fetch a value in the variable identified by {@code identifier}.
 	 */
-	public ArrayVariable(String identifier, int[] index){
+	public Locator(String identifier, int[] index){
 		this.identifier = identifier;
 		this.index = index;
 	}
@@ -37,12 +37,30 @@ public class ArrayVariable {
 		if (this == other){
 			return true;
 		}
-		if(other instanceof ArrayVariable == false){
+		if(other instanceof Locator == false){
 			return false;
 		}
 		
-		ArrayVariable rhs = (ArrayVariable) other;
+		Locator rhs = (Locator) other;
 		
 		return this.identifier.equals(rhs.identifier) && Arrays.equals(this.index, rhs.index);
+	}
+	
+	/**
+	 * Compares the index only, ignoring identifier.
+	 * @param other The other Locator to compare.
+	 * @return True if the index of this and other are equal, false otherwise.
+	 */
+	public boolean indexEquals(Locator other){
+		return Arrays.equals(this.index, other.index);
+	}
+	
+	/**
+	 * Compares the index only, ignoring identifier.
+	 * @param other The index to compare.
+	 * @return True if the index of this and other are equal, false otherwise.
+	 */
+	public boolean indexEquals(int[] other){
+		return Arrays.equals(this.index, other);
 	}
 }

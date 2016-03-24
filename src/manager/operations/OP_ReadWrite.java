@@ -1,7 +1,7 @@
-package wrapper.operations;
+package manager.operations;
 import java.util.HashMap;
 
-import wrapper.ArrayVariable;
+import wrapper.Locator;
 import wrapper.Operation;
 
 
@@ -29,7 +29,7 @@ public abstract class OP_ReadWrite extends Operation{
 	 * The identifier of the variable should be previously declared in the header.
 	 * @param target The target variable for this ReadWrite operation.
 	 */
-	public void setTarget(ArrayVariable target){
+	public void setTarget(Locator target){
 		this.operationBody.put(KEY_TARGET, target);
 	}
 	
@@ -38,7 +38,7 @@ public abstract class OP_ReadWrite extends Operation{
 	 * The identifier of the variable should be previously declared in the header.
 	 * @param source The source variable for this ReadWrite operation.
 	 */
-	public void setSource(ArrayVariable source){
+	public void setSource(Locator source){
 		this.operationBody.put(KEY_SOURCE, source);
 	}
 	
@@ -53,11 +53,11 @@ public abstract class OP_ReadWrite extends Operation{
 	
 	
 	
-	public ArrayVariable getTarget(){
-		return (ArrayVariable)this.operationBody.get(KEY_TARGET);
+	public Locator getTarget(){
+		return (Locator)this.operationBody.get(KEY_TARGET);
 	}
-	public ArrayVariable getSource(){
-		return (ArrayVariable)this.operationBody.get(KEY_SOURCE);
+	public Locator getSource(){
+		return (Locator)this.operationBody.get(KEY_SOURCE);
 	}
 	public String getValue(){
 		return (String)this.operationBody.get(KEY_VALUE);

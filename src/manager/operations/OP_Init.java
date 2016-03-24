@@ -1,9 +1,9 @@
-package wrapper.operations;
+package manager.operations;
 
 import java.util.Arrays;
 import java.util.HashMap;
 
-import wrapper.ArrayVariable;
+import wrapper.Locator;
 import wrapper.Operation;
 
 /**
@@ -27,7 +27,7 @@ public class OP_Init extends Operation{
 	 * The identifier of the variable should be previously declared in the header.
 	 * @param var The target variable for this Init operation.
 	 */
-	public void setTarget(ArrayVariable var){
+	public void setTarget(Locator var){
 		this.operationBody.put(KEY_TARGET, var);
 	}
 	
@@ -47,8 +47,8 @@ public class OP_Init extends Operation{
 		this.operationBody.put(KEY_VALUE, value);
 	}
 	
-	public ArrayVariable getTarget(){
-		return (ArrayVariable)this.operationBody.get(KEY_TARGET);
+	public Locator getTarget(){
+		return (Locator)this.operationBody.get(KEY_TARGET);
 	}
 	
 	public int[] getSize(){
@@ -66,7 +66,7 @@ public class OP_Init extends Operation{
 			builder.append("\""+key+"\": ");
 			switch(key){
 				case KEY_TARGET:
-					builder.append(((ArrayVariable)operationBody.get(key)).toString() +",\n");
+					builder.append(((Locator)operationBody.get(key)).toString() +",\n");
 				break;
 				case KEY_SIZE:
 					builder.append(Arrays.toString((int[])operationBody.get(key))+",\n");
