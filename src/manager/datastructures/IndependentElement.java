@@ -7,13 +7,14 @@ import wrapper.AnnotatedVariable;
 
 /**
  * An independent variable holding a single element. May for example be used as a temporary variable when performing a swap.
+ * IndependentElement extends AnnotatedVariable, and is notably both an Element and a DataStructure.
  * @author Richard
  *
  */
 public class IndependentElement extends AnnotatedVariable implements Element, DataStructure{
 
-	private Element element;
-	private final ArrayList<Element> elements; 
+	private transient Element element;
+	private transient final ArrayList<Element> elements; 
 	
 	/**
 	 * Create a new IndependentElement.
@@ -24,6 +25,7 @@ public class IndependentElement extends AnnotatedVariable implements Element, Da
 	public IndependentElement(String identifier, String abstractType, String visual) {
 		super(identifier, "independent", abstractType, visual);
 		elements = new ArrayList<Element>();
+		System.out.println("new inde");
 	}
 
 	/**
@@ -35,8 +37,8 @@ public class IndependentElement extends AnnotatedVariable implements Element, Da
 	}
 	
 	/**
-	 * Returns the element held by this IndependenElement.
-	 * @return The element held by this IndependenElement.
+	 * Returns the element held by this IndependentElement.
+	 * @return The element held by this IndependentElement.
 	 */
 	public Element getElement(){
 		return element;
@@ -55,5 +57,9 @@ public class IndependentElement extends AnnotatedVariable implements Element, Da
 	 */
 	public double getValue() {
 		return element.getValue();
+	}
+	
+	public int size(){
+		return 1;
 	}
 }
