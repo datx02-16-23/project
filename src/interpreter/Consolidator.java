@@ -14,18 +14,19 @@ import wrapper.Operation;
  */
 public class Consolidator {
 	
+	private static final int MAX_SIZE = 10;
 	private int minimumSetSize = Integer.MAX_VALUE;
 	private int maximumSetSet = Integer.MIN_VALUE;
 	private final ArrayList<Consolidable>[] invokers;
 	
 	/**
-	 * Create a new Consolidator using the default types.
+	 * Create a new Consolidator with the default types.
 	 */
 	@SuppressWarnings("unchecked")
 	public Consolidator(){
 		
-		invokers = new ArrayList[10];
-		for(int i = 0; i < 10; i++){
+		invokers = new ArrayList[MAX_SIZE];
+		for(int i = 0; i < MAX_SIZE; i++){
 			invokers[i] = new ArrayList<Consolidable>();
 		}
 		
@@ -100,4 +101,21 @@ public class Consolidator {
 		return minimumSetSize;
 	}	
 	
+	/**
+	 * Print a human-readable list of all the Operation types this Consolidator tests.
+	 * @return A human-readable list of all the Operation types this Consolidator tests.
+	 */
+	public String getTestCases(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("Tested operations: {");
+		for(int i = 0; i < MAX_SIZE; i++){
+			for(Consolidable c : invokers[i]){
+				sb.append(c.getClass().getSimpleName() + ", ");
+			}
+			
+		}
+		sb.delete(sb.length()-2, sb.length());
+		sb.append("}.");
+		return sb.toString();
+	}
 }
