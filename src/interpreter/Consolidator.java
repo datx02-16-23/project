@@ -78,12 +78,15 @@ public class Consolidator {
 	 * @return A consolidated operation if successful, null otherwise.
 	 */
 	public Operation attemptConsolidate(List<OP_ReadWrite> rwList){
-		Operation consolidatedOperation = null;
+		Operation consolidatedOperation;
 		
 		for(Consolidable c : invokers[rwList.size()]){
 			consolidatedOperation = c.consolidate(rwList);
+			if (consolidatedOperation != null){
+				return consolidatedOperation;
+			}
 		}
-		return consolidatedOperation;
+		return null;
 	}
 	
 	/**

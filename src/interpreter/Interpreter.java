@@ -174,7 +174,7 @@ public class Interpreter {
 		candidate = unprocessedOperations.remove(0); 
 		//Found a message. Add continue expansion.
 		if (candidate.operation.equals("message")){
-			processedOperations.add(candidate);
+			keep_set_add_high();
 			return tryExpandWorkingSet(); //Call self until working set has been expanded.
 			
 		//Found an init operation. Flush working set into high level operations, then add the init.
