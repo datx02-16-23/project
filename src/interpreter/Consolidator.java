@@ -16,7 +16,7 @@ public class Consolidator {
 	
 	private static final int MAX_SIZE = 10;
 	private int minimumSetSize = Integer.MAX_VALUE;
-	private int maximumSetSet = Integer.MIN_VALUE;
+	private int maximumSetSize = Integer.MIN_VALUE;
 	private final ArrayList<Consolidable>[] invokers;
 	
 	/**
@@ -66,8 +66,8 @@ public class Consolidator {
 		if (rwCount < minimumSetSize){
 			minimumSetSize = rwCount;
 		}
-		if (rwCount > maximumSetSet){
-			maximumSetSet = rwCount;
+		if (rwCount > maximumSetSize){
+			maximumSetSize = rwCount;
 		}
 		invokers[rwCount].add(c);
 	}
@@ -94,7 +94,7 @@ public class Consolidator {
 	 * @return The maximum number of read/write operations this Consolidator will use.
 	 */
 	public int getMaximumSetSet() {
-		return maximumSetSet;
+		return maximumSetSize;
 	}
 	/**
 	 * Returns the minimum number of read/write operations this Consolidator will use.
