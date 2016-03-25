@@ -12,9 +12,9 @@ import wrapper.Operation;
  */
 public interface Consolidable {
 	/**
-	 * Consolidate
-	 * @param rwList
-	 * @return
+	 * Attempt to consolidate a list of read/write operations.
+	 * @param rwList The list to attempt consolidation on.
+	 * @return A high level operation if the supplied list could be consolidated, null otherwise.
 	 */
 	public Operation consolidate(List<OP_ReadWrite> rwList);
 	/**
