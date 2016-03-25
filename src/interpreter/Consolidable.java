@@ -5,6 +5,11 @@ import java.util.List;
 import manager.operations.OP_ReadWrite;
 import wrapper.Operation;
 
+/**
+ * A consolidable element can be broken into a series read/write operations.
+ * @author Richard
+ *
+ */
 public interface Consolidable {
 	/**
 	 * Consolidate

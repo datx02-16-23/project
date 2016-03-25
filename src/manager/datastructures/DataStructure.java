@@ -4,6 +4,11 @@ import java.util.List;
 
 import manager.datastructures.Element;
 
+/**
+ * A data structure for use in visualisation.
+ * @author Richard
+ *
+ */
 public interface DataStructure {
 
 	/**

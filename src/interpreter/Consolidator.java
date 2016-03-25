@@ -18,6 +18,9 @@ public class Consolidator {
 	private int maximumSetSet = Integer.MIN_VALUE;
 	private final ArrayList<Consolidable>[] invokers;
 	
+	/**
+	 * Create a new Consolidator using the default types.
+	 */
 	@SuppressWarnings("unchecked")
 	public Consolidator(){
 		
