@@ -25,7 +25,6 @@ public class IndependentElement extends AnnotatedVariable implements Element, Da
 	public IndependentElement(String identifier, String abstractType, String visual) {
 		super(identifier, "independent", abstractType, visual);
 		elements = new ArrayList<Element>();
-		System.out.println("new inde");
 	}
 
 	/**
