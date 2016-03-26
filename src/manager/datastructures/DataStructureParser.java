@@ -14,6 +14,8 @@ public class DataStructureParser {
 		switch(av.rawType){
 			case "array":
 				return unpackArray(av);
+			case "independentElement":
+				return unpackIndependentElement(av);
 			case "tree":
 				return null; //TODO: Add parsing of trees.
 			default:
@@ -23,6 +25,15 @@ public class DataStructureParser {
 		return null;
 	}
 	
+	/**
+	 * Unpack an IndependentElement data structure variable.
+	 * @param av The variable to unpack.
+	 * @return An unpacked IndependentElement.
+	 */
+	private static AnnotatedVariable unpackIndependentElement(AnnotatedVariable av) {
+		return new IndependentElement(av.identifier, av.abstractType, av.visual);	
+	}
+
 	/**
 	 * Unpack an Array data structure variable.
 	 * @param av The variable to unpack.

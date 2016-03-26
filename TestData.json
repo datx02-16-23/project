@@ -12,7 +12,7 @@
 			},
 			"tmp": {
 				"identifier": "tmp",
-				"rawType": "array"
+				"rawType": "independentElement"
 			}
 		}
 	},

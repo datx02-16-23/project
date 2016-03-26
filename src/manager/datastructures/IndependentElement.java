@@ -23,7 +23,7 @@ public class IndependentElement extends AnnotatedVariable implements Element, Da
 	 * @param visual The preferred visual style of the IndependentElement.
 	 */
 	public IndependentElement(String identifier, String abstractType, String visual) {
-		super(identifier, "independent", abstractType, visual);
+		super(identifier, "independentElement", abstractType, visual);
 		elements = new ArrayList<Element>();
 	}
 
