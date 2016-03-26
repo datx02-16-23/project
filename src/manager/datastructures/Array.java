@@ -19,8 +19,8 @@ import wrapper.Locator;
 //TODO: Add access logging to enable presenting statistics.
 public class Array extends AnnotatedVariable implements DataStructure{
 
-	private final List<Element> elements;
-	private int[] size;
+	private transient final List<Element> elements;
+	private transient int[] size;
 	
 	/**
 	 * Construct a new Array with the given parameters.
@@ -134,6 +134,11 @@ public class Array extends AnnotatedVariable implements DataStructure{
 		
 		return old;
 	}
+	
+	@Override
+	public int size(){
+		return elements.size();
+	}
 
 	/*									   
 	 		Internal class for holding elements
@@ -145,8 +150,8 @@ public class Array extends AnnotatedVariable implements DataStructure{
 	 *
 	 */
 	public class ArrayElement implements Element{
-		protected double value;
-		protected int[] index;
+		private double value;
+		private int[] index;
 		
 		/**
 		 * Construct a new ArrayElement with the given value and index.

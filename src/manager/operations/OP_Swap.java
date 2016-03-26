@@ -3,13 +3,14 @@ package manager.operations;
 import java.util.HashMap;
 import java.util.List;
 
+import interpreter.Consolidable;
 import wrapper.Locator;
 import wrapper.Operation;
 
 /**
  * Create a new Swap operation, shifting the values of {@code var1} and {@code var2}.
  */
-public class OP_Swap extends Operation{
+public class OP_Swap extends Operation implements Consolidable{
 	private static final String OPERATION = "swap";
 	private static final String KEY_VAR1 = "var1";
 	private static final String KEY_VAR2 = "var2";
@@ -71,7 +72,8 @@ public class OP_Swap extends Operation{
 	 * @param rwList The list of 3 read/write operations to test.
 	 * @return A new Swap operation if the given testSet is a valid decomposition of a Swap operation, null otherwise.
 	 */
-	public static OP_Swap consolidate(List<OP_ReadWrite> rwList){
+	@Override
+	public Operation consolidate(List<OP_ReadWrite> rwList){
 		if (rwList.size() != 3){
 			throw new IllegalArgumentException("Swap operations are composed of 3 read/write operations.");
 		}
@@ -113,6 +115,10 @@ public class OP_Swap extends Operation{
 		op_swap.setVar2(var2);
 		//TODO: setValue() op_swap.setValues("[v1, v2]");
 		return op_swap;
+	}
+	@Override
+	public int getRWcount() {
+		return 3;
 	}
 
 }

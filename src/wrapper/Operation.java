@@ -1,6 +1,9 @@
 package wrapper;
 
 import java.util.HashMap;
+import java.util.List;
+
+import manager.operations.OP_ReadWrite;
 
 /**
  * Abstract wrapper class containing the necessary data to recreate a given operation.

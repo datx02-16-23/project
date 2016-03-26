@@ -9,7 +9,7 @@ import manager.LogStreamManager;
 import wrapper.Operation;
 
 /** 
- * Demo klass för tolken.
+ * Demo for the Interpreter.
  * @author Richard
  */
 public class InterpreterDemo {

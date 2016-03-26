@@ -17,21 +17,60 @@ import wrapper.Operation;
 //TODO: Create add handling for all high level operations encounter in lowLevelOperations when calling
 // consolidateOperations(), make it possible to reconsolidate the operations found in consolidatedOperations. 
 public class Interpreter {
+	/**
+	 * Halt execution if a high-level operation is found.
+	 */
+	public final int HALT = 0;
+	/**
+	 * Add any high-level operation found to processedOperations, then continue on the current working set.
+	 */
+	public final int KEEP_SET_ADD_HIGH = 1;
+	/**
+	 * Flush the working set into processedOperations, then add the high-level operation as well.
+	 */
+	public final int FLUSH_SET_ADD_HIGH = 2;
+	/**
+	 * Discard high-level operations as they are found.
+	 */
+	public final int DISCARD = 3;
+	/**
+	 * Deconstruct high-level operations into read/write operations.
+	 */
+	public final int DECONSTRUCT = 4;
+	
+	private int highOrderRoutine;
 	
 	private List<Operation> unprocessedOperations;
 	private List<OP_ReadWrite> workingSet;
 	private List<Operation> processedOperations;
+	private Consolidator consolidator;
 
 	/**
-	 * Create a new Interpreter. Use the setOperations() and getConsolidatedOperations() methods to
-	 * interpret lists of operations.
+	 * Create a new Interpreter with the high order routine set to FLUSH_SET_ADD_HIGH. Use the setOperations()
+	 * and getConsolidatedOperations() methods to interpret lists of operations.
 	 */
 	public Interpreter(){
 		unprocessedOperations = new ArrayList<Operation>();
 		workingSet = new ArrayList<OP_ReadWrite>();
 		processedOperations = new ArrayList<Operation>();
+		highOrderRoutine = FLUSH_SET_ADD_HIGH;
+		consolidator = new Consolidator();
 		//Different list types? Array lists may become a performance issue in the future.
 	} 
+
+	public int getHighOrderRoutine(){
+		return highOrderRoutine;
+	}
+	/**
+	 * Set the routine for handling high level operation if they are found in the operations list when interpreting.
+	 * @param newRoutine The new routine.
+	 */
+	public void setHighOrderRoutine(int newRoutine){
+		if (newRoutine < 0 || newRoutine > 4){
+			throw new IllegalArgumentException("something useful."); //TODO: Write something useful.
+		}
+		highOrderRoutine = newRoutine;
+	}
 	/**
 	 * Attempt to consolidate the list of low level operations (read/write) held by this Interpreter.
 	 * When this method returns, getLowLevelOperations.size() will be 0. You may then supply a new list
@@ -77,8 +116,8 @@ public class Interpreter {
 	 */
 	private void consolidateOperations(){
 		//TODO: Ta fram min/max working size automagiskt.
-		int minWorkingSetSize = 3; //Must be > 0.
-		int maxWorkingSetSize = 3; //Must be >= minWorkingSetSize.
+		int minWorkingSetSize = consolidator.getMinimumSetSize();
+		int maxWorkingSetSize = consolidator.getMinimumSetSize();
 		
 		//Continue until all operations are handled
 		outer: while(unprocessedOperations.isEmpty() == false || workingSet.isEmpty() == false){
@@ -126,26 +165,27 @@ public class Interpreter {
 	 * as are initialization. 
 	 * @return False if the working set could not be expanded.
 	 */
+	private Operation candidate;
 	private boolean tryExpandWorkingSet() {
 		if(unprocessedOperations.isEmpty()){
 			return false;
 		}
 		
-		Operation candidate = unprocessedOperations.remove(0); 
+		candidate = unprocessedOperations.remove(0); 
 		//Found a message. Add continue expansion.
 		if (candidate.operation.equals("message")){
-			processedOperations.add(candidate);
+			keep_set_add_high();
 			return tryExpandWorkingSet(); //Call self until working set has been expanded.
 			
 		//Found an init operation. Flush working set into high level operations, then add the init.
-		} else if (candidate.operation.equals("init")){ //TODO: Do this for any high level operations?
-			processedOperations.addAll(workingSet);
-			processedOperations.add(candidate);
-			return tryExpandWorkingSet(); //Call self until working set has been expanded.
+		} else if (candidate.operation.equals("init")){
+			flush_set_add_high();
+			return tryExpandWorkingSet(); //Try to expand working set again.
 			
 		//Only read/write operations should remain at this point.
 		} else if (isReadOrWrite(candidate) == false){
-			throw new IllegalArgumentException("Cannot consolidate operations of type: " + candidate.operation);
+			handleHighLevelOperation();
+			return tryExpandWorkingSet(); //Try to expand working set again.
 		}
 		
 		//Add the read/write operation to the working set.
@@ -153,22 +193,74 @@ public class Interpreter {
 		return true;
 	}
 	
+	private void handleHighLevelOperation(){
+
+		switch(highOrderRoutine){
+			case HALT:
+				System.exit(-1); //TODO: Handle properly.
+				break;
+				
+			case KEEP_SET_ADD_HIGH:
+				keep_set_add_high();
+				break;
+				
+			case FLUSH_SET_ADD_HIGH:
+				flush_set_add_high();
+				break;
+				
+			case DISCARD:
+				tryExpandWorkingSet();
+				break;
+			case DECONSTRUCT:
+				deconstruct();
+				break;
+		}
+		
+	}
+	/**
+	 * Deconstruct operation into read/write operations.
+	 */
+	private void deconstruct(){
+		throw new UnsupportedOperationException("Deconstruction has not been implemented.");
+	}
+	
+	/**
+	 * Add high-level operation found to processedOperations, then continue on the current working set.
+	 */
+	private void keep_set_add_high(){
+		processedOperations.add(candidate);
+	}
+	
+	/**
+	 * Flush the working set into processedOperations, then add the high-level operation as well.
+	 */
+	private void flush_set_add_high(){
+		processedOperations.addAll(workingSet);
+		processedOperations.add(candidate);
+		workingSet.clear();
+	}
+	
+	/**
+	 * Returns true if the operation is a read or write operation, thus being capable of inheriting OP_ReadWrite.
+	 * @param op The operation to test.
+	 * @return True if the operation is a read/write operation. False otherwise.
+	 */
 	private boolean isReadOrWrite(Operation op){
 		return op.operation.equals("read") || op.operation.equals("write");
 	}
 	
+	/**
+	 * Attempt to consolidate the working set held by this Interpreter. Will return true and add the new operation to 
+	 * processedOperations if successful. Will not clear the working set.
+	 * @return True if workingSet was successfully consolidated, false otherwise.
+	 */
 	private boolean attemptConsolidateWorkingSet(){
-		switch(workingSet.size()){
-			case 3:
-				OP_Swap op_swap = OP_Swap.consolidate(workingSet);
-				if (op_swap != null){
-					processedOperations.add(op_swap);
-					return true;
-				}
-				break;
-				
-			default:
-				break;
+		Operation consolidatedOperation;
+		consolidatedOperation = consolidator.attemptConsolidate(workingSet);
+		
+		if (consolidatedOperation != null){
+			processedOperations.add(consolidatedOperation);
+			return true;
 		}
 
 		return false;

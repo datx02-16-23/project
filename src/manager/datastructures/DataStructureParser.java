@@ -23,6 +23,11 @@ public class DataStructureParser {
 		return null;
 	}
 	
+	/**
+	 * Unpack an Array data structure variable.
+	 * @param av The variable to unpack.
+	 * @return An unpacked Array.
+	 */
 	public static Array unpackArray(AnnotatedVariable av){
 		return new Array(av.identifier, av.abstractType, av.visual);
 	}
