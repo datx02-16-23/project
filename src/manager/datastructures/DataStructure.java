@@ -3,6 +3,7 @@ package manager.datastructures;
 import java.util.List;
 
 import manager.datastructures.Element;
+import manager.operations.OP_Init;
 
 /**
  * A data structure for use in visualisation.
@@ -22,4 +23,10 @@ public interface DataStructure {
 	 * @return The number of elements held by this DataStructure.
 	 */
 	public int size();
+	
+	/**
+	 * Apply an initialise to this DataStrucutre.
+	 * @param op_init The init operation to process.
+	 */
+	public void init(OP_Init op_init);
 }

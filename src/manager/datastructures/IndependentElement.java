@@ -3,6 +3,7 @@ package manager.datastructures;
 import java.util.ArrayList;
 import java.util.List;
 
+import manager.operations.OP_Init;
 import wrapper.AnnotatedVariable;
 
 /**
@@ -60,5 +61,12 @@ public class IndependentElement extends AnnotatedVariable implements Element, Da
 	
 	public int size(){
 		return 1;
+	}
+
+	@Override
+	public void init(OP_Init op_init) {
+		if (!op_init.getTarget().equals(super.identifier)){throw new IllegalArgumentException();}
+	
+		//TODO: Implement init.
 	}
 }
