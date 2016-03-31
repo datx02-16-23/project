@@ -17,7 +17,7 @@ public class OperationParser {
 	private static final String KEY_INDEX = "index";
 	private static final String KEY_SOURCE = "source";
 	private static final String KEY_VALUE = "value";
-	private static final String KEY_SIZE = "size";
+	private static final String KEY_SIZE = "size"; //TODO: Use.
 	private static final String KEY_VAR1 = "var1";
 	private static final String KEY_VAR2 = "var2";
 	
@@ -90,7 +90,7 @@ public class OperationParser {
 		}
 		op_rw.setSource(unpackArrayVariable(op.operationBody.get(KEY_SOURCE)));
 		op_rw.setTarget(unpackArrayVariable(op.operationBody.get(KEY_TARGET)));
-		op_rw.setValue((String)op.operationBody.get(KEY_VALUE));
+		op_rw.setValue(parseValue(op));
 
 		return op_rw;
 	}
@@ -109,17 +109,42 @@ public class OperationParser {
 		return op_message;
 	}
 
-	@SuppressWarnings("unchecked")
 	private static Operation parseInit(Operation op) {
 		OP_Init op_init = new OP_Init();
-		ArrayList<Double> listOfDoubles = (ArrayList<Double>) op.operationBody.get(KEY_SIZE);
-		op_init.setSize(doubleListToIntArray(listOfDoubles));
+		op_init.setSize(parseIndex(op));
 		op_init.setTarget(unpackArrayVariable(op.operationBody.get(KEY_TARGET)));
-		op_init.setValue((String) op.operationBody.get(KEY_VALUE));
+		op_init.setValue(parseValue(op));
 		return op_init;
 	}
 	
+	
+	@SuppressWarnings("unchecked")
+	private static int[] parseIndex(Operation op){
+		return doubleListToIntArray((ArrayList<Double>)op.operationBody.get(KEY_INDEX));
+	}
+	
+	@SuppressWarnings("unchecked")
+	private static double[] parseValue(Operation op){
+		return doubleListToDoubleArray((ArrayList<Double>)op.operationBody.get(KEY_VALUE));
+	}
+	
+	private static double[] doubleListToDoubleArray(ArrayList<Double> listOfDoubles){
+		if (listOfDoubles == null){
+			return null;
+		}
+		double[] array = new double[listOfDoubles.size()];
+		int i = 0;
+		for(Double d : listOfDoubles){
+			array[i] = d.doubleValue();
+			i++;
+		}
+		return array;
+	}
+	
 	private static int[] doubleListToIntArray(ArrayList<Double> listOfDoubles){
+		if (listOfDoubles == null){
+			return null;
+		}
 		int[] array = new int[listOfDoubles.size()];
 		int i = 0;
 		for(Double d : listOfDoubles){

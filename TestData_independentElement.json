@@ -22,7 +22,7 @@
 			"size": [
 				3
 			],
-			"value": "[1,2,3]",
+			"value": [1,2,3],
 			"target": {
 				"identifier": "a1"
 			}
@@ -33,7 +33,7 @@
 			"size": [
 				3
 			],
-			"value": "[4,5,6]",
+			"value": [4,5,6],
 			"target": {
 				"identifier": "a2"
 			}
@@ -51,7 +51,7 @@
 					0
 				]
 			},
-			"value": "2",
+			"value": [2],
 			"target": {
 				"identifier": "a2",
 				"index": [
@@ -84,7 +84,7 @@
 					1
 				]
 			},
-			"value": "2",
+			"value": [2],
 			"target": {
 				"identifier": "tmp"
 			}
@@ -106,7 +106,7 @@
 					1
 				]
 			},
-			"value": "4",
+			"value": [4],
 			"target": {
 				"identifier": "a1",
 				"index": [
@@ -134,7 +134,7 @@
 					1
 				]
 			},
-			"value": "2"
+			"value": [2]
 		}
 
 	}, {
@@ -156,7 +156,7 @@
 					2
 				]
 			},
-			"value": "2"
+			"value": [2]
 		}
 
 

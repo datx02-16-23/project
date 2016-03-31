@@ -43,7 +43,7 @@ public class OP_Init extends Operation{
 	 * Set the value(s) with which to initialize this variable.
 	 * @param value The value(s) with which to initialize this variable.
 	 */
-	public void setValue(String value){
+	public void setValue(double[] value){
 		this.operationBody.put(KEY_VALUE, value);
 	}
 	
@@ -55,8 +55,8 @@ public class OP_Init extends Operation{
 		return (int[])this.operationBody.get(KEY_SIZE);
 	}
 	
-	public String getValue(){
-		return (String)this.operationBody.get(KEY_VALUE);
+	public double[] getValue(){
+		return (double[])this.operationBody.get(KEY_VALUE);
 	}
 	
 	public String printBody(){

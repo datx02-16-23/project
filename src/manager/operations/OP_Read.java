@@ -45,7 +45,7 @@ public class OP_Read extends OP_ReadWrite{
 	 * of {@code target} and the specified index after operation execution, if applicable.
 	 * @param value Set the value(s) which were read from {@code source}.
 	 */
-	public void setValue(String value){
+	public void setValue(double[] value){
 		this.operationBody.put(KEY_VALUE, value);
 	}
 	
@@ -57,8 +57,8 @@ public class OP_Read extends OP_ReadWrite{
 	public Locator getSource(){
 		return (Locator)this.operationBody.get(KEY_SOURCE);
 	}
-	public String getValue(){
-		return (String)this.operationBody.get(KEY_VALUE);
+	public double[] getValue(){
+		return (double[])this.operationBody.get(KEY_VALUE);
 	}
 
 	@Override

@@ -42,14 +42,14 @@ public class Controller extends Application{
         Scene scene = new Scene(new VBox(), 400, 300);
 
         //Add menu
-        menu(scene);
+        buildMenu(scene);
 
         stage.setTitle("MAVSER");
         stage.setScene(scene);
         stage.show();
     }
 
-    private void menu(Scene scene){
+    private void buildMenu(Scene scene){
         MenuBar menuBar = new MenuBar();
         Menu menuFile = new Menu("File");
         MenuItem openFile = new MenuItem("Open File");

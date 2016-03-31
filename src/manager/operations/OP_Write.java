@@ -44,7 +44,7 @@ public class OP_Write extends OP_ReadWrite{
 	 * Set the value(s) which were written to {@code target} (from {@code source}, if applicable).
 	 * @param value Set the value(s) written to {@code target}.
 	 */
-	public void setValue(String value){
+	public void setValue(double[] value){
 		this.operationBody.put(KEY_VALUE, value);
 	}
 	
@@ -57,8 +57,8 @@ public class OP_Write extends OP_ReadWrite{
 	}
 
 	
-	public String getValue(){
-		return (String)this.operationBody.get(KEY_VALUE);
+	public double[] getValue(){
+		return (double[])this.operationBody.get(KEY_VALUE);
 	}
 
 	@Override

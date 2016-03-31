@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import manager.operations.OP_Init;
-import manager.operations.OperationParser;
 import wrapper.AnnotatedVariable;
 import wrapper.Locator;
 
@@ -72,8 +71,8 @@ public class Array extends AnnotatedVariable implements DataStructure{
 			
 		}
 		
-		double[] valuesDbl = OperationParser.stringToDoubleArray(op_init.getValue());
-		
+//		double[] valuesDbl = OperationParser.stringToDoubleArray(op_init.getValue());
+		double[] valuesDbl = op_init.getValue();
 		//Initialize specified by the values argument of the init operation.
 		for(int i = 0; i < valuesDbl.length; i++){
 			elements.add(new ArrayElement(valuesDbl[i], new int[]{i}));
