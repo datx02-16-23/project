@@ -4,6 +4,7 @@ package application.controller; /**
 
 
 import application.model.Model;
+import application.model.iModel;
 import application.view.View;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -15,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import manager.LogStreamManager;
+import wrapper.AnnotatedVariable;
 
 import javax.swing.*;
 import java.io.File;
@@ -22,7 +24,7 @@ import java.io.FileNotFoundException;
 
 public class Controller extends Application{
     private final LogStreamManager lsm = new LogStreamManager();
-    private final Model model;
+    private final iModel model;
     private final View view;
 
     public Controller(){
@@ -43,7 +45,7 @@ public class Controller extends Application{
         //Add menu
         menu(scene);
 
-        stage.setTitle("My JavaFX Application");
+        stage.setTitle("MAVSER");
         stage.setScene(scene);
         stage.show();
     }
@@ -69,13 +71,22 @@ public class Controller extends Application{
         File file = fileChooser.getSelectedFile();
 
         if (file != null){
-            try {
-                lsm.readLog(file);
-                model.setOperations(lsm.getOperations());
+            setFile(file);
+        }
+    }
 
-            } catch (FileNotFoundException e){
-
+    private void setFile(File file) {
+        try {
+            //TODO Tell model to remove old data
+            lsm.readLog(file);
+            System.out.println(lsm.getKnownVariables().keySet());
+            model.setOperations(lsm.getOperations());
+            for (AnnotatedVariable av : lsm.getKnownVariables().values()){
+                model.addStructure(av);
             }
+
+        } catch (FileNotFoundException e){
+
         }
     }
 }
