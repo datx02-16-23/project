@@ -7,7 +7,7 @@ import wrapper.Operation;
  * Creates an operation to initialize an {@code AnnotatedVariable}.
  */
 public class OP_Message extends Operation{
-	private static final String OPERATION = "message";
+	private static final Operations OPERATION = Operations.message;
 	private static final String KEY_VALUE = "value";
 
 	/**

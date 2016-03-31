@@ -20,7 +20,7 @@ public abstract class OP_ReadWrite extends Operation{
 	 * Create a new ReadWrite operation. Note that you must set the target, source and value.
 	 * @param operation The name of the operation. Should be "read" or "write".
 	 */
-	public OP_ReadWrite(String operation) {
+	public OP_ReadWrite(Operations operation) {
 		super(operation, new HashMap<String, Object>());
 	}
 	

@@ -7,7 +7,7 @@ import wrapper.Locator;
  * to the variable at index specified by {@target}. The target may be set null if necessary.
  */
 public class OP_Read extends OP_ReadWrite{
-	private static final String OPERATION = "read";
+	private static final Operations OPERATION = Operations.read;
 	private static final String KEY_TARGET = "target";
 	private static final String KEY_SOURCE = "source";
 	private static final String KEY_VALUE = "value";

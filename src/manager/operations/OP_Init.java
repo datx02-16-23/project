@@ -10,7 +10,7 @@ import wrapper.Operation;
  * Creates an operation to initialize an {@code AnnotatedVariable}.
  */
 public class OP_Init extends Operation{
-	private static final String OPERATION = "init";
+	private static final Operations OPERATION = Operations.init;
 	private static final String KEY_TARGET = "target";
 	private static final String KEY_SIZE = "size";
 	private static final String KEY_VALUE = "value";

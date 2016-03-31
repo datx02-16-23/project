@@ -6,6 +6,8 @@ import com.google.gson.internal.LinkedTreeMap;
 import wrapper.Locator;
 import wrapper.Operation;
 
+import static manager.operations.Operations.*;
+
 /**
  * Contains methods to parse operations. Cannot be instantiated.
  * @author Richard
@@ -26,17 +28,17 @@ public class OperationParser {
 	
 	public static Operation unpackOperation(Operation op){
 		switch(op.operation){
-			case "read":
-			case "write":
+			case read:
+			case write:
 				return parseReadWrite(op);
 				
-			case "init":
+			case init:
 				return parseInit(op);
 			
-			case "message":
+			case message:
 				return parseMessage(op);
 				
-			case "swap":
+			case swap:
 				return parseSwap(op);
 			
 			default:
@@ -81,9 +83,9 @@ public class OperationParser {
 	
 	public static OP_ReadWrite parseReadWrite(Operation op){
 		OP_ReadWrite op_rw;
-		if (op.operation.equals("write")){
+		if (op.operation.equals(Operations.write)){
 			op_rw = new OP_Write();
-		} else if (op.operation.equals("read")){
+		} else if (op.operation.equals(Operations.read)){
 			op_rw = new OP_Read();
 		} else {
 			throw new IllegalArgumentException("Operation must be \"read\" or \"write\".");

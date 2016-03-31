@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import manager.operations.OP_ReadWrite;
+import manager.operations.Operations;
 
 /**
  * Abstract wrapper class containing the necessary data to recreate a given operation.
@@ -13,7 +14,7 @@ public class Operation {
 	/**
 	 * The literal name of the operation, such as "init" (initialize) or "read".
 	 */
-	public final String operation;
+	public final Operations operation;
 	/**
 	 * A map containing the identifier of the field (such as "destination" or "value") and the data they contained.
 	 */
@@ -25,7 +26,7 @@ public class Operation {
 	 * @param operationBody A map containing the identifier of the field
 	 * (such as "destination" or "value") and the data they contained.
 	 */
-	public Operation(String operation, HashMap<String, Object> operationBody){
+	public Operation(Operations operation, HashMap<String, Object> operationBody){
 		this.operation = operation;
 		this.operationBody = operationBody;
 	}
