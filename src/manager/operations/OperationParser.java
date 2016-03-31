@@ -1,5 +1,8 @@
 package manager.operations;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.DoubleStream;
 
 import com.google.gson.internal.LinkedTreeMap;
 
@@ -113,11 +116,43 @@ public class OperationParser {
 		OP_Init op_init = new OP_Init();
 		op_init.setSize(parseIndex(op));
 		op_init.setTarget(unpackArrayVariable(op.operationBody.get(KEY_TARGET)));
-		op_init.setValue(parseValue(op));
+		op_init.setValue(parseMultiValue(op));
 		return op_init;
 	}
 	
 	
+	private static double[] parseMultiValue(Operation op) {
+		@SuppressWarnings("unchecked")
+		ArrayList<Object> nested = (ArrayList<Object>)op.operationBody.get(KEY_VALUE);
+		if (nested == null){
+			return null;
+		}
+		
+		ArrayList<Double> simple = new ArrayList<Double>();	
+		
+		unwrapNestedList(nested, simple);
+		System.out.println("simple = " + simple);
+		return doubleListToDoubleArray(simple);
+	}
+	
+	private static <T> void unwrapNestedList(ArrayList<Object> list, ArrayList<T> ack){
+		if (list.isEmpty()){
+			return;
+		}
+		Object firstElement = list.get(0);
+		if (firstElement instanceof ArrayList){
+			for(Object subList : list){
+				unwrapNestedList((ArrayList<Object>) subList, ack);
+			}
+		} else {
+			for(Object o : list){
+				ack.add((T) o);
+			}
+		}
+	}
+	
+	
+
 	@SuppressWarnings("unchecked")
 	private static int[] parseIndex(Operation op){
 		return doubleListToIntArray((ArrayList<Double>)op.operationBody.get(KEY_INDEX));
@@ -132,6 +167,7 @@ public class OperationParser {
 		if (listOfDoubles == null){
 			return null;
 		}
+		
 		double[] array = new double[listOfDoubles.size()];
 		int i = 0;
 		for(Double d : listOfDoubles){
