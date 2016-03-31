@@ -6,8 +6,6 @@ import com.google.gson.internal.LinkedTreeMap;
 import wrapper.Locator;
 import wrapper.Operation;
 
-import static manager.operations.Operations.*;
-
 /**
  * Contains methods to parse operations. Cannot be instantiated.
  * @author Richard

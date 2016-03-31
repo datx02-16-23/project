@@ -93,7 +93,7 @@ public class Consolidator {
 	 * Returns the maximum number of read/write operations this Consolidator will use.
 	 * @return The maximum number of read/write operations this Consolidator will use.
 	 */
-	public int getMaximumSetSet() {
+	public int getMaximumSetSize() {
 		return maximumSetSize;
 	}
 	/**

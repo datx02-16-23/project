@@ -1,7 +1,6 @@
 package manager.operations;
 
 import wrapper.Locator;
-import wrapper.Operation;
 
 /**
  * Create a new Write operation, from the variable at index specified by {@code source}

@@ -1,6 +1,5 @@
 package application.model;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import wrapper.AnnotatedVariable;
 import wrapper.Operation;
 

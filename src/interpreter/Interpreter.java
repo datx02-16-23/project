@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import manager.operations.OP_ReadWrite;
-import manager.operations.OP_Swap;
+import manager.operations.Operations;
 import wrapper.Operation;
 
 /**
@@ -115,16 +115,14 @@ public class Interpreter {
 	 * When this method returns, lowLevelOperations.size() will be 0.
 	 */
 	private void consolidateOperations(){
-		//TODO: Ta fram min/max working size automagiskt.
 		int minWorkingSetSize = consolidator.getMinimumSetSize();
-		int maxWorkingSetSize = consolidator.getMinimumSetSize();
+		int maxWorkingSetSize = consolidator.getMaximumSetSize();
 		
 		//Continue until all operations are handled
 		outer: while(unprocessedOperations.isEmpty() == false || workingSet.isEmpty() == false){
-			//Expand working set.
 			while(workingSet.size() < minWorkingSetSize){
 				if (tryExpandWorkingSet() == false){
-					break;
+					break outer;
 				}
 			}
 			
@@ -136,7 +134,7 @@ public class Interpreter {
 				}
 				
 				if (tryExpandWorkingSet() == false){
-					break;
+					break outer;
 				}
 			} 
 			
@@ -173,12 +171,12 @@ public class Interpreter {
 		
 		candidate = unprocessedOperations.remove(0); 
 		//Found a message. Add continue expansion.
-		if (candidate.operation.equals("message")){
+		if (candidate.operation.equals(Operations.message)){
 			keep_set_add_high();
 			return tryExpandWorkingSet(); //Call self until working set has been expanded.
 			
 		//Found an init operation. Flush working set into high level operations, then add the init.
-		} else if (candidate.operation.equals("init")){
+		} else if (candidate.operation.equals(Operations.init)){
 			flush_set_add_high();
 			return tryExpandWorkingSet(); //Try to expand working set again.
 			
@@ -246,7 +244,7 @@ public class Interpreter {
 	 * @return True if the operation is a read/write operation. False otherwise.
 	 */
 	private boolean isReadOrWrite(Operation op){
-		return op.operation.equals("read") || op.operation.equals("write");
+		return op.operation.equals(Operations.read) || op.operation.equals(Operations.write);
 	}
 	
 	/**
@@ -257,7 +255,6 @@ public class Interpreter {
 	private boolean attemptConsolidateWorkingSet(){
 		Operation consolidatedOperation;
 		consolidatedOperation = consolidator.attemptConsolidate(workingSet);
-		
 		if (consolidatedOperation != null){
 			processedOperations.add(consolidatedOperation);
 			return true;

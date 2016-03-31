@@ -16,7 +16,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import manager.LogStreamManager;
-import wrapper.AnnotatedVariable;
 
 import javax.swing.*;
 import java.io.File;
