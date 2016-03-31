@@ -5,6 +5,7 @@ import wrapper.AnnotatedVariable;
 import wrapper.Operation;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -24,18 +25,21 @@ public class Model implements iModel {
     }
 
     @Override
-    public void setOperations(List<Operation> operations) {
-        this.operations = operations;
-        index = 0;
-    }
-
-    @Override
     public void stepForward() {
         iStep prevStep = steps.get(index);
         index += 1;
         if (steps.size() <= index){
             steps.add(new Step(prevStep, operations.get(index)));
         }
+    }
+
+    @Override
+    public void set(Collection<AnnotatedVariable> structs, List<Operation> ops) {
+        steps = new ArrayList<>();
+        steps.add(new Step());
+        operations = ops;
+        index = 0;
+        structs.forEach(this::addStructure);
     }
 
     @Override

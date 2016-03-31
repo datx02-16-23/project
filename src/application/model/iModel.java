@@ -3,6 +3,7 @@ package application.model;
 import wrapper.AnnotatedVariable;
 import wrapper.Operation;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  */
 public interface iModel {
     void addStructure(AnnotatedVariable structure);
-    void setOperations(List<Operation> operations);
     void stepForward();
+    void set(Collection<AnnotatedVariable> structs, List<Operation> ops);
     iStep getCurrentStep();
 }

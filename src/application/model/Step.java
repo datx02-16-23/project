@@ -22,6 +22,7 @@ public class Step implements iStep {
         //Copy prevStep structs
         structs = prevStep.getStructures();
         //Apply operation
+
     }
 
 

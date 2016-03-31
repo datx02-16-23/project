@@ -77,14 +77,8 @@ public class Controller extends Application{
 
     private void setFile(File file) {
         try {
-            //TODO Tell model to remove old data
             lsm.readLog(file);
-            System.out.println(lsm.getKnownVariables().keySet());
-            model.setOperations(lsm.getOperations());
-            for (AnnotatedVariable av : lsm.getKnownVariables().values()){
-                model.addStructure(av);
-            }
-
+            model.set(lsm.getKnownVariables().values(), lsm.getOperations());
         } catch (FileNotFoundException e){
 
         }
