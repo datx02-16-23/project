@@ -1,6 +1,7 @@
 package application.model;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import wrapper.AnnotatedVariable;
 import wrapper.Operation;
 
 import java.util.ArrayList;
@@ -16,10 +17,16 @@ public class Model implements iModel {
 
 
     @Override
+    public void addStructure(AnnotatedVariable struct) {
+        if(struct.rawType.equals("array")){
+            steps.get(index).addDataStructure(struct.identifier, Structure.Array);
+        }
+    }
+
+    @Override
     public void setOperations(List<Operation> operations) {
         this.operations = operations;
         index = 0;
-        createInitialStep();
     }
 
     @Override
@@ -32,40 +39,8 @@ public class Model implements iModel {
     }
 
     @Override
-    public void stepBackward() {
-        if (index > 0) {
-            index -= 1;
-        }
-    }
-
-    @Override
-    public void stepForward(int steps) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void stepBackward(int steps) {
-        throw new NotImplementedException();
-    }
-
-    @Override
-    public void stepToIndex(int index) {
-        throw new NotImplementedException();
-    }
-
-    @Override
     public iStep getCurrentStep() {
         return steps.get(index);
-    }
-
-    /**
-     * TODO, should get header data as parameters
-     */
-    private void createInitialStep(){
-        iStep step = new Step();
-        step.addDataStructure("a1", Structure.Array);
-        step.addDataStructure("a2", Structure.Array);
-        steps.add(0, step);
     }
 
 

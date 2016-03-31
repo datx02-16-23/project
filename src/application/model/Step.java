@@ -1,5 +1,6 @@
 package application.model;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import wrapper.Operation;
 
 import java.util.ArrayList;
@@ -21,13 +22,16 @@ public class Step implements iStep {
         //Copy prevStep structs
         structs = prevStep.getStructures();
         //Apply operation
-
     }
 
 
     @Override
     public void addDataStructure(String identifier, Structure struct) {
-        structs.put(identifier, new ArrayList<>());
+        if(struct.equals(Structure.Array)) {
+            structs.put(identifier, new ArrayList<>());
+        } else {
+            throw new NotImplementedException();
+        }
     }
 
     /**
