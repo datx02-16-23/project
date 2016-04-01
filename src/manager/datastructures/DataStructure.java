@@ -15,7 +15,6 @@ public abstract class DataStructure extends AnnotatedVariable{
 
 	public DataStructure(String identifier, String rawType, String abstractType, String visual) {
 		super(identifier, rawType, abstractType, visual);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

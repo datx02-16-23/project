@@ -66,16 +66,20 @@ public class Array extends DataStructure{
 	
 		//Initialize specified by the values argument of the init operation.
 		int linearIndex = 0;
-		int linearTotal = 1;
 		
+
+		for(; linearIndex < linearArray.length; linearIndex++){
+			elements.add(new ArrayElement(linearArray[linearIndex], getIndexInNDimensions(linearIndex, size)));
+		}
+		
+		//Initialize elements without given values to 0.
+		int linearTotal = 1;
 		for(int i = 0; i < size.length; i++){
 			linearTotal = linearTotal * size[i];
 		}
-
-		for(; linearIndex < linearArray.length; linearIndex++){
-			ArrayElement ae = new ArrayElement(linearArray[linearIndex], getIndexInNDimensions(linearIndex, size));
-			System.out.println(ae);
-			elements.add(ae);
+		
+		for(linearIndex++ ; linearIndex < linearTotal; linearIndex++){
+			elements.add(new ArrayElement(0.0 , getIndexInNDimensions(linearIndex, size)));
 		}
 	}
 	
