@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import manager.operations.OP_Init;
-import wrapper.AnnotatedVariable;
 
 /**
  * An independent variable holding a single element. May for example be used as a temporary variable when performing a swap.
@@ -12,7 +11,7 @@ import wrapper.AnnotatedVariable;
  * @author Richard
  *
  */
-public class IndependentElement extends AnnotatedVariable implements Element, DataStructure{
+public class IndependentElement extends DataStructure implements Element{
 
 	private transient Element element;
 	private transient final ArrayList<Element> elements; 

@@ -77,7 +77,7 @@ public class Controller extends Application{
     private void setFile(File file) {
         try {
             lsm.readLog(file);
-            model.set(lsm.getKnownVariables().values(), lsm.getOperations());
+//            model.set(lsm.getKnownVariables().values(), lsm.getOperations());
         } catch (FileNotFoundException e){
 
         }

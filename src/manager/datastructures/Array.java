@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import manager.operations.OP_Init;
-import wrapper.AnnotatedVariable;
 import wrapper.Locator;
 
 /**
@@ -16,7 +15,7 @@ import wrapper.Locator;
  */
 //TODO: Add handling of multi-dimensional arrays.
 //TODO: Add access logging to enable presenting statistics.
-public class Array extends AnnotatedVariable implements DataStructure{
+public class Array extends DataStructure{
 
 	private transient final List<Element> elements;
 	private transient int[] size;
@@ -30,7 +29,10 @@ public class Array extends AnnotatedVariable implements DataStructure{
 	public Array(String identifier, String abstractType, String visual) {
 		super(identifier, "array", abstractType, visual);
 		elements = new ArrayList<Element>();
-		size = new int[]{-1};
+		size = (int[]) super.attributes.get("size");
+		if (size == null){
+			size = new int[]{-1};			
+		}
 	}
 	
 	/**
@@ -54,38 +56,90 @@ public class Array extends AnnotatedVariable implements DataStructure{
 	 */
 
 	public void init(OP_Init op_init){
-		if (!op_init.getTarget().equals(super.identifier)){throw new IllegalArgumentException();}
+		if (!op_init.getTarget().getIdentifier().equals(super.identifier)){throw new IllegalArgumentException();}
 		
-		int oldSize = this.size[0];
-		this.size = op_init.getSize();
-		
-		if (op_init.getValue() == null){
-			
-			//Initialize any new values to zero, if the new size is greater than the old one.
-			if (this.size[0] > oldSize){
-				for(int i = oldSize+1; i < size[0]; i++){
-					elements.add(new ArrayElement(0, new int[]{i}));
-				}
-			}
-			return; //Return after changing the size of the array if no values were provided.
-			
+		double[] linearArray = op_init.getValue();
+		size = op_init.getSize();
+		if (size == null){
+			size = new int[]{linearArray.length}; //Assume one-dimensional if size is not specified.
 		}
-		
-//		double[] valuesDbl = OperationParser.stringToDoubleArray(op_init.getValue());
-		double[] valuesDbl = op_init.getValue();
+	
 		//Initialize specified by the values argument of the init operation.
-		for(int i = 0; i < valuesDbl.length; i++){
-			elements.add(new ArrayElement(valuesDbl[i], new int[]{i}));
-		}
-		if (valuesDbl.length > size[0]){
-			size[0] = valuesDbl.length; //Set the size to exactly the number of elements just initialized.
-		}
+		int linearIndex = 0;
+		int linearTotal = 1;
 		
-		//Initialize any values not specified to zero.
-		for(int i = valuesDbl.length+1; i < size[0]; i++){
-			elements.add(new ArrayElement(0, new int[]{i}));
+		for(int i = 0; i < size.length; i++){
+			linearTotal = linearTotal * size[i];
+		}
+
+		for(; linearIndex < linearArray.length; linearIndex++){
+			ArrayElement ae = new ArrayElement(linearArray[linearIndex], getIndexInNDimensions(linearIndex, size));
+			System.out.println(ae);
+			elements.add(ae);
 		}
 	}
+	
+	/**
+	 * Given a linear index, returns the index in N dimensions (dimeionSizes.length).
+	 * @param linearIndex The linear index.
+	 * @param dimensionSizes Sizes of the dimensions.
+	 * @return The linear index translated to an index in N dimensions.
+	 */
+	private int[] getIndexInNDimensions(int linearIndex, final int[] dimensionSizes){
+		
+		int[] index = new int[dimensionSizes.length];
+
+		/*
+		 * http://stackoverflow.com/questions/14015556/how-to-map-the-indexes-of-a-matrix-to-a-1-dimensional-array-c
+		 Matrix has size, n by m. That is i = [0, n-1] and j = [0, m-1].
+		 matrix[i][j] = array[i*m + j].
+		 
+		 For higher dimension, this idea generalizes, i.e. for a 3D matrix L by N by M:
+		 matrix[i][j][k] = array[i*(N*M) + j*M + k]
+		 
+		 */
+		
+		for (int currDim = 0; currDim < dimensionSizes.length ; currDim++){
+			index[currDim] = linearIndex;
+			
+			//Subtract others
+			for(int otherDim = 0; otherDim < dimensionSizes.length; otherDim++){
+				if (otherDim == currDim){
+					continue; //Don't subtract self.
+				}
+					index[currDim] = index[currDim] - index[otherDim]*higherDimSizesProduct(otherDim);
+				
+				
+			}
+			index[currDim] = index[currDim]/higherDimSizesProduct(currDim);
+		}
+		
+		
+		
+		return index;
+	}
+	
+	/**
+	 * Calculate the product of all lower (to the right) dimension sizes. That is, for
+	 * dim = 0 in array[i][j][k], dim refers to the dimension indexed by i
+	 * and the method returns size[1]*size[2].
+	 * 
+	 * @param dim The current dimension. Must be non-negative.
+	 * @return The product of all lower dimension sizes
+	 */
+	private int higherDimSizesProduct(int dim){
+		
+		int product = 1;
+		
+		for(int i = dim+1; i < size.length; i++){
+			product = product * size[i];
+		}
+		
+		return product;
+	}
+	
+	
+	
 	
 	/**
 	 * Get the element at the specified by the given Locator.
@@ -207,6 +261,10 @@ public class Array extends AnnotatedVariable implements DataStructure{
 			ArrayElement rhs = (ArrayElement) obj;
 			
 			return this.value == rhs.value && Arrays.equals(this.index, rhs.index);
+		}
+		
+		public String toString(){
+			return Arrays.toString(index) + " = " + value;
 		}
 	}
 }

@@ -63,28 +63,28 @@ public class OP_Init extends Operation{
 		StringBuilder builder = new StringBuilder();
 		builder.append("{");
 		for( String key : operationBody.keySet()){
-			builder.append("\""+key+"\": ");
+			builder.append("\t\""+key+"\": ");
 			switch(key){
 				case KEY_TARGET:
-					builder.append(((Locator)operationBody.get(key)).toString() +",\n");
+					builder.append("\t" + ((Locator)operationBody.get(key)).toString() +",\n");
 				break;
 				case KEY_SIZE:
-					builder.append(Arrays.toString((int[])operationBody.get(key))+",\n");
+					builder.append("\t" + Arrays.toString((int[])operationBody.get(key))+",\n");
 				break;
 				case KEY_VALUE:
-					builder.append((String)operationBody.get(key) +",\n");
+					builder.append("\t" + Arrays.toString((double[])operationBody.get(key)) +",\n");
 				break;
 			}
 			 
 		}
 		builder.delete(builder.length()-2, builder.length());
-		builder.append("}");
+		builder.append("}\n");
 		return builder.toString();
 	}
 
 	@Override
 	public String toString() {
-		return "{ \"operation\": \""+OPERATION+"\", \"operationBody\":"+printBody()+"}";
+		return "{ \"operation\": \""+OPERATION+"\", \"operationBody\":\n"+printBody()+"}\n";
 	}
 	
 	

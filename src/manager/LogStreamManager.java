@@ -20,6 +20,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
+import manager.datastructures.DataStructure;
 import manager.datastructures.DataStructureParser;
 import manager.operations.OperationParser;
 import wrapper.AnnotatedVariable;
@@ -41,7 +42,7 @@ public class LogStreamManager {
 	
 	private Wrapper wrapper;
 
-	private Map<String, AnnotatedVariable> knownVariables;
+	private Map<String, DataStructure> knownVariables;
 	private List<Operation> operations;
 
 	/**
@@ -57,7 +58,7 @@ public class LogStreamManager {
 	public void restoreDefaultState(){
 		wrapper = null;
 		PRETTY_PRINTING = false;
-		knownVariables = new HashMap<String, AnnotatedVariable>();
+		knownVariables = new HashMap<String, DataStructure>();
 		operations = new ArrayList<Operation>();
 	}
 	
@@ -65,7 +66,7 @@ public class LogStreamManager {
 	 * Returns the map of known variables held by this LogStreamManager.
 	 * @return The list of known variables used by this LogStreamManager.
 	 */
-	public Map<String, AnnotatedVariable> getKnownVariables() {
+	public Map<String, DataStructure> getKnownVariables() {
 		return knownVariables;
 	}
 
@@ -73,7 +74,7 @@ public class LogStreamManager {
 	 * Set the map of known variables used by this LogStreamManager.
 	 * @param knownVariables A new map of known variables to be used by this LogStreamManager.
 	 */
-	public void setKnownVariables(Map<String, AnnotatedVariable> knownVariables) {
+	public void setKnownVariables(Map<String, DataStructure> knownVariables) {
 		this.knownVariables = knownVariables;
 	}
 	
@@ -122,7 +123,8 @@ public class LogStreamManager {
 	 * @param targetPath The location to print the log file.
 	 */
 	public void printLog(String targetPath){
-		Header header = new Header(Header.VERSION_UNKNOWN, (HashMap<String, AnnotatedVariable>) knownVariables);
+		//TODO: Proper header data (using knownVariables, not annotatedVariables).
+		Header header = new Header(Header.VERSION_UNKNOWN, wrapper.header.annotatedVariables);//(HashMap<String, AnnotatedVariable>) knownVariables);
 		printLog(targetPath, new Wrapper(header, operations));
 	}
 	

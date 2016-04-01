@@ -12,6 +12,7 @@ public class Locator {
 	 * keys in the {@code annotatedVariables} HashMap of the variables declared in the header.
 	 */
 	public final String identifier;
+
 	/**
 	 * The index from which the fetch a value in the variable identified by {@code identifier}.
 	 */
@@ -63,4 +64,21 @@ public class Locator {
 	public boolean indexEquals(int[] other){
 		return Arrays.equals(this.index, other);
 	}
+	
+	/**
+	 * Returns the identifier for this Locator.
+	 * @return The identifier for this Locator.
+	 */
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	/**
+	 * Returns the index for this Locator.
+	 * @return The index for this Locator.
+	 */
+	public int[] getIndex() {
+		return index;
+	}
+
 }

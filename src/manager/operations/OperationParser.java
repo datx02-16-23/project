@@ -1,8 +1,5 @@
 package manager.operations;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.DoubleStream;
 
 import com.google.gson.internal.LinkedTreeMap;
 
@@ -114,7 +111,11 @@ public class OperationParser {
 
 	private static Operation parseInit(Operation op) {
 		OP_Init op_init = new OP_Init();
-		op_init.setSize(parseIndex(op));
+		op_init.setSize(
+				doubleListToIntArray(
+						(ArrayList<Double>)op.operationBody.get(KEY_SIZE)
+						)
+				);
 		op_init.setTarget(unpackArrayVariable(op.operationBody.get(KEY_TARGET)));
 		op_init.setValue(parseMultiValue(op));
 		return op_init;
@@ -131,10 +132,14 @@ public class OperationParser {
 		ArrayList<Double> simple = new ArrayList<Double>();	
 		
 		unwrapNestedList(nested, simple);
-		System.out.println("simple = " + simple);
 		return doubleListToDoubleArray(simple);
 	}
 	
+	/**
+	 * Naive implementation to flatten a multi-dimensional list into a single dimension.
+	 * @param list The multi-dimensional list to flatten.
+	 * @param ack The result.
+	 */
 	private static <T> void unwrapNestedList(ArrayList<Object> list, ArrayList<T> ack){
 		if (list.isEmpty()){
 			return;
@@ -153,7 +158,6 @@ public class OperationParser {
 	
 	
 
-	@SuppressWarnings("unchecked")
 	private static int[] parseIndex(Operation op){
 		return doubleListToIntArray((ArrayList<Double>)op.operationBody.get(KEY_INDEX));
 	}

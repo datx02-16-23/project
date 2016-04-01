@@ -10,7 +10,7 @@ import wrapper.AnnotatedVariable;
 public class DataStructureParser {
 	private DataStructureParser(){};
 	
-	public static AnnotatedVariable unpackAnnotatedVariable(AnnotatedVariable av){
+	public static DataStructure unpackAnnotatedVariable(AnnotatedVariable av){
 		switch(av.rawType){
 			case "array":
 				return unpackArray(av);
@@ -30,7 +30,7 @@ public class DataStructureParser {
 	 * @param av The variable to unpack.
 	 * @return An unpacked IndependentElement.
 	 */
-	private static AnnotatedVariable unpackIndependentElement(AnnotatedVariable av) {
+	private static IndependentElement unpackIndependentElement(AnnotatedVariable av) {
 		return new IndependentElement(av.identifier, av.abstractType, av.visual);	
 	}
 
