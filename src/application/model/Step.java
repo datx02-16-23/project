@@ -8,11 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import manager.datastructures.DataStructure;
+
 /**
  * Created by Ivar on 2016-03-24.
  */
 public class Step implements iStep {
-    private final Map<String, List<Integer>> structs;
+    private final Map<String, List<DataStructure>> structs;
 
     public Step(){
         structs = new HashMap<>();
@@ -29,7 +31,7 @@ public class Step implements iStep {
     @Override
     public void addDataStructure(String identifier, Structure struct) {
         if(struct.equals(Structure.Array)) {
-            structs.put(identifier, new ArrayList<>());
+            structs.put(identifier, new ArrayList<DataStructure>());
         } else {
             throw new NotImplementedException();
         }
@@ -40,12 +42,12 @@ public class Step implements iStep {
      * @return
      */
     @Override
-    public Map<String, List<Integer>> getStructures() {
-        Map<String, List<Integer>> copy = new HashMap<>();
+    public Map<String, List<DataStructure>> getStructures() {
+        Map<String, List<DataStructure>> copy = new HashMap<>();
         for (String key:structs.keySet()){
-            List<Integer> original = structs.get(key);
-            List<Integer> listCopy = new ArrayList<>(original.size());
-            for (Integer value:original){
+            List<DataStructure> original = structs.get(key);
+            List<DataStructure> listCopy = new ArrayList<>(original.size());
+            for (DataStructure value:original){
                 listCopy.add(value);
             }
             copy.put(key, listCopy);

@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import manager.datastructures.DataStructure;
+
 /**
  * Created by Ivar on 2016-03-23.
  */
@@ -17,7 +19,7 @@ public class Model implements iModel {
 
 
     @Override
-    public void addStructure(AnnotatedVariable struct) {
+    public void addStructure(DataStructure struct) {
         if(struct.rawType.equals("array")){
             steps.get(index).addDataStructure(struct.identifier, Structure.Array);
         }
@@ -33,7 +35,7 @@ public class Model implements iModel {
     }
 
     @Override
-    public void set(Collection<AnnotatedVariable> structs, List<Operation> ops) {
+    public void set(Collection<DataStructure> structs, List<Operation> ops) {
         steps = new ArrayList<>();
         steps.add(new Step());
         operations = ops;
