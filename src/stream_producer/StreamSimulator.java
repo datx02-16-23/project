@@ -1,14 +1,19 @@
 package stream_producer;
 
 import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonSyntaxException;
+import org.jgroups.Address;
+import org.jgroups.JChannel;
+import org.jgroups.Message;
+import org.jgroups.Receiver;
+import org.jgroups.View;
 
+import com.google.gson.*;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,53 +21,39 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Tooltip;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.TextFlow;
-import javafx.stage.Modality;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import manager.LogStreamManager;
-import manager.operations.OP_Init;
-import manager.operations.OP_Read;
-import manager.operations.OP_Swap;
-import manager.operations.OP_Write;
-import wrapper.Locator;
-import wrapper.Operation;
+import manager.operations.*;
 
-public class StreamSimulator extends Application{
+import wrapper.*;
+
+public class StreamSimulator extends Application implements Receiver{
 
 	private final LogStreamManager LSM;
-	private final ObservableList<Operation> queuedOperations;
-	private final ObservableList<Operation> sentOperations;
-	private final Gson GSON;
+	private final ObservableList<Operation> queuedOperations, sentOperations;
 	SimpleStringProperty nbrQueuedString = new SimpleStringProperty();
 	SimpleStringProperty nbrSentString = new SimpleStringProperty();
 	SimpleStringProperty waitingOperationsList = new SimpleStringProperty();
 	SimpleStringProperty sentOperationsList = new SimpleStringProperty();
+
+	private JChannel channel;
+	private final int id;
 	
 	public StreamSimulator(){
+		id = (int)(Math.random()*Integer.MAX_VALUE);
+		try {
+			channel = new JChannel("udp.xml");
+			channel.connect("mavser");
+			channel.setReceiver(this);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		
+		
 		LSM = new LogStreamManager();
-		GSON = new Gson();
-//		queuedOperations = new ArrayList<Operation>();
-//		sentOperations = new ArrayList<Operation>();
 		queuedOperations = FXCollections.observableArrayList();
 		sentOperations = FXCollections.observableArrayList();
 		updateSent();
@@ -74,24 +65,26 @@ public class StreamSimulator extends Application{
 		} catch (JsonIOException | JsonSyntaxException | FileNotFoundException e) {
 			e.printStackTrace();
 		}
-
 	}
 	
 	private void transmitOperation(Operation op){
-		String message = GSON.toJson(op);
+		ArrayList<Operation> operationList = new ArrayList<Operation>();
+		operationList.add(op);
+		Wrapper message = new Wrapper(null, operationList);
 		if(transmit(message)){
 			sentOperations.add(op);
 			updateSent();
 		}
 	}
 	
-	private boolean transmit(String message){
-		System.out.println("Transmitting: " + message);
+	private boolean transmit(Wrapper wrapper){
+		WrapperMessage wm = new WrapperMessage(wrapper, id);
+		try {
+			channel.send(new Message().setObject(wm));
+		} catch (Exception e) {
+			return false;
+		}
 		return true; //Return true if transmit was successful.
-	}
-	
-	private int getNbrsentOperations(){
-		return sentOperations.size();
 	}
 	
 	private void transmitAll(){
@@ -105,14 +98,6 @@ public class StreamSimulator extends Application{
 			transmitOperation(queuedOperations.remove(0));
 		}
 		updateQueued();
-	}
-	
-	private int getNumberWaitingOperations(){
-		return queuedOperations.size();
-	}
-	
-	private boolean hasWaitingOperations(){
-		return !queuedOperations.isEmpty();
 	}
 
 	private void readOperation(){
@@ -217,15 +202,11 @@ public class StreamSimulator extends Application{
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
+	private Stage primaryStage;
 	@Override
 	public void start(Stage primaryStage) throws Exception {
+		this.primaryStage = primaryStage;
+        
 		StackPane root = new StackPane();
 		BorderPane base = new BorderPane();
 		
@@ -233,13 +214,15 @@ public class StreamSimulator extends Application{
 		//Construct "Waiting Operations List" list
 		ListView<Operation> waitList = new ListView<Operation>();
 		waitList.setItems(queuedOperations);
-		waitList.setMaxHeight(3000);
+        waitList.setMinWidth(250);
+        waitList.setMaxWidth(250);
 		waitList.setTooltip(new Tooltip("A list of operations waiting to be sent."));
 
 		//Construct "Waiting Operations List" list
 		ListView<Operation> sentList = new ListView<Operation>();
 		sentList.setItems(sentOperations);
-		sentList.setMaxHeight(3000);
+        sentList.setMinWidth(250);
+        sentList.setMaxWidth(250);
 		sentList.setTooltip(new Tooltip("A list of operations which have been sent."));
 	    
 		//Construct Inspect dialog.
@@ -374,32 +357,69 @@ public class StreamSimulator extends Application{
 	        base.setCenter(listPane);
 	        listPane.add(waitingOperations, 0, 0);
 	        listPane.add(sentOperations, 1, 0);
-	        waitList.setMinWidth(250);
-	        sentList.setMinWidth(250);
-	        waitList.setMaxWidth(250);
-	        sentList.setMaxWidth(250);
 	        listPane.add(waitList, 0, 1);
 	        listPane.add(sentList, 1, 1);
 	        listPane.add(inspectSent, 1, 2);
 	        listPane.add(inspectQueued, 0, 2);
         
 
-	    primaryStage.setTitle("Stream Simulator");
+	    primaryStage.setTitle("Stream Simulator: (id =" + id + ", channel = " + channel.getClusterName() + ")");
 		root.getChildren().add(base);
-	    Scene scene = new Scene(root, 700, 500);
+	    Scene scene = new Scene(root, 700, 400);
         primaryStage.setScene(scene);
         primaryStage.sizeToScene();
-//        primaryStage.setResizable(false);
+        primaryStage.setResizable(false);
         primaryStage.show();
-	}
-	
-	Stage inspectStage;
-	private void constructInspectStage(){
-		inspectStage = new Stage();
 	}
 	
 	public static void main(String[] args)  {
 		System.out.println("Launch: main().");
         launch(args);
 	}
+
+	
+	@Override
+	public void receive(Message msg) {
+		WrapperMessage wm = (WrapperMessage) msg.getObject();
+		
+		if (wm.senderId == id){
+			return; //Don't receive messages from self.
+		}
+		
+		Platform.runLater(new Runnable(){
+			public void run() {
+				queuedOperations.add(wm.wrapper.body.get(0));
+				updateQueued();
+			}
+		});
+	}
+
+	@Override
+	public void getState(OutputStream output) throws Exception {
+		System.out.println("getState(OutputStream output)");
+	}
+
+	@Override
+	public void setState(InputStream input) throws Exception {
+		System.out.println("setState(InputStream input)");
+	}
+
+	@Override
+	public void viewAccepted(View new_view) {}
+
+	@Override
+	public void suspect(Address suspected_mbr) {
+		System.out.println("uspect(Address suspected_mbr)");
+	}
+
+	@Override
+	public void block() {
+		System.out.println("block()");
+	}
+
+	@Override
+	public void unblock() {
+		System.out.println("unblock()");
+	}
+
 }

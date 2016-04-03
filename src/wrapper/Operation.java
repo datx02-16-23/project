@@ -1,5 +1,6 @@
 package wrapper;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import manager.operations.Operations;
 
@@ -7,7 +8,7 @@ import manager.operations.Operations;
  * Abstract wrapper class containing the necessary data to recreate a given operation.
  * Should be inherited to create specific operations.
  */
-public class Operation {
+public class Operation implements Serializable {
 	/**
 	 * The literal name of the operation, such as "init" (initialize) or "read".
 	 */

@@ -1,11 +1,12 @@
 package wrapper;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  * A variable used by the {@code Operation} class.
  */
-public class Locator {
+public class Locator implements Serializable {
 	
 	/**
 	 * The identifier for this variable. Will generally match one of the identifiers used as

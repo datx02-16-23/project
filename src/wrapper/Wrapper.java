@@ -2,12 +2,13 @@ package wrapper;
 
 
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Wrapper class for GLO and HOG files on the JSON format.
  */
-public class Wrapper {
+public class Wrapper implements Serializable {
 	/**
 	 * Header data for the file. Contains version number and variable declarations.
 	 */

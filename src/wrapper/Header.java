@@ -1,11 +1,12 @@
 package wrapper;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Header item for the {@code Wrapper} class.
  */
-public class Header {
+public class Header implements Serializable{
 	/**
 	 * Default value for the {@code version} field.
 	 */

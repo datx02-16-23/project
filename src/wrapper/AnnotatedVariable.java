@@ -1,11 +1,12 @@
 package wrapper;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * The declaration for an annotated (observed) variable in source.
  */
-public class AnnotatedVariable {
+public class AnnotatedVariable implements Serializable{
 	
 	/**
 	 * The identifier for this variable. For example, the indentifier for the variable created
