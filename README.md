@@ -6,6 +6,7 @@ Very fancy algorithm and data structure visualization tool
 Links to JAR downloads below. Some libraries require natives.
 ###Lightweight Java Game Library
 https://www.lwjgl.org/download
+
 Include "-Djava.library.path="libs/lwjgl/native/"" in your VM options or equivalent that points to your lwjgl folder.
 
 ###JGroups
