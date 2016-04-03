@@ -60,12 +60,4 @@ public class OP_Write extends OP_ReadWrite{
 	public double[] getValue(){
 		return (double[])this.operationBody.get(KEY_VALUE);
 	}
-
-	@Override
-	public String toString() {
-		return "{ \"operation\": "+OPERATION+", \"operationBody\":"+printOperationBody()+"}";
-	}
-	
-	
-
 }

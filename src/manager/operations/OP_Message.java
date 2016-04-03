@@ -34,6 +34,9 @@ public class OP_Message extends Operation{
 		return (String)this.operationBody.get(KEY_VALUE);
 	}
 	
+	public String toString(){
+		return "MESSAGE: " + getValue();
+	}
 	
 
 }

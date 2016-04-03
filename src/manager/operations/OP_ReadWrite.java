@@ -51,6 +51,10 @@ public abstract class OP_ReadWrite extends Operation{
 		this.operationBody.put(KEY_VALUE, value);
 	}
 	
+	public String toString(){
+		return toSimpleString();		
+	}
+	
 	public String toSimpleString(){
 		return super.operation.toString().toUpperCase() + ": " + (getSource() == null ? "?" : getSource().toSimpleString()) 
 				+ " -> " + (getTarget() == null ? "?" : getTarget().toSimpleString()) ;

@@ -84,13 +84,13 @@ public class OP_Init extends Operation{
 
 	@Override
 	public String toString() {
-		return "{ \"operation\": \""+OPERATION+"\", \"operationBody\":\n"+printBody()+"}\n";
+		return toSimpleString();
+//		return "{ \"operation\": \""+OPERATION+"\", \"operationBody\":\n"+printBody()+"}\n";
 	}
 	
 	public String toSimpleString(){
 		return "INIT: " + getTarget().toSimpleString() + " <- " + Arrays.toString(getValue());
 	}
-	
 	
 
 }
