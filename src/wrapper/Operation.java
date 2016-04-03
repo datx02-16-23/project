@@ -42,4 +42,8 @@ public class Operation {
 		builder.append("}");
 		return builder.toString();
 	}
+
+	public String toSimpleString() {
+		return operation.toString().toUpperCase();
+	}
 }

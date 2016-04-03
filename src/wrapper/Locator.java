@@ -33,6 +33,10 @@ public class Locator {
 		return "{\"identifier\":"+identifier+", \"index\": "+Arrays.toString(index)+"}";
 	}
 	
+	public String toSimpleString(){
+		return identifier + (index == null ? "" : Arrays.toString(index));
+	}
+	
 	@Override
 	public boolean equals(Object other){
 		if (this == other){

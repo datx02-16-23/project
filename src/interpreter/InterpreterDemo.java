@@ -37,7 +37,7 @@ public class InterpreterDemo {
 		lfm.readLog(lowOrderGrammarFile);
 		List<Operation> operations = lfm.getOperations();
 		
-		bla(operations.get(0), lfm.getKnownVariables().get("a"));
+		bla(operations.get(0), lfm.getKnownVariables().get("a1"));
 		
 		//Consolidate into a combination of high and low level operations
 		Interpreter interpreter = new Interpreter();

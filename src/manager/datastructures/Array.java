@@ -69,6 +69,7 @@ public class Array extends DataStructure{
 		
 
 		for(; linearIndex < linearArray.length; linearIndex++){
+			System.out.println(new ArrayElement(linearArray[linearIndex], getIndexInNDimensions(linearIndex, size)));
 			elements.add(new ArrayElement(linearArray[linearIndex], getIndexInNDimensions(linearIndex, size)));
 		}
 		
@@ -111,9 +112,7 @@ public class Array extends DataStructure{
 				if (otherDim == currDim){
 					continue; //Don't subtract self.
 				}
-					index[currDim] = index[currDim] - index[otherDim]*higherDimSizesProduct(otherDim);
-				
-				
+				index[currDim] = index[currDim] - index[otherDim]*higherDimSizesProduct(otherDim);
 			}
 			index[currDim] = index[currDim]/higherDimSizesProduct(currDim);
 		}

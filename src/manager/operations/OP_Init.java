@@ -87,6 +87,10 @@ public class OP_Init extends Operation{
 		return "{ \"operation\": \""+OPERATION+"\", \"operationBody\":\n"+printBody()+"}\n";
 	}
 	
+	public String toSimpleString(){
+		return "INIT: " + getTarget().toSimpleString() + " <- " + Arrays.toString(getValue());
+	}
+	
 	
 
 }

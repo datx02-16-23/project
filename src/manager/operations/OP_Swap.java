@@ -52,10 +52,10 @@ public class OP_Swap extends Operation implements Consolidable{
 	
 	
 	
-	public Locator getTarget(){
+	public Locator getVar1(){
 		return (Locator)this.operationBody.get(KEY_VAR1);
 	}
-	public Locator getSource(){
+	public Locator getVar2(){
 		return (Locator)this.operationBody.get(KEY_VAR2);
 	}
 	public String getValue(){
@@ -64,7 +64,7 @@ public class OP_Swap extends Operation implements Consolidable{
 
 	@Override
 	public String toString() {
-		return "{ \"operation\": "+OPERATION+", \"operationBody\":"+printOperationBody()+"}";
+		return "SWAP: " + getVar1().toSimpleString() + " <-> " + getVar2().toSimpleString();
 	}
 	
 	/**
@@ -119,6 +119,10 @@ public class OP_Swap extends Operation implements Consolidable{
 	@Override
 	public int getRWcount() {
 		return 3;
+	}
+	
+	public String toSimpleString(){
+		return toString();
 	}
 
 }

@@ -34,4 +34,8 @@ public abstract class DataStructure extends AnnotatedVariable{
 	 * @param op_init The init operation to process.
 	 */
 	public abstract void init(OP_Init op_init);
+	
+	public String toString(){
+		return super.identifier + ": " + super.rawType;
+	}
 }
