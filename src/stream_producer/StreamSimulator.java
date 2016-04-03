@@ -89,11 +89,7 @@ public class StreamSimulator implements Receiver{
 		    		Platform.runLater(new Runnable(){
 		    			public void run() {
 		    		    	int operation = (int)(Math.random()*5);
-		    		    	if (queuedOperations.size() > 2){
-		    		    		sleepDur = 1500;
-		    		    	}
 		    		    	if(queuedOperations.size() < 2){
-		    		    		sleepDur = 2500;
 		    		    		switch(operation){
 						    		case 0:
 						    			swapOperation();
@@ -117,7 +113,7 @@ public class StreamSimulator implements Receiver{
 		    			
 		    		});
 		    		try {
-						sleep(sleepDur);
+						sleep((int)(sleepDur/Math.sqrt(queuedOperations.size())));
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -228,7 +224,7 @@ public class StreamSimulator implements Receiver{
 	}
 	
 	public void updateQueued(){
-		nbrQueuedString.set("#Queued: " + queuedOperations.size());
+		nbrQueuedString.set("#Queued/Received: " + queuedOperations.size());
 		
 		if (queuedOperations.isEmpty()){
 			waitingOperationsList.set("\tNo operations in queue!");
