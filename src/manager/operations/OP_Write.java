@@ -1,5 +1,6 @@
 package manager.operations;
 
+import application.Strings;
 import wrapper.Locator;
 
 /**
@@ -8,9 +9,6 @@ import wrapper.Locator;
  */
 public class OP_Write extends OP_ReadWrite{
 	private static final Operations OPERATION = Operations.write;
-	private static final String KEY_TARGET = "target";
-	private static final String KEY_SOURCE = "source";
-	private static final String KEY_VALUE = "value";
 
 	/**
 	 * Create a new Write operation.  Note that you must set the target, source and value.
@@ -28,7 +26,7 @@ public class OP_Write extends OP_ReadWrite{
 		if (target == null){
 			throw new IllegalArgumentException("Target cannot be null in a Write operation!");
 		}
-		this.operationBody.put(KEY_TARGET, target);
+		this.operationBody.put(Strings.KEY_TARGET, target);
 	}
 	
 	/**
@@ -37,7 +35,7 @@ public class OP_Write extends OP_ReadWrite{
 	 * @param source The source variable for this Write operation.
 	 */
 	public void setSource(Locator source){
-		this.operationBody.put(KEY_SOURCE, source);
+		this.operationBody.put(Strings.KEY_SOURCE, source);
 	}
 	
 	/**
@@ -45,19 +43,19 @@ public class OP_Write extends OP_ReadWrite{
 	 * @param value Set the value(s) written to {@code target}.
 	 */
 	public void setValue(double[] value){
-		this.operationBody.put(KEY_VALUE, value);
+		this.operationBody.put(Strings.KEY_VALUE, value);
 	}
 	
 	public Locator getTarget(){
-		return (Locator)this.operationBody.get(KEY_TARGET);
+		return (Locator)this.operationBody.get(Strings.KEY_TARGET);
 	}
 
 	public Locator getSource(){
-		return (Locator)this.operationBody.get(KEY_SOURCE);
+		return (Locator)this.operationBody.get(Strings.KEY_SOURCE);
 	}
 
 	
 	public double[] getValue(){
-		return (double[])this.operationBody.get(KEY_VALUE);
+		return (double[])this.operationBody.get(Strings.KEY_VALUE);
 	}
 }

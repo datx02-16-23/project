@@ -12,6 +12,8 @@ import org.jgroups.Receiver;
 import org.jgroups.View;
 
 import com.google.gson.*;
+
+import application.Strings;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -41,7 +43,7 @@ public class StreamSimulator implements Receiver{
 		id = (int)(Math.random()*Integer.MAX_VALUE);
 		try {
 			channel = new JChannel("udp.xml");
-			channel.connect("mavser");
+			channel.connect(Strings.DEFAULT_CHANNEL);
 			channel.setReceiver(this);
 		} catch (Exception e1) {
 			e1.printStackTrace();

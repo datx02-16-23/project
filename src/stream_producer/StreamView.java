@@ -211,7 +211,7 @@ public class StreamView extends Application {
 	        listPane.add(inspectQueued, 0, 2);
         
 
-	    primaryStage.setTitle("Stream Simulator: (id =" + sm.getId() + ", channel = " + sm.getChannel().getClusterName() + ")");
+	    primaryStage.setTitle("JGroupCommunicator Simulator: (id =" + sm.getId() + ", channel = " + sm.getChannel().getClusterName() + ")");
 		root.getChildren().add(base);
 	    Scene scene = new Scene(root, 700, 400);
         primaryStage.setScene(scene);

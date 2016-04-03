@@ -3,6 +3,7 @@ package manager.operations;
 import java.util.HashMap;
 import java.util.List;
 
+import application.Strings;
 import interpreter.Consolidable;
 import wrapper.Locator;
 import wrapper.Operation;
@@ -12,9 +13,6 @@ import wrapper.Operation;
  */
 public class OP_Swap extends Operation implements Consolidable{
 	private static final Operations OPERATION = Operations.swap;
-	private static final String KEY_VAR1 = "var1";
-	private static final String KEY_VAR2 = "var2";
-	private static final String KEY_VALUE = "value";
 
 	/**
 	 * Create a new Swap operation.  Note that you must set var1, var2, and value.
@@ -29,7 +27,7 @@ public class OP_Swap extends Operation implements Consolidable{
 	 * @param var1 Variable 1 for this Swap operation.
 	 */
 	public void setVar1(Locator var1){
-		this.operationBody.put(KEY_VAR1, var1);
+		this.operationBody.put(Strings.KEY_VAR1, var1);
 	}
 	
 	/**
@@ -38,7 +36,7 @@ public class OP_Swap extends Operation implements Consolidable{
 	 * @param var2 Variable 2 for this Swap operation.
 	 */
 	public void setVar2(Locator var2){
-		this.operationBody.put(KEY_VAR2, var2);
+		this.operationBody.put(Strings.KEY_VAR2, var2);
 	}
 	
 	
@@ -47,19 +45,19 @@ public class OP_Swap extends Operation implements Consolidable{
 	 * @param value The values in var1 and var2 after execution.
 	 */
 	public void setValues(String values){
-		this.operationBody.put(KEY_VALUE, values);
+		this.operationBody.put(Strings.KEY_VALUE, values);
 	}
 	
 	
 	
 	public Locator getVar1(){
-		return (Locator)this.operationBody.get(KEY_VAR1);
+		return (Locator)this.operationBody.get(Strings.KEY_VAR1);
 	}
 	public Locator getVar2(){
-		return (Locator)this.operationBody.get(KEY_VAR2);
+		return (Locator)this.operationBody.get(Strings.KEY_VAR2);
 	}
 	public String getValue(){
-		return (String)this.operationBody.get(KEY_VALUE);
+		return (String)this.operationBody.get(Strings.KEY_VALUE);
 	}
 
 	@Override

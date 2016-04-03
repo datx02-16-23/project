@@ -3,6 +3,7 @@ package manager.operations;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import application.Strings;
 import wrapper.Locator;
 import wrapper.Operation;
 
@@ -11,9 +12,6 @@ import wrapper.Operation;
  */
 public class OP_Init extends Operation{
 	private static final Operations OPERATION = Operations.init;
-	private static final String KEY_TARGET = "target";
-	private static final String KEY_SIZE = "size";
-	private static final String KEY_VALUE = "value";
 
 	/**
 	 * Creates a new Init operation. Note that you must set the target, maxSize and initial values.
@@ -28,7 +26,7 @@ public class OP_Init extends Operation{
 	 * @param var The target variable for this Init operation.
 	 */
 	public void setTarget(Locator var){
-		this.operationBody.put(KEY_TARGET, var);
+		this.operationBody.put(Strings.KEY_TARGET, var);
 	}
 	
 	/**
@@ -36,7 +34,7 @@ public class OP_Init extends Operation{
 	 * @param size The declared maximum size of this variable.
 	 */
 	public void setSize(int [] size){
-		this.operationBody.put(KEY_SIZE, size);
+		this.operationBody.put(Strings.KEY_SIZE, size);
 	}
 	
 	/**
@@ -44,19 +42,19 @@ public class OP_Init extends Operation{
 	 * @param value The value(s) with which to initialize this variable.
 	 */
 	public void setValue(double[] value){
-		this.operationBody.put(KEY_VALUE, value);
+		this.operationBody.put(Strings.KEY_VALUE, value);
 	}
 	
 	public Locator getTarget(){
-		return (Locator)this.operationBody.get(KEY_TARGET);
+		return (Locator)this.operationBody.get(Strings.KEY_TARGET);
 	}
 	
 	public int[] getSize(){
-		return (int[])this.operationBody.get(KEY_SIZE);
+		return (int[])this.operationBody.get(Strings.KEY_SIZE);
 	}
 	
 	public double[] getValue(){
-		return (double[])this.operationBody.get(KEY_VALUE);
+		return (double[])this.operationBody.get(Strings.KEY_VALUE);
 	}
 	
 	public String printBody(){
@@ -65,13 +63,13 @@ public class OP_Init extends Operation{
 		for( String key : operationBody.keySet()){
 			builder.append("\t\""+key+"\": ");
 			switch(key){
-				case KEY_TARGET:
+				case Strings.KEY_TARGET:
 					builder.append("\t" + ((Locator)operationBody.get(key)).toString() +",\n");
 				break;
-				case KEY_SIZE:
+				case Strings.KEY_SIZE:
 					builder.append("\t" + Arrays.toString((int[])operationBody.get(key))+",\n");
 				break;
-				case KEY_VALUE:
+				case Strings.KEY_VALUE:
 					builder.append("\t" + Arrays.toString((double[])operationBody.get(key)) +",\n");
 				break;
 			}

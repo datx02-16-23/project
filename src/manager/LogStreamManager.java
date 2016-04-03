@@ -32,13 +32,14 @@ import wrapper.Wrapper;
  * A LogStreamManager can read and print logs adhering to <our standard> on a JSON format.
  * @author Richard
  */
-public class LogStreamManager {	
+public class LogStreamManager implements CommunicatorListener {	
 	/**
 	 * Set to true to enable human readable printing of log files. False by default to increase performance.
 	 */
 	public boolean PRETTY_PRINTING;
 	
 	private static final Gson GSON = new Gson();
+	private static final Communicator communicator = new JGroupCommunicator();
 	
 	private Wrapper wrapper;
 
@@ -50,6 +51,7 @@ public class LogStreamManager {
 	 */
 	public LogStreamManager(){
 		restoreDefaultState();
+		communicator.addListner(this);
 	}
 	
 	/**
@@ -123,9 +125,29 @@ public class LogStreamManager {
 	 * @param targetPath The location to print the log file.
 	 */
 	public void printLog(String targetPath){
-		//TODO: Proper header data (using knownVariables, not annotatedVariables).
-		Header header = new Header(Header.VERSION_UNKNOWN, wrapper.header.annotatedVariables);//(HashMap<String, AnnotatedVariable>) knownVariables);
+		HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
+		annotatedVariables.putAll(knownVariables);
+		Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables);
+		
 		printLog(targetPath, new Wrapper(header, operations));
+	}
+	
+	/**
+	 * Stream the data held by this LogStreamManager using the current Communicator.
+	 */
+	public void streamLogData(){
+		HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
+		annotatedVariables.putAll(knownVariables);
+		Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables);
+		communicator.send(new Wrapper(header, operations));
+	}
+	/**
+	 * Stream the data held by this LogStreamManager using the current Communicator, then clear data.
+	 */
+	public void streamAndClearLogData(){
+		streamLogData();
+		operations.clear();
+		knownVariables.clear();
 	}
 	
 	/**
@@ -171,5 +193,10 @@ public class LogStreamManager {
 				operations.add(OperationParser.unpackOperation(op));
 			}
 		}
+	}
+
+	@Override
+	public void communicationReceived() {
+		unwrap(communicator.popQueuedMessage());
 	}
 }

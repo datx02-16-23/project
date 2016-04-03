@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 import com.google.gson.internal.LinkedTreeMap;
 
+import application.Strings;
 import wrapper.Locator;
 import wrapper.Operation;
 
@@ -12,14 +13,6 @@ import wrapper.Operation;
  *
  */
 public class OperationParser {
-	private static final String KEY_TARGET = "target";
-	private static final String KEY_IDENTIFIER = "identifier";
-	private static final String KEY_INDEX = "index";
-	private static final String KEY_SOURCE = "source";
-	private static final String KEY_VALUE = "value";
-	private static final String KEY_SIZE = "size"; //TODO: Use.
-	private static final String KEY_VAR1 = "var1";
-	private static final String KEY_VAR2 = "var2";
 	
 	private OperationParser(){};
 	
@@ -60,12 +53,12 @@ public class OperationParser {
 		LinkedTreeMap<String, Object> linkedTreeMap = (LinkedTreeMap<String, Object>)arrayVariable;
 		
 		
-		Object identifier = linkedTreeMap.get(KEY_IDENTIFIER);
+		Object identifier = linkedTreeMap.get(Strings.KEY_IDENTIFIER);
 		if (identifier == null){
 			return null; //No identifier -> return null.
 		}
 		
-		Object indexAL = linkedTreeMap.get(KEY_INDEX);
+		Object indexAL = linkedTreeMap.get(Strings.KEY_INDEX);
 		int[] index = null;
 		
 		if (indexAL != null){
@@ -88,8 +81,8 @@ public class OperationParser {
 		} else {
 			throw new IllegalArgumentException("Operation must be \"read\" or \"write\".");
 		}
-		op_rw.setSource(unpackArrayVariable(op.operationBody.get(KEY_SOURCE)));
-		op_rw.setTarget(unpackArrayVariable(op.operationBody.get(KEY_TARGET)));
+		op_rw.setSource(unpackArrayVariable(op.operationBody.get(Strings.KEY_SOURCE)));
+		op_rw.setTarget(unpackArrayVariable(op.operationBody.get(Strings.KEY_TARGET)));
 		op_rw.setValue(parseValue(op));
 
 		return op_rw;
@@ -97,15 +90,15 @@ public class OperationParser {
 
 	private static Operation parseSwap(Operation op) {
 		OP_Swap op_swap = new OP_Swap();
-		op_swap.setVar1(unpackArrayVariable(op.operationBody.get(KEY_VAR1)));
-		op_swap.setVar2(unpackArrayVariable(op.operationBody.get(KEY_VAR2)));
-		op_swap.setValues((String) op.operationBody.get(KEY_VALUE));
+		op_swap.setVar1(unpackArrayVariable(op.operationBody.get(Strings.KEY_VAR1)));
+		op_swap.setVar2(unpackArrayVariable(op.operationBody.get(Strings.KEY_VAR2)));
+		op_swap.setValues((String) op.operationBody.get(Strings.KEY_VALUE));
 		return op_swap;
 	}
 
 	private static Operation parseMessage(Operation op) {
 		OP_Message op_message = new OP_Message();
-		op_message.setMessage((String) op_message.operationBody.get(KEY_VALUE));
+		op_message.setMessage((String) op_message.operationBody.get(Strings.KEY_VALUE));
 		return op_message;
 	}
 
@@ -113,10 +106,10 @@ public class OperationParser {
 		OP_Init op_init = new OP_Init();
 		op_init.setSize(
 				doubleListToIntArray(
-						(ArrayList<Double>)op.operationBody.get(KEY_SIZE)
+						(ArrayList<Double>)op.operationBody.get(Strings.KEY_SIZE)
 						)
 				);
-		op_init.setTarget(unpackArrayVariable(op.operationBody.get(KEY_TARGET)));
+		op_init.setTarget(unpackArrayVariable(op.operationBody.get(Strings.KEY_TARGET)));
 		op_init.setValue(parseMultiValue(op));
 		return op_init;
 	}
@@ -124,7 +117,7 @@ public class OperationParser {
 	
 	private static double[] parseMultiValue(Operation op) {
 		@SuppressWarnings("unchecked")
-		ArrayList<Object> nested = (ArrayList<Object>)op.operationBody.get(KEY_VALUE);
+		ArrayList<Object> nested = (ArrayList<Object>)op.operationBody.get(Strings.KEY_VALUE);
 		if (nested == null){
 			return null;
 		}
@@ -159,12 +152,12 @@ public class OperationParser {
 	
 
 	private static int[] parseIndex(Operation op){
-		return doubleListToIntArray((ArrayList<Double>)op.operationBody.get(KEY_INDEX));
+		return doubleListToIntArray((ArrayList<Double>)op.operationBody.get(Strings.KEY_INDEX));
 	}
 	
 	@SuppressWarnings("unchecked")
 	private static double[] parseValue(Operation op){
-		return doubleListToDoubleArray((ArrayList<Double>)op.operationBody.get(KEY_VALUE));
+		return doubleListToDoubleArray((ArrayList<Double>)op.operationBody.get(Strings.KEY_VALUE));
 	}
 	
 	private static double[] doubleListToDoubleArray(ArrayList<Double> listOfDoubles){
