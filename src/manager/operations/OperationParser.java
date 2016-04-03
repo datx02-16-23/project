@@ -50,6 +50,9 @@ public class OperationParser {
 		if (arrayVariable == null){
 			return null;
 		}
+		if(arrayVariable instanceof Locator){
+			return (Locator) arrayVariable;
+		}
 		LinkedTreeMap<String, Object> linkedTreeMap = (LinkedTreeMap<String, Object>)arrayVariable;
 		
 		
@@ -98,15 +101,15 @@ public class OperationParser {
 
 	private static Operation parseMessage(Operation op) {
 		OP_Message op_message = new OP_Message();
-		op_message.setMessage((String) op_message.operationBody.get(Strings.KEY_VALUE));
+		op_message.setMessage((String) op.operationBody.get(Strings.KEY_VALUE));
 		return op_message;
 	}
 
 	private static Operation parseInit(Operation op) {
 		OP_Init op_init = new OP_Init();
 		op_init.setSize(
-				doubleListToIntArray(
-						(ArrayList<Double>)op.operationBody.get(Strings.KEY_SIZE)
+				ensureIntArray(
+						op.operationBody.get(Strings.KEY_SIZE)
 						)
 				);
 		op_init.setTarget(unpackArrayVariable(op.operationBody.get(Strings.KEY_TARGET)));
@@ -117,15 +120,20 @@ public class OperationParser {
 	
 	private static double[] parseMultiValue(Operation op) {
 		@SuppressWarnings("unchecked")
-		ArrayList<Object> nested = (ArrayList<Object>)op.operationBody.get(Strings.KEY_VALUE);
-		if (nested == null){
+		Object object = op.operationBody.get(Strings.KEY_VALUE);
+		if (object == null){
 			return null;
 		}
+		if (object instanceof double[]){
+			return (double[])object;
+		}
+		
+		ArrayList<Object> nested = (ArrayList<Object>) object;
 		
 		ArrayList<Double> simple = new ArrayList<Double>();	
 		
 		unwrapNestedList(nested, simple);
-		return doubleListToDoubleArray(simple);
+		return ensureDoubleArray(simple);
 	}
 	
 	/**
@@ -149,22 +157,24 @@ public class OperationParser {
 		}
 	}
 	
-	
-
 	private static int[] parseIndex(Operation op){
-		return doubleListToIntArray((ArrayList<Double>)op.operationBody.get(Strings.KEY_INDEX));
+		return ensureIntArray((ArrayList<Object>)op.operationBody.get(Strings.KEY_INDEX));
 	}
 	
 	@SuppressWarnings("unchecked")
 	private static double[] parseValue(Operation op){
-		return doubleListToDoubleArray((ArrayList<Double>)op.operationBody.get(Strings.KEY_VALUE));
+		return ensureDoubleArray(op.operationBody.get(Strings.KEY_VALUE));
 	}
 	
-	private static double[] doubleListToDoubleArray(ArrayList<Double> listOfDoubles){
-		if (listOfDoubles == null){
+	private static double[] ensureDoubleArray(Object object){
+		if (object == null){
 			return null;
 		}
+		if(object instanceof double[]){
+			return (double[]) object;
+		}
 		
+		ArrayList<Double> listOfDoubles = (ArrayList<Double>) object;
 		double[] array = new double[listOfDoubles.size()];
 		int i = 0;
 		for(Double d : listOfDoubles){
@@ -174,15 +184,42 @@ public class OperationParser {
 		return array;
 	}
 	
-	private static int[] doubleListToIntArray(ArrayList<Double> listOfDoubles){
-		if (listOfDoubles == null){
+	/**
+	 * What is returned depends heavily on how the data was received. If passed directly,
+	 * it will be an likely be and array. If Processed by Gson, it will probably be an ArrayList<Double>.
+	 * @param listOrArray Should be an int array, or an ArrayList of Integers or Doubles.
+	 * @return An array of ints, or null.
+	 */
+	private static int[] ensureIntArray(Object listOrArray){
+		if (listOrArray == null){
 			return null;
 		}
-		int[] array = new int[listOfDoubles.size()];
+		
+		if (listOrArray instanceof int[]){
+			return (int[]) listOrArray;
+		}
+		ArrayList<Object> listOfNumbers = (ArrayList<Object>)listOrArray;
+		//JSon will convert to Double, but if sent directly they will be Integer.
+
+		int[] array = new int[listOfNumbers.size()];
 		int i = 0;
-		for(Double d : listOfDoubles){
-			array[i] = d.intValue();
-			i++;
+		
+		if (listOfNumbers.isEmpty()){
+			return array;
+		}
+		Object testCase = listOfNumbers.get(0);
+		//Integers
+		if (testCase instanceof Integer){
+			for(Object d : listOfNumbers){
+				array[i] = ((Integer) d).intValue();
+				i++;
+			}
+		} else {
+			//Doubles
+			for(Object d : listOfNumbers){
+				array[i] = ((Double) d).intValue();
+				i++;
+			}
 		}
 		return array;
 	}

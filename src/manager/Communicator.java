@@ -34,5 +34,5 @@ public interface Communicator {
 	 * Add a new CommunicatorListener which will be notified when this Communicator accepts a message.
 	 * @param newListeners The new CommunicatorListener.
 	 */
-	public void addListner(CommunicatorListener newListener);
+	public void addListener(CommunicatorListener newListener);
 }

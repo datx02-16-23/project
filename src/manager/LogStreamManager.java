@@ -51,7 +51,7 @@ public class LogStreamManager implements CommunicatorListener {
 	 */
 	public LogStreamManager(){
 		restoreDefaultState();
-		communicator.addListner(this);
+		communicator.addListener(this);
 	}
 	
 	/**

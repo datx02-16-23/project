@@ -47,4 +47,8 @@ public class Operation implements Serializable {
 	public String toSimpleString() {
 		return operation.toString().toUpperCase();
 	}
+	
+	public String toString(){
+		return operationBody.toString();
+	}
 }

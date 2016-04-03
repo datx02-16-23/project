@@ -39,6 +39,11 @@
 			}
 		}
 	}, {
+		"operation": "message",
+		"operationBody": {
+			"value": "message!"
+		}
+	}, {
 
 
 

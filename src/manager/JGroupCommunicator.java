@@ -8,9 +8,6 @@ import org.jgroups.Message;
 import org.jgroups.ReceiverAdapter;
 
 import application.Strings;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import wrapper.Wrapper;
 import wrapper.WrapperMessage;
 
@@ -19,7 +16,7 @@ import wrapper.WrapperMessage;
  * @author Richard
  *
  */
-public class JGroupCommunicator extends ReceiverAdapter implements ListChangeListener<Wrapper>, Communicator{
+public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	/**
 	 * Set to True to print debug messages.
 	 */
@@ -29,7 +26,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements ListChangeLis
 	private String channel;
 	private int totalReceived, totalRejected, totalAccepted, totalSent;
 	
-	private final ObservableList<Wrapper> incomingQueue;
+	private final List<Wrapper> incomingQueue;
 	private final List<CommunicatorListener> listeners;
 	
 	private JChannel jChannel;
@@ -46,8 +43,9 @@ public class JGroupCommunicator extends ReceiverAdapter implements ListChangeLis
 		totalReceived = 0;
 		totalRejected = 0;
 		totalAccepted = 0;
+		totalSent = 0;
 		
-		incomingQueue = FXCollections.observableArrayList();
+		incomingQueue = new ArrayList<Wrapper>();
 		listeners = new ArrayList<CommunicatorListener>();
 		
 		try {
@@ -80,7 +78,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements ListChangeLis
 		}
 		
 		WrapperMessage iWM = (WrapperMessage) messageObject;
-		
+
 		if (iWM.senderId == transmitterId){
 			if (debug){
 				System.out.println("Message rejected: sender == receiver.");
@@ -91,6 +89,9 @@ public class JGroupCommunicator extends ReceiverAdapter implements ListChangeLis
 		
 		totalAccepted++;
 		incomingQueue.add(iWM.wrapper);
+		for(CommunicatorListener cl : listeners){
+			cl.communicationReceived();
+		}
 	}
 	
 	/**
@@ -170,16 +171,15 @@ public class JGroupCommunicator extends ReceiverAdapter implements ListChangeLis
 		return totalSent;
 	}
 
-	@Override
-	public void onChanged(ListChangeListener.Change<? extends Wrapper> c) {
-		for(CommunicatorListener cl : listeners){
-			cl.communicationReceived();
-		}
-	}
-
-	public void addListner(CommunicatorListener newListener){
+	public void addListener(CommunicatorListener newListener){
 		listeners.add(newListener);
 	}
 
+	/**
+	 * Destroy channel and free resources. Should be called before exiting to prevent resource leaks.
+	 */
+	public void close(){
+		jChannel.close();
+	}
 
 }

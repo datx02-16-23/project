@@ -16,6 +16,11 @@ import wrapper.Operation;
  */
 public class InterpreterDemo {
 	public static void main(String[] args) throws Exception{
+	
+		LogStreamManager lfm = new LogStreamManager();
+		List<Operation> operations = lfm.getOperations();
+		Interpreter interpreter = new Interpreter();
+		lfm.PRETTY_PRINTING = true;
 		
 		File lowOrderGrammarFile;
 		if (args.length > 0){
@@ -31,25 +36,18 @@ public class InterpreterDemo {
 				System.exit(0);
 			}
 		}
-		
-		//Unpack low level operations
-		LogStreamManager lfm = new LogStreamManager();
 		lfm.readLog(lowOrderGrammarFile);
-		List<Operation> operations = lfm.getOperations();
-		
-		bla(operations.get(0), lfm.getKnownVariables().get("a1"));
 		
 		//Consolidate into a combination of high and low level operations
-		Interpreter interpreter = new Interpreter();
 		interpreter.setOperations(operations);
 		operations = interpreter.getConsolidatedOperations();
 		//Change to list of consolidated operations, then create a high-order grammar log file
 		lfm.setOperations(operations);
-		lfm.PRETTY_PRINTING = true;
+		lfm.streamAndClearLogData();
 //		logFM.printLog("C:\\Users\\Richard\\Desktop\\");
-	}
-	
-	private static void bla(Operation init, DataStructure ds){
-		ds.init((OP_Init) init);
+		while(true){
+			System.out.println(lfm.getOperations());	
+			Thread.sleep(1500);
+		}
 	}
 }

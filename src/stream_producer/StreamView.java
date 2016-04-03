@@ -175,6 +175,18 @@ public class StreamView extends Application {
             }
         });
 		
+		//Construct "Continuous Transmit "button.
+		Button clearLists = new Button();
+		clearLists.setText("Clear");
+		clearLists.setPrefSize(100,30);
+		clearLists.setTooltip(new Tooltip("Clear lists, without transmitting anything."));
+		clearLists.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+            	sm.clearLists();
+            }
+        });
+
+		
 		//Construct stage
         
         	//Add text fields
@@ -199,6 +211,7 @@ public class StreamView extends Application {
 	        controlButtons.getChildren().add(transmit);
 	        controlButtons.getChildren().add(transmitAll);
 	        controlButtons.getChildren().add(continuousTransmit);
+	        controlButtons.getChildren().add(clearLists);
 	        
 	        //Add lists
 	        GridPane listPane = new GridPane();

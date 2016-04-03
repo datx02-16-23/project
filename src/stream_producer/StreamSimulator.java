@@ -74,7 +74,13 @@ public class StreamSimulator implements Receiver{
 		}
 	}
 	
-
+	public void clearLists(){
+		sentOperations.clear();
+		queuedOperations.clear();
+		updateSent();
+		updateQueued();
+	}
+	
 	int sleepDur = 1500;
 	private boolean continousTransmit = false;
 	public void continousTransmit(){
@@ -263,38 +269,28 @@ public class StreamSimulator implements Receiver{
 		
 		Platform.runLater(new Runnable(){
 			public void run() {
-				queuedOperations.add(wm.wrapper.body.get(0));
+				queuedOperations.addAll(wm.wrapper.body);
 				updateQueued();
 			}
 		});
 	}
 
 	@Override
-	public void getState(OutputStream output) throws Exception {
-		System.out.println("getState(OutputStream output)");
-	}
+	public void getState(OutputStream output) throws Exception {}
 
 	@Override
-	public void setState(InputStream input) throws Exception {
-		System.out.println("setState(InputStream input)");
-	}
+	public void setState(InputStream input) throws Exception {}
 
 	@Override
 	public void viewAccepted(View new_view) {}
 
 	@Override
-	public void suspect(Address suspected_mbr) {
-		System.out.println("suspect(Address suspected_mbr)");
-	}
+	public void suspect(Address suspected_mbr) {}
 
 	@Override
-	public void block() {
-		System.out.println("block()");
-	}
+	public void block() {}
 
 	@Override
-	public void unblock() {
-		System.out.println("unblock()");
-	}
+	public void unblock() {}
 
 }
