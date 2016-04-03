@@ -17,6 +17,10 @@ public class OP_Message extends Operation{
 		super(OPERATION, new HashMap<String, Object>());
 	}
 	
+	/**
+	 * Simply calls setValue().
+	 * @param message The message to attach to this OP_Message.
+	 */
 	public void setMessage(String message){
 		setValue(message);
 	}

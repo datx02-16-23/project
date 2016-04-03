@@ -12,37 +12,32 @@ import org.jgroups.Receiver;
 import org.jgroups.View;
 
 import com.google.gson.*;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.layout.*;
-import javafx.stage.Stage;
 import manager.LogStreamManager;
 import manager.operations.*;
 
 import wrapper.*;
 
-public class StreamSimulator extends Application implements Receiver{
+public class StreamSimulator implements Receiver{
 
 	private final LogStreamManager LSM;
 	private final ObservableList<Operation> queuedOperations, sentOperations;
-	SimpleStringProperty nbrQueuedString = new SimpleStringProperty();
-	SimpleStringProperty nbrSentString = new SimpleStringProperty();
-	SimpleStringProperty waitingOperationsList = new SimpleStringProperty();
-	SimpleStringProperty sentOperationsList = new SimpleStringProperty();
+	private final SimpleStringProperty nbrQueuedString, nbrSentString, waitingOperationsList, sentOperationsList;
+	public ObservableList<Operation> getQueuedOperations() {
+		return queuedOperations;
+	}
 
 	private JChannel channel;
 	private final int id;
 	
 	public StreamSimulator(){
+		nbrQueuedString = new SimpleStringProperty();
+		nbrSentString = new SimpleStringProperty();
+		waitingOperationsList = new SimpleStringProperty();
+		sentOperationsList = new SimpleStringProperty();
 		id = (int)(Math.random()*Integer.MAX_VALUE);
 		try {
 			channel = new JChannel("udp.xml");
@@ -67,7 +62,7 @@ public class StreamSimulator extends Application implements Receiver{
 		}
 	}
 	
-	private void transmitOperation(Operation op){
+	public void transmitOperation(Operation op){
 		ArrayList<Operation> operationList = new ArrayList<Operation>();
 		operationList.add(op);
 		Wrapper message = new Wrapper(null, operationList);
@@ -77,7 +72,91 @@ public class StreamSimulator extends Application implements Receiver{
 		}
 	}
 	
-	private boolean transmit(Wrapper wrapper){
+
+	int sleepDur = 1500;
+	private boolean continousTransmit = false;
+	public void continousTransmit(){
+		continousTransmit = !continousTransmit;
+		
+		if (continousTransmit == false){
+			return;
+		}
+
+		new Thread()
+		{
+		    public void run() {
+		    	while(continousTransmit){
+		    		Platform.runLater(new Runnable(){
+		    			public void run() {
+		    		    	int operation = (int)(Math.random()*5);
+		    		    	if (queuedOperations.size() > 2){
+		    		    		sleepDur = 1500;
+		    		    	}
+		    		    	if(queuedOperations.size() < 2){
+		    		    		sleepDur = 2500;
+		    		    		switch(operation){
+						    		case 0:
+						    			swapOperation();
+						    			break;
+						    		case 1:
+						    			readOperation();
+						    			break;
+						    		case 2:
+						    			writeOperation();
+						    			break;
+						    		case 3:
+						    			initOperation();
+						    			break;
+						    		case 4:
+						    			messageOperation();
+						    			break;
+		    		    		}
+		    		    	}
+			    		transmitFirst();
+		    			}
+		    			
+		    		});
+		    		try {
+						sleep(sleepDur);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+		    	}
+		    }
+		}.start();
+	}
+
+	
+	//Getters and setters
+	public ObservableList<Operation> getSentOperations() {
+		return sentOperations;
+	}
+
+	public SimpleStringProperty getNbrQueuedString() {
+		return nbrQueuedString;
+	}
+
+	public SimpleStringProperty getNbrSentString() {
+		return nbrSentString;
+	}
+
+	public SimpleStringProperty getWaitingOperationsList() {
+		return waitingOperationsList;
+	}
+
+	public SimpleStringProperty getSentOperationsList() {
+		return sentOperationsList;
+	}
+	public JChannel getChannel() {
+		return channel;
+	}
+	public int getId() {
+		return id;
+	}
+	
+	//Receiver stuff
+	
+	public boolean transmit(Wrapper wrapper){
 		WrapperMessage wm = new WrapperMessage(wrapper, id);
 		try {
 			channel.send(new Message().setObject(wm));
@@ -87,20 +166,30 @@ public class StreamSimulator extends Application implements Receiver{
 		return true; //Return true if transmit was successful.
 	}
 	
-	private void transmitAll(){
+	public void transmitAll(){
 		while(queuedOperations.isEmpty() == false){
 			transmitOperation(queuedOperations.remove(0));
 		}
 		updateQueued();
 	}	
-	private void transmitFirst(){
+	
+	public void transmitFirst(){
 		if(queuedOperations.isEmpty() == false){
 			transmitOperation(queuedOperations.remove(0));
 		}
 		updateQueued();
 	}
 
-	private void readOperation(){
+	
+
+	public void messageOperation() {
+		OP_Message op = new OP_Message();
+		op.setMessage("JavaFX is the future!");
+		queuedOperations.add(op);
+		updateQueued();
+	}
+	
+	public void readOperation(){
 		OP_Read op = new OP_Read();
 		op.setSource(new Locator("a1", new int[]{1}));
 		op.setTarget(new Locator("a1", new int[]{2}));
@@ -109,7 +198,7 @@ public class StreamSimulator extends Application implements Receiver{
 		updateQueued();
 	}
 	
-	private void writeOperation(){
+	public void writeOperation(){
 		OP_Write op = new OP_Write();
 		op.setSource(new Locator("a2", new int[]{2}));
 		op.setTarget(new Locator("a2", new int[]{1}));
@@ -118,18 +207,18 @@ public class StreamSimulator extends Application implements Receiver{
 		updateQueued();
 	}
 	
-	private void initOperation(){
+	public void initOperation(){
 		OP_Init op = new OP_Init();
 		op.setTarget(new Locator("a1", new int[]{1}));
 		op.setValue(new double[]{
 				Math.round(Math.random()*100),Math.round(Math.random()*100),Math.round(Math.random()*100),
-				Math.round(Math.random()*100),Math.round(Math.random()*100),Math.round(Math.random()*100)
+				Math.round(Math.random()*100),Math.round(Math.random()*100)
 				});
 		queuedOperations.add(op);
 		updateQueued();
 	}
 	
-	private void swapOperation(){
+	public void swapOperation(){
 		OP_Swap op= new OP_Swap();
 		op.setVar1((new Locator("a1", new int[]{0})));
 		op.setVar2((new Locator("a2", new int[]{0})));
@@ -137,9 +226,8 @@ public class StreamSimulator extends Application implements Receiver{
 		queuedOperations.add(op);
 		updateQueued();
 	}
-
 	
-	private void updateQueued(){
+	public void updateQueued(){
 		nbrQueuedString.set("#Queued: " + queuedOperations.size());
 		
 		if (queuedOperations.isEmpty()){
@@ -153,7 +241,7 @@ public class StreamSimulator extends Application implements Receiver{
 		}
 	}
 	
-	private void updateSent(){
+	public void updateSent(){
 		nbrSentString.set("#Sent: " + sentOperations.size());
 		
 		if (sentOperations.isEmpty()){
@@ -166,218 +254,7 @@ public class StreamSimulator extends Application implements Receiver{
 			sentOperationsList.set(sb.toString());			
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-	Dialog<String> inspect = new Dialog<String>();
-	private void inspectOperation(ListView<Operation> sentList){
-		Operation op = sentList.getSelectionModel().getSelectedItem();
 		
-		if (op == null){
-			return;
-		}
-		
-		//Construct "Inspect" dialog
-		inspect.setHeaderText(op.toString());
-		inspect.setContentText(new GsonBuilder().setPrettyPrinting().create().toJson(op));
-    	inspect.showAndWait();
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	private Stage primaryStage;
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		this.primaryStage = primaryStage;
-        
-		StackPane root = new StackPane();
-		BorderPane base = new BorderPane();
-		
-		
-		//Construct "Waiting Operations List" list
-		ListView<Operation> waitList = new ListView<Operation>();
-		waitList.setItems(queuedOperations);
-        waitList.setMinWidth(250);
-        waitList.setMaxWidth(250);
-		waitList.setTooltip(new Tooltip("A list of operations waiting to be sent."));
-
-		//Construct "Waiting Operations List" list
-		ListView<Operation> sentList = new ListView<Operation>();
-		sentList.setItems(sentOperations);
-        sentList.setMinWidth(250);
-        sentList.setMaxWidth(250);
-		sentList.setTooltip(new Tooltip("A list of operations which have been sent."));
-	    
-		//Construct Inspect dialog.
-		inspect.setTitle("Inspecting Operation");
-		inspect.getDialogPane().getButtonTypes().add(new ButtonType("Close", ButtonData.CANCEL_CLOSE));
-	    
-		//Construct "Inspect sent operation" button
-		Button inspectSent = new Button();
-		inspectSent.setText("Inspect Sent Operation");
-		inspectSent.setPrefSize(250, 30);
-		inspectSent.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-            	inspectOperation(sentList);
-            }
-        });
-		
-		//Construct "Inspect queued operation" button
-		Button inspectQueued = new Button();
-		inspectQueued.setText("Inspect Queued Operation");
-		inspectQueued.setPrefSize(250, 30);
-		inspectQueued.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-            	inspectOperation(waitList);
-            }
-        });
-		
-		//Construct "Waiting Operations" label
-		Label waitingOperations = new Label();
-		waitingOperations.setPadding(new Insets(0, 5, 0, 5));
-		waitingOperations.setTooltip(new Tooltip("The number of operations waiting to be sent."));
-//		waitingOperations.setText("#Waiting: " + getNumberWaitingOperations());
-		waitingOperations.textProperty().bind(nbrQueuedString);
-
-		//Construct "sent Operations" label
-		Label sentOperations = new Label();
-		sentOperations.setPadding(new Insets(0, 5, 0, 5));
-		sentOperations.setTooltip(new Tooltip("The number of operations that have been sent so far."));
-//		sentOperations.setText("#sent: " + getNbrsentOperations());
-		sentOperations.textProperty().bind(nbrSentString);
-		
-		//Construct "Transmit" button
-		Button transmit = new Button();
-		transmit.setText("Transmit");
-		transmit.setTooltip(new Tooltip("Transmit the first waiting operation."));
-		transmit.setPrefSize(100,30);
-		transmit.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-            	transmitFirst();
-            }
-        });
-		
-		//Construct "Transmit All" button.
-		Button transmitAll = new Button();
-		transmitAll.setText("Transmit All");
-		transmitAll.setTooltip(new Tooltip("Transmit all waiting operations."));
-		transmitAll.setPrefSize(100,30);
-		transmitAll.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-            	transmitAll();
-            }
-        });
-		
-		//Construct "Read" button.
-		Button read = new Button();
-		read.setText("Read");
-		read.setTooltip(new Tooltip("Create a new Read operation and add it to the queue."));
-		read.setPrefSize(100,30);
-		read.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-            	readOperation();
-            }
-        });
-		
-		//Construct "Write" button.
-		Button write = new Button();
-		write.setText("Write");
-		write.setTooltip(new Tooltip("Create a new Write operation and add it to the queue."));
-		write.setPrefSize(100,30);
-		write.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-            	writeOperation();
-            }
-        });
-		
-		//Construct "Swap" button.
-		Button swap = new Button();
-		swap.setText("Swap");
-		swap.setTooltip(new Tooltip("Create a new Swap operation and add it to the queue."));
-		swap.setPrefSize(100,30);
-		swap.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-            	swapOperation();
-            }
-        });
-
-		//Construct "Init" button.
-		Button init = new Button();
-		init.setText("Init");
-		init.setTooltip(new Tooltip("Create a new Init operation and add it to the queue."));
-		init.setPrefSize(100,30);
-		init.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent event) {
-            	initOperation();
-            }
-        });
-		
-		//Construct stage
-        
-        	//Add text fields
-        	FlowPane textPane = new FlowPane();
-        	textPane.setBorder(null);
-	        base.setTop(textPane);
-	        textPane.getChildren().add(waitingOperations);
-	        textPane.getChildren().add(sentOperations);
-        
-		    //Add operation buttons
-	        VBox operationButtons = new VBox();
-	        base.setLeft(operationButtons);
-	        operationButtons.getChildren().add(read);
-	        operationButtons.getChildren().add(write);
-	        operationButtons.getChildren().add(swap);
-	        operationButtons.getChildren().add(init);
-	        
-		    //Add operation buttons
-	        VBox controlButtons = new VBox();
-	        base.setRight(controlButtons);
-	        controlButtons.getChildren().add(transmit);
-	        controlButtons.getChildren().add(transmitAll);
-	        
-	        //Add lists
-	        GridPane listPane = new GridPane();
-	        base.setCenter(listPane);
-	        listPane.add(waitingOperations, 0, 0);
-	        listPane.add(sentOperations, 1, 0);
-	        listPane.add(waitList, 0, 1);
-	        listPane.add(sentList, 1, 1);
-	        listPane.add(inspectSent, 1, 2);
-	        listPane.add(inspectQueued, 0, 2);
-        
-
-	    primaryStage.setTitle("Stream Simulator: (id =" + id + ", channel = " + channel.getClusterName() + ")");
-		root.getChildren().add(base);
-	    Scene scene = new Scene(root, 700, 400);
-        primaryStage.setScene(scene);
-        primaryStage.sizeToScene();
-        primaryStage.setResizable(false);
-        primaryStage.show();
-	}
-	
-	public static void main(String[] args)  {
-		System.out.println("Launch: main().");
-        launch(args);
-	}
-
-	
 	@Override
 	public void receive(Message msg) {
 		WrapperMessage wm = (WrapperMessage) msg.getObject();
@@ -409,7 +286,7 @@ public class StreamSimulator extends Application implements Receiver{
 
 	@Override
 	public void suspect(Address suspected_mbr) {
-		System.out.println("uspect(Address suspected_mbr)");
+		System.out.println("suspect(Address suspected_mbr)");
 	}
 
 	@Override
