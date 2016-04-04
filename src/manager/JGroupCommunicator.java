@@ -7,9 +7,12 @@ import org.jgroups.JChannel;
 import org.jgroups.Message;
 import org.jgroups.ReceiverAdapter;
 
+import com.google.gson.Gson;
+
 import application.Strings;
 import wrapper.Wrapper;
 import wrapper.WrapperMessage;
+import wrapper.StringMessage;
 
 /**
  * Interprocess communication implementation using the JGroups library.
@@ -20,7 +23,16 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	/**
 	 * Set to True to print debug messages.
 	 */
-	public boolean debug = false;
+	public boolean debug = true;
+	
+	/**
+	 * Send messages in native mode (serialised Wrapper).
+	 */
+	public static final int SENDER_MODE_NATIVE = 0;
+	/**
+	 * Send messages in JSON mode (Wrapper serialised as JSON String).
+	 */
+	public static final int SENDER_MODE_JSON = 1;
 	
 	private int transmitterId;
 	private String channel;
@@ -30,6 +42,10 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	private final List<CommunicatorListener> listeners;
 	
 	private JChannel jChannel;
+	
+	private int senderMode;
+	
+	Gson gson;
 	
 	/**
 	 * Create a new JGroupCommunicator with the given transmitter id. Connects to the given channel.
@@ -44,7 +60,9 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 		totalRejected = 0;
 		totalAccepted = 0;
 		totalSent = 0;
+		setNativeSenderMode();
 		
+		gson = new Gson();
 		incomingQueue = new ArrayList<Wrapper>();
 		listeners = new ArrayList<CommunicatorListener>();
 		
@@ -55,6 +73,29 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Set the sender mode of this JGroupCommunicator to Native (serialised Wrapper). 
+	 */
+	public void setNativeSenderMode(){
+		senderMode = SENDER_MODE_NATIVE;
+	}
+	
+	/**
+	 * Set the sender mode of this JGroupCommunicator to JSON (Wrapper serialised as JSON String).
+	 */
+	public void setJSONSenderMode(){
+		senderMode = SENDER_MODE_JSON;
+	}
+	
+
+	/**
+	 * Returns the sender mode of this JGroupCommunicator.
+	 * @return The sender mode of this JGroupCommunicator.
+	 */
+	public int getSenderMode(){
+		return senderMode;
 	}
 	
 	/**
@@ -69,26 +110,62 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 		totalReceived++;
 		
 		Object messageObject = incoming.getObject();
-		if (messageObject instanceof WrapperMessage == false){
-			if (debug){
-				System.out.println("Invalig message type: " + messageObject);
+		
+		//Handle Wrapper case.
+		if (messageObject instanceof WrapperMessage){
+			WrapperMessage wm = (WrapperMessage) messageObject;
+			
+			if(senderIsSelf(wm.senderId)){
+				return;  //Don't process our own messages.
 			}
-			totalRejected++;
+			
+			addAndFireEvent(wm.wrapper);
 			return;
 		}
 		
-		WrapperMessage iWM = (WrapperMessage) messageObject;
-
-		if (iWM.senderId == transmitterId){
-			if (debug){
-				System.out.println("Message rejected: sender == receiver.");
-				totalRejected++;
+		//Handle String (assume gson) case
+		if (messageObject instanceof StringMessage){
+			StringMessage sm = (StringMessage) messageObject;
+			
+			if(senderIsSelf(sm.senderId)){
+				return;  //Don't process our own messages.
 			}
-			return; //Don't process our own messages.
+			
+			Wrapper wrapper;
+			try{
+				wrapper = gson.fromJson(sm.gsonString, Wrapper.class);
+			} catch (Exception e){
+				if (debug){
+					System.out.println("Gson failed to parse String: " + sm.gsonString);
+				}
+				totalRejected++;
+				return;
+			}
+			addAndFireEvent(wrapper);
+			return;
 		}
 		
+		//Reject message
+		if (debug){
+			System.out.println("Invalid message type: " + messageObject);
+		}
+		totalRejected++;
+	}
+	
+	private boolean senderIsSelf(int senderId){
+		if (senderId == transmitterId){
+			if (debug){
+				System.out.println("Message rejected: sender == receiver.");
+			}
+			totalRejected++;
+			return true;
+		}
+		return false;
+	}
+	
+	private void addAndFireEvent(Wrapper w){
 		totalAccepted++;
-		incomingQueue.add(iWM.wrapper);
+		incomingQueue.add(w);
 		for(CommunicatorListener cl : listeners){
 			cl.communicationReceived();
 		}
@@ -117,9 +194,22 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	 * Send the given Wrapper to all everyone listening on the current channel.
 	 * @param outgoing The Wrapper to send.
 	 */
-	public void send(Wrapper outgoing){
+	public boolean send(Wrapper outgoing){
 		Message outMessage = new Message();
-		outMessage.setObject(new WrapperMessage(outgoing, this.transmitterId));
+		
+		if (senderMode == SENDER_MODE_NATIVE){
+			outMessage.setObject(new WrapperMessage(outgoing, this.transmitterId));			
+		} else if (senderMode == SENDER_MODE_JSON){
+			outMessage.setObject(new StringMessage(gson.toJson(outgoing), this.transmitterId));			
+		} else {
+			if(debug){
+				System.out.println("Message could not be sent: Sender mode invalid.");
+				System.out.println(outgoing);
+			}
+			return false;
+		}
+		
+		
 		try {
 			jChannel.send(outMessage);
 		} catch (Exception e) {
@@ -127,9 +217,10 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 				System.out.println("Message could not be sent: " + e);
 				System.out.println(outgoing);
 			}
-			return;
+			return false;
 		}
 		totalSent++;
+		return true;
 	}
 	
 	@Override

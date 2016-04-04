@@ -19,10 +19,12 @@ public interface Communicator {
 	public List<Wrapper> getAllQueuedMessages();
 	
 	/**
+	/**
 	 * Send the given Wrapper to all everyone listening on the current channel.
 	 * @param outgoing The Wrapper to send.
+	 * @return True if message was sent, false otherwise.
 	 */
-	public void send(Wrapper outgoing);
+	public boolean send(Wrapper outgoing);
 	
 	/**
 	 * Send all Wrappers to all everyone listening on the current channel.
