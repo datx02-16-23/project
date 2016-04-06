@@ -41,7 +41,7 @@ public class Controller extends Application{
     @Override
     public void start(Stage stage) {
         VBox vbox = new VBox();
-        Scene scene = new Scene(vbox, 400, 300);
+        Scene scene = new Scene(vbox, 800, 600);
 
         //Add menu
         buildMenu(scene);

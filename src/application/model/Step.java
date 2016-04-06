@@ -38,7 +38,7 @@ public class Step implements iStep {
     }
 
     private void updateStructs(Operation op) {
-        op.
+        //op.
     }
 
 }
