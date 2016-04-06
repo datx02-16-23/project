@@ -13,7 +13,9 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.StrokeType;
 import javafx.stage.Stage;
 import manager.LogStreamManager;
 
@@ -28,7 +30,8 @@ public class Controller extends Application{
 
     public Controller(){
         model = new Model();
-        view = new View();
+        view = new View(model);
+
     }
 
     public static void main(String[] args){
@@ -37,12 +40,22 @@ public class Controller extends Application{
 
     @Override
     public void start(Stage stage) {
-        Circle circ = new Circle(40, 40, 30);
-        Group root = new Group(circ);
-        Scene scene = new Scene(new VBox(), 400, 300);
+        VBox vbox = new VBox();
+        Scene scene = new Scene(vbox, 400, 300);
 
         //Add menu
         buildMenu(scene);
+
+        Group circles = new Group();
+        for (int i = 0; i < 30; i++) {
+            Circle circle = new Circle(150, Color.web("white", 0.05));
+            circle.setStrokeType(StrokeType.OUTSIDE);
+            circle.setStroke(Color.web("white", 0.16));
+            circle.setStrokeWidth(4);
+            circles.getChildren().add(circle);
+        }
+        vbox.getChildren().add(circles);
+
 
         stage.setTitle("MAVSER");
         stage.setScene(scene);
@@ -55,6 +68,7 @@ public class Controller extends Application{
         MenuItem openFile = new MenuItem("Open File");
         openFile.setOnAction(event -> {
             fileChooser();
+            view.render();
         });
         menuFile.getItems().addAll(openFile);
 
@@ -71,15 +85,18 @@ public class Controller extends Application{
 
         if (file != null){
             setFile(file);
+        } else {
+            System.err.println("Unable to find file");
         }
+
     }
 
     private void setFile(File file) {
         try {
             lsm.readLog(file);
-//            model.set(lsm.getKnownVariables().values(), lsm.getOperations());
+            model.set(lsm.getKnownVariables().values(), lsm.getOperations());
         } catch (FileNotFoundException e){
-
+            System.err.println("Unable to find file");
         }
     }
 }

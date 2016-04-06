@@ -1,5 +1,6 @@
 package application.model;
 
+import manager.datastructures.DataStructure;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import wrapper.Operation;
 
@@ -49,6 +50,7 @@ public class Step implements iStep {
             List<DataStructure> listCopy = new ArrayList<>(original.size());
             for (DataStructure value:original){
                 listCopy.add(value);
+
             }
             copy.put(key, listCopy);
         }

@@ -1,5 +1,7 @@
 package application.model;
 
+import manager.datastructures.DataStructure;
+
 import java.util.List;
 import java.util.Map;
 
