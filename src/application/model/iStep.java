@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import manager.datastructures.DataStructure;
+import wrapper.Operation;
 
-/**
- * Created by Ivar on 2016-03-24.
- */
+
 public interface iStep {
-    void addDataStructure(String identifier, Structure struct);
-    Map<String, List<DataStructure>> getStructures();
+    Map<String, DataStructure> getStructures();
+    void applyOperation(Operation op);
+    void addDataStructure(String id, DataStructure struct);
 }

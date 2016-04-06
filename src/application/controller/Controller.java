@@ -46,15 +46,9 @@ public class Controller extends Application{
         //Add menu
         buildMenu(scene);
 
-        Group circles = new Group();
-        for (int i = 0; i < 30; i++) {
-            Circle circle = new Circle(150, Color.web("white", 0.05));
-            circle.setStrokeType(StrokeType.OUTSIDE);
-            circle.setStroke(Color.web("white", 0.16));
-            circle.setStrokeWidth(4);
-            circles.getChildren().add(circle);
-        }
-        vbox.getChildren().add(circles);
+        Group datastructs = new Group();
+        view.render(datastructs);
+        vbox.getChildren().add(datastructs);
 
 
         stage.setTitle("MAVSER");
@@ -68,7 +62,6 @@ public class Controller extends Application{
         MenuItem openFile = new MenuItem("Open File");
         openFile.setOnAction(event -> {
             fileChooser();
-            view.render();
         });
         menuFile.getItems().addAll(openFile);
 
@@ -94,7 +87,7 @@ public class Controller extends Application{
     private void setFile(File file) {
         try {
             lsm.readLog(file);
-            model.set(lsm.getKnownVariables().values(), lsm.getOperations());
+            model.set(lsm.getKnownVariables(), lsm.getOperations());
         } catch (FileNotFoundException e){
             System.err.println("Unable to find file");
         }

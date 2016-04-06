@@ -2,6 +2,10 @@ package application.view;
 
 import application.model.iModel;
 import application.model.iStep;
+import javafx.scene.Group;
+import manager.datastructures.DataStructure;
+
+import java.util.Set;
 
 public class View{
     private final iModel model;
@@ -10,13 +14,15 @@ public class View{
         this.model = model;
     }
 
-    public void render(){
+    public void render(Group group){
         iStep currStep = model.getCurrentStep();
-        //For each structure in the current step
-        for (String id:currStep.getStructures().keySet()){
-            if(currStep.getStructures().get(id))
+        Set<String> ids = currStep.getStructures().keySet();
+        for (String id:ids){
+            //Render
         }
+    }
 
+    private void renderStructure(Group group, String id, DataStructure struct){
 
     }
 
