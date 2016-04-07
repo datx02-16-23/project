@@ -36,14 +36,14 @@ public class StreamView extends Application {
 		BorderPane base = new BorderPane();
 		
 		
-		//Construct "Waiting Operations List" list
+		//Construct "Waiting Operations" list
 		ListView<Operation> waitList = new ListView<Operation>();
 		waitList.setItems(sm.getQueuedOperations());
         waitList.setMinWidth(250);
         waitList.setMaxWidth(250);
 		waitList.setTooltip(new Tooltip("A list of operations waiting to be sent."));
 
-		//Construct "Waiting Operations List" list
+		//Construct "Sent Operations" list
 		ListView<Operation> sentList = new ListView<Operation>();
 		sentList.setItems(sm.getSentOperations());
         sentList.setMinWidth(250);
