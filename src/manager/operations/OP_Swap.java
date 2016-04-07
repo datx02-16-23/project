@@ -3,7 +3,8 @@ package manager.operations;
 import java.util.HashMap;
 import java.util.List;
 
-import application.Strings;
+import assets.Operations;
+import assets.Strings;
 import interpreter.Consolidable;
 import wrapper.Locator;
 import wrapper.Operation;
@@ -75,41 +76,43 @@ public class OP_Swap extends Operation implements Consolidable{
 		if (rwList.size() != 3){
 			throw new IllegalArgumentException("Swap operations are composed of 3 read/write operations.");
 		}
-
+		OP_ReadWrite rw0 = rwList.get(0);
+		OP_ReadWrite rw1 = rwList.get(1);
+		OP_ReadWrite rw2 = rwList.get(2);
+		
 		if (
-				   rwList.get(0).getSource() == null || rwList.get(0).getTarget() == null
-				|| rwList.get(1).getSource() == null || rwList.get(1).getTarget() == null
-				|| rwList.get(2).getSource() == null || rwList.get(2).getTarget() == null
+				   rw0.getSource() == null || rw0.getTarget() == null
+				|| rw1.getSource() == null || rw1.getTarget() == null
+				|| rw2.getSource() == null || rw2.getTarget() == null
 			){
 			return null; //All sources/targets must be known.
 		}
 		
 		Locator var1, tmp, var2;
-		
 	
 		//Operation 1: Set var1 -> tmp
-		var1 = rwList.get(0).getSource();
-		tmp = rwList.get(0).getTarget();
+		var1 = rw0.getSource();
+		tmp = rw0.getTarget();
 		
 		if(tmp.index != null){
 			return null; //tmp should not be another array.
 		}
 		
 		//Operation 2: x -> var1?
-		if(rwList.get(1).getTarget().equals(var1)){
-			var2 = rwList.get(1).getSource(); //Set x = var2
+		if(rw1.getTarget().equals(var1)){
+			var2 = rw1.getSource(); //Set x = var2
 		} else {
 			return null;
 		}
 		
 		//Operation 3: tmp -> var2?
-		if((rwList.get(2).getSource().equals(tmp) && rwList.get(2).getTarget().equals(var2)) == false){
+		if((rw2.getSource().equals(tmp) && rw2.getTarget().equals(var2)) == false){
 			return null;
 		}
 		
 		//Construct and return swap operation.
 		OP_Swap op_swap = new OP_Swap();
-		op_swap.setVar1(var1);;
+		op_swap.setVar1(var1);
 		op_swap.setVar2(var2);
 		//TODO: setValue() op_swap.setValues("[v1, v2]");
 		return op_swap;
