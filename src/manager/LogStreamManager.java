@@ -40,7 +40,7 @@ public class LogStreamManager implements CommunicatorListener {
 	public boolean PRETTY_PRINTING;
 	
 	private final Gson gson = new Gson();
-	private final Communicator communicator = new JGroupCommunicator(this);
+	private final Communicator communicator;
 	private CommunicatorListener listener;
 	
 	private Wrapper wrapper;
@@ -52,6 +52,7 @@ public class LogStreamManager implements CommunicatorListener {
 	 * Creates a new LogStreamManager. You may read a log file using the readLog() methods.
 	 */
 	public LogStreamManager(){
+		communicator = new JGroupCommunicator(this);
 		restoreDefaultState();
 	}
 	
@@ -142,6 +143,7 @@ public class LogStreamManager implements CommunicatorListener {
 		Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables);
 		communicator.send(new Wrapper(header, operations));
 	}
+	
 	/**
 	 * Stream the data held by this LogStreamManager using the current Communicator, then clear data.
 	 */
@@ -237,12 +239,16 @@ public class LogStreamManager implements CommunicatorListener {
 
 	@Override
 	public void communicationReceived() {
+	
+		
 		List<Wrapper> wrappers = communicator.getAllQueuedMessages();
 		for(Wrapper w : wrappers){
 			unwrap(w);
 		}
-
-		listener.communicationReceived();
+		
+		if (listener != null){
+			listener.communicationReceived();
+	}
 	}
 	
 	/**
