@@ -1,6 +1,5 @@
 package manager.operations;
 
-import application.Strings;
 import wrapper.Locator;
 
 /**
@@ -26,7 +25,7 @@ public class OP_Write extends OP_ReadWrite{
 		if (target == null){
 			throw new IllegalArgumentException("Target cannot be null in a Write operation!");
 		}
-		this.operationBody.put(Strings.KEY_TARGET, target);
+		this.operationBody.put(OperationsBody.TARGET, target);
 	}
 	
 	/**
@@ -35,7 +34,7 @@ public class OP_Write extends OP_ReadWrite{
 	 * @param source The source variable for this Write operation.
 	 */
 	public void setSource(Locator source){
-		this.operationBody.put(Strings.KEY_SOURCE, source);
+		this.operationBody.put(OperationsBody.SOURCE, source);
 	}
 	
 	/**
@@ -43,19 +42,19 @@ public class OP_Write extends OP_ReadWrite{
 	 * @param value Set the value(s) written to {@code target}.
 	 */
 	public void setValue(double[] value){
-		this.operationBody.put(Strings.KEY_VALUE, value);
+		this.operationBody.put(OperationsBody.VALUE, value);
 	}
 	
 	public Locator getTarget(){
-		return (Locator)this.operationBody.get(Strings.KEY_TARGET);
+		return (Locator)this.operationBody.get(OperationsBody.TARGET);
 	}
 
 	public Locator getSource(){
-		return (Locator)this.operationBody.get(Strings.KEY_SOURCE);
+		return (Locator)this.operationBody.get(OperationsBody.SOURCE);
 	}
 
 	
 	public double[] getValue(){
-		return (double[])this.operationBody.get(Strings.KEY_VALUE);
+		return (double[])this.operationBody.get(OperationsBody.VALUE);
 	}
 }

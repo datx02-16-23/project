@@ -56,12 +56,12 @@ public class OperationParser {
 		LinkedTreeMap<String, Object> linkedTreeMap = (LinkedTreeMap<String, Object>)arrayVariable;
 		
 		
-		Object identifier = linkedTreeMap.get(Strings.KEY_IDENTIFIER);
+		Object identifier = linkedTreeMap.get(OperationsBody.IDENTIFIER);
 		if (identifier == null){
 			return null; //No identifier -> return null.
 		}
 		
-		Object indexAL = linkedTreeMap.get(Strings.KEY_INDEX);
+		Object indexAL = linkedTreeMap.get(OperationsBody.INDEX);
 		int[] index = null;
 		
 		if (indexAL != null){
@@ -85,8 +85,8 @@ public class OperationParser {
 			System.err.println(("Operation must be \"read\" or \"write\". Got: " + op.operation));
 			return null;
 		}
-		op_rw.setSource(unpackArrayVariable(op.operationBody.get(Strings.KEY_SOURCE)));
-		op_rw.setTarget(unpackArrayVariable(op.operationBody.get(Strings.KEY_TARGET)));
+		op_rw.setSource(unpackArrayVariable(op.operationBody.get(OperationsBody.SOURCE)));
+		op_rw.setTarget(unpackArrayVariable(op.operationBody.get(OperationsBody.TARGET)));
 		op_rw.setValue(parseValue(op));
 
 		return op_rw;
@@ -94,15 +94,15 @@ public class OperationParser {
 
 	private static Operation parseSwap(Operation op) {
 		OP_Swap op_swap = new OP_Swap();
-		op_swap.setVar1(unpackArrayVariable(op.operationBody.get(Strings.KEY_VAR1)));
-		op_swap.setVar2(unpackArrayVariable(op.operationBody.get(Strings.KEY_VAR2)));
-		op_swap.setValues((String) op.operationBody.get(Strings.KEY_VALUE));
+		op_swap.setVar1(unpackArrayVariable(op.operationBody.get(OperationsBody.VAR1)));
+		op_swap.setVar2(unpackArrayVariable(op.operationBody.get(OperationsBody.VAR2)));
+		op_swap.setValues((String) op.operationBody.get(OperationsBody.VALUE));
 		return op_swap;
 	}
 
 	private static Operation parseMessage(Operation op) {
 		OP_Message op_message = new OP_Message();
-		op_message.setMessage((String) op.operationBody.get(Strings.KEY_VALUE));
+		op_message.setMessage((String) op.operationBody.get(OperationsBody.VALUE));
 		return op_message;
 	}
 
@@ -110,17 +110,17 @@ public class OperationParser {
 		OP_Init op_init = new OP_Init();
 		op_init.setSize(
 				ensureIntArray(
-						op.operationBody.get(Strings.KEY_SIZE)
+						op.operationBody.get(OperationsBody.SIZE)
 						)
 				);
-		op_init.setTarget(unpackArrayVariable(op.operationBody.get(Strings.KEY_TARGET)));
+		op_init.setTarget(unpackArrayVariable(op.operationBody.get(OperationsBody.TARGET)));
 		op_init.setValue(parseMultiValue(op));
 		return op_init;
 	}
 	
 	
 	private static double[] parseMultiValue(Operation op) {
-		Object object = op.operationBody.get(Strings.KEY_VALUE);
+		Object object = op.operationBody.get(OperationsBody.VALUE);
 		if (object == null){
 			return null;
 		}
@@ -158,11 +158,11 @@ public class OperationParser {
 	}
 	
 	private static int[] parseIndex(Operation op){
-		return ensureIntArray((ArrayList<Object>)op.operationBody.get(Strings.KEY_INDEX));
+		return ensureIntArray((ArrayList<Object>)op.operationBody.get(OperationsBody.INDEX));
 	}
 	
 	private static double[] parseValue(Operation op){
-		return ensureDoubleArray(op.operationBody.get(Strings.KEY_VALUE));
+		return ensureDoubleArray(op.operationBody.get(OperationsBody.VALUE));
 	}
 	
 	private static double[] ensureDoubleArray(Object object){

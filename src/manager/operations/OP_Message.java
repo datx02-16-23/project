@@ -1,8 +1,8 @@
 package manager.operations;
 import java.util.HashMap;
 
-import application.Strings;
 import wrapper.Operation;
+
 
 /**
  * Creates an operation to initialize an {@code AnnotatedVariable}.
@@ -14,7 +14,7 @@ public class OP_Message extends Operation{
 	 * Creates a new Init operation. Note that you must set the target, maxSize and initial values.
 	 */
 	public OP_Message() {
-		super(OPERATION, new HashMap<String, Object>());
+		super(OPERATION, new HashMap<OperationsBody, Object>());
 	}
 	
 	/**
@@ -32,10 +32,10 @@ public class OP_Message extends Operation{
 	 * @param value The value(s) with which to initialize this variable.
 	 */
 	public void setValue(String value){
-		this.operationBody.put(Strings.KEY_VALUE, value);
+		this.operationBody.put(OperationsBody.VALUE, value);
 	}
 	public String getValue(){
-		return (String)this.operationBody.get(Strings.KEY_VALUE);
+		return (String)this.operationBody.get(OperationsBody.VALUE);
 	}
 	
 	public String toString(){

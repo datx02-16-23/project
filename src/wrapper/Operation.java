@@ -3,6 +3,7 @@ package wrapper;
 import java.io.Serializable;
 import java.util.HashMap;
 import manager.operations.Operations;
+import manager.operations.OperationsBody;
 
 /**
  * Abstract wrapper class containing the necessary data to recreate a given operation.
@@ -16,7 +17,7 @@ public class Operation implements Serializable {
 	/**
 	 * A map containing the identifier of the field (such as "destination" or "value") and the data they contained.
 	 */
-	public final HashMap<String, Object> operationBody;
+	public final HashMap<OperationsBody, Object> operationBody;
 	
 	/**
 	 * Create a new Operation with the given operation identifier and body.
@@ -24,7 +25,7 @@ public class Operation implements Serializable {
 	 * @param operationBody A map containing the identifier of the field
 	 * (such as "destination" or "value") and the data they contained.
 	 */
-	public Operation(Operations operation, HashMap<String, Object> operationBody){
+	public Operation(Operations operation, HashMap<OperationsBody, Object> operationBody){
 		this.operation = operation;
 		this.operationBody = operationBody;
 	}
@@ -32,7 +33,7 @@ public class Operation implements Serializable {
 	public String printOperationBody(){
 		StringBuilder builder = new StringBuilder();
 		builder.append("{");
-		for( String key : operationBody.keySet()){
+		for( OperationsBody key : operationBody.keySet()){
 			if (operationBody.get(key) != null){
 				builder.append("\""+key+"\": "+ operationBody.get(key).toString() +",\n");
 			} else {

@@ -3,7 +3,6 @@ package manager.operations;
 import java.util.HashMap;
 import java.util.List;
 
-import assets.Strings;
 import interpreter.Consolidable;
 import wrapper.Locator;
 import wrapper.Operation;
@@ -18,7 +17,7 @@ public class OP_Swap extends Operation implements Consolidable{
 	 * Create a new Swap operation.  Note that you must set var1, var2, and value.
 	 */
 	public OP_Swap() {
-		super(OPERATION, new HashMap<String, Object>());
+		super(OPERATION, new HashMap<OperationsBody, Object>());
 	}
 	
 	/**
@@ -27,7 +26,8 @@ public class OP_Swap extends Operation implements Consolidable{
 	 * @param var1 Variable 1 for this Swap operation.
 	 */
 	public void setVar1(Locator var1){
-		this.operationBody.put(Strings.KEY_VAR1, var1);
+		this.operationBody.put(OperationsBody.VAR1, var1);
+
 	}
 	
 	/**
@@ -36,28 +36,28 @@ public class OP_Swap extends Operation implements Consolidable{
 	 * @param var2 Variable 2 for this Swap operation.
 	 */
 	public void setVar2(Locator var2){
-		this.operationBody.put(Strings.KEY_VAR2, var2);
+		this.operationBody.put(OperationsBody.VAR2, var2);
 	}
 	
 	
 	/**
 	 * The values contained at var1 and var2 respectively, AFTER this Swap operation has been executed.
-	 * @param value The values in var1 and var2 after execution.
+	 * @param values The values in var1 and var2 after execution.
 	 */
 	public void setValues(String values){
-		this.operationBody.put(Strings.KEY_VALUE, values);
+		this.operationBody.put(OperationsBody.VALUE, values);
 	}
 	
 	
 	
 	public Locator getVar1(){
-		return (Locator)this.operationBody.get(Strings.KEY_VAR1);
+		return (Locator)this.operationBody.get(OperationsBody.VAR1);
 	}
 	public Locator getVar2(){
-		return (Locator)this.operationBody.get(Strings.KEY_VAR2);
+		return (Locator)this.operationBody.get(OperationsBody.VAR2);
 	}
 	public String getValue(){
-		return (String)this.operationBody.get(Strings.KEY_VALUE);
+		return (String)this.operationBody.get(OperationsBody.VALUE);
 	}
 
 	@Override
@@ -105,7 +105,7 @@ public class OP_Swap extends Operation implements Consolidable{
 		}
 		
 		//Operation 3: tmp -> var2?
-		if((rw2.getSource().equals(tmp) && rw2.getTarget().equals(var2)) == false){
+		if(!(rw2.getSource().equals(tmp) && rw2.getTarget().equals(var2))){
 			return null;
 		}
 		
