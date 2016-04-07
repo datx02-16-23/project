@@ -3,7 +3,8 @@ import java.util.ArrayList;
 
 import com.google.gson.internal.LinkedTreeMap;
 
-import application.Strings;
+import assets.Operations;
+import assets.Strings;
 import wrapper.Locator;
 import wrapper.Operation;
 
@@ -172,6 +173,9 @@ public class OperationParser {
 		}
 		if(object instanceof double[]){
 			return (double[]) object;
+		}
+		if(object instanceof Double){
+			return new double[]{(Double) object};
 		}
 		
 		ArrayList<Double> listOfDoubles = (ArrayList<Double>) object;
