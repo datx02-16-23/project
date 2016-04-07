@@ -23,7 +23,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	/**
 	 * Set to True to print debug messages.
 	 */
-	public boolean debug = true;
+	public boolean debug = false;
 	
 	/**
 	 * Send messages in native mode (serialised Wrapper).
@@ -36,10 +36,9 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	
 	private int transmitterId;
 	private String channel;
-	private int totalReceived, totalRejected, totalAccepted, totalSent;
 	
 	private final List<Wrapper> incomingQueue;
-	private final List<CommunicatorListener> listeners;
+	private final CommunicatorListener listener;
 	
 	private JChannel jChannel;
 	
@@ -48,23 +47,29 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	Gson gson;
 	
 	/**
+	 * Create a new JGroupCommunicator with a random transmitter id. Connects to the default channel.
+	 * @param listener The listener for this JGroupCommunicator.
+	 */
+	public JGroupCommunicator(CommunicatorListener listener){
+		this((int)(Math.random()*Integer.MAX_VALUE), Strings.DEFAULT_CHANNEL, listener);
+	}
+	
+	
+	/**
 	 * Create a new JGroupCommunicator with the given transmitter id. Connects to the given channel.
 	 * @param transmitterId The transmitter id for this JGroupCommunicator.
 	 * @param channel The channel to connect to.
+	 * @param listener The listener for this JGroupCommunicator.
 	 */
-	public JGroupCommunicator (int transmitterId, String channel){
+	public JGroupCommunicator (int transmitterId, String channel, CommunicatorListener listener){
 		super();
 		this.transmitterId = transmitterId;
 		this.channel = channel;
-		totalReceived = 0;
-		totalRejected = 0;
-		totalAccepted = 0;
-		totalSent = 0;
+		this.listener = listener;
 		setNativeSenderMode();
 		
 		gson = new Gson();
 		incomingQueue = new ArrayList<Wrapper>();
-		listeners = new ArrayList<CommunicatorListener>();
 		
 		try {
 			jChannel = new JChannel("udp.xml");
@@ -75,6 +80,33 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 		}
 	}
 	
+	/**
+	 * Returns the name of the channel this JGroupCommunicator is connected to.
+	 * @return The name of the channel this JGroupCommunicator is connected to.
+	 */
+	public String getChannel() {
+		return channel;
+	}
+
+	/**
+	 * Change channel this JGroupCommunicator will use to communicate.
+	 * @param channel The name of the channel this JGroupCommunicator will use.
+	 */
+	public void setChannel(String channel) {
+		if (channel == null || channel.equals("")){
+			throw new IllegalArgumentException("(channel == null || channel.equals(\"\")) != false");
+		}
+		
+		this.channel = channel;
+			try {
+				jChannel.disconnect();
+				jChannel.connect(this.channel);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	
+	}
+
 	/**
 	 * Set the sender mode of this JGroupCommunicator to Native (serialised Wrapper). 
 	 */
@@ -97,17 +129,9 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	public int getSenderMode(){
 		return senderMode;
 	}
-	
-	/**
-	 * Create a new JGroupCommunicator with a random transmitter id. Connects to the default channel.
-	 */
-	public JGroupCommunicator(){
-		this((int)(Math.random()*Integer.MAX_VALUE), Strings.DEFAULT_CHANNEL);
-	}
-	
+
 	@Override
 	public void receive(Message incoming){
-		totalReceived++;
 		
 		Object messageObject = incoming.getObject();
 		
@@ -138,7 +162,6 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 				if (debug){
 					System.out.println("Gson failed to parse String: " + sm.gsonString);
 				}
-				totalRejected++;
 				return;
 			}
 			addAndFireEvent(wrapper);
@@ -149,7 +172,6 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 		if (debug){
 			System.out.println("Invalid message type: " + messageObject);
 		}
-		totalRejected++;
 	}
 	
 	private boolean senderIsSelf(int senderId){
@@ -157,18 +179,14 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 			if (debug){
 				System.out.println("Message rejected: sender == receiver.");
 			}
-			totalRejected++;
 			return true;
 		}
 		return false;
 	}
 	
 	private void addAndFireEvent(Wrapper w){
-		totalAccepted++;
 		incomingQueue.add(w);
-		for(CommunicatorListener cl : listeners){
-			cl.communicationReceived();
-		}
+		listener.communicationReceived();
 	}
 	
 	/**
@@ -185,9 +203,10 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	 */
 	public List<Wrapper> getAllQueuedMessages(){
 		ArrayList<Wrapper> allQueuedMessages = new ArrayList<Wrapper>();
-		while (incomingQueue.isEmpty() == false){
-			allQueuedMessages.add(incomingQueue.remove(0));
+		if (incomingQueue.isEmpty() == false){
+			allQueuedMessages.addAll(incomingQueue);
 		}
+		incomingQueue.clear();
 		return allQueuedMessages;
 	}
 	/**
@@ -214,12 +233,11 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 			jChannel.send(outMessage);
 		} catch (Exception e) {
 			if(debug){
-				System.out.println("Message could not be sent: " + e);
-				System.out.println(outgoing);
+				System.err.println("Message could not be sent: " + e);
+				System.err.println(outgoing);
 			}
 			return false;
 		}
-		totalSent++;
 		return true;
 	}
 	
@@ -228,42 +246,6 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 		for(Wrapper w : outgoing){
 			send(w);
 		}
-	}
-
-	/**
-	 * Returns the total number of messages received.
-	 * @return Total number of messages received.
-	 */
-	public int getTotalReceived() {
-		return totalReceived;
-	}
-
-	/**
-	 * Returns the total number of messages rejected.
-	 * @return Total number of messages rejected.
-	 */
-	public int getTotalRejected() {
-		return totalRejected;
-	}
-
-	/**
-	 * Returns the total number of messages accepted.
-	 * @return Total number of messages accepted.
-	 */
-	public int getTotalAccepted() {
-		return totalAccepted;
-	}
-
-	/**
-	 * Returns the total number of messages sent.
-	 * @return Total number of messages sent.
-	 */
-	public int getTotalSent() {
-		return totalSent;
-	}
-
-	public void addListener(CommunicatorListener newListener){
-		listeners.add(newListener);
 	}
 
 	/**

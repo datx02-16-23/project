@@ -39,8 +39,9 @@ public class LogStreamManager implements CommunicatorListener {
 	 */
 	public boolean PRETTY_PRINTING;
 	
-	private static final Gson GSON = new Gson();
-	private static final Communicator communicator = new JGroupCommunicator();
+	private final Gson gson = new Gson();
+	private final Communicator communicator = new JGroupCommunicator(this);
+	private CommunicatorListener listener;
 	
 	private Wrapper wrapper;
 
@@ -52,7 +53,6 @@ public class LogStreamManager implements CommunicatorListener {
 	 */
 	public LogStreamManager(){
 		restoreDefaultState();
-		communicator.addListener(this);
 	}
 	
 	/**
@@ -116,7 +116,7 @@ public class LogStreamManager implements CommunicatorListener {
 	 * @throws FileNotFoundException Signals that LogStream could not be opened.
 	 */
 	public void readLog(File LogStream) throws JsonIOException, JsonSyntaxException, FileNotFoundException{
-		wrapper = GSON.fromJson(new JsonReader(new FileReader(LogStream)), Wrapper.class);
+		wrapper = gson.fromJson(new JsonReader(new FileReader(LogStream)), Wrapper.class);
 		unwrap(wrapper);
 	}
 	
@@ -196,7 +196,7 @@ public class LogStreamManager implements CommunicatorListener {
 		if (PRETTY_PRINTING){
 			GSON = new GsonBuilder().setPrettyPrinting().create();
 		} else {
-			GSON = LogStreamManager.GSON;
+			GSON = this.gson;
 		}
 
 		pringString(targetPath+fileName, GSON.toJson(wrapper));
@@ -237,6 +237,19 @@ public class LogStreamManager implements CommunicatorListener {
 
 	@Override
 	public void communicationReceived() {
-		unwrap(communicator.popQueuedMessage());
+		List<Wrapper> wrappers = communicator.getAllQueuedMessages();
+		for(Wrapper w : wrappers){
+			unwrap(w);
+		}
+
+		listener.communicationReceived();
+	}
+	
+	/**
+	 * Set the CommunicatorListener which will be notified when this Communicator accepts a message.
+	 * @param newListener The new CommunicatorListener.
+	 */
+	public void setListener(CommunicatorListener newListener){
+		listener = newListener;
 	}
 }
