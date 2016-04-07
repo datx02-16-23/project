@@ -110,7 +110,7 @@ public class StreamSimulator implements CommunicatorListener{
 		    			
 		    		});
 		    		try {
-						sleep((int)(sleepDur/Math.sqrt(queuedOperations.size())));
+						sleep((int)(sleepDur/Math.sqrt(1+queuedOperations.size())));
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
