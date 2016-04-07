@@ -5,26 +5,14 @@ import java.io.File;
 import com.google.gson.GsonBuilder;
 
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.collections.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Separator;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -424,7 +412,6 @@ public class StreamView extends Application {
 	private void knownVariablesView(){
 		//Construct "Known Variables" dialog
 		knowVariablesList.addAll(sm.getKnownVariables());
-		System.out.println(knowVariablesList);
 		root.getChildren().add(variablesView);
 		root.getChildren().remove(baseView);
 	}
@@ -443,7 +430,7 @@ public class StreamView extends Application {
 	}
 	
 	public static void main(String[] args)  {
-		System.out.println("Launch: main().");
+		System.out.println("Launch: main()");
         launch(args);
 	}
 	
@@ -456,6 +443,7 @@ public class StreamView extends Application {
 	
 	private File chooseFile(Stage stage){
 		FileChooser fileChooser = new FileChooser();
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
 		fileChooser.setTitle("Select Log File");
 		return fileChooser.showOpenDialog(stage);
 	}
