@@ -13,7 +13,9 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.StrokeType;
 import javafx.stage.Stage;
 import manager.LogStreamManager;
 
@@ -28,7 +30,8 @@ public class Controller extends Application{
 
     public Controller(){
         model = new Model();
-        view = new View();
+        view = new View(model);
+
     }
 
     public static void main(String[] args){
@@ -37,12 +40,16 @@ public class Controller extends Application{
 
     @Override
     public void start(Stage stage) {
-        Circle circ = new Circle(40, 40, 30);
-        Group root = new Group(circ);
-        Scene scene = new Scene(new VBox(), 400, 300);
+        VBox vbox = new VBox();
+        Scene scene = new Scene(vbox, 800, 600);
 
         //Add menu
         buildMenu(scene);
+
+        Group datastructs = new Group();
+        view.render(datastructs);
+        vbox.getChildren().add(datastructs);
+
 
         stage.setTitle("MAVSER");
         stage.setScene(scene);
@@ -71,15 +78,18 @@ public class Controller extends Application{
 
         if (file != null){
             setFile(file);
+        } else {
+            System.err.println("Unable to find file");
         }
+
     }
 
     private void setFile(File file) {
         try {
             lsm.readLog(file);
-//            model.set(lsm.getKnownVariables().values(), lsm.getOperations());
+            model.set(lsm.getKnownVariables(), lsm.getOperations());
         } catch (FileNotFoundException e){
-
+            System.err.println("Unable to find file");
         }
     }
 }
