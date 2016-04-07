@@ -20,10 +20,6 @@ import wrapper.StringMessage;
  *
  */
 public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
-	/**
-	 * Set to True to print debug messages.
-	 */
-	public boolean debug = false;
 	
 	/**
 	 * Send messages in native mode (serialised Wrapper).
@@ -159,26 +155,19 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 			try{
 				wrapper = gson.fromJson(sm.gsonString, Wrapper.class);
 			} catch (Exception e){
-				if (debug){
-					System.out.println("Gson failed to parse String: " + sm.gsonString);
-				}
+				System.err.println("Gson failed to parse String: " + sm.gsonString);
 				return;
 			}
 			addAndFireEvent(wrapper);
 			return;
 		}
 		
-		//Reject message
-		if (debug){
-			System.out.println("Invalid message type: " + messageObject);
-		}
+		System.err.println("Invalid message type: " + messageObject);
+
 	}
 	
 	private boolean senderIsSelf(int senderId){
 		if (senderId == transmitterId){
-			if (debug){
-				System.out.println("Message rejected: sender == receiver.");
-			}
 			return true;
 		}
 		return false;
@@ -221,10 +210,8 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 		} else if (senderMode == SENDER_MODE_JSON){
 			outMessage.setObject(new StringMessage(gson.toJson(outgoing), this.transmitterId));			
 		} else {
-			if(debug){
-				System.out.println("Message could not be sent: Sender mode invalid.");
-				System.out.println(outgoing);
-			}
+			System.err.println("Message could not be sent: Sender mode invalid.");
+			System.err.println(outgoing);
 			return false;
 		}
 		
@@ -232,10 +219,8 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 		try {
 			jChannel.send(outMessage);
 		} catch (Exception e) {
-			if(debug){
-				System.err.println("Message could not be sent: " + e);
-				System.err.println(outgoing);
-			}
+			System.err.println("Message could not be sent: " + e);
+			System.err.println(outgoing);
 			return false;
 		}
 		return true;
