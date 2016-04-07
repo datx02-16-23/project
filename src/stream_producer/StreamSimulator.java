@@ -14,6 +14,7 @@ import org.jgroups.View;
 import com.google.gson.*;
 
 import application.Strings;
+import interpreter.Interpreter;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -28,6 +29,8 @@ public class StreamSimulator implements Receiver{
 	private final LogStreamManager LSM;
 	private final ObservableList<Operation> queuedOperations, sentOperations;
 	private final SimpleStringProperty nbrQueuedString, nbrSentString, waitingOperationsList, sentOperationsList;
+	private final Interpreter interpreter;
+	
 	public ObservableList<Operation> getQueuedOperations() {
 		return queuedOperations;
 	}
@@ -36,6 +39,7 @@ public class StreamSimulator implements Receiver{
 	private final int id;
 	
 	public StreamSimulator(){
+		interpreter = new Interpreter();
 		nbrQueuedString = new SimpleStringProperty();
 		nbrSentString = new SimpleStringProperty();
 		waitingOperationsList = new SimpleStringProperty();
@@ -56,7 +60,7 @@ public class StreamSimulator implements Receiver{
 		updateSent();
 		
 		try {
-			LSM.readLog("C:\\Users\\Richard\\Documents\\datx02-16-23\\git\\src\\stream_producer\\init.json");
+			LSM.readLog("C:\\Users\\Richard\\Documents\\datx02-16-23\\git\\src\\stream_producer\\bubble.json");
 			queuedOperations.addAll(LSM.getOperations());
 			updateQueued();
 		} catch (JsonIOException | JsonSyntaxException | FileNotFoundException e) {
@@ -259,6 +263,16 @@ public class StreamSimulator implements Receiver{
 		}
 	}
 		
+	public void interpret(){
+		ArrayList<Operation> toInterpreter = new ArrayList<Operation>();
+		interpreter.clearConsoloidatedOperations();
+		toInterpreter.addAll(queuedOperations);
+		interpreter.setOperations(toInterpreter);
+		queuedOperations.clear();
+		queuedOperations.addAll(interpreter.getConsolidatedOperations());
+		updateQueued();
+	}
+	
 	@Override
 	public void receive(Message msg) {
 		WrapperMessage wm = (WrapperMessage) msg.getObject();

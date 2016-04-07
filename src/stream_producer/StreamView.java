@@ -12,6 +12,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Separator;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -153,6 +154,7 @@ public class StreamView extends Application {
             	sm.initOperation();
             }
         });
+		
 		//Construct "Message" button.
 		Button message = new Button();
 		message.setText("Message");
@@ -163,6 +165,18 @@ public class StreamView extends Application {
             	sm.messageOperation();
             }
         });
+
+		//Construct "Message" button.
+		Button interpret = new Button();
+		interpret.setText("Interpret");
+		interpret.setTooltip(new Tooltip("Attempt to consolidate all queued/received operations."));
+		interpret.setPrefSize(100,30);
+		interpret.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+            	sm.interpret();
+            }
+        });
+		
 		
 		//Construct "Continuous Transmit "button.
 		ToggleButton continuousTransmit = new ToggleButton();
@@ -204,6 +218,10 @@ public class StreamView extends Application {
 	        operationButtons.getChildren().add(swap);
 	        operationButtons.getChildren().add(init);
 	        operationButtons.getChildren().add(message);
+	        Separator s = new Separator();
+	        s.setPrefHeight(10);
+	        operationButtons.getChildren().add(s);
+	        operationButtons.getChildren().add(interpret);
 	        
 		    //Add operation buttons
 	        VBox controlButtons = new VBox();
@@ -211,6 +229,9 @@ public class StreamView extends Application {
 	        controlButtons.getChildren().add(transmit);
 	        controlButtons.getChildren().add(transmitAll);
 	        controlButtons.getChildren().add(continuousTransmit);
+	        Separator s2 = new Separator();
+	        s2.setPrefHeight(10);
+	        controlButtons.getChildren().add(s2);
 	        controlButtons.getChildren().add(clearLists);
 	        
 	        //Add lists
