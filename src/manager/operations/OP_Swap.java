@@ -3,7 +3,6 @@ package manager.operations;
 import java.util.HashMap;
 import java.util.List;
 
-import assets.Operations;
 import assets.Strings;
 import interpreter.Consolidable;
 import wrapper.Locator;

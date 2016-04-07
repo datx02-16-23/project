@@ -3,7 +3,6 @@ import java.util.ArrayList;
 
 import com.google.gson.internal.LinkedTreeMap;
 
-import assets.Operations;
 import assets.Strings;
 import wrapper.Locator;
 import wrapper.Operation;
@@ -78,12 +77,13 @@ public class OperationParser {
 	
 	public static OP_ReadWrite parseReadWrite(Operation op){
 		OP_ReadWrite op_rw;
-		if (op.operation.equals(Operations.write)){
+		if (op.operation == Operations.write){
 			op_rw = new OP_Write();
-		} else if (op.operation.equals(Operations.read)){
+		} else if (op.operation == Operations.read){
 			op_rw = new OP_Read();
 		} else {
-			throw new IllegalArgumentException("Operation must be \"read\" or \"write\".");
+			System.err.println(("Operation must be \"read\" or \"write\". Got: " + op.operation));
+			return null;
 		}
 		op_rw.setSource(unpackArrayVariable(op.operationBody.get(Strings.KEY_SOURCE)));
 		op_rw.setTarget(unpackArrayVariable(op.operationBody.get(Strings.KEY_TARGET)));
