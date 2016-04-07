@@ -1,30 +1,19 @@
 package stream_producer;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jgroups.Address;
-import org.jgroups.JChannel;
-import org.jgroups.Message;
-import org.jgroups.Receiver;
-import org.jgroups.ReceiverAdapter;
-import org.jgroups.View;
-
-import com.google.gson.*;
-
-import application.Strings;
 import interpreter.Interpreter;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import manager.CommunicatorListener;
 import manager.JGroupCommunicator;
 import manager.LogStreamManager;
+import manager.datastructures.DataStructure;
 import manager.operations.*;
 
 import wrapper.*;
@@ -33,6 +22,7 @@ public class StreamSimulator implements CommunicatorListener{
 
 	private final LogStreamManager LSM;
 	private final ObservableList<Operation> queuedOperations, sentOperations;
+	private final ObservableMap<String, DataStructure> knownVariables;
 	private final SimpleStringProperty nbrQueuedString, nbrSentString, waitingOperationsList, sentOperationsList;
 	private final Interpreter interpreter;
 	
@@ -57,6 +47,7 @@ public class StreamSimulator implements CommunicatorListener{
 		
 		queuedOperations = FXCollections.observableArrayList();
 		sentOperations = FXCollections.observableArrayList();
+		knownVariables = FXCollections.observableHashMap();
 		
 		updateSent();
 		updateQueued();
@@ -157,9 +148,8 @@ public class StreamSimulator implements CommunicatorListener{
 	//Receiver stuff
 	
 	public boolean transmit(Wrapper wrapper){
-		WrapperMessage wm = new WrapperMessage(wrapper, id);
 		try {
-			LSM.streamAndClearLogData();
+			LSM.streamWrapper(wrapper);
 		} catch (Exception e) {
 			return false;
 		}
@@ -266,9 +256,13 @@ public class StreamSimulator implements CommunicatorListener{
 	}
 	
 	public void importList(File jsonFile){
-		LSM.clearOperations();
+		LSM.clearData();
+		
 		LSM.readLog(jsonFile);
+		
 		queuedOperations.addAll(LSM.getOperations());
+		knownVariables.putAll(LSM.getKnownVariables());
+		
 		updateQueued();
 	}
 	
@@ -288,10 +282,26 @@ public class StreamSimulator implements CommunicatorListener{
 	}
 
 	@Override
-	public void communicationReceived() {
-		queuedOperations.addAll(LSM.getOperations());
-		LSM.clearOperations();
-		updateQueued();
+	public void messageReceived() {
+		Platform.runLater(new Runnable(){
+			@Override
+			public void run() {
+				//Operations
+				queuedOperations.addAll(LSM.getOperations());
+				LSM.clearOperations();
+				updateQueued();
+				
+				//Variables
+				knownVariables.putAll(LSM.getKnownVariables());
+				LSM.clearKnownVariables();
+			}
+		});
+	}
+	
+	public List<DataStructure> getKnownVariables() {
+		ArrayList<DataStructure> ans = new ArrayList<DataStructure>();
+		ans.addAll(knownVariables.values());
+		return ans;
 	}
 
 	public String getChannelName() {

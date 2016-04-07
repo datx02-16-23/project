@@ -308,7 +308,6 @@ public class LogStreamManager implements CommunicatorListener {
 				knownVariables.put(av.identifier, DataStructureParser.unpackAnnotatedVariable(av));
 			}
 		}
-		
 		if (wrapper.body != null){
 			for (Operation op : wrapper.body){
 				operations.add(OperationParser.unpackOperation(op));
@@ -317,17 +316,25 @@ public class LogStreamManager implements CommunicatorListener {
 	}
 
 	@Override
-	public void communicationReceived() {
+	public void messageReceived() {
 	
 		
 		List<Wrapper> wrappers = communicator.getAllQueuedMessages();
 		for(Wrapper w : wrappers){
 			unwrap(w);
 		}
-		
 		if (listener != null){
-			listener.communicationReceived();
+			listener.messageReceived();
 		}
+	}
+	
+	/**
+	 * Clear list of operations and known variables.
+	 * Equivalent to calling clearOperations() and clearKnownVariables().
+	 */
+	public void clearData(){
+		knownVariables.clear();
+		operations.clear();
 	}
 	
 	/**

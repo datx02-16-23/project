@@ -120,7 +120,6 @@ public class OperationParser {
 	
 	
 	private static double[] parseMultiValue(Operation op) {
-		@SuppressWarnings("unchecked")
 		Object object = op.operationBody.get(Strings.KEY_VALUE);
 		if (object == null){
 			return null;
@@ -162,7 +161,6 @@ public class OperationParser {
 		return ensureIntArray((ArrayList<Object>)op.operationBody.get(Strings.KEY_INDEX));
 	}
 	
-	@SuppressWarnings("unchecked")
 	private static double[] parseValue(Operation op){
 		return ensureDoubleArray(op.operationBody.get(Strings.KEY_VALUE));
 	}

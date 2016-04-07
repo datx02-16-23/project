@@ -175,7 +175,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	
 	private void addAndFireEvent(Wrapper w){
 		incomingQueue.add(w);
-		listener.communicationReceived();
+		listener.messageReceived();
 	}
 	
 	/**
