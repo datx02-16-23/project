@@ -20,6 +20,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
+import assets.Strings;
 import manager.datastructures.DataStructure;
 import manager.datastructures.DataStructureParser;
 import manager.operations.OperationParser;
@@ -150,6 +151,37 @@ public class LogStreamManager implements CommunicatorListener {
 		knownVariables.clear();
 	}
 	
+	public void printSimpleLog(String targetPath){
+		HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
+		annotatedVariables.putAll(knownVariables);
+		Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables);
+		
+		printSimpleLog(targetPath+"simple.log", new Wrapper(header, operations));
+	}
+	
+	public void printSimpleLog(String targetPath, Wrapper wrapper){
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("This is a simplified version of the log. It sacrifices completeness for readability and cannot be processed by " + Strings.PROJECT_NAME + ".\n\n");
+		Collection<AnnotatedVariable> c = wrapper.header.annotatedVariables.values();
+		sb.append("Header: " + c.size() + " declared variables.\n");
+		int i = 0;
+		for (AnnotatedVariable av : c){
+			i++;
+			sb.append("\t" + i + ":\t" + av.identifier + " (" + av.rawType + ")\n");
+		}
+		sb.append("\nBody: " + wrapper.body.size() + " operations.\n");
+		
+		i = 0;
+		for (Operation op : wrapper.body){
+			i++;
+			sb.append("\t" + i + ":\t\t" + op + "\n");
+		}
+		
+		
+		pringString(targetPath, sb.toString());
+	}
+	
 	/**
 	 * Print the operations and header container in the wrapper given as argument. Set the public variable
 	 * PRETTY_PRINTING to true to enable human-readable output.
@@ -166,13 +198,21 @@ public class LogStreamManager implements CommunicatorListener {
 		} else {
 			GSON = LogStreamManager.GSON;
 		}
-		try (PrintStream out = new PrintStream(new FileOutputStream(targetPath+fileName))) {
-		    out.print(GSON.toJson(wrapper));
-		    System.out.println("Log printed: " + targetPath + fileName);
+
+		pringString(targetPath+fileName, GSON.toJson(wrapper));
+
+	}
+	
+	private void pringString(String completePath, String str){
+		try {
+			PrintStream out = new PrintStream(new FileOutputStream(completePath));
+		    System.out.println("Log printed: " + completePath);
+		    out.print(str);
 		    out.flush();
 		    out.close();
 		} catch (Exception e) {
-			System.out.println("printLog() failed: " + e.getMessage());
+			System.err.println("Printing failed: " + e);
+			e.printStackTrace();
 		}
 	}
 	
