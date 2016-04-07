@@ -1,5 +1,7 @@
 package stream_producer;
 
+import java.io.File;
+
 import com.google.gson.GsonBuilder;
 
 import javafx.application.Application;
@@ -21,6 +23,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import wrapper.Operation;
 
@@ -200,7 +204,49 @@ public class StreamView extends Application {
             }
         });
 
+		//Construct "Import "button.
+		Button importList = new Button();
+		importList.setText("Import");
+		importList.setPrefSize(100,30);
+		importList.setTooltip(new Tooltip("Import a log file and append it to queued/received operations."));
+		importList.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+            	File f = chooseFile(primaryStage);
+            	if (f == null){
+            		return;
+            	}
+            	sm.importList(f);
+            }
+        });
 		
+		Button exportSent = new Button();
+		exportSent.setText("Export Sent");
+		exportSent.setPrefSize(100,30);
+		exportSent.setTooltip(new Tooltip("Export sent operations on a JSON format."));
+		exportSent.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+            	File f = chooseDirectory(primaryStage);
+            	if (f == null){
+            		return;
+            	}
+            	sm.exportSent(f);
+            }
+        });
+		
+		Button exportQueued = new Button();
+		exportQueued.setText("Export Queued");
+		exportQueued.setPrefSize(100,30);
+		exportQueued.setTooltip(new Tooltip("Export queued/received operations on a JSON format."));
+		exportQueued.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+            	File f = chooseDirectory(primaryStage);
+            	if (f == null){
+            		return;
+            	}
+            	sm.exportQueued(f);
+            }
+        });
+
 		//Construct stage
         
         	//Add text fields
@@ -233,6 +279,9 @@ public class StreamView extends Application {
 	        s2.setPrefHeight(10);
 	        controlButtons.getChildren().add(s2);
 	        controlButtons.getChildren().add(clearLists);
+	        controlButtons.getChildren().add(importList);
+	        controlButtons.getChildren().add(exportQueued);
+	        controlButtons.getChildren().add(exportSent);
 	        
 	        //Add lists
 	        GridPane listPane = new GridPane();
@@ -245,7 +294,7 @@ public class StreamView extends Application {
 	        listPane.add(inspectQueued, 0, 2);
         
 
-	    primaryStage.setTitle("JGroupCommunicator Simulator: (id =" + sm.getId() + ", channel = " + sm.getChannel().getClusterName() + ")");
+	    primaryStage.setTitle("JGroupCommunicator Simulator: (id =" + sm.getId() + ", channel = " + sm.getChannelName() + ")");
 		root.getChildren().add(base);
 	    Scene scene = new Scene(root, 700, 400);
         primaryStage.setScene(scene);
@@ -272,7 +321,16 @@ public class StreamView extends Application {
         launch(args);
 	}
 	
-	public void stop(){
-		sm.getChannel().close();
+	private File chooseDirectory(Stage stage){
+		DirectoryChooser dc = new DirectoryChooser();
+		dc.setTitle("Choose Output Directory");
+		return dc.showDialog(stage);
+		
+	}
+	
+	private File chooseFile(Stage stage){
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Select Log File");
+		return fileChooser.showOpenDialog(stage);
 	}
 }

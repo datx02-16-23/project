@@ -85,11 +85,7 @@ public class Controller extends Application{
     }
 
     private void setFile(File file) {
-        try {
-            lsm.readLog(file);
-            model.set(lsm.getKnownVariables(), lsm.getOperations());
-        } catch (FileNotFoundException e){
-            System.err.println("Unable to find file");
-        }
+    	lsm.readLog(file);
+    	model.set(lsm.getKnownVariables(), lsm.getOperations());
     }
 }

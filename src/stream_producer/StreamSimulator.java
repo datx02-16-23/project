@@ -1,14 +1,17 @@
 package stream_producer;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.jgroups.Address;
 import org.jgroups.JChannel;
 import org.jgroups.Message;
 import org.jgroups.Receiver;
+import org.jgroups.ReceiverAdapter;
 import org.jgroups.View;
 
 import com.google.gson.*;
@@ -19,12 +22,14 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import manager.CommunicatorListener;
+import manager.JGroupCommunicator;
 import manager.LogStreamManager;
 import manager.operations.*;
 
 import wrapper.*;
 
-public class StreamSimulator implements Receiver{
+public class StreamSimulator implements CommunicatorListener{
 
 	private final LogStreamManager LSM;
 	private final ObservableList<Operation> queuedOperations, sentOperations;
@@ -35,7 +40,6 @@ public class StreamSimulator implements Receiver{
 		return queuedOperations;
 	}
 
-	private JChannel channel;
 	private final int id;
 	
 	public StreamSimulator(){
@@ -44,28 +48,18 @@ public class StreamSimulator implements Receiver{
 		nbrSentString = new SimpleStringProperty();
 		waitingOperationsList = new SimpleStringProperty();
 		sentOperationsList = new SimpleStringProperty();
-		id = (int)(Math.random()*Integer.MAX_VALUE);
-		try {
-			channel = new JChannel("udp.xml");
-			channel.connect(Strings.DEFAULT_CHANNEL);
-			channel.setReceiver(this);
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
 		
+		id = (int)(Math.random()*Integer.MAX_VALUE);
 		
 		LSM = new LogStreamManager();
+		LSM.PRETTY_PRINTING = true;
+		LSM.setListener(this);
+		
 		queuedOperations = FXCollections.observableArrayList();
 		sentOperations = FXCollections.observableArrayList();
-		updateSent();
 		
-		try {
-			LSM.readLog("C:\\Users\\Richard\\Documents\\datx02-16-23\\git\\src\\stream_producer\\bubble.json");
-			queuedOperations.addAll(LSM.getOperations());
-			updateQueued();
-		} catch (JsonIOException | JsonSyntaxException | FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		updateSent();
+		updateQueued();
 	}
 	
 	public void transmitOperation(Operation op){
@@ -155,9 +149,7 @@ public class StreamSimulator implements Receiver{
 	public SimpleStringProperty getSentOperationsList() {
 		return sentOperationsList;
 	}
-	public JChannel getChannel() {
-		return channel;
-	}
+	
 	public int getId() {
 		return id;
 	}
@@ -167,7 +159,7 @@ public class StreamSimulator implements Receiver{
 	public boolean transmit(Wrapper wrapper){
 		WrapperMessage wm = new WrapperMessage(wrapper, id);
 		try {
-			channel.send(new Message().setObject(wm));
+			LSM.streamAndClearLogData();
 		} catch (Exception e) {
 			return false;
 		}
@@ -273,38 +265,37 @@ public class StreamSimulator implements Receiver{
 		updateQueued();
 	}
 	
-	@Override
-	public void receive(Message msg) {
-		WrapperMessage wm = (WrapperMessage) msg.getObject();
+	public void importList(File jsonFile){
+		LSM.clearOperations();
+		LSM.readLog(jsonFile);
+		queuedOperations.addAll(LSM.getOperations());
+		updateQueued();
+	}
+	
+	public void exportSent(File targetDir){
+		exportList(targetDir, sentOperations);
 		
-		if (wm.senderId == id){
-			return; //Don't receive messages from self.
-		}
-		
-		Platform.runLater(new Runnable(){
-			public void run() {
-				queuedOperations.addAll(wm.wrapper.body);
-				updateQueued();
-			}
-		});
+	}
+	
+	public void exportQueued(File targetDir){
+		exportList(targetDir, queuedOperations);
+	}
+	
+	private void exportList(File targetDir, List<Operation> list){
+		LSM.clearOperations();
+		LSM.setOperations(list);
+		LSM.printLog(targetDir);
 	}
 
 	@Override
-	public void getState(OutputStream output) throws Exception {}
+	public void communicationReceived() {
+		queuedOperations.addAll(LSM.getOperations());
+		LSM.clearOperations();
+		updateQueued();
+	}
 
-	@Override
-	public void setState(InputStream input) throws Exception {}
-
-	@Override
-	public void viewAccepted(View new_view) {}
-
-	@Override
-	public void suspect(Address suspected_mbr) {}
-
-	@Override
-	public void block() {}
-
-	@Override
-	public void unblock() {}
+	public String getChannelName() {
+		return ((JGroupCommunicator) LSM.getCommunicator()).getChannel();
+	}
 
 }

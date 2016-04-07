@@ -105,20 +105,42 @@ public class LogStreamManager implements CommunicatorListener {
 	 * @throws JsonSyntaxException This exception is raised when Gson attempts to read (or write) a malformed JSON element.
 	 * @throws FileNotFoundException Signals that the file located at filePath could not be opened.
 	 */
-	public void readLog(String filePath) throws JsonIOException, JsonSyntaxException, FileNotFoundException{
+	public void readLog(String filePath){
 		readLog(new File(filePath));
 	}
 	
 	/**
-	 * 
+	 * Read, unwrap and store data from a JSON log file.
 	 * @param LogStream The file to read.
-	 * @throws JsonIOException This exception is raised when Gson was unable to read an input stream or write to one.
-	 * @throws JsonSyntaxException This exception is raised when Gson attempts to read (or write) a malformed JSON element.
-	 * @throws FileNotFoundException Signals that LogStream could not be opened.
 	 */
-	public void readLog(File LogStream) throws JsonIOException, JsonSyntaxException, FileNotFoundException{
-		wrapper = gson.fromJson(new JsonReader(new FileReader(LogStream)), Wrapper.class);
-		unwrap(wrapper);
+	public void readLog(File LogStream){
+		try {
+			wrapper = gson.fromJson(new JsonReader(new FileReader(LogStream)), Wrapper.class);
+			unwrap(wrapper);
+		} catch (JsonIOException e) {
+			System.err.println("JSON IO error: " + e);
+		} catch (JsonSyntaxException e) {
+			System.err.println("JSON syntax error: " + e);
+		} catch (FileNotFoundException e) {
+			System.err.println("File not found: " + e);
+		}
+	}
+	
+	/**
+	 * Returns the Communicator used by this LogStreamManager.
+	 * @return The Communicator used by this LogStreamManager.
+	 */
+	public Communicator getCommunicator(){
+		return communicator;
+	}
+	
+	/**
+	 * Print the operations and header information currently held by this LogStreamManager.  Set the public variable
+	 * PRETTY_PRINTING to true to enable human-readable output.
+	 * @param targetPath The location to print the log file.
+	 */
+	public void printLog(File targetPath){
+		printLog(targetPath.toString());
 	}
 	
 	/**
@@ -136,21 +158,78 @@ public class LogStreamManager implements CommunicatorListener {
 	
 	/**
 	 * Stream the data held by this LogStreamManager using the current Communicator.
+	 * @return True if data was successfully streamed.
 	 */
-	public void streamLogData(){
+	public boolean streamLogData(){
 		HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
 		annotatedVariables.putAll(knownVariables);
 		Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables);
-		communicator.send(new Wrapper(header, operations));
+		return streamWrapper(new Wrapper(header, operations));
 	}
 	
 	/**
 	 * Stream the data held by this LogStreamManager using the current Communicator, then clear data.
+	 * @return True if data was successfully streamed.
 	 */
-	public void streamAndClearLogData(){
-		streamLogData();
+	public boolean streamAndClearLogData(){
+		boolean result = streamLogData();
 		operations.clear();
 		knownVariables.clear();
+		return result;
+	}
+	
+	/**
+	 * Stream the given Wrapper using the Communicator carried by this LogStreamManager.
+	 * @param wrapper The Wrapper to stream.
+	 * @return True if successful, false otherwise.
+	 */
+	public boolean streamWrapper(Wrapper wrapper){
+		return communicator.send(wrapper);
+	}
+	
+	/**
+	 * Stream the given Wrapper using the Communicator carried by this LogStreamManager.
+	 * @param operation The Operation to stream.
+	 * @return True if successful, false otherwise.
+	 */
+	public boolean streamOperation(Operation operation){
+		ArrayList<Operation> operations = new ArrayList<Operation>();
+		operations.add(operation);
+		return streamWrapper(new Wrapper(null, operations));	
+	}
+	
+	/**
+	 * Stream the given Wrapper using the Communicator carried by this LogStreamManager.
+	 * @param operation The operations to stream.
+	 * @return True if successful, false otherwise.
+	 */
+	public boolean streamOperations(List<Operation> operations){
+		return streamWrapper(new Wrapper(null, operations));	
+	}
+	
+	/**
+	 * Stream the given Wrapper using the Communicator carried by this LogStreamManager.
+	 * @param annotatedVariable The Wrapper to stream.
+	 * @return True if successful, false otherwise.
+	 */
+	public boolean streamAnnotatedVariable(AnnotatedVariable annotatedVariable){
+		HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
+		annotatedVariables.put(annotatedVariable.identifier, annotatedVariable);
+		Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables);
+		return streamWrapper(new Wrapper(header, null));
+	}
+	
+	/**
+	 * Stream the given Wrapper using the Communicator carried by this LogStreamManager.
+	 * @param wrappers The Wrappers to stream.
+	 * @return True if ALL wrappers successfully sent, false otherwise.
+	 */
+	public boolean streamWrappers(List<Wrapper> wrappers){
+		boolean allSuccessful = true;
+		for (Wrapper w : wrappers){
+			allSuccessful = allSuccessful && communicator.send(w);
+		}
+		return allSuccessful;
 	}
 	
 	public void printSimpleLog(String targetPath){
@@ -194,7 +273,7 @@ public class LogStreamManager implements CommunicatorListener {
 		Gson GSON;
 		DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd_HHmmss");
 		Calendar cal = Calendar.getInstance();
-		String fileName = dateFormat.format(cal.getTime()) + ".json";
+		String fileName = File.separator + dateFormat.format(cal.getTime()) + ".json";
 		if (PRETTY_PRINTING){
 			GSON = new GsonBuilder().setPrettyPrinting().create();
 		} else {
@@ -248,7 +327,21 @@ public class LogStreamManager implements CommunicatorListener {
 		
 		if (listener != null){
 			listener.communicationReceived();
+		}
 	}
+	
+	/**
+	 * Clear all operations held by this LogStreamManager.
+	 */
+	public void clearOperations(){
+		operations.clear();
+	}
+	
+	/**
+	 * Clear all known variables held by this LogStreamManager.
+	 */
+	public void clearKnownVariables(){
+		knownVariables.clear();
 	}
 	
 	/**
