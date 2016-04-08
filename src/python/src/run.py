@@ -3,12 +3,15 @@ from os import path
 from create_log import visualize
 
 if __name__ == '__main__':
+	output = path.abspath('output.py')
 	settings = {
 		'rootdir' : path.abspath('./test'), 
 		'files' : ['main.py'],
-		'exec' : 'main.py',
+		'output' : output,
 		'watch' : [Variable('a','list',None,None)]}
 	visualize(settings)
+	# execfile(path.abspath('/vi'))
+	# ToJson().convert(output,path.abspath('output.json'))
 	# import ast
 	
 	# f = open('operations.py','r')

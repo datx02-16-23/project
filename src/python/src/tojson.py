@@ -63,6 +63,7 @@ class ToJson(object):
 
     # make separate read/write cases
     def convert(self,output,outfile):
+        print output
         for line in output:
             isNewValue = self.table.update(line)
             if line['type'] == 'write':
