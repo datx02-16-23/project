@@ -136,3 +136,6 @@ local.properties
 # Code Recommenders
 .recommenders/
 
+# Python
+*.pyc
+

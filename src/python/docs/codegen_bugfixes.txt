@@ -1,0 +1,25 @@
+visit_If
+	missing a break if there were no else/elif
+	else_ = node.orelse
+	->
+	else_ = node.orelse
+    if not else_:
+        break
+
+visit_Compare
+	
+	extra %% (first line in for loop)
+	self.write(' %s %%' % CMPOP_SYMBOLS[type(op)])
+	->
+	self.write(' %s ' % CMPOP_SYMBOLS[type(op)])
+
+	called write instead of visit (second line of function)
+	self.write(node.left)
+	->
+	self.visit(node.left)
+
+visit_ImportFrom
+	just wrote the item instead of visiting
+    	self.write(item)
+	->
+	self.visit(item)
