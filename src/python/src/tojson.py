@@ -1,36 +1,38 @@
-from var import VarTable,Var,get_vars,find_reads
+from expr import Variable,VariableTable,InvalidExpression
 from json import dump
 
-translate_types = {
-    'list' : 'array'
-}
+def translate_types(type_):
+    types_ = {
+        'list' : 'array'
+    }
+    if type_ not in types_:
+        return type_
+    else:
+        return types_[type_]
 
-def initJson(watch):
-    init = {'header' : { 'annotatedVariables' : {}, 'version' : 0.0 }, 'body' : []}
+def initJsonBuffer(watch):
+    jsonBuffer = {'header' : { 'annotatedVariables' : {}, 'version' : 0.0 }, 'body' : []}
     for var in watch:
-        t_json = translate_types[var.type_]
+        t_json = translate_types(var.type_)
         var.type_ = t_json
-        init['header']['annotatedVariables'][var.name] = var.get_json() 
-    return init
+        jsonBuffer['header']['annotatedVariables'][var.name] = var.get_json()
+    return jsonBuffer
 
 def getOperationObject():
     return {'operation' : None, 'operationBody' : {}}
 
 class ToJson(object):
     def __init__(self,watch):
-        self.jsonBuffer = initJson(watch)
-        self.table = VarTable()
+        self.jsonBuffer = initJsonBuffer(watch)
         self.ids = [w.name for w in watch]
+        self.table = VariableTable()
 
     def toJson(self,statement):
-        variable = self.table.evaluate_indices(statement)
-        if not isinstance(variable,tuple):
-            if isinstance(variable,str):
-                return {'identifier' : variable}
-            else:
-                return None
+        indices = self.table.evaluate_indices(statement)
+        if len(indices) == 1:
+            return {'identifier' : indices[0]}
         else:
-            return {'identifier' : variable[0], 'index' : list(variable[1:]) } 
+            return {'identifier' : indices[0], 'index' : indices[1:]}
 
     def putOperation(self,name):
         obj = getOperationObject()
@@ -40,7 +42,10 @@ class ToJson(object):
 
     def putWrite(self,src,src_val,dst):
         obj = self.putOperation('write')
-        obj['operationBody']['source'] = self.toJson(src)
+        try:
+            obj['operationBody']['source'] = self.toJson(src)
+        except InvalidExpression:
+            obj['operationBody']['source'] = 'undefined'
         obj['operationBody']['target'] = self.toJson(dst)
         obj['operationBody']['value'] = src_val
 
@@ -56,26 +61,27 @@ class ToJson(object):
         obj['operationBody']['size'] = len(value) if isinstance(value,list) else 1
         obj['operationBody']['value'] = value
 
-    def dumpJson(self,outfile):
-        with open(outfile,'wb') as f:
-            dump(self.jsonBuffer,f)
-            f.close()
-
     # make separate read/write cases
-    def convert(self,output,outfile):
-        print output
+    def convert_(self,output,outfile):
         for line in output:
-            isNewValue = self.table.update(line)
             if line['type'] == 'write':
-                (src,dst) = (line['src'],line['dst'])
-                var = get_vars(dst) + get_vars(src)
-                if [i for i in self.ids if i in var]:
-                    if not isNewValue or [i for i in self.ids if i in get_vars(src)]:
-                        self.putWrite(src,line['src_val'],dst)
-                    else:
-                        self.putInit(dst,line['src_val'])
+                self.table.update(line['src_val'],line['dst'])
+                self.putWrite(line['src'],line['src_val'],line['dst'])
             elif line['type'] == 'read':
-                reads = find_reads(line['statement'])
-                for read in reads:
-                    self.putRead(read,self.table.evaluate(read))
-        self.dumpJson(outfile)
+                pass
+        return self.jsonBuffer
+
+def dumpJson(outfile,jsonBuffer):
+    with open(outfile,'wb') as f:
+        dump(jsonBuffer,f)
+        f.close()
+
+def convert(output_path,outfile_path,watch):
+    tj = ToJson(watch)
+    pm = __import__(output_path)
+    output = pm.output
+    print tj.convert_(output,outfile_path)
+
+# from create_log import format_log
+# format_log('output.py')
+convert('output','output.json',[])

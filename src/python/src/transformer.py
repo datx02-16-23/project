@@ -37,11 +37,14 @@ def is_variable(node):
 class ExpressionTransformer(NodeTransformer):
 
 	def visit_Subscript(self,node):
-		value 		= self.visit(node.value)
-		index 		= self.visit(node.slice)
-		expand 		= add_tuple(Tuple(elts=[value]),index)
+		value  = self.visit(node.value)
+		index  = self.visit(node.slice)
+		expand = None
 		if is_variable(value):
+			expand = add_tuple(Tuple(elts=[value]),index)
 			expand.elts = [Str('subscript')] + expand.elts
+		else:
+			expand = add_tuple(value,index)
 		return copy_location(expand,node)
 
 	def visit_Name(self,node):

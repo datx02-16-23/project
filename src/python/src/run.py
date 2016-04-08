@@ -1,6 +1,7 @@
 from expr import Variable
 from os import path
 from create_log import visualize
+from tojson import convert
 
 if __name__ == '__main__':
 	output = path.abspath('output.py')
