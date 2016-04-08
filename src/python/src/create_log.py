@@ -65,17 +65,31 @@ def visualize(settings):
 	open(settings['output'],'w').close()
 	for node in nodes:
 		f = open(node['path'],'wb')
-		transform(node['parse'],load_logwriter(abspath('operations.py'),settings['output']))
+		transform(node['parse'],load_logwriter(abspath('operations.py'),abspath(settings['output'])))
 		f.write(to_source(node['parse']))
 		f.close()
 
+	# # Insert a 'create_output' call into given main file and execute it
+	# # generating an output.py
+	# sys.path.append(os.path.join(os.path.dirname(__file__), v_env))
+	# with open(v_env+settings['exec'],'a') as f:
+	# 	f.write('\ncreate_output(\'output.py\')')
+	# 	f.close()
+	# execfile(v_env+settings['exec'],locals())
+
+	# # Generate an output.json
+	# from output import output
+	# ToJson(settings['watch']).convert(output,'output.json')
+
 def format_log(file_path):
-	output = None
 	with open(file_path,'r') as f:
 		output = f.read()
 		# encapsulate the output in a list
 		output = "output = [%s]" % output[:len(output)-1] # remove trailing ","
+		# Feels like a hacky way of formatting
+		f2 = open('tmp.py','w')
+		f2.write(output)
+		f2.close()
 		f.close()
-	with open(file_path,'w') as f:
-		f.write(output)
-		f.close()
+	output = __import__('tmp').output
+	return output

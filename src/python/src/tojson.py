@@ -1,5 +1,6 @@
 from expr import Variable,VariableTable,InvalidExpression
 from json import dump
+from create_log import format_log
 
 def translate_types(type_):
     types_ = {
@@ -13,8 +14,8 @@ def translate_types(type_):
 def initJsonBuffer(watch):
     jsonBuffer = {'header' : { 'annotatedVariables' : {}, 'version' : 0.0 }, 'body' : []}
     for var in watch:
-        t_json = translate_types(var.type_)
-        var.type_ = t_json
+        t_json = translate_types(var.rawType)
+        var.rawType = t_json
         jsonBuffer['header']['annotatedVariables'][var.name] = var.get_json()
     return jsonBuffer
 
@@ -62,7 +63,7 @@ class ToJson(object):
         obj['operationBody']['value'] = value
 
     # make separate read/write cases
-    def convert_(self,output,outfile):
+    def convert_(self,output):
         for line in output:
             if line['type'] == 'write':
                 self.table.update(line['src_val'],line['dst'])
@@ -78,10 +79,7 @@ def dumpJson(outfile,jsonBuffer):
 
 def convert(output_path,outfile_path,watch):
     tj = ToJson(watch)
-    pm = __import__(output_path)
-    output = pm.output
-    print tj.convert_(output,outfile_path)
+    output = format_log(output_path)
+    dumpJson(outfile_path,tj.convert_(output))
 
-# from create_log import format_log
-# format_log('output.py')
-convert('output','output.json',[])
+convert('output.py','output.json',[Variable('a','list',None,None)])

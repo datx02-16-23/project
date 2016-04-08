@@ -7,7 +7,7 @@ def get_op(tr_op):
 	}[tr_op]
 
 class Variable(object):
-	def __init__(self,name,rawType,attributes,abstractType=None):
+	def __init__(self,name,rawType,attributes=None,abstractType=None):
 		self.name = name
 		self.rawType = rawType
 		self.attributes = attributes
