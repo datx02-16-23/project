@@ -9,7 +9,7 @@ import org.jgroups.ReceiverAdapter;
 
 import com.google.gson.Gson;
 
-import application.Strings;
+import assets.Strings;
 import wrapper.Wrapper;
 
 /**

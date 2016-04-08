@@ -1,7 +1,7 @@
 package manager.operations;
 
-import application.Strings;
 import wrapper.Locator;
+
 
 /**
  * Create a new Read operation, from the variable at index specified by {@code source}
@@ -23,7 +23,7 @@ public class OP_Read extends OP_ReadWrite{
 	 * @param target The target variable for this Read operation.
 	 */
 	public void setTarget(Locator target){
-		this.operationBody.put(Strings.KEY_TARGET, target);
+		this.operationBody.put(OperationsBody.TARGET, target);
 	}
 	
 	/**
@@ -35,7 +35,7 @@ public class OP_Read extends OP_ReadWrite{
 		if (source == null){
 			throw new IllegalArgumentException("Source cannot be null in a Read operation!");
 		}
-		this.operationBody.put(Strings.KEY_SOURCE, source);
+		this.operationBody.put(OperationsBody.SOURCE, source);
 	}
 	
 	/**
@@ -44,18 +44,18 @@ public class OP_Read extends OP_ReadWrite{
 	 * @param value Set the value(s) which were read from {@code source}.
 	 */
 	public void setValue(double[] value){
-		this.operationBody.put(Strings.KEY_VALUE, value);
+		this.operationBody.put(OperationsBody.VALUE, value);
 	}
 	
 	
 	
 	public Locator getTarget(){
-		return (Locator)this.operationBody.get(Strings.KEY_TARGET);
+		return (Locator)this.operationBody.get(OperationsBody.TARGET);
 	}
 	public Locator getSource(){
-		return (Locator)this.operationBody.get(Strings.KEY_SOURCE);
+		return (Locator)this.operationBody.get(OperationsBody.SOURCE);
 	}
 	public double[] getValue(){
-		return (double[])this.operationBody.get(Strings.KEY_VALUE);
+		return (double[])this.operationBody.get(OperationsBody.VALUE);
 	}
 }

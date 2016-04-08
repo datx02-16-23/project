@@ -1,7 +1,6 @@
 package manager.operations;
 import java.util.HashMap;
 
-import application.Strings;
 import wrapper.Locator;
 import wrapper.Operation;
 
@@ -18,7 +17,7 @@ public abstract class OP_ReadWrite extends Operation{
 	 * @param operation The name of the operation. Should be "read" or "write".
 	 */
 	public OP_ReadWrite(Operations operation) {
-		super(operation, new HashMap<String, Object>());
+		super(operation, new HashMap<OperationsBody, Object>());
 	}
 	
 	/**
@@ -27,7 +26,7 @@ public abstract class OP_ReadWrite extends Operation{
 	 * @param target The target variable for this ReadWrite operation.
 	 */
 	public void setTarget(Locator target){
-		this.operationBody.put(Strings.KEY_TARGET, target);
+		this.operationBody.put(OperationsBody.TARGET, target);
 	}
 	
 	/**
@@ -36,7 +35,7 @@ public abstract class OP_ReadWrite extends Operation{
 	 * @param source The source variable for this ReadWrite operation.
 	 */
 	public void setSource(Locator source){
-		this.operationBody.put(Strings.KEY_SOURCE, source);
+		this.operationBody.put(OperationsBody.SOURCE, source);
 	}
 	
 	/**
@@ -45,7 +44,7 @@ public abstract class OP_ReadWrite extends Operation{
 	 * @param value Set the value(s) which were ReadWrite from {@code source}.
 	 */
 	public void setValue(double[] value){
-		this.operationBody.put(Strings.KEY_VALUE, value);
+		this.operationBody.put(OperationsBody.VALUE, value);
 	}
 	
 	public String toString(){
@@ -58,12 +57,12 @@ public abstract class OP_ReadWrite extends Operation{
 	}
 	
 	public Locator getTarget(){
-		return (Locator)this.operationBody.get(Strings.KEY_TARGET);
+		return (Locator)this.operationBody.get(OperationsBody.TARGET);
 	}
 	public Locator getSource(){
-		return (Locator)this.operationBody.get(Strings.KEY_SOURCE);
+		return (Locator)this.operationBody.get(OperationsBody.SOURCE);
 	}
 	public double[] getValue(){
-		return (double[])this.operationBody.get(Strings.KEY_VALUE);
+		return (double[])this.operationBody.get(OperationsBody.VALUE);
 	}
 }
