@@ -69,18 +69,6 @@ def visualize(settings):
 		f.write(to_source(node['parse']))
 		f.close()
 
-	# # Insert a 'create_output' call into given main file and execute it
-	# # generating an output.py
-	# sys.path.append(os.path.join(os.path.dirname(__file__), v_env))
-	# with open(v_env+settings['exec'],'a') as f:
-	# 	f.write('\ncreate_output(\'output.py\')')
-	# 	f.close()
-	# execfile(v_env+settings['exec'],locals())
-
-	# # Generate an output.json
-	# from output import output
-	# ToJson(settings['watch']).convert(output,'output.json')
-
 def format_log(file_path):
 	output = None
 	with open(file_path,'r') as f:
