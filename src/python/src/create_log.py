@@ -32,6 +32,7 @@ def transform(node,logwriter_nodes):
 	transformers = [WriteTransformer(), ReadTransformer()]
 	MainTransformer(transformers,logwriter_nodes).visit(node)
 
+# Move this out of create_log? Perhaps into run.py
 def load_logwriter(logwriter,output):
 	with open(logwriter,'r') as f:
 		n = parse(f.read())
