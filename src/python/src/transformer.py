@@ -69,7 +69,6 @@ class ExpressionTransformer(NodeTransformer):
 	def visit_Call(self,node):
 		return node
 
-
 class OperationTransformer(NodeTransformer):
 	def __init__(self,name):
 		self.name = name
@@ -84,7 +83,7 @@ class OperationTransformer(NodeTransformer):
 		)
 
 	def visit_Call(self,node):
-		if node.func.id in DEFINED_OPERATIONS:
+		if isinstance(node.func,Attribute) or node.func.id in DEFINED_OPERATIONS:
 			return node
 		else:
 			for arg in node.args:
@@ -95,26 +94,26 @@ class OperationTransformer(NodeTransformer):
 	def visit_Assign(self,node): return node
 
 	def visit_AugAssign(self,node): return node
-		
+	
+	def visit_FunctionDef(self,node): return node
+
 class WriteTransformer(OperationTransformer):
 	def __init__(self):
 		super(WriteTransformer,self).__init__('write')
 
 	def visit_Assign(self,node):
-		src = self.expr_transformer.visit(node.value)
-		# need a deep copy of node.targets[0] (the left-most part
-		# of the assignment) since we dont want to change that statement
-		# this is an eval-hack, possibly more safe solution exists
+		# this is an eval-hack for deep copy, probably more safe solution exists
+		src = self.expr_transformer.visit(eval(dump(node.value)))
 		dst = self.expr_transformer.visit(eval(dump(node.targets[0])))
 		write = self.create_call([src,dst,node.value])
 		node.value = write
 		return node
 
-	def insert(self,target,mod):
+	def insert_write(self,target,mod):
 		mod.body.insert(0,
 			Assign(
 				targets = [target],
-				value 	= self.create_call([target,self.expr_transformer.visit(target)])
+				value 	= self.create_call([target,self.expr_transformer.visit(target),target])
 			)
 		)
 
@@ -124,10 +123,10 @@ class WriteTransformer(OperationTransformer):
 		# inject an (for example) i = write(i,['var','i'])
 		# to keep track of i during loop, not a very good solution though
 		if isinstance(node.target,Name):
-			self.insert(node.target,node)
+			self.insert_write(node.target,node)
 		else:
 			for target in node.target.elts:
-				self.insert(target,node)
+				self.insert_write(target,node)
 		return node
 
 class ReadTransformer(OperationTransformer):
@@ -135,16 +134,20 @@ class ReadTransformer(OperationTransformer):
 		super(ReadTransformer,self).__init__('read')
 
 	def create_read(self,node):
-		stmt = self.expr_transformer.visit(node)
+		# eval hack again
+		stmt = self.expr_transformer.visit(eval(dump(node)))
 		read = self.create_call([stmt,node])
 		return copy_location(read,node)
 
-	def visit_Subscript(self,node): return self.create_read(node)
+	def visit_Subscript(self,node): 
+		return self.create_read(node)
 
-	def visit_Name(self,node): return self.create_read(node)
+	def visit_Name(self,node):
+		return self.create_read(node)
 
 	def visit_For(self,node):
-		self.visit(node.body)
+		for line in node.body:
+			self.visit(line)
 		return node
 
 ######################## Tests ########################
@@ -152,23 +155,29 @@ def test_stmt(stmt):
 	wt = WriteTransformer()
 	rt = ReadTransformer()
 	node = parse(stmt).body[0]
+	print 'before : ',stmt
 	node = wt.visit(node)
 	node = rt.visit(node)
 	ts_node = ts(node)
 	print 'after : ',ts_node
 	return ts_node
 
-# # # assignment
+# # assignment
 # test_stmt("a = 1")						# integer
 # test_stmt("a = 'asd'") 					# string
 # test_stmt("a = False") 					# boolean
 # test_stmt("a = [1,2,3]")				# array
 # test_stmt("a = [[[1,2,3]]]")			# array
+# test_stmt("tmp = a[i]")
+
+# # indexing
 # test_stmt("a[0] = [1,2,3]")				# array dst
 # test_stmt("a[0][1] = [1,2,3]")			# array dst
 # test_stmt("a[0][b[0]+b[1]] = [1,2,3]")	# array dst
 # test_stmt("a[len(a) - 1] = a[0]") 		# array dst,function call
 # test_stmt("a[0] += 3")
+# test_stmt("a[j+1]")
+# test_stmt("a[j+1][x+3]")
 
 # # binop
 # test_stmt("x = a + b")
@@ -185,3 +194,9 @@ def test_stmt(stmt):
 # test_stmt("for i in range(0,10): x = 3")
 # test_stmt("for i,j in (range(0,10),range(0,10)): x = 3")
 # test_stmt("for i in [1,2,3]: print i")
+
+# # function calls
+# test_stmt("a = rand_array(10,50)")
+
+# # function declaration
+# test_stmt("def foo(): return 0")

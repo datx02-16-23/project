@@ -27,15 +27,19 @@ class VariableTable(object):
 
 	def update(self,src_val,dst):
 		indices = self.evaluate_indices(dst)
+		var_name = indices[0]
+		new_value = False
 		if len(indices) == 1:
-			self.table[indices[0]] = src_val
+			new_value = var_name in self.table
+			self.table[var_name] = src_val
 		else:
-			var = self.table[indices[0]]
+			var = self.table[var_name]
 			loc = indices[1:len(indices) - 1]
 			index = indices[len(indices) - 1]
 			for i in loc:
 				var = var[i]
 			var[index] = src_val
+		return new_value
 
 	def evaluate_indices(self,expression):
 		if not isinstance(expression,tuple):

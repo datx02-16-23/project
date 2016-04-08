@@ -69,10 +69,13 @@ class ToJson(object):
             if line['type'] == 'write':
                 # copy src_val so that changing src_val in table wont
                 # affect src_val written to jsonBuffer
-                self.table.update(deepcopy(line['src_val']),line['dst'])
-                self.putWrite(line['src'],line['src_val'],line['dst'])
+                new_value = self.table.update(deepcopy(line['src_val']),line['dst'])
+                if new_value:
+                    self.putInit(line['dst'],line['src_val'])
+                else:
+                    self.putWrite(line['src'],line['src_val'],line['dst'])
             elif line['type'] == 'read':
-                pass
+                self.putRead(line['statement'],line['value'])
         return self.jsonBuffer
 
 def dumpJson(outfile,jsonBuffer):
