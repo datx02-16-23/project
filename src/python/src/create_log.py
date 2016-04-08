@@ -1,0 +1,93 @@
+from codegen import to_source
+from transformer import WriteTransformer,ReadTransformer
+from ast import NodeTransformer,parse,Assign,Name,Str
+from printnode import ast_visit as printnode
+from distutils.dir_util import copy_tree
+from os.path import abspath
+
+class MainTransformer(NodeTransformer):
+	def __init__(self,transformers,logwriter_nodes):
+		self.transformers = transformers
+		self.logwriter_nodes = logwriter_nodes
+
+	def visit_Module(self,node):
+		for tr in self.transformers:
+			tr.visit(node)
+
+		self.logwriter_nodes.reverse()
+		for n in self.logwriter_nodes:
+			node.body.insert(0,n)
+
+		return node
+
+def setup_env(settings,v_env):
+	copy_tree(settings['rootdir'],v_env)
+	# This only supports flat layout of files
+	with open(v_env+'__init__.py','wb') as f:
+		f.write('')
+		f.close()
+
+def transform(node,logwriter_nodes):
+	transformers = [WriteTransformer(), ReadTransformer()]
+	MainTransformer(transformers,logwriter_nodes).visit(node)
+
+def load_logwriter(logwriter,output):
+	with open(logwriter,'r') as f:
+		n = parse(f.read())
+		f.close()
+		for node in n.body:
+			if (isinstance(node,Assign) and 
+				isinstance(node.targets[0],Name) and 
+				node.targets[0].id == 'outfile'):
+				node.value = Str(output)
+		return n.body
+
+# Maybe convert this into a "main" function
+# Also rethink the execution of this function
+# - v_env+... must be fail-safe
+# execfile must be fail-safe
+# given settings variable should be sanity-checked
+def visualize(settings):
+	# Setup rootdir of visualization folder given source root directory
+	v_env = '%svisualize/' % settings['rootdir']
+	setup_env(settings,v_env)
+
+	# Generate ast's from given files copied into visualization folder
+	nodes = []
+	for f in settings['files']:
+		path = v_env+f
+		fRead = open(path, "r")
+		nodes.append( {'path' : path, 'parse' : parse(fRead.read())} )
+		fRead.close()
+
+	# Replace lines in files to be visualized with
+	# function calls from operations.py
+	open('output.py','w').close()
+	for node in nodes:
+		f = open(node['path'],'wb')
+		transform(node['parse'],load_logwriter(abspath('operations.py'),abspath('output.py')))
+		f.write(to_source(node['parse']))
+		f.close()
+
+	# # Insert a 'create_output' call into given main file and execute it
+	# # generating an output.py
+	# sys.path.append(os.path.join(os.path.dirname(__file__), v_env))
+	# with open(v_env+settings['exec'],'a') as f:
+	# 	f.write('\ncreate_output(\'output.py\')')
+	# 	f.close()
+	# execfile(v_env+settings['exec'],locals())
+
+	# # Generate an output.json
+	# from output import output
+	# ToJson(settings['watch']).convert(output,'output.json')
+
+def format_log(file_path):
+	output = None
+	with open(file_path,'r') as f:
+		output = f.read()
+		# encapsulate the output in a list
+		output = "output = [%s]" % output[:len(output)-1] # remove trailing ","
+		f.close()
+	with open(file_path,'w') as f:
+		f.write(output)
+		f.close()

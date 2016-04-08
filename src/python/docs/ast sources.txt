@@ -1,0 +1,14 @@
+Ast Source
+https://hg.python.org/cpython/file/2.7/Lib/ast.py
+
+Ast Nodes Explanation
+http://greentreesnakes.readthedocs.org/en/latest/nodes.html
+
+Ast Transform 1
+http://www.dalkescientific.com/writings/diary/archive/2010/02/22/instrumenting_the_ast.html
+
+Ast Transform 2
+http://eli.thegreenplace.net/2009/11/28/python-internals-working-with-python-asts
+
+Codegen Source
+https://gist.github.com/mattbasta/791312
