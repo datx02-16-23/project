@@ -11,8 +11,6 @@ import com.google.gson.Gson;
 
 import application.Strings;
 import wrapper.Wrapper;
-import wrapper.WrapperMessage;
-import wrapper.StringMessage;
 
 /**
  * Interprocess communication implementation using the JGroups library.
@@ -131,51 +129,71 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 		
 		Object messageObject = incoming.getObject();
 		
-		//Handle Wrapper case.
-		if (messageObject instanceof WrapperMessage){
-			WrapperMessage wm = (WrapperMessage) messageObject;
-			
-			if(senderIsSelf(wm.senderId)){
-				return;  //Don't process our own messages.
-			}
-			
-			addAndFireEvent(wm.wrapper);
+		if (messageObject instanceof MavserMessage == false){
+			System.err.println("Invalid message type: " + messageObject);
 			return;
 		}
 		
-		//Handle String (assume gson) case
-		if (messageObject instanceof StringMessage){
-			StringMessage sm = (StringMessage) messageObject;
+		MavserMessage message = (MavserMessage) messageObject;
 			
-			if(senderIsSelf(sm.senderId)){
-				return;  //Don't process our own messages.
+		if(message.senderId == transmitterId){
+			return;  //Don't process our own messages.
+		}
+		
+		switch(message.messageType){
+			case MavserMessage.WRAPPER:
+				addAndFireEvent((Wrapper) message.payload);
+			break;
+				
+			case MavserMessage.JSON:
+				try{
+					addAndFireEvent(gson.fromJson((String) message.payload, Wrapper.class));
+				} catch (Exception e){
+					System.err.println("JSON String malformed: " + message.payload);
+				}
+			break;
+			
+			case MavserMessage.REQUEST_FOR_MEMBER_INFO:
+				String myListener = listener == null ? "null" :  listener.getClass().getSimpleName();
+				Message messageReply = new Message();
+				messageReply.setObject(new MavserMessage("JGroupCommunicator [" + myListener +"], (id = " + transmitterId + ")", transmitterId, MavserMessage.MEMBER_INFO));
+			try {
+				jChannel.send(messageReply);
+			} catch (Exception e) {
+				System.err.println("Failed to send member information.");
 			}
+			break;
 			
-			Wrapper wrapper;
-			try{
-				wrapper = gson.fromJson(sm.gsonString, Wrapper.class);
-			} catch (Exception e){
-				System.err.println("Gson failed to parse String: " + sm.gsonString);
+			case MavserMessage.MEMBER_INFO:
+				if (listenForMemeberInfo){
+					memberStrings.add((String) message.payload);
+					listener.messageReceived(MavserMessage.MEMBER_INFO);
+				}
+			break;
+			
+			default:
+				System.err.println("Invalid message type: " + message.messageType);
 				return;
-			}
-			addAndFireEvent(wrapper);
-			return;
 		}
-		
-		System.err.println("Invalid message type: " + messageObject);
 
 	}
 	
-	private boolean senderIsSelf(int senderId){
-		if (senderId == transmitterId){
-			return true;
+	private boolean listenForMemeberInfo = false;
+	public void listenForMemberInfo(boolean value){
+		listenForMemeberInfo = value;
+		if (listenForMemeberInfo == false){
+			memberStrings.clear();
 		}
-		return false;
+	}
+	
+	private final List<String> memberStrings = new ArrayList<String>();
+	public List<String> getMemberStrings(){
+		return memberStrings;
 	}
 	
 	private void addAndFireEvent(Wrapper w){
 		incomingQueue.add(w);
-		listener.messageReceived();
+		listener.messageReceived(MavserMessage.WRAPPER);
 	}
 	
 	/**
@@ -202,16 +220,15 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	 * Send the given Wrapper to all everyone listening on the current channel.
 	 * @param outgoing The Wrapper to send.
 	 */
-	public boolean send(Wrapper outgoing){
+	public boolean sendWrapper(Wrapper outgoing){
 		Message outMessage = new Message();
 		
 		if (senderMode == SENDER_MODE_NATIVE){
-			outMessage.setObject(new WrapperMessage(outgoing, this.transmitterId));			
+			outMessage.setObject(new MavserMessage(outgoing, this.transmitterId, MavserMessage.WRAPPER));			
 		} else if (senderMode == SENDER_MODE_JSON){
-			outMessage.setObject(new StringMessage(gson.toJson(outgoing), this.transmitterId));			
+			outMessage.setObject(new MavserMessage(gson.toJson(outgoing), this.transmitterId, MavserMessage.JSON));			
 		} else {
 			System.err.println("Message could not be sent: Sender mode invalid.");
-			System.err.println(outgoing);
 			return false;
 		}
 		
@@ -229,7 +246,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	@Override
 	public void sendAll(List<Wrapper> outgoing) {
 		for(Wrapper w : outgoing){
-			send(w);
+			sendWrapper(w);
 		}
 	}
 

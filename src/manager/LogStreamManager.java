@@ -21,6 +21,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
 import assets.Strings;
+import manager.Communicator.MavserMessage;
 import manager.datastructures.DataStructure;
 import manager.datastructures.DataStructureParser;
 import manager.operations.OperationParser;
@@ -184,7 +185,7 @@ public class LogStreamManager implements CommunicatorListener {
 	 * @return True if successful, false otherwise.
 	 */
 	public boolean streamWrapper(Wrapper wrapper){
-		return communicator.send(wrapper);
+		return communicator.sendWrapper(wrapper);
 	}
 	
 	/**
@@ -227,7 +228,7 @@ public class LogStreamManager implements CommunicatorListener {
 	public boolean streamWrappers(List<Wrapper> wrappers){
 		boolean allSuccessful = true;
 		for (Wrapper w : wrappers){
-			allSuccessful = allSuccessful && communicator.send(w);
+			allSuccessful = allSuccessful && communicator.sendWrapper(w);
 		}
 		return allSuccessful;
 	}
@@ -316,15 +317,14 @@ public class LogStreamManager implements CommunicatorListener {
 	}
 
 	@Override
-	public void messageReceived() {
-	
+	public void messageReceived(short messageType) {
 		
 		List<Wrapper> wrappers = communicator.getAllQueuedMessages();
 		for(Wrapper w : wrappers){
 			unwrap(w);
 		}
 		if (listener != null){
-			listener.messageReceived();
+			listener.messageReceived(MavserMessage.WRAPPER);
 		}
 	}
 	

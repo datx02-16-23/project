@@ -282,7 +282,7 @@ public class StreamSimulator implements CommunicatorListener{
 	}
 
 	@Override
-	public void messageReceived() {
+	public void messageReceived(short messageType) {
 		Platform.runLater(new Runnable(){
 			@Override
 			public void run() {

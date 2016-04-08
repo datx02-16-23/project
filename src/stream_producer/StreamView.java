@@ -21,22 +21,26 @@ import wrapper.Operation;
 
 public class StreamView extends Application {
 	private StreamSimulator sm;
-	private Dialog<String> inspect;
+	private Dialog<String> inspectDialog, memberDialog;
 	private BorderPane variablesView = new BorderPane();
 	private BorderPane baseView = new BorderPane();
+	private StackPane root;
 	
 	ObservableList<DataStructure> knowVariablesList;
-	
-	StackPane root;
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		sm = new StreamSimulator();
-		inspect = new Dialog<String>();
+		inspectDialog = new Dialog<String>();
+		memberDialog = new Dialog<String>();
 		root = new StackPane();
 	    
 		//Construct "Inspect" dialog.
-		inspect.setTitle("Inspecting Operation");
-		inspect.getDialogPane().getButtonTypes().add(new ButtonType("Close", ButtonData.CANCEL_CLOSE));
+		inspectDialog.setTitle("Inspecting Operation");
+		inspectDialog.getDialogPane().getButtonTypes().add(new ButtonType("Close", ButtonData.CANCEL_CLOSE));
+	    
+		//Construct "Members" dialog.
+		memberDialog.setTitle("Channel members");
+		memberDialog.getDialogPane().getButtonTypes().add(new ButtonType("Close", ButtonData.CANCEL_CLOSE));
 	    
 		//Known Variables view
 		Button closeKnownVariablesPane = buildCloseKnownVariablesButton();
@@ -67,6 +71,7 @@ public class StreamView extends Application {
 		Button importList = buildImportButton(primaryStage);
 		Button exportSent = buildExportSentButton(primaryStage);
 		Button exportQueued = buildExportQueuedButton(primaryStage);
+		Button showMembers = buildShowMembersButton();
 
 		//Construct stage
         	//Add text fields
@@ -94,9 +99,12 @@ public class StreamView extends Application {
 	        
 	        Separator separator3 = new Separator();
 	        separator3.setPrefHeight(10);
+	        Separator separator4 = new Separator();
+	        separator4.setPrefHeight(10);
 	        
 	        controlButtons.getChildren().addAll(transmit,transmitAll,continuousTransmit,separator3,
-	        								clearLists,importList,exportQueued,exportSent);
+	        								clearLists,importList,exportQueued,exportSent,separator4,
+	        								showMembers);
 	        
 	        //Add lists
 	        GridPane listPane = new GridPane();
@@ -109,7 +117,7 @@ public class StreamView extends Application {
 	        listPane.add(inspectQueued, 0, 2);
         
 	        
-	    primaryStage.setTitle("JGroupCommunicator Simulator: (id =" + sm.getId() + ", channel = " + sm.getChannelName() + ")");
+	    primaryStage.setTitle("id =" + sm.getId() + ", channel = " + sm.getChannelName());
 		root.getChildren().add(baseView);
 	    Scene scene = new Scene(root, 700, 400);
         primaryStage.setScene(scene);
@@ -336,6 +344,23 @@ public class StreamView extends Application {
         });
 		return inspectSent;
 	}
+	
+	private Button buildShowMembersButton() {
+		Button showMembers = new Button();
+		showMembers.setText("Members");
+		showMembers.setPrefSize(100, 30);
+		showMembers.setTooltip(new Tooltip("Request a list of the members connected the channel."));
+		showMembers.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+            	showMembers();
+            }
+        });
+		return showMembers;
+	}
+	
+	private void showMembers(){
+		memberDialog.showAndWait();
+	}
 
 	private Button buildKnownVariablesViewButton() {
 		//Construct "Known Variables view" button
@@ -424,9 +449,9 @@ public class StreamView extends Application {
 		}
 		
 		//Construct "Inspect" dialog
-		inspect.setHeaderText(op.toString());
-		inspect.setContentText(new GsonBuilder().setPrettyPrinting().create().toJson(op));
-    	inspect.showAndWait();
+		inspectDialog.setHeaderText(op.toString());
+		inspectDialog.setContentText(new GsonBuilder().setPrettyPrinting().create().toJson(op));
+    	inspectDialog.showAndWait();
 	}
 	
 	public static void main(String[] args)  {
