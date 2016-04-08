@@ -30,6 +30,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	
 	private int transmitterId;
 	private String channel;
+	private boolean transmitOnly;
 	
 	private final List<Wrapper> incomingQueue;
 	private final CommunicatorListener listener;
@@ -40,26 +41,37 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	
 	Gson gson;
 	
+	
 	/**
 	 * Create a new JGroupCommunicator with a random transmitter id. Connects to the default channel.
 	 * @param listener The listener for this JGroupCommunicator.
 	 */
 	public JGroupCommunicator(CommunicatorListener listener){
-		this((int)(Math.random()*Integer.MAX_VALUE), Strings.DEFAULT_CHANNEL, listener);
+		this((int)(Math.random()*Integer.MAX_VALUE), Strings.DEFAULT_CHANNEL, listener, false);
 	}
 	
+	/**
+	 * Create a new JGroupCommunicator with a random transmitter id. Connects to the default channel.
+	 * @param listener The listener for this JGroupCommunicator.
+	 * @param transmitOnly If true, most incoming messages will be ignored.
+	 */
+	public JGroupCommunicator(CommunicatorListener listener, boolean transmitOnly){
+		this((int)(Math.random()*Integer.MAX_VALUE), Strings.DEFAULT_CHANNEL, listener, transmitOnly);
+	}
 	
 	/**
 	 * Create a new JGroupCommunicator with the given transmitter id. Connects to the given channel.
 	 * @param transmitterId The transmitter id for this JGroupCommunicator.
 	 * @param channel The channel to connect to.
 	 * @param listener The listener for this JGroupCommunicator.
+	 * @param transmitOnly If true, most incoming messages will be ignored.
 	 */
-	public JGroupCommunicator (int transmitterId, String channel, CommunicatorListener listener){
+	public JGroupCommunicator (int transmitterId, String channel, CommunicatorListener listener, boolean transmitOnly){
 		super();
 		this.transmitterId = transmitterId;
 		this.channel = channel;
 		this.listener = listener;
+		this.transmitOnly = transmitOnly;
 		setNativeSenderMode();
 		
 		gson = new Gson();
@@ -142,10 +154,16 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 		
 		switch(message.messageType){
 			case MavserMessage.WRAPPER:
+				if(transmitOnly){
+					return;
+				}
 				addAndFireEvent((Wrapper) message.payload);
 			break;
 				
 			case MavserMessage.JSON:
+				if(transmitOnly){
+					return;
+				}
 				try{
 					addAndFireEvent(gson.fromJson((String) message.payload, Wrapper.class));
 				} catch (Exception e){
