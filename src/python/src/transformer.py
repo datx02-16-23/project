@@ -69,13 +69,14 @@ class ExpressionTransformer(NodeTransformer):
 	def visit_Call(self,node):
 		return node
 
+
 class OperationTransformer(NodeTransformer):
 	def __init__(self,name):
 		self.name = name
 		self.expr_transformer = ExpressionTransformer()
 
-	# args_ - ast.Node
-	def create(self,args_):
+	# args_ - [ast.Node]
+	def create_call(self,args_):
 		return Call(
 			func=Name(id=self.name, ctx=Load()),
 			args=args_,
@@ -105,21 +106,15 @@ class WriteTransformer(OperationTransformer):
 		# of the assignment) since we dont want to change that statement
 		# this is an eval-hack, possibly more safe solution exists
 		dst = self.expr_transformer.visit(eval(dump(node.targets[0])))
-		write = self.create([src,dst,node.value])
+		write = self.create_call([src,dst,node.value])
 		node.value = write
 		return node
-		# return copy_location(
-		# 	Assign(
-		# 		targets=node.targets,
-		# 		value=write
-		# 	)
-		# ,node)
 
 	def insert(self,target,mod):
 		mod.body.insert(0,
 			Assign(
 				targets = [target],
-				value 	= self.create([target,self.expr_transformer.visit(target)])
+				value 	= self.create_call([target,self.expr_transformer.visit(target)])
 			)
 		)
 
@@ -141,7 +136,7 @@ class ReadTransformer(OperationTransformer):
 
 	def create_read(self,node):
 		stmt = self.expr_transformer.visit(node)
-		read = self.create([stmt,node])
+		read = self.create_call([stmt,node])
 		return copy_location(read,node)
 
 	def visit_Subscript(self,node): return self.create_read(node)

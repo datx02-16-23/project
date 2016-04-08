@@ -1,6 +1,7 @@
 from expr import Variable,VariableTable,InvalidExpression
 from json import dump
 from create_log import format_log
+from copy import deepcopy
 
 def translate_types(type_):
     types_ = {
@@ -66,7 +67,9 @@ class ToJson(object):
     def convert_(self,output):
         for line in output:
             if line['type'] == 'write':
-                self.table.update(line['src_val'],line['dst'])
+                # copy src_val so that changing src_val in table wont
+                # affect src_val written to jsonBuffer
+                self.table.update(deepcopy(line['src_val']),line['dst'])
                 self.putWrite(line['src'],line['src_val'],line['dst'])
             elif line['type'] == 'read':
                 pass
@@ -81,5 +84,3 @@ def convert(output_path,outfile_path,watch):
     tj = ToJson(watch)
     output = format_log(output_path)
     dumpJson(outfile_path,tj.convert_(output))
-
-convert('output.py','output.json',[Variable('a','list',None,None)])

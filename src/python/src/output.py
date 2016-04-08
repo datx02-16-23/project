@@ -1,0 +1,1 @@
+{'src': [1, 2, 3], 'dst': ('var', 'a'), 'type': 'write', 'src_val': [1, 2, 3]},{'src': ('subscript', ('var', 'a'), 0), 'dst': ('subscript', ('var', 'a'), ('binop', '-', 3, 1)), 'type': 'write', 'src_val': 1},{'type': 'read', 'value': 1, 'statement': ('subscript', ('var', 'a'), 0)},

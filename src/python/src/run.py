@@ -1,3 +1,4 @@
+# This file executes the different modules, resulting in a output.json file
 from expr import Variable
 from os import path
 from create_log import visualize
@@ -11,3 +12,5 @@ if __name__ == '__main__':
 		'output' : output,
 		'watch' : [Variable('a','list',None,None)]}
 	visualize(settings)
+	execfile(path.abspath('./testvisualize/main.py'))
+	convert(output,path.abspath('output.json'),[Variable('a','list',None,None)])
