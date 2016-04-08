@@ -17,7 +17,7 @@ public abstract class OP_ReadWrite extends Operation{
 	 * @param operation The name of the operation. Should be "read" or "write".
 	 */
 	public OP_ReadWrite(Operations operation) {
-		super(operation, new HashMap<OperationsBody, Object>());
+		super(operation, new HashMap<Key, Object>());
 	}
 	
 	/**
@@ -26,7 +26,7 @@ public abstract class OP_ReadWrite extends Operation{
 	 * @param target The target variable for this ReadWrite operation.
 	 */
 	public void setTarget(Locator target){
-		this.operationBody.put(OperationsBody.TARGET, target);
+		this.operationBody.put(Key.target, target);
 	}
 	
 	/**
@@ -35,7 +35,7 @@ public abstract class OP_ReadWrite extends Operation{
 	 * @param source The source variable for this ReadWrite operation.
 	 */
 	public void setSource(Locator source){
-		this.operationBody.put(OperationsBody.SOURCE, source);
+		this.operationBody.put(Key.source, source);
 	}
 	
 	/**
@@ -44,7 +44,7 @@ public abstract class OP_ReadWrite extends Operation{
 	 * @param value Set the value(s) which were ReadWrite from {@code source}.
 	 */
 	public void setValue(double[] value){
-		this.operationBody.put(OperationsBody.VALUE, value);
+		this.operationBody.put(Key.value, value);
 	}
 	
 	public String toString(){
@@ -57,12 +57,12 @@ public abstract class OP_ReadWrite extends Operation{
 	}
 	
 	public Locator getTarget(){
-		return (Locator)this.operationBody.get(OperationsBody.TARGET);
+		return (Locator)this.operationBody.get(Key.target);
 	}
 	public Locator getSource(){
-		return (Locator)this.operationBody.get(OperationsBody.SOURCE);
+		return (Locator)this.operationBody.get(Key.source);
 	}
 	public double[] getValue(){
-		return (double[])this.operationBody.get(OperationsBody.VALUE);
+		return (double[])this.operationBody.get(Key.value);
 	}
 }

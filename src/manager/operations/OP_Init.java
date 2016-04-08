@@ -17,7 +17,7 @@ public class OP_Init extends Operation{
 	 * Creates a new Init operation. Note that you must set the target, maxSize and initial values.
 	 */
 	public OP_Init() {
-		super(OPERATION, new HashMap<OperationsBody, Object>());
+		super(OPERATION, new HashMap<Key, Object>());
 	}
 	
 	/**
@@ -26,7 +26,7 @@ public class OP_Init extends Operation{
 	 * @param var The target variable for this Init operation.
 	 */
 	public void setTarget(Locator var){
-		this.operationBody.put(OperationsBody.TARGET, var);
+		this.operationBody.put(Key.target, var);
 	}
 	
 	/**
@@ -34,7 +34,7 @@ public class OP_Init extends Operation{
 	 * @param size The declared maximum size of this variable.
 	 */
 	public void setSize(int [] size){
-		this.operationBody.put(OperationsBody.SIZE, size);
+		this.operationBody.put(Key.size, size);
 	}
 	
 	/**
@@ -42,34 +42,34 @@ public class OP_Init extends Operation{
 	 * @param value The value(s) with which to initialize this variable.
 	 */
 	public void setValue(double[] value){
-		this.operationBody.put(OperationsBody.VALUE, value);
+		this.operationBody.put(Key.value, value);
 	}
 	
 	public Locator getTarget(){
-		return (Locator)this.operationBody.get(OperationsBody.TARGET);
+		return (Locator)this.operationBody.get(Key.target);
 	}
 	
 	public int[] getSize(){
-		return (int[])this.operationBody.get(OperationsBody.SIZE);
+		return (int[])this.operationBody.get(Key.size);
 	}
 	
 	public double[] getValue(){
-		return (double[])this.operationBody.get(OperationsBody.VALUE);
+		return (double[])this.operationBody.get(Key.value);
 	}
 	
 	public String printBody(){
 		StringBuilder builder = new StringBuilder();
 		builder.append("{");
-		for( OperationsBody key : operationBody.keySet()){
+		for( Key key : operationBody.keySet()){
 			builder.append("\t\""+key+"\": ");
 			switch(key){
-				case TARGET:
+				case target:
 					builder.append("\t" + ((Locator)operationBody.get(key)).toString() +",\n");
 				break;
-				case SIZE:
+				case size:
 					builder.append("\t" + Arrays.toString((int[])operationBody.get(key))+",\n");
 				break;
-				case VALUE:
+				case value:
 					builder.append("\t" + Arrays.toString((double[])operationBody.get(key)) +",\n");
 				break;
 			}

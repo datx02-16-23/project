@@ -17,7 +17,7 @@ public class OP_Swap extends Operation implements Consolidable{
 	 * Create a new Swap operation.  Note that you must set var1, var2, and value.
 	 */
 	public OP_Swap() {
-		super(OPERATION, new HashMap<OperationsBody, Object>());
+		super(OPERATION, new HashMap<Key, Object>());
 	}
 	
 	/**
@@ -26,17 +26,16 @@ public class OP_Swap extends Operation implements Consolidable{
 	 * @param var1 Variable 1 for this Swap operation.
 	 */
 	public void setVar1(Locator var1){
-		this.operationBody.put(OperationsBody.VAR1, var1);
-
+		this.operationBody.put(Key.var1, var1);
 	}
 	
-	/**
+	/**	
 	 * Set var2 for this Swap operation.
 	 * The identifier of the variable should be previously declared in the header.
 	 * @param var2 Variable 2 for this Swap operation.
 	 */
 	public void setVar2(Locator var2){
-		this.operationBody.put(OperationsBody.VAR2, var2);
+		this.operationBody.put(Key.var2, var2);
 	}
 	
 	
@@ -45,19 +44,19 @@ public class OP_Swap extends Operation implements Consolidable{
 	 * @param values The values in var1 and var2 after execution.
 	 */
 	public void setValues(String values){
-		this.operationBody.put(OperationsBody.VALUE, values);
+		this.operationBody.put(Key.value, values);
 	}
 	
 	
 	
 	public Locator getVar1(){
-		return (Locator)this.operationBody.get(OperationsBody.VAR1);
+		return (Locator)this.operationBody.get(Key.var1);
 	}
 	public Locator getVar2(){
-		return (Locator)this.operationBody.get(OperationsBody.VAR2);
+		return (Locator)this.operationBody.get(Key.var2);
 	}
 	public String getValue(){
-		return (String)this.operationBody.get(OperationsBody.VALUE);
+		return (String)this.operationBody.get(Key.value);
 	}
 
 	@Override

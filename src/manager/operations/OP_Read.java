@@ -23,7 +23,7 @@ public class OP_Read extends OP_ReadWrite{
 	 * @param target The target variable for this Read operation.
 	 */
 	public void setTarget(Locator target){
-		this.operationBody.put(OperationsBody.TARGET, target);
+		this.operationBody.put(Key.target, target);
 	}
 	
 	/**
@@ -35,7 +35,7 @@ public class OP_Read extends OP_ReadWrite{
 		if (source == null){
 			throw new IllegalArgumentException("Source cannot be null in a Read operation!");
 		}
-		this.operationBody.put(OperationsBody.SOURCE, source);
+		this.operationBody.put(Key.source, source);
 	}
 	
 	/**
@@ -44,18 +44,18 @@ public class OP_Read extends OP_ReadWrite{
 	 * @param value Set the value(s) which were read from {@code source}.
 	 */
 	public void setValue(double[] value){
-		this.operationBody.put(OperationsBody.VALUE, value);
+		this.operationBody.put(Key.value, value);
 	}
 	
 	
 	
 	public Locator getTarget(){
-		return (Locator)this.operationBody.get(OperationsBody.TARGET);
+		return (Locator)this.operationBody.get(Key.target);
 	}
 	public Locator getSource(){
-		return (Locator)this.operationBody.get(OperationsBody.SOURCE);
+		return (Locator)this.operationBody.get(Key.source);
 	}
 	public double[] getValue(){
-		return (double[])this.operationBody.get(OperationsBody.VALUE);
+		return (double[])this.operationBody.get(Key.value);
 	}
 }

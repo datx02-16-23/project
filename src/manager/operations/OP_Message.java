@@ -14,7 +14,7 @@ public class OP_Message extends Operation{
 	 * Creates a new Init operation. Note that you must set the target, maxSize and initial values.
 	 */
 	public OP_Message() {
-		super(OPERATION, new HashMap<OperationsBody, Object>());
+		super(OPERATION, new HashMap<Key, Object>());
 	}
 	
 	/**
@@ -32,10 +32,10 @@ public class OP_Message extends Operation{
 	 * @param value The value(s) with which to initialize this variable.
 	 */
 	public void setValue(String value){
-		this.operationBody.put(OperationsBody.VALUE, value);
+		this.operationBody.put(Key.value, value);
 	}
 	public String getValue(){
-		return (String)this.operationBody.get(OperationsBody.VALUE);
+		return (String)this.operationBody.get(Key.value);
 	}
 	
 	public String toString(){
