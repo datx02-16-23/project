@@ -3,7 +3,6 @@ import java.util.ArrayList;
 
 import com.google.gson.internal.LinkedTreeMap;
 
-import assets.Strings;
 import wrapper.Locator;
 import wrapper.Operation;
 

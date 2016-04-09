@@ -1,18 +1,14 @@
 package application.view;
 
 import application.model.iModel;
-import application.model.iStep;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import manager.datastructures.DataStructure;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 public class Visualization {
     private final iModel model;

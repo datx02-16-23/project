@@ -2,7 +2,6 @@ package manager.datastructures;
 
 import java.util.List;
 
-import manager.datastructures.Element;
 import manager.operations.OP_Init;
 import wrapper.AnnotatedVariable;
 

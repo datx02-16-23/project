@@ -3,13 +3,6 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 
-sourceSets {
-    main {
-        java {
-            srcDir 'src'
-        }
-    }
-}
 
 project.ext.lwjglVersion = "3.0.0b"
 

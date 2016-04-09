@@ -1,17 +1,13 @@
 package application.Visualizer;
 
-import application.model.Model;
 import application.model.iModel;
 import assets.Strings;
 import javafx.event.Event;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import manager.LogStreamManager;
 import java.io.File;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 /**
  * This is the Controller of MVC for the visualizer GUI.

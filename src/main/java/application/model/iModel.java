@@ -2,7 +2,6 @@ package application.model;
 
 import wrapper.Operation;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
