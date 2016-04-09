@@ -128,6 +128,7 @@ public class VisualizerController implements CommunicatorListener{
         ListView<Operation> operationHistory = (ListView<Operation>) fxmlLoader.getNamespace().get("operationHistory");
         operationHistory.getItems().clear();
         operationHistory.getItems().addAll(lsm.getOperations());
+        visualization.render();
     }
 
 	@Override

@@ -10,12 +10,15 @@ import manager.datastructures.DataStructure;
 import manager.datastructures.Element;
 import manager.datastructures.IndependentElement;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Visualization extends Pane {
     private final iModel model;
     private final Canvas canvas = new Canvas();
+    private final int structHeight = 100;
 
     public Visualization(iModel model){
         this.model = model;
@@ -36,17 +39,34 @@ public class Visualization extends Pane {
             canvas.setWidth(w);
             canvas.setHeight(h);
         }
-        GraphicsContext g = canvas.getGraphicsContext2D();
-        g.clearRect(0, 0, w, h);
-        g.setFill(Color.WHITE);
-        g.fillRect(0, 0, w, h);
         render();
     }
 
+    private void clear(){
+        final int top = (int)snappedTopInset();
+        final int right = (int)snappedRightInset();
+        final int bottom = (int)snappedBottomInset();
+        final int left = (int)snappedLeftInset();
+        final int w = (int)getWidth() - left - right;
+        final int h = (int)getHeight() - top - bottom;
+        GraphicsContext g = canvas.getGraphicsContext2D();
+        g.setFill(Color.WHITE);
+        g.fillRect(0, 0, w, h);
+    }
+
     public void render(){
+        clear();
         Map<String, DataStructure> structs = model.getCurrentStep().getStructures();
-        for (String id: structs.keySet()){
-            renderStructure(id, structs.get(id));
+        Iterator<String> structNames = structs.keySet().iterator();
+        int numStruct = 0;
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setFill(Color.BLACK);
+
+        while (structNames.hasNext()){
+            String structName = structNames.next();
+            gc.fillText(structName, 20, 20 + 100*numStruct);
+            numStruct++;
+            //renderStructure(id, structs.get(id));
         }
 
     }
