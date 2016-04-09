@@ -34,16 +34,11 @@ public class VisualizerModel extends Application {
         window = primaryStage;
         window.setTitle(Strings.PROJECT_NAME);
 
-        System.out.println(getClass().getResource("VisualizerModel.class"));
-        System.out.println(getClass().getResource("/../../resources/main/VisualizerView.fxml"));
-        System.out.println(getClass().getProtectionDomain().getCodeSource().getLocation());
-
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/../../resources/main/VisualizerView.fxml"));
         VisualizerController controller = new VisualizerController(window, model, lsm);
         fxmlLoader.setController(controller);
         // Load and get the root layout.
         BorderPane root;
-        System.out.println(getClass());
 
         try {
             root = fxmlLoader.load();
