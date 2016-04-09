@@ -76,7 +76,7 @@ public class Array extends DataStructure{
 
 
 	@Override
-	public void reset() {
+	public void clear() {
 		elements.clear();
 	}
 

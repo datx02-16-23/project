@@ -29,7 +29,7 @@ public class Step implements iStep {
     @Override
     public void reset() {
         lastOp = null;
-        structs.values().forEach(DataStructure::reset);
+        structs.values().forEach(DataStructure::clear);
     }
 
 

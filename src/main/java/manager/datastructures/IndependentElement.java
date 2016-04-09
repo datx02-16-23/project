@@ -71,7 +71,7 @@ public class IndependentElement extends DataStructure implements Element{
 	}
 
 	@Override
-	public void reset() {
+	public void clear() {
 		element = null;
 	}
 

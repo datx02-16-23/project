@@ -30,9 +30,9 @@ public abstract class DataStructure extends AnnotatedVariable{
 	public abstract int size();
 
 	/**
-	 * Reset the structure to the state before any applied operations
+	 * Clear all set values in the structure
 	 */
-	public abstract void reset();
+	public abstract void clear();
 
 	/**
 	 * Apply an operation to the structure

@@ -41,6 +41,7 @@ public class Model implements iModel {
     @Override
     public void set(Map<String, DataStructure> structs, List<Operation> ops) {
         //TODO Ensure that the structs don't contain elements inside
+        structs.values().forEach(DataStructure::clear);
         step = new Step(structs);
         operations = ops;
         index = 0;
