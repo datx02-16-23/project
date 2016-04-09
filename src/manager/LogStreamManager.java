@@ -201,6 +201,15 @@ public class LogStreamManager implements CommunicatorListener {
 	
 	/**
 	 * Stream the given Wrapper using the Communicator carried by this LogStreamManager.
+	 * @param operation The Operation to stream.
+	 * @return True if successful, false otherwise.
+	 */
+	public boolean streamString(String JSONString){
+		return communicator.sendString(JSONString);
+	}
+	
+	/**
+	 * Stream the given Wrapper using the Communicator carried by this LogStreamManager.
 	 * @param operation The operations to stream.
 	 * @return True if successful, false otherwise.
 	 */

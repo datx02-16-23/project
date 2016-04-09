@@ -28,11 +28,33 @@ public interface Communicator {
 	public boolean sendWrapper(Wrapper outgoing);
 	
 	/**
-	 * Send all Wrappers to all everyone listening on the current channel.
+	 * Send all Wrappers to everyone listening on the current channel.
 	 * @param outgoing The list of Wrappers to send.
 	 */
-	public void sendAll(List<Wrapper> outgoing);
+	public boolean sendWrappers(List<Wrapper> outgoing);
 	
+	/**
+	 * Send the given String to all everyone listening on the current channel. 
+	 * <br><b>NOTE:</b> JSONString must be a valid serialisation of a Wrapper.
+	 * @param JSONString The JSON String to send.
+	 * @return True if the String was successfully sent. False otherwise.
+	 */
+	public boolean sendString(String JSONString);
+	
+	
+	
+	
+	
+	
+	/*
+	 * Internal class
+	 */
+	
+	/**
+	 * Wrapper for messages sent and recevied by implementations of the Communicator interface.
+	 * @author Richard
+	 *
+	 */
 	@SuppressWarnings("serial")
 	public class MavserMessage implements Serializable{
 		

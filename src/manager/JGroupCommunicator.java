@@ -28,18 +28,24 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	 */
 	public static final int SENDER_MODE_JSON = 1;
 	
-	private int transmitterId;
+	/**
+	 * If true, most incoming messages will be ignored. The messageReceived() method of the listener will
+	 * be called only if the listener has requested a head count of group members. Useful when the owner
+	 * of this JGroupCommunicator functions exclusively as the sender.
+	 */
+	public boolean suppressIncoming;
+	
+	private int senderId;
 	private String channel;
-	private boolean transmitOnly;
 	
 	private final List<Wrapper> incomingQueue;
 	private final CommunicatorListener listener;
+	private final Gson gson;
 	
 	private JChannel jChannel;
 	
 	private int senderMode;
 	
-	Gson gson;
 	
 	
 	/**
@@ -53,10 +59,10 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	/**
 	 * Create a new JGroupCommunicator with a random transmitter id. Connects to the default channel.
 	 * @param listener The listener for this JGroupCommunicator.
-	 * @param transmitOnly If true, most incoming messages will be ignored.
+	 * @param suppressIncoming If true, most incoming messages will be ignored.
 	 */
-	public JGroupCommunicator(CommunicatorListener listener, boolean transmitOnly){
-		this((int)(Math.random()*Integer.MAX_VALUE), Strings.DEFAULT_CHANNEL, listener, transmitOnly);
+	public JGroupCommunicator(CommunicatorListener listener, boolean suppressIncoming){
+		this((int)(Math.random()*Integer.MAX_VALUE), Strings.DEFAULT_CHANNEL, listener, suppressIncoming);
 	}
 	
 	/**
@@ -64,14 +70,17 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	 * @param transmitterId The transmitter id for this JGroupCommunicator.
 	 * @param channel The channel to connect to.
 	 * @param listener The listener for this JGroupCommunicator.
-	 * @param transmitOnly If true, most incoming messages will be ignored.
+	 * @param suppressIncoming If true, most incoming messages will be ignored.
 	 */
-	public JGroupCommunicator (int transmitterId, String channel, CommunicatorListener listener, boolean transmitOnly){
+	public JGroupCommunicator (int transmitterId, String channel, CommunicatorListener listener, boolean suppressIncoming){
 		super();
-		this.transmitterId = transmitterId;
+		if(listener == null){
+			throw new IllegalArgumentException("Listener may not be null.");
+		}
+		this.senderId = transmitterId;
 		this.channel = channel;
 		this.listener = listener;
-		this.transmitOnly = transmitOnly;
+		this.suppressIncoming = suppressIncoming;
 		setNativeSenderMode();
 		
 		gson = new Gson();
@@ -148,20 +157,20 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 		
 		MavserMessage message = (MavserMessage) messageObject;
 			
-		if(message.senderId == transmitterId){
+		if(message.senderId == senderId){
 			return;  //Don't process our own messages.
 		}
 		
 		switch(message.messageType){
 			case MavserMessage.WRAPPER:
-				if(transmitOnly){
+				if(suppressIncoming){
 					return;
 				}
 				addAndFireEvent((Wrapper) message.payload);
 			break;
 				
 			case MavserMessage.JSON:
-				if(transmitOnly){
+				if(suppressIncoming){
 					return;
 				}
 				try{
@@ -173,10 +182,10 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 			
 			case MavserMessage.REQUEST_FOR_MEMBER_INFO:
 				String myListener = listener == null ? "null" :  listener.getClass().getSimpleName();
-				Message messageReply = new Message();
-				messageReply.setObject(new MavserMessage("JGroupCommunicator [" + myListener +"], (id = " + transmitterId + ")", transmitterId, MavserMessage.MEMBER_INFO));
+				Message memberInfo = new Message();
+				memberInfo.setObject(new MavserMessage("JGroupCommunicator [" + myListener +"], (id = " + senderId + ")", senderId, MavserMessage.MEMBER_INFO));
 			try {
-				jChannel.send(messageReply);
+				jChannel.send(memberInfo);
 			} catch (Exception e) {
 				System.err.println("Failed to send member information.");
 			}
@@ -234,6 +243,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 		incomingQueue.clear();
 		return allQueuedMessages;
 	}
+	
 	/**
 	 * Send the given Wrapper to all everyone listening on the current channel.
 	 * @param outgoing The Wrapper to send.
@@ -242,9 +252,9 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 		Message outMessage = new Message();
 		
 		if (senderMode == SENDER_MODE_NATIVE){
-			outMessage.setObject(new MavserMessage(outgoing, this.transmitterId, MavserMessage.WRAPPER));			
+			outMessage.setObject(new MavserMessage(outgoing, this.senderId, MavserMessage.WRAPPER));			
 		} else if (senderMode == SENDER_MODE_JSON){
-			outMessage.setObject(new MavserMessage(gson.toJson(outgoing), this.transmitterId, MavserMessage.JSON));			
+			outMessage.setObject(new MavserMessage(gson.toJson(outgoing), this.senderId, MavserMessage.JSON));			
 		} else {
 			System.err.println("Message could not be sent: Sender mode invalid.");
 			return false;
@@ -255,17 +265,36 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 			jChannel.send(outMessage);
 		} catch (Exception e) {
 			System.err.println("Message could not be sent: " + e);
-			System.err.println(outgoing);
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Send the given String to all everyone listening on the current channel. 
+	 * <br><b>NOTE:</b> JSONString must be a valid serialisation of a Wrapper.
+	 * @param JSONString The JSON String to send.
+	 * @return True if the String was successfully sent. False otherwise.
+	 */
+	public boolean sendString(String JSONString){
+		Message m = new Message();
+		m.setObject(new MavserMessage(JSONString, senderId, MavserMessage.JSON));
+		try {
+			jChannel.send(m);
+		} catch (Exception e) {
+			System.err.println("Message could not be sent: " + e);
 			return false;
 		}
 		return true;
 	}
 	
 	@Override
-	public void sendAll(List<Wrapper> outgoing) {
+	public boolean sendWrappers(List<Wrapper> outgoing) {
+		boolean allSuccessful = true;
 		for(Wrapper w : outgoing){
-			sendWrapper(w);
+			allSuccessful = allSuccessful && sendWrapper(w);
 		}
+		return allSuccessful;
 	}
 
 	/**
