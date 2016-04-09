@@ -58,7 +58,7 @@ public class Array extends DataStructure{
 		
 
 		for(; linearIndex < linearArray.length; linearIndex++){
-			System.out.println(new ArrayElement(linearArray[linearIndex], getIndexInNDimensions(linearIndex, size)));
+			//System.out.println(new ArrayElement(linearArray[linearIndex], getIndexInNDimensions(linearIndex, size)));
 			elements.add(new ArrayElement(linearArray[linearIndex], getIndexInNDimensions(linearIndex, size)));
 		}
 		
