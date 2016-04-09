@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -39,8 +40,7 @@ public class VisualizerModel extends Application {
         window.setTitle(Strings.PROJECT_NAME);
 
         // Create a Group view for the AV.
-        Group datastructs = new Group();
-        visualization = new Visualization(model, datastructs);
+        visualization = new Visualization(model);
 
         fxmlLoader = new FXMLLoader(getClass().getResource("/VisualizerView.fxml"));
 
@@ -56,7 +56,7 @@ public class VisualizerModel extends Application {
             throw new RuntimeException(exception);
         }
 
-        root.setCenter(datastructs);
+        root.setCenter(visualization);
 
         Scene scene = new Scene(root, 800, 600);
         scene.getStylesheets().add( getClass().getResource("/VisualizerStyle.css").toExternalForm());

@@ -1,31 +1,49 @@
 package application.view;
 
 import application.model.iModel;
-import application.model.iStep;
-import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.text.Font;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import manager.datastructures.Array;
 import manager.datastructures.DataStructure;
 import manager.datastructures.Element;
 import manager.datastructures.IndependentElement;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Visualization {
+public class Visualization extends Pane {
     private final iModel model;
-    private final Group group;
+    private final Canvas canvas = new Canvas();
 
-    public Visualization(iModel model, Group group){
+    public Visualization(iModel model){
         this.model = model;
-        this.group = group;
+        getChildren().add(canvas);
+    }
+
+    @Override
+    protected void layoutChildren() {
+        final int top = (int)snappedTopInset();
+        final int right = (int)snappedRightInset();
+        final int bottom = (int)snappedBottomInset();
+        final int left = (int)snappedLeftInset();
+        final int w = (int)getWidth() - left - right;
+        final int h = (int)getHeight() - top - bottom;
+        canvas.setLayoutX(left);
+        canvas.setLayoutY(top);
+        if (w != canvas.getWidth() || h != canvas.getHeight()) {
+            canvas.setWidth(w);
+            canvas.setHeight(h);
+        }
+        GraphicsContext g = canvas.getGraphicsContext2D();
+        g.clearRect(0, 0, w, h);
+        g.setFill(Color.WHITE);
+        g.fillRect(0, 0, w, h);
+        render();
     }
 
     public void render(){
-        group.getChildren().clear();
         Map<String, DataStructure> structs = model.getCurrentStep().getStructures();
         for (String id: structs.keySet()){
             renderStructure(id, structs.get(id));
@@ -34,7 +52,6 @@ public class Visualization {
     }
 
     private void drawArray(Array array){
-        System.out.println(group.getChildren().size());
         int width = array.size()*40;
         int height = 80;
         Canvas canvas = new Canvas(width, height);
@@ -46,9 +63,6 @@ public class Visualization {
         for(int i = 0; i < elements.size(); i++){
 
         }
-
-
-        group.getChildren().add(canvas);
 
     }
 
