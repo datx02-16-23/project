@@ -1,6 +1,7 @@
 package application.model;
 
 import manager.datastructures.DataStructure;
+import manager.operations.Key;
 import wrapper.Operation;
 
 import java.util.HashMap;
@@ -26,9 +27,7 @@ public class Step implements iStep {
     @Override
     public void reset() {
         lastOp = null;
-        for(DataStructure struct:structs.values()){
-            struct.reset();
-        }
+        structs.values().forEach(DataStructure::reset);
     }
 
 
@@ -40,12 +39,11 @@ public class Step implements iStep {
 
     @Override
     public void applyOperation(Operation op) {
-        updateStructs(op);
-        lastOp = op;
-    }
+        //System.out.println("Applying op");
+        //for(String struct:structs.keySet()){
+            //String source = op.operationBody.get(Key.source);
 
-    private void updateStructs(Operation op) {
-        //op.
+        //}
     }
 
 }
