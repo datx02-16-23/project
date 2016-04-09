@@ -8,6 +8,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;
 import manager.datastructures.Array;
 import manager.datastructures.DataStructure;
+import manager.datastructures.Element;
 import manager.datastructures.IndependentElement;
 
 import java.util.ArrayList;
@@ -33,7 +34,21 @@ public class Visualization {
     }
 
     private void drawArray(Array array){
-        System.out.println("Drawing array");
+        System.out.println(group.getChildren().size());
+        int width = array.size()*40;
+        int height = 80;
+        Canvas canvas = new Canvas(width, height);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        gc.strokeRect(5, 5, 5+width, 5+height);
+
+        List<Element> elements = array.getElements();
+        for(int i = 0; i < elements.size(); i++){
+
+        }
+
+
+        group.getChildren().add(canvas);
 
     }
 
