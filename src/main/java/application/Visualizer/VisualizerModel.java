@@ -39,7 +39,7 @@ public class VisualizerModel extends Application {
         fxmlLoader.setController(controller);
         // Load and get the root layout.
         BorderPane root;
-
+        
         try {
             root = fxmlLoader.load();
         } catch (IOException exception) {

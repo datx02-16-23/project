@@ -127,6 +127,7 @@ public class OperationParser {
 			return (double[])object;
 		}
 		
+		@SuppressWarnings("unchecked")
 		ArrayList<Object> nested = (ArrayList<Object>) object;
 		
 		ArrayList<Double> simple = new ArrayList<Double>();	
@@ -140,6 +141,7 @@ public class OperationParser {
 	 * @param list The multi-dimensional list to flatten.
 	 * @param ack The result.
 	 */
+	@SuppressWarnings("unchecked")
 	private static <T> void unwrapNestedList(ArrayList<Object> list, ArrayList<T> ack){
 		if (list.isEmpty()){
 			return;
@@ -156,6 +158,7 @@ public class OperationParser {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static int[] parseIndex(Operation op){
 		return ensureIntArray((ArrayList<Object>)op.operationBody.get(Key.index));
 	}
@@ -164,6 +167,7 @@ public class OperationParser {
 		return ensureDoubleArray(op.operationBody.get(Key.value));
 	}
 	
+	@SuppressWarnings("unchecked")
 	private static double[] ensureDoubleArray(Object object){
 		if (object == null){
 			return null;
@@ -191,6 +195,7 @@ public class OperationParser {
 	 * @param listOrArray Should be an int array, or an ArrayList of Integers or Doubles.
 	 * @return An array of ints, or null.
 	 */
+	@SuppressWarnings("unchecked")
 	private static int[] ensureIntArray(Object listOrArray){
 		if (listOrArray == null){
 			return null;
