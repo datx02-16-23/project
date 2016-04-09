@@ -32,6 +32,11 @@ public interface Communicator {
 	 * @param outgoing The list of Wrappers to send.
 	 */
 	public boolean sendWrappers(List<Wrapper> outgoing);
+
+	/**
+	 * Close any communications that can cause leaks
+	 */
+	public void close();
 	
 	/**
 	 * Send the given String to all everyone listening on the current channel. 

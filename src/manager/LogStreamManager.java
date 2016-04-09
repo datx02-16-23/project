@@ -367,4 +367,10 @@ public class LogStreamManager implements CommunicatorListener {
 	public void setListener(CommunicatorListener newListener){
 		listener = newListener;
 	}
+
+	public void close(){
+		communicator.close();
+	}
+
+
 }
