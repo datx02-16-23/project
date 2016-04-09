@@ -96,14 +96,12 @@ public class VisualizerController {
     public void openFileChooser() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open OI-File");
-
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
         File file = fileChooser.showOpenDialog(window);
 
         if (file != null){
             setFile(file);
-        } else {
-            System.err.println("Unable to find file");
-        }
+        } else {} //Null is returned if the users pressed Cancel.
 
     }
 
