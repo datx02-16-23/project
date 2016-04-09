@@ -3,6 +3,7 @@ package application.Visualizer;
 import application.model.Model;
 import application.model.iModel;
 import application.view.Visualization;
+import assets.Strings;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -24,9 +25,11 @@ public class VisualizerModel extends Application {
     public void start(Stage primaryStage) throws Exception{
 
         window = primaryStage;
+        window.setTitle(Strings.PROJECT_NAME);
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("VisualizerView.fxml"));
-        fxmlLoader.setController(new VisualizerController(window, model, lsm));
+        VisualizerController controller = new VisualizerController(window, model, lsm);
+        fxmlLoader.setController(controller);
 
         BorderPane root;
         try {
@@ -40,7 +43,7 @@ public class VisualizerModel extends Application {
         visualization.render(datastructs);
         root.setCenter(datastructs);
 
-        window.setTitle("Visualizer");
+        window.setOnCloseRequest(event -> controller.closeProgram());
         Scene scene = new Scene(root, 800, 600);
         scene.getStylesheets().add( getClass().getResource("VisualizerStyle.css").toExternalForm());
         window.setScene(scene);

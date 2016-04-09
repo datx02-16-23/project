@@ -32,6 +32,7 @@ public class VisualizerController implements Initializable {
     }
 
     public void closeProgram(){
+        lsm.close();
         window.close();
     }
 

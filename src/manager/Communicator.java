@@ -32,6 +32,11 @@ public interface Communicator {
 	 * @param outgoing The list of Wrappers to send.
 	 */
 	public void sendAll(List<Wrapper> outgoing);
+
+	/**
+	 * Close any communications that can cause leaks
+	 */
+	public void close();
 	
 	@SuppressWarnings("serial")
 	public class MavserMessage implements Serializable{
