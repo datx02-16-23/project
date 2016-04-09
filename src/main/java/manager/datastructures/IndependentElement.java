@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import manager.operations.OP_Init;
+import wrapper.Operation;
 
 /**
  * An independent variable holding a single element. May for example be used as a temporary variable when performing a swap.
@@ -62,8 +63,8 @@ public class IndependentElement extends DataStructure implements Element{
 		return 1;
 	}
 
-	@Override
-	public void init(OP_Init op_init) {
+
+	private void init(OP_Init op_init) {
 		if (!op_init.getTarget().equals(super.identifier)){throw new IllegalArgumentException();}
 	
 		//TODO: Implement init.
@@ -72,5 +73,10 @@ public class IndependentElement extends DataStructure implements Element{
 	@Override
 	public void reset() {
 		element = null;
+	}
+
+	@Override
+	public void applyOperation(Operation op) {
+
 	}
 }
