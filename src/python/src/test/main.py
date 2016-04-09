@@ -1,5 +1,16 @@
+from random import random
 
-a = [1,2,3]
-a[len(a) - 1] = a[0]
-if a[0] > 2:
-	a[0] += 1
+def rand_array(size,rng):
+	array = []
+	for i in range(0,size):
+		array.append(int(random()*rng))
+	return array
+
+a = rand_array(10,50)
+
+for i in range(0,len(a)):
+	for j in range(0,len(a) - 1):
+		if a[j] > a[j+1]:
+			tmp = a[j]
+			a[j] = a[j+1]
+			a[j+1] = tmp

@@ -12,7 +12,7 @@ def put(statement):
 # Might wanna make these the same but change in-code syntax
 def write(src,dst,source):
     # Right now using hack to make deep copy of source
-    put({'type' : 'write', 'src' : src, 'dst' : dst, 'src_val' : eval(str(source)) })
+    put({'type' : 'write', 'src' : src, 'dst' : dst, 'src_val' : source })
     return source
 
 def read(statement,source):

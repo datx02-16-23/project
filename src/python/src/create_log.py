@@ -4,6 +4,7 @@ from ast import NodeTransformer,parse,Assign,Name,Str
 from printnode import ast_visit as printnode
 from distutils.dir_util import copy_tree
 from os.path import abspath
+from os import remove
 
 class MainTransformer(NodeTransformer):
 	def __init__(self,transformers,logwriter_nodes):
@@ -31,6 +32,7 @@ def transform(node,logwriter_nodes):
 	transformers = [WriteTransformer(), ReadTransformer()]
 	MainTransformer(transformers,logwriter_nodes).visit(node)
 
+# Move this out of create_log? Perhaps into run.py
 def load_logwriter(logwriter,output):
 	with open(logwriter,'r') as f:
 		n = parse(f.read())
@@ -65,7 +67,7 @@ def visualize(settings):
 	open(settings['output'],'w').close()
 	for node in nodes:
 		f = open(node['path'],'wb')
-		transform(node['parse'],load_logwriter(abspath('operations.py'),settings['output']))
+		transform(node['parse'],load_logwriter(abspath('operations.py'),abspath(settings['output'])))
 		f.write(to_source(node['parse']))
 		f.close()
 
@@ -75,7 +77,11 @@ def format_log(file_path):
 		output = f.read()
 		# encapsulate the output in a list
 		output = "output = [%s]" % output[:len(output)-1] # remove trailing ","
+		# Feels like a hacky way of formatting
+		tmp = open('tmp.py','w')
+		tmp.write(output)
+		tmp.close()
+		output = __import__('tmp').output
+		remove('tmp.py')
 		f.close()
-	with open(file_path,'w') as f:
-		f.write(output)
-		f.close()
+	return output
