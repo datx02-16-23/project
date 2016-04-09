@@ -242,8 +242,8 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 		ArrayList<Wrapper> allQueuedMessages = new ArrayList<Wrapper>();
 		if (incomingQueue.isEmpty() == false){
 			allQueuedMessages.addAll(incomingQueue);
+			incomingQueue.clear();
 		}
-		incomingQueue.clear();
 		return allQueuedMessages;
 	}
 	
@@ -291,7 +291,6 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 		return true;
 	}
 	
-	@Override
 	public boolean sendWrappers(List<Wrapper> outgoing) {
 		boolean allSuccessful = true;
 		for(Wrapper w : outgoing){
