@@ -36,7 +36,7 @@ public class Model implements iModel {
 
     @Override
     public void stepBackward() {
-        throw new NotImplementedException();
+        System.err.println("This is not implemented, try reset instead");
     }
 
     @Override
