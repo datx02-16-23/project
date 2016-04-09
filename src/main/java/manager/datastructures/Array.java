@@ -256,7 +256,7 @@ public class Array extends DataStructure{
 
 		/**
 		 * Set the index of this ArrayElement.
-		 * @param index The new index of this ArrayElement.
+		 * @param newIndex The new index of this ArrayElement.
 		 */
 		public void setIndex(int[] newIndex) {
 			this.index = newIndex;
