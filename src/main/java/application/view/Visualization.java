@@ -1,6 +1,7 @@
 package application.view;
 
 import application.model.iModel;
+import application.model.iStep;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -9,26 +10,24 @@ import manager.datastructures.DataStructure;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Visualization {
     private final iModel model;
+    private final Group group;
 
-    public Visualization(iModel model){
+    public Visualization(iModel model, Group group){
         this.model = model;
+        this.group = group;
     }
 
-    public void render(Group group){
-        //Do fake stuff with made up data to implement rendering side
-        String id = "a1";
-        List<Integer> values = new ArrayList<>();
-        for(int i = 0; i < 10; i++){
-            values.add(i);
+    public void render(){
+        group.getChildren().clear();
+        Map<String, DataStructure> structs = model.getCurrentStep().getStructures();
+        for (DataStructure struct: structs.values()){
+            System.out.println(struct.toString());
         }
 
-        Canvas canvas = new Canvas(500, 300);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        drawArray(gc, values);
-        group.getChildren().add(canvas);
     }
 
     private void drawArray(GraphicsContext gc, List<Integer> values){

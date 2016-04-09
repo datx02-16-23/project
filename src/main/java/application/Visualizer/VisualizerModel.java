@@ -38,22 +38,24 @@ public class VisualizerModel extends Application {
         window = primaryStage;
         window.setTitle(Strings.PROJECT_NAME);
 
+        // Create a Group view for the AV.
+        Group datastructs = new Group();
+        visualization = new Visualization(model, datastructs);
+
         fxmlLoader = new FXMLLoader(getClass().getResource("/VisualizerView.fxml"));
-        VisualizerController controller = new VisualizerController(window, model, lsm, fxmlLoader);
+
+        VisualizerController controller = new VisualizerController(visualization, window, model, lsm, fxmlLoader);
+
         fxmlLoader.setController(controller);
         // Load and get the root layout.
         BorderPane root;
-        
+
         try {
             root = fxmlLoader.load();
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
 
-        // Create a Group view for the AV.
-        visualization = new Visualization(model);
-        Group datastructs = new Group();
-        visualization.render(datastructs);
         root.setCenter(datastructs);
 
         Scene scene = new Scene(root, 800, 600);

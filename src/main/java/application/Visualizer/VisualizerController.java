@@ -1,6 +1,7 @@
 package application.Visualizer;
 
 import application.model.iModel;
+import application.view.Visualization;
 import assets.Strings;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +20,7 @@ import java.io.File;
  */
 public class VisualizerController implements CommunicatorListener{
 
+    private Visualization visualization;
     private Stage window;
     private final LogStreamManager lsm;
     private final iModel model;
@@ -28,7 +30,8 @@ public class VisualizerController implements CommunicatorListener{
     private boolean isPlaying = false;
     private int speed = 1;
 
-    public VisualizerController(Stage window, iModel model, LogStreamManager lsm, FXMLLoader fxmlLoader) {
+    public VisualizerController(Visualization visualization, Stage window, iModel model, LogStreamManager lsm, FXMLLoader fxmlLoader) {
+        this.visualization = visualization;
         this.window = window;
         this.model = model;
         this.lsm = lsm;
@@ -64,6 +67,7 @@ public class VisualizerController implements CommunicatorListener{
      */
     public void stepForwardButtonClicked(){
         model.stepForward();
+        visualization.render();
     }
 
     /**
