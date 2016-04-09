@@ -4,6 +4,7 @@ import java.util.List;
 
 import manager.operations.OP_Init;
 import wrapper.AnnotatedVariable;
+import wrapper.Operation;
 
 /**
  * A data structure for use in visualisation.
@@ -27,13 +28,17 @@ public abstract class DataStructure extends AnnotatedVariable{
 	 * @return The number of elements held by this DataStructure.
 	 */
 	public abstract int size();
-	
+
 	/**
-	 * Apply an initialise to this DataStrucutre.
-	 * @param op_init The init operation to process.
+	 * Reset the structure to the state before any applied operations
 	 */
-	public abstract void init(OP_Init op_init);
 	public abstract void reset();
+
+	/**
+	 * Apply an operation to the structure
+	 * @param op to be applied
+     */
+	public abstract void applyOperation(Operation op);
 	
 	public String toString(){
 		return super.identifier + ": " + super.rawType;

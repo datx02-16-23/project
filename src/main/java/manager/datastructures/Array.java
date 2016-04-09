@@ -5,7 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import manager.operations.OP_Init;
+import manager.operations.OP_Write;
 import wrapper.Locator;
+import wrapper.Operation;
 
 /**
  * A representation of the Array data structure, using doubles as values.
@@ -42,13 +44,7 @@ public class Array extends DataStructure{
 		return elements;
 	}
 
-	
-	/**
-	 * Apply an initialise to this Array.
-	 * @param op_init The init operation to process.
-	 */
-
-	public void init(OP_Init op_init){
+	private void init(OP_Init op_init){
 		if (!op_init.getTarget().getIdentifier().equals(super.identifier)){throw new IllegalArgumentException();}
 		
 		double[] linearArray = op_init.getValue();
@@ -77,9 +73,28 @@ public class Array extends DataStructure{
 		}
 	}
 
+
+
 	@Override
 	public void reset() {
 		elements.clear();
+	}
+
+	@Override
+	public void applyOperation(Operation op) {
+		switch(op.operation){
+			case init:
+				init((OP_Init) op);
+				break;
+			case message:
+				break;
+			case read:
+				break;
+			case write:
+				break;
+			case swap:
+				break;
+		}
 	}
 
 	/**

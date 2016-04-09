@@ -2,6 +2,8 @@ package application.model;
 
 import manager.datastructures.DataStructure;
 import manager.operations.Key;
+import manager.operations.OperationType;
+import wrapper.Locator;
 import wrapper.Operation;
 
 import java.util.HashMap;
@@ -39,11 +41,23 @@ public class Step implements iStep {
 
     @Override
     public void applyOperation(Operation op) {
-        //System.out.println("Applying op");
-        //for(String struct:structs.keySet()){
-            //String source = op.operationBody.get(Key.source);
+        OperationType opType = op.operation;
+        switch(opType){
+            case init:
+                //Has the operation body value, target and size
+                String identifier = ((Locator)op.operationBody.get(Key.target)).getIdentifier();
+                structs.get(identifier).applyOperation(op);
+                break;
+            case message:
+                break;
+            case read:
+                break;
+            case write:
+                break;
+            case swap:
+                break;
+        }
 
-        //}
     }
 
 }
