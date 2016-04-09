@@ -28,13 +28,15 @@ public class Model implements iModel {
 
     @Override
     public void stepForward() {
-        step.applyOperation(operations.get(index));
-        index += 1;
+        if(operations != null && index < operations.size()){
+            step.applyOperation(operations.get(index));
+            index += 1;
+        }
     }
 
     @Override
     public void stepBackward() {
-        throw new NotImplementedException();
+        System.err.println("This is not implemented, try reset instead");
     }
 
     @Override
