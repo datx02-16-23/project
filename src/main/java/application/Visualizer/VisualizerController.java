@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import manager.CommunicatorListener;
 import manager.LogStreamManager;
 import wrapper.Operation;
 
@@ -16,7 +17,7 @@ import java.io.File;
 /**
  * This is the Controller of MVC for the visualizer GUI.
  */
-public class VisualizerController {
+public class VisualizerController implements CommunicatorListener{
 
     private Stage window;
     private final LogStreamManager lsm;
@@ -31,6 +32,7 @@ public class VisualizerController {
         this.window = window;
         this.model = model;
         this.lsm = lsm;
+        this.lsm.setListener(this);
         this.fxmlLoader = fxmlLoader;
     }
 
@@ -119,6 +121,15 @@ public class VisualizerController {
         lsm.readLog(file);
         model.set(lsm.getKnownVariables(), lsm.getOperations());
         ListView<Operation> operationHistory = (ListView<Operation>) fxmlLoader.getNamespace().get("operationHistory");
+        operationHistory.getItems().clear();
         operationHistory.getItems().addAll(lsm.getOperations());
     }
+
+	@Override
+	public void messageReceived(short messageType) {
+        ListView<Operation> operationHistory = (ListView<Operation>) fxmlLoader.getNamespace().get("operationHistory");
+        operationHistory.getItems().clear();
+        operationHistory.getItems().addAll(lsm.getOperations());
+		lsm.clearData();
+	}
 }
