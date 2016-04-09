@@ -76,9 +76,9 @@ public class OperationParser {
 	
 	public static OP_ReadWrite parseReadWrite(Operation op){
 		OP_ReadWrite op_rw;
-		if (op.operation == Operations.write){
+		if (op.operation == OperationType.write){
 			op_rw = new OP_Write();
-		} else if (op.operation == Operations.read){
+		} else if (op.operation == OperationType.read){
 			op_rw = new OP_Read();
 		} else {
 			System.err.println(("Operation must be \"read\" or \"write\". Got: " + op.operation));

@@ -54,13 +54,6 @@ public class LogStreamManager implements CommunicatorListener {
 	 */
 	public LogStreamManager(){
 		communicator = new JGroupCommunicator(this);
-		restoreDefaultState();
-	}
-	
-	/**
-	 * Restores this LogStreamManager to its initial state.
-	 */
-	public void restoreDefaultState(){
 		wrapper = null;
 		PRETTY_PRINTING = false;
 		knownVariables = new HashMap<String, DataStructure>();
@@ -170,12 +163,15 @@ public class LogStreamManager implements CommunicatorListener {
 	
 	/**
 	 * Stream the data held by this LogStreamManager using the current Communicator, then clear data.
+	 * Data will be cleared only if successful (this method returns true).
 	 * @return True if data was successfully streamed.
 	 */
 	public boolean streamAndClearLogData(){
 		boolean result = streamLogData();
-		operations.clear();
-		knownVariables.clear();
+		if (result){
+			operations.clear();
+			knownVariables.clear();
+		}
 		return result;
 	}
 	
@@ -268,8 +264,7 @@ public class LogStreamManager implements CommunicatorListener {
 			i++;
 			sb.append("\t" + i + ":\t\t" + op + "\n");
 		}
-		
-		
+
 		pringString(targetPath, sb.toString());
 	}
 	

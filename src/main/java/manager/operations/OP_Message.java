@@ -8,7 +8,7 @@ import wrapper.Operation;
  * Creates an operation to initialize an {@code AnnotatedVariable}.
  */
 public class OP_Message extends Operation{
-	private static final Operations OPERATION = Operations.message;
+	private static final OperationType OPERATION = OperationType.message;
 
 	/**
 	 * Creates a new Init operation. Note that you must set the target, maxSize and initial values.

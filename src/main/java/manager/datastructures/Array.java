@@ -13,7 +13,6 @@ import wrapper.Locator;
  * @author Richard
  *
  */
-//TODO: Add handling of multi-dimensional arrays.
 //TODO: Add access logging to enable presenting statistics.
 public class Array extends DataStructure{
 

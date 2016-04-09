@@ -8,7 +8,7 @@ import wrapper.Locator;
  * to the variable at index specified by {@target}. The target may be set null if necessary.
  */
 public class OP_Read extends OP_ReadWrite{
-	private static final Operations OPERATION = Operations.read;
+	private static final OperationType OPERATION = OperationType.read;
 
 	/**
 	 * Create a new Read operation. Note that you must set the target, source and value.

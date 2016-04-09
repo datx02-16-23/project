@@ -34,7 +34,7 @@ public interface Communicator {
 	public boolean sendWrappers(List<Wrapper> outgoing);
 
 	/**
-	 * Close any communications that can cause leaks
+	 * Close any communications that can cause leaks.
 	 */
 	public void close();
 	

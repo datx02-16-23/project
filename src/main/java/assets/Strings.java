@@ -3,11 +3,15 @@ package assets;
 public abstract class Strings {
 
 	public static final String PROJECT_NAME = "Mavser";
-	public static final String PROJECT_SLOGAN = "Frï¿½n kï¿½llkod till grafisk representation";
+	public static final String PROJECT_SLOGAN = "Data structures the way they were meant to be seen.";
 
 	public static final String DEFAULT_CHANNEL = "mavser_stream";
 
-		//Credits
-		public static final String[] DEVELOPER_NAMES = {"Jonathan Skï¿½rstedt","Simon Smith","Richard Sundqvist",
-											            "Dennis Jï¿½nsson","Johan Gerdin","Ivar Josefsson"};
+	//Credits
+	public static final String[] DEVELOPER_NAMES = {"Johan Gerdin",
+													"Ivar Josefsson",
+											        "Dennis Jönsson",
+											        "Jonathan Skarstedt",
+											        "Simon Smith",
+											        "Richard Sundqvist"};
 }

@@ -11,7 +11,7 @@ import wrapper.Operation;
  * Create a new Swap operation, shifting the values of {@code var1} and {@code var2}.
  */
 public class OP_Swap extends Operation implements Consolidable{
-	private static final Operations OPERATION = Operations.swap;
+	private static final OperationType OPERATION = OperationType.swap;
 
 	/**
 	 * Create a new Swap operation.  Note that you must set var1, var2, and value.

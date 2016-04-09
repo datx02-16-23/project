@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import manager.operations.OP_ReadWrite;
-import manager.operations.Operations;
+import manager.operations.OperationType;
 import wrapper.Operation;
 
 /**
@@ -171,12 +171,12 @@ public class Interpreter {
 		
 		candidate = unprocessedOperations.remove(0); 
 		//Found a message. Add continue expansion.
-		if (candidate.operation == Operations.message){
+		if (candidate.operation == OperationType.message){
 			keep_set_add_high();
 			return tryExpandWorkingSet(); //Call self until working set has been expanded.
 			
 		//Found an init operation. Flush working set into high level operations, then add the init.
-		} else if (candidate.operation == Operations.init){
+		} else if (candidate.operation == OperationType.init){
 			flush_set_add_high();
 			return tryExpandWorkingSet(); //Try to expand working set again.
 			
@@ -244,7 +244,7 @@ public class Interpreter {
 	 * @return True if the operation is a read/write operation. False otherwise.
 	 */
 	private boolean isReadOrWrite(Operation op){
-		return (op.operation == Operations.read || op.operation == Operations.write);
+		return (op.operation == OperationType.read || op.operation == OperationType.write);
 	}
 	
 	/**

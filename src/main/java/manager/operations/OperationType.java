@@ -1,8 +1,8 @@
 package manager.operations;
 
 /**
- * Created by cb on 31/03/16.
+ * The name of the operation.
  */
-public enum Operations {
+public enum OperationType {
     init, message, read, write, swap
 }
