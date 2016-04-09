@@ -5,9 +5,12 @@ import application.model.iModel;
 import application.view.Visualization;
 import assets.Strings;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import manager.LogStreamManager;
@@ -27,6 +30,7 @@ public class VisualizerModel extends Application {
     private Visualization visualization;
     private final iModel model= new Model();
     private final LogStreamManager lsm = new LogStreamManager();
+    FXMLLoader fxmlLoader;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -34,8 +38,8 @@ public class VisualizerModel extends Application {
         window = primaryStage;
         window.setTitle(Strings.PROJECT_NAME);
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/VisualizerView.fxml"));
-        VisualizerController controller = new VisualizerController(window, model, lsm);
+        fxmlLoader = new FXMLLoader(getClass().getResource("/VisualizerView.fxml"));
+        VisualizerController controller = new VisualizerController(window, model, lsm, fxmlLoader);
         fxmlLoader.setController(controller);
         // Load and get the root layout.
         BorderPane root;
@@ -58,8 +62,21 @@ public class VisualizerModel extends Application {
             event.consume(); // Better to do this now than missing it later.
             controller.closeProgram();
         });
+        
+        initList();
+        
         window.setScene(scene);
         window.show();
+    }
+    
+	public void initList(){
+    	ObservableList<String> listItems = FXCollections.observableArrayList();
+    	ListView operationHistory = (ListView) fxmlLoader.getNamespace().get("operationHistory");
+    	operationHistory.setItems(listItems);
+    }
+    
+    public void init(){
+
     }
 
 

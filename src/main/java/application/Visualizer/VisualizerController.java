@@ -3,10 +3,14 @@ package application.Visualizer;
 import application.model.iModel;
 import assets.Strings;
 import javafx.event.Event;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import manager.LogStreamManager;
+import wrapper.Operation;
+
 import java.io.File;
 
 /**
@@ -17,15 +21,17 @@ public class VisualizerController {
     private Stage window;
     private final LogStreamManager lsm;
     private final iModel model;
+    private final FXMLLoader fxmlLoader;
 
     // Controls
     private boolean isPlaying = false;
     private int speed = 1;
 
-    public VisualizerController(Stage window, iModel model, LogStreamManager lsm) {
+    public VisualizerController(Stage window, iModel model, LogStreamManager lsm, FXMLLoader fxmlLoader) {
         this.window = window;
         this.model = model;
         this.lsm = lsm;
+        this.fxmlLoader = fxmlLoader;
     }
 
     /**
@@ -112,5 +118,7 @@ public class VisualizerController {
     private void setFile(File file) {
         lsm.readLog(file);
         model.set(lsm.getKnownVariables(), lsm.getOperations());
+        ListView<Operation> operationHistory = (ListView<Operation>) fxmlLoader.getNamespace().get("operationHistory");
+        operationHistory.getItems().addAll(lsm.getOperations());
     }
 }
