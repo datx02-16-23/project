@@ -43,15 +43,9 @@ public class Visualization extends Pane {
     }
 
     private void clear(){
-        final int top = (int)snappedTopInset();
-        final int right = (int)snappedRightInset();
-        final int bottom = (int)snappedBottomInset();
-        final int left = (int)snappedLeftInset();
-        final int w = (int)getWidth() - left - right;
-        final int h = (int)getHeight() - top - bottom;
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setFill(Color.WHITE);
-        g.fillRect(0, 0, w, h);
+        g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
     public void render(){
@@ -63,12 +57,24 @@ public class Visualization extends Pane {
         gc.setFill(Color.BLACK);
 
         while (structNames.hasNext()){
-            String structName = structNames.next();
-            gc.fillText(structName, 20, 20 + 100*numStruct);
+            String id = structNames.next();
+            gc.fillText(generateStructHeader(id, structs.get(id)), 20, 20 + structHeight*numStruct);
             numStruct++;
-            //renderStructure(id, structs.get(id));
+            renderStructure(id, structs.get(id));
+            gc.strokeLine(0, structHeight*numStruct, canvas.getWidth(), structHeight*numStruct);
+
         }
 
+    }
+
+    private String generateStructHeader(String id, DataStructure struct){
+        StringBuilder sB = new StringBuilder();
+        sB.append("Identifier: ");
+        sB.append(id);
+        sB.append("\t");
+        sB.append("Type: ");
+        sB.append(struct.rawType);
+        return sB.toString();
     }
 
     private void drawArray(Array array){
