@@ -42,13 +42,7 @@ public class Array extends DataStructure{
 	public List<Element> getElements(){
 		return elements;
 	}
-	
-	/**
-	 * Remove all elements from this Array.
-	 */
-	public void clearElements(){
-		elements.clear();
-	}
+
 	
 	/**
 	 * Apply an initialise to this Array.
@@ -83,7 +77,12 @@ public class Array extends DataStructure{
 			elements.add(new ArrayElement(0.0 , getIndexInNDimensions(linearIndex, size)));
 		}
 	}
-	
+
+	@Override
+	public void reset() {
+		elements.clear();
+	}
+
 	/**
 	 * Given a linear index, returns the index in N dimensions (dimeionSizes.length).
 	 * @param linearIndex The linear index.

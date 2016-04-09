@@ -68,4 +68,9 @@ public class IndependentElement extends DataStructure implements Element{
 	
 		//TODO: Implement init.
 	}
+
+	@Override
+	public void reset() {
+		element = null;
+	}
 }
