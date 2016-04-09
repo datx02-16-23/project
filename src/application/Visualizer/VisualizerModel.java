@@ -34,11 +34,17 @@ public class VisualizerModel extends Application {
         window = primaryStage;
         window.setTitle(Strings.PROJECT_NAME);
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("VisualizerView.fxml"));
+        System.out.println(getClass().getResource("VisualizerModel.class"));
+        System.out.println(getClass().getResource("/../../resources/main/VisualizerView.fxml"));
+        System.out.println(getClass().getProtectionDomain().getCodeSource().getLocation());
+
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/../../resources/main/VisualizerView.fxml"));
         VisualizerController controller = new VisualizerController(window, model, lsm);
         fxmlLoader.setController(controller);
         // Load and get the root layout.
         BorderPane root;
+        System.out.println(getClass());
+
         try {
             root = fxmlLoader.load();
         } catch (IOException exception) {
@@ -52,7 +58,7 @@ public class VisualizerModel extends Application {
         root.setCenter(datastructs);
 
         Scene scene = new Scene(root, 800, 600);
-        scene.getStylesheets().add( getClass().getResource("VisualizerStyle.css").toExternalForm());
+        scene.getStylesheets().add( getClass().getResource("/../../resources/main/VisualizerStyle.css").toExternalForm());
         window.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
             controller.closeProgram();
