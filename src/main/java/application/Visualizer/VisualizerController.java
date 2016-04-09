@@ -99,9 +99,9 @@ public class VisualizerController {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
         File file = fileChooser.showOpenDialog(window);
 
-        if (file != null){
+        if (file != null){ //Null is returned if the users pressed Cancel.
             setFile(file);
-        } else {} //Null is returned if the users pressed Cancel.
+        } 
 
     }
 
