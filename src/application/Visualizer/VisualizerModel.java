@@ -14,6 +14,13 @@ import manager.LogStreamManager;
 
 import java.io.IOException;
 
+
+/**
+ * This is the Model of MVC for the visualizer GUI.
+ * All its views comes from VisualizerView.fxml, except for a Group view
+ * that is used for the AV.
+ * Its controller is VisualizerController.
+ */
 public class VisualizerModel extends Application {
 
     private Stage window;
@@ -30,7 +37,7 @@ public class VisualizerModel extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("VisualizerView.fxml"));
         VisualizerController controller = new VisualizerController(window, model, lsm);
         fxmlLoader.setController(controller);
-
+        // Load and get the root layout.
         BorderPane root;
         try {
             root = fxmlLoader.load();
@@ -38,14 +45,18 @@ public class VisualizerModel extends Application {
             throw new RuntimeException(exception);
         }
 
+        // Create a Group view for the AV.
         visualization = new Visualization(model);
         Group datastructs = new Group();
         visualization.render(datastructs);
         root.setCenter(datastructs);
 
-        window.setOnCloseRequest(event -> controller.closeProgram());
         Scene scene = new Scene(root, 800, 600);
         scene.getStylesheets().add( getClass().getResource("VisualizerStyle.css").toExternalForm());
+        window.setOnCloseRequest(event -> {
+            event.consume(); // Better to do this now than missing it later.
+            controller.closeProgram();
+        });
         window.setScene(scene);
         window.show();
     }

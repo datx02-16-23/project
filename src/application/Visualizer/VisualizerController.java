@@ -10,7 +10,10 @@ import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class VisualizerController implements Initializable {
+/**
+ * This is the Controller of MVC for the visualizer GUI.
+ */
+public class VisualizerController {
 
     private Stage window;
     private final LogStreamManager lsm;
@@ -22,20 +25,24 @@ public class VisualizerController implements Initializable {
         this.lsm = lsm;
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-    }
-
+    /**
+     * Starts playing the AV animation.
+     */
     public void playButtonClicked(){
         System.out.println("What's up player?");
     }
 
+    /**
+     * Used for closing the GUI properly.
+     */
     public void closeProgram(){
         lsm.close();
         window.close();
     }
 
+    /**
+     * Used for choosing a file to Visualize.
+     */
     public void openFileChooser() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open OI-File");
@@ -50,6 +57,10 @@ public class VisualizerController implements Initializable {
 
     }
 
+    /**
+     * Helper function for {@link #openFileChooser() openFileChooser}
+     * @param file
+     */
     private void setFile(File file) {
         lsm.readLog(file);
         model.set(lsm.getKnownVariables(), lsm.getOperations());
