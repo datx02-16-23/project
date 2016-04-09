@@ -466,6 +466,11 @@ public class StreamView extends Application {
 		
 	}
 	
+	@Override
+	public void stop(){
+		sm.stop();
+	}
+	
 	private File chooseFile(Stage stage){
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));

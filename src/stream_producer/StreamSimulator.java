@@ -307,4 +307,8 @@ public class StreamSimulator implements CommunicatorListener{
 		return ((JGroupCommunicator) LSM.getCommunicator()).getChannel();
 	}
 
+	public void stop() {
+		LSM.getCommunicator().close();
+	}
+
 }
