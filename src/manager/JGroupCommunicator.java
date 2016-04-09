@@ -45,8 +45,6 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	
 	private JChannel jChannel;
 	
-	
-	
 	/**
 	 * Create a new JGroupCommunicator with a random transmitter id. Connects to the default channel.
 	 * @param listener The listener for this JGroupCommunicator.
@@ -66,17 +64,17 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	
 	/**
 	 * Create a new JGroupCommunicator with the given transmitter id. Connects to the given channel.
-	 * @param transmitterId The transmitter id for this JGroupCommunicator.
+	 * @param senderId The transmitter id for this JGroupCommunicator.
 	 * @param channel The channel to connect to.
 	 * @param listener The listener for this JGroupCommunicator.
 	 * @param suppressIncoming If true, most incoming messages will be ignored.
 	 */
-	public JGroupCommunicator (int transmitterId, String channel, CommunicatorListener listener, boolean suppressIncoming){
+	public JGroupCommunicator (int senderId, String channel, CommunicatorListener listener, boolean suppressIncoming){
 		super();
 		if(listener == null){
 			throw new IllegalArgumentException("Listener may not be null.");
 		}
-		this.senderId = transmitterId;
+		this.senderId = senderId;
 		this.channel = channel;
 		this.listener = listener;
 		this.suppressIncoming = suppressIncoming;
@@ -309,7 +307,10 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 		jChannel.close();
 	}
 	
-	
+	/**
+	 * Add a wrapper to the incoming queue and signal listener.
+	 * @param w The wrapper to add the the incoming queue.
+	 */
 	private void addAndFireEvent(Wrapper w){
 		incomingQueue.add(w);
 		listener.messageReceived(MavserMessage.WRAPPER);
