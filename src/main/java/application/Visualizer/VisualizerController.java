@@ -48,21 +48,21 @@ public class VisualizerController {
      * Restart the AV animation.
      */
     public void restartButtonClicked(){
-        System.out.println("Placeholder: If only there was a button for second chances.");
+        model.reset();
     }
 
     /**
      * Step the animation forward
      */
     public void stepForwardButtonClicked(){
-        System.out.println("Placeholder: So it was you.");
+        model.stepForward();
     }
 
     /**
      * Step the animation backward
      */
     public void stepBackwardButtonClicked(){
-        System.out.println("Placeholder: aaaand you fell of a cliff");
+        model.stepBackward();
     }
 
     /**

@@ -1,5 +1,6 @@
 package application.model;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import wrapper.Operation;
 
 import java.util.List;
@@ -20,9 +21,20 @@ public class Model implements iModel {
     }
 
     @Override
+    public void reset() {
+        index = 0;
+        step.reset();
+    }
+
+    @Override
     public void stepForward() {
         step.applyOperation(operations.get(index));
         index += 1;
+    }
+
+    @Override
+    public void stepBackward() {
+        throw new NotImplementedException();
     }
 
     @Override

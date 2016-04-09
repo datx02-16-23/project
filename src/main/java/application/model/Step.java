@@ -23,6 +23,14 @@ public class Step implements iStep {
         structs.put(identifier, struct);
     }
 
+    @Override
+    public void reset() {
+        lastOp = null;
+        for(DataStructure struct:structs.values()){
+            struct.reset();
+        }
+    }
+
 
     @Override
     public Map<String, DataStructure> getStructures() {
