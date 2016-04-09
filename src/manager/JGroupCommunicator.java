@@ -22,11 +22,11 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	/**
 	 * Send messages in native mode (serialised Wrapper).
 	 */
-	public static final int SENDER_MODE_NATIVE = 0;
+	public static final short SENDER_MODE_NATIVE = 0;
 	/**
 	 * Send messages in JSON mode (Wrapper serialised as JSON String).
 	 */
-	public static final int SENDER_MODE_JSON = 1;
+	public static final short SENDER_MODE_JSON = 1;
 	
 	/**
 	 * If true, most incoming messages will be ignored. The messageReceived() method of the listener will
@@ -36,6 +36,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	public boolean suppressIncoming;
 	
 	private int senderId;
+	private short senderMode;
 	private String channel;
 	
 	private final List<Wrapper> incomingQueue;
@@ -43,8 +44,6 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	private final Gson gson;
 	
 	private JChannel jChannel;
-	
-	private int senderMode;
 	
 	
 	
@@ -206,6 +205,13 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	}
 	
 	private boolean listenForMemeberInfo = false;
+	
+	/**
+	 * Enable/disable listening for member info. Used to get a head count of
+	 * of agents connected to the current channel. Listener will be notified
+	 * on by a call to messageReceived(MavserMessage.MEMBER_INFO).
+	 * @param value True to enable listening. False to disable.
+	 */
 	public void listenForMemberInfo(boolean value){
 		listenForMemeberInfo = value;
 		if (listenForMemeberInfo == false){
@@ -213,16 +219,15 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 		}
 	}
 	
+	/**
+	 * Returns a list of agents connected to the channel.
+	 * @return A list of agents connected to the channel.
+	 */
 	private final List<String> memberStrings = new ArrayList<String>();
 	public List<String> getMemberStrings(){
 		return memberStrings;
 	}
-	
-	private void addAndFireEvent(Wrapper w){
-		incomingQueue.add(w);
-		listener.messageReceived(MavserMessage.WRAPPER);
-	}
-	
+
 	/**
 	 * Returns the first received Wrapper in queue. Returns null if the queue is empty.
 	 * @return The first received Wrapper in queue.
@@ -303,5 +308,12 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	public void close(){
 		jChannel.close();
 	}
+	
+	
+	private void addAndFireEvent(Wrapper w){
+		incomingQueue.add(w);
+		listener.messageReceived(MavserMessage.WRAPPER);
+	}
+	
 
 }
