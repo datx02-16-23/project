@@ -70,8 +70,8 @@ public class VisualizerModel extends Application {
     }
     
 	public void initList(){
-    	ObservableList<String> listItems = FXCollections.observableArrayList();
-    	ListView operationHistory = (ListView) fxmlLoader.getNamespace().get("operationHistory");
+    	ObservableList<wrapper.Operation> listItems = FXCollections.observableArrayList();
+    	ListView<wrapper.Operation> operationHistory = (ListView<wrapper.Operation>) fxmlLoader.getNamespace().get("operationHistory");
     	operationHistory.setItems(listItems);
     }
     

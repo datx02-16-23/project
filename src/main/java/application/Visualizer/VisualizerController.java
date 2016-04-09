@@ -2,6 +2,7 @@ package application.Visualizer;
 
 import application.model.iModel;
 import assets.Strings;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -128,8 +129,15 @@ public class VisualizerController implements CommunicatorListener{
 	@Override
 	public void messageReceived(short messageType) {
         ListView<Operation> operationHistory = (ListView<Operation>) fxmlLoader.getNamespace().get("operationHistory");
-        operationHistory.getItems().clear();
-        operationHistory.getItems().addAll(lsm.getOperations());
-		lsm.clearData();
+        Platform.runLater(new Runnable(){
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				operationHistory.getItems().addAll(lsm.getOperations());
+				lsm.clearData();
+			}        	
+        });
+		
 	}
 }
