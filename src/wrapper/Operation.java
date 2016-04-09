@@ -2,7 +2,7 @@ package wrapper;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import manager.operations.Operations;
+import manager.operations.OperationType;
 import manager.operations.Key;
 
 /**
@@ -13,7 +13,7 @@ public class Operation implements Serializable {
 	/**
 	 * The literal name of the operation, such as "init" (initialize) or "read".
 	 */
-	public final Operations operation;
+	public final OperationType operation;
 	/**
 	 * A map containing the identifier of the field (such as "destination" or "value") and the data they contained.
 	 */
@@ -25,7 +25,7 @@ public class Operation implements Serializable {
 	 * @param operationBody A map containing the identifier of the field
 	 * (such as "destination" or "value") and the data they contained.
 	 */
-	public Operation(Operations operation, HashMap<Key, Object> operationBody){
+	public Operation(OperationType operation, HashMap<Key, Object> operationBody){
 		this.operation = operation;
 		this.operationBody = operationBody;
 	}

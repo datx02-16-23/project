@@ -12,9 +12,4 @@ public interface Element {
 	 * @return The value held by this Element.
 	 */
 	public abstract double getValue();
-
-	//Counters
-//	public abstract int getValueReads();
-//	public abstract int getValueWrites();
-
 }

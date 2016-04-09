@@ -1,7 +1,7 @@
 package application.model;
 
 import manager.datastructures.DataStructure;
-import manager.operations.Operations;
+import manager.operations.OperationType;
 import wrapper.Operation;
 
 import java.util.HashMap;
