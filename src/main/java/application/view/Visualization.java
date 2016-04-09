@@ -6,7 +6,9 @@ import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;
+import manager.datastructures.Array;
 import manager.datastructures.DataStructure;
+import manager.datastructures.IndependentElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,25 +26,28 @@ public class Visualization {
     public void render(){
         group.getChildren().clear();
         Map<String, DataStructure> structs = model.getCurrentStep().getStructures();
-        for (DataStructure struct: structs.values()){
-            System.out.println(struct.toString());
+        for (String id: structs.keySet()){
+            renderStructure(id, structs.get(id));
         }
 
     }
 
-    private void drawArray(GraphicsContext gc, List<Integer> values){
-        gc.setFont(new Font(30));
-        int width = values.size()*40;
-        int height = 80;
-        gc.strokeRect(0, 0, width, height);
-        for (int i = 0; i < values.size(); i++){
-            gc.fillText(values.get(i).toString(), width/values.size()*i + 20, 60);
-        //    gc.strokeLine(10, 10, );
-        }
+    private void drawArray(Array array){
+        System.out.println("Drawing array");
 
     }
 
-    private void renderStructure(Group group, String id, DataStructure struct){
+    private void drawIndependentElement(IndependentElement element){
+        System.out.println("Drawing independent element");
+    }
+
+    private void renderStructure(String id, DataStructure struct){
+        Class structClass = struct.getClass();
+        if (structClass.equals(Array.class)){
+            drawArray((Array)struct);
+        } else if (structClass.equals(IndependentElement.class)){
+            drawIndependentElement((IndependentElement)struct);
+        }
 
     }
 
