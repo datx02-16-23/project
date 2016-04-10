@@ -86,10 +86,9 @@ public class VisualizerModel extends Application {
 	    	@SuppressWarnings("unchecked")
 			ListView<wrapper.Operation> operationHistory = (ListView<wrapper.Operation>) fxmlLoader.getNamespace().get("operationHistory");
 	    	operationHistory.setItems(listItems);
-        
-	    
-	    	
-	    window.getIcons().add(new Image(VisualizerModel.class.getResourceAsStream( "icon.png" )));
+
+
+        window.getIcons().add(new Image(VisualizerModel.class.getResourceAsStream( "/icon.png" )));
 	    	
         window.setScene(scene);
         window.show();
