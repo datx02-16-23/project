@@ -1,6 +1,7 @@
 package manager;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.jgroups.JChannel;
@@ -45,6 +46,8 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	
 	private JChannel jChannel;
 	
+	private final HashSet<Integer> allTransmitters;
+	
 	/**
 	 * Create a new JGroupCommunicator with a random transmitter id. Connects to the default channel.
 	 * @param listener The listener for this JGroupCommunicator.
@@ -82,6 +85,8 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 		
 		gson = new Gson();
 		incomingQueue = new ArrayList<Wrapper>();
+		
+		allTransmitters = new HashSet<Integer>();
 		
 		try {
 			jChannel = new JChannel("udp.xml");
@@ -152,10 +157,16 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 			return;
 		}
 		
+		
 		MavserMessage message = (MavserMessage) messageObject;
 			
 		if(message.senderId == senderId){
 			return;  //Don't process our own messages.
+		}
+	
+		if(allTransmitters.add(new Integer(message.senderId))){
+			String s = "" + message.senderId;
+			allMemberStrings.add(s);
 		}
 		
 		switch(message.messageType){
@@ -189,7 +200,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 			
 			case MavserMessage.MEMBER_INFO:
 				if (listenForMemeberInfo){
-					memberStrings.add((String) message.payload);
+					currentMemberStrings.add((String) message.payload);
 					listener.messageReceived(MavserMessage.MEMBER_INFO);
 				}
 			break;
@@ -212,12 +223,12 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	public void listenForMemberInfo(boolean value){
 		listenForMemeberInfo = value;
 		if (listenForMemeberInfo == false){
-			memberStrings.clear();
+			currentMemberStrings.clear();
 		} else {
 			Message m = new Message();
 			m.setObject(new MavserMessage(null, senderId, MavserMessage.REQUEST_FOR_MEMBER_INFO));
 			
-			memberStrings.add("ME: JGroupCommunicator [ " + getListenerHierarchy() +" ], (id = " + senderId + ")");
+			currentMemberStrings.add("ME: JGroupCommunicator [ " + getListenerHierarchy() +" ], (id = " + senderId + ")");
 			listener.messageReceived(MavserMessage.MEMBER_INFO);
 			try {
 				jChannel.send(m);
@@ -247,9 +258,18 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 	 * Returns a list of agents connected to the channel.
 	 * @return A list of agents connected to the channel.
 	 */
-	private final List<String> memberStrings = new ArrayList<String>();
+	private final List<String> currentMemberStrings = new ArrayList<String>();
 	public List<String> getMemberStrings(){
-		return memberStrings;
+		return currentMemberStrings;
+	}
+
+	/**
+	 * Returns a list all agents this JGroupCommunicator has been in contact with.
+	 * @return A list all agents this JGroupCommunicator has been in contact with.
+	 */
+	private final List<String> allMemberStrings = new ArrayList<String>();
+	public final List<String> getAllMemberStrings(){
+		return allMemberStrings;
 	}
 
 	/**

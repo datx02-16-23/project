@@ -24,7 +24,7 @@
             <Menu mnemonicParsing="false" text="File">
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#openFileChooser" text="Import" />
-                  <MenuItem mnemonicParsing="false" text="Export" />
+                  <MenuItem mnemonicParsing="false" onAction="#openDestinationChooser" text="Export" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#closeProgram" text="Close" />
                </items>

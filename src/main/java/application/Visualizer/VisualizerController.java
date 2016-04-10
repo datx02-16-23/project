@@ -15,6 +15,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -193,6 +194,12 @@ public class VisualizerController implements CommunicatorListener{
     	JGroupCommunicator jgc = (JGroupCommunicator) lsm.getCommunicator();
     	jgc.listenForMemberInfo(true);
         
+    	StringBuilder sb = new StringBuilder();
+    	for(String s : jgc.getAllMemberStrings()){
+    		sb.append(s + "\n");
+    	}
+    	allConnected.set(sb.toString());
+    	
         connectedDialog.setWidth(this.window.getWidth()*0.75);
         connectedDialog.setHeight(this.window.getHeight()*0.75);
         connectedDialog.show();
@@ -261,6 +268,20 @@ public class VisualizerController implements CommunicatorListener{
 		
 	}
 
+	public void openDestinationChooser(){
+		DirectoryChooser dc = new DirectoryChooser();
+		dc.setTitle("Choose Output Directory");
+		File outputPath = dc.showDialog(this.window);
+		if (outputPath == null){
+			return;
+		}
+		System.err.println("No way to get operations/variables from model?");
+		//TODO: No way to get operations/variables from model?
+//		lsm.setOperations(null);
+//		lsm.setKnownVariables(null);
+//		lsm.printLog(outputPath);
+	}
+	
 	@Override
 	public CommunicatorListener getListener() {
 		return null; //VisualizerController doesn't have any listeners.

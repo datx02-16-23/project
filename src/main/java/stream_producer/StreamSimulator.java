@@ -271,6 +271,7 @@ public class StreamSimulator implements CommunicatorListener{
 	}
 	
 	private void exportList(File targetDir, List<Operation> list){
+		LSM.setKnownVariables(knownVariables);
 		LSM.setOperations(list);
 		LSM.printLog(targetDir);
 	}
