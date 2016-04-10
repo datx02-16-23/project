@@ -109,7 +109,7 @@ public class VisualizerController implements CommunicatorListener{
     	JGroupCommunicator jgc = (JGroupCommunicator) lsm.getCommunicator();
     	jgc.listenForMemberInfo(true);
         final Stage dialog = new Stage();
-        dialog.getIcons().add(new Image(VisualizerModel.class.getResourceAsStream( "connected_entities_icon.png" )));
+        dialog.getIcons().add(new Image(VisualizerController.class.getResourceAsStream( "/connected_entities_icon.png" )));
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle("Connected Entities: Channel = \"" + jgc.getChannel() + "\"");
         dialog.initOwner(parent);
