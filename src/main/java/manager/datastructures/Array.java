@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import manager.operations.OP_Init;
-import manager.operations.OP_Write;
 import wrapper.Locator;
 import wrapper.Operation;
 

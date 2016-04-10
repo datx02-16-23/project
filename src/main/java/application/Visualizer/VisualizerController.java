@@ -11,8 +11,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -103,7 +101,6 @@ public class VisualizerController implements CommunicatorListener{
         }
         System.out.println();
         
-        connectedToChannel(null);
     }
     
     private final SimpleStringProperty connected = new SimpleStringProperty();
@@ -158,7 +155,8 @@ public class VisualizerController implements CommunicatorListener{
     private void setFile(File file) {
         lsm.readLog(file);
         model.set(lsm.getKnownVariables(), lsm.getOperations());
-        ListView<Operation> operationHistory = (ListView<Operation>) fxmlLoader.getNamespace().get("operationHistory");
+        @SuppressWarnings("unchecked")
+		ListView<Operation> operationHistory = (ListView<Operation>) fxmlLoader.getNamespace().get("operationHistory");
         operationHistory.getItems().clear();
         operationHistory.getItems().addAll(lsm.getOperations());
         visualization.render();
@@ -176,7 +174,8 @@ public class VisualizerController implements CommunicatorListener{
 			return;
 		}
 		
-        ListView<Operation> operationHistory = (ListView<Operation>) fxmlLoader.getNamespace().get("operationHistory");
+        @SuppressWarnings("unchecked")
+		ListView<Operation> operationHistory = (ListView<Operation>) fxmlLoader.getNamespace().get("operationHistory");
         Platform.runLater(new Runnable(){
 
 			@Override

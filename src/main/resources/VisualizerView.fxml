@@ -30,9 +30,10 @@
                   <MenuItem mnemonicParsing="false" onAction="#closeProgram" text="Close" />
                </items>
             </Menu>
-            <Menu mnemonicParsing="false" onAction="#aboutProgram" text="Help">
+            <Menu mnemonicParsing="false" text="Help">
                <items>
-                  <MenuItem mnemonicParsing="false" text="About" />
+                  <MenuItem mnemonicParsing="false" onAction="#aboutProgram" text="About" />
+                  <MenuItem fx:id="connectedEntitiesBtn" mnemonicParsing="false" text="Connected Entities" />
                </items>
             </Menu>
          </menus>

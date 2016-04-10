@@ -72,6 +72,8 @@ public class OP_Init extends Operation{
 				case value:
 					builder.append("\t" + Arrays.toString((double[])operationBody.get(key)) +",\n");
 				break;
+			default:
+				break;
 			}
 			 
 		}

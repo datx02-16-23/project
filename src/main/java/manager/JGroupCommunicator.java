@@ -2,7 +2,6 @@ package manager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Semaphore;
 
 import org.jgroups.JChannel;
 import org.jgroups.Message;
