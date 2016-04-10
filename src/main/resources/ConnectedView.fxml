@@ -9,9 +9,9 @@
 
 <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="373.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <items>
-      <VBox prefHeight="200.0" prefWidth="100.0">
+      <VBox fx:id="connectedEntities1" prefHeight="200.0" prefWidth="100.0">
          <children>
-            <Label text="Currently connected entities:" textAlignment="LEFT" wrapText="true">
+            <Label text="Currently connected entities:" textAlignment="LEFT" wrapText="true" VBox.vgrow="NEVER">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
@@ -19,12 +19,15 @@
                   <Insets left="5.0" />
                </padding>
             </Label>
-            <TextArea fx:id="connectedEntities" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="88.0" prefWidth="479.0" text="No currently connected entities found." />
+            <TextArea fx:id="connectedEntities" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="88.0" prefWidth="479.0" text="No currently connected entities found." VBox.vgrow="ALWAYS" />
          </children>
+         <padding>
+            <Insets bottom="5.0" />
+         </padding>
       </VBox>
       <VBox prefHeight="200.0" prefWidth="100.0">
          <children>
-            <Label text="All entities:" textAlignment="LEFT" wrapText="true">
+            <Label text="All entities:" textAlignment="LEFT" wrapText="true" VBox.vgrow="NEVER">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
@@ -32,8 +35,11 @@
                   <Insets left="5.0" />
                </padding>
             </Label>
-            <TextArea fx:id="allEntities" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="121.0" prefWidth="487.0" text="No entities found." />
+            <TextArea fx:id="allEntities" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="121.0" prefWidth="487.0" text="No entities found." VBox.vgrow="ALWAYS" />
          </children>
+         <padding>
+            <Insets top="5.0" />
+         </padding>
       </VBox>
    </items>
 </SplitPane>

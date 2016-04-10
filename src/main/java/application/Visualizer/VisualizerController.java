@@ -11,6 +11,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
@@ -23,6 +25,7 @@ import manager.Communicator.MavserMessage;
 import wrapper.Operation;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -35,7 +38,17 @@ public class VisualizerController implements CommunicatorListener{
     private final LogStreamManager lsm;
     private final Interpreter interpreter;
     private final iModel model;
-    private final FXMLLoader fxmlLoader;
+    private final FXMLLoader mainViewLoader;
+
+    //Connection dialog stuff.
+    private final SimpleStringProperty currentlyConnected = new SimpleStringProperty();
+    private final SimpleStringProperty allConnected = new SimpleStringProperty("Not implemented yet.");
+    private FXMLLoader connectedLoader;
+    private Stage connectedDialog;
+    
+    //Settings dialog stuff
+    private FXMLLoader settingsLoader;
+    private Stage settingsDialog;
 
     // Controls
     private boolean isPlaying = false;
@@ -47,11 +60,20 @@ public class VisualizerController implements CommunicatorListener{
         this.model = model;
         this.lsm = lsm;
         this.lsm.setListener(this);
-        this.fxmlLoader = fxmlLoader;
+        this.mainViewLoader = fxmlLoader;
         
         this.interpreter = new Interpreter();
+        
+        initConnectedPane();
+        initSettingsPane();
     }
 
+    public void showSettings(){
+        settingsDialog.setWidth(this.window.getWidth()*0.75);
+        settingsDialog.setHeight(this.window.getHeight()*0.75);
+        settingsDialog.show();
+    }
+    
     /**
      * Starts playing or pause the AV animation.
      */
@@ -110,32 +132,70 @@ public class VisualizerController implements CommunicatorListener{
     
     public void interpretOperationHistory(){
     	 @SuppressWarnings("unchecked")
- 		 ListView<Operation> operationHistory = (ListView<Operation>) fxmlLoader.getNamespace().get("operationHistory");
+ 		 ListView<Operation> operationHistory = (ListView<Operation>) mainViewLoader.getNamespace().get("operationHistory");
          interpreter.consolidate(operationHistory.getItems());
     }
+
+    private void initSettingsPane(){
+        settingsLoader = new FXMLLoader(getClass().getResource("/SettingsView.fxml"));
+        settingsDialog = new Stage();
+        settingsDialog.getIcons().add(new Image(VisualizerController.class.getResourceAsStream( "/icon_settings.png" )));
+        settingsDialog.initModality(Modality.APPLICATION_MODAL);
+        settingsDialog.setTitle(Strings.PROJECT_NAME + ": Settings and Preferences");
+        settingsDialog.initOwner(this.window);
+        
+        TabPane p = null;
+		try {
+			p = settingsLoader.load();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+        Scene dialogScene = new Scene(p, this.window.getWidth()*0.75, this.window.getHeight()*0.75);
+        settingsDialog.setOnCloseRequest(event -> {
+            event.consume(); // Better to do this now than missing it later.
+            //Close without saving.
+            settingsDialog.close();
+        });
+        settingsDialog.setScene(dialogScene);
+    }
     
-    private final SimpleStringProperty connected = new SimpleStringProperty();
-    public void connectedToChannel(){
-    	FXMLLoader connectedLoader = new FXMLLoader(getClass().getResource("/ConnectedView.fxml"));
+    private void initConnectedPane(){
     	JGroupCommunicator jgc = (JGroupCommunicator) lsm.getCommunicator();
-    	jgc.listenForMemberInfo(true);
-        final Stage dialog = new Stage();
-        dialog.getIcons().add(new Image(VisualizerController.class.getResourceAsStream( "/icon_connected.png" )));
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.setTitle("Connected Entities: Channel = \"" + jgc.getChannel() + "\"");
-        dialog.initOwner(this.window);
-        TextArea textArea = new TextArea("If you can see this, something went wrong :(.");
+    	connectedLoader = new FXMLLoader(getClass().getResource("/ConnectedView.fxml"));
+    	connectedDialog = new Stage();
+    	connectedDialog.getIcons().add(new Image(VisualizerController.class.getResourceAsStream( "/icon_connected.png" )));
+        connectedDialog.initModality(Modality.APPLICATION_MODAL);
+        connectedDialog.setTitle("Entities View: Channel = \"" + jgc.getChannel() + "\"");
+        connectedDialog.initOwner(this.window);
         
-        textArea.textProperty().bind(connected);
+        SplitPane p = null;
+		try {
+			p = connectedLoader.load();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
         
-        Scene dialogScene = new Scene(textArea, 600, 200);
-        dialog.setOnCloseRequest(event -> {
+        TextArea top = (TextArea) connectedLoader.getNamespace().get("connectedEntities");
+        top.textProperty().bind(currentlyConnected);
+        TextArea bottom = (TextArea) connectedLoader.getNamespace().get("allEntities");
+        bottom.textProperty().bind(allConnected);
+		
+        Scene dialogScene = new Scene(p, this.window.getWidth()*0.75, this.window.getHeight()*0.75);
+        connectedDialog.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
             jgc.listenForMemberInfo(false);
-        	dialog.close();
+            connectedDialog.close();
         });
-        dialog.setScene(dialogScene);
-        dialog.show();
+        connectedDialog.setScene(dialogScene);
+    }
+    public void connectedToChannel(){
+    	JGroupCommunicator jgc = (JGroupCommunicator) lsm.getCommunicator();
+    	jgc.listenForMemberInfo(true);
+        
+        connectedDialog.setWidth(this.window.getWidth()*0.75);
+        connectedDialog.setHeight(this.window.getHeight()*0.75);
+        connectedDialog.show();
     }
 
     /**
@@ -170,7 +230,7 @@ public class VisualizerController implements CommunicatorListener{
         lsm.readLog(file);
         model.set(lsm.getKnownVariables(), lsm.getOperations());
         @SuppressWarnings("unchecked")
-		ListView<Operation> operationHistory = (ListView<Operation>) fxmlLoader.getNamespace().get("operationHistory");
+		ListView<Operation> operationHistory = (ListView<Operation>) mainViewLoader.getNamespace().get("operationHistory");
         operationHistory.getItems().clear();
         operationHistory.getItems().addAll(lsm.getOperations());
         visualization.render();
@@ -184,12 +244,12 @@ public class VisualizerController implements CommunicatorListener{
 	    	for (String s : memberStrings){
 	    		sb.append(s + "\n");
 	    	}
-	    	connected.set(sb.toString());
+	    	currentlyConnected.set(sb.toString());
 			return;
 		}
 		
         @SuppressWarnings("unchecked")
-		ListView<Operation> operationHistory = (ListView<Operation>) fxmlLoader.getNamespace().get("operationHistory");
+		ListView<Operation> operationHistory = (ListView<Operation>) mainViewLoader.getNamespace().get("operationHistory");
         Platform.runLater(new Runnable(){
 
 			@Override
