@@ -13,6 +13,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import manager.LogStreamManager;
 
@@ -50,7 +51,7 @@ public class VisualizerModel extends Application {
 
         fxmlLoader.setController(controller);
         // Load and get the root layout.
-        BorderPane root;
+        VBox root;
 
         try {
             root = fxmlLoader.load();
