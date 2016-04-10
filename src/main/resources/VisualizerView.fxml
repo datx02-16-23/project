@@ -29,6 +29,11 @@
                   <MenuItem mnemonicParsing="false" onAction="#closeProgram" text="Close" />
                </items>
             </Menu>
+            <Menu mnemonicParsing="false" text="Actions">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#interpretOperationHistory" text="Interpret" />
+              </items>
+            </Menu>
             <Menu mnemonicParsing="false" text="Help">
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#aboutProgram" text="About" />

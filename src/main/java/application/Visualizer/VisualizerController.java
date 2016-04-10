@@ -3,6 +3,7 @@ package application.Visualizer;
 import application.model.iModel;
 import application.view.Visualization;
 import assets.Strings;
+import interpreter.Interpreter;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.Event;
@@ -32,6 +33,7 @@ public class VisualizerController implements CommunicatorListener{
     private Visualization visualization;
     private Stage window;
     private final LogStreamManager lsm;
+    private final Interpreter interpreter;
     private final iModel model;
     private final FXMLLoader fxmlLoader;
 
@@ -46,6 +48,8 @@ public class VisualizerController implements CommunicatorListener{
         this.lsm = lsm;
         this.lsm.setListener(this);
         this.fxmlLoader = fxmlLoader;
+        
+        this.interpreter = new Interpreter();
     }
 
     /**
@@ -102,6 +106,12 @@ public class VisualizerController implements CommunicatorListener{
         }
         System.out.println();
         
+    }
+    
+    public void interpretOperationHistory(){
+    	 @SuppressWarnings("unchecked")
+ 		 ListView<Operation> operationHistory = (ListView<Operation>) fxmlLoader.getNamespace().get("operationHistory");
+         interpreter.consolidate(operationHistory.getItems());
     }
     
     private final SimpleStringProperty connected = new SimpleStringProperty();

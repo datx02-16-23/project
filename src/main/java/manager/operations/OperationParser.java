@@ -159,6 +159,7 @@ public class OperationParser {
 	}
 	
 	@SuppressWarnings("unchecked")
+	//TODO: Use..
 	private static int[] parseIndex(Operation op){
 		return ensureIntArray((ArrayList<Object>)op.operationBody.get(Key.index));
 	}

@@ -5,13 +5,10 @@ import application.model.iModel;
 import application.view.Visualization;
 import assets.Strings;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -81,12 +78,6 @@ public class VisualizerModel extends Application {
 					controller.connectedToChannel(window);
 				}
 	        });
-	        
-	        //Operation history
-	    	ObservableList<wrapper.Operation> listItems = FXCollections.observableArrayList();
-	    	@SuppressWarnings("unchecked")
-			ListView<wrapper.Operation> operationHistory = (ListView<wrapper.Operation>) fxmlLoader.getNamespace().get("operationHistory");
-	    	operationHistory.setItems(listItems);
 
 
         window.getIcons().add(new Image(VisualizerModel.class.getResourceAsStream( "/icon.png" )));

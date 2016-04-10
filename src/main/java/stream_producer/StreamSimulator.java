@@ -246,12 +246,7 @@ public class StreamSimulator implements CommunicatorListener{
 	}
 		
 	public void interpret(){
-		ArrayList<Operation> toInterpreter = new ArrayList<Operation>();
-		interpreter.clearConsoloidatedOperations();
-		toInterpreter.addAll(queuedOperations);
-		interpreter.setOperations(toInterpreter);
-		queuedOperations.clear();
-		queuedOperations.addAll(interpreter.getConsolidatedOperations());
+		interpreter.consolidate(queuedOperations);
 		updateQueued();
 	}
 	

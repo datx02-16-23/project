@@ -8,14 +8,10 @@ import manager.operations.OperationType;
 import wrapper.Operation;
 
 /**
- * The Interpreter class contains methods for consolidating read/write operations into more complex operations.
- * The class would typically be used by creating a new instance, setting the list of low level operations and then
- * calling getConsolidatedOperations().
+ * Class for consolidating groups of low level operations (read/write).
  * @author Richard
  *
  */
-//TODO: Create add handling for all high level operations encounter in lowLevelOperations when calling
-// consolidateOperations(), make it possible to reconsolidate the operations found in consolidatedOperations. 
 public class Interpreter {
 	/**
 	 * Halt execution if a high-level operation is found.
@@ -40,9 +36,8 @@ public class Interpreter {
 	
 	private int highOrderRoutine;
 	
-	private List<Operation> unprocessedOperations;
+	private List<Operation> unprocessedOperations, processedOperations;
 	private List<OP_ReadWrite> workingSet;
-	private List<Operation> processedOperations;
 	private Consolidator consolidator;
 
 	/**
@@ -67,47 +62,32 @@ public class Interpreter {
 	 */
 	public void setHighOrderRoutine(int newRoutine){
 		if (newRoutine < 0 || newRoutine > 4){
-			throw new IllegalArgumentException("something useful."); //TODO: Write something useful.
+			System.err.println("INTERPRETER: setHighOrderRoutine(): Invalid high-order routine.");
+			return;
 		}
 		highOrderRoutine = newRoutine;
 	}
-	/**
-	 * Attempt to consolidate the list of low level operations (read/write) held by this Interpreter.
-	 * When this method returns, getLowLevelOperations.size() will be 0. You may then supply a new list
-	 * to be consolidated and appended to the list of consolidated operations.
-	 * @return A consolidated list of operations.
-	 */
-	public List<Operation> getConsolidatedOperations(){
-		consolidateOperations();
-		return processedOperations;
-	}
-	
-	/**
-	 * Clear the list of consolidated operations. This method must be called manually if you do not wish
-	 * for the result of several consolidated list of low level operations to be combined.
-	 */
-	public void clearConsoloidatedOperations(){
-		processedOperations.clear();
-	}
-	
-	/**
-	 * Returns the list of low level operations held by this Interpreter. 
-	 * @return The list of low level operations held by this Interpreter.
-	 */
-	public List<Operation> getLowLevelOperations() {
-		return unprocessedOperations;
-	}
 
 	/**
-	 * Set the list of low level operations used by this Interpreter.
-	 * The interpreter can handle read/write, message and init.
-	 * @param operations A new list of low level operations held by this interpreter.
+	 * Attempt to consolidate the supplied list of operations. Returns True if the size of the list has changed
+	 * as a result on the attempted consolidation.
+	 * <br><b>NOTE:</b> The list given by the argument {@code operations} will be modified by this method!
+	 * @param operations The operations to consolidate.
+	 * @return True if the list has been changed. False otherwise.
 	 */
-	public void setOperations(List<Operation> operations) {
-		if (operations == null){
-			throw new NullPointerException("List of low level operations cannot be null.");
-		}
-		this.unprocessedOperations = operations;
+	public boolean consolidate(List<Operation> operations){
+		int oldSize = operations.size();
+		
+		unprocessedOperations.clear(); //Not really needed.
+		unprocessedOperations.addAll(operations);
+		
+		processedOperations.clear();
+		consolidateOperations();
+		
+		operations.clear();
+		operations.addAll(processedOperations);
+		
+		return oldSize == operations.size();
 	}
 	
 	/**
@@ -172,12 +152,12 @@ public class Interpreter {
 		candidate = unprocessedOperations.remove(0); 
 		//Found a message. Add continue expansion.
 		if (candidate.operation == OperationType.message){
-			keep_set_add_high();
+			keepSetAddHigh();
 			return tryExpandWorkingSet(); //Call self until working set has been expanded.
 			
 		//Found an init operation. Flush working set into high level operations, then add the init.
 		} else if (candidate.operation == OperationType.init){
-			flush_set_add_high();
+			flushSetAddHigh();
 			return tryExpandWorkingSet(); //Try to expand working set again.
 			
 		//Only read/write operations should remain at this point.
@@ -195,15 +175,16 @@ public class Interpreter {
 
 		switch(highOrderRoutine){
 			case HALT:
+				System.err.println("HALT has not been implemented yet. Sorry :/.");
 				System.exit(-1); //TODO: Handle properly.
 				break;
 				
 			case KEEP_SET_ADD_HIGH:
-				keep_set_add_high();
+				keepSetAddHigh();
 				break;
 				
 			case FLUSH_SET_ADD_HIGH:
-				flush_set_add_high();
+				flushSetAddHigh();
 				break;
 				
 			case DISCARD:
@@ -211,6 +192,7 @@ public class Interpreter {
 				break;
 			case DECONSTRUCT:
 				deconstruct();
+				System.exit(-1); //TODO: Handle properly.
 				break;
 		}
 		
@@ -219,20 +201,20 @@ public class Interpreter {
 	 * Deconstruct operation into read/write operations.
 	 */
 	private void deconstruct(){
-		throw new UnsupportedOperationException("Deconstruction has not been implemented.");
+		System.err.println("DECONSTRUCT has not been implemented yet. Sorry :/.");
 	}
 	
 	/**
 	 * Add high-level operation found to processedOperations, then continue on the current working set.
 	 */
-	private void keep_set_add_high(){
+	private void keepSetAddHigh(){
 		processedOperations.add(candidate);
 	}
 	
 	/**
 	 * Flush the working set into processedOperations, then add the high-level operation as well.
 	 */
-	private void flush_set_add_high(){
+	private void flushSetAddHigh(){
 		processedOperations.addAll(workingSet);
 		processedOperations.add(candidate);
 		workingSet.clear();
