@@ -55,12 +55,12 @@ public class OperationParser {
 		LinkedTreeMap<String, Object> linkedTreeMap = (LinkedTreeMap<String, Object>)arrayVariable;
 		
 		
-		Object identifier = linkedTreeMap.get("identifier");
+		Object identifier = linkedTreeMap.get(Key.identifier.toString());
 		if (identifier == null){
 			return null; //No identifier -> return null.
 		}
 		
-		Object indexAL = linkedTreeMap.get(Key.index);
+		Object indexAL = linkedTreeMap.get(Key.index.toString());
 		int[] index = null;
 		
 		if (indexAL != null){
