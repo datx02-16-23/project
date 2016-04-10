@@ -39,7 +39,7 @@ public class OP_Message extends Operation{
 	}
 	
 	public String toString(){
-		return "MESSAGE: " + getValue();
+		return "MESSAGE: \"" + getValue() + "\"";
 	}
 	
 

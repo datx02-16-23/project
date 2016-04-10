@@ -1,4 +1,5 @@
 package manager.operations;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import wrapper.Locator;
@@ -48,12 +49,32 @@ public abstract class OP_ReadWrite extends Operation{
 	}
 	
 	public String toString(){
-		return toSimpleString();		
-	}
-	
-	public String toSimpleString(){
-		return super.operation.toString().toUpperCase() + ": " + (getSource() == null ? "?" : getSource().toSimpleString()) 
-				+ " -> " + (getTarget() == null ? "?" : getTarget().toSimpleString()) ;
+		Locator source = getSource();
+		Locator target = getTarget();
+		String sourceStr;
+		String targetStr;
+		
+		//Source and target known
+		if (source != null && target != null){
+			sourceStr = source.toSimpleString();
+			targetStr = target.toSimpleString();
+		//Assume source or target known.
+		} else {
+			double[] value = getValue();
+			String valueStr = value == null ? "?" : Arrays.toString(value);
+			
+			//Source unknown
+			if(source == null){
+				sourceStr = valueStr;
+				targetStr = target.toSimpleString();
+			//Target unknown
+			} else {
+				sourceStr = source.toSimpleString();
+				targetStr = valueStr;
+			}
+		}
+		
+		return super.operation.toString().toUpperCase() + ": " + sourceStr + " -> " + targetStr ;	
 	}
 	
 	public Locator getTarget(){
