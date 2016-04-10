@@ -5,6 +5,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import manager.datastructures.Array;
 import manager.datastructures.DataStructure;
 import manager.datastructures.Element;
@@ -18,6 +20,7 @@ public class Visualization extends Pane {
     private final iModel model;
     private final Canvas canvas = new Canvas();
     private final int structHeight = 100;
+    private final double headerTextSize = 12;
 
     public Visualization(iModel model){
         this.model = model;
@@ -56,10 +59,14 @@ public class Visualization extends Pane {
         gc.setFill(Color.BLACK);
 
         while (structNames.hasNext()){
-            String id = structNames.next();
-            gc.fillText(generateStructHeader(id, structs.get(id)), 20, 20 + structHeight*numStruct);
+            final int x = 0;
+            final int y = 0 + structHeight*numStruct;
+            final int width = (int)canvas.getWidth();
+            final String id = structNames.next();
+            gc.setFont(new Font(headerTextSize));
+            gc.fillText(generateStructHeader(id, structs.get(id)), 20 + x, 20 + y);
             numStruct++;
-            renderStructure(id, structs.get(id));
+            renderStructure(structs.get(id), x, y, width, structHeight);
             gc.strokeLine(0, structHeight*numStruct, canvas.getWidth(), structHeight*numStruct);
 
         }
@@ -76,13 +83,10 @@ public class Visualization extends Pane {
         return sB.toString();
     }
 
-    private void drawArray(Array array){
-        int width = array.size()*40;
-        int height = 80;
-        Canvas canvas = new Canvas(width, height);
+    private void drawArray(Array array, int x, int y, int width, int height){
+        int elemWidth = 40;
         GraphicsContext gc = canvas.getGraphicsContext2D();
-
-        gc.strokeRect(5, 5, 5+width, 5+height);
+        gc.setStroke(Color.BLACK);
 
         List<Element> elements = array.getElements();
         for(int i = 0; i < elements.size(); i++){
@@ -95,10 +99,10 @@ public class Visualization extends Pane {
         System.out.println("Drawing independent element");
     }
 
-    private void renderStructure(String id, DataStructure struct){
+    private void renderStructure(DataStructure struct, int x, int y, int width, int height){
         Class structClass = struct.getClass();
         if (structClass.equals(Array.class)){
-            drawArray((Array)struct);
+            drawArray((Array)struct, x, y, width, height);
         } else if (structClass.equals(IndependentElement.class)){
             drawIndependentElement((IndependentElement)struct);
         }
