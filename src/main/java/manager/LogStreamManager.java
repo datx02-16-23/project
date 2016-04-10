@@ -50,12 +50,20 @@ public class LogStreamManager implements CommunicatorListener {
 	private List<Operation> operations;
 
 	/**
-	 * Creates a new LogStreamManager. You may read a log file using the readLog() methods.
+	 * Creates a new LogStreamManager.
 	 */
 	public LogStreamManager(){
 		communicator = new JGroupCommunicator(this);
-		wrapper = null;
-		PRETTY_PRINTING = false;
+		knownVariables = new HashMap<String, DataStructure>();
+		operations = new ArrayList<Operation>();
+	}
+	
+	/**
+	 * Creates a new LogStreamManager.
+	 * @param suppressIncoming If {@code true}, most incoming messages will be suppressed.
+	 */
+	public LogStreamManager(boolean suppressIncoming){
+		communicator = new JGroupCommunicator(this, suppressIncoming);
 		knownVariables = new HashMap<String, DataStructure>();
 		operations = new ArrayList<Operation>();
 	}
