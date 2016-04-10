@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="373.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+   <items>
+      <VBox prefHeight="200.0" prefWidth="100.0">
+         <children>
+            <Label text="Currently connected entities:" textAlignment="LEFT" wrapText="true">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font>
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </Label>
+            <TextArea fx:id="connectedEntities" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="88.0" prefWidth="479.0" text="No currently connected entities found." />
+         </children>
+      </VBox>
+      <VBox prefHeight="200.0" prefWidth="100.0">
+         <children>
+            <Label text="All entities:" textAlignment="LEFT" wrapText="true">
+               <font>
+                  <Font name="System Bold" size="13.0" />
+               </font>
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </Label>
+            <TextArea fx:id="allEntities" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="121.0" prefWidth="487.0" text="No entities found." />
+         </children>
+      </VBox>
+   </items>
+</SplitPane>

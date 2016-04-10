@@ -116,10 +116,11 @@ public class VisualizerController implements CommunicatorListener{
     
     private final SimpleStringProperty connected = new SimpleStringProperty();
     public void connectedToChannel(){
+    	FXMLLoader connectedLoader = new FXMLLoader(getClass().getResource("/ConnectedView.fxml"));
     	JGroupCommunicator jgc = (JGroupCommunicator) lsm.getCommunicator();
     	jgc.listenForMemberInfo(true);
         final Stage dialog = new Stage();
-        dialog.getIcons().add(new Image(VisualizerController.class.getResourceAsStream( "/connected_entities_icon.png" )));
+        dialog.getIcons().add(new Image(VisualizerController.class.getResourceAsStream( "/icon_options.png" )));
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle("Connected Entities: Channel = \"" + jgc.getChannel() + "\"");
         dialog.initOwner(this.window);
