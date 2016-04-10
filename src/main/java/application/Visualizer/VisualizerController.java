@@ -155,6 +155,7 @@ public class VisualizerController implements CommunicatorListener{
      * @param file
      */
     private void setFile(File file) {
+    	lsm.clearData();
         lsm.readLog(file);
         model.set(lsm.getKnownVariables(), lsm.getOperations());
         @SuppressWarnings("unchecked")
