@@ -16,6 +16,8 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import manager.LogStreamManager;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.IOException;
 
 
@@ -59,8 +61,9 @@ public class VisualizerModel extends Application {
         GridPane visualizationPane = (GridPane) fxmlLoader.getNamespace().get("visualizationPane");
         
         visualizationPane.add(visualization, 0, 0);
-
-        Scene scene = new Scene(root, 800, 600);
+        
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Scene scene = new Scene(root, (screenSize.getWidth()*0.5), (screenSize.getHeight()*0.5));
         scene.getStylesheets().add( getClass().getResource("/VisualizerStyle.css").toExternalForm());
         window.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
