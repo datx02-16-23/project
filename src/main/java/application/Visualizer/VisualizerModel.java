@@ -13,6 +13,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -33,7 +34,7 @@ public class VisualizerModel extends Application {
     private Visualization visualization;
     private final iModel model= new Model();
     private final LogStreamManager lsm = new LogStreamManager();
-    FXMLLoader fxmlLoader;
+    private FXMLLoader fxmlLoader;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -86,7 +87,10 @@ public class VisualizerModel extends Application {
 			ListView<wrapper.Operation> operationHistory = (ListView<wrapper.Operation>) fxmlLoader.getNamespace().get("operationHistory");
 	    	operationHistory.setItems(listItems);
         
-        
+	    
+	    	
+	    window.getIcons().add(new Image(VisualizerModel.class.getResourceAsStream( "icon.png" )));
+	    	
         window.setScene(scene);
         window.show();
     }

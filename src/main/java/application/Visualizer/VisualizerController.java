@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -108,6 +109,7 @@ public class VisualizerController implements CommunicatorListener{
     	JGroupCommunicator jgc = (JGroupCommunicator) lsm.getCommunicator();
     	jgc.listenForMemberInfo(true);
         final Stage dialog = new Stage();
+        dialog.getIcons().add(new Image(VisualizerModel.class.getResourceAsStream( "connected_entities_icon.png" )));
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.setTitle("Connected Entities: Channel = \"" + jgc.getChannel() + "\"");
         dialog.initOwner(parent);
