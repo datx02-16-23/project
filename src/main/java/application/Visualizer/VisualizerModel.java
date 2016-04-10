@@ -15,7 +15,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import manager.LogStreamManager;
 
@@ -59,8 +59,9 @@ public class VisualizerModel extends Application {
             throw new RuntimeException(exception);
         }
 
-        Pane visualizationPane = (Pane) fxmlLoader.getNamespace().get("visualization");
-        visualizationPane.getChildren().add(visualization);
+        GridPane visualizationPane = (GridPane) fxmlLoader.getNamespace().get("visualizationPane");
+        
+        visualizationPane.add(visualization, 0, 0);
 
         Scene scene = new Scene(root, 800, 600);
         scene.getStylesheets().add( getClass().getResource("/VisualizerStyle.css").toExternalForm());
