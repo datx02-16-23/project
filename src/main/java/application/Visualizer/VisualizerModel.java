@@ -69,19 +69,6 @@ public class VisualizerModel extends Application {
             event.consume(); // Better to do this now than missing it later.
             controller.closeProgram();
         });
-       
-        /*
-         * Handlers
-         */
-        	//Connected entities
-	        MenuItem connectedEntitiesBtn = (MenuItem) fxmlLoader.getNamespace().get("connectedEntitiesBtn");
-	        connectedEntitiesBtn.setOnAction(new EventHandler<ActionEvent>(){
-				@Override
-				public void handle(ActionEvent event) {
-					controller.connectedToChannel(window);
-				}
-	        });
-
 
         window.getIcons().add(new Image(VisualizerModel.class.getResourceAsStream( "/icon.png" )));
 	    	
