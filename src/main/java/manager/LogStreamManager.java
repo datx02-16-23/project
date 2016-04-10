@@ -323,12 +323,23 @@ public class LogStreamManager implements CommunicatorListener {
 	@Override
 	public void messageReceived(short messageType) {
 		
-		List<Wrapper> wrappers = communicator.getAllQueuedMessages();
-		for(Wrapper w : wrappers){
-			unwrap(w);
-		}
-		if (listener != null){
-			listener.messageReceived(MavserMessage.WRAPPER);
+		//Handle Wrapper messages
+		if(messageType == MavserMessage.WRAPPER){
+			
+			List<Wrapper> wrappers = communicator.getAllQueuedMessages();
+			for(Wrapper w : wrappers){
+				unwrap(w);
+			}
+			if (listener != null){
+				listener.messageReceived(MavserMessage.WRAPPER);				
+			}
+			
+			//Handle Member info messages.
+		} else if (messageType == MavserMessage.MEMBER_INFO){
+			
+			if (listener != null){
+				listener.messageReceived(MavserMessage.MEMBER_INFO);
+			}
 		}
 	}
 	
@@ -365,6 +376,11 @@ public class LogStreamManager implements CommunicatorListener {
 
 	public void close(){
 		communicator.close();
+	}
+
+	@Override
+	public CommunicatorListener getListener() {
+		return listener;
 	}
 
 

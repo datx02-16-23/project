@@ -2,6 +2,7 @@ package manager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import org.jgroups.JChannel;
 import org.jgroups.Message;
@@ -178,9 +179,8 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 			break;
 			
 			case MavserMessage.REQUEST_FOR_MEMBER_INFO:
-				String myListener = listener == null ? "null" :  listener.getClass().getSimpleName();
 				Message memberInfo = new Message();
-				memberInfo.setObject(new MavserMessage("JGroupCommunicator [" + myListener +"], (id = " + senderId + ")", senderId, MavserMessage.MEMBER_INFO));
+				memberInfo.setObject(new MavserMessage("JGroupCommunicator [ " + getListenerHierarchy() +" ], (id = " + senderId + ")", senderId, MavserMessage.MEMBER_INFO));
 			try {
 				jChannel.send(memberInfo);
 			} catch (Exception e) {
@@ -214,7 +214,34 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator{
 		listenForMemeberInfo = value;
 		if (listenForMemeberInfo == false){
 			memberStrings.clear();
+		} else {
+			Message m = new Message();
+			m.setObject(new MavserMessage(null, senderId, MavserMessage.REQUEST_FOR_MEMBER_INFO));
+			
+			memberStrings.add("ME: JGroupCommunicator [ " + getListenerHierarchy() +" ], (id = " + senderId + ")");
+			listener.messageReceived(MavserMessage.MEMBER_INFO);
+			try {
+				jChannel.send(m);
+			} catch (Exception e) {
+				System.err.println("Failed to send REQUEST_FOR_MEMBER_INFO message.");
+			}
 		}
+	}
+	
+	private String getListenerHierarchy(){
+		if(listener == null){
+			return "null";
+		}
+		
+		CommunicatorListener theListner = listener;
+		StringBuilder sb = new StringBuilder();
+		while(theListner != null){
+			sb.append(theListner.getClass().getSimpleName() +"/");
+			theListner = theListner.getListener();
+		}
+		
+		sb.append("null/");
+		return sb.toString();
 	}
 	
 	/**

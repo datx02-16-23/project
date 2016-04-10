@@ -4,17 +4,26 @@ import application.model.iModel;
 import application.view.Visualization;
 import assets.Strings;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import manager.CommunicatorListener;
+import manager.JGroupCommunicator;
 import manager.LogStreamManager;
+import manager.Communicator.MavserMessage;
 import wrapper.Operation;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * This is the Controller of MVC for the visualizer GUI.
@@ -93,6 +102,30 @@ public class VisualizerController implements CommunicatorListener{
             System.out.print(name + ", ");
         }
         System.out.println();
+        
+        connectedToChannel(null);
+    }
+    
+    private final SimpleStringProperty connected = new SimpleStringProperty();
+    public void connectedToChannel(Stage parent){
+    	JGroupCommunicator jgc = (JGroupCommunicator) lsm.getCommunicator();
+    	jgc.listenForMemberInfo(true);
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.setTitle("Connected Entities: Channel = \"" + jgc.getChannel() + "\"");
+        dialog.initOwner(parent);
+        TextArea textArea = new TextArea("If you can see this, something went wrong :(.");
+        
+        textArea.textProperty().bind(connected);
+        
+        Scene dialogScene = new Scene(textArea, 600, 200);
+        dialog.setOnCloseRequest(event -> {
+            event.consume(); // Better to do this now than missing it later.
+            jgc.listenForMemberInfo(false);
+        	dialog.close();
+        });
+        dialog.setScene(dialogScene);
+        dialog.show();
     }
 
     /**
@@ -133,16 +166,30 @@ public class VisualizerController implements CommunicatorListener{
 
 	@Override
 	public void messageReceived(short messageType) {
+		if(messageType == MavserMessage.MEMBER_INFO){
+	    	List<String> memberStrings = ((JGroupCommunicator) lsm.getCommunicator()).getMemberStrings();
+	    	StringBuilder sb = new StringBuilder();
+	    	for (String s : memberStrings){
+	    		sb.append(s + "\n");
+	    	}
+	    	connected.set(sb.toString());
+			return;
+		}
+		
         ListView<Operation> operationHistory = (ListView<Operation>) fxmlLoader.getNamespace().get("operationHistory");
         Platform.runLater(new Runnable(){
 
 			@Override
 			public void run() {
-				// TODO Auto-generated method stub
 				operationHistory.getItems().addAll(lsm.getOperations());
 				lsm.clearData();
 			}        	
         });
 		
+	}
+
+	@Override
+	public CommunicatorListener getListener() {
+		return null; //VisualizerController doesn't have any listeners.
 	}
 }

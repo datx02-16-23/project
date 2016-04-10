@@ -5,16 +5,17 @@ import application.model.iModel;
 import application.view.Visualization;
 import assets.Strings;
 import javafx.application.Application;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import manager.LogStreamManager;
 
@@ -59,8 +60,8 @@ public class VisualizerModel extends Application {
             throw new RuntimeException(exception);
         }
 
-        Pane p = (Pane) fxmlLoader.getNamespace().get("visualization");
-        p.getChildren().add(visualization);
+        FlowPane visualizationPane = (FlowPane) fxmlLoader.getNamespace().get("visualization");
+        visualizationPane.getChildren().add(visualization);
         
 
         Scene scene = new Scene(root, 800, 600);
@@ -83,7 +84,6 @@ public class VisualizerModel extends Application {
     }
     
     public void init(){
-
     }
 
 
