@@ -19,6 +19,8 @@ public class Array extends DataStructure{
 
 	private transient final List<Element> elements;
 	private transient int[] size;
+	private transient double min = Integer.MAX_VALUE;
+	private transient double max = Integer.MIN_VALUE;
 	
 	/**
 	 * Construct a new Array with the given parameters.
@@ -58,7 +60,7 @@ public class Array extends DataStructure{
 
 		for(; linearIndex < linearArray.length; linearIndex++){
 			//System.out.println(new ArrayElement(linearArray[linearIndex], getIndexInNDimensions(linearIndex, size)));
-			elements.add(new ArrayElement(linearArray[linearIndex], getIndexInNDimensions(linearIndex, size)));
+			putElement(new ArrayElement(linearArray[linearIndex], getIndexInNDimensions(linearIndex, size)));
 		}
 		
 		//Initialize elements without given values to 0.
@@ -68,7 +70,7 @@ public class Array extends DataStructure{
 		}
 		
 		for(linearIndex++ ; linearIndex < linearTotal; linearIndex++){
-			elements.add(new ArrayElement(0.0 , getIndexInNDimensions(linearIndex, size)));
+			putElement(new ArrayElement(0.0 , getIndexInNDimensions(linearIndex, size)));
 		}
 	}
 
@@ -77,6 +79,9 @@ public class Array extends DataStructure{
 	@Override
 	public void clear() {
 		elements.clear();
+
+		min = Integer.MAX_VALUE;
+		max = Integer.MIN_VALUE;
 	}
 
 	@Override
@@ -185,8 +190,8 @@ public class Array extends DataStructure{
 	
 	/**
 	 * Add a new element to this Array. If there was already an element at the index of the
-	 * new element, this old value element will be lost.
-	 * @param newElement The new element to insert.
+	 * new element, the old element will be returned to the caller.
+	 * @param newElement The element to insert.
 	 * @return The element which was replaced, if applicable. Null otherwise.
 	 */
 	public ArrayElement putElement(ArrayElement newElement){
@@ -194,13 +199,40 @@ public class Array extends DataStructure{
 		
 		old = getElement(newElement.index);
 		if (old != null){
+			if (newElement.value == old.value){
+				return null;
+			}
 			int replacedElementIndex = elements.indexOf(old);
 			elements.remove(old);
 			elements.add(replacedElementIndex, newElement);
 		}
+		
+		if(newElement.value < min){
+			min = newElement.value;
+		}
+		if(newElement.value > max){
+			max = newElement.value;
+		}
+		
 		elements.add(newElement);
 		
 		return old;
+	}
+	
+	/**
+	 * Returns the value of the largest element held by this Array.
+	 * @return The value of the largest element held by this Array.
+	 */
+	public double getMax(){
+		return max;
+	}
+	
+	/**
+	 * Returns the value of the smallest element held by this Array.
+	 * @return The value of the smallest element held by this Array.
+	 */
+	public double getMin(){
+		return min;
 	}
 	
 	@Override
