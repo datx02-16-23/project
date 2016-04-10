@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Popup;
@@ -60,7 +61,7 @@ public class VisualizerModel extends Application {
             throw new RuntimeException(exception);
         }
 
-        FlowPane visualizationPane = (FlowPane) fxmlLoader.getNamespace().get("visualization");
+        Pane visualizationPane = (Pane) fxmlLoader.getNamespace().get("visualization");
         visualizationPane.getChildren().add(visualization);
         
 
