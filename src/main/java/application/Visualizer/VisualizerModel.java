@@ -103,26 +103,26 @@ public class VisualizerModel extends Application {
         window.show();
     }
     
-    private Properties properties;
     public void init(){
-    	InputStream inputStream;
-		Properties prop = new Properties();
-		String propFileName = "config.properties";
-		
-		inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
- 
+    	
+    	InputStream inputStream =getClass().getClassLoader().getResourceAsStream(Strings.PROPERTIES_FILE_NAME);
+    	
+    	Properties properties = new Properties();
 		if (inputStream != null) {
-			prop.load(inputStream);
-			inputStream.close();
-		}
+			try {
+				properties.load(inputStream);
+			} catch (IOException e) {
+				System.err.println("Failed to open properties file.");
+			}
 
- 
-		// get the property value and print it out
-		String user = prop.getProperty("user");
-		String company1 = prop.getProperty("company1");
-		String company2 = prop.getProperty("company2");
-		String company3 = prop.getProperty("company3");
-			
+			try {
+				inputStream.close();
+			} catch (IOException e) {
+				System.err.println("Failed to close properties file.");
+			}
+		}
+		
+		System.out.println(properties.getProperty("test"));	
     }
 
     public static void main(String[] args) {
