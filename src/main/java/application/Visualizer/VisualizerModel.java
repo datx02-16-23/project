@@ -7,6 +7,8 @@ import assets.Strings;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
@@ -14,8 +16,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import manager.LogStreamManager;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 
 
@@ -62,9 +64,26 @@ public class VisualizerModel extends Application {
         // Extracting some nodes from the fxml:
         SplitPane sP = (SplitPane) fxmlLoader.getNamespace().get("splitPane");
         VBox sidePanel = (VBox) fxmlLoader.getNamespace().get("rightSidePanel");
-
         // Hard coding an extra width (+5) to compensate for the width of the divider of splitPane!
         sP.setDividerPositions( 1 - ( (sidePanel.getPrefWidth() + 5) / scene.getWidth() ));
+
+        // Add examples
+        Menu examples = (Menu) fxmlLoader.getNamespace().get("examplesMenu");
+        // Get all .json files
+        File folder = new File(getClass().getResource("/examples").getFile());
+        File[] files = folder.listFiles((dir, name) -> name.endsWith(".json"));
+
+        // loop through all files and add menu item
+        for (int i = 0; i < files.length; i++) {
+            if (files[i].isFile()) {
+
+                File file = files[i];
+                System.out.println("File " + file.getName());
+                MenuItem ex = new MenuItem(file.getName());
+                ex.setOnAction(event1 -> controller.setFile(file));
+                examples.getItems().add(ex);
+            }
+        }
 
         // Add AV
         GridPane visualizationPane = (GridPane) fxmlLoader.getNamespace().get("visualizationPane");

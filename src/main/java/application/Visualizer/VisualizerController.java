@@ -232,7 +232,7 @@ public class VisualizerController implements CommunicatorListener{
      * Helper function for {@link #openFileChooser() openFileChooser}
      * @param file
      */
-    private void setFile(File file) {
+    void setFile(File file) {
     	lsm.clearData();
     	
         if(lsm.readLog(file) == false){
