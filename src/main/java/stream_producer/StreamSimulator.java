@@ -149,7 +149,7 @@ public class StreamSimulator implements CommunicatorListener{
 	
 	public boolean transmit(Wrapper wrapper){
 		try {
-			LSM.streamWrapper(wrapper);
+			LSM.stream(wrapper);
 		} catch (Exception e) {
 			return false;
 		}

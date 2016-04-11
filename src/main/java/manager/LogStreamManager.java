@@ -169,7 +169,7 @@ public class LogStreamManager implements CommunicatorListener {
 		HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
 		annotatedVariables.putAll(knownVariables);
 		Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables);
-		return streamWrapper(new Wrapper(header, operations));
+		return stream(new Wrapper(header, operations));
 	}
 	
 	/**
@@ -192,7 +192,7 @@ public class LogStreamManager implements CommunicatorListener {
 	 * @param wrapper The Wrapper to stream.
 	 * @return True if successful, false otherwise.
 	 */
-	public boolean streamWrapper(Wrapper wrapper){
+	public boolean stream(Wrapper wrapper){
 		return communicator.sendWrapper(wrapper);
 	}
 	
@@ -201,10 +201,10 @@ public class LogStreamManager implements CommunicatorListener {
 	 * @param operation The Operation to stream.
 	 * @return True if successful, false otherwise.
 	 */
-	public boolean streamOperation(Operation operation){
+	public boolean stream(Operation operation){
 		ArrayList<Operation> operations = new ArrayList<Operation>();
 		operations.add(operation);
-		return streamWrapper(new Wrapper(null, operations));	
+		return stream(new Wrapper(null, operations));	
 	}
 	
 	/**
@@ -212,7 +212,7 @@ public class LogStreamManager implements CommunicatorListener {
 	 * @param JSONString The String to stream.
 	 * @return True if successful, false otherwise.
 	 */
-	public boolean streamString(String JSONString){
+	public boolean stream(String JSONString){
 		return communicator.sendString(JSONString);
 	}
 	
@@ -222,7 +222,7 @@ public class LogStreamManager implements CommunicatorListener {
 	 * @return True if successful, false otherwise.
 	 */
 	public boolean streamOperations(List<Operation> operations){
-		return streamWrapper(new Wrapper(null, operations));	
+		return stream(new Wrapper(null, operations));	
 	}
 	
 	/**
@@ -230,11 +230,11 @@ public class LogStreamManager implements CommunicatorListener {
 	 * @param annotatedVariable The Wrapper to stream.
 	 * @return True if successful, false otherwise.
 	 */
-	public boolean streamAnnotatedVariable(AnnotatedVariable annotatedVariable){
+	public boolean stream(AnnotatedVariable annotatedVariable){
 		HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
 		annotatedVariables.put(annotatedVariable.identifier, annotatedVariable);
 		Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables);
-		return streamWrapper(new Wrapper(header, null));
+		return stream(new Wrapper(header, null));
 	}
 	
 	/**
@@ -277,7 +277,7 @@ public class LogStreamManager implements CommunicatorListener {
 			sb.append("\t" + i + ":\t\t" + op + "\n");
 		}
 
-		pringString(targetPath, sb.toString());
+		printString(targetPath, sb.toString());
 	}
 	
 	/**
@@ -297,11 +297,11 @@ public class LogStreamManager implements CommunicatorListener {
 			GSON = this.gson;
 		}
 
-		pringString(targetPath+fileName, GSON.toJson(wrapper));
+		printString(targetPath+fileName, GSON.toJson(wrapper));
 
 	}
 	
-	private void pringString(String completePath, String str){
+	private void printString(String completePath, String str){
 		try {
 			PrintStream out = new PrintStream(new FileOutputStream(completePath));
 		    System.out.println("Log printed: " + completePath);
