@@ -103,29 +103,32 @@ public class LogStreamManager implements CommunicatorListener {
 	/**
 	 * Read a log file from the file specified by {@code filePath}.
 	 * @param filePath Location of the file to read.
-	 * @throws JsonIOException This exception is raised when Gson was unable to read an input stream or write to one.
-	 * @throws JsonSyntaxException This exception is raised when Gson attempts to read (or write) a malformed JSON element.
-	 * @throws FileNotFoundException Signals that the file located at filePath could not be opened.
+	 * @return {@code true} if the log was successfully read. {@code false} otherwise.
 	 */
-	public void readLog(String filePath){
-		readLog(new File(filePath));
+	public boolean readLog(String filePath){
+		return readLog(new File(filePath));
 	}
 	
 	/**
 	 * Read, unwrap and store data from a JSON log file.
-	 * @param LogStream The file to read.
+	 * @param logFile The file to read.
+	 * @return {@code true} if the log was successfully read. {@code false} otherwise.
 	 */
-	public void readLog(File LogStream){
+	public boolean readLog(File logFile){
 		try {
-			wrapper = gson.fromJson(new JsonReader(new FileReader(LogStream)), Wrapper.class);
+			wrapper = gson.fromJson(new JsonReader(new FileReader(logFile)), Wrapper.class);
 			unwrap(wrapper);
 		} catch (JsonIOException e) {
 			System.err.println("JSON IO error: " + e);
+			return false;
 		} catch (JsonSyntaxException e) {
 			System.err.println("JSON syntax error: " + e);
+			return false;
 		} catch (FileNotFoundException e) {
 			System.err.println("File not found: " + e);
+			return false;
 		}
+		return true;
 	}
 	
 	/**

@@ -43,7 +43,7 @@ public class VisualizerController implements CommunicatorListener{
 
     //Connection dialog stuff.
     private final SimpleStringProperty currentlyConnected = new SimpleStringProperty();
-    private final SimpleStringProperty allConnected = new SimpleStringProperty("Not implemented yet.");
+    private final SimpleStringProperty allConnected = new SimpleStringProperty();
     private FXMLLoader connectedLoader;
     private Stage connectedDialog;
     
@@ -119,7 +119,7 @@ public class VisualizerController implements CommunicatorListener{
     public void changeSpeedButtonClicked(Event e){
         System.out.println("Placeholder: Let's pump it up!");
         speed = speed*2 % 7; // possible values: 1, 2, 4
-        ((Button) e.getSource()).setText("" + speed + "x");
+        ((Button) e.getSource()).setText(speed + "x");
     }
 
     public void aboutProgram(){
@@ -234,7 +234,11 @@ public class VisualizerController implements CommunicatorListener{
      */
     private void setFile(File file) {
     	lsm.clearData();
-        lsm.readLog(file);
+    	
+        if(lsm.readLog(file) == false){
+        	return;
+        }
+        
         model.set(lsm.getKnownVariables(), lsm.getOperations());
         @SuppressWarnings("unchecked")
 		ListView<Operation> operationHistory = (ListView<Operation>) mainViewLoader.getNamespace().get("operationHistory");
