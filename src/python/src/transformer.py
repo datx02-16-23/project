@@ -197,5 +197,6 @@ def test_stmt(stmt):
 # # function calls
 # test_stmt("a = rand_array(10,50)")
 
-# # function declaration
+# function declaration
 # test_stmt("def foo(): return 0")
+test_stmt("def assign(value,target,i): target[i] = value")
