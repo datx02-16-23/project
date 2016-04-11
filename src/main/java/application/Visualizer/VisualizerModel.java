@@ -80,7 +80,6 @@ public class VisualizerModel extends Application {
             if (files[i].isFile()) {
 
                 File file = files[i];
-                System.out.println("File " + file.getName());
                 MenuItem ex = new MenuItem(file.getName());
                 ex.setOnAction(event1 -> controller.setFile(file));
                 examples.getItems().add(ex);
