@@ -61,7 +61,6 @@ public class Visualization extends Pane {
             final String id = structNames.next();
 
             renderStructure(id, structs.get(id), x, y);
-            gc.fillText(generateStructHeader(id, structs.get(id)), 20 + x, 20 + y);
             numStruct++;
         }
 

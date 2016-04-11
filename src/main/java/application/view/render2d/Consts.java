@@ -5,5 +5,7 @@ package application.view.render2d;
  */
 public final class Consts {
     public static final int structHeight = 120;
-    public static final double fontSize = 12;
+    public static final double headerFontSize = 12;
+    public static final double elementFontSize= 16;
+
 }

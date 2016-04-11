@@ -1,9 +1,11 @@
 package application.view.render2d;
 
+import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import manager.datastructures.Array;
 import manager.datastructures.DataStructure;
 import manager.datastructures.Element;
@@ -39,8 +41,10 @@ public class ArrayRender implements iRender{
 
     private void renderHeader(){
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFont(new Font(12));
+        gc.setFont(new Font(Consts.headerFontSize));
         gc.setFill(Color.BLACK);
+        gc.setTextAlign(TextAlignment.LEFT);
+        gc.setTextBaseline(VPos.BOTTOM);
         gc.fillText(generateStructHeader(), 20 + x, 20 + y);
     }
 
@@ -74,6 +78,18 @@ public class ArrayRender implements iRender{
     }
 
     private void renderValues(){
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setStroke(Color.BLACK);
+        gc.setFont(new Font(Consts.elementFontSize));
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.setTextBaseline(VPos.CENTER);
+
+        for(int i=0; i<array.size(); i++){
+            Element element = array.getElements().get(i);
+            int xPos = x+30+elementWidth*i+elementWidth/2;
+            int yPos = y+30+height/2;
+            gc.fillText(String.valueOf(element.getValue()), xPos, yPos);
+        }
 
 
     }
@@ -86,4 +102,5 @@ public class ArrayRender implements iRender{
             renderValues();
         }
     }
+
 }
