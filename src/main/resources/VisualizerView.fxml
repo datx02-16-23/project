@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.input.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -27,24 +28,30 @@
    <children>
       <MenuBar prefHeight="25.0" prefWidth="600.0">
          <menus>
-            <Menu mnemonicParsing="false" text="File">
+            <Menu text="_File">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openFileChooser" text="Import" />
+                  <MenuItem mnemonicParsing="false" onAction="#openFileChooser" text="Import">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="I" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
                   <MenuItem mnemonicParsing="false" onAction="#openDestinationChooser" text="Export" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#closeProgram" text="Close" />
                </items>
             </Menu>
-            <Menu mnemonicParsing="false" text="Actions">
+            <Menu mnemonicParsing="false" text="_Actions">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#interpretOperationHistory" text="Interpret" />
               </items>
             </Menu>
-            <Menu fx:id="examplesMenu" mnemonicParsing="false" text="Examples" />
-            <Menu mnemonicParsing="false" text="Help">
+            <Menu fx:id="examplesMenu" mnemonicParsing="false" text="_Examples" />
+            <Menu mnemonicParsing="false" text="_Help">
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#aboutProgram" text="About" />
-                  <MenuItem mnemonicParsing="false" onAction="#showSettings" text="Settings" />
+                  <MenuItem mnemonicParsing="false" onAction="#showSettings" text="Settings">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
                   <MenuItem mnemonicParsing="false" onAction="#connectedToChannel" text="Connected Entities" />
                </items>
             </Menu>
