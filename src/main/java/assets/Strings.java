@@ -14,4 +14,6 @@ public abstract class Strings {
 											        "Jonathan Skarstedt",
 											        "Simon Smith",
 											        "Richard Sundqvist"};
+	
+	public static final long VERSION_NUMBER = 0;
 }

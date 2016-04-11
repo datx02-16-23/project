@@ -2,6 +2,7 @@ package manager.operations;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import assets.Strings;
 import wrapper.Locator;
 import wrapper.Operation;
 
@@ -12,6 +13,10 @@ import wrapper.Operation;
  *
  */
 public abstract class OP_ReadWrite extends Operation{
+	/**
+	 * Version number for this class.
+	 */
+	private static final long serialVersionUID = Strings.VERSION_NUMBER;
 	
 	/**
 	 * Create a new ReadWrite operation. Note that you must set the target, source and value.

@@ -3,6 +3,7 @@ package manager.operations;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import assets.Strings;
 import wrapper.Locator;
 import wrapper.Operation;
 
@@ -11,6 +12,11 @@ import wrapper.Operation;
  * Creates an operation to initialize an {@code AnnotatedVariable}.
  */
 public class OP_Init extends Operation{
+	/**
+	 * Version number for this class.
+	 */
+	private static final long serialVersionUID = Strings.VERSION_NUMBER;
+	
 	private static final OperationType OPERATION = OperationType.init;
 
 	/**

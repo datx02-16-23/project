@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import assets.Strings;
 import manager.operations.*;
 import wrapper.Locator;
 import wrapper.Operation;
@@ -17,6 +18,11 @@ import wrapper.Operation;
 //TODO: Add access logging to enable presenting statistics.
 public class Array extends DataStructure{
 
+	/**
+	 * Version number for this class.
+	 */
+	private static final long serialVersionUID = Strings.VERSION_NUMBER;
+	
 	private transient final List<Element> elements;
 	private transient int[] capacity;
 	private transient double min = Integer.MAX_VALUE;

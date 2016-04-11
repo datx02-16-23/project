@@ -1,5 +1,6 @@
 package manager.operations;
 
+import assets.Strings;
 import wrapper.Locator;
 
 
@@ -8,6 +9,11 @@ import wrapper.Locator;
  * to the variable at index specified by {@target}. The target may be set null if necessary.
  */
 public class OP_Read extends OP_ReadWrite{
+	/**
+	 * Version number for this class.
+	 */
+	private static final long serialVersionUID = Strings.VERSION_NUMBER;
+	
 	private static final OperationType OPERATION = OperationType.read;
 
 	/**

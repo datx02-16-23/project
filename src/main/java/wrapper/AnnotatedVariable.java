@@ -3,10 +3,17 @@ package wrapper;
 import java.io.Serializable;
 import java.util.HashMap;
 
+import assets.Strings;
+
 /**
  * The declaration for an annotated (observed) variable in source.
  */
 public class AnnotatedVariable implements Serializable{
+
+	/**
+	 * Version number for this class.
+	 */
+	private static final long serialVersionUID = Strings.VERSION_NUMBER;
 	
 	/**
 	 * The identifier for this variable. For example, the indentifier for the variable created

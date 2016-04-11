@@ -3,10 +3,18 @@ package wrapper;
 import java.io.Serializable;
 import java.util.HashMap;
 
+import assets.Strings;
+
 /**
  * Header item for the {@code Wrapper} class.
  */
 public class Header implements Serializable{
+
+	/**
+	 * Version number for this class.
+	 */
+	private static final long serialVersionUID = Strings.VERSION_NUMBER;
+	
 	/**
 	 * Default value for the {@code version} field.
 	 */

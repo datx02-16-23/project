@@ -5,10 +5,17 @@ package wrapper;
 import java.io.Serializable;
 import java.util.List;
 
+import assets.Strings;
+
 /**
  * Wrapper class for GLO and HOG files on the JSON format.
  */
 public class Wrapper implements Serializable {
+	/**
+	 * Version number for this class.
+	 */
+	private static final long serialVersionUID = Strings.VERSION_NUMBER;
+	
 	/**
 	 * Header data for the file. Contains version number and variable declarations.
 	 */

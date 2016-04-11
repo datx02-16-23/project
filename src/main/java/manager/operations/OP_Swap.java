@@ -3,6 +3,7 @@ package manager.operations;
 import java.util.HashMap;
 import java.util.List;
 
+import assets.Strings;
 import interpreter.Consolidable;
 import wrapper.Locator;
 import wrapper.Operation;
@@ -11,6 +12,11 @@ import wrapper.Operation;
  * Create a new Swap operation, shifting the values of {@code var1} and {@code var2}.
  */
 public class OP_Swap extends Operation implements Consolidable{
+	/**
+	 * Version number for this class.
+	 */
+	private static final long serialVersionUID = Strings.VERSION_NUMBER;
+	
 	private static final OperationType OPERATION = OperationType.swap;
 
 	/**

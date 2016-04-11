@@ -3,12 +3,8 @@ package manager.datastructures;
 import java.util.ArrayList;
 import java.util.List;
 
-import manager.operations.OP_Init;
-import manager.operations.OP_Read;
-import manager.operations.OP_ReadWrite;
-import manager.operations.OP_Swap;
-import manager.operations.OP_Write;
-import wrapper.Locator;
+import assets.Strings;
+import manager.operations.*;
 import wrapper.Operation;
 
 /**
@@ -19,6 +15,11 @@ import wrapper.Operation;
  */
 public class IndependentElement extends DataStructure implements Element{
 
+	/**
+	 * Version number for this class.
+	 */
+	private static final long serialVersionUID = Strings.VERSION_NUMBER;
+	
 	private transient Element element;
 	private transient final ArrayList<Element> elements; 
 	

@@ -2,6 +2,7 @@ package manager.datastructures;
 
 import java.util.List;
 
+import assets.Strings;
 import wrapper.AnnotatedVariable;
 import wrapper.Operation;
 
@@ -11,6 +12,11 @@ import wrapper.Operation;
  *
  */
 public abstract class DataStructure extends AnnotatedVariable{
+
+	/**
+	 * Version number for this class.
+	 */
+	private static final long serialVersionUID = Strings.VERSION_NUMBER;
 
 	public DataStructure(String identifier, String rawType, String abstractType, String visual) {
 		super(identifier, rawType, abstractType, visual);

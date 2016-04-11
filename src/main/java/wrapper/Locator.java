@@ -3,10 +3,16 @@ package wrapper;
 import java.io.Serializable;
 import java.util.Arrays;
 
+import assets.Strings;
+
 /**
  * A variable used by the {@code Operation} class.
  */
 public class Locator implements Serializable {
+	/**
+	 * Version number for this class.
+	 */
+	private static final long serialVersionUID = Strings.VERSION_NUMBER;
 	
 	/**
 	 * The identifier for this variable. Will generally match one of the identifiers used as
