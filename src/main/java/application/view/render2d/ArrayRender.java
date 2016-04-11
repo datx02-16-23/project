@@ -37,6 +37,9 @@ public class ArrayRender implements iRender{
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setStroke(Color.BLACK);
 
+        int structWidth = array.size()*60;
+        int structHeight = 120;
+        gc.strokeRect(x, y, structWidth, structHeight);
         List<Element> elements = array.getElements();
         for(int i = 0; i < elements.size(); i++){
 
@@ -52,8 +55,10 @@ public class ArrayRender implements iRender{
     }
 
     public void render(){
-        renderStructure();
-        renderHilights();
-        renderValues();
+        if (array.size() > 0){
+            renderStructure();
+            renderHilights();
+            renderValues();
+        }
     }
 }

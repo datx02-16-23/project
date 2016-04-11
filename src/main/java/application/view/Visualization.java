@@ -18,7 +18,7 @@ import java.util.Map;
 public class Visualization extends Pane {
     private final iModel model;
     private final Canvas canvas = new Canvas();
-    private final int structHeight = 100;
+    private final int structHeight = 200;
     private final double headerTextSize = 12;
 
     public Visualization(iModel model){
