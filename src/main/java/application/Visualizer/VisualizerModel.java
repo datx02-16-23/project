@@ -36,7 +36,7 @@ public class VisualizerModel extends Application {
     private final iModel model= new Model();
     private final LogStreamManager lsm = new LogStreamManager();
     private FXMLLoader fxmlLoader;
-    private boolean propertiesFailed = true;
+    private boolean propertiesFailed = false;
 
     @Override
     public void start(Stage primaryStage) throws Exception{

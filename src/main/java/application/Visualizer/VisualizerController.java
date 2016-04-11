@@ -325,7 +325,6 @@ public class VisualizerController implements CommunicatorListener{
 	
 	private TextField perSecField;
 	public void setPlayBackOpsPerSec(Event e){
-        perSecField = (TextField) e.getSource();
         double speed;
         
         try{
@@ -347,8 +346,6 @@ public class VisualizerController implements CommunicatorListener{
 	
 	private TextField timeBetweenField;
 	public void setPlaybackTimeBetweenOperations(Event e){
-		System.out.println("enter");
-        timeBetweenField = (TextField) e.getSource();
         double speed;
         
         try{
@@ -357,7 +354,7 @@ public class VisualizerController implements CommunicatorListener{
         	timeBetweenField.setText("reset");
         	return;
         }
-        
+
         if(speed < 0){
         	timeBetweenField.setText("invalid");
         	return;
