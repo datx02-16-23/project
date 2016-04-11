@@ -36,6 +36,7 @@ public class VisualizerModel extends Application {
     private final iModel model= new Model();
     private final LogStreamManager lsm = new LogStreamManager();
     private FXMLLoader fxmlLoader;
+    private boolean propertiesFailed = true;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -97,9 +98,13 @@ public class VisualizerModel extends Application {
         });
 
         window.getIcons().add(new Image(VisualizerModel.class.getResourceAsStream( "/icon.png" )));
-	    	
+        
         window.setScene(scene);
         window.show();
+        
+        if(propertiesFailed){
+        	controller.propertiesFailed();
+        }
     }
     
     private String stylizeExampleName(String original){
@@ -137,17 +142,20 @@ public class VisualizerModel extends Application {
 				properties.load(inputStream);
 			} catch (IOException e) {
 				System.err.println("Failed to open properties file.");
+				propertiesFailed = true;
 			}
 
 			try {
 				inputStream.close();
 			} catch (IOException e) {
 				System.err.println("Failed to close properties file.");
+				propertiesFailed = true;
 			}
 			
-			System.out.println(properties.getProperty("playbackSpeed"));
+			System.out.println("playbackSpeed = " + properties.getProperty("playbackSpeed"));
 		}	
     }
+
 
     public static void main(String[] args) {
         launch(args);

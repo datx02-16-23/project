@@ -16,6 +16,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -294,6 +295,33 @@ public class VisualizerController implements CommunicatorListener{
 //		lsm.setKnownVariables(null);
 //		lsm.printLog(outputPath);
 	}
+	
+    public void propertiesFailed(){
+    	FXMLLoader loader = new FXMLLoader(getClass().getResource("/PropertiesAlert.fxml"));
+        Stage stage = new Stage();
+        
+        GridPane p = null;
+		try {
+			p = loader.load();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+        Scene dialogScene = new Scene(p);
+        
+        stage.setOnCloseRequest(event -> {
+            event.consume();
+            stage.close();
+        });
+        Button close = (Button) loader.getNamespace().get("closeAlert");
+        close.setOnAction(event -> {
+            event.consume();
+            stage.close();
+        });
+        stage.setScene(dialogScene);
+        stage.toFront();
+        stage.show();
+    }
 	
 	private TextField perSecField;
 	public void setPlayBackOpsPerSec(Event e){
