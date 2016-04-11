@@ -61,8 +61,7 @@ public class ArrayRender implements iRender{
 
         int structWidth = array.size()*elementWidth;
         gc.strokeRect(x+30, y+30, structWidth, height-30);
-        List<Element> elements = array.getElements();
-        for(int i = 1; i < elements.size(); i++){
+        for(int i = 1; i < array.size(); i++){
             int xPos = x+30+elementWidth*i;
             int yStart = y+30;
             int yEnd = y+height;
@@ -75,6 +74,7 @@ public class ArrayRender implements iRender{
     }
 
     private void renderValues(){
+
 
     }
 
