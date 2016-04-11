@@ -1,6 +1,7 @@
 package application.view;
 
 import application.model.iModel;
+import application.view.render2d.ArrayRender;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
@@ -8,11 +9,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import manager.datastructures.Array;
 import manager.datastructures.DataStructure;
-import manager.datastructures.Element;
 import manager.datastructures.IndependentElement;
+import wrapper.Operation;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 public class Visualization extends Pane {
@@ -82,31 +82,25 @@ public class Visualization extends Pane {
         return sB.toString();
     }
 
-    private void drawArray(Array array, int x, int y, int width, int height){
-        int elemWidth = 40;
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setStroke(Color.BLACK);
 
-        List<Element> elements = array.getElements();
-        for(int i = 0; i < elements.size(); i++){
-
-        }
-
-    }
 
     private void drawIndependentElement(IndependentElement element){
         System.out.println("Drawing independent element");
     }
 
     private void renderStructure(DataStructure struct, int x, int y, int width, int height){
-        Class<? extends DataStructure> structClass = struct.getClass();
+        final Class<? extends DataStructure> structClass = struct.getClass();
+        final Operation op = model.getCurrentStep().getLastOp();
         if (structClass.equals(Array.class)){
-            drawArray((Array)struct, x, y, width, height);
+            ArrayRender arrayRender = new ArrayRender(canvas, struct, op, x, y, width, height);
+            arrayRender.render();
         } else if (structClass.equals(IndependentElement.class)){
             drawIndependentElement((IndependentElement)struct);
         }
 
     }
+
+
 
 
 }
