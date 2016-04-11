@@ -2,6 +2,7 @@ package application.view;
 
 import application.model.iModel;
 import application.view.render2d.ArrayRender;
+import application.view.render2d.Consts;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
@@ -18,8 +19,6 @@ import java.util.Map;
 public class Visualization extends Pane {
     private final iModel model;
     private final Canvas canvas = new Canvas();
-    private final int structHeight = 200;
-    private final double headerTextSize = 12;
 
     public Visualization(iModel model){
         this.model = model;
@@ -55,19 +54,15 @@ public class Visualization extends Pane {
         Iterator<String> structNames = structs.keySet().iterator();
         int numStruct = 0;
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.BLACK);
 
         while (structNames.hasNext()){
             final int x = 0;
-            final int y = 0 + structHeight*numStruct;
-            final int width = (int)canvas.getWidth();
+            final int y = 0 + Consts.structHeight*numStruct;
             final String id = structNames.next();
-            gc.setFont(new Font(headerTextSize));
+
+            renderStructure(id, structs.get(id), x, y);
             gc.fillText(generateStructHeader(id, structs.get(id)), 20 + x, 20 + y);
             numStruct++;
-            renderStructure(structs.get(id), x, y, width, structHeight);
-            gc.strokeLine(0, structHeight*numStruct, canvas.getWidth(), structHeight*numStruct);
-
         }
 
     }
@@ -88,11 +83,13 @@ public class Visualization extends Pane {
         System.out.println("Drawing independent element");
     }
 
-    private void renderStructure(DataStructure struct, int x, int y, int width, int height){
+    private void renderStructure(String id, DataStructure struct, int x, int y){
+        int width = (int)canvas.getWidth();
+        int height = Consts.structHeight;
         final Class<? extends DataStructure> structClass = struct.getClass();
         final Operation op = model.getCurrentStep().getLastOp();
         if (structClass.equals(Array.class)){
-            ArrayRender arrayRender = new ArrayRender(canvas, struct, op, x, y, width, height);
+            ArrayRender arrayRender = new ArrayRender(canvas, id, struct, op, x, y, width, height);
             arrayRender.render();
         } else if (structClass.equals(IndependentElement.class)){
             drawIndependentElement((IndependentElement)struct);
