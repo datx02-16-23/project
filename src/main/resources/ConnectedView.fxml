@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -19,7 +20,10 @@
                   <Insets left="5.0" />
                </padding>
             </Label>
-            <TextArea fx:id="connectedEntities" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="88.0" prefWidth="479.0" text="No currently connected entities found." VBox.vgrow="ALWAYS" />
+            <TextArea fx:id="connectedEntities" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="88.0" prefWidth="479.0" text="No currently connected entities found." VBox.vgrow="ALWAYS">
+               <tooltip>
+                  <Tooltip text="Listening entities will be listed here as they respond." />
+               </tooltip></TextArea>
          </children>
          <padding>
             <Insets bottom="5.0" />
@@ -35,7 +39,10 @@
                   <Insets left="5.0" />
                </padding>
             </Label>
-            <TextArea fx:id="allEntities" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="121.0" prefWidth="487.0" text="No entities found." VBox.vgrow="ALWAYS" />
+            <TextArea fx:id="allEntities" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="121.0" prefWidth="487.0" text="No entities found." VBox.vgrow="ALWAYS">
+               <tooltip>
+                  <Tooltip text="A list of entities from which messages have been received." />
+               </tooltip></TextArea>
          </children>
          <padding>
             <Insets top="5.0" />
