@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import manager.operations.OP_Init;
+import manager.operations.*;
 import wrapper.Locator;
 import wrapper.Operation;
 
@@ -18,7 +18,7 @@ import wrapper.Operation;
 public class Array extends DataStructure{
 
 	private transient final List<Element> elements;
-	private transient int[] size;
+	private transient int[] capacity;
 	private transient double min = Integer.MAX_VALUE;
 	private transient double max = Integer.MIN_VALUE;
 	
@@ -31,9 +31,9 @@ public class Array extends DataStructure{
 	public Array(String identifier, String abstractType, String visual) {
 		super(identifier, "array", abstractType, visual);
 		elements = new ArrayList<Element>();
-		size = (int[]) super.attributes.get("size");
-		if (size == null){
-			size = new int[]{-1};			
+		capacity = (int[]) super.attributes.get("size");
+		if (capacity == null){
+			capacity = new int[]{-1};			
 		}
 	}
 	
@@ -49,9 +49,9 @@ public class Array extends DataStructure{
 		if (!op_init.getTarget().getIdentifier().equals(super.identifier)){throw new IllegalArgumentException();}
 		
 		double[] linearArray = op_init.getValue();
-		size = op_init.getSize();
-		if (size == null){
-			size = new int[]{linearArray.length}; //Assume one-dimensional if size is not specified.
+		capacity = op_init.getSize();
+		if (capacity == null){
+			capacity = new int[]{linearArray.length}; //Assume one-dimensional if size is not specified.
 		}
 	
 		//Initialize specified by the values argument of the init operation.
@@ -60,17 +60,17 @@ public class Array extends DataStructure{
 
 		for(; linearIndex < linearArray.length; linearIndex++){
 			//System.out.println(new ArrayElement(linearArray[linearIndex], getIndexInNDimensions(linearIndex, size)));
-			putElement(new ArrayElement(linearArray[linearIndex], getIndexInNDimensions(linearIndex, size)));
+			putElement(new ArrayElement(linearArray[linearIndex], getIndexInNDimensions(linearIndex, capacity)));
 		}
 		
 		//Initialize elements without given values to 0.
 		int linearTotal = 1;
-		for(int i = 0; i < size.length; i++){
-			linearTotal = linearTotal * size[i];
+		for(int i = 0; i < capacity.length; i++){
+			linearTotal = linearTotal * capacity[i];
 		}
 		
 		for(linearIndex++ ; linearIndex < linearTotal; linearIndex++){
-			putElement(new ArrayElement(0.0 , getIndexInNDimensions(linearIndex, size)));
+			putElement(new ArrayElement(0.0 , getIndexInNDimensions(linearIndex, capacity)));
 		}
 	}
 
@@ -90,15 +90,52 @@ public class Array extends DataStructure{
 			case init:
 				init((OP_Init) op);
 				break;
-			case message:
-				break;
 			case read:
+				readORwrite((OP_Read) op);
 				break;
 			case write:
+				readORwrite((OP_Write) op);
 				break;
 			case swap:
+				swap((OP_Swap) op);
+				break;
+			
+			default:
+				System.err.println("Unknown OperationType: " + op.operation);
 				break;
 		}
+	}
+
+	private void swap(OP_Swap op) {
+		Locator var1 = op.getVar1();
+		Locator var2 = op.getVar2();
+
+		ArrayElement var1Element = this.getElement(var1);
+		if(var1Element != null){
+			var1Element.value = op.getValues()[0];
+		}
+		
+		ArrayElement var2Element = this.getElement(var2);
+		if(var2Element != null){
+			var2Element.value = op.getValues()[1];
+		}
+		
+	}
+
+	private void readORwrite(OP_ReadWrite op){
+		Locator source = op.getSource();
+		Locator target = op.getTarget();
+		
+		ArrayElement sourceElement = this.getElement(source);
+		if (sourceElement != null){
+			//Ignore.
+		}
+		
+		ArrayElement targetElement = this.getElement(target);
+		if (targetElement != null){
+			sourceElement.value = op.getValue()[0];
+		}
+	
 	}
 
 	/**
@@ -151,8 +188,8 @@ public class Array extends DataStructure{
 		
 		int product = 1;
 		
-		for(int i = dim+1; i < size.length; i++){
-			product = product * size[i];
+		for(int i = dim+1; i < capacity.length; i++){
+			product = product * capacity[i];
 		}
 		
 		return product;
@@ -167,7 +204,9 @@ public class Array extends DataStructure{
 	 * @return The element at the location specified by the given locator, if it was valid. Null otherwise.
 	 */
 	public ArrayElement getElement(Locator locator){
-		if(locator.identifier.equals(identifier) == false){throw new IllegalArgumentException();}
+		if(locator.identifier.equals(identifier) == false){
+			return null;
+		}
 		
 		return getElement(locator.index);
 	}

@@ -43,7 +43,7 @@ public class OP_Swap extends Operation implements Consolidable{
 	 * The values contained at var1 and var2 respectively, AFTER this Swap operation has been executed.
 	 * @param values The values in var1 and var2 after execution.
 	 */
-	public void setValues(String values){
+	public void setValues(double[] values){
 		this.operationBody.put(Key.value, values);
 	}
 	
@@ -55,8 +55,8 @@ public class OP_Swap extends Operation implements Consolidable{
 	public Locator getVar2(){
 		return (Locator)this.operationBody.get(Key.var2);
 	}
-	public String getValue(){
-		return (String)this.operationBody.get(Key.value);
+	public double[] getValues(){
+		return (double[])this.operationBody.get(Key.value);
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public class OP_Swap extends Operation implements Consolidable{
 		OP_Swap op_swap = new OP_Swap();
 		op_swap.setVar1(var1);
 		op_swap.setVar2(var2);
-		//TODO: setValue() op_swap.setValues("[v1, v2]");
+		op_swap.setValues(new double[]{rw0.getValue()[0], rw2.getValue()[1]});
 		return op_swap;
 	}
 	@Override

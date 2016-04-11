@@ -95,7 +95,7 @@ public class OperationParser {
 		OP_Swap op_swap = new OP_Swap();
 		op_swap.setVar1(unpackArrayVariable(op.operationBody.get(Key.var1)));
 		op_swap.setVar2(unpackArrayVariable(op.operationBody.get(Key.var2)));
-		op_swap.setValues((String) op.operationBody.get(Key.value));
+		op_swap.setValues(ensureDoubleArray(op.operationBody.get(Key.value)));
 		return op_swap;
 	}
 
