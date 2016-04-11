@@ -1,14 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 
 <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
   <tabs>
     <Tab text="Group 1">
       <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <Label layoutX="14.0" layoutY="14.0" text="Playback speed:">
+                     <tooltip>
+                        <Tooltip text="Set the playback speed in operations per second or time between each operation in milliseconds." />
+                     </tooltip>
+                  </Label>
+                  <TextField fx:id="perSecField" layoutX="113.0" layoutY="10.0" onAction="#setPlayBackOpsPerSec" prefHeight="25.0" prefWidth="60.0">
+                     <tooltip>
+                        <Tooltip text="Playback speed in operations per second." />
+                     </tooltip>
+                  </TextField>
+                  <Label layoutX="182.0" layoutY="14.0" text="op/sec" />
+                  <TextField fx:id="timeBetweenField" layoutX="225.0" layoutY="10.0" onAction="#setPlaybackTimeBetweenOperations" prefHeight="25.0" prefWidth="60.0">
+                     <tooltip>
+                        <Tooltip text="Time between each operation in milliseconds." />
+                     </tooltip>
+                  </TextField>
+                  <Label layoutX="297.0" layoutY="14.0" text="ms" />
+               </children></AnchorPane>
       </content>
     </Tab>
     <Tab text="Group 2">

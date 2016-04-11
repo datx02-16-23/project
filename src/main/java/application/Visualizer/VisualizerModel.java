@@ -80,7 +80,6 @@ public class VisualizerModel extends Application {
             if (files[i].isFile()) {
 
                 File file = files[i];
-                System.out.println("File " + file.getName());
                 MenuItem ex = new MenuItem(file.getName());
                 ex.setOnAction(event1 -> controller.setFile(file));
                 examples.getItems().add(ex);
@@ -105,7 +104,7 @@ public class VisualizerModel extends Application {
     
     public void init(){
     	
-    	InputStream inputStream =getClass().getClassLoader().getResourceAsStream(Strings.PROPERTIES_FILE_NAME);
+    	InputStream inputStream = getClass().getClassLoader().getResourceAsStream(Strings.PROPERTIES_FILE_NAME);
     	
     	Properties properties = new Properties();
 		if (inputStream != null) {
@@ -122,7 +121,7 @@ public class VisualizerModel extends Application {
 			}
 		}
 		
-		System.out.println(properties.getProperty("test"));	
+		System.out.println("config.properties.test = " + properties.getProperty("test"));	
     }
 
     public static void main(String[] args) {

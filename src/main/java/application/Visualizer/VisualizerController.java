@@ -14,6 +14,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -27,6 +28,7 @@ import wrapper.Operation;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -137,8 +139,11 @@ public class VisualizerController implements CommunicatorListener{
          interpreter.consolidate(operationHistory.getItems());
     }
 
+    private DecimalFormat df;
     private void initSettingsPane(){
+    	df = new DecimalFormat("#.##"); 
         settingsLoader = new FXMLLoader(getClass().getResource("/SettingsView.fxml"));
+        settingsLoader.setController(this);
         settingsDialog = new Stage();
         settingsDialog.getIcons().add(new Image(VisualizerController.class.getResourceAsStream( "/icon_settings.png" )));
         settingsDialog.initModality(Modality.APPLICATION_MODAL);
@@ -158,6 +163,10 @@ public class VisualizerController implements CommunicatorListener{
             //Close without saving.
             settingsDialog.close();
         });
+        
+        timeBetweenField = (TextField) settingsLoader.getNamespace().get("timeBetweenField");
+        perSecField = (TextField) settingsLoader.getNamespace().get("perSecField");
+        
         settingsDialog.setScene(dialogScene);
     }
     
@@ -284,6 +293,51 @@ public class VisualizerController implements CommunicatorListener{
 //		lsm.setOperations(null);
 //		lsm.setKnownVariables(null);
 //		lsm.printLog(outputPath);
+	}
+	
+	private TextField perSecField;
+	public void setPlayBackOpsPerSec(Event e){
+        perSecField = (TextField) e.getSource();
+        double speed;
+        
+        try{
+        	speed = Double.parseDouble(perSecField.getText());
+        } catch (Exception exc){
+        	perSecField.setText("reset");
+        	return;
+        }
+        
+        if(speed <= 0){
+        	perSecField.setText("invalid");
+        	return;
+        }
+
+        //Valid input. Change other button and speed variable.
+        perSecField.setText(df.format(speed));
+        timeBetweenField.setText(df.format((1000/speed)));
+	}
+	
+	private TextField timeBetweenField;
+	public void setPlaybackTimeBetweenOperations(Event e){
+		System.out.println("enter");
+        timeBetweenField = (TextField) e.getSource();
+        double speed;
+        
+        try{
+        	speed = Double.parseDouble(timeBetweenField.getText());
+        } catch (Exception exc){
+        	timeBetweenField.setText("reset");
+        	return;
+        }
+        
+        if(speed < 0){
+        	timeBetweenField.setText("invalid");
+        	return;
+        }
+        
+        //Valid input. Change other button and speed variable.
+        perSecField.setText(df.format(1000/speed));
+        timeBetweenField.setText(df.format(speed));
 	}
 	
 	@Override
