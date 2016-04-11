@@ -80,7 +80,7 @@ public class VisualizerModel extends Application {
             if (files[i].isFile()) {
 
                 File file = files[i];
-                MenuItem ex = new MenuItem(file.getName());
+                MenuItem ex = new MenuItem(stylizeExampleName(file.getName()));
                 ex.setOnAction(event1 -> controller.setFile(file));
                 examples.getItems().add(ex);
             }
@@ -100,6 +100,31 @@ public class VisualizerModel extends Application {
 	    	
         window.setScene(scene);
         window.show();
+    }
+    
+    private String stylizeExampleName(String original){
+    	StringBuilder sb = new StringBuilder();
+    	char currentChar;
+    	boolean nextUpper = false;
+    	
+    	sb.append(Character.toUpperCase(original.charAt(0)));
+    	
+    	for(int i = 1; i < original.length(); i++){
+    		currentChar = original.charAt(i);
+    		if(currentChar == '_'){
+    			sb.append(" ");
+    			nextUpper=true;
+    		} else if (currentChar == '.'){
+    			return sb.toString();
+    		} else {
+    			if(nextUpper){
+    				currentChar = Character.toUpperCase(currentChar);
+    				nextUpper=false;
+    			}
+    			sb.append(currentChar);
+    		}
+    	}
+    	return sb.toString(); //Shouldn't get called.
     }
     
     public void init(){
