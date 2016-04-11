@@ -12,4 +12,9 @@ public interface Element {
 	 * @return The value held by this Element.
 	 */
 	public abstract double getValue();
+	
+	/**
+	 * Set the value held by this Element.
+	 */
+	public abstract void setValue(double newValue);
 }

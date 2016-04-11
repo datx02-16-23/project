@@ -99,9 +99,8 @@ public class Array extends DataStructure{
 			case swap:
 				swap((OP_Swap) op);
 				break;
-			
 			default:
-				System.err.println("Unknown OperationType: " + op.operation);
+				System.err.println("OperationType \"" + op.operation + "\" not applicable to " + getClass().getSimpleName());
 				break;
 		}
 	}
