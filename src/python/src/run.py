@@ -24,4 +24,4 @@ if __name__ == '__main__':
 	# convert output to json
 	convert(output,path.abspath('output.json'),[Variable('a','list',None,None)])
 	# right now run cleanup script until a better solution is found
-	system('sh cleanup.sh')
+	# system('sh cleanup.sh')
