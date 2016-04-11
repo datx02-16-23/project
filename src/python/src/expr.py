@@ -39,7 +39,7 @@ class VariableTable(object):
 			for i in loc:
 				var = var[i]
 			var[index] = src_val
-		return new_value
+		return (new_value,var_name)
 
 	def evaluate_indices(self,expression):
 		if not isinstance(expression,tuple):
