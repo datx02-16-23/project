@@ -35,7 +35,11 @@ public class Model implements iModel {
 
     @Override
     public void stepBackward() {
-        System.err.println("This is not implemented, try reset instead");
+    	int oldIndex = index-1;
+    	reset();
+    	while (index < oldIndex){
+    		stepForward();
+    	}
     }
 
     @Override
