@@ -40,6 +40,11 @@ public class Step implements iStep {
     }
 
     @Override
+    public Operation getLastOp(){
+        return lastOp;
+    }
+
+    @Override
     public void applyOperation(Operation op) {
         OperationType opType = op.operation;
         switch(opType){
