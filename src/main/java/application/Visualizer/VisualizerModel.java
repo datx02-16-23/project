@@ -113,13 +113,13 @@ public class VisualizerModel extends Application {
     		currentChar = original.charAt(i);
     		if(currentChar == '_'){
     			sb.append(" ");
-    			nextUpper=true;
+    			nextUpper = true;
     		} else if (currentChar == '.'){
     			return sb.toString();
     		} else {
     			if(nextUpper){
     				currentChar = Character.toUpperCase(currentChar);
-    				nextUpper=false;
+    				nextUpper = false;
     			}
     			sb.append(currentChar);
     		}
@@ -144,9 +144,7 @@ public class VisualizerModel extends Application {
 			} catch (IOException e) {
 				System.err.println("Failed to close properties file.");
 			}
-		}
-		
-		System.out.println("config.properties.test = " + properties.getProperty("test"));	
+		}	
     }
 
     public static void main(String[] args) {
