@@ -1,6 +1,6 @@
 # This file executes the different modules, resulting in a output.json file
 from expr import Variable
-from os import path
+from os import path,system
 from create_log import visualize
 from tojson import convert
 
@@ -23,3 +23,5 @@ if __name__ == '__main__':
 	execfile(path.abspath('./testvisualize/main.py'))
 	# convert output to json
 	convert(output,path.abspath('output.json'),[Variable('a','list',None,None)])
+	# right now run cleanup script until a better solution is found
+	system('sh cleanup.sh')

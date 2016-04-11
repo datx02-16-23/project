@@ -4,6 +4,7 @@
 from ast import *
 from codegen import to_source as ts
 from printnode import ast_visit as printnode
+from copy import deepcopy
 ######################## Utilities ##########################
 DEFINED_OPERATIONS = ['write','read']
 
@@ -102,9 +103,8 @@ class WriteTransformer(OperationTransformer):
 		super(WriteTransformer,self).__init__('write')
 
 	def visit_Assign(self,node):
-		# this is an eval-hack for deep copy, probably more safe solution exists
-		src = self.expr_transformer.visit(eval(dump(node.value)))
-		dst = self.expr_transformer.visit(eval(dump(node.targets[0])))
+		src = self.expr_transformer.visit(deepcopy(node.value))
+		dst = self.expr_transformer.visit(deepcopy(node.targets[0]))
 		write = self.create_call([src,dst,node.value])
 		node.value = write
 		return node
@@ -134,8 +134,7 @@ class ReadTransformer(OperationTransformer):
 		super(ReadTransformer,self).__init__('read')
 
 	def create_read(self,node):
-		# eval hack again
-		stmt = self.expr_transformer.visit(eval(dump(node)))
+		stmt = self.expr_transformer.visit(deepcopy(node))
 		read = self.create_call([stmt,node])
 		return copy_location(read,node)
 
