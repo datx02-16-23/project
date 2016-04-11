@@ -99,7 +99,7 @@ public class Visualization extends Pane {
     }
 
     private void renderStructure(DataStructure struct, int x, int y, int width, int height){
-        Class structClass = struct.getClass();
+        Class<? extends DataStructure> structClass = struct.getClass();
         if (structClass.equals(Array.class)){
             drawArray((Array)struct, x, y, width, height);
         } else if (structClass.equals(IndependentElement.class)){

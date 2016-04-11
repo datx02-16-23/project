@@ -57,6 +57,8 @@ public class Step implements iStep {
             case swap:
                 break;
         }
+        
+        lastOp = op;
 
     }
 
