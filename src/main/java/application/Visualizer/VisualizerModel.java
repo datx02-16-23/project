@@ -144,6 +144,8 @@ public class VisualizerModel extends Application {
 			} catch (IOException e) {
 				System.err.println("Failed to close properties file.");
 			}
+			
+			System.out.println(properties.getProperty("playbackSpeed"));
 		}	
     }
 

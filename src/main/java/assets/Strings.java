@@ -11,7 +11,7 @@ public abstract class Strings {
 	//Credits
 	public static final String[] DEVELOPER_NAMES = {"Johan Gerdin",
 													"Ivar Josefsson",
-											        "Dennis Jönsson",
+											        "Dennis Jonsson",
 											        "Jonathan Skarstedt",
 											        "Simon Smith",
 											        "Richard Sundqvist"};
