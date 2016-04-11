@@ -7,6 +7,7 @@ import assets.Strings;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -46,21 +47,29 @@ public class VisualizerModel extends Application {
         VisualizerController controller = new VisualizerController(visualization, window, model, lsm, fxmlLoader);
 
         fxmlLoader.setController(controller);
+
         // Load and get the root layout.
         VBox root;
-
         try {
             root = fxmlLoader.load();
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
 
-        GridPane visualizationPane = (GridPane) fxmlLoader.getNamespace().get("visualizationPane");
-        
-        visualizationPane.add(visualization, 0, 0);
-        
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Scene scene = new Scene(root, (screenSize.getWidth()*0.5), (screenSize.getHeight()*0.5));
+
+        // Extracting some nodes from the fxml:
+        SplitPane sP = (SplitPane) fxmlLoader.getNamespace().get("splitPane");
+        VBox sidePanel = (VBox) fxmlLoader.getNamespace().get("rightSidePanel");
+
+        // Hard coding an extra width (+5) to compensate for the width of the divider of splitPane!
+        sP.setDividerPositions( 1 - ( (sidePanel.getPrefWidth() + 5) / scene.getWidth() ));
+
+        // Add AV
+        GridPane visualizationPane = (GridPane) fxmlLoader.getNamespace().get("visualizationPane");
+        visualizationPane.add(visualization, 0, 0);
+
         scene.getStylesheets().add( getClass().getResource("/VisualizerStyle.css").toExternalForm());
         window.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
