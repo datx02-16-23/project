@@ -263,7 +263,7 @@ public class VisualizerController implements CommunicatorListener{
 		        operationHistory.getFocusModel().focus(index);
 		        operationHistory.scrollTo(index-1);
 		        
-		        currOpTextField.setText("" + index);
+		        currOpTextField.setText("" + (index+1));
 			}	
     	});
     }
@@ -273,10 +273,36 @@ public class VisualizerController implements CommunicatorListener{
     public void inspectSelection(){
     	System.out.println(operationHistory.getSelectionModel().getSelectedItem());
     }
-    
-    public void gotoSelection(){
-    	model.goToStep(operationHistory.getSelectionModel().getSelectedIndex());
+
+    public void inputGoToSelecton(){
+        int lineNr;
+
+        try{
+            currOpTextField.setStyle("-fx-control-inner-background: white;");
+            lineNr = Integer.parseInt(currOpTextField.getText());
+        } catch (Exception exc){
+            // NaN
+            currOpTextField.setStyle("-fx-control-inner-background: #C40000;");
+            return;
+        }
+
+        if(lineNr <= 0){
+            currOpTextField.setText("invalid");
+            currOpTextField.selectAll();
+            return;
+        }
+
+        model.goToStep(lineNr-1);
         visualization.render();
+        currOpTextField.setText(""+lineNr);
+        operationHistory.getSelectionModel().select(lineNr-1);
+    }
+
+    public void gotoSelection(){
+        int lineOffset = operationHistory.getSelectionModel().getSelectedIndex();
+    	model.goToStep(lineOffset);
+        visualization.render();
+        currOpTextField.setText(""+(lineOffset+1));
     }
 
     private DecimalFormat df;
@@ -307,7 +333,7 @@ public class VisualizerController implements CommunicatorListener{
         
         timeBetweenField = (TextField) settingsLoader.getNamespace().get("timeBetweenField");
         perSecField = (TextField) settingsLoader.getNamespace().get("perSecField");
-        
+
         settingsDialog.setScene(dialogScene);
     }
     
