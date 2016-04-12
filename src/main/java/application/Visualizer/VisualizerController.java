@@ -50,7 +50,6 @@ public class VisualizerController implements CommunicatorListener{
     //Settings dialog stuff
     private FXMLLoader settingsLoader;
     private Stage settingsDialog;
-
     // Controls
     private boolean isPlaying = false;
     private int stepDelaySpeedupFactor = 1;
@@ -147,7 +146,9 @@ public class VisualizerController implements CommunicatorListener{
 		{
 		    public void run() {
 		    	while(isPlaying){
-		    		stepForwardButtonClicked();
+		    		if(stepForwardButtonClicked() == false){
+		    			stopAutoPlay();
+		    		}
 		    		try {
 						sleep(stepDelay);
 					} catch (InterruptedException e) {}
@@ -173,17 +174,22 @@ public class VisualizerController implements CommunicatorListener{
      * Restart the AV animation.
      */
     public void restartButtonClicked(){
+    	stopAutoPlay();
         model.reset();
         setHistoryFocus();
+        visualization.render();
     }
 
     /**
      * Step the animation forward
      */
-    public void stepForwardButtonClicked(){
-        model.stepForward();
-        visualization.render();
-        setHistoryFocus();
+    public boolean stepForwardButtonClicked(){
+        if(model.stepForward()){
+            visualization.render();
+            setHistoryFocus();
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -479,12 +485,16 @@ public class VisualizerController implements CommunicatorListener{
 	}
 
 	
-	@SuppressWarnings("unchecked")
 	//Load components from the main view.
+    private TextField currOpTextField;
+	private TextField totOpTextField;
+	@SuppressWarnings("unchecked")
 	public void loadMainViewFxID(FXMLLoader mainViewLoader) {
 		ObservableMap<String, Object> mainViewNameSpace = mainViewLoader.getNamespace();
 		
 		operationHistory = (ListView<Operation>) mainViewNameSpace.get("operationHistory");
         playPauseButton = (Button) mainViewNameSpace.get("playPauseButton");
+        currOpTextField = (TextField) mainViewNameSpace.get("currOpTextField");
+        totOpTextField = (TextField) mainViewNameSpace.get("totOpTextField");
 	}
 }
