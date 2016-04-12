@@ -105,7 +105,7 @@ public class VisualizerModel extends Application {
         controller.loadMainViewFxID(fxmlLoader);
         
         if(propertiesFailed){
-        	controller.propertiesFailed();
+        	controller.propertiesFailed(null);
         }
     }
 

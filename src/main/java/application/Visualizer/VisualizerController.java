@@ -26,8 +26,11 @@ import manager.Communicator.MavserMessage;
 import wrapper.Operation;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -91,14 +94,13 @@ public class VisualizerController implements CommunicatorListener{
     
     public Properties tryLoadProperties(){
     	InputStream inputStream = getClass().getClassLoader().getResourceAsStream(Strings.PROPERTIES_FILE_NAME);
-    	
     	Properties properties = new Properties();
 		if (inputStream != null) {
 			try {
 				properties.load(inputStream);
 			} catch (IOException e) {
 				System.err.println("Failed to open properties file.");
-				propertiesFailed();
+				propertiesFailed(e);
 				return null;
 			}
 
@@ -106,7 +108,7 @@ public class VisualizerController implements CommunicatorListener{
 				inputStream.close();
 			} catch (IOException e) {
 				System.err.println("Failed to close properties file.");
-				propertiesFailed();
+				propertiesFailed(e);
 				return null;
 			}
 		}
@@ -114,15 +116,37 @@ public class VisualizerController implements CommunicatorListener{
     }
     
     public void loadProperties(){
-
-			Properties properties = tryLoadProperties();
-			if(properties == null){
-				return;
-			}
+		Properties properties = tryLoadProperties();
+		if(properties == null){
+			return;
+		}
 			
-			stepDelay = Long.parseLong(properties.getProperty("playbackStepDelay"))/stepDelaySpeedupFactor;
-			autoPlayOnIncomingStream = Boolean.parseBoolean(properties.getProperty("autoPlayOnIncomingStream"));
-			autoConsumeInit =  Boolean.parseBoolean(properties.getProperty("autoConsumeInit"));
+		stepDelayBase = Long.parseLong(properties.getProperty("playbackStepDelay")); stepDelay = stepDelayBase; //Speedup factor is 1 at startup.
+		autoPlayOnIncomingStream = Boolean.parseBoolean(properties.getProperty("autoPlayOnIncomingStream"));
+		autoConsumeInit =  Boolean.parseBoolean(properties.getProperty("autoConsumeInit"));
+    }
+    
+    public void saveProperties(){
+		Properties properties = new Properties();
+		
+		System.out.println("SAVING: ");
+		properties.put("playbackStepDelay", ""+stepDelayBase);
+		System.out.println(""+stepDelayBase);
+		properties.put("autoPlayOnIncomingStream", ""+autoPlayOnIncomingStream);
+		System.out.println(""+autoPlayOnIncomingStream);
+		properties.put("autoConsumeInit", ""+autoConsumeInit);
+		System.out.println(""+autoConsumeInit);
+		
+
+		
+		try {
+			URL url = getClass().getClassLoader().getResource(Strings.PROPERTIES_FILE_NAME);
+			OutputStream outputStream = new FileOutputStream(new File(url.toURI()));
+			properties.store(outputStream, "OK now what?");
+			System.out.println("Saved settings.");
+		} catch (Exception e) {
+			propertiesFailed(e);
+		}
     }
     
     /**
@@ -153,6 +177,9 @@ public class VisualizerController implements CommunicatorListener{
 		    			stopAutoPlay();
 		    		}
 		    		try {
+		    			System.out.println("stepDelaySpeedupFactor = " + stepDelaySpeedupFactor);
+		    			System.out.println("stepDelayBase = " + stepDelayBase);
+		    			System.out.println("stepDelay = " + stepDelay);
 						sleep(stepDelay);
 					} catch (InterruptedException e) {}
 		    	}
@@ -279,6 +306,7 @@ public class VisualizerController implements CommunicatorListener{
         settingsDialog.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
             //Close without saving.
+            saveProperties();
             settingsDialog.close();
         });
         
@@ -416,7 +444,11 @@ public class VisualizerController implements CommunicatorListener{
 //		lsm.printLog(outputPath);
 	}
 	
-    public void propertiesFailed(){
+    public void propertiesFailed(Exception exception){
+    	if(exception != null){
+    		System.err.println(exception.getMessage());    		
+    	}
+    	
     	FXMLLoader loader = new FXMLLoader(getClass().getResource("/PropertiesAlert.fxml"));
         Stage stage = new Stage();
         
@@ -465,7 +497,8 @@ public class VisualizerController implements CommunicatorListener{
         //Valid input. Change other button and speed variable.
         perSecField.setText(df.format(newSpeed));
         timeBetweenField.setText(df.format((1000/newSpeed)));
-        stepDelay = (1000/newSpeed)/stepDelaySpeedupFactor;
+        stepDelayBase = (1000/newSpeed);
+        stepDelay = stepDelayBase/stepDelaySpeedupFactor;
 	}
 	
 	private TextField timeBetweenField;
@@ -490,7 +523,8 @@ public class VisualizerController implements CommunicatorListener{
         //Valid input. Change other button and speed variable.
         perSecField.setText(df.format(1000/newSpeed));
         timeBetweenField.setText(df.format(newSpeed));
-        stepDelay = newSpeed/stepDelaySpeedupFactor;
+        stepDelayBase = newSpeed;
+        stepDelay = stepDelayBase/stepDelaySpeedupFactor;
 	}
 	
 	@Override
