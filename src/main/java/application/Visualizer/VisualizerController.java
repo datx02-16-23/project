@@ -114,6 +114,7 @@ public class VisualizerController implements CommunicatorListener{
      */
     public void stepBackwardButtonClicked(){
         model.stepBackward();
+        visualization.render();
     }
 
     /**

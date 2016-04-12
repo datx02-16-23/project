@@ -19,9 +19,10 @@ public class IndependentElement extends DataStructure implements Element{
 	 * Version number for this class.
 	 */
 	private static final long serialVersionUID = Strings.VERSION_NUMBER;
+
 	
-	private transient Element element;
-	private transient final ArrayList<Element> elements; 
+	private transient final ArrayList<Element> elements = new ArrayList<Element>();
+	private transient Element element = setElement(new IndependentElementContainer());
 	
 	/**
 	 * Create a new IndependentElement.
@@ -31,18 +32,19 @@ public class IndependentElement extends DataStructure implements Element{
 	 */
 	public IndependentElement(String identifier, String abstractType, String visual) {
 		super(identifier, "independentElement", abstractType, visual);
-		elements = new ArrayList<Element>();
-		setElement(new IndependentElementContainer());
 	}
 
 	/**
 	 * Set the element held by this IndependentElement.
 	 * @param newElement The new element to be held by this IndependentElement.
 	 */
-	public void setElement(Element newElement){
+	public Element setElement(Element newElement){
+		System.out.println("SET ELEMENT");
 		element = newElement;
 		elements.clear();
 		elements.add(newElement);
+		System.out.println("identifier = " + this.identifier + ", element = " + element);
+		return newElement;
 	}
 	
 	/**
@@ -115,9 +117,12 @@ public class IndependentElement extends DataStructure implements Element{
 	}
 
 	private void readORwrite(OP_ReadWrite op){
-		
+		System.out.println("identifier = " + this.identifier + ", element = " + element);
+		System.out.println("op = " + op);
+		System.out.println("op.getValue()[0] = " + op.getValue()[0]);
+	
 		if(op.getTarget().identifier.equals(this.identifier)){
-			element.setValue(op.getValue()[1]);
+			element.setValue(op.getValue()[0]);
 			return;
 		}
 		

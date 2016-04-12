@@ -138,7 +138,7 @@ public class Array extends DataStructure{
 		
 		ArrayElement targetElement = this.getElement(target);
 		if (targetElement != null){
-			sourceElement.value = op.getValue()[0];
+			targetElement.value = op.getValue()[0];
 		}
 	
 	}
@@ -209,7 +209,7 @@ public class Array extends DataStructure{
 	 * @return The element at the location specified by the given locator, if it was valid. Null otherwise.
 	 */
 	public ArrayElement getElement(Locator locator){
-		if(locator.identifier.equals(identifier) == false){
+		if(locator == null || locator.identifier.equals(identifier) == false){
 			return null;
 		}
 		

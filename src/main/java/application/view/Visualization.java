@@ -79,7 +79,7 @@ public class Visualization extends Pane {
 
 
     private void drawIndependentElement(IndependentElement element){
-        System.out.println("Drawing independent element");
+//        System.out.println("Drawing independent element");
     }
 
     private void renderStructure(String id, DataStructure struct, int x, int y){

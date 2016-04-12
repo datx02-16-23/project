@@ -47,19 +47,42 @@ public class Step implements iStep {
     @Override
     public void applyOperation(Operation op) {
         OperationType opType = op.operation;
+        String identifier;
+        Locator locator;
         switch(opType){
             case init:
                 //Has the operation body value, target and size
-                String identifier = ((Locator)op.operationBody.get(Key.target)).getIdentifier();
+                identifier = ((Locator)op.operationBody.get(Key.target)).getIdentifier();
                 structs.get(identifier).applyOperation(op);
                 break;
             case message:
+            	System.out.println(op);
                 break;
             case read:
-                break;
             case write:
+            	//Technically not identical, as read will always have a source and write will always have a target.
+            	//They are treated the same in Array however, so will will treat them the same here as well.
+            	
+            	locator = ((Locator)op.operationBody.get(Key.source));
+            	if(locator != null){
+            		identifier = locator.getIdentifier();
+            		structs.get(identifier).applyOperation(op);
+            	}
+
+            	locator = ((Locator)op.operationBody.get(Key.target));
+            	if(locator != null){
+                	identifier = locator.getIdentifier();
+                	structs.get(identifier).applyOperation(op);	
+            	}
+            	
                 break;
             case swap:
+            	//No checking here - swap should always have a var1 and var2.
+            	identifier = ((Locator)op.operationBody.get(Key.var1)).getIdentifier();
+            	structs.get(identifier).applyOperation(op);
+            	
+            	identifier = ((Locator)op.operationBody.get(Key.var2)).getIdentifier();
+            	structs.get(identifier).applyOperation(op);
                 break;
         }
         
