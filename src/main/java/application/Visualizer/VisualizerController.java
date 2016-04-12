@@ -247,7 +247,7 @@ public class VisualizerController implements CommunicatorListener{
         model.goToStep(lineNr-1);
         visualization.render();
         currOpTextField.setText(""+lineNr);
-        operationHistory.getSelectionModel().select(lineNr-1);
+        updateOperationList();
     }
 
     public void gotoSelection(){
@@ -403,8 +403,11 @@ public class VisualizerController implements CommunicatorListener{
 				operationHistory.getItems().addAll(lsm.getOperations());
                 totNrOfOpLabel.setText("/ " + operationHistory.getItems().size());
 				lsm.clearData();
-				updateOperationList();
-				stepForwardButtonClicked();
+				if (autoPlayOnIncomingStream){
+					stepForwardButtonClicked();
+				} else {
+					updateOperationList();
+				}
 			}        	
         });
 		
@@ -628,8 +631,8 @@ public class VisualizerController implements CommunicatorListener{
 	    Media media = new Media(resource.toString());
 	    MediaPlayer mediaPlayer = new MediaPlayer(media);
 	    mediaPlayer.play();
-	    
-	    System.out.println("GET SPOOKED!");
+	    window.setTitle("SpoooooOOoooOOOooooOOoookster!");
+	    System.out.println("GET SPoooooOOoooOOOooooOOoooKED!");
 		
 	}
 }
