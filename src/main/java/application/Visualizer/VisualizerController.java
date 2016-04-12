@@ -63,9 +63,6 @@ public class VisualizerController implements CommunicatorListener{
     private long stepDelay = stepDelayBase/stepDelaySpeedupFactor;
     private ListView<Operation> operationHistory;
 
-    //TODO: Add to settings
-    private boolean autoConsumeInit = false;
-    //TODO: Add to settings
     private boolean autoPlayOnIncomingStream = true;
     
     public VisualizerController(Visualization visualization, Stage window, iModel model, LogStreamManager lsm) {
@@ -86,10 +83,19 @@ public class VisualizerController implements CommunicatorListener{
         settingsDialog.setWidth(this.window.getWidth()*0.75);
         settingsDialog.setHeight(this.window.getHeight()*0.75);
         
+        //Playback speed
         perSecField.setText(df.format(1000.0/stepDelayBase));
         timeBetweenField.setText(df.format(stepDelayBase));
         
+    	toggleAutorunStream.setSelected(autoPlayOnIncomingStream);
+        
         settingsDialog.show();
+    }
+    
+    private CheckBox toggleAutorunStream;
+    public void toggleAutorunStream(){
+    	autoPlayOnIncomingStream = toggleAutorunStream.isSelected();
+    	unsavedChanged();
     }
     
     /**
@@ -281,7 +287,10 @@ public class VisualizerController implements CommunicatorListener{
 	        //Playpack speed
 	        timeBetweenField = (TextField) fxmlLoader.getNamespace().get("timeBetweenField");
 	        perSecField = (TextField) fxmlLoader.getNamespace().get("perSecField");
+	        
+	        toggleAutorunStream = (CheckBox) fxmlLoader.getNamespace().get("toggleAutorunStream");
 
+	    
         settingsDialog.setScene(dialogScene);
     }
     
@@ -476,9 +485,9 @@ public class VisualizerController implements CommunicatorListener{
 		public void saveSettings(){
 			if(settingsChanged){
 				saveProperties();
-	            settingsDialog.close();
 				noUnsavedChanges();
 			}
+			settingsDialog.close();
 		}
 		
 		//Keep settings until program exit
@@ -490,9 +499,9 @@ public class VisualizerController implements CommunicatorListener{
 		public void revertSettings(){
 			if(settingsChanged){
 				loadProperties();
-				settingsDialog.close();
 				noUnsavedChanges();
 			}
+			settingsDialog.close();
 		}
 		
 		private void noUnsavedChanges(){
@@ -528,9 +537,9 @@ public class VisualizerController implements CommunicatorListener{
 	        }
 	
 	        //Valid input. Change other button and speed variable.
-	        perSecField.setText(df.format(newSpeed));
-	        timeBetweenField.setText(df.format((1000/newSpeed)));
-	        stepDelayBase = (1000/newSpeed);
+	        perSecField.setText(df.format(newSpeed));//BLA
+	        timeBetweenField.setText(df.format((1000.0/newSpeed)));
+	        stepDelayBase = (1000L/newSpeed);
 	        stepDelay = stepDelayBase/stepDelaySpeedupFactor;
 	        unsavedChanged();
 		}
@@ -555,7 +564,7 @@ public class VisualizerController implements CommunicatorListener{
 	        }
 	        
 	        //Valid input. Change other button and speed variable.
-	        perSecField.setText(df.format(1000/newSpeed));
+	        perSecField.setText(df.format(1000.0/newSpeed));
 	        timeBetweenField.setText(df.format(newSpeed));
 	        stepDelayBase = newSpeed;
 	        stepDelay = stepDelayBase/stepDelaySpeedupFactor;
@@ -593,7 +602,6 @@ public class VisualizerController implements CommunicatorListener{
 				
 			stepDelayBase = Long.parseLong(properties.getProperty("playbackStepDelay")); stepDelay = stepDelayBase; //Speedup factor is 1 at startup.
 			autoPlayOnIncomingStream = Boolean.parseBoolean(properties.getProperty("autoPlayOnIncomingStream"));
-			autoConsumeInit =  Boolean.parseBoolean(properties.getProperty("autoConsumeInit"));
 	    }
 	    
 	    public void saveProperties(){
@@ -601,7 +609,6 @@ public class VisualizerController implements CommunicatorListener{
 			
 			properties.put("playbackStepDelay", ""+stepDelayBase);
 			properties.put("autoPlayOnIncomingStream", ""+autoPlayOnIncomingStream);
-			properties.put("autoConsumeInit", ""+autoConsumeInit);
 			
 			try {
 				URL url = getClass().getClassLoader().getResource(Strings.PROPERTIES_FILE_NAME);
