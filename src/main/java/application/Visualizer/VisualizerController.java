@@ -2,6 +2,7 @@ package application.Visualizer;
 
 import application.model.iModel;
 import application.view.Visualization;
+import assets.DefaultProperties;
 import assets.Strings;
 import interpreter.Interpreter;
 import javafx.application.Platform;
@@ -398,11 +399,12 @@ public class VisualizerController implements CommunicatorListener{
 			public void run() {
 				if (autoPlayOnIncomingStream){
 					model.goToEnd();
-					startAutoPlay();
 				}
 				operationHistory.getItems().addAll(lsm.getOperations());
                 totNrOfOpLabel.setText("/ " + operationHistory.getItems().size());
 				lsm.clearData();
+				updateOperationList();
+				stepForwardButtonClicked();
 			}        	
         });
 		
@@ -568,35 +570,28 @@ public class VisualizerController implements CommunicatorListener{
 	    
 	    public Properties tryLoadProperties(){
 	    	InputStream inputStream = getClass().getClassLoader().getResourceAsStream(Strings.PROPERTIES_FILE_NAME);
+
+	    	if(inputStream == null){
+	    		System.err.println("Failed to open properties file.");
+	    		propertiesFailed(null);
+	    		return DefaultProperties.get();
+	    	}
 	    	
 	    	Properties properties = new Properties();
-			if (inputStream != null) {
-				try {
-					properties.load(inputStream);
-				} catch (IOException e) {
-					System.err.println("Failed to open properties file.");
-					propertiesFailed(e);
-					return null;
-				}
-	
-				try {
-					inputStream.close();
-				} catch (IOException e) {
-					System.err.println("Failed to close properties file.");
-					propertiesFailed(e);
-					return null;
-				}
+			try {
+				properties.load(inputStream);
+				inputStream.close();
 				return properties;
+			} catch (IOException e) {
+				propertiesFailed(e);			
+				System.err.println("Property file I/O failed.");
+				return DefaultProperties.get();
 			}
-			return null;
 	    }
 	    
 	    public void loadProperties(){
 			Properties properties = tryLoadProperties();
-			if(properties == null){
-				return;
-			}
-				
+			
 			stepDelayBase = Long.parseLong(properties.getProperty("playbackStepDelay")); stepDelay = stepDelayBase; //Speedup factor is 1 at startup.
 			autoPlayOnIncomingStream = Boolean.parseBoolean(properties.getProperty("autoPlayOnIncomingStream"));
 	    }

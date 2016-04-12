@@ -35,7 +35,6 @@ public class VisualizerModel extends Application {
     private final iModel model= new Model();
     private final LogStreamManager lsm = new LogStreamManager();
     private FXMLLoader fxmlLoader;
-    private boolean propertiesFailed = false;
     private VisualizerController controller;
 
     @Override
@@ -103,10 +102,6 @@ public class VisualizerModel extends Application {
 
         //Load needed components of from main view in Controller.
         controller.loadMainViewFxID(fxmlLoader);
-        
-        if(propertiesFailed){
-        	controller.propertiesFailed(null);
-        }
     }
 
 
@@ -140,37 +135,10 @@ public class VisualizerModel extends Application {
     	return sb.toString(); //Shouldn't get called.
     }
 
-    /**
-     * Load the properties file (config.properties)
-     */
-    public void init(){
-    	
-    	InputStream inputStream = getClass().getClassLoader().getResourceAsStream(Strings.PROPERTIES_FILE_NAME);
-    	
-	    	Properties properties = new Properties();
-			if (inputStream != null) {
-				try {
-					properties.load(inputStream);
-				} catch (IOException e) {
-					System.err.println("Failed to open properties file.");
-					propertiesFailed = true;
-				}
-	
-				try {
-					inputStream.close();
-				} catch (IOException e) {
-					System.err.println("Failed to close properties file.");
-					propertiesFailed = true;
-				}
-			
-				//TODO: Load model properties from file, such as window size.
-		}
-		System.err.println("Failed to open properties file.");
-		propertiesFailed = true;
-    }
-
     public void stop(){
-    	controller.stopAutoPlay();
+    	if(controller != null){
+    		controller.stopAutoPlay(); //Kill autoplay thread.		
+    	}
     }
 
     public static void main(String[] args) {
