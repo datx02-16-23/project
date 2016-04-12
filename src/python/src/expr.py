@@ -6,6 +6,21 @@ def get_op(tr_op):
 		'/' : lambda x,y:x/y
 	}[tr_op]
 
+# Returns variables in expression as a list
+def get_variables(expr):
+	if not isinstance(expr,tuple):
+		return []
+	return get_variables_(expr[0],expr[1:])
+
+def get_variables_(l,r):
+	if l == 'var':
+		return [r[0]]
+	else:
+		var = []
+		for v in r:
+			var += get_variables(v)
+		return var
+
 class Variable(object):
 	def __init__(self,name,rawType,attributes=None,abstractType=None):
 		self.name = name
@@ -103,3 +118,4 @@ class InvalidExpression(Exception): pass
 # t.table['a'] = [[1,2,3],[4,5,6]]
 # t.table['b'] = [0,1,2]
 # print 'eval : ',t.evaluate(('subscript', ('var', 'a'), 0, ('binop', '+', ('subscript', ('var', 'b'), 0), ('subscript', ('var', 'b'), 0))))
+# print get_variables(('subscript', ('var', 'a'), ('binop', '+', ('var', 'j'), 1)))

@@ -1,5 +1,5 @@
 from codegen import to_source
-from transformer import WriteTransformer,ReadTransformer
+from transformer import WriteTransformer,ReadTransformer,PassTransformer
 from ast import NodeTransformer,parse,Assign,Name,Str
 from printnode import ast_visit as printnode
 from distutils.dir_util import copy_tree
@@ -29,7 +29,7 @@ def setup_env(settings,v_env):
 		f.close()
 
 def transform(node,logwriter_nodes):
-	transformers = [WriteTransformer(), ReadTransformer()]
+	transformers = [PassTransformer(), WriteTransformer(), ReadTransformer()]
 	MainTransformer(transformers,logwriter_nodes).visit(node)
 
 # Move this out of create_log? Perhaps into run.py

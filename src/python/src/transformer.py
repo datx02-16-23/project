@@ -6,7 +6,7 @@ from codegen import to_source as ts
 from printnode import ast_visit as printnode
 from copy import deepcopy
 ######################## Utilities ##########################
-DEFINED_OPERATIONS = ['write','read']
+DEFINED_OPERATIONS = ['write','read','link']
 
 def translate_op(op):
 	tr_op = {
@@ -68,7 +68,7 @@ class ExpressionTransformer(NodeTransformer):
 		,node)
 
 	def visit_Call(self,node):
-		return node
+		return Str('undefined')
 
 class OperationTransformer(NodeTransformer):
 	def __init__(self,name):
@@ -83,12 +83,7 @@ class OperationTransformer(NodeTransformer):
 			keywords=[]
 		)
 
-	def visit_Call(self,node):
-		if isinstance(node.func,Attribute) or node.func.id in DEFINED_OPERATIONS:
-			return node
-		else:
-			for arg in node.args:
-				self.expr_transformer.visit(arg)
+	def visit_Call(self,node): return node
 
 	# OperationTransformer shouldnt know about WriteTransformer
 	# should be a better solution
@@ -96,7 +91,10 @@ class OperationTransformer(NodeTransformer):
 
 	def visit_AugAssign(self,node): return node
 	
-	def visit_FunctionDef(self,node): return node
+	def visit_FunctionDef(self,node):
+		for field in node.body:
+			self.visit(field)
+		return node
 
 class WriteTransformer(OperationTransformer):
 	def __init__(self):
@@ -149,12 +147,51 @@ class ReadTransformer(OperationTransformer):
 			self.visit(line)
 		return node
 
+class PassTransformer(OperationTransformer):
+	def __init__(self):
+		super(PassTransformer,self).__init__('link')
+		self.function_defs = []
+
+	def extract_params(self,args):
+		reg_args = []
+		for arg in args.args:
+			reg_args.append(Str(arg.id))
+		return reg_args
+
+	def visit_FunctionDef(self,node):
+		self.function_defs.append(node.name)
+		node.decorator_list.append(Call(
+			func=Name(id=self.name),
+			args=self.extract_params(node.args),
+			keywords=[]
+		))
+		return node
+
+	def visit_Call(self,node):
+		if node.func.id in self.function_defs:
+			for i,arg in enumerate(node.args):
+				node.args[i] = Dict(
+					values=[arg, self.expr_transformer.visit(deepcopy(arg))],
+					keys=[Str('value'),Str('arg')]
+				)
+		else:
+			for child in iter_child_nodes(node):
+				self.visit(child)
+		return node
+
+	def visit_Assign(self,node):
+		for child in iter_child_nodes(node):
+			self.visit(child)
+		return node
+
 ######################## Tests ########################
+pt = PassTransformer()
 def test_stmt(stmt):
 	wt = WriteTransformer()
 	rt = ReadTransformer()
 	node = parse(stmt).body[0]
 	print 'before : ',stmt
+	node = pt.visit(node)
 	node = wt.visit(node)
 	node = rt.visit(node)
 	ts_node = ts(node)
@@ -199,4 +236,5 @@ def test_stmt(stmt):
 
 # function declaration
 # test_stmt("def foo(): return 0")
-test_stmt("def assign(value,target,i): target[i] = value")
+# test_stmt("def assign(value,target,i): target[i] = value")
+# test_stmt("assign(0,array,0)")

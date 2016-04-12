@@ -15,4 +15,13 @@ def write(src,dst,source):
 def read(statement,source):
     put({'type' : 'read', 'statement' :  statement, 'value' : source})
     return source
+
+def link(*params):
+	def wrap(func):
+		def call(*args):
+			for param,arg in zip(params,args):
+				put({'type' : 'link', 'param' : param, 'arg' : arg})
+			return func(*tuple(arg['value'] for arg in args))
+		return call
+	return wrap
 ########################################################################

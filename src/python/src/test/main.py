@@ -6,7 +6,8 @@ def rand_array(size,rng):
 		array.append(int(random()*rng))
 	return array
 
-a = rand_array(10,50)
+x = 10
+a = rand_array(x,50)
 
 for i in range(0,len(a)):
 	for j in range(0,len(a) - 1):

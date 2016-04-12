@@ -1,7 +1,14 @@
-from expr import Variable,VariableTable,InvalidExpression
+from expr import Variable,VariableTable,InvalidExpression,get_variables
 from json import dump
 from create_log import format_log
 from copy import deepcopy
+
+def union(l1,l2):
+    u = []
+    for l in l1:
+        if l in l2:
+            u.append(l)
+    return u
 
 def translate_types(type_):
     types_ = {
@@ -63,7 +70,7 @@ class ToJson(object):
         obj['operationBody']['size'] = len(value) if isinstance(value,list) else 1
         obj['operationBody']['value'] = value
 
-    # make separate read/write cases
+    # var = get_varialble rethink
     def convert_(self,output):
         for line in output:
             if line['type'] == 'write':
@@ -76,7 +83,15 @@ class ToJson(object):
                     else:
                         self.putWrite(line['src'],line['src_val'],line['dst'])
             elif line['type'] == 'read':
-                self.putRead(line['statement'],line['value'])
+                var = get_variables(line['statement'])
+                if union(var,self.ids):
+                    self.putRead(line['statement'],line['value'])
+            elif line['type'] == 'link':
+                var = get_variables(line['arg']['arg'])
+                if union(var,self.ids):
+                    if line['param'] not in self.ids:
+                        self.ids.append(line['param'])
+                    self.putWrite(line['arg']['arg'],line['arg']['value'],('var',line['param']))
         return self.jsonBuffer
 
 def dumpJson(outfile,jsonBuffer):
