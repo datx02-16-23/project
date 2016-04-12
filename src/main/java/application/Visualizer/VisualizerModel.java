@@ -142,7 +142,10 @@ public class VisualizerModel extends Application {
     	}
     	return sb.toString(); //Shouldn't get called.
     }
-    
+
+    /**
+     * Load the properties file (config.properties)
+     */
     public void init(){
     	
     	InputStream inputStream = getClass().getClassLoader().getResourceAsStream(Strings.PROPERTIES_FILE_NAME);
