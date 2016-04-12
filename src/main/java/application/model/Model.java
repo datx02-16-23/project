@@ -49,8 +49,7 @@ public class Model implements iModel {
     }
     
     public void goToStep(int toStepNo){
-    	if(toStepNo < 0){
-    		System.err.println("Step must be >= 0.");
+    	if(operations == null || toStepNo > operations.size() || toStepNo < 0){
     		return;
     	}
     	
