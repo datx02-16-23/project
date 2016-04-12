@@ -27,7 +27,7 @@ public class Model implements iModel {
 
     @Override
     public boolean stepForward() {
-        if(operations != null && index < operations.size()){
+        if(operations != null && index < operations.size()-1){
             step.applyOperation(operations.get(index));
             index += 1;
             return true;
