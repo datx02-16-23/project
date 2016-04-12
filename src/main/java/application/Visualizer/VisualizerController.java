@@ -161,11 +161,16 @@ public class VisualizerController implements CommunicatorListener{
 	}
 	
 	public void stopAutoPlay(){
-		playPauseButton.setText("Play");
-	    isPlaying = false;
-	    if (autoPlayThread != null){
-		    autoPlayThread.interrupt();
-	    }
+		Platform.runLater(new Runnable(){
+			@Override
+			public void run() {
+				playPauseButton.setText("Play");
+			    isPlaying = false;
+			    if (autoPlayThread != null){
+				    autoPlayThread.interrupt();
+			    }
+			}
+		});
 	}
 	
 
@@ -176,7 +181,7 @@ public class VisualizerController implements CommunicatorListener{
     public void restartButtonClicked(){
     	stopAutoPlay();
         model.reset();
-        setHistoryFocus();
+        updateOperationList();
         visualization.render();
     }
 
@@ -186,7 +191,7 @@ public class VisualizerController implements CommunicatorListener{
     public boolean stepForwardButtonClicked(){
         if(model.stepForward()){
             visualization.render();
-            setHistoryFocus();
+            updateOperationList();
             return true;
         }
         return false;
@@ -196,15 +201,17 @@ public class VisualizerController implements CommunicatorListener{
      * Step the animation backward
      */
     public void stepBackwardButtonClicked(){
+    	stopAutoPlay();
         model.stepBackward();
         visualization.render();
+        updateOperationList();
     }
 
     /**
      * Change the animation speed
      */
     public void changeSpeedButtonClicked(Event e){
-        stepDelaySpeedupFactor = stepDelaySpeedupFactor*2 % 7; // possible values: 1, 2, 4
+        stepDelaySpeedupFactor = stepDelaySpeedupFactor*2 % 31; // possible values: 1, 2, 4, 8, 16
         ((Button) e.getSource()).setText(stepDelaySpeedupFactor + "x");
         stepDelay = stepDelayBase/stepDelaySpeedupFactor;
     }
@@ -222,7 +229,7 @@ public class VisualizerController implements CommunicatorListener{
  		 interpreter.consolidate(operationHistory.getItems());
     }
     
-    private void setHistoryFocus(){
+    private void updateOperationList(){
     	Platform.runLater(new Runnable(){
 			@Override
 			public void run() {
@@ -230,6 +237,8 @@ public class VisualizerController implements CommunicatorListener{
 		        operationHistory.getSelectionModel().select(index);
 		        operationHistory.getFocusModel().focus(index);
 		        operationHistory.scrollTo(index-1);
+		        
+		        currOpTextField.setText("" + index);
 			}	
     	});
     }
@@ -358,7 +367,8 @@ public class VisualizerController implements CommunicatorListener{
         operationHistory.getItems().clear();
         operationHistory.getItems().addAll(lsm.getOperations());
         visualization.render();
-        setHistoryFocus();
+        totOpTextField.setText("" + operationHistory.getItems().size());
+        updateOperationList();
     }
 
 	@Override
@@ -382,6 +392,7 @@ public class VisualizerController implements CommunicatorListener{
 					startAutoPlay();
 				}
 				operationHistory.getItems().addAll(lsm.getOperations());
+				totOpTextField.setText("" + operationHistory.getItems().size());
 				lsm.clearData();
 			}        	
         });
