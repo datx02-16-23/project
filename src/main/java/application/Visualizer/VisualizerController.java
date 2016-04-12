@@ -94,6 +94,7 @@ public class VisualizerController implements CommunicatorListener{
      */
     public void restartButtonClicked(){
         model.reset();
+        setHistoryFocus();
     }
 
     /**
@@ -102,6 +103,7 @@ public class VisualizerController implements CommunicatorListener{
     public void stepForwardButtonClicked(){
         model.stepForward();
         visualization.render();
+        setHistoryFocus();
     }
 
     /**
@@ -132,6 +134,13 @@ public class VisualizerController implements CommunicatorListener{
     
     public void interpretOperationHistory(){
  		 interpreter.consolidate(operationHistory.getItems());
+    }
+    
+    private void setHistoryFocus(){
+    	int index = model.getIndex();
+        operationHistory.getSelectionModel().select(index);
+        operationHistory.getFocusModel().focus(index);
+        operationHistory.scrollTo(index-1);
     }
 
     private DecimalFormat df;
@@ -247,6 +256,7 @@ public class VisualizerController implements CommunicatorListener{
         operationHistory.getItems().clear();
         operationHistory.getItems().addAll(lsm.getOperations());
         visualization.render();
+        setHistoryFocus();
     }
 
 	@Override

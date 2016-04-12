@@ -56,6 +56,10 @@ public class Model implements iModel {
     public iStep getCurrentStep() {
         return step;
     }
+    
+    public int getIndex(){
+    	return index;
+    }
 
 
 }
