@@ -7,7 +7,6 @@ import assets.Strings;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
@@ -16,8 +15,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import manager.LogStreamManager;
-import wrapper.Operation;
-
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -70,7 +67,7 @@ public class VisualizerModel extends Application {
         SplitPane sP = (SplitPane) fxmlLoader.getNamespace().get("splitPane");
         VBox sidePanel = (VBox) fxmlLoader.getNamespace().get("rightSidePanel");
         // Hard coding an extra width (+5) to compensate for the width of the divider of splitPane!
-        sP.setDividerPositions( 1 - ( (sidePanel.getPrefWidth() + 5) / scene.getWidth() ));
+        sP.setDividerPositions( 1 - ( (sidePanel.getPrefWidth() + 14) / scene.getWidth() ));
 
         // Add examples
         Menu examples = (Menu) fxmlLoader.getNamespace().get("examplesMenu");

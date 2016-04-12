@@ -13,6 +13,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -26,6 +28,7 @@ import wrapper.Operation;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Properties;
@@ -507,5 +510,20 @@ public class VisualizerController implements CommunicatorListener{
         playPauseButton = (Button) mainViewNameSpace.get("playPauseButton");
         currOpTextField = (TextField) mainViewNameSpace.get("currOpTextField");
         totOpTextField = (TextField) mainViewNameSpace.get("totOpTextField");
+	}
+	
+	/*
+	 * How to do sound in JavaFX.
+	 */
+	public void oooooOOoooOOOooooOOooo (){
+		//https://www.youtube.com/watch?v=inli9ukUKIs
+		
+	    URL resource = getClass().getResource("/assets/oooooOOoooOOOooooOOooo.mp3");
+	    Media media = new Media(resource.toString());
+	    MediaPlayer mediaPlayer = new MediaPlayer(media);
+	    mediaPlayer.play();
+	    
+	    System.out.println("GET SPOOKED!");
+		
 	}
 }
