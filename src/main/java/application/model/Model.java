@@ -31,10 +31,8 @@ public class Model implements iModel {
             step.applyOperation(operations.get(index));
             index += 1;
             return true;
-        } else {
-        	System.err.println("No more operations. Try reset.");
-        	return false;
         }
+        return false;
     }
 
     @Override
