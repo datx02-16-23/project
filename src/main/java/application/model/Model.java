@@ -50,13 +50,13 @@ public class Model implements iModel {
     		return;
     	}
     	
-    	if (index < toStepNo){
+    	if (toStepNo < index){
     		reset(); //Can't go backwards: Start from the beginning
         	while (index < toStepNo){
         		stepForward();
         	}
         	
-    	} else if (index > toStepNo){
+    	} else if (toStepNo > index){
         	while (index < toStepNo){
         		stepForward();
         	}
