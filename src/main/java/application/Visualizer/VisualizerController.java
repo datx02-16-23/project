@@ -12,10 +12,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -31,7 +31,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -55,8 +54,8 @@ public class VisualizerController implements CommunicatorListener{
     private Stage connectedDialog;
     
     //Settings dialog stuff
-    private FXMLLoader settingsLoader;
     private Stage settingsDialog;
+    
     // Controls
     private boolean isPlaying = false;
     private int stepDelaySpeedupFactor = 1;
@@ -93,57 +92,6 @@ public class VisualizerController implements CommunicatorListener{
         settingsDialog.show();
     }
     
-    public Properties tryLoadProperties(){
-    	InputStream inputStream = getClass().getClassLoader().getResourceAsStream(Strings.PROPERTIES_FILE_NAME);
-    	Properties properties = new Properties();
-		if (inputStream != null) {
-			try {
-				properties.load(inputStream);
-			} catch (IOException e) {
-				System.err.println("Failed to open properties file.");
-				propertiesFailed(e);
-				return null;
-			}
-
-			try {
-				inputStream.close();
-			} catch (IOException e) {
-				System.err.println("Failed to close properties file.");
-				propertiesFailed(e);
-				return null;
-			}
-		}
-		return properties;
-    }
-    
-    public void loadProperties(){
-		Properties properties = tryLoadProperties();
-		if(properties == null){
-			return;
-		}
-			
-		stepDelayBase = Long.parseLong(properties.getProperty("playbackStepDelay")); stepDelay = stepDelayBase; //Speedup factor is 1 at startup.
-		autoPlayOnIncomingStream = Boolean.parseBoolean(properties.getProperty("autoPlayOnIncomingStream"));
-		autoConsumeInit =  Boolean.parseBoolean(properties.getProperty("autoConsumeInit"));
-    }
-    
-    public void saveProperties(){
-		Properties properties = new Properties();
-		
-		properties.put("playbackStepDelay", ""+stepDelayBase);
-		properties.put("autoPlayOnIncomingStream", ""+autoPlayOnIncomingStream);
-		properties.put("autoConsumeInit", ""+autoConsumeInit);
-		
-		try {
-			URL url = getClass().getClassLoader().getResource(Strings.PROPERTIES_FILE_NAME);
-			OutputStream outputStream = new FileOutputStream(new File(url.toURI()));
-			properties.store(outputStream, "OK now what?");
-			System.out.println("Saved settings.");
-		} catch (Exception e) {
-			propertiesFailed(e);
-		}
-    }
-    
     /**
      * Starts playing or pause the AV animation.
      */
@@ -172,9 +120,6 @@ public class VisualizerController implements CommunicatorListener{
 		    			stopAutoPlay();
 		    		}
 		    		try {
-		    			System.out.println("stepDelaySpeedupFactor = " + stepDelaySpeedupFactor);
-		    			System.out.println("stepDelayBase = " + stepDelayBase);
-		    			System.out.println("stepDelay = " + stepDelay);
 						sleep(stepDelay);
 					} catch (InterruptedException e) {}
 		    	}
@@ -281,9 +226,9 @@ public class VisualizerController implements CommunicatorListener{
 
     private DecimalFormat df;
     private void initSettingsPane(){
-    	df = new DecimalFormat("#.##"); 
-        settingsLoader = new FXMLLoader(getClass().getResource("/SettingsView.fxml"));
-        settingsLoader.setController(this);
+    	df = new DecimalFormat("#.####"); 
+    	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/SettingsView.fxml"));
+        fxmlLoader.setController(this);
         settingsDialog = new Stage();
         settingsDialog.getIcons().add(new Image(VisualizerController.class.getResourceAsStream("/assets/icon_settings.png")));
         settingsDialog.initModality(Modality.APPLICATION_MODAL);
@@ -292,7 +237,7 @@ public class VisualizerController implements CommunicatorListener{
         
         GridPane p = null;
 		try {
-			p = settingsLoader.load();
+			p = fxmlLoader.load();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -300,13 +245,16 @@ public class VisualizerController implements CommunicatorListener{
         Scene dialogScene = new Scene(p, this.window.getWidth()*0.75, this.window.getHeight()*0.75);
         settingsDialog.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
-            //Close without saving.
-            saveProperties();
             settingsDialog.close();
         });
-        
-        timeBetweenField = (TextField) settingsLoader.getNamespace().get("timeBetweenField");
-        perSecField = (TextField) settingsLoader.getNamespace().get("perSecField");
+
+        //Get namespace items
+        	//Save state label
+	        settingsSaveState = (Label) fxmlLoader.getNamespace().get("settingsSaveState");
+	        
+	        //Playpack speed
+	        timeBetweenField = (TextField) fxmlLoader.getNamespace().get("timeBetweenField");
+	        perSecField = (TextField) fxmlLoader.getNamespace().get("perSecField");
         
         settingsDialog.setScene(dialogScene);
     }
@@ -470,57 +418,7 @@ public class VisualizerController implements CommunicatorListener{
         stage.show();
     }
 	
-	private TextField perSecField;
-	public void setPlayBackOpsPerSec(Event e){
-        long newSpeed;
-        
-        try{
-            perSecField.setStyle("-fx-control-inner-background: white;");
-        	newSpeed = Long.parseLong(perSecField.getText());
-        } catch (Exception exc){
-            // NaN
-            perSecField.setStyle("-fx-control-inner-background: #C40000;");
-        	return;
-        }
-        
-        if(newSpeed <= 0){
-        	perSecField.setText("invalid");
-            perSecField.selectAll();
-            return;
-        }
 
-        //Valid input. Change other button and speed variable.
-        perSecField.setText(df.format(newSpeed));
-        timeBetweenField.setText(df.format((1000/newSpeed)));
-        stepDelayBase = (1000/newSpeed);
-        stepDelay = stepDelayBase/stepDelaySpeedupFactor;
-	}
-	
-	private TextField timeBetweenField;
-	public void setPlaybackTimeBetweenOperations(Event e){
-        long newSpeed;
-        
-        try{
-            perSecField.setStyle("-fx-control-inner-background: white;");
-        	newSpeed = Long.parseLong(timeBetweenField.getText());
-        } catch (Exception exc){
-            // NaN
-            perSecField.setStyle("-fx-control-inner-background: #C40000;");
-        	return;
-        }
-
-        if(newSpeed < 0){
-        	timeBetweenField.setText("invalid");
-            perSecField.selectAll();
-        	return;
-        }
-        
-        //Valid input. Change other button and speed variable.
-        perSecField.setText(df.format(1000/newSpeed));
-        timeBetweenField.setText(df.format(newSpeed));
-        stepDelayBase = newSpeed;
-        stepDelay = stepDelayBase/stepDelaySpeedupFactor;
-	}
 	
 	@Override
 	public CommunicatorListener getListener() {
@@ -540,21 +438,161 @@ public class VisualizerController implements CommunicatorListener{
         playPauseButton = (Button) mainViewNameSpace.get("playPauseButton");
         currOpTextField = (TextField) mainViewNameSpace.get("currOpTextField");
         totNrOfOpLabel = (Label) mainViewNameSpace.get("totNrOfOpLabel");
-        settingsSaveState = (Label) mainViewNameSpace.get("settingsSaveState");
 	}
 	
-	public void saveSettings(){
+	
+		/*				  
+		 * SETTINGS PANEL
+		 */
+		private boolean settingsChanged = false;
 		
-	}
-	
-	public void closeSettings(){
+		//Commit changes to file.
+		public void saveSettings(){
+			if(settingsChanged){
+				saveProperties();
+	            settingsDialog.close();
+				noUnsavedChanges();
+			}
+		}
 		
-	}
-	
-	public void revertSettings(){
+		//Keep settings until program exit
+		public void closeSettings(){
+            settingsDialog.close();
+		}
 		
-	}
+		//Reload settings from file.
+		public void revertSettings(){
+			if(settingsChanged){
+				loadProperties();
+				settingsDialog.close();
+				noUnsavedChanges();
+			}
+		}
+		
+		private void noUnsavedChanges(){
+			settingsChanged = false;
+			settingsSaveState.setText("No unsaved changes.");
+			settingsSaveState.setTextFill(Color.web("#00c8ff"));
+		}
+		
+		private void unsavedChanged(){
+			settingsChanged = true;
+			settingsSaveState.setText("Unsaved changes.");
+			settingsSaveState.setTextFill(Color.web("#ff0000"));
+		}
+		
+		//Playback speed
+		private TextField perSecField;
+		public void setPlayBackOpsPerSec(Event e){
+	        long newSpeed;
+	        
+	        try{
+	            perSecField.setStyle("-fx-control-inner-background: white;");
+	        	newSpeed = Long.parseLong(perSecField.getText());
+	        } catch (Exception exc){
+	            // NaN
+	            perSecField.setStyle("-fx-control-inner-background: #C40000;");
+	        	return;
+	        }
+	        
+	        if(newSpeed <= 0){
+	        	perSecField.setText("invalid");
+	            perSecField.selectAll();
+	            return;
+	        }
 	
+	        //Valid input. Change other button and speed variable.
+	        perSecField.setText(df.format(newSpeed));
+	        timeBetweenField.setText(df.format((1000/newSpeed)));
+	        stepDelayBase = (1000/newSpeed);
+	        stepDelay = stepDelayBase/stepDelaySpeedupFactor;
+	        unsavedChanged();
+		}
+		
+		private TextField timeBetweenField;
+		public void setPlaybackTimeBetweenOperations(Event e){
+	        long newSpeed;
+	        
+	        try{
+	            perSecField.setStyle("-fx-control-inner-background: white;");
+	        	newSpeed = Long.parseLong(timeBetweenField.getText());
+	        } catch (Exception exc){
+	            // NaN
+	            perSecField.setStyle("-fx-control-inner-background: #C40000;");
+	        	return;
+	        }
+	
+	        if(newSpeed < 0){
+	        	timeBetweenField.setText("invalid");
+	            perSecField.selectAll();
+	        	return;
+	        }
+	        
+	        //Valid input. Change other button and speed variable.
+	        perSecField.setText(df.format(1000/newSpeed));
+	        timeBetweenField.setText(df.format(newSpeed));
+	        stepDelayBase = newSpeed;
+	        stepDelay = stepDelayBase/stepDelaySpeedupFactor;
+	        unsavedChanged();
+		}
+	    
+	    public Properties tryLoadProperties(){
+	    	InputStream inputStream = getClass().getClassLoader().getResourceAsStream(Strings.PROPERTIES_FILE_NAME);
+	    	Properties properties = new Properties();
+			if (inputStream != null) {
+				try {
+					properties.load(inputStream);
+				} catch (IOException e) {
+					System.err.println("Failed to open properties file.");
+					propertiesFailed(e);
+					return null;
+				}
+	
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					System.err.println("Failed to close properties file.");
+					propertiesFailed(e);
+					return null;
+				}
+			}
+			return properties;
+	    }
+	    
+	    public void loadProperties(){
+			Properties properties = tryLoadProperties();
+			if(properties == null){
+				return;
+			}
+				
+			stepDelayBase = Long.parseLong(properties.getProperty("playbackStepDelay")); stepDelay = stepDelayBase; //Speedup factor is 1 at startup.
+			autoPlayOnIncomingStream = Boolean.parseBoolean(properties.getProperty("autoPlayOnIncomingStream"));
+			autoConsumeInit =  Boolean.parseBoolean(properties.getProperty("autoConsumeInit"));
+	    }
+	    
+	    public void saveProperties(){
+			Properties properties = new Properties();
+			
+			properties.put("playbackStepDelay", ""+stepDelayBase);
+			properties.put("autoPlayOnIncomingStream", ""+autoPlayOnIncomingStream);
+			properties.put("autoConsumeInit", ""+autoConsumeInit);
+			
+			try {
+				URL url = getClass().getClassLoader().getResource(Strings.PROPERTIES_FILE_NAME);
+				OutputStream outputStream = new FileOutputStream(new File(url.toURI()));
+				properties.store(outputStream, "OK now what?");
+				System.out.println("Saved settings.");
+			} catch (Exception e) {
+				propertiesFailed(e);
+			}
+	    }
+	
+	    
+	    /*
+	     * End settings 
+	     */
+	    
+	    
 	/*
 	 * How to do sound in JavaFX.
 	 */
