@@ -16,4 +16,5 @@ public interface iModel {
     void set(Map<String, DataStructure> structs, List<Operation> ops);
     iStep getCurrentStep();
     int getIndex();
+    void goToStep(int toStepNo);
 }

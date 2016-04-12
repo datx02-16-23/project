@@ -31,17 +31,39 @@ public class Model implements iModel {
             step.applyOperation(operations.get(index));
             index += 1;
         } else {
-        	System.err.println("Can't step forward.");
+        	System.err.println("No more operations. Try reset.");
         }
     }
 
     @Override
     public void stepBackward() {
     	int oldIndex = index-1;
-    	reset();
+    	reset(); //Can't go backwards: Start from the beginning
     	while (index < oldIndex){
     		stepForward();
     	}
+    }
+    
+    public void goToStep(int toStepNo){
+    	if(toStepNo < 0){
+    		System.err.println("Step must be >= 0.");
+    		return;
+    	}
+    	
+    	if (index < toStepNo){
+    		reset(); //Can't go backwards: Start from the beginning
+        	while (index < toStepNo){
+        		stepForward();
+        	}
+        	
+    	} else if (index > toStepNo){
+        	while (index < toStepNo){
+        		stepForward();
+        	}
+    	}
+    	
+    	//Do nothing if index == toStepNo
+    	
     }
 
     @Override
