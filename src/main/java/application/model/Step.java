@@ -49,6 +49,8 @@ public class Step implements iStep {
         OperationType opType = op.operation;
         String identifier;
         Locator locator;
+        DataStructure struct;
+        
         switch(opType){
             case init:
                 //Has the operation body value, target and size
@@ -66,13 +68,23 @@ public class Step implements iStep {
             	locator = ((Locator)op.operationBody.get(Key.source));
             	if(locator != null){
             		identifier = locator.getIdentifier();
-            		structs.get(identifier).applyOperation(op);
+            		struct = structs.get(identifier);
+            		if (struct == null){
+            			System.err.println("WARNING: Undeclared variable \"" + identifier + "\". " + op + " aborted.");
+            			break;
+            		}
+        			struct.applyOperation(op);
             	}
 
             	locator = ((Locator)op.operationBody.get(Key.target));
             	if(locator != null){
                 	identifier = locator.getIdentifier();
-                	structs.get(identifier).applyOperation(op);	
+            		struct = structs.get(identifier);
+            		if (struct == null){
+            			System.err.println("WARNING: Undeclared variable \"" + identifier + "\". " + op + " aborted.");
+            			break;
+            		}
+        			struct.applyOperation(op);
             	}
             	
                 break;

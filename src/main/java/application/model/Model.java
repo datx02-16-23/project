@@ -30,6 +30,8 @@ public class Model implements iModel {
         if(operations != null && index < operations.size()){
             step.applyOperation(operations.get(index));
             index += 1;
+        } else {
+        	System.err.println("Can't step forward.");
         }
     }
 
