@@ -79,9 +79,16 @@ public class Model implements iModel {
         return step;
     }
     
+    @Override
     public int getIndex(){
     	return index;
     }
-
-
+    
+	@Override
+	public void goToEnd() {
+        while(operations != null && index < operations.size()){
+            step.applyOperation(operations.get(index));
+            index += 1;
+        }
+	}
 }

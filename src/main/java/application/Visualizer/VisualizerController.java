@@ -6,6 +6,7 @@ import assets.Strings;
 import interpreter.Interpreter;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.ObservableMap;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -57,7 +58,12 @@ public class VisualizerController implements CommunicatorListener{
     private long stepDelay = stepDelayBase/stepDelaySpeedupFactor;
     private ListView<Operation> operationHistory;
 
-   public VisualizerController(Visualization visualization, Stage window, iModel model, LogStreamManager lsm) {
+    //TODO: Add to settings
+    private boolean autoConsumeInit = false;
+    //TODO: Add to settings
+    private boolean autoPlayOnIncomingStream = true;
+    
+    public VisualizerController(Visualization visualization, Stage window, iModel model, LogStreamManager lsm) {
         this.visualization = visualization;
         this.window = window;
         this.model = model;
@@ -113,6 +119,8 @@ public class VisualizerController implements CommunicatorListener{
 			}
 			
 			stepDelay = Long.parseLong(properties.getProperty("playbackStepDelay"))/stepDelaySpeedupFactor;
+			autoPlayOnIncomingStream = Boolean.parseBoolean(properties.getProperty("autoPlayOnIncomingStream"));
+			autoConsumeInit =  Boolean.parseBoolean(properties.getProperty("autoConsumeInit"));
     }
     
     /**
@@ -363,6 +371,10 @@ public class VisualizerController implements CommunicatorListener{
 
 			@Override
 			public void run() {
+				if (autoPlayOnIncomingStream){
+					model.goToEnd();
+					startAutoPlay();
+				}
 				operationHistory.getItems().addAll(lsm.getOperations());
 				lsm.clearData();
 			}        	
@@ -470,9 +482,9 @@ public class VisualizerController implements CommunicatorListener{
 	@SuppressWarnings("unchecked")
 	//Load components from the main view.
 	public void loadMainViewFxID(FXMLLoader mainViewLoader) {
-		operationHistory = (ListView<Operation>) mainViewLoader.getNamespace().get("operationHistory");
-        playPauseButton = (Button) mainViewLoader.getNamespace().get("playPauseButton");
-        System.out.println(operationHistory);
-        System.out.println(playPauseButton);
+		ObservableMap<String, Object> mainViewNameSpace = mainViewLoader.getNamespace();
+		
+		operationHistory = (ListView<Operation>) mainViewNameSpace.get("operationHistory");
+        playPauseButton = (Button) mainViewNameSpace.get("playPauseButton");
 	}
 }

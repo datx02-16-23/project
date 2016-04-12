@@ -115,8 +115,8 @@
                       <RowConstraints fillHeight="false" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button mnemonicParsing="false" onAction="#inspectSelection" prefHeight="25.0" prefWidth="118.0" text="Inspect Selection" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER" />
-                        <Button mnemonicParsing="false" onAction="#gotoSelection" prefHeight="25.0" prefWidth="135.0" text="Go To Selection" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER" />
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#inspectSelection" prefHeight="25.0" prefWidth="118.0" text="Inspect Selection" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER" />
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#gotoSelection" prefHeight="25.0" prefWidth="135.0" text="Go To Selection" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER" />
                      </children>
                      <opaqueInsets>
                         <Insets bottom="5.0" />
