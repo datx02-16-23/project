@@ -7,6 +7,7 @@ import assets.Strings;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
@@ -15,6 +16,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import manager.LogStreamManager;
+import wrapper.Operation;
 
 import java.awt.*;
 import java.io.File;
@@ -60,7 +62,7 @@ public class VisualizerModel extends Application {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-
+        controller.setOperationListView((ListView<Operation>) fxmlLoader.getNamespace().get("operationHistory"));
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Scene scene = new Scene(root, (screenSize.getWidth()*0.5), (screenSize.getHeight()*0.5));
 
