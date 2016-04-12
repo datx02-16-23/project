@@ -84,12 +84,10 @@ public class VisualizerController implements CommunicatorListener{
     public void playPauseButtonClicked(Event e){
         if(isPlaying) {
             ((Button) e.getSource()).setText("Play");
-            System.out.println("Placeholder: Woah! Hold your horses.");
             isPlaying = false;
         }
         else {
             ((Button) e.getSource()).setText("Pause");
-            System.out.println("Placeholder: What's up player?");
             isPlaying = true;
     		new Thread()
     		{
@@ -134,7 +132,6 @@ public class VisualizerController implements CommunicatorListener{
      * Change the animation speed
      */
     public void changeSpeedButtonClicked(Event e){
-        System.out.println("Placeholder: Let's pump it up!");
         speedMultiplier = speedMultiplier*2 % 7; // possible values: 1, 2, 4
         ((Button) e.getSource()).setText(speedMultiplier + "x");
         sleepTime = sleepTimeBase/speedMultiplier;
