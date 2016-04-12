@@ -22,7 +22,8 @@ public class IndependentElement extends DataStructure implements Element{
 
 	
 	private transient final ArrayList<Element> elements = new ArrayList<Element>();
-	private transient Element element = setElement(new IndependentElementContainer());
+//	private transient Element element = initElement();
+	private transient final Element element = new IndependentElementContainer();
 	
 	/**
 	 * Create a new IndependentElement.
@@ -34,18 +35,25 @@ public class IndependentElement extends DataStructure implements Element{
 		super(identifier, "independentElement", abstractType, visual);
 	}
 
-	/**
-	 * Set the element held by this IndependentElement.
-	 * @param newElement The new element to be held by this IndependentElement.
-	 */
-	public Element setElement(Element newElement){
-		System.out.println("SET ELEMENT");
-		element = newElement;
-		elements.clear();
-		elements.add(newElement);
-		System.out.println("identifier = " + this.identifier + ", element = " + element);
-		return newElement;
-	}
+//	/**
+//	 * Set the element held by this IndependentElement.
+//	 * @param newElement The new element to be held by this IndependentElement.
+//	 */
+//	public void setElement(Element newElement){
+//		element = newElement;
+//		elements.clear();
+//		elements.add(newElement);
+//	}
+	
+//	private Element initElement(){
+//		IndependentElementContainer init = new IndependentElementContainer();
+//		System.out.println("INIT ELEMENT: " + System.identityHashCode(this));
+//		element = init;
+//		elements.clear();
+//		elements.add(init);
+//		System.out.println("identifier = " + this.identifier + ", element = " + element);
+//		return init;
+//	}
 	
 	/**
 	 * Returns the element held by this IndependentElement.
@@ -66,6 +74,7 @@ public class IndependentElement extends DataStructure implements Element{
 	 * @return The value held by the element contained in this IndependentElement.
 	 */
 	public double getValue() {
+		System.out.println(getClass().getSimpleName() + " - getValue");
 		return element.getValue();
 	}
 	
@@ -81,7 +90,8 @@ public class IndependentElement extends DataStructure implements Element{
 
 	@Override
 	public void clear() {
-		element = null;
+		elements.clear();
+//		element = null;
 	}
 	@Override
 	public void applyOperation(Operation op) {
@@ -117,9 +127,11 @@ public class IndependentElement extends DataStructure implements Element{
 	}
 
 	private void readORwrite(OP_ReadWrite op){
+		System.out.println(System.identityHashCode(this));
 		System.out.println("identifier = " + this.identifier + ", element = " + element);
 		System.out.println("op = " + op);
 		System.out.println("op.getValue()[0] = " + op.getValue()[0]);
+		System.out.println("");
 	
 		if(op.getTarget().identifier.equals(this.identifier)){
 			element.setValue(op.getValue()[0]);
@@ -134,6 +146,7 @@ public class IndependentElement extends DataStructure implements Element{
 	
 	@Override
 	public void setValue(double newValue) {
+		System.out.println(getClass().getSimpleName() + " - setValue");
 		this.element.setValue(newValue);
 	}
 	
@@ -152,11 +165,13 @@ public class IndependentElement extends DataStructure implements Element{
 
 		@Override
 		public double getValue() {
+			System.out.println(getClass().getSimpleName() + " - getValue");
 			return value;
 		}
 
 		@Override
 		public void setValue(double newValue) {
+			System.out.println(getClass().getSimpleName() + " - setValue");
 			value = newValue;
 		}
 		
