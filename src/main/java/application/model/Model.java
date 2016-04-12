@@ -49,7 +49,7 @@ public class Model implements iModel {
     }
     
     public void goToStep(int toStepNo){
-    	if(operations == null || toStepNo > operations.size() || toStepNo < 0){
+    	if(operations == null || toStepNo >= operations.size() || toStepNo < 0){
     		return;
     	}
     	
