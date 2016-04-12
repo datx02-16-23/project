@@ -24,8 +24,10 @@ import wrapper.Operation;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * This is the Controller of MVC for the visualizer GUI.
@@ -37,7 +39,6 @@ public class VisualizerController implements CommunicatorListener{
     private final LogStreamManager lsm;
     private final Interpreter interpreter;
     private final iModel model;
-    private final FXMLLoader mainViewLoader;
 
     //Connection dialog stuff.
     private final SimpleStringProperty currentlyConnected = new SimpleStringProperty();
@@ -51,57 +52,114 @@ public class VisualizerController implements CommunicatorListener{
 
     // Controls
     private boolean isPlaying = false;
-    private long sleepTimeBase = 1500;
-    private long sleepTime = 1500;
-    private int speedMultiplier = 1;
+    private int stepDelaySpeedupFactor = 1;
+    private long stepDelayBase = 1500;
+    private long stepDelay = stepDelayBase/stepDelaySpeedupFactor;
     private ListView<Operation> operationHistory;
 
-   public VisualizerController(Visualization visualization, Stage window, iModel model, LogStreamManager lsm, FXMLLoader fxmlLoader) {
+   public VisualizerController(Visualization visualization, Stage window, iModel model, LogStreamManager lsm) {
         this.visualization = visualization;
         this.window = window;
         this.model = model;
         this.lsm = lsm;
         this.lsm.setListener(this);
-        this.mainViewLoader = fxmlLoader;
         
         this.interpreter = new Interpreter();
+        
         initConnectedPane();
         initSettingsPane();
+        loadProperties();
     }
 
     public void showSettings(){
         settingsDialog.setWidth(this.window.getWidth()*0.75);
         settingsDialog.setHeight(this.window.getHeight()*0.75);
         
-        perSecField.setText(df.format(1000.0/sleepTimeBase));
-        timeBetweenField.setText(df.format(sleepTimeBase));
+        perSecField.setText(df.format(1000.0/stepDelayBase));
+        timeBetweenField.setText(df.format(stepDelayBase));
+        
         settingsDialog.show();
+    }
+    
+    public Properties tryLoadProperties(){
+    	InputStream inputStream = getClass().getClassLoader().getResourceAsStream(Strings.PROPERTIES_FILE_NAME);
+    	
+    	Properties properties = new Properties();
+		if (inputStream != null) {
+			try {
+				properties.load(inputStream);
+			} catch (IOException e) {
+				System.err.println("Failed to open properties file.");
+				propertiesFailed();
+				return null;
+			}
+
+			try {
+				inputStream.close();
+			} catch (IOException e) {
+				System.err.println("Failed to close properties file.");
+				propertiesFailed();
+				return null;
+			}
+		}
+		return properties;
+    }
+    
+    public void loadProperties(){
+
+			Properties properties = tryLoadProperties();
+			if(properties == null){
+				return;
+			}
+			
+			stepDelay = Long.parseLong(properties.getProperty("playbackStepDelay"))/stepDelaySpeedupFactor;
     }
     
     /**
      * Starts playing or pause the AV animation.
      */
-    public void playPauseButtonClicked(Event e){
-        if(isPlaying) {
-            ((Button) e.getSource()).setText("Play");
-            isPlaying = false;
+	private Button playPauseButton;
+	private Thread autoPlayThread;
+    public void playPauseButtonClicked(){
+        if(!isPlaying) {
+        	startAutoPlay();
         }
         else {
-            ((Button) e.getSource()).setText("Pause");
-            isPlaying = true;
-    		new Thread()
-    		{
-    		    public void run() {
-    		    	while(isPlaying){
-    		    		stepForwardButtonClicked();
-    		    		try {
-							sleep(sleepTime);
-						} catch (InterruptedException e) {}
-    		    	}
-    		    }
-    		}.start();
+        	stopAutoPlay();
         }
     }
+    
+	public void startAutoPlay(){
+        playPauseButton.setText("Pause");
+        if(autoPlayThread!=null){
+        	autoPlayThread.interrupt();
+        }
+        isPlaying = true;
+        autoPlayThread = new Thread()
+		{
+		    public void run() {
+		    	while(isPlaying){
+		    		stepForwardButtonClicked();
+		    		try {
+						sleep(stepDelay);
+					} catch (InterruptedException e) {}
+		    	}
+		    }
+		};
+		
+        autoPlayThread.start();
+ 
+	}
+	
+	public void stopAutoPlay(){
+		playPauseButton.setText("Play");
+	    isPlaying = false;
+	    if (autoPlayThread != null){
+		    autoPlayThread.interrupt();
+	    }
+	}
+	
+
 
     /**
      * Restart the AV animation.
@@ -132,9 +190,9 @@ public class VisualizerController implements CommunicatorListener{
      * Change the animation speed
      */
     public void changeSpeedButtonClicked(Event e){
-        speedMultiplier = speedMultiplier*2 % 7; // possible values: 1, 2, 4
-        ((Button) e.getSource()).setText(speedMultiplier + "x");
-        sleepTime = sleepTimeBase/speedMultiplier;
+        stepDelaySpeedupFactor = stepDelaySpeedupFactor*2 % 7; // possible values: 1, 2, 4
+        ((Button) e.getSource()).setText(stepDelaySpeedupFactor + "x");
+        stepDelay = stepDelayBase/stepDelaySpeedupFactor;
     }
 
     public void aboutProgram(){
@@ -375,7 +433,7 @@ public class VisualizerController implements CommunicatorListener{
         //Valid input. Change other button and speed variable.
         perSecField.setText(df.format(newSpeed));
         timeBetweenField.setText(df.format((1000/newSpeed)));
-        sleepTime = (1000/newSpeed)/speedMultiplier;
+        stepDelay = (1000/newSpeed)/stepDelaySpeedupFactor;
 	}
 	
 	private TextField timeBetweenField;
@@ -400,7 +458,7 @@ public class VisualizerController implements CommunicatorListener{
         //Valid input. Change other button and speed variable.
         perSecField.setText(df.format(1000/newSpeed));
         timeBetweenField.setText(df.format(newSpeed));
-        sleepTime = newSpeed/speedMultiplier;
+        stepDelay = newSpeed/stepDelaySpeedupFactor;
 	}
 	
 	@Override
@@ -408,7 +466,13 @@ public class VisualizerController implements CommunicatorListener{
 		return null; //VisualizerController doesn't have any listeners.
 	}
 
-	public void setOperationListView(ListView<Operation> listView) {
-		operationHistory = listView;
+	
+	@SuppressWarnings("unchecked")
+	//Load components from the main view.
+	public void loadMainViewFxID(FXMLLoader mainViewLoader) {
+		operationHistory = (ListView<Operation>) mainViewLoader.getNamespace().get("operationHistory");
+        playPauseButton = (Button) mainViewLoader.getNamespace().get("playPauseButton");
+        System.out.println(operationHistory);
+        System.out.println(playPauseButton);
 	}
 }

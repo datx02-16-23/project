@@ -39,6 +39,7 @@ public class VisualizerModel extends Application {
     private final LogStreamManager lsm = new LogStreamManager();
     private FXMLLoader fxmlLoader;
     private boolean propertiesFailed = false;
+    private VisualizerController controller;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -51,7 +52,7 @@ public class VisualizerModel extends Application {
 
         fxmlLoader = new FXMLLoader(getClass().getResource("/VisualizerView.fxml"));
 
-        VisualizerController controller = new VisualizerController(visualization, window, model, lsm, fxmlLoader);
+        controller = new VisualizerController(visualization, window, model, lsm);
 
         fxmlLoader.setController(controller);
 
@@ -62,7 +63,6 @@ public class VisualizerModel extends Application {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-        controller.setOperationListView((ListView<Operation>) fxmlLoader.getNamespace().get("operationHistory"));
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Scene scene = new Scene(root, (screenSize.getWidth()*0.5), (screenSize.getHeight()*0.5));
 
@@ -103,6 +103,9 @@ public class VisualizerModel extends Application {
         
         window.setScene(scene);
         window.show();
+
+        //Load needed components of from main view in Controller.
+        controller.loadMainViewFxID(fxmlLoader);
         
         if(propertiesFailed){
         	controller.propertiesFailed();
@@ -144,26 +147,29 @@ public class VisualizerModel extends Application {
     	
     	InputStream inputStream = getClass().getClassLoader().getResourceAsStream(Strings.PROPERTIES_FILE_NAME);
     	
-    	Properties properties = new Properties();
-		if (inputStream != null) {
-			try {
-				properties.load(inputStream);
-			} catch (IOException e) {
-				System.err.println("Failed to open properties file.");
-				propertiesFailed = true;
-			}
-
-			try {
-				inputStream.close();
-			} catch (IOException e) {
-				System.err.println("Failed to close properties file.");
-				propertiesFailed = true;
-			}
+	    	Properties properties = new Properties();
+			if (inputStream != null) {
+				try {
+					properties.load(inputStream);
+				} catch (IOException e) {
+					System.err.println("Failed to open properties file.");
+					propertiesFailed = true;
+				}
+	
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					System.err.println("Failed to close properties file.");
+					propertiesFailed = true;
+				}
 			
-			System.out.println("playbackSpeed = " + properties.getProperty("playbackSpeed"));
+			//TODO: Load model properties from file, such as window size.
 		}	
     }
 
+    public void stop(){
+    	controller.stopAutoPlay();
+    }
 
     public static void main(String[] args) {
         launch(args);
