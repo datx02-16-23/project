@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -289,7 +290,7 @@ public class VisualizerController implements CommunicatorListener{
         settingsDialog.setTitle(Strings.PROJECT_NAME + ": Settings and Preferences");
         settingsDialog.initOwner(this.window);
         
-        TabPane p = null;
+        GridPane p = null;
 		try {
 			p = settingsLoader.load();
 		} catch (IOException e) {
@@ -530,6 +531,7 @@ public class VisualizerController implements CommunicatorListener{
 	//Load components from the main view.
     private TextField currOpTextField;
 	private Label totNrOfOpLabel;
+	private Label settingsSaveState;
 	@SuppressWarnings("unchecked")
 	public void loadMainViewFxID(FXMLLoader mainViewLoader) {
 		ObservableMap<String, Object> mainViewNameSpace = mainViewLoader.getNamespace();
@@ -538,6 +540,19 @@ public class VisualizerController implements CommunicatorListener{
         playPauseButton = (Button) mainViewNameSpace.get("playPauseButton");
         currOpTextField = (TextField) mainViewNameSpace.get("currOpTextField");
         totNrOfOpLabel = (Label) mainViewNameSpace.get("totNrOfOpLabel");
+        settingsSaveState = (Label) mainViewNameSpace.get("settingsSaveState");
+	}
+	
+	public void saveSettings(){
+		
+	}
+	
+	public void closeSettings(){
+		
+	}
+	
+	public void revertSettings(){
+		
 	}
 	
 	/*
