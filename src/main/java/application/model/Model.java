@@ -26,22 +26,28 @@ public class Model implements iModel {
     }
 
     @Override
-    public void stepForward() {
+    public boolean stepForward() {
         if(operations != null && index < operations.size()){
             step.applyOperation(operations.get(index));
             index += 1;
+            return true;
         } else {
         	System.err.println("No more operations. Try reset.");
+        	return false;
         }
     }
 
     @Override
-    public void stepBackward() {
+    public boolean stepBackward() {
+    	if(index == 0){
+    		return false;
+    	}
     	int oldIndex = index-1;
     	reset(); //Can't go backwards: Start from the beginning
     	while (index < oldIndex){
     		stepForward();
     	}
+    	return true;
     }
     
     public void goToStep(int toStepNo){

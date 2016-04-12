@@ -11,8 +11,8 @@ import manager.datastructures.DataStructure;
 public interface iModel {
     void addStructure(String id, DataStructure structure);
     void reset();
-    void stepForward();
-    void stepBackward();
+    boolean stepForward();
+    boolean stepBackward();
     void set(Map<String, DataStructure> structs, List<Operation> ops);
     iStep getCurrentStep();
     
