@@ -23,12 +23,12 @@
     </ImageView>
     <VBox maxHeight="+Infinity" maxWidth="+Infinity" minHeight="-Infinity" prefWidth="400.0" spacing="7.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
       <children>
-        <Label fx:id="messageLabel" text="Failed To Load User Preferences" textAlignment="LEFT" wrapText="true">
+        <Label fx:id="messageLabel" text="Failed To Configuration File" textAlignment="LEFT" wrapText="true">
           <font>
             <Font name="System Bold" size="13.0" />
           </font>
         </Label>
-        <Label fx:id="detailsLabel" text="This session will use program defaults. The config.properties file may be missing or corrupt." textAlignment="LEFT" wrapText="true">
+        <Label fx:id="detailsLabel" text="The config.properties file may be missing or corrupt." textAlignment="LEFT" wrapText="true">
           <font>
             <Font size="12.0" />
           </font>

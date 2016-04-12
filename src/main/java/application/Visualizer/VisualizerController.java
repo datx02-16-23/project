@@ -568,6 +568,7 @@ public class VisualizerController implements CommunicatorListener{
 	    
 	    public Properties tryLoadProperties(){
 	    	InputStream inputStream = getClass().getClassLoader().getResourceAsStream(Strings.PROPERTIES_FILE_NAME);
+	    	
 	    	Properties properties = new Properties();
 			if (inputStream != null) {
 				try {
@@ -585,8 +586,9 @@ public class VisualizerController implements CommunicatorListener{
 					propertiesFailed(e);
 					return null;
 				}
+				return properties;
 			}
-			return properties;
+			return null;
 	    }
 	    
 	    public void loadProperties(){

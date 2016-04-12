@@ -163,8 +163,10 @@ public class VisualizerModel extends Application {
 					propertiesFailed = true;
 				}
 			
-			//TODO: Load model properties from file, such as window size.
-		}	
+				//TODO: Load model properties from file, such as window size.
+		}
+		System.err.println("Failed to open properties file.");
+		propertiesFailed = true;
     }
 
     public void stop(){
