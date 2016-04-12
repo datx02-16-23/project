@@ -151,18 +151,26 @@ public class VisualizerController implements CommunicatorListener{
     }
     
     private void setHistoryFocus(){
-    	int index = model.getIndex();
-        operationHistory.getSelectionModel().select(index);
-        operationHistory.getFocusModel().focus(index);
-        operationHistory.scrollTo(index-1);
+    	Platform.runLater(new Runnable(){
+			@Override
+			public void run() {
+		    	int index = model.getIndex();
+		        operationHistory.getSelectionModel().select(index);
+		        operationHistory.getFocusModel().focus(index);
+		        operationHistory.scrollTo(index-1);
+			}	
+    	});
     }
     
+    
+    //TODO: Implement detailed inspection of operation
     public void inspectSelection(){
-    	System.out.println("inspect");
+    	System.out.println(operationHistory.getSelectionModel().getSelectedItem());
     }
     
     public void gotoSelection(){
-    	System.out.println("goto");
+    	model.goToStep(operationHistory.getSelectionModel().getSelectedIndex());
+        visualization.render();
     }
 
     private DecimalFormat df;
