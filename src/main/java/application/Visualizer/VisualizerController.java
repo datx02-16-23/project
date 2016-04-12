@@ -142,7 +142,7 @@ public class VisualizerController implements CommunicatorListener{
         settingsLoader = new FXMLLoader(getClass().getResource("/SettingsView.fxml"));
         settingsLoader.setController(this);
         settingsDialog = new Stage();
-        settingsDialog.getIcons().add(new Image(VisualizerController.class.getResourceAsStream( "/icon_settings.png" )));
+        settingsDialog.getIcons().add(new Image(VisualizerController.class.getResourceAsStream("/assets/icon_settings.png")));
         settingsDialog.initModality(Modality.APPLICATION_MODAL);
         settingsDialog.setTitle(Strings.PROJECT_NAME + ": Settings and Preferences");
         settingsDialog.initOwner(this.window);
@@ -171,7 +171,7 @@ public class VisualizerController implements CommunicatorListener{
     	JGroupCommunicator jgc = (JGroupCommunicator) lsm.getCommunicator();
     	connectedLoader = new FXMLLoader(getClass().getResource("/ConnectedView.fxml"));
     	connectedDialog = new Stage();
-    	connectedDialog.getIcons().add(new Image(VisualizerController.class.getResourceAsStream( "/icon_connected.png" )));
+    	connectedDialog.getIcons().add(new Image(VisualizerController.class.getResourceAsStream("/assets/icon_connected.png")));
         connectedDialog.initModality(Modality.APPLICATION_MODAL);
         connectedDialog.setTitle("Entities View: Channel = \"" + jgc.getChannel() + "\"");
         connectedDialog.initOwner(this.window);
@@ -324,11 +324,11 @@ public class VisualizerController implements CommunicatorListener{
         double speed;
         
         try{
-            perSecField.setStyle("-fx-text-inner-color: black;");
+            perSecField.setStyle("-fx-control-inner-background: white;");
         	speed = Double.parseDouble(perSecField.getText());
         } catch (Exception exc){
             // NaN
-            perSecField.setStyle("-fx-text-inner-color: red;");
+            perSecField.setStyle("-fx-control-inner-background: #C40000;");
         	return;
         }
         
@@ -348,11 +348,11 @@ public class VisualizerController implements CommunicatorListener{
         double speed;
         
         try{
-            perSecField.setStyle("-fx-text-inner-color: black;");
+            perSecField.setStyle("-fx-control-inner-background: white;");
         	speed = Double.parseDouble(timeBetweenField.getText());
         } catch (Exception exc){
             // NaN
-            perSecField.setStyle("-fx-text-inner-color: red;");
+            perSecField.setStyle("-fx-control-inner-background: #C40000;");
         	return;
         }
 

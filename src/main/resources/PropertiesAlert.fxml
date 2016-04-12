@@ -18,7 +18,7 @@
   <children>
     <ImageView fitHeight="61.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="TOP">
       <image>
-        <Image url="@alert.png" />
+        <Image url="@assets/alert.png" />
       </image>
     </ImageView>
     <VBox maxHeight="+Infinity" maxWidth="+Infinity" minHeight="-Infinity" prefWidth="400.0" spacing="7.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
