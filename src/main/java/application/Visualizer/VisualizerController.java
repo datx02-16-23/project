@@ -129,15 +129,9 @@ public class VisualizerController implements CommunicatorListener{
     public void saveProperties(){
 		Properties properties = new Properties();
 		
-		System.out.println("SAVING: ");
 		properties.put("playbackStepDelay", ""+stepDelayBase);
-		System.out.println(""+stepDelayBase);
 		properties.put("autoPlayOnIncomingStream", ""+autoPlayOnIncomingStream);
-		System.out.println(""+autoPlayOnIncomingStream);
 		properties.put("autoConsumeInit", ""+autoConsumeInit);
-		System.out.println(""+autoConsumeInit);
-		
-
 		
 		try {
 			URL url = getClass().getClassLoader().getResource(Strings.PROPERTIES_FILE_NAME);
