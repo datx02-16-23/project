@@ -52,8 +52,9 @@ public class VisualizerController implements CommunicatorListener{
     // Controls
     private boolean isPlaying = false;
     private int speed = 1;
+    private ListView<Operation> operationHistory;
 
-    public VisualizerController(Visualization visualization, Stage window, iModel model, LogStreamManager lsm, FXMLLoader fxmlLoader) {
+   public VisualizerController(Visualization visualization, Stage window, iModel model, LogStreamManager lsm, FXMLLoader fxmlLoader) {
         this.visualization = visualization;
         this.window = window;
         this.model = model;
@@ -62,7 +63,6 @@ public class VisualizerController implements CommunicatorListener{
         this.mainViewLoader = fxmlLoader;
         
         this.interpreter = new Interpreter();
-        
         initConnectedPane();
         initSettingsPane();
     }
@@ -131,9 +131,7 @@ public class VisualizerController implements CommunicatorListener{
     }
     
     public void interpretOperationHistory(){
-    	 @SuppressWarnings("unchecked")
- 		 ListView<Operation> operationHistory = (ListView<Operation>) mainViewLoader.getNamespace().get("operationHistory");
-         interpreter.consolidate(operationHistory.getItems());
+ 		 interpreter.consolidate(operationHistory.getItems());
     }
 
     private DecimalFormat df;
@@ -246,8 +244,6 @@ public class VisualizerController implements CommunicatorListener{
         }
         
         model.set(lsm.getKnownVariables(), lsm.getOperations());
-        @SuppressWarnings("unchecked")
-		ListView<Operation> operationHistory = (ListView<Operation>) mainViewLoader.getNamespace().get("operationHistory");
         operationHistory.getItems().clear();
         operationHistory.getItems().addAll(lsm.getOperations());
         visualization.render();
@@ -265,8 +261,6 @@ public class VisualizerController implements CommunicatorListener{
 			return;
 		}
 		
-        @SuppressWarnings("unchecked")
-		ListView<Operation> operationHistory = (ListView<Operation>) mainViewLoader.getNamespace().get("operationHistory");
         Platform.runLater(new Runnable(){
 
 			@Override
@@ -370,5 +364,9 @@ public class VisualizerController implements CommunicatorListener{
 	@Override
 	public CommunicatorListener getListener() {
 		return null; //VisualizerController doesn't have any listeners.
+	}
+
+	public void setOperationListView(ListView<Operation> listView) {
+		operationHistory = listView;
 	}
 }
