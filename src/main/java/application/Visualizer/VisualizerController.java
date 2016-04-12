@@ -9,12 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
@@ -329,15 +324,18 @@ public class VisualizerController implements CommunicatorListener{
         double speed;
         
         try{
+            perSecField.setStyle("-fx-text-inner-color: black;");
         	speed = Double.parseDouble(perSecField.getText());
         } catch (Exception exc){
-        	perSecField.setText("reset");
+            // NaN
+            perSecField.setStyle("-fx-text-inner-color: red;");
         	return;
         }
         
         if(speed <= 0){
         	perSecField.setText("invalid");
-        	return;
+            perSecField.selectAll();
+            return;
         }
 
         //Valid input. Change other button and speed variable.
@@ -350,14 +348,17 @@ public class VisualizerController implements CommunicatorListener{
         double speed;
         
         try{
+            perSecField.setStyle("-fx-text-inner-color: black;");
         	speed = Double.parseDouble(timeBetweenField.getText());
         } catch (Exception exc){
-        	timeBetweenField.setText("reset");
+            // NaN
+            perSecField.setStyle("-fx-text-inner-color: red;");
         	return;
         }
 
         if(speed < 0){
         	timeBetweenField.setText("invalid");
+            perSecField.selectAll();
         	return;
         }
         

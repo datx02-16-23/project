@@ -106,7 +106,13 @@ public class VisualizerModel extends Application {
         	controller.propertiesFailed();
         }
     }
-    
+
+
+    /**
+     * Make a file name a bit more fancy. For example: "bubble_sort.json" -> "Bubble Sort"
+     * @param original The file name
+     * @return The file name without '_' and '.json' or .* and there is always an upper case after '_'
+     */
     private String stylizeExampleName(String original){
     	StringBuilder sb = new StringBuilder();
     	char currentChar;
