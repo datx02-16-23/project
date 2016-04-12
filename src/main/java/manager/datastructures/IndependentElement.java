@@ -87,10 +87,9 @@ public class IndependentElement extends DataStructure implements Element{
 
 	@Override
 	public void clear() {
-//		elements.clear();
-//		element = null;
-		System.err.println("IndependentElement: Clear does nothing :o!");
+		initElement();
 	}
+	
 	@Override
 	public void applyOperation(Operation op) {
 		switch(op.operation){
