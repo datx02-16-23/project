@@ -277,7 +277,7 @@ public class VisualizerController implements CommunicatorListener{
         Scene dialogScene = new Scene(p, this.window.getWidth()*0.75, this.window.getHeight()*0.75);
         settingsDialog.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
-            settingsDialog.close();
+            revertSettings();
         });
         
         //Get namespace items
@@ -488,11 +488,6 @@ public class VisualizerController implements CommunicatorListener{
 				noUnsavedChanges();
 			}
 			settingsDialog.close();
-		}
-		
-		//Keep settings until program exit
-		public void closeSettings(){
-            settingsDialog.close();
 		}
 		
 		//Reload settings from file.
