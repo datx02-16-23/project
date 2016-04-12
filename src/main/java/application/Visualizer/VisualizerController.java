@@ -51,7 +51,9 @@ public class VisualizerController implements CommunicatorListener{
 
     // Controls
     private boolean isPlaying = false;
-    private int speed = 1;
+    private long sleepTimeBase = 1500;
+    private long sleepTime = 1500;
+    private int speedMultiplier = 1;
     private ListView<Operation> operationHistory;
 
    public VisualizerController(Visualization visualization, Stage window, iModel model, LogStreamManager lsm, FXMLLoader fxmlLoader) {
@@ -70,6 +72,9 @@ public class VisualizerController implements CommunicatorListener{
     public void showSettings(){
         settingsDialog.setWidth(this.window.getWidth()*0.75);
         settingsDialog.setHeight(this.window.getHeight()*0.75);
+        
+        perSecField.setText(df.format(1000.0/sleepTimeBase));
+        timeBetweenField.setText(df.format(sleepTimeBase));
         settingsDialog.show();
     }
     
@@ -86,6 +91,17 @@ public class VisualizerController implements CommunicatorListener{
             ((Button) e.getSource()).setText("Pause");
             System.out.println("Placeholder: What's up player?");
             isPlaying = true;
+    		new Thread()
+    		{
+    		    public void run() {
+    		    	while(isPlaying){
+    		    		stepForwardButtonClicked();
+    		    		try {
+							sleep(sleepTime);
+						} catch (InterruptedException e) {}
+    		    	}
+    		    }
+    		}.start();
         }
     }
 
@@ -119,8 +135,9 @@ public class VisualizerController implements CommunicatorListener{
      */
     public void changeSpeedButtonClicked(Event e){
         System.out.println("Placeholder: Let's pump it up!");
-        speed = speed*2 % 7; // possible values: 1, 2, 4
-        ((Button) e.getSource()).setText(speed + "x");
+        speedMultiplier = speedMultiplier*2 % 7; // possible values: 1, 2, 4
+        ((Button) e.getSource()).setText(speedMultiplier + "x");
+        sleepTime = sleepTimeBase/speedMultiplier;
     }
 
     public void aboutProgram(){
@@ -141,6 +158,14 @@ public class VisualizerController implements CommunicatorListener{
         operationHistory.getSelectionModel().select(index);
         operationHistory.getFocusModel().focus(index);
         operationHistory.scrollTo(index-1);
+    }
+    
+    public void inspectSelection(){
+    	System.out.println("inspect");
+    }
+    
+    public void gotoSelection(){
+    	System.out.println("goto");
     }
 
     private DecimalFormat df;
@@ -325,50 +350,52 @@ public class VisualizerController implements CommunicatorListener{
 	
 	private TextField perSecField;
 	public void setPlayBackOpsPerSec(Event e){
-        double speed;
+        long newSpeed;
         
         try{
             perSecField.setStyle("-fx-control-inner-background: white;");
-        	speed = Double.parseDouble(perSecField.getText());
+        	newSpeed = Long.parseLong(perSecField.getText());
         } catch (Exception exc){
             // NaN
             perSecField.setStyle("-fx-control-inner-background: #C40000;");
         	return;
         }
         
-        if(speed <= 0){
+        if(newSpeed <= 0){
         	perSecField.setText("invalid");
             perSecField.selectAll();
             return;
         }
 
         //Valid input. Change other button and speed variable.
-        perSecField.setText(df.format(speed));
-        timeBetweenField.setText(df.format((1000/speed)));
+        perSecField.setText(df.format(newSpeed));
+        timeBetweenField.setText(df.format((1000/newSpeed)));
+        sleepTime = (1000/newSpeed)/speedMultiplier;
 	}
 	
 	private TextField timeBetweenField;
 	public void setPlaybackTimeBetweenOperations(Event e){
-        double speed;
+        long newSpeed;
         
         try{
             perSecField.setStyle("-fx-control-inner-background: white;");
-        	speed = Double.parseDouble(timeBetweenField.getText());
+        	newSpeed = Long.parseLong(timeBetweenField.getText());
         } catch (Exception exc){
             // NaN
             perSecField.setStyle("-fx-control-inner-background: #C40000;");
         	return;
         }
 
-        if(speed < 0){
+        if(newSpeed < 0){
         	timeBetweenField.setText("invalid");
             perSecField.selectAll();
         	return;
         }
         
         //Valid input. Change other button and speed variable.
-        perSecField.setText(df.format(1000/speed));
-        timeBetweenField.setText(df.format(speed));
+        perSecField.setText(df.format(1000/newSpeed));
+        timeBetweenField.setText(df.format(newSpeed));
+        sleepTime = newSpeed/speedMultiplier;
 	}
 	
 	@Override
