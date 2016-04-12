@@ -99,7 +99,7 @@ public class VisualizerModel extends Application {
             controller.closeProgram();
         });
 
-        window.getIcons().add(new Image(VisualizerModel.class.getResourceAsStream( "/icon.png" )));
+        window.getIcons().add(new Image(VisualizerModel.class.getResourceAsStream("/assets/icon.png")));
         
         window.setScene(scene);
         window.show();
