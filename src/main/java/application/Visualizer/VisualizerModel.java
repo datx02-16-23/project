@@ -66,8 +66,8 @@ public class VisualizerModel extends Application {
         // Extracting some nodes from the fxml:
         SplitPane sP = (SplitPane) fxmlLoader.getNamespace().get("splitPane");
         VBox sidePanel = (VBox) fxmlLoader.getNamespace().get("rightSidePanel");
-        // Hard coding an extra width (+5) to compensate for the width of the divider of splitPane!
-        sP.setDividerPositions( 1 - ( (sidePanel.getPrefWidth() + 14) / scene.getWidth() ));
+        // Hard coding an extra width (-5) to compensate for the width of the divider of splitPane!
+        sP.setDividerPositions( 1 - (sidePanel.getPrefWidth() / (scene.getWidth() - 5) ));
 
         // Add examples
         Menu examples = (Menu) fxmlLoader.getNamespace().get("examplesMenu");

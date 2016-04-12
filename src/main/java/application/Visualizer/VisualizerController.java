@@ -398,7 +398,7 @@ public class VisualizerController implements CommunicatorListener{
         operationHistory.getItems().clear();
         operationHistory.getItems().addAll(lsm.getOperations());
         visualization.render();
-        totOpTextField.setText("" + operationHistory.getItems().size());
+        totNrOfOpLabel.setText("/ " + operationHistory.getItems().size());
         updateOperationList();
     }
 
@@ -423,7 +423,7 @@ public class VisualizerController implements CommunicatorListener{
 					startAutoPlay();
 				}
 				operationHistory.getItems().addAll(lsm.getOperations());
-				totOpTextField.setText("" + operationHistory.getItems().size());
+                totNrOfOpLabel.setText("/ " + operationHistory.getItems().size());
 				lsm.clearData();
 			}        	
         });
@@ -535,7 +535,7 @@ public class VisualizerController implements CommunicatorListener{
 	
 	//Load components from the main view.
     private TextField currOpTextField;
-	private TextField totOpTextField;
+	private Label totNrOfOpLabel;
 	@SuppressWarnings("unchecked")
 	public void loadMainViewFxID(FXMLLoader mainViewLoader) {
 		ObservableMap<String, Object> mainViewNameSpace = mainViewLoader.getNamespace();
@@ -543,7 +543,7 @@ public class VisualizerController implements CommunicatorListener{
 		operationHistory = (ListView<Operation>) mainViewNameSpace.get("operationHistory");
         playPauseButton = (Button) mainViewNameSpace.get("playPauseButton");
         currOpTextField = (TextField) mainViewNameSpace.get("currOpTextField");
-        totOpTextField = (TextField) mainViewNameSpace.get("totOpTextField");
+        totNrOfOpLabel = (Label) mainViewNameSpace.get("totNrOfOpLabel");
 	}
 	
 	/*
