@@ -164,12 +164,19 @@ class PassTransformer(OperationTransformer):
 	def __init__(self):
 		super(PassTransformer,self).__init__('link')
 		self.function_defs = []
+		self.function_bodies = []
 
 	def extract_params(self,args):
 		reg_args = []
 		for arg in args.args:
 			reg_args.append(Str(arg.id))
 		return reg_args
+	def visit_Module(self,node):
+		for child in iter_child_nodes(node):
+			self.visit(child)
+		for body in self.function_bodies:
+			for field in body:
+				self.visit(field)
 
 	def visit_FunctionDef(self,node):
 		self.function_defs.append(node.name)
@@ -178,6 +185,7 @@ class PassTransformer(OperationTransformer):
 			args=self.extract_params(node.args),
 			keywords=[]
 		))
+		self.function_bodies.append(node.body)
 		return node
 
 	def visit_Call(self,node):

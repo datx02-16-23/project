@@ -23,26 +23,46 @@ def link(*params):
             return func(*tuple((arg['value'] for arg in args)))
         return call
     return wrap
-nodes = write(('A', 'B', 'C', 'D', 'E', 'F', 'G'), ('var', 'nodes'), ('A', 'B', 'C', 'D', 'E', 'F', 'G'))
-distances = write({'B': {'A': 5, 'D': 1, 'G': 2}, 'A': {'B': 5, 'D': 3, 'E': 12, 'F': 5}, 'D': {'B': 1, 'G': 1, 'E': 1, 'A': 3}, 'G': {'B': 2, 'D': 1, 'C': 2}, 'C': {'G': 2, 'E': 1, 'F': 16}, 'E': {'A': 12, 'D': 1, 'C': 1, 'F': 2}, 'F': {'A': 5, 'E': 2, 'C': 16}}, ('var', 'distances'), {'B': {'A': 5, 'D': 1, 'G': 2}, 'A': {'B': 5, 'D': 3, 'E': 12, 'F': 5}, 'D': {'B': 1, 'G': 1, 'E': 1, 'A': 3}, 'G': {'B': 2, 'D': 1, 'C': 2}, 'C': {'G': 2, 'E': 1, 'F': 16}, 'E': {'A': 12, 'D': 1, 'C': 1, 'F': 2}, 'F': {'A': 5, 'E': 2, 'C': 16}})
-unvisited = write({node: None for node in nodes}, ('var', 'unvisited'), {node: None for node in nodes})
-visited = write({}, ('var', 'visited'), {})
-current = write('B', ('var', 'current'), 'B')
-currentDistance = write(0, ('var', 'currentDistance'), 0)
-unvisited[current] = write(('var', 'currentDistance', currentDistance), ('subscript', ('var', 'unvisited', unvisited), ('var', 'current', current)), currentDistance)
-while read(True, True):
-    for (neighbour, distance) in distances[current].items():
-        distance = write(distance, ('var', 'distance'), distance)
-        neighbour = write(neighbour, ('var', 'neighbour'), neighbour)
-        if (read(('var', 'neighbour', neighbour), neighbour) not in read(('var', 'unvisited', unvisited), unvisited)):
-            continue
-        newDistance = write(('binop', '+', ('var', 'currentDistance', currentDistance), ('var', 'distance', distance)), ('var', 'newDistance'), currentDistance + distance)
-        if ((read(('subscript', ('var', 'unvisited', unvisited), ('var', 'neighbour', neighbour)), unvisited[neighbour]) is read(('var', 'None', None), None)) or (read(('subscript', ('var', 'unvisited', unvisited), ('var', 'neighbour', neighbour)), unvisited[neighbour]) > read(('var', 'newDistance', newDistance), newDistance))):
-            unvisited[neighbour] = write(('var', 'newDistance', newDistance), ('subscript', ('var', 'unvisited', unvisited), ('var', 'neighbour', neighbour)), newDistance)
-    visited[current] = write(('var', 'currentDistance', currentDistance), ('subscript', ('var', 'visited', visited), ('var', 'current', current)), currentDistance)
-    del unvisited[current]
-    if (not read(('var', 'unvisited', unvisited), unvisited)):
-        break
-    candidates = write([node for node in unvisited.items() if node[1]], ('var', 'candidates'), [node for node in unvisited.items() if node[1]])
-    (current, currentDistance) = sorted(candidates, key=lambda x: x[1])[0]
-print read(('var', 'visited', visited), visited)
+from random import random
+
+@link('matrix', 'm', 'n')
+def dijkstra(matrix, m, n):
+    k = write('undefined', ('var', 'k'), int(input('Enter the source vertex')))
+    cost = write([[0 for x in range(m)] for x in range(1)], ('var', 'cost'), [[0 for x in range(m)] for x in range(1)])
+    offsets = write([], ('var', 'offsets'), [])
+    offsets.append(k)
+    elepos = write(0, ('var', 'elepos'), 0)
+    for j in range(m):
+        j = write(j, ('var', 'j'), j)
+        cost[0][j] = write(('subscript', ('var', 'matrix', matrix), ('var', 'k', k), ('var', 'j', j)), ('subscript', ('var', 'cost', cost), 0, ('var', 'j', j)), matrix[k][j])
+    mini = write(999, ('var', 'mini'), 999)
+    for x in range(m - 1):
+        x = write(x, ('var', 'x'), x)
+        mini = write(999, ('var', 'mini'), 999)
+        for j in range(m):
+            j = write(j, ('var', 'j'), j)
+            if ((read(('subscript', ('var', 'cost', cost), 0, ('var', 'j', j)), cost[0][j]) <= read(('var', 'mini', mini), mini)) and (read(('var', 'j', j), j) not in read(('var', 'offsets', offsets), offsets))):
+                mini = write(('subscript', ('var', 'cost', cost), 0, ('var', 'j', j)), ('var', 'mini'), cost[0][j])
+                elepos = write(('var', 'j', j), ('var', 'elepos'), j)
+        offsets.append(elepos)
+        for j in range(m):
+            j = write(j, ('var', 'j'), j)
+            if (read(('subscript', ('var', 'cost', cost), 0, ('var', 'j', j)), cost[0][j]) > read(('subscript', ('var', 'cost', cost), 0, ('var', 'elepos', elepos)), cost[0][elepos]) + read(('subscript', ('var', 'matrix', matrix), ('var', 'elepos', elepos), ('var', 'j', j)), matrix[elepos][j])):
+                cost[0][j] = write(('binop', '+', ('subscript', ('var', 'cost', cost), 0, ('var', 'elepos', elepos)), ('subscript', ('var', 'matrix', matrix), ('var', 'elepos', elepos), ('var', 'j', j))), ('subscript', ('var', 'cost', cost), 0, ('var', 'j', j)), cost[0][elepos] + matrix[elepos][j])
+    print ('The shortest path', read(('var', 'offsets', offsets), offsets))
+    print ('The cost to various vertices in order', read(('var', 'cost', cost), cost))
+
+@link()
+def main():
+    print 'Dijkstras algorithum graph using matrix representation \n'
+    n = write('undefined', ('var', 'n'), int(input('number of elements in row')))
+    m = write('undefined', ('var', 'm'), int(input('number of elements in column')))
+    matrix = write([[0 for x in range(m)] for x in range(n)], ('var', 'matrix'), [[0 for x in range(m)] for x in range(n)])
+    for i in range(n):
+        i = write(i, ('var', 'i'), i)
+        for j in range(m):
+            j = write(j, ('var', 'j'), j)
+            matrix[i][j] = write('undefined', ('subscript', ('var', 'matrix', matrix), ('var', 'i', i), ('var', 'j', j)), int(random() * 100))
+    print read(('var', 'matrix', matrix), matrix)
+    dijkstra({'value': matrix, 'arg': ('var', 'matrix', matrix)}, {'value': n, 'arg': ('var', 'n', n)}, {'value': m, 'arg': ('var', 'm', m)})
+main()

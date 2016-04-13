@@ -11,17 +11,17 @@ if __name__ == '__main__':
 	# rootdir - where programfiles is located
 	# files - what files should be visualized
 	# output - where to store executed statements during run-time
-	# watch - what variables to observe during execution
+	# observe - what variables to observe during execution
 	settings = {
 		'rootdir' : path.abspath('./test'), 
 		'files' : ['main.py'],
 		'output' : output,
-		'watch' : [Variable('visited','list',None,None)]}
+		'observe' : [Variable('offsets','list',None,None)]}
 	# create visulization environment
 	visualize(settings)
 	# run userprogram in visualization environment
 	execfile(path.abspath('./testvisualize/main.py'))
 	# convert output to json
-	convert(output,path.abspath('output.json'),settings['watch'])
+	convert(output,path.abspath('output.json'),settings['observe'])
 	# right now run cleanup script until a better solution is found
 	# system('sh cleanup.sh')

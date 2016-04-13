@@ -19,9 +19,9 @@ def translate_types(type_):
     else:
         return types_[type_]
 
-def initJsonBuffer(watch):
+def initJsonBuffer(observe):
     jsonBuffer = {'header' : { 'annotatedVariables' : {}, 'version' : 0.0 }, 'body' : []}
-    for var in watch:
+    for var in observe:
         t_json = translate_types(var.rawType)
         var.rawType = t_json
         jsonBuffer['header']['annotatedVariables'][var.name] = var.get_json()
@@ -31,9 +31,9 @@ def getOperationObject():
     return {'operation' : None, 'operationBody' : {}}
 
 class ToJson(object):
-    def __init__(self,watch):
-        self.jsonBuffer = initJsonBuffer(watch)
-        self.ids = [w.name for w in watch]
+    def __init__(self,observe):
+        self.jsonBuffer = initJsonBuffer(observe)
+        self.ids = [w.name for w in observe]
         self.table = VariableTable()
 
     def toJson(self,statement):
@@ -99,7 +99,7 @@ def dumpJson(outfile,jsonBuffer):
         dump(jsonBuffer,f)
         f.close()
 
-def convert(output_path,outfile_path,watch):
-    tj = ToJson(watch)
+def convert(output_path,outfile_path,observe):
+    tj = ToJson(observe)
     output = format_log(output_path)
     dumpJson(outfile_path,tj.convert_(output))

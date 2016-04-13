@@ -1,29 +1,38 @@
-nodes = ('A', 'B', 'C', 'D', 'E', 'F', 'G')
-distances = {
-    'B': {'A': 5, 'D': 1, 'G': 2},
-    'A': {'B': 5, 'D': 3, 'E': 12, 'F' :5},
-    'D': {'B': 1, 'G': 1, 'E': 1, 'A': 3},
-    'G': {'B': 2, 'D': 1, 'C': 2},
-    'C': {'G': 2, 'E': 1, 'F': 16},
-    'E': {'A': 12, 'D': 1, 'C': 1, 'F': 2},
-    'F': {'A': 5, 'E': 2, 'C': 16}}
-
-unvisited = {node: None for node in nodes} #using None as +inf
-visited = {}
-current = 'B'
-currentDistance = 0
-unvisited[current] = currentDistance
-
-while True:
-    for neighbour, distance in distances[current].items():
-        if neighbour not in unvisited: continue
-        newDistance = currentDistance + distance
-        if unvisited[neighbour] is None or unvisited[neighbour] > newDistance:
-            unvisited[neighbour] = newDistance
-    visited[current] = currentDistance
-    del unvisited[current]
-    if not unvisited: break
-    candidates = [node for node in unvisited.items() if node[1]]
-    current, currentDistance = sorted(candidates, key = lambda x: x[1])[0]
-
-print(visited)
+#vertex should start with zero
+#if you are giving weight above 999 adjust min in program
+#result will be the shortest path and the distace to each vertex from source vertex in order
+from random import random
+def dijkstra(matrix,m,n):
+    k=int(input("Enter the source vertex"))
+    cost=[[0 for x in range(m)] for x in range(1)]
+    offsets = []
+    offsets.append(k)
+    elepos=0
+    for j in range(m):
+        cost[0][j]=matrix[k][j]
+    mini=999
+    for x in range (m-1):
+        mini=999
+        for j in range (m):
+                if cost[0][j]<=mini and j not in offsets:
+                        mini=cost[0][j]
+                        elepos=j
+        offsets.append(elepos)
+        for j in range (m):
+            if cost[0][j] >cost[0][elepos]+matrix[elepos][j]:
+                cost[0][j]=cost[0][elepos]+matrix[elepos][j]
+    print("The shortest path",offsets)
+    print("The cost to various vertices in order",cost)
+    
+def main():
+    print("Dijkstras algorithum graph using matrix representation \n")
+    n=int(input("number of elements in row"))
+    m=int(input("number of elements in column"))
+    #print("enter the values of the matrix")
+    matrix=[[0 for x in range(m)] for x in range(n)]
+    for i in range (n):
+        for j in range (m):
+            matrix[i][j]=int(random()*100)
+    print(matrix)
+    dijkstra(matrix,n,m)
+main()
