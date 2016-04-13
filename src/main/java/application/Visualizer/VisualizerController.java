@@ -56,7 +56,7 @@ public class VisualizerController implements CommunicatorListener{
     private Stage connectedDialog;
     
     //Settings dialog stuff
-    private Stage settingsDialog;
+    private Stage settingsView;
     
     // Controls
     private boolean isPlaying = false;
@@ -78,24 +78,21 @@ public class VisualizerController implements CommunicatorListener{
         
         initConnectedPane();
         initSettingsPane();
+        initInterpreterPane();
         loadProperties();
     }
 
     public void showSettings(){
-        settingsDialog.setWidth(this.window.getWidth()*0.75);
-        settingsDialog.setHeight(this.window.getHeight()*0.75);
+        settingsView.setWidth(this.window.getWidth()*0.75);
+        settingsView.setHeight(this.window.getHeight()*0.75);
         
         //Playback speed
         perSecField.setText(df.format(1000.0/stepDelayBase));
         timeBetweenField.setText(df.format(stepDelayBase));
         
     	toggleAutorunStream.setSelected(autoPlayOnIncomingStream);
-    	
-    	//Interpreter stuff
-    	newRoutine = interpreter.getHighOrderRoutine();
-    	interpreterRoutineChooser.getSelectionModel().select(translateInterpreterRoutine());;
     			
-        settingsDialog.show();
+        settingsView.show();
     }
     
     private String translateInterpreterRoutine(){
@@ -230,8 +227,25 @@ public class VisualizerController implements CommunicatorListener{
         
     }
     
+    public void openInterpreterView(){
+    	stopAutoPlay();    	//Prevent concurrent modification exception.
+    	
+    	//Load settings
+    	newRoutine = interpreter.getHighOrderRoutine();
+    	interpreterRoutineChooser.getSelectionModel().select(translateInterpreterRoutine());
+    	
+    	//Setup
+    	interpreterBefore.getItems().setAll(operationHistory.getItems());
+    	beforeCount.setText(""+interpreterBefore.getItems().size());
+    	interpreterAfter.getItems().clear();
+
+    	interpreterView.show();
+    }
+    
     public void interpretOperationHistory(){
+    	 stopAutoPlay();
  		 interpreter.consolidate(operationHistory.getItems());
+ 		 updateOperationList();
     }
     
     private void updateOperationList(){
@@ -243,7 +257,8 @@ public class VisualizerController implements CommunicatorListener{
 		        operationHistory.getFocusModel().focus(index);
 		        operationHistory.scrollTo(index-1);
 		        
-		        currOpTextField.setText("" + (index+1));
+		        currOpTextField.setText("" + (index));
+		 		totNrOfOpLabel.setText("/ " + operationHistory.getItems().size());
 			}	
     	});
     }
@@ -291,11 +306,11 @@ public class VisualizerController implements CommunicatorListener{
     	df = new DecimalFormat("#.####"); 
     	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/SettingsView.fxml"));
         fxmlLoader.setController(this);
-        settingsDialog = new Stage();
-        settingsDialog.getIcons().add(new Image(VisualizerController.class.getResourceAsStream("/assets/icon_settings.png")));
-        settingsDialog.initModality(Modality.APPLICATION_MODAL);
-        settingsDialog.setTitle(Strings.PROJECT_NAME + ": Settings and Preferences");
-        settingsDialog.initOwner(this.window);
+        settingsView = new Stage();
+        settingsView.getIcons().add(new Image(VisualizerController.class.getResourceAsStream("/assets/icon_settings.png")));
+        settingsView.initModality(Modality.APPLICATION_MODAL);
+        settingsView.setTitle(Strings.PROJECT_NAME + ": Settings and Preferences");
+        settingsView.initOwner(this.window);
         
         GridPane p = null;
 		try {
@@ -305,7 +320,7 @@ public class VisualizerController implements CommunicatorListener{
 		}
 		
         Scene dialogScene = new Scene(p, this.window.getWidth()*0.75, this.window.getHeight()*0.75);
-        settingsDialog.setOnCloseRequest(event -> {
+        settingsView.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
             revertSettings();
         });
@@ -319,13 +334,84 @@ public class VisualizerController implements CommunicatorListener{
 	        perSecField = (TextField) fxmlLoader.getNamespace().get("perSecField");
 	        
 	        toggleAutorunStream = (CheckBox) fxmlLoader.getNamespace().get("toggleAutorunStream");
-	        interpreterRoutineChooser = (ChoiceBox<String>) fxmlLoader.getNamespace().get("interpreterRoutineChooser");
+	        
+        settingsView.setScene(dialogScene);
+    }
+    
+    private Stage interpreterView;
+    private ListView<Operation>interpreterBefore, interpreterAfter;
+    private TextField beforeCount;
+    @SuppressWarnings("unchecked")
+	private void initInterpreterPane(){
+    	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/InterpreterView.fxml"));
+        fxmlLoader.setController(this);
+        interpreterView = new Stage();
+        interpreterView.getIcons().add(new Image(VisualizerController.class.getResourceAsStream("/assets/icon_interpreter.png")));
+        interpreterView.initModality(Modality.APPLICATION_MODAL);
+        interpreterView.setTitle(Strings.PROJECT_NAME + ": Interpreter");
+        interpreterView.initOwner(this.window);
+        
+        GridPane p = null;
+		try {
+			p = fxmlLoader.load();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+        Scene dialogScene = new Scene(p, this.window.getWidth()*0.75, this.window.getHeight()*0.75);
+        
+        //Buttons
+        interpreterView.setOnCloseRequest(event -> {
+            event.consume(); // Better to do this now than missing it later.
+            discardInterpreted();
+        });
+        
+        //Get namespace items
+	        interpreterRoutineChooser = (ChoiceBox<String>) fxmlLoader.getNamespace().get("routineChooser");
 	        interpreterRoutineChooser.getSelectionModel().selectedItemProperty().addListener(event -> {
 	        	interpreterRoutineChooser(); //Cant set onAction i SceneBuilder for some reason.
 	        });
-	        interpreterRoutineChooser.setItems(FXCollections.observableArrayList("Discard", "Flush Set", "Keep Set", "Deconstruct", "Abort"));
+	        interpreterRoutineChooser.setItems(FXCollections.observableArrayList("Discard","Flush Set", "Keep Set" 
+	        																	,"Deconstruct", "Abort" //TODO: Implement in Interpreter! Comment this line!
+	        																	));
 	        
-        settingsDialog.setScene(dialogScene);
+	        interpreterBefore = (ListView<Operation>) fxmlLoader.getNamespace().get("interpreterBefore");
+	        interpreterAfter = (ListView<Operation>) fxmlLoader.getNamespace().get("interpreterAfter");
+	        
+	        beforeCount = (TextField) fxmlLoader.getNamespace().get("beforeCount");
+	        TextField afterCount = (TextField) fxmlLoader.getNamespace().get("afterCount");
+
+        	List<Operation> afterItems = interpreterAfter.getItems();
+	        
+	        Button interpret = (Button) fxmlLoader.getNamespace().get("interpret");
+	        interpret.setOnAction(event ->{
+	        	
+	        	afterItems.clear();
+	        	afterItems.addAll(interpreterBefore.getItems());
+	        	
+	        	interpreter.consolidate(afterItems);
+	        	afterCount.setText(""+afterItems.size());
+	        });
+	        
+	        Button moveToBefore = (Button) fxmlLoader.getNamespace().get("moveToBefore");
+	        moveToBefore.setOnAction(event ->{
+	        	interpreterBefore.getItems().setAll(afterItems);
+	        	beforeCount.setText(""+interpreterBefore.getItems().size());
+	        });
+	        
+        interpreterView.setScene(dialogScene);
+    }
+    
+    public void keepInterpreted(){
+    	operationHistory.getItems().setAll(interpreterAfter.getItems());
+    	updateOperationList();
+    	saveProperties();
+    	interpreterView.close();
+    }
+    
+    public void discardInterpreted(){
+    	saveProperties();
+    	interpreterView.close();
     }
     
     private void initConnectedPane(){
@@ -526,7 +612,7 @@ public class VisualizerController implements CommunicatorListener{
 				saveProperties();
 				noUnsavedChanges();
 			}
-			settingsDialog.close();
+			settingsView.close();
 		}
 		
 		//Reload settings from file.
@@ -535,7 +621,7 @@ public class VisualizerController implements CommunicatorListener{
 				loadProperties();
 				noUnsavedChanges();
 			}
-			settingsDialog.close();
+			settingsView.close();
 		}
 		
 		private void noUnsavedChanges(){
@@ -681,7 +767,7 @@ public class VisualizerController implements CommunicatorListener{
 	    	}
 	    	
 	    	if (newRoutine == interpreter.getHighOrderRoutine()){
-	    		unsavedChanged();	    		
+	    		saveProperties();	
 	    	}
 	    	
 	    }

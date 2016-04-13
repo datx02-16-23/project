@@ -28,18 +28,26 @@
          <menus>
             <Menu text="_File">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#openFileChooser" text="Import">
+                  <MenuItem mnemonicParsing="false" onAction="#openFileChooser" text="Import Log">
                      <accelerator>
-                        <KeyCodeCombination alt="UP" code="I" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                        <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
-                  <MenuItem mnemonicParsing="false" onAction="#openDestinationChooser" text="Export" />
+                  <MenuItem mnemonicParsing="false" onAction="#openDestinationChooser" text="Export Log">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#closeProgram" text="Close" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="_Actions">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#interpretOperationHistory" text="Interpret" />
+                <MenuItem mnemonicParsing="false" onAction="#interpretOperationHistory" text="Interpret Now" />
+                  <MenuItem mnemonicParsing="false" onAction="#openInterpreterView" text="Interpreter">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="I" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator>
+                  </MenuItem>
               </items>
             </Menu>
             <Menu fx:id="examplesMenu" mnemonicParsing="false" text="_Examples" />
