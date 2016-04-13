@@ -16,12 +16,12 @@ if __name__ == '__main__':
 		'rootdir' : path.abspath('./test'), 
 		'files' : ['main.py'],
 		'output' : output,
-		'watch' : [Variable('a','list',None,None)]}
+		'watch' : [Variable('visited','list',None,None)]}
 	# create visulization environment
 	visualize(settings)
 	# run userprogram in visualization environment
 	execfile(path.abspath('./testvisualize/main.py'))
 	# convert output to json
-	convert(output,path.abspath('output.json'),[Variable('a','list',None,None),Variable('x','int',None,None)])
+	convert(output,path.abspath('output.json'),settings['watch'])
 	# right now run cleanup script until a better solution is found
 	# system('sh cleanup.sh')

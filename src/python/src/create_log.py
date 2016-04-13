@@ -65,9 +65,10 @@ def visualize(settings):
 	# Replace lines in files to be visualized with
 	# function calls from operations.py
 	open(settings['output'],'w').close()
+	logwriter = load_logwriter(abspath('operations.py'),abspath(settings['output']))
 	for node in nodes:
 		f = open(node['path'],'wb')
-		transform(node['parse'],load_logwriter(abspath('operations.py'),abspath(settings['output'])))
+		transform(node['parse'],logwriter)
 		f.write(to_source(node['parse']))
 		f.close()
 
