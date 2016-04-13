@@ -319,7 +319,6 @@ public class VisualizerController implements CommunicatorListener{
 			e.printStackTrace();
 		}
 		
-        Scene dialogScene = new Scene(p, this.window.getWidth()*0.75, this.window.getHeight()*0.75);
         settingsView.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
             revertSettings();
@@ -335,6 +334,9 @@ public class VisualizerController implements CommunicatorListener{
 	        
 	        toggleAutorunStream = (CheckBox) fxmlLoader.getNamespace().get("toggleAutorunStream");
 	        
+		p.setPrefWidth(this.window.getWidth()*0.75);
+		p.setPrefHeight(this.window.getHeight()*0.75);
+	    Scene dialogScene = new Scene(p, this.window.getWidth()*0.75, this.window.getHeight()*0.75);
         settingsView.setScene(dialogScene);
     }
     
@@ -358,7 +360,7 @@ public class VisualizerController implements CommunicatorListener{
 			e.printStackTrace();
 		}
 		
-        Scene dialogScene = new Scene(p, this.window.getWidth()*0.75, this.window.getHeight()*0.75);
+
         
         //Buttons
         interpreterView.setOnCloseRequest(event -> {
@@ -398,7 +400,10 @@ public class VisualizerController implements CommunicatorListener{
 	        	interpreterBefore.getItems().setAll(afterItems);
 	        	beforeCount.setText(""+interpreterBefore.getItems().size());
 	        });
-	        
+	    
+	    p.setPrefWidth(this.window.getWidth()*0.75);
+	    p.setPrefHeight(this.window.getHeight()*0.75);
+	    Scene dialogScene = new Scene(p, this.window.getWidth()*0.75, this.window.getHeight()*0.75);
         interpreterView.setScene(dialogScene);
     }
     
@@ -435,12 +440,13 @@ public class VisualizerController implements CommunicatorListener{
         TextArea bottom = (TextArea) connectedLoader.getNamespace().get("allEntities");
         bottom.textProperty().bind(allConnected);
 		
-        Scene dialogScene = new Scene(p, this.window.getWidth()*0.75, this.window.getHeight()*0.75);
         connectedDialog.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
             jgc.listenForMemberInfo(false);
             connectedDialog.close();
         });
+
+        Scene dialogScene = new Scene(p, this.window.getWidth()*0.75, this.window.getHeight()*0.75);
         connectedDialog.setScene(dialogScene);
     }
     public void connectedToChannel(){
