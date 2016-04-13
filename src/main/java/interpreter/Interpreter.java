@@ -76,6 +76,19 @@ public class Interpreter {
 	 * @return True if the list has been changed. False otherwise.
 	 */
 	public boolean consolidate(List<Operation> operations){
+		System.out.println("CONSOLIDATING: routine = " + highOrderRoutine);
+		if (highOrderRoutine == ABORT){
+			for(Operation op : operations){
+				
+				if (op.operation == OperationType.message || op.operation == OperationType.init){
+					continue; //Acceptable non read/write operation found.
+				} else if (isReadOrWrite(op) == false){
+					return false;
+				}
+				
+			}
+		}
+		
 		int oldSize = operations.size();
 		
 		unprocessedOperations.clear(); //Not really needed.
@@ -174,11 +187,6 @@ public class Interpreter {
 	private void handleHighLevelOperation(){
 
 		switch(highOrderRoutine){
-			case ABORT:
-				System.err.println("HALT has not been implemented yet. Sorry :/.");
-				System.exit(-1); //TODO: Handle properly.
-				break;
-				
 			case KEEP_SET_ADD_HIGH:
 				keepSetAddHigh();
 				break;

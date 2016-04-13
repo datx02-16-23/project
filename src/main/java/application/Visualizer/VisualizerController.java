@@ -734,7 +734,6 @@ public class VisualizerController implements CommunicatorListener{
 			properties.setProperty("playbackStepDelay", ""+stepDelayBase);
 			properties.setProperty("autoPlayOnIncomingStream", ""+autoPlayOnIncomingStream);
 			
-			interpreter.setHighOrderRoutine(newRoutine);
 			properties.setProperty("highOrderRoutine", ""+interpreter.getHighOrderRoutine());
 			
 			try {
@@ -772,7 +771,8 @@ public class VisualizerController implements CommunicatorListener{
 	    		break;
 	    	}
 	    	
-	    	if (newRoutine == interpreter.getHighOrderRoutine()){
+	    	if (newRoutine != interpreter.getHighOrderRoutine()){
+	    		interpreter.setHighOrderRoutine(newRoutine);
 	    		saveProperties();	
 	    	}
 	    	
