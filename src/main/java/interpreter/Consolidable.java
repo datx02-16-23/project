@@ -7,6 +7,7 @@ import wrapper.Operation;
 
 /**
  * A consolidable element can be broken into a series read/write operations.
+ * <br><b>IMPORTANT:</b> Any class implementing Consolidable should inherit Operation!
  * @author Richard
  *
  */

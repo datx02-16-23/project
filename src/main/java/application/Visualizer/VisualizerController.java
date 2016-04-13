@@ -397,8 +397,10 @@ public class VisualizerController implements CommunicatorListener{
 	        
 	        Button moveToBefore = (Button) fxmlLoader.getNamespace().get("moveToBefore");
 	        moveToBefore.setOnAction(event ->{
-	        	interpreterBefore.getItems().setAll(afterItems);
-	        	beforeCount.setText(""+interpreterBefore.getItems().size());
+	        	if(afterItems.isEmpty() == false){
+	        		interpreterBefore.getItems().setAll(afterItems);
+	        		beforeCount.setText(""+interpreterBefore.getItems().size());	        		
+	        	}
 	        });
 	    
 	    p.setPrefWidth(this.window.getWidth()*0.75);

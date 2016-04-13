@@ -5,6 +5,7 @@ import java.util.List;
 
 import manager.operations.OP_ReadWrite;
 import manager.operations.OP_Swap;
+import manager.operations.OperationType;
 import wrapper.Operation;
 
 /**
@@ -41,14 +42,15 @@ public class Consolidator {
 	}
 	
 	/**
-	 * Returns true if the type of the Consolidable given as argument is among the test cases used by this Consolidator.
-	 * @param testCase The Consolidable to test.
-	 * @return True if the test case type is among the tested.
+	 * Returns true if the type of the OperationType given as argument is among the test cases used by this Consolidator.
+	 * @param testCase The OperationType to test.
+	 * @return True if the test case type is among the tested, false otherwise.
 	 */
-	public boolean checkConsolidable(Consolidable testCase){
+	public boolean checkTestCase(OperationType testCase){
+		List<OperationType> testCases = getTestCases();
 		
-		for(Consolidable c : invokers[testCase.getRWcount()]){
-			if(c.getClass().equals(testCase.getClass())){
+		for(OperationType ot : testCases){
+			if(ot == testCase){
 				return true;
 			}
 		}
@@ -57,11 +59,12 @@ public class Consolidator {
 	}
 	
 	/**
-	 * Adds another Consolidable for this Consolidator 
-	 * @param c The Consolidable to add.
+	 * Adds another Consolidable for this Consolidator.
+	 * Will not any any Consolidable type more than once.
+	 * @param newConsolidable The Consolidable to add.
 	 */
-	public void addConsolidable(Consolidable c){
-		int rwCount = c.getRWcount();
+	public void addConsolidable(Consolidable newConsolidable){
+		int rwCount = newConsolidable.getRWcount();
 		
 		if (rwCount < minimumSetSize){
 			minimumSetSize = rwCount;
@@ -69,7 +72,16 @@ public class Consolidator {
 		if (rwCount > maximumSetSize){
 			maximumSetSize = rwCount;
 		}
-		invokers[rwCount].add(c);
+		
+		Operation newOp = (Operation) newConsolidable;
+		for(Consolidable c : invokers[rwCount]){
+			Operation op = (Operation) c;
+			if(newOp.operation == op.operation){
+				return;
+			}
+		}
+		
+		invokers[rwCount].add(newConsolidable);
 	}
 	
 	/**
@@ -108,17 +120,16 @@ public class Consolidator {
 	 * Print a human-readable list of all the Operation types this Consolidator tests.
 	 * @return A human-readable list of all the Operation types this Consolidator tests.
 	 */
-	public String getTestCases(){
-		StringBuilder sb = new StringBuilder();
-		sb.append("Tested operations: {");
+	public List<OperationType> getTestCases(){
+		ArrayList<OperationType> simpleNames = new ArrayList<OperationType>();
+			
 		for(int i = 0; i < MAX_SIZE; i++){
 			for(Consolidable c : invokers[i]){
-				sb.append(c.getClass().getSimpleName() + ", ");
+				Operation op = (Operation) c;
+				simpleNames.add(op.operation);
 			}
 			
 		}
-		sb.delete(sb.length()-2, sb.length());
-		sb.append("}.");
-		return sb.toString();
+		return simpleNames;
 	}
 }

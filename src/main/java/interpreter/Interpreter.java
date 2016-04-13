@@ -3,8 +3,7 @@ package interpreter;
 import java.util.ArrayList;
 import java.util.List;
 
-import manager.operations.OP_ReadWrite;
-import manager.operations.OperationType;
+import manager.operations.*;
 import wrapper.Operation;
 
 /**
@@ -251,5 +250,24 @@ public class Interpreter {
 		}
 
 		return false;
+	}
+	
+	public List<OperationType> getTestCases(){
+		return consolidator.getTestCases();
+	}
+	
+	public boolean addTestCase(OperationType testCase){
+		switch(testCase){
+		
+			case swap:
+				consolidator.addConsolidable(new OP_Swap());
+			break;
+			
+			default:
+				System.err.println("Cannot consolidate the type: " + testCase.toString().toUpperCase());
+				return false;
+		
+		}
+		return true;
 	}
 }
