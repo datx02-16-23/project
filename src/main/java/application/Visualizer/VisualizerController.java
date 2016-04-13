@@ -25,6 +25,8 @@ import javafx.stage.Stage;
 import manager.CommunicatorListener;
 import manager.JGroupCommunicator;
 import manager.LogStreamManager;
+import manager.operations.OP_Swap;
+import manager.operations.OperationType;
 import manager.Communicator.MavserMessage;
 import wrapper.Operation;
 
@@ -36,6 +38,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -239,7 +242,18 @@ public class VisualizerController implements CommunicatorListener{
     	beforeCount.setText(""+interpreterBefore.getItems().size());
     	interpreterAfter.getItems().clear();
 
+    	setTestCases();
+    	
     	interpreterView.show();
+    }
+    private Map<String, Object> interpreterViewNamespace;
+    private void setTestCases(){
+    	List<OperationType> selectedTypes = interpreter.getTestCases();
+
+        //TODO: Get and set all of them automatically
+    	//Swap
+    	CheckBox swap = (CheckBox) interpreterViewNamespace.get("swap");
+    	swap.setSelected(selectedTypes.contains(OperationType.swap));
     }
     
     public void interpretOperationHistory(){
@@ -360,8 +374,6 @@ public class VisualizerController implements CommunicatorListener{
 			e.printStackTrace();
 		}
 		
-
-        
         //Buttons
         interpreterView.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
@@ -369,6 +381,7 @@ public class VisualizerController implements CommunicatorListener{
         });
         
         //Get namespace items
+        	//High order routine
 	        interpreterRoutineChooser = (ChoiceBox<String>) fxmlLoader.getNamespace().get("routineChooser");
 	        interpreterRoutineChooser.getSelectionModel().selectedItemProperty().addListener(event -> {
 	        	interpreterRoutineChooser(); //Cant set onAction i SceneBuilder for some reason.
@@ -377,14 +390,18 @@ public class VisualizerController implements CommunicatorListener{
 	        																	,"Deconstruct", "Abort" //TODO: Implement in Interpreter! Comment this line!
 	        																	));
 	        
-	        interpreterBefore = (ListView<Operation>) fxmlLoader.getNamespace().get("interpreterBefore");
-	        interpreterAfter = (ListView<Operation>) fxmlLoader.getNamespace().get("interpreterAfter");
+	        interpreterViewNamespace = fxmlLoader.getNamespace();
 	        
-	        beforeCount = (TextField) fxmlLoader.getNamespace().get("beforeCount");
-	        TextField afterCount = (TextField) fxmlLoader.getNamespace().get("afterCount");
+	        //Lists
+	        interpreterBefore = (ListView<Operation>) interpreterViewNamespace.get("interpreterBefore");
+	        interpreterAfter = (ListView<Operation>) interpreterViewNamespace.get("interpreterAfter");
+	        
+	        beforeCount = (TextField) interpreterViewNamespace.get("beforeCount");
+	        TextField afterCount = (TextField) interpreterViewNamespace.get("afterCount");
 
         	List<Operation> afterItems = interpreterAfter.getItems();
 	        
+        	//Interpret button
 	        Button interpret = (Button) fxmlLoader.getNamespace().get("interpret");
 	        interpret.setOnAction(event ->{
 	        	
@@ -395,11 +412,22 @@ public class VisualizerController implements CommunicatorListener{
 	        	afterCount.setText(""+afterItems.size());
 	        });
 	        
+	        //<-- button
 	        Button moveToBefore = (Button) fxmlLoader.getNamespace().get("moveToBefore");
 	        moveToBefore.setOnAction(event ->{
 	        	if(afterItems.isEmpty() == false){
 	        		interpreterBefore.getItems().setAll(afterItems);
 	        		beforeCount.setText(""+interpreterBefore.getItems().size());	        		
+	        	}
+	        });
+	        
+	        //Listeners for TestCase buttons
+	        CheckBox swap = (CheckBox) fxmlLoader.getNamespace().get("swap");
+	        swap.setOnAction(event ->{
+	        	if(swap.isSelected()){
+	        		interpreter.addTestCase(OperationType.swap);
+	        	} else {
+	        		interpreter.removeTestCase(OperationType.swap, new OP_Swap());
 	        	}
 	        });
 	    
@@ -451,6 +479,7 @@ public class VisualizerController implements CommunicatorListener{
         Scene dialogScene = new Scene(p, this.window.getWidth()*0.75, this.window.getHeight()*0.75);
         connectedDialog.setScene(dialogScene);
     }
+    
     public void connectedToChannel(){
     	JGroupCommunicator jgc = (JGroupCommunicator) lsm.getCommunicator();
     	jgc.listenForMemberInfo(true);

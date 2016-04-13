@@ -242,8 +242,8 @@ public class Interpreter {
 	 * @return True if workingSet was successfully consolidated, false otherwise.
 	 */
 	private boolean attemptConsolidateWorkingSet(){
-		Operation consolidatedOperation;
-		consolidatedOperation = consolidator.attemptConsolidate(workingSet);
+		 Operation consolidatedOperation = consolidator.attemptConsolidate(workingSet);
+		 
 		if (consolidatedOperation != null){
 			processedOperations.add(consolidatedOperation);
 			return true;
@@ -252,10 +252,17 @@ public class Interpreter {
 		return false;
 	}
 	
+	//TODO: JAVADOC
 	public List<OperationType> getTestCases(){
 		return consolidator.getTestCases();
 	}
-	
+
+	//TODO: JAVADOC
+	public void removeTestCase(OperationType testCase, Consolidable c){
+		consolidator.removeTestCase(testCase, c.getRWcount());
+	}
+
+	//TODO: JAVADOC
 	public boolean addTestCase(OperationType testCase){
 		switch(testCase){
 		

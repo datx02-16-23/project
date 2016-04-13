@@ -132,4 +132,21 @@ public class Consolidator {
 		}
 		return simpleNames;
 	}
+
+	//TODO: JAVADOC
+	public void removeTestCase(OperationType testCase, int rwCount){
+		Consolidable victim = null;
+		
+		for (Consolidable c : invokers[rwCount]){
+			Operation op = (Operation) c;
+			if(testCase == op.operation){
+				victim = c;
+				break;
+			}
+		}
+		
+		if(victim != null){
+			invokers[rwCount].remove(victim);
+		}
+	}
 }

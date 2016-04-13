@@ -98,22 +98,17 @@
                      </VBox.margin>
                   </Separator>
                   <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefHeight="20.0" prefWidth="130.0" text="Testcases:" />
-                  <CheckBox mnemonicParsing="false" text="Swap">
+                  <CheckBox fx:id="swap" mnemonicParsing="false" text="Swap">
                      <VBox.margin>
                         <Insets bottom="2.0" left="10.0" top="2.0" />
                      </VBox.margin>
                   </CheckBox>
-                  <CheckBox mnemonicParsing="false" text="op2">
+                  <CheckBox disable="true" indeterminate="true" mnemonicParsing="false" text="Zig">
                      <VBox.margin>
                         <Insets bottom="2.0" left="10.0" top="2.0" />
                      </VBox.margin>
                   </CheckBox>
-                  <CheckBox mnemonicParsing="false" text="op3">
-                     <VBox.margin>
-                        <Insets bottom="2.0" left="10.0" top="2.0" />
-                     </VBox.margin>
-                  </CheckBox>
-                  <CheckBox mnemonicParsing="false" text="op4..">
+                  <CheckBox disable="true" indeterminate="true" mnemonicParsing="false" text="Zag">
                      <VBox.margin>
                         <Insets bottom="2.0" left="10.0" top="2.0" />
                      </VBox.margin>
