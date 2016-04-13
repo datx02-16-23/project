@@ -118,7 +118,7 @@ public class OP_Swap extends Operation implements Consolidable{
 		OP_Swap op_swap = new OP_Swap();
 		op_swap.setVar1(var1);
 		op_swap.setVar2(var2);
-		op_swap.setValues(new double[]{rw0.getValue()[0], rw1.getValue()[0]});
+		op_swap.setValues(new double[]{rw1.getValue()[0], rw0.getValue()[0]});
 		return op_swap;
 	}
 	@Override
