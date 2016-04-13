@@ -1,11 +1,10 @@
 package application.model;
 
+import manager.datastructures.DataStructure;
 import wrapper.Operation;
 
 import java.util.List;
 import java.util.Map;
-
-import manager.datastructures.DataStructure;
 
 
 public class Model implements iModel {
@@ -27,7 +26,7 @@ public class Model implements iModel {
 
     @Override
     public boolean stepForward() {
-        if(operations != null && index < operations.size()-1){
+        if(operations != null && index < operations.size()){
             step.applyOperation(operations.get(index));
             index += 1;
             return true;
