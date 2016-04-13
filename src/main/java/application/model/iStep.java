@@ -6,6 +6,7 @@ import wrapper.Operation;
 import wrapper.datastructures.DataStructure;
 
 
+//TODO: Javadoc #51
 public interface iStep {
     Map<String, DataStructure> getStructures();
     Operation getLastOp();

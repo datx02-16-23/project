@@ -441,6 +441,7 @@ public class GUI_Controller implements CommunicatorListener{
     
     public void keepInterpreted(){
     	operationHistory.getItems().setAll(interpreterAfter.getItems());
+    	model.setOperations(interpreterAfter.getItems());
     	updateOperationList();
     	saveProperties();
     	interpreterView.close();

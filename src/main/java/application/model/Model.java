@@ -6,6 +6,8 @@ import wrapper.datastructures.DataStructure;
 import java.util.List;
 import java.util.Map;
 
+import javafx.collections.ObservableList;
+
 
 public class Model implements iModel {
     private iStep step = new Step();
@@ -102,5 +104,18 @@ public class Model implements iModel {
 	@Override
 	public List<Operation> getOperations() {
 		return operations;
+	}
+
+	@Override
+	public void setOperations(List<Operation> newOperations) {
+        operations = newOperations;
+        index = 0;
+	}
+
+	@Override
+	public void setStructures(Map<String, DataStructure> newStructures) {
+        newStructures.values().forEach(DataStructure::clear);
+        step = new Step(newStructures);
+        index = 0;
 	}
 }
