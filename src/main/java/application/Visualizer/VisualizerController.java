@@ -423,7 +423,9 @@ public class VisualizerController implements CommunicatorListener{
 		
 		lsm.setOperations(model.getOperations());
 		lsm.setKnownVariables(model.getStructures());
+		lsm.PRETTY_PRINTING = true;
 		lsm.printLog(outputPath);
+		lsm.PRETTY_PRINTING = false;
 	}
 	
     public void propertiesFailed(Exception exception){
