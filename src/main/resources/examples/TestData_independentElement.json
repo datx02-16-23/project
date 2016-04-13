@@ -41,12 +41,9 @@
 	}, {
 		"operation": "message",
 		"operationBody": {
-			"value": "message!"
+			"value": "test"
 		}
 	}, {
-
-
-
 
 		"operation": "read",
 		"operationBody": {
@@ -75,7 +72,8 @@
 				"index": [
 					0
 				]
-			}
+			},
+			"value": [2]
 		}
 
 

@@ -127,10 +127,13 @@ public class Array extends DataStructure{
 
 	private void readORwrite(OP_ReadWrite op){
 		ArrayElement targetElement = this.getElement(op.getTarget());
+		double[] value = op.getValue();
 		if (targetElement != null){
-			targetElement.value = op.getValue()[0];
-		} else {
-			System.err.println("WARNING: Null value in: " + op);
+			if(value != null){
+				targetElement.value = op.getValue()[0];				
+			} else {
+				System.err.println("WARNING: Null value in: " + op);
+			}
 		}
 	
 	}

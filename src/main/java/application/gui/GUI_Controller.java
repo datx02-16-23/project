@@ -253,6 +253,7 @@ public class GUI_Controller implements CommunicatorListener{
     public void interpretOperationHistory(){
     	 stopAutoPlay();
  		 interpreter.consolidate(operationHistory.getItems());
+ 		 model.setOperations(operationHistory.getItems());
  		 updateOperationList();
     }
     
