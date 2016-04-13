@@ -37,6 +37,7 @@ def is_variable(node):
 #############################################################
 class ExpressionTransformer(NodeTransformer):
 
+	# ('subscript', to, indices..)
 	def visit_Subscript(self,node):
 		value  = self.visit(node.value)
 		index  = self.visit(node.slice)
@@ -48,15 +49,18 @@ class ExpressionTransformer(NodeTransformer):
 			expand = add_tuple(value,index)
 		return copy_location(expand,node)
 
+	# ('var',node.id) if Store is context
+	# ('var',node.id, node) if Load is context
 	def visit_Name(self,node):
 		if node.id == 'False' or node.id == 'True':
 			return node
 		return copy_location(
 			Tuple(elts=
-				[Str(s='var'),Str(s=node.id)]
+				[Str(s='var'),Str(s=node.id)] + ([node] if isinstance(node.ctx,Load) else [])
 			)
 		,node)
 
+	# ('binop', op, left, right)
 	def visit_BinOp(self,node):
 		return copy_location(
 			Tuple(elts=[
@@ -67,8 +71,14 @@ class ExpressionTransformer(NodeTransformer):
 			])
 		,node)
 
+	# 'undefined'
 	def visit_Call(self,node):
 		return Str('undefined')
+
+	# these two need implementing
+	def visit_DictComp(self,node): return node
+	
+	def visit_ListComp(self,node): return node
 
 class OperationTransformer(NodeTransformer):
 	def __init__(self,name):
@@ -83,14 +93,16 @@ class OperationTransformer(NodeTransformer):
 			keywords=[]
 		)
 
+	# Following nodes should generally be avoided
+	# or should be handled diffrently in future
 	def visit_Call(self,node): return node
 
-	# OperationTransformer shouldnt know about WriteTransformer
-	# should be a better solution
 	def visit_Assign(self,node): return node
 
 	def visit_AugAssign(self,node): return node
-	
+
+	def visit_Delete(self,node): return node
+
 	def visit_FunctionDef(self,node):
 		for field in node.body:
 			self.visit(field)
@@ -101,10 +113,11 @@ class WriteTransformer(OperationTransformer):
 		super(WriteTransformer,self).__init__('write')
 
 	def visit_Assign(self,node):
-		src = self.expr_transformer.visit(deepcopy(node.value))
-		dst = self.expr_transformer.visit(deepcopy(node.targets[0]))
-		write = self.create_call([src,dst,node.value])
-		node.value = write
+		if len(node.targets) == 1 and (isinstance(node.targets[0],Name) or isinstance(node.targets[0],Subscript)):
+			src = self.expr_transformer.visit(deepcopy(node.value))
+			dst = self.expr_transformer.visit(deepcopy(node.targets[0]))
+			write = self.create_call([src,dst,node.value])
+			node.value = write
 		return node
 
 	def insert_write(self,target,mod):
@@ -168,7 +181,7 @@ class PassTransformer(OperationTransformer):
 		return node
 
 	def visit_Call(self,node):
-		if node.func.id in self.function_defs:
+		if not isinstance(node.func,Attribute) and node.func.id in self.function_defs:
 			for i,arg in enumerate(node.args):
 				node.args[i] = Dict(
 					values=[arg, self.expr_transformer.visit(deepcopy(arg))],

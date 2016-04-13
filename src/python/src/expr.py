@@ -78,7 +78,7 @@ class VariableTable(object):
 
 	def evaluate_(self,head,r):
 		if head == 'var':
-			return self.evaluate_var(r[0])
+			return self.evaluate_var(r)
 		elif head == 'subscript':
 			return self.evaluate_subscript(r)
 		elif head == 'binop':
@@ -88,7 +88,7 @@ class VariableTable(object):
 
 	def evaluate_var(self,var):
 		if var not in self.table:
-			raise InvalidExpression('%s not in table' % var)
+			return var[1]
 		else:
 			return self.table[var]
 

@@ -23,3 +23,9 @@ visit_ImportFrom
     	self.write(item)
 	->
 	self.visit(item)
+
+visit_Delete
+	tried to enumerate node instead of node.targets
+	for idx, target in enumerate(node):
+	->
+	for idx, target in enumerate(node.targets):
