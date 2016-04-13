@@ -35,7 +35,8 @@ public class Interpreter {
 	
 	private int highOrderRoutine;
 	
-	private List<Operation> unprocessedOperations, processedOperations;
+	private final List<Operation> before;
+	private List<Operation> after;
 	private List<OP_ReadWrite> workingSet;
 	private Consolidator consolidator;
 
@@ -44,9 +45,8 @@ public class Interpreter {
 	 * and getConsolidatedOperations() methods to interpret lists of operations.
 	 */
 	public Interpreter(){
-		unprocessedOperations = new ArrayList<Operation>();
+		before = new ArrayList<Operation>();
 		workingSet = new ArrayList<OP_ReadWrite>();
-		processedOperations = new ArrayList<Operation>();
 		highOrderRoutine = FLUSH_SET_ADD_HIGH;
 		consolidator = new Consolidator();
 		//Different list types? Array lists may become a performance issue in the future.
@@ -75,7 +75,6 @@ public class Interpreter {
 	 * @return True if the list has been changed. False otherwise.
 	 */
 	public boolean consolidate(List<Operation> operations){
-		System.out.println("CONSOLIDATING: routine = " + highOrderRoutine);
 		if (highOrderRoutine == ABORT){
 			for(Operation op : operations){
 				
@@ -90,14 +89,16 @@ public class Interpreter {
 		
 		int oldSize = operations.size();
 		
-		unprocessedOperations.clear(); //Not really needed.
-		unprocessedOperations.addAll(operations);
+		before.clear(); //Not really needed.
+		before.addAll(operations);		
 		
-		processedOperations.clear();
+		after = operations;
+		after.clear();
+		
+		workingSet.clear();
+		
+		candidate = null;
 		consolidateOperations();
-		
-		operations.clear();
-		operations.addAll(processedOperations);
 		
 		return oldSize == operations.size();
 	}
@@ -110,8 +111,13 @@ public class Interpreter {
 		int minWorkingSetSize = consolidator.getMinimumSetSize();
 		int maxWorkingSetSize = consolidator.getMaximumSetSize();
 		
+		if(minWorkingSetSize < 0 || maxWorkingSetSize < 0){
+			after.addAll(before);
+			return; //No operations in Consolidator.
+		}
+		
 		//Continue until all operations are handled
-		outer: while(unprocessedOperations.isEmpty() == false || workingSet.isEmpty() == false){
+		outer: while(before.isEmpty() == false || workingSet.isEmpty() == false){
 			while(workingSet.size() < minWorkingSetSize){
 				if (tryExpandWorkingSet() == false){
 					break outer;
@@ -131,14 +137,15 @@ public class Interpreter {
 			} 
 			
 			//Add the first operation of working set to consolidated operations.
-			processedOperations.add(workingSet.remove(0));
+			after.add(workingSet.remove(0));
 			
 			//Reduce the working set.
 			while(workingSet.size() > minWorkingSetSize){
 				reduceWorkingSet();
 			}
 		}
-		processedOperations.addAll(workingSet);
+		
+		after.addAll(workingSet);
 	}
 	
 	/**
@@ -147,7 +154,7 @@ public class Interpreter {
 	 */
 	private void reduceWorkingSet() {
 		//Add the last element of working set to the first position in low level operations.
-		unprocessedOperations.add(0, workingSet.remove(workingSet.size()-1)); 
+		before.add(0, workingSet.remove(workingSet.size()-1));
 	}
 
 	/**
@@ -157,25 +164,23 @@ public class Interpreter {
 	 */
 	private Operation candidate;
 	private boolean tryExpandWorkingSet() {
-		if(unprocessedOperations.isEmpty()){
+		if(before.isEmpty()){
 			return false;
 		}
 		
-		candidate = unprocessedOperations.remove(0); 
-		//Found a message. Add continue expansion.
+		candidate = before.remove(0); 
 		if (candidate.operation == OperationType.message){
-			keepSetAddHigh();
-			return tryExpandWorkingSet(); //Call self until working set has been expanded.
+			keepSet_addCandidate();
+			return tryExpandWorkingSet(); 
 			
-		//Found an init operation. Flush working set into high level operations, then add the init.
 		} else if (candidate.operation == OperationType.init){
-			flushSetAddHigh();
-			return tryExpandWorkingSet(); //Try to expand working set again.
+			flushSet_addCandidate();
+			return tryExpandWorkingSet();
 			
 		//Only read/write operations should remain at this point.
 		} else if (isReadOrWrite(candidate) == false){
 			handleHighLevelOperation();
-			return tryExpandWorkingSet(); //Try to expand working set again.
+			return tryExpandWorkingSet();
 		}
 		
 		//Add the read/write operation to the working set.
@@ -187,11 +192,11 @@ public class Interpreter {
 
 		switch(highOrderRoutine){
 			case KEEP_SET_ADD_HIGH:
-				keepSetAddHigh();
+				keepSet_addCandidate();
 				break;
 				
 			case FLUSH_SET_ADD_HIGH:
-				flushSetAddHigh();
+				flushSet_addCandidate();
 				break;
 				
 			case DISCARD:
@@ -214,16 +219,16 @@ public class Interpreter {
 	/**
 	 * Add high-level operation found to processedOperations, then continue on the current working set.
 	 */
-	private void keepSetAddHigh(){
-		processedOperations.add(candidate);
+	private void keepSet_addCandidate(){
+		after.add(candidate);
 	}
 	
 	/**
 	 * Flush the working set into processedOperations, then add the high-level operation as well.
 	 */
-	private void flushSetAddHigh(){
-		processedOperations.addAll(workingSet);
-		processedOperations.add(candidate);
+	private void flushSet_addCandidate(){
+		after.addAll(workingSet);
+		after.add(candidate);
 		workingSet.clear();
 	}
 	
@@ -245,7 +250,7 @@ public class Interpreter {
 		 Operation consolidatedOperation = consolidator.attemptConsolidate(workingSet);
 		 
 		if (consolidatedOperation != null){
-			processedOperations.add(consolidatedOperation);
+			after.add(consolidatedOperation);
 			return true;
 		}
 
