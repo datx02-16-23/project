@@ -1,10 +1,10 @@
 package application.model;
 
-import manager.datastructures.DataStructure;
-import manager.operations.Key;
-import manager.operations.OperationType;
 import wrapper.Locator;
 import wrapper.Operation;
+import wrapper.datastructures.DataStructure;
+import wrapper.operations.Key;
+import wrapper.operations.OperationType;
 
 import java.util.HashMap;
 import java.util.Map;

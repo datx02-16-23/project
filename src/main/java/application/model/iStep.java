@@ -1,10 +1,9 @@
 package application.model;
 
-import manager.datastructures.DataStructure;
-
 import java.util.Map;
 
 import wrapper.Operation;
+import wrapper.datastructures.DataStructure;
 
 
 public interface iStep {

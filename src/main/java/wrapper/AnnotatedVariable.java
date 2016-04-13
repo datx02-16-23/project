@@ -3,7 +3,7 @@ package wrapper;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import assets.Strings;
+import application.assets.Strings;
 
 /**
  * The declaration for an annotated (observed) variable in source.

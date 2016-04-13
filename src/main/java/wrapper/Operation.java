@@ -3,9 +3,9 @@ package wrapper;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import assets.Strings;
-import manager.operations.OperationType;
-import manager.operations.Key;
+import application.assets.Strings;
+import wrapper.operations.Key;
+import wrapper.operations.OperationType;
 
 /**
  * Abstract wrapper class containing the necessary data to recreate a given operation.

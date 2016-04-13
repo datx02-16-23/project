@@ -3,7 +3,7 @@ package wrapper;
 import java.io.Serializable;
 import java.util.Arrays;
 
-import assets.Strings;
+import application.assets.Strings;
 
 /**
  * A variable used by the {@code Operation} class.

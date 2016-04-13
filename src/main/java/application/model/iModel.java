@@ -1,11 +1,10 @@
 package application.model;
 
 import wrapper.Operation;
+import wrapper.datastructures.DataStructure;
 
 import java.util.List;
 import java.util.Map;
-
-import manager.datastructures.DataStructure;
 
 
 public interface iModel {

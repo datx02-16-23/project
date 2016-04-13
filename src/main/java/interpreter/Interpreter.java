@@ -3,8 +3,8 @@ package interpreter;
 import java.util.ArrayList;
 import java.util.List;
 
-import manager.operations.*;
 import wrapper.Operation;
+import wrapper.operations.*;
 
 /**
  * Class for consolidating groups of low level operations (read/write).

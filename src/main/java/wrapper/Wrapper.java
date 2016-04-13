@@ -5,7 +5,7 @@ package wrapper;
 import java.io.Serializable;
 import java.util.List;
 
-import assets.Strings;
+import application.assets.Strings;
 
 /**
  * Wrapper class for GLO and HOG files on the JSON format.
