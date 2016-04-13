@@ -37,6 +37,7 @@ def is_variable(node):
 #############################################################
 class ExpressionTransformer(NodeTransformer):
 
+	# ('subscript', to, indices..)
 	def visit_Subscript(self,node):
 		value  = self.visit(node.value)
 		index  = self.visit(node.slice)
@@ -48,15 +49,18 @@ class ExpressionTransformer(NodeTransformer):
 			expand = add_tuple(value,index)
 		return copy_location(expand,node)
 
+	# ('var',node.id) if Store is context
+	# ('var',node.id, node) if Load is context
 	def visit_Name(self,node):
 		if node.id == 'False' or node.id == 'True':
 			return node
 		return copy_location(
 			Tuple(elts=
-				[Str(s='var'),Str(s=node.id),node]
+				[Str(s='var'),Str(s=node.id)] + ([node] if isinstance(node.ctx,Load) else [])
 			)
 		,node)
 
+	# ('binop', op, left, right)
 	def visit_BinOp(self,node):
 		return copy_location(
 			Tuple(elts=[
@@ -67,6 +71,7 @@ class ExpressionTransformer(NodeTransformer):
 			])
 		,node)
 
+	# 'undefined'
 	def visit_Call(self,node):
 		return Str('undefined')
 

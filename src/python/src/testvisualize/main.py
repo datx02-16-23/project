@@ -29,20 +29,20 @@ unvisited = write({node: None for node in nodes}, ('var', 'unvisited'), {node: N
 visited = write({}, ('var', 'visited'), {})
 current = write('B', ('var', 'current'), 'B')
 currentDistance = write(0, ('var', 'currentDistance'), 0)
-unvisited[current] = write(('var', 'currentDistance'), ('subscript', ('var', 'unvisited'), ('var', 'current')), currentDistance)
+unvisited[current] = write(('var', 'currentDistance', currentDistance), ('subscript', ('var', 'unvisited', unvisited), ('var', 'current', current)), currentDistance)
 while read(True, True):
     for (neighbour, distance) in distances[current].items():
         distance = write(distance, ('var', 'distance'), distance)
         neighbour = write(neighbour, ('var', 'neighbour'), neighbour)
-        if (read(('var', 'neighbour'), neighbour) not in read(('var', 'unvisited'), unvisited)):
+        if (read(('var', 'neighbour', neighbour), neighbour) not in read(('var', 'unvisited', unvisited), unvisited)):
             continue
-        newDistance = write(('binop', '+', ('var', 'currentDistance'), ('var', 'distance')), ('var', 'newDistance'), currentDistance + distance)
-        if ((read(('subscript', ('var', 'unvisited'), ('var', 'neighbour')), unvisited[neighbour]) is read(('var', 'None'), None)) or (read(('subscript', ('var', 'unvisited'), ('var', 'neighbour')), unvisited[neighbour]) > read(('var', 'newDistance'), newDistance))):
-            unvisited[neighbour] = write(('var', 'newDistance'), ('subscript', ('var', 'unvisited'), ('var', 'neighbour')), newDistance)
-    visited[current] = write(('var', 'currentDistance'), ('subscript', ('var', 'visited'), ('var', 'current')), currentDistance)
+        newDistance = write(('binop', '+', ('var', 'currentDistance', currentDistance), ('var', 'distance', distance)), ('var', 'newDistance'), currentDistance + distance)
+        if ((read(('subscript', ('var', 'unvisited', unvisited), ('var', 'neighbour', neighbour)), unvisited[neighbour]) is read(('var', 'None', None), None)) or (read(('subscript', ('var', 'unvisited', unvisited), ('var', 'neighbour', neighbour)), unvisited[neighbour]) > read(('var', 'newDistance', newDistance), newDistance))):
+            unvisited[neighbour] = write(('var', 'newDistance', newDistance), ('subscript', ('var', 'unvisited', unvisited), ('var', 'neighbour', neighbour)), newDistance)
+    visited[current] = write(('var', 'currentDistance', currentDistance), ('subscript', ('var', 'visited', visited), ('var', 'current', current)), currentDistance)
     del unvisited[current]
-    if (not read(('var', 'unvisited'), unvisited)):
+    if (not read(('var', 'unvisited', unvisited), unvisited)):
         break
     candidates = write([node for node in unvisited.items() if node[1]], ('var', 'candidates'), [node for node in unvisited.items() if node[1]])
     (current, currentDistance) = sorted(candidates, key=lambda x: x[1])[0]
-print read(('var', 'visited'), visited)
+print read(('var', 'visited', visited), visited)
