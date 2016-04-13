@@ -97,10 +97,8 @@ public class Array extends DataStructure{
 				init((OP_Init) op);
 				break;
 			case read:
-				readORwrite((OP_Read) op);
-				break;
 			case write:
-				readORwrite((OP_Write) op);
+				readORwrite((OP_ReadWrite) op);
 				break;
 			case swap:
 				swap((OP_Swap) op);
@@ -128,17 +126,11 @@ public class Array extends DataStructure{
 	}
 
 	private void readORwrite(OP_ReadWrite op){
-		Locator source = op.getSource();
-		Locator target = op.getTarget();
-		
-		ArrayElement sourceElement = this.getElement(source);
-		if (sourceElement != null){
-			//Ignore.
-		}
-		
-		ArrayElement targetElement = this.getElement(target);
+		ArrayElement targetElement = this.getElement(op.getTarget());
 		if (targetElement != null){
 			targetElement.value = op.getValue()[0];
+		} else {
+			System.err.println("WARNING: Null value in: " + op);
 		}
 	
 	}

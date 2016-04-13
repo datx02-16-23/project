@@ -97,10 +97,8 @@ public class IndependentElement extends DataStructure implements Element{
 				init((OP_Init) op);
 				break;
 			case read:
-				readORwrite((OP_Read) op);
-				break;
 			case write:
-				readORwrite((OP_Write) op);
+				readORwrite((OP_ReadWrite) op);
 				break;
 			case swap:
 				swap((OP_Swap) op);
@@ -128,10 +126,6 @@ public class IndependentElement extends DataStructure implements Element{
 		if(op.getTarget().identifier.equals(this.identifier)){
 			element.setValue(op.getValue()[0]);
 			return;
-		}
-		
-		if(op.getSource().identifier.equals(this.identifier)){
-			//Do nothing.
 		}
 		
 	}
