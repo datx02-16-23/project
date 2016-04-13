@@ -235,6 +235,7 @@ public class VisualizerController implements CommunicatorListener{
     	interpreterBefore.getItems().setAll(operationHistory.getItems());
     	beforeCount.setText(""+interpreterBefore.getItems().size());
     	interpreterAfter.getItems().clear();
+    	afterCount.setText("0");
 
     	setTestCases();
     	
@@ -357,7 +358,7 @@ public class VisualizerController implements CommunicatorListener{
     
     private Stage interpreterView;
     private ListView<Operation>interpreterBefore, interpreterAfter;
-    private TextField beforeCount;
+    private TextField beforeCount, afterCount;
     @SuppressWarnings("unchecked")
 	private void initInterpreterPane(){
     	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/InterpreterView.fxml"));
@@ -398,7 +399,7 @@ public class VisualizerController implements CommunicatorListener{
 	        interpreterAfter = (ListView<Operation>) interpreterViewNamespace.get("interpreterAfter");
 	        
 	        beforeCount = (TextField) interpreterViewNamespace.get("beforeCount");
-	        TextField afterCount = (TextField) interpreterViewNamespace.get("afterCount");
+	        afterCount = (TextField) interpreterViewNamespace.get("afterCount");
 
         	List<Operation> afterItems = interpreterAfter.getItems();
 	        
@@ -408,7 +409,7 @@ public class VisualizerController implements CommunicatorListener{
 	        	
 	        	afterItems.clear();
 	        	afterItems.addAll(interpreterBefore.getItems());
-	        	
+	        	System.out.println("before = \n" + afterItems);
 	        	interpreter.consolidate(afterItems);
 	        	afterCount.setText(""+afterItems.size());
 	        });
@@ -418,7 +419,9 @@ public class VisualizerController implements CommunicatorListener{
 	        moveToBefore.setOnAction(event ->{
 	        	if(afterItems.isEmpty() == false){
 	        		interpreterBefore.getItems().setAll(afterItems);
-	        		beforeCount.setText(""+interpreterBefore.getItems().size());	        		
+	        		beforeCount.setText(""+interpreterBefore.getItems().size());
+	        		afterItems.clear();
+	        		afterCount.setText("0");
 	        	}
 	        });
 	        
