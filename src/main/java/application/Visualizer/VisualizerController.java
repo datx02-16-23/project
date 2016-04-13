@@ -406,10 +406,9 @@ public class VisualizerController implements CommunicatorListener{
         	//Interpret button
 	        Button interpret = (Button) fxmlLoader.getNamespace().get("interpret");
 	        interpret.setOnAction(event ->{
-	        	
+
 	        	afterItems.clear();
 	        	afterItems.addAll(interpreterBefore.getItems());
-	        	System.out.println("before = \n" + afterItems);
 	        	interpreter.consolidate(afterItems);
 	        	afterCount.setText(""+afterItems.size());
 	        });
