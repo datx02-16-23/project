@@ -16,23 +16,23 @@ public class Interpreter {
 	/**
 	 * Halt execution if a high-level operation is found.
 	 */
-	public final int HALT = 0;
+	public static final int ABORT = 0;
 	/**
 	 * Add any high-level operation found to processedOperations, then continue on the current working set.
 	 */
-	public final int KEEP_SET_ADD_HIGH = 1;
+	public static final int KEEP_SET_ADD_HIGH = 1;
 	/**
 	 * Flush the working set into processedOperations, then add the high-level operation as well.
 	 */
-	public final int FLUSH_SET_ADD_HIGH = 2;
+	public static final int FLUSH_SET_ADD_HIGH = 2;
 	/**
 	 * Discard high-level operations as they are found.
 	 */
-	public final int DISCARD = 3;
+	public static final int DISCARD = 3;
 	/**
 	 * Deconstruct high-level operations into read/write operations.
 	 */
-	public final int DECONSTRUCT = 4;
+	public static final int DECONSTRUCT = 4;
 	
 	private int highOrderRoutine;
 	
@@ -174,7 +174,7 @@ public class Interpreter {
 	private void handleHighLevelOperation(){
 
 		switch(highOrderRoutine){
-			case HALT:
+			case ABORT:
 				System.err.println("HALT has not been implemented yet. Sorry :/.");
 				System.exit(-1); //TODO: Handle properly.
 				break;

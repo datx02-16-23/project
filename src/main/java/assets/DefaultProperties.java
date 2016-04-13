@@ -13,6 +13,7 @@ public abstract class DefaultProperties {
 		defaultConfig.setProperty("playbackStepDelay", "500");
 		defaultConfig.setProperty("autoPlayOnIncomingStream", "true");
 		defaultConfig.setProperty("firstRun", "true");
+		defaultConfig.setProperty("highOrderRoutine", "2");
 
 		System.out.println("Default config properties created:");
 		System.out.println(defaultConfig);

@@ -7,6 +7,7 @@ import assets.Strings;
 import interpreter.Interpreter;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
@@ -89,8 +90,35 @@ public class VisualizerController implements CommunicatorListener{
         timeBetweenField.setText(df.format(stepDelayBase));
         
     	toggleAutorunStream.setSelected(autoPlayOnIncomingStream);
-        
+    	
+    	//Interpreter stuff
+    	newRoutine = interpreter.getHighOrderRoutine();
+    	interpreterRoutineChooser.getSelectionModel().select(translateInterpreterRoutine());;
+    			
         settingsDialog.show();
+    }
+    
+    private String translateInterpreterRoutine(){
+    
+		switch(interpreter.getHighOrderRoutine()){
+			case Interpreter.DISCARD:
+				return "Discard";
+				
+			case Interpreter.FLUSH_SET_ADD_HIGH:
+				return "Flush Set";
+				
+			case Interpreter.KEEP_SET_ADD_HIGH:
+				return "Keep Set";
+				
+			case Interpreter.DECONSTRUCT:
+				return "Deconstruct";
+				
+			case Interpreter.ABORT:
+				return "Abort";
+			default:
+				throw new IllegalArgumentException();
+		}
+		
     }
     
     private CheckBox toggleAutorunStream;
@@ -258,7 +286,8 @@ public class VisualizerController implements CommunicatorListener{
     }
 
     private DecimalFormat df;
-    private void initSettingsPane(){
+    @SuppressWarnings("unchecked")
+	private void initSettingsPane(){
     	df = new DecimalFormat("#.####"); 
     	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/SettingsView.fxml"));
         fxmlLoader.setController(this);
@@ -290,8 +319,12 @@ public class VisualizerController implements CommunicatorListener{
 	        perSecField = (TextField) fxmlLoader.getNamespace().get("perSecField");
 	        
 	        toggleAutorunStream = (CheckBox) fxmlLoader.getNamespace().get("toggleAutorunStream");
-
-	    
+	        interpreterRoutineChooser = (ChoiceBox<String>) fxmlLoader.getNamespace().get("interpreterRoutineChooser");
+	        interpreterRoutineChooser.getSelectionModel().selectedIndexProperty().addListener(event -> {
+	        	interpreterRoutineChooser(); //Cant set onAction i SceneBuilder for some reason.
+	        });
+	        interpreterRoutineChooser.setItems(FXCollections.observableArrayList("Discard", "Flush Set", "Keep Set", "Deconstruct", "Abort"));
+	        
         settingsDialog.setScene(dialogScene);
     }
     
@@ -593,27 +626,73 @@ public class VisualizerController implements CommunicatorListener{
 			}
 	    }
 	    
+	    //Load settings
 	    public void loadProperties(){
 			Properties properties = tryLoadProperties();
 			
+			interpreter.setHighOrderRoutine(Integer.parseInt(properties.getProperty("highOrderRoutine")));
 			stepDelayBase = Long.parseLong(properties.getProperty("playbackStepDelay")); stepDelay = stepDelayBase; //Speedup factor is 1 at startup.
 			autoPlayOnIncomingStream = Boolean.parseBoolean(properties.getProperty("autoPlayOnIncomingStream"));
 	    }
 	    
+	    //Save settings
 	    public void saveProperties(){
 			Properties properties = new Properties();
 			
-			properties.put("playbackStepDelay", ""+stepDelayBase);
-			properties.put("autoPlayOnIncomingStream", ""+autoPlayOnIncomingStream);
+			properties.setProperty("playbackStepDelay", ""+stepDelayBase);
+			properties.setProperty("autoPlayOnIncomingStream", ""+autoPlayOnIncomingStream);
+			
+//			System.out.println(newRoutine);
+			interpreter.setHighOrderRoutine(newRoutine);
+			properties.setProperty("highOrderRoutine", ""+interpreter.getHighOrderRoutine());
+//			System.out.println(interpreter.getHighOrderRoutine());
+//			System.out.println(properties.getProperty("highOrderRoutine"));
+//			System.out.println("");
 			
 			try {
 				URL url = getClass().getClassLoader().getResource(Strings.PROPERTIES_FILE_NAME);
 				OutputStream outputStream = new FileOutputStream(new File(url.toURI()));
-				properties.store(outputStream, "OK now what?");
-				System.out.println("Saved settings.");
+				properties.store(outputStream, Strings.PROJECT_NAME + " user preferences.");
 			} catch (Exception e) {
 				propertiesFailed(e);
 			}
+	    }
+	    
+	    private ChoiceBox<String> interpreterRoutineChooser;
+	    private int newRoutine = -1;
+	    public void interpreterRoutineChooser(){
+	    	String choice = interpreterRoutineChooser.getSelectionModel().getSelectedItem();
+	    	System.out.println(choice);
+	    	if (choice == null){
+	    		return;
+	    	}
+	    	
+	    	switch(choice){
+	    	case "Discard":
+	    		newRoutine = Interpreter.DISCARD;
+	    		break;
+	    	case "Flush Set":
+	    		newRoutine = Interpreter.FLUSH_SET_ADD_HIGH;
+	    		break;
+	    		
+	    	case "Keep Set":
+	    		newRoutine = Interpreter.KEEP_SET_ADD_HIGH;
+	    		break;
+	    		
+	    	case "Deconstruct":
+	    		newRoutine = Interpreter.DECONSTRUCT;
+	    		break;
+	    		
+	    	case "Abort":
+	    		newRoutine = Interpreter.ABORT;
+	    		break;
+	    	}
+	    	System.out.println("newRoutine = " + newRoutine);
+	    	
+	    	if (newRoutine == interpreter.getHighOrderRoutine()){
+	    		unsavedChanged();	    		
+	    	}
+	    	
 	    }
 	
 	    
