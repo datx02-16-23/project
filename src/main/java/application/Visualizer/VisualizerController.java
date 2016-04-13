@@ -14,6 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -22,17 +23,13 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import manager.Communicator.MavserMessage;
 import manager.CommunicatorListener;
 import manager.JGroupCommunicator;
 import manager.LogStreamManager;
-import manager.Communicator.MavserMessage;
 import wrapper.Operation;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -286,18 +283,25 @@ public class VisualizerController implements CommunicatorListener{
             currOpTextField.selectAll();
             return;
         }
-
-        model.goToStep(lineOffset);
-        visualization.render();
-        currOpTextField.setText(""+lineOffset);
-        updateOperationList();
+        goToOpIndex(lineOffset);
     }
 
     public void gotoSelection(){
         int lineOffset = operationHistory.getSelectionModel().getSelectedIndex();
-    	model.goToStep(lineOffset);
+    	goToOpIndex(lineOffset);
+    }
+
+    public void doubleClickGoTo(MouseEvent click){
+        if(click.getClickCount() == 2){
+            goToOpIndex(( (ListView) click.getSource()).getSelectionModel().getSelectedIndex());
+        }
+    }
+
+    private void goToOpIndex(int index){
+        model.goToStep(index);
         visualization.render();
-        currOpTextField.setText(""+(lineOffset));
+        currOpTextField.setText(""+index);
+        updateOperationList();
     }
 
     private DecimalFormat df;
