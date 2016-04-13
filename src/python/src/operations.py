@@ -3,10 +3,21 @@
 ########################################################################
 outfile = None
 
+import socket
+import json
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.connect(('localhost', 8000))
+
+def to_json(statement):
+	return {'test' : None}
+
 def put(statement):
     with open(outfile, 'a') as f:
         f.write('%s,' % str(statement))
         f.close()
+    statement_json = to_json(statement)
+    sock.send(json.dumps(statement_json))
 
 def write(src,dst,source):
     put({'type' : 'write', 'src' : src, 'dst' : dst, 'src_val' : source })

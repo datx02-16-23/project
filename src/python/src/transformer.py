@@ -109,8 +109,8 @@ class OperationTransformer(NodeTransformer):
 		return node
 
 class WriteTransformer(OperationTransformer):
-	def __init__(self):
-		super(WriteTransformer,self).__init__('write')
+	def __init__(self,name):
+		super(WriteTransformer,self).__init__(name)
 
 	def visit_Assign(self,node):
 		if len(node.targets) == 1 and (isinstance(node.targets[0],Name) or isinstance(node.targets[0],Subscript)):
@@ -141,8 +141,8 @@ class WriteTransformer(OperationTransformer):
 		return node
 
 class ReadTransformer(OperationTransformer):
-	def __init__(self):
-		super(ReadTransformer,self).__init__('read')
+	def __init__(self,name):
+		super(ReadTransformer,self).__init__(name)
 
 	def create_read(self,node):
 		stmt = self.expr_transformer.visit(deepcopy(node))
@@ -161,8 +161,8 @@ class ReadTransformer(OperationTransformer):
 		return node
 
 class PassTransformer(OperationTransformer):
-	def __init__(self):
-		super(PassTransformer,self).__init__('link')
+	def __init__(self,name):
+		super(PassTransformer,self).__init__(name)
 		self.function_defs = []
 		self.function_bodies = []
 
@@ -206,18 +206,18 @@ class PassTransformer(OperationTransformer):
 		return node
 
 ######################## Tests ########################
-pt = PassTransformer()
-def test_stmt(stmt):
-	wt = WriteTransformer()
-	rt = ReadTransformer()
-	node = parse(stmt).body[0]
-	print 'before : ',stmt
-	node = pt.visit(node)
-	node = wt.visit(node)
-	node = rt.visit(node)
-	ts_node = ts(node)
-	print 'after : ',ts_node
-	return ts_node
+# pt = PassTransformer()
+# def test_stmt(stmt):
+# 	wt = WriteTransformer()
+# 	rt = ReadTransformer()
+# 	node = parse(stmt).body[0]
+# 	print 'before : ',stmt
+# 	node = pt.visit(node)
+# 	node = wt.visit(node)
+# 	node = rt.visit(node)
+# 	ts_node = ts(node)
+# 	print 'after : ',ts_node
+# 	return ts_node
 
 # # assignment
 # test_stmt("a = 1")						# integer
