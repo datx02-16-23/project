@@ -270,26 +270,26 @@ public class VisualizerController implements CommunicatorListener{
     }
 
     public void inputGoToSelecton(){
-        int lineNr;
+        int lineOffset;
 
         try{
             currOpTextField.setStyle("-fx-control-inner-background: white;");
-            lineNr = Integer.parseInt(currOpTextField.getText());
+            lineOffset = Integer.parseInt(currOpTextField.getText());
         } catch (Exception exc){
             // NaN
             currOpTextField.setStyle("-fx-control-inner-background: #C40000;");
             return;
         }
 
-        if(lineNr <= 0){
+        if(lineOffset < 0){
             currOpTextField.setText("invalid");
             currOpTextField.selectAll();
             return;
         }
 
-        model.goToStep(lineNr-1);
+        model.goToStep(lineOffset);
         visualization.render();
-        currOpTextField.setText(""+lineNr);
+        currOpTextField.setText(""+lineOffset);
         updateOperationList();
     }
 
@@ -297,7 +297,7 @@ public class VisualizerController implements CommunicatorListener{
         int lineOffset = operationHistory.getSelectionModel().getSelectedIndex();
     	model.goToStep(lineOffset);
         visualization.render();
-        currOpTextField.setText(""+(lineOffset+1));
+        currOpTextField.setText(""+(lineOffset));
     }
 
     private DecimalFormat df;
