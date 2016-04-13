@@ -420,11 +420,10 @@ public class VisualizerController implements CommunicatorListener{
 		if (outputPath == null){
 			return;
 		}
-		System.err.println("No way to get operations/variables from model?");
-		//TODO: No way to get operations/variables from model?
-//		lsm.setOperations(null);
-//		lsm.setKnownVariables(null);
-//		lsm.printLog(outputPath);
+		
+		lsm.setOperations(model.getOperations());
+		lsm.setKnownVariables(model.getStructures());
+		lsm.printLog(outputPath);
 	}
 	
     public void propertiesFailed(Exception exception){

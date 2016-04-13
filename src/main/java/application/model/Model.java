@@ -94,4 +94,14 @@ public class Model implements iModel {
             index += 1;
         }
 	}
+
+	@Override
+	public Map<String, DataStructure> getStructures() {
+		return step.getStructures();
+	}
+
+	@Override
+	public List<Operation> getOperations() {
+		return operations;
+	}
 }
