@@ -275,7 +275,7 @@ public class VisualizerController implements CommunicatorListener{
     
     //TODO: Implement detailed inspection of operation
     public void inspectSelection(){
-    	System.out.println(operationHistory.getSelectionModel().getSelectedItem());
+    	System.err.println("Not implemented.");
     }
 
     public void inputGoToSelecton(){
