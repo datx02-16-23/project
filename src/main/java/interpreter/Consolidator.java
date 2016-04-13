@@ -90,7 +90,7 @@ public class Consolidator {
 	 * @return A consolidated operation if successful, null otherwise.
 	 */
 	public Operation attemptConsolidate(List<OP_ReadWrite> rwList){
-		Operation consolidatedOperation;
+		Operation consolidatedOperation = null;
 		
 		for(Consolidable c : invokers[rwList.size()]){
 			consolidatedOperation = c.consolidate(rwList);
@@ -106,6 +106,9 @@ public class Consolidator {
 	 * @return The maximum number of read/write operations this Consolidator will use.
 	 */
 	public int getMaximumSetSize() {
+		if(minimumSetSize == Integer.MIN_VALUE){
+			return -1;
+		}
 		return maximumSetSize;
 	}
 	/**
@@ -113,6 +116,9 @@ public class Consolidator {
 	 * @return The minimum number of read/write operations this Consolidator will use.
 	 */
 	public int getMinimumSetSize() {
+		if(minimumSetSize == Integer.MAX_VALUE){
+			return -1;
+		}
 		return minimumSetSize;
 	}	
 	
@@ -148,5 +154,40 @@ public class Consolidator {
 		if(victim != null){
 			invokers[rwCount].remove(victim);
 		}
+		
+		if(victim.getRWcount() == maximumSetSize){
+			recalculateMaxSetSize();
+		}
+		if(victim.getRWcount() == minimumSetSize){
+			recalculateMinSetSize();
+		}
+	}
+	
+	//TODO: JAVADOC
+	private void recalculateMaxSetSize(){
+		maximumSetSize = Integer.MIN_VALUE;
+		
+		for(int i = 0; i < MAX_SIZE; i++){
+			for(Consolidable c : invokers[i]){
+				if(c.getRWcount() > maximumSetSize){
+					maximumSetSize = c.getRWcount();
+				}
+			}
+		}
+		
+	}
+	
+	//TODO: JAVADOC
+	private void recalculateMinSetSize(){
+		minimumSetSize = Integer.MAX_VALUE;
+		
+		for(int i = 0; i < MAX_SIZE; i++){
+			for(Consolidable c : invokers[i]){
+				if(c.getRWcount() > minimumSetSize){
+					minimumSetSize = c.getRWcount();
+				}
+			}
+		}
+		
 	}
 }
