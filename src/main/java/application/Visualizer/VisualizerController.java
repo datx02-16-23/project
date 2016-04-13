@@ -320,7 +320,7 @@ public class VisualizerController implements CommunicatorListener{
 	        
 	        toggleAutorunStream = (CheckBox) fxmlLoader.getNamespace().get("toggleAutorunStream");
 	        interpreterRoutineChooser = (ChoiceBox<String>) fxmlLoader.getNamespace().get("interpreterRoutineChooser");
-	        interpreterRoutineChooser.getSelectionModel().selectedIndexProperty().addListener(event -> {
+	        interpreterRoutineChooser.getSelectionModel().selectedItemProperty().addListener(event -> {
 	        	interpreterRoutineChooser(); //Cant set onAction i SceneBuilder for some reason.
 	        });
 	        interpreterRoutineChooser.setItems(FXCollections.observableArrayList("Discard", "Flush Set", "Keep Set", "Deconstruct", "Abort"));
@@ -642,12 +642,8 @@ public class VisualizerController implements CommunicatorListener{
 			properties.setProperty("playbackStepDelay", ""+stepDelayBase);
 			properties.setProperty("autoPlayOnIncomingStream", ""+autoPlayOnIncomingStream);
 			
-//			System.out.println(newRoutine);
 			interpreter.setHighOrderRoutine(newRoutine);
 			properties.setProperty("highOrderRoutine", ""+interpreter.getHighOrderRoutine());
-//			System.out.println(interpreter.getHighOrderRoutine());
-//			System.out.println(properties.getProperty("highOrderRoutine"));
-//			System.out.println("");
 			
 			try {
 				URL url = getClass().getClassLoader().getResource(Strings.PROPERTIES_FILE_NAME);
@@ -662,10 +658,6 @@ public class VisualizerController implements CommunicatorListener{
 	    private int newRoutine = -1;
 	    public void interpreterRoutineChooser(){
 	    	String choice = interpreterRoutineChooser.getSelectionModel().getSelectedItem();
-	    	System.out.println(choice);
-	    	if (choice == null){
-	    		return;
-	    	}
 	    	
 	    	switch(choice){
 	    	case "Discard":
@@ -687,7 +679,6 @@ public class VisualizerController implements CommunicatorListener{
 	    		newRoutine = Interpreter.ABORT;
 	    		break;
 	    	}
-	    	System.out.println("newRoutine = " + newRoutine);
 	    	
 	    	if (newRoutine == interpreter.getHighOrderRoutine()){
 	    		unsavedChanged();	    		
