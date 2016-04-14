@@ -1,6 +1,7 @@
 package interpreter;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import wrapper.Operation;
@@ -17,40 +18,45 @@ public class Interpreter {
     /**
      * Halt execution if a high-level operation is found.
      */
-    public static final int       ABORT              = 0;
+    public static final int             ABORT              = 0;
     /**
      * Add any high-level operation found to processedOperations, then continue on the current working set.
      */
-    public static final int       KEEP_SET_ADD_HIGH  = 1;
+    public static final int             KEEP_SET_ADD_HIGH  = 1;
     /**
      * Flush the working set into processedOperations, then add the high-level operation as well.
      */
-    public static final int       FLUSH_SET_ADD_HIGH = 2;
+    public static final int             FLUSH_SET_ADD_HIGH = 2;
     /**
      * Discard high-level operations as they are found.
      */
-    public static final int       DISCARD            = 3;
+    public static final int             DISCARD            = 3;
     /**
      * Deconstruct high-level operations into read/write operations.
      */
-    public static final int       DECONSTRUCT        = 4;
-    private int                   highOrderRoutine;
-    private final List<Operation> before;
-    private List<Operation>       after;
-    private List<OP_ReadWrite>    workingSet;
-    private Consolidator          consolidator;
+    public static final int             DECONSTRUCT        = 4;
+    private int                         highOrderRoutine;
+    private final LinkedList<Operation> before;
+    private LinkedList<Operation>       after;
+    private LinkedList<OP_ReadWrite>    workingSet;
+    private Consolidator                consolidator;
 
     /**
      * Create a new Interpreter with the high order routine set to FLUSH_SET_ADD_HIGH. Use the setOperations() and
      * getConsolidatedOperations() methods to interpret lists of operations.
      */
     public Interpreter (){
-        before = new ArrayList<Operation>();
-        workingSet = new ArrayList<OP_ReadWrite>();
+        before = new LinkedList<Operation>();
+        workingSet = new LinkedList<OP_ReadWrite>();
         highOrderRoutine = FLUSH_SET_ADD_HIGH;
         consolidator = new Consolidator();
     }
 
+    /**
+     * Returns the high order routine currently in use. See static declarations of this class for possible routines.
+     * 
+     * @return The high order routine currently in use.
+     */
     public int getHighOrderRoutine (){
         return highOrderRoutine;
     }
@@ -88,19 +94,22 @@ public class Interpreter {
             }
         }
         int oldSize = operations.size();
-        before.clear(); //Not really needed.
+        //
+        before.clear();
         before.addAll(operations);
-        after = operations;
+        //Prepare working lists.
         after.clear();
         workingSet.clear();
-        candidate = null;
+        //Consolidate and add result to operations
         consolidateOperations();
+        operations.clear();
+        operations.addAll(after);
         return oldSize == operations.size();
     }
 
     /**
-     * Build and evaluate working sets until all operations in lowLevelOperations have been processed. When this method
-     * returns, lowLevelOperations.size() will be 0.
+     * Build and evaluate working sets until all operations in {@code before} have been processed. When this method
+     * returns, {@code before.size()} will be 0.
      */
     private void consolidateOperations (){
         int minWorkingSetSize = consolidator.getMinimumSetSize();
@@ -127,7 +136,7 @@ public class Interpreter {
                 }
             }
             //Add the first operation of working set to consolidated operations.
-            after.add(workingSet.remove(0));
+            after.add(workingSet.removeFirst());
             //Reduce the working set.
             while(workingSet.size() > minWorkingSetSize) {
                 reduceWorkingSet();
@@ -142,7 +151,7 @@ public class Interpreter {
      */
     private void reduceWorkingSet (){
         //Add the last element of working set to the first position in low level operations.
-        before.add(0, workingSet.remove(workingSet.size() - 1));
+        before.addFirst(workingSet.removeLast());
     }
 
     /**
@@ -271,23 +280,41 @@ public class Interpreter {
                 consolidator.addConsolidable(new OP_Swap());
                 break;
             default:
-                System.err.println("Cannot consolidate the type: " + testCase.toString().toUpperCase());
+                System.err.println("Cannot consolidate OperationType: " + testCase.toString().toUpperCase());
                 break;
         }
     }
 
-    /*
-     * CONSOLIDATOR
+    /**
+     * Returns the Consolidator used by the interpreter.
+     * 
+     * @return The Consolidator used by the interpreter.
      */
+    public Consolidator getConsolidator (){
+        return consolidator;
+    }
+
+    /**
+     * Set the Consolidator used by this interpreter.
+     * 
+     * @param newConsolidator A new Consolidator to use.
+     */
+    public void setConsolidator (Consolidator newConsolidator){
+        consolidator = newConsolidator;
+    }
+
     /**
      * A Consolidator attempts to consolidate low level (read/write) operations into higher level operations.
      * 
      * @author Richard
      *
      */
-    private class Consolidator {
+    public class Consolidator {
 
-        private static final int                MAX_SIZE       = 10;
+        /**
+         * The maximum number of operations a Consolidable may consist of.
+         */
+        public static final int                 MAX_SIZE       = 100;
         private int                             minimumSetSize = Integer.MAX_VALUE;
         private int                             maximumSetSize = Integer.MIN_VALUE;
         private final ArrayList<Consolidable>[] invokers;
