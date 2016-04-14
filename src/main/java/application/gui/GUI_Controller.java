@@ -6,13 +6,19 @@ import application.visualization.Visualization;
 import interpreter.Interpreter;
 import io.*;
 import io.Communicator.*;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
@@ -24,6 +30,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import wrapper.Operation;
 import wrapper.operations.*;
 
@@ -113,7 +120,6 @@ public class GUI_Controller implements CommunicatorListener {
      * Starts playing or pause the AV animation.
      */
     private Button playPauseButton;
-    private Thread autoPlayThread;
 
     public void playPauseButtonClicked (){
         if (!isPlaying) {
@@ -124,41 +130,33 @@ public class GUI_Controller implements CommunicatorListener {
         }
     }
 
+    private Timeline autoplayTimeline;
     public void startAutoPlay (){
         playPauseButton.setText("Pause");
-        if (autoPlayThread != null) {
-            autoPlayThread.interrupt();
+        if(autoplayTimeline != null){
+            autoplayTimeline.stop();
         }
         isPlaying = true;
-        autoPlayThread = new Thread() {
+        autoplayTimeline = new Timeline();
+        autoplayTimeline.getKeyFrames().add(new KeyFrame(Duration.millis(stepDelay), new EventHandler<ActionEvent>() {
 
-            public void run (){
-                while(isPlaying) {
-                    if (stepForwardButtonClicked() == false) {
-                        stopAutoPlay();
-                    }
-                    try {
-                        sleep(stepDelay);
-                    } catch (InterruptedException e) {
-                    }
+            @Override
+            public void handle (ActionEvent actionEvent){
+                if (stepForwardButtonClicked() == false) {
+                    stopAutoPlay();
                 }
             }
-        };
-        autoPlayThread.start();
+        }));
+        autoplayTimeline.setCycleCount(Animation.INDEFINITE);
+        autoplayTimeline.play();
     }
 
     public void stopAutoPlay (){
-        Platform.runLater(new Runnable() {
-
-            @Override
-            public void run (){
-                playPauseButton.setText("Play");
-                isPlaying = false;
-                if (autoPlayThread != null) {
-                    autoPlayThread.interrupt();
-                }
-            }
-        });
+        if(autoplayTimeline != null){
+            autoplayTimeline.stop();
+            playPauseButton.setText("Play");
+            isPlaying = false;
+        }
     }
 
     /**

@@ -161,12 +161,12 @@ public class IndependentElement extends DataStructure implements Element {
     @Override
     public String getRawVisual (){
         Main.console.err("WARNING: getRawVisual has not been implemented for Independent Element.");
-        return null;
+        return "";
     }
 
     @Override
     public String getAbstractVisual (){
         Main.console.err("WARNING: getAbstractVisual has not been implemented for Independent Element.");
-        return null;
+        return "";
     }
 }
