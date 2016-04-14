@@ -77,42 +77,52 @@ public class Interpreter {
 
     /**
      * Attempt to consolidate the supplied list of operations. Returns True if the size of the list has changed as a
+     * result on the attempted consolidation. The list provided as argument will not be changed.
+     * @param operationsToConsolidate The operations to consolidate.
+     * @return A consolidated list of operations.
+     */
+    public List<Operation> consolidateSafe (List<Operation> operationsToConsolidate){
+        ArrayList<Operation> result = new ArrayList<Operation>(operationsToConsolidate);
+        consolidate(result);
+        return result;
+    }
+    
+    /**
+     * Attempt to consolidate the supplied list of operations. Returns True if the size of the list has changed as a
      * result on the attempted consolidation. <br>
      * <b>NOTE:</b> The list given by the argument {@code operations} will be modified by this method!
      * 
-     * @param operations The operations to consolidate.
-     * @return True if the list has been changed. False otherwise.
+     * @param listToConsolidate The List to consolidate.
      */
-    public boolean consolidate (List<Operation> operations){
+    public void consolidate (List<Operation> listToConsolidate){
         if (highOrderRoutine == ABORT) {
-            for (Operation op : operations) {
+            for (Operation op : listToConsolidate) {
                 if (op.operation == OperationType.message || op.operation == OperationType.init) {
                     continue; //Acceptable non read/write operation found.
                 }
                 else if (isReadOrWrite(op) == false) {
-                    return false;
+                    System.out.println("ABORT: High level operation found: " + op);
+                    return;
                 }
             }
         }
-        int oldSize = operations.size();
-        //
+        //Clean up data from previous executions
         before.clear();
-        before.addAll(operations);
-        //Prepare working lists.
         after.clear();
         workingSet.clear();
-        //Consolidate and add result to operations
-        consolidateOperations();
-        operations.clear();
-        operations.addAll(after);
-        return oldSize == operations.size();
+        //Set before list and begin
+        before.addAll(listToConsolidate);
+        consolidate();
+        //Transfer result to operations
+        listToConsolidate.clear();
+        listToConsolidate.addAll(after);
     }
 
     /**
      * Build and evaluate working sets until all operations in {@code before} have been processed. When this method
      * returns, {@code before.size()} will be 0.
      */
-    private void consolidateOperations (){
+    private void consolidate (){
         int minWorkingSetSize = consolidator.getMinimumSetSize();
         int maxWorkingSetSize = consolidator.getMaximumSetSize();
         if (minWorkingSetSize < 0 || maxWorkingSetSize < 0) {
