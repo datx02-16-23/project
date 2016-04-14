@@ -3,6 +3,7 @@ package application.visualization;
 import application.gui.Main;
 import application.model.iModel;
 import application.visualization.render2d.BarchartRender;
+import application.visualization.render2d.BoxRender;
 import application.visualization.render2d.Render;
 import javafx.scene.layout.GridPane;
 import wrapper.datastructures.DataStructure;
@@ -37,7 +38,7 @@ public class Visualization extends GridPane {
                     render = new BarchartRender(struct);
                     break outer;
                 case "box":
-                    render = new BarchartRender(struct);
+                    render = new BoxRender(struct);
                     break outer;
                 default:
                     /*
