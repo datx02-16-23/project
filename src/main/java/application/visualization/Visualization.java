@@ -2,9 +2,11 @@ package application.visualization;
 
 import application.model.iModel;
 import application.visualization.render2d.ArrayRender;
+import application.visualization.render2d.BarchartRender;
 import application.visualization.render2d.Consts;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -16,16 +18,15 @@ import wrapper.datastructures.IndependentElement;
 import java.util.Iterator;
 import java.util.Map;
 
-public class Visualization extends Pane {
+public class Visualization extends GridPane {
 
     private final iModel model;
-    private final Canvas canvas = new Canvas();
 
     public Visualization (iModel model){
         this.model = model;
-        getChildren().add(canvas);
     }
 
+    /*
     @Override
     protected void layoutChildren (){
         final int top = (int) snappedTopInset();
@@ -43,14 +44,20 @@ public class Visualization extends Pane {
         render();
     }
 
+
     private void clear (){
         GraphicsContext g = canvas.getGraphicsContext2D();
         g.setFill(Color.WHITE);
         g.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
+    */
 
+    /**
+     * Should be called whenever model is updated, does a complete rerender of the structures
+     */
     public void render (){
-        clear();
+        getChildren().add(new BarchartRender());
+        /*
         Map<String, DataStructure> structs = model.getCurrentStep().getStructures();
         Iterator<String> structNames = structs.keySet().iterator();
         int numStruct = 0;
@@ -61,7 +68,7 @@ public class Visualization extends Pane {
             final String id = structNames.next();
             renderStructure(id, structs.get(id), x, y);
             numStruct++;
-        }
+        }*/
     }
 
     private String generateStructHeader (String id, DataStructure struct){
@@ -79,7 +86,7 @@ public class Visualization extends Pane {
     }
 
     private void renderStructure (String id, DataStructure struct, int x, int y){
-        int width = (int) canvas.getWidth();
+        /*int width = (int) canvas.getWidth();
         int height = Consts.structHeight;
         final Class<? extends DataStructure> structClass = struct.getClass();
         final Operation op = model.getCurrentStep().getLastOp();
@@ -89,6 +96,6 @@ public class Visualization extends Pane {
         }
         else if (structClass.equals(IndependentElement.class)) {
             drawIndependentElement((IndependentElement) struct);
-        }
+        }*/
     }
 }

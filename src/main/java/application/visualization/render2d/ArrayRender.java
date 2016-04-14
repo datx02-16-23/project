@@ -89,6 +89,7 @@ public class ArrayRender implements iRender {
     }
 
     public void render (){
+
         renderHeader();
         if (array.size() > 0) {
             renderStructure();
