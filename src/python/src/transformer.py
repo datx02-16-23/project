@@ -54,9 +54,10 @@ class ExpressionTransformer(NodeTransformer):
 	def visit_Name(self,node):
 		if node.id == 'False' or node.id == 'True':
 			return node
+		value = [node] if isinstance(node.ctx,Load) else [Name(id='None')]
 		return copy_location(
 			Tuple(elts=
-				[Str(s='var'),Str(s=node.id)] + ([node] if isinstance(node.ctx,Load) else [])
+				[Str(s='var'),Str(s=node.id)] + value
 			)
 		,node)
 

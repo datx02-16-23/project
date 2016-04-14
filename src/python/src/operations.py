@@ -2,15 +2,20 @@
 # To be injected into nodes
 ########################################################################
 outfile = None
+outport = 8000
 
 import socket
 import json
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.connect(('localhost', 8000))
+sock.connect(('localhost', outport))
+
+def get_operation(name):
+    return {'operation' : name, 'operationBody' : {}}
 
 def to_json(statement):
-	return {'test' : None}
+    operation = get_operation(statement['type'])
+    return operation
 
 def put(statement):
     with open(outfile, 'a') as f:

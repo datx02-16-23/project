@@ -1,11 +1,16 @@
 outfile = '/home/johan/Dropbox/It/Kandidat Datx02/project/src/python/src/output.py'
+outport = 8000
 import socket
 import json
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.connect(('localhost', 8000))
+sock.connect(('localhost', outport))
+
+def get_operation(name):
+    return {'operation': name, 'operationBody': {}}
 
 def to_json(statement):
-    return {'test': None}
+    operation = get_operation(statement['type'])
+    return operation
 
 def put(statement):
     with open(outfile, 'a') as f:
@@ -32,4 +37,4 @@ def link(*params):
             return func(*tuple((arg['value'] for arg in args)))
         return call
     return wrap
-a = write(3, ('var', 'a'), 3)
+a = write(3, ('var', 'a', None), 3)

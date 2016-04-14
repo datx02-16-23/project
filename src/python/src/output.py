@@ -1,1 +1,1 @@
-{'src': 3, 'dst': ('var', 'a'), 'type': 'write', 'src_val': 3},
+{'src': 3, 'dst': ('var', 'a', None), 'type': 'write', 'src_val': 3},

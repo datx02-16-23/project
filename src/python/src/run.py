@@ -14,6 +14,7 @@ def load_logwriter(operations,output):
 			node.value = Str(output)
 	return operations.body
 
+# either write to port or outfile
 if __name__ == '__main__':
 	# where to output execution of program
 	output = path.abspath('output.py')
