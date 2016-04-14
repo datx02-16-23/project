@@ -25,7 +25,7 @@
 
 <VBox prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <SplitPane dividerPositions="0.8" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" orientation="VERTICAL" VBox.vgrow="ALWAYS">
+      <SplitPane dividerPositions="0.8" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" orientation="VERTICAL" style="-fx-background-color: #123456;" VBox.vgrow="ALWAYS">
         <items>
             <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0">
                <children>
@@ -47,9 +47,19 @@
                               <MenuItem mnemonicParsing="false" onAction="#closeProgram" text="Close" />
                            </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="_Actions">
+                        <Menu mnemonicParsing="false" text="_Action">
                           <items>
-                            <MenuItem mnemonicParsing="false" onAction="#interpretOperationHistory" text="Interpret Now" />
+                              <MenuItem mnemonicParsing="false" onAction="#playPauseButtonClicked" text="Play/Pause" />
+                              <MenuItem mnemonicParsing="false" onAction="#stepForwardButtonClicked" text="Forward" />
+                              <MenuItem mnemonicParsing="false" onAction="#stepBackwardButtonClicked" text="Backward" />
+                              <SeparatorMenuItem mnemonicParsing="false" />
+                              <MenuItem mnemonicParsing="false" onAction="#restartButtonClicked" text="Restart" />
+                              <MenuItem mnemonicParsing="false" onAction="#changeSpeedButtonClicked" text="Change Speed" />
+                              <SeparatorMenuItem mnemonicParsing="false" />
+                            <MenuItem mnemonicParsing="false" onAction="#interpretOperationHistory" text="Interpret Now">
+                                 <accelerator>
+                                    <KeyCodeCombination alt="UP" code="R" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                 </accelerator></MenuItem>
                               <MenuItem mnemonicParsing="false" onAction="#openInterpreterView" text="Interpreter">
                                  <accelerator>
                                     <KeyCodeCombination alt="UP" code="I" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
@@ -63,7 +73,7 @@
                               <MenuItem mnemonicParsing="false" onAction="#aboutProgram" text="About" />
                               <MenuItem mnemonicParsing="false" onAction="#showSettings" text="Settings">
                                  <accelerator>
-                                    <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                    <KeyCodeCombination alt="UP" code="F10" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                                  </accelerator>
                               </MenuItem>
                               <MenuItem mnemonicParsing="false" onAction="#connectedToChannel" text="Connected Entities" />
@@ -108,7 +118,7 @@
                                           <Font name="System Bold" size="9.0" />
                                        </font>
                                     </Button>
-                                    <Button id="speed_button" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#changeSpeedButtonClicked" text="1x" textAlignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                                    <Button id="speed_button" fx:id="speedButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#changeSpeedButtonClicked" text="1x" textAlignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
@@ -166,8 +176,14 @@
                                   <RowConstraints fillHeight="false" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#inspectSelection" prefHeight="25.0" prefWidth="118.0" text="Inspect Selection" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER" />
-                                    <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#gotoSelection" prefHeight="25.0" prefWidth="135.0" text="Go To Selection" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER" />
+                                    <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#inspectSelection" prefHeight="25.0" prefWidth="118.0" text="Inspect" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
+                                       <tooltip>
+                                          <Tooltip text="Inspect the selected operation." />
+                                       </tooltip></Button>
+                                    <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#gotoSelection" prefHeight="25.0" prefWidth="135.0" text="Jump To" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
+                                       <tooltip>
+                                          <Tooltip text="Jump to the selected operation." />
+                                       </tooltip></Button>
                                  </children>
                                  <opaqueInsets>
                                     <Insets bottom="5.0" />
@@ -182,10 +198,14 @@
                   </SplitPane>
                </children>
                <padding>
-                  <Insets bottom="3.0" />
+                  <Insets bottom="1.0" />
                </padding>
             </VBox>
-            <TextArea fx:id="console" prefHeight="200.0" prefWidth="200.0" />
+            <TextArea fx:id="console" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="50.0" prefWidth="200.0" style="-fx-background-color: #123456;" text="Project name&#10;version&#10;&#10;authors">
+               <padding>
+                  <Insets top="1.0" />
+               </padding>
+            </TextArea>
         </items>
       </SplitPane>
    </children>

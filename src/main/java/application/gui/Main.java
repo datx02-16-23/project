@@ -147,6 +147,7 @@ public class Main extends Application {
      */
     public class MavserConsole {
         private boolean allowPrinting = true;
+        private boolean verbose = false;
         private final TextArea consoleTextArea;
 
         public MavserConsole (TextArea consoleTextArea){
@@ -162,13 +163,7 @@ public class Main extends Application {
             if(!allowPrinting){
                 return;
             }
-            Platform.runLater(new Runnable() {
-
-                @Override
-                public void run (){
-                    consoleTextArea.appendText(out+"\n");
-                }
-            });
+            print(out+"\n");
         }
         
         /**
@@ -179,12 +174,35 @@ public class Main extends Application {
             if(!allowPrinting){
                 return;
             }
-            String line = "\t"+err+"\n"; //Unload main thread.
+            print("\t"+err+"\n");
+        }
+        
+        /**
+         * Print a verbose String. Generally disabled.
+         * @param verbose A verbose String to print.
+         */
+        public void verbose(String verbose){
+            print(verbose+"\n");
+        }
+        
+        /**
+         * Print a line regardless of settings.
+         * @param str The line to print.
+         */
+        public void forceOut(String str){
+            print(str+"\n");
+        }
+        
+        /**
+         * Print the given String. Run on JavaFX Application thread.
+         * @param string The string to print to the console.
+         */
+        private void print(String string){
             Platform.runLater(new Runnable() {
 
                 @Override
                 public void run (){
-                    consoleTextArea.appendText(line);
+                    consoleTextArea.appendText(string);
                 }
             });
         }
@@ -216,7 +234,7 @@ public class Main extends Application {
             StringBuilder sb = new StringBuilder();
             sb.append("Welcome to " + Strings.PROJECT_NAME + "!\n");
             sb.append("Version: " + Strings.VERSION_NUMBER +"\n\n");
-            sb.append("DEVELOPERS: ");
+            sb.append("AUTHORS: ");
             for(String s : Strings.DEVELOPER_NAMES){
                 sb.append(s + " | ");
             }

@@ -193,12 +193,13 @@ public class GUI_Controller implements CommunicatorListener {
         updateOperationList();
     }
 
+    private Button speedButton;
     /**
      * Change the animation speed
      */
-    public void changeSpeedButtonClicked (Event e){
+    public void changeSpeedButtonClicked (){
         stepDelaySpeedupFactor = stepDelaySpeedupFactor * 2 % 31;
-        ((Button) e.getSource()).setText(stepDelaySpeedupFactor + "x");
+        speedButton.setText(stepDelaySpeedupFactor + "x");
         stepDelay = stepDelayBase / stepDelaySpeedupFactor;
     }
 
@@ -547,7 +548,7 @@ public class GUI_Controller implements CommunicatorListener {
 
     public void propertiesFailed (Exception exception){
         if (exception != null) {
-            Main.console.err(exception.getMessage());
+            System.err.println(exception.getMessage());
         }
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/PropertiesAlert.fxml"));
         Stage stage = new Stage();
@@ -589,6 +590,7 @@ public class GUI_Controller implements CommunicatorListener {
         playPauseButton = (Button) mainViewNameSpace.get("playPauseButton");
         currOpTextField = (TextField) mainViewNameSpace.get("currOpTextField");
         totNrOfOpLabel = (Label) mainViewNameSpace.get("totNrOfOpLabel");
+        speedButton = (Button) mainViewNameSpace.get("speedButton");
     }
 
     /*
@@ -680,7 +682,7 @@ public class GUI_Controller implements CommunicatorListener {
     public Properties tryLoadProperties (){
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream(Strings.PROPERTIES_FILE_NAME);
         if (inputStream == null) {
-            Main.console.err("Failed to open properties file.");
+            System.err.println("Failed to open properties file.");
             propertiesFailed(null);
             return DefaultProperties.get();
         }
@@ -691,7 +693,7 @@ public class GUI_Controller implements CommunicatorListener {
             return properties;
         } catch (IOException e) {
             propertiesFailed(e);
-            Main.console.err("Property file I/O failed.");
+            System.err.println("Property file I/O failed.");
             return DefaultProperties.get();
         }
     }
