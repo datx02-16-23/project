@@ -115,10 +115,12 @@ public class IndependentElement extends DataStructure implements Element {
     private void swap (OP_Swap op){
         if (op.getVar1().identifier.equals(this.identifier)) {
             element.setValue(op.getValues()[0]);
+            element.setColor(COLOR_SWAP);
             return;
         }
         if (op.getVar2().identifier.equals(this.identifier)) {
             element.setValue(op.getValues()[1]);
+            element.setColor(COLOR_SWAP);
             return;
         }
     }
@@ -126,7 +128,13 @@ public class IndependentElement extends DataStructure implements Element {
     private void readORwrite (OP_ReadWrite op){
         if (op.getTarget().identifier.equals(this.identifier)) {
             element.setValue(op.getValue()[0]);
+            modifiedElements.add(element);
+            element.setColor(COLOR_WRITE);
             return;
+        }
+        else if (op.getSource().identifier.equals(this.identifier)) {
+            modifiedElements.add(element);
+            element.setColor(COLOR_READ);
         }
     }
 
@@ -135,9 +143,33 @@ public class IndependentElement extends DataStructure implements Element {
         this.element.setValue(newValue);
     }
 
-    public class IndependentElementContainer implements Element {
+    @Override
+    public String getRawVisual (){
+        Main.console.err("WARNING: getRawVisual has not been implemented for Independent Element.");
+        return "";
+    }
+
+    @Override
+    public String getAbstractVisual (){
+        Main.console.err("WARNING: getAbstractVisual has not been implemented for Independent Element.");
+        return "";
+    }
+
+    @Override
+    public String getColor (){
+        return element.getColor();
+    }
+    
+
+    @Override
+    public void setColor (String newColor){
+        element.setColor(newColor);  
+    }
+
+    public static class IndependentElementContainer implements Element {
 
         private double value;
+        private String color;
 
         public IndependentElementContainer (double value){
             this.value = value;
@@ -159,24 +191,12 @@ public class IndependentElement extends DataStructure implements Element {
 
         @Override
         public String getColor (){
-            return null;
+            return color;
         }
-    }
 
-    @Override
-    public String getRawVisual (){
-        Main.console.err("WARNING: getRawVisual has not been implemented for Independent Element.");
-        return "";
-    }
-
-    @Override
-    public String getAbstractVisual (){
-        Main.console.err("WARNING: getAbstractVisual has not been implemented for Independent Element.");
-        return "";
-    }
-
-    @Override
-    public String getColor (){
-        return null;
+        @Override
+        public void setColor (String newColor){
+            color = newColor;
+        }
     }
 }

@@ -23,5 +23,15 @@ public interface Element {
      */
     public abstract void setValue (double newValue);
     
+    /**
+     * Returns the colour with which to draw this Element.
+     * @return The colour with which to draw this Element.
+     */
     public abstract String getColor();
+
+    /**
+     * Set The colour with which to draw this Element.
+     * @param newColor The colour with which to draw this Element.
+     */
+    public abstract void setColor(String newColor);
 }

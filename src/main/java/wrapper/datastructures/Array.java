@@ -362,6 +362,11 @@ public class Array extends DataStructure {
         public String getColor (){
             return color;
         }
+
+        @Override
+        public void setColor (String newColor){
+            color = newColor;
+        }
     }
 
     @Override
