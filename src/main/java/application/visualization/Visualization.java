@@ -56,19 +56,20 @@ public class Visualization extends GridPane {
      * Should be called whenever model is updated, does a complete rerender of the structures
      */
     public void render (){
-        getChildren().add(new BarchartRender());
-        /*
+
         Map<String, DataStructure> structs = model.getCurrentStep().getStructures();
         Iterator<String> structNames = structs.keySet().iterator();
         int numStruct = 0;
-        GraphicsContext gc = canvas.getGraphicsContext2D();
         while(structNames.hasNext()) {
             final int x = 0;
             final int y = 0 + Consts.structHeight * numStruct;
             final String id = structNames.next();
-            renderStructure(id, structs.get(id), x, y);
+            if(structs.get(id).rawType.equals("array")){
+                getChildren().add(new BarchartRender(structs.get(id)));
+            }
+            //renderStructure(id, structs.get(id), x, y);
             numStruct++;
-        }*/
+        }
     }
 
     private String generateStructHeader (String id, DataStructure struct){

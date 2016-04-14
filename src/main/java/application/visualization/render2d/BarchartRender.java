@@ -1,31 +1,40 @@
 package application.visualization.render2d;
 
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.layout.Pane;
+import wrapper.datastructures.Array;
+import wrapper.datastructures.DataStructure;
+import wrapper.datastructures.Element;
 
 /**
  * Created by cb on 14/04/16.
  */
 public class BarchartRender extends Pane {
+    private final DataStructure struct;
+    private final BarChart<String, Number> bc;
+    private final XYChart.Series elemData;
 
-    public BarchartRender() {
+    public BarchartRender(DataStructure struct) {
+
+        this.struct = struct;
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
-        final BarChart<String,Number> bc =
-                new BarChart<String,Number>(xAxis,yAxis);
-        bc.setTitle("Country Summary");
-        xAxis.setLabel("Country");
+        bc = new BarChart<>(xAxis,yAxis);
+        bc.setTitle(struct.identifier);
+        xAxis.setLabel("Index");
         yAxis.setLabel("Value");
 
-        XYChart.Series series1 = new XYChart.Series();
-        series1.setName("2003");
-        series1.getData().add(new XYChart.Data("austria", 25601.34));
-        series1.getData().add(new XYChart.Data("brazil", 20148.82));
-        series1.getData().add(new XYChart.Data("france", 10000));
-        series1.getData().add(new XYChart.Data("italy", 35407.15));
-        series1.getData().add(new XYChart.Data("usa", 12000));
-        bc.getData().add(series1);
+        elemData = new XYChart.Series();
+        ObservableList data = elemData.getData();
+        for (Element element:struct.getElements()){
+            Array.ArrayElement e = (Array.ArrayElement)element;
+            data.add(new XYChart.Data(e.getIndex()[0] + "", e.getValue()));
+        }
+
+        bc.getData().add(elemData);
 
 
         this.getChildren().add(bc);
@@ -33,7 +42,6 @@ public class BarchartRender extends Pane {
 
 
     public void render(){
-
     }
 
 
