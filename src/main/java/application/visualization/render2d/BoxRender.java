@@ -1,21 +1,29 @@
 package application.visualization.render2d;
 
-import javafx.collections.ObservableList;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.XYChart.Data;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import wrapper.datastructures.Array.ArrayElement;
 import wrapper.datastructures.DataStructure;
-import wrapper.datastructures.Element;
+import wrapper.datastructures.*;
 
 public class BoxRender extends Render {
 
+    public static final double  GRID_SIZE     = 50;
     private final GridPane      grid;
-    private static final String DEFAULT_COLOR = "#123456";
+    private static final String DEFAULT_COLOR = "white";
     private final DataStructure struct;
 
     public BoxRender (DataStructure struct){
         grid = new GridPane();
+        this.getChildren().add(grid);
         this.struct = struct;
+        this.setVisible(true);
+        this.setMaxWidth(Double.MAX_VALUE);
+        this.setMaxHeight(Double.MAX_VALUE);
+        this.setPrefWidth(Double.MAX_VALUE);
+        this.setPrefHeight(Double.MAX_VALUE);
+        this.setStyle("-fx-background-color: #2f4f4f;");
         init();
     }
 
@@ -24,26 +32,45 @@ public class BoxRender extends Render {
      */
     @Override
     public void render (){
-        GridElement ge;
-        for(Element e : struct.getElements()){
-            
-        }
+        System.out.println("box render()");
+        init(); //TODO
     }
-    
+
     /**
-     * Create and render elements.
+     * Create and render all elements.
      */
     private void init (){
         grid.getChildren().clear();
-        
+        for (Element e : struct.getElements()) {
+            ArrayElement ae = (ArrayElement) e;
+            grid.add(new Label(ae.getIndex() + ""), ae.getIndex()[0], 0);
+            grid.add(new GridElement(e), ae.getIndex()[0], 0);
+        }
     }
-    
+
     /**
      * The actual drawing surface for the elements.
+     * 
      * @author Richard
      *
      */
-    private class GridElement{
-        
+    private class GridElement extends Pane {
+
+        private static final String BORDER = "-fx-border-color: black;\n" + "-fx-border-insets: 5;\n" + "-fx-border-width: 3;\n" + "-fx-border-style: dashed;\n";
+        private final Element       e;
+        private final Label         valueLabel;
+
+        private GridElement (Element e){
+            this.e = e;
+            this.setStyle(BORDER);
+            this.setPrefWidth(GRID_SIZE);
+            this.setPrefHeight(GRID_SIZE);
+            this.setMaxWidth(GRID_SIZE);
+            this.setMaxHeight(GRID_SIZE);
+            valueLabel = new Label(e.getValue()+"");
+            valueLabel.setPrefWidth(Double.MAX_VALUE);
+            valueLabel.setPrefHeight(Double.MIN_VALUE);
+        }
+        //TODO: Override draw method.
     }
 }

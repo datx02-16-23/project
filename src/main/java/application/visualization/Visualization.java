@@ -35,7 +35,8 @@ public class Visualization extends GridPane {
         outer: for (int attempt = 1; attempt <= 3; attempt++) {
             switch (visual) {
                 case "bar":
-                    render = new BarchartRender(struct);
+                    render = new BoxRender(struct);
+//                    render = new BarchartRender(struct);
                     break outer;
                 case "box":
                     render = new BoxRender(struct);
