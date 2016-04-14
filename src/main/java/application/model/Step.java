@@ -10,96 +10,88 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Step implements iStep {
-    private final Map<String, DataStructure> structs;
-    private Operation lastOp;
 
-    public Step(){
+    private final Map<String, DataStructure> structs;
+    private Operation                        lastOp;
+
+    public Step (){
         structs = new HashMap<>();
     }
 
-    public Step(Map<String, DataStructure> structs){
+    public Step (Map<String, DataStructure> structs){
         this.structs = structs;
     }
 
     @Override
-    public void addDataStructure(String identifier, DataStructure struct) {
+    public void addDataStructure (String identifier, DataStructure struct){
         structs.put(identifier, struct);
     }
 
     @Override
-    public void reset() {
+    public void reset (){
         lastOp = null;
         structs.values().forEach(DataStructure::clear);
     }
 
-
     @Override
-    public Map<String, DataStructure> getStructures() {
+    public Map<String, DataStructure> getStructures (){
         //Should do a deep copy
         return structs;
     }
 
     @Override
-    public Operation getLastOp(){
+    public Operation getLastOp (){
         return lastOp;
     }
 
     @Override
-    public void applyOperation(Operation op) {
+    public void applyOperation (Operation op){
         OperationType opType = op.operation;
         String identifier;
         Locator locator;
         DataStructure struct;
-        
-        switch(opType){
+        switch (opType) {
             case init:
                 //Has the operation body value, target and size
-                identifier = ((Locator)op.operationBody.get(Key.target)).getIdentifier();
+                identifier = ((Locator) op.operationBody.get(Key.target)).getIdentifier();
                 structs.get(identifier).applyOperation(op);
                 break;
             case message:
-            	System.out.println(op);
+                System.out.println(op);
                 break;
             case read:
             case write:
-            	//Technically not identical, as read will always have a source and write will always have a target.
-            	//They are treated the same in Array however, so will will treat them the same here as well.
-            	
-            	locator = ((Locator)op.operationBody.get(Key.source));
-            	if(locator != null){
-            		identifier = locator.getIdentifier();
-            		struct = structs.get(identifier);
-            		if (struct == null){
-            			System.err.println("WARNING: Undeclared variable \"" + identifier + "\". " + op + " aborted.");
-            			break;
-            		}
-        			struct.applyOperation(op);
-            	}
-
-            	locator = ((Locator)op.operationBody.get(Key.target));
-            	if(locator != null){
-                	identifier = locator.getIdentifier();
-            		struct = structs.get(identifier);
-            		if (struct == null){
-            			System.err.println("WARNING: Undeclared variable \"" + identifier + "\". " + op + " aborted.");
-            			break;
-            		}
-        			struct.applyOperation(op);
-            	}
-            	
+                //Technically not identical, as read will always have a source and write will always have a target.
+                //They are treated the same in Array however, so will will treat them the same here as well.
+                locator = ((Locator) op.operationBody.get(Key.source));
+                if (locator != null) {
+                    identifier = locator.getIdentifier();
+                    struct = structs.get(identifier);
+                    if (struct == null) {
+                        System.err.println("WARNING: Undeclared variable \"" + identifier + "\". " + op + " aborted.");
+                        break;
+                    }
+                    struct.applyOperation(op);
+                }
+                locator = ((Locator) op.operationBody.get(Key.target));
+                if (locator != null) {
+                    identifier = locator.getIdentifier();
+                    struct = structs.get(identifier);
+                    if (struct == null) {
+                        System.err.println("WARNING: Undeclared variable \"" + identifier + "\". " + op + " aborted.");
+                        break;
+                    }
+                    struct.applyOperation(op);
+                }
                 break;
             case swap:
-            	//No checking here - swap should always have a var1 and var2.
-            	identifier = ((Locator)op.operationBody.get(Key.var1)).getIdentifier();
-            	structs.get(identifier).applyOperation(op);
-            	
-            	identifier = ((Locator)op.operationBody.get(Key.var2)).getIdentifier();
-            	structs.get(identifier).applyOperation(op);
+                //No checking here - swap should always have a var1 and var2.
+                identifier = ((Locator) op.operationBody.get(Key.var1)).getIdentifier();
+                structs.get(identifier).applyOperation(op);
+                identifier = ((Locator) op.operationBody.get(Key.var2)).getIdentifier();
+                structs.get(identifier).applyOperation(op);
                 break;
         }
-        
         lastOp = op;
-
     }
-
 }

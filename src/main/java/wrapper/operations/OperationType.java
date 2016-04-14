@@ -3,6 +3,6 @@ package wrapper.operations;
 /**
  * The name of the operation.
  */
-public enum OperationType {
+public enum OperationType{
     init, message, read, write, swap
 }

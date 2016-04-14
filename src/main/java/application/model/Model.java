@@ -8,27 +8,26 @@ import java.util.Map;
 
 import javafx.collections.ObservableList;
 
-
 public class Model implements iModel {
-    private iStep step = new Step();
-    private List<Operation> operations;
-    private int index;
 
+    private iStep           step = new Step();
+    private List<Operation> operations;
+    private int             index;
 
     @Override
-    public void addStructure(String id, DataStructure structure) {
+    public void addStructure (String id, DataStructure structure){
         step.addDataStructure(id, structure);
     }
 
     @Override
-    public void reset() {
+    public void reset (){
         index = 0;
         step.reset();
     }
 
     @Override
-    public boolean stepForward() {
-        if(operations != null && index < operations.size()){
+    public boolean stepForward (){
+        if (operations != null && index < operations.size()) {
             step.applyOperation(operations.get(index));
             index += 1;
             return true;
@@ -37,41 +36,38 @@ public class Model implements iModel {
     }
 
     @Override
-    public boolean stepBackward() {
-    	if(index == 0){
-    		return false;
-    	}
-    	int oldIndex = index-1;
-    	reset(); //Can't go backwards: Start from the beginning
-    	while (index < oldIndex){
-    		stepForward();
-    	}
-    	return true;
+    public boolean stepBackward (){
+        if (index == 0) {
+            return false;
+        }
+        int oldIndex = index - 1;
+        reset(); //Can't go backwards: Start from the beginning
+        while(index < oldIndex) {
+            stepForward();
+        }
+        return true;
     }
-    
-    public void goToStep(int toStepNo){
-    	if(operations == null || toStepNo >= operations.size() || toStepNo < 0){
-    		return;
-    	}
-    	
-    	if (toStepNo < index){
-    		reset(); //Can't go backwards: Start from the beginning
-        	while (index < toStepNo){
-        		stepForward();
-        	}
-        	
-    	} else if (toStepNo > index){
-        	while (index < toStepNo){
-        		stepForward();
-        	}
-    	}
-    	
-    	//Do nothing if index == toStepNo
-    	
+
+    public void goToStep (int toStepNo){
+        if (operations == null || toStepNo >= operations.size() || toStepNo < 0) {
+            return;
+        }
+        if (toStepNo < index) {
+            reset(); //Can't go backwards: Start from the beginning
+            while(index < toStepNo) {
+                stepForward();
+            }
+        }
+        else if (toStepNo > index) {
+            while(index < toStepNo) {
+                stepForward();
+            }
+        }
+        //Do nothing if index == toStepNo
     }
 
     @Override
-    public void set(Map<String, DataStructure> structs, List<Operation> ops) {
+    public void set (Map<String, DataStructure> structs, List<Operation> ops){
         structs.values().forEach(DataStructure::clear);
         step = new Step(structs);
         operations = ops;
@@ -79,43 +75,43 @@ public class Model implements iModel {
     }
 
     @Override
-    public iStep getCurrentStep() {
+    public iStep getCurrentStep (){
         return step;
     }
-    
+
     @Override
-    public int getIndex(){
-    	return index;
+    public int getIndex (){
+        return index;
     }
-    
-	@Override
-	public void goToEnd() {
-        while(operations != null && index < operations.size()){
+
+    @Override
+    public void goToEnd (){
+        while(operations != null && index < operations.size()) {
             step.applyOperation(operations.get(index));
             index += 1;
         }
-	}
+    }
 
-	@Override
-	public Map<String, DataStructure> getStructures() {
-		return step.getStructures();
-	}
+    @Override
+    public Map<String, DataStructure> getStructures (){
+        return step.getStructures();
+    }
 
-	@Override
-	public List<Operation> getOperations() {
-		return operations;
-	}
+    @Override
+    public List<Operation> getOperations (){
+        return operations;
+    }
 
-	@Override
-	public void setOperations(List<Operation> newOperations) {
+    @Override
+    public void setOperations (List<Operation> newOperations){
         operations = newOperations;
         index = 0;
-	}
+    }
 
-	@Override
-	public void setStructures(Map<String, DataStructure> newStructures) {
+    @Override
+    public void setStructures (Map<String, DataStructure> newStructures){
         newStructures.values().forEach(DataStructure::clear);
         step = new Step(newStructures);
         index = 0;
-	}
+    }
 }
