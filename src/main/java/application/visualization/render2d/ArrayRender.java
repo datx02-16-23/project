@@ -11,12 +11,10 @@ import wrapper.datastructures.Array;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
 
-import java.util.List;
-
 /**
  * Created by Ivar on 2016-04-11.
  */
-public class ArrayRender implements iRender {
+public class ArrayRender extends Render {
 
     private Canvas    canvas;
     private String    id;

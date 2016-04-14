@@ -339,4 +339,14 @@ public class Array extends DataStructure {
             return Arrays.toString(index) + " = " + value;
         }
     }
+
+    @Override
+    public String getRawVisual (){
+        return "bar";
+    }
+
+    @Override
+    public String getAbstractVisual (){
+        return ""; //TODO: Determine visual style for the abstract type of an Array.
+    }
 }

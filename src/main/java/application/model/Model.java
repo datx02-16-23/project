@@ -3,6 +3,8 @@ package application.model;
 import wrapper.Operation;
 import wrapper.datastructures.DataStructure;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +13,7 @@ import javafx.collections.ObservableList;
 public class Model implements iModel {
 
     private iStep           step = new Step();
-    private List<Operation> operations;
+    private final List<Operation> operations = new ArrayList<Operation>();
     private int             index;
 
     @Override
@@ -68,9 +70,9 @@ public class Model implements iModel {
 
     @Override
     public void set (Map<String, DataStructure> structs, List<Operation> ops){
-        structs.values().forEach(DataStructure::clear);
-        step = new Step(structs);
-        operations = ops;
+        structs.values().forEach(DataStructure::clear); //TODO: Varför rensar vi här?
+        step = new Step(new HashMap<String, DataStructure>(structs));
+        operations.addAll(ops);
         index = 0;
     }
 
@@ -104,14 +106,15 @@ public class Model implements iModel {
 
     @Override
     public void setOperations (List<Operation> newOperations){
-        operations = newOperations;
+        operations.clear();
+        operations.addAll(newOperations);
         index = 0;
     }
 
     @Override
     public void setStructures (Map<String, DataStructure> newStructures){
         newStructures.values().forEach(DataStructure::clear);
-        step = new Step(newStructures);
+        step = new Step(new HashMap<String, DataStructure>(newStructures));
         index = 0;
     }
 }

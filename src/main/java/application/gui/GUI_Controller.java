@@ -194,6 +194,7 @@ public class GUI_Controller implements CommunicatorListener {
     }
 
     private Button speedButton;
+
     /**
      * Change the animation speed
      */
@@ -493,12 +494,16 @@ public class GUI_Controller implements CommunicatorListener {
         if (lsm.readLog(file) == false) {
             return;
         }
+        //Add operations to model and create Render visuals, then draw them.
         model.set(lsm.getKnownVariables(), lsm.getOperations());
+        visualization.createVisuals();
+        visualization.render();
+        //Update operation list
         operationHistory.getItems().clear();
         operationHistory.getItems().addAll(lsm.getOperations());
-        visualization.render();
-        totNrOfOpLabel.setText("/ " + operationHistory.getItems().size());
         updateOperationList();
+        //Clean lsm
+        lsm.clearData();
     }
 
     @Override
@@ -518,6 +523,10 @@ public class GUI_Controller implements CommunicatorListener {
             public void run (){
                 if (autoPlayOnIncomingStream) {
                     model.goToEnd();
+                }
+                if (lsm.getKnownVariables().isEmpty() == false) {
+                    model.getStructures().putAll(lsm.getKnownVariables());
+                    visualization.createVisuals();
                 }
                 operationHistory.getItems().addAll(lsm.getOperations());
                 totNrOfOpLabel.setText("/ " + operationHistory.getItems().size());

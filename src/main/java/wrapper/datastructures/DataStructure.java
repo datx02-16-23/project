@@ -52,4 +52,20 @@ public abstract class DataStructure extends AnnotatedVariable {
     public String toString (){
         return super.identifier + ": " + super.rawType;
     }
+
+    /**
+     * Returns the default raw visual for this DataStructure.
+     * <br><b>NOTE:</b> Must never return {@code null}! Use {@code return "";} instead.
+     * 
+     * @return The default raw visual for this DataStructure.
+     */
+    public abstract String getRawVisual ();
+
+    /**
+     * Returns the default visual for the raw type held by this DataStructure.
+     * <br><b>NOTE:</b> Must never return {@code null}! Use {@code return "";} instead.
+     * 
+     * @return A visual style if available, null otherwise.
+     */
+    public abstract String getAbstractVisual ();
 }

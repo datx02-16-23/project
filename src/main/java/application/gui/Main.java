@@ -32,15 +32,13 @@ public class Main extends Application {
     /**
      * Console for printing system and error messages.
      */
-    public static MavserConsole console;
-    
+    public static MavserConsole    console;
     private Stage                  window;
     private Visualization          visualization;
     private final iModel           model = new Model();
     private final LogStreamManager lsm   = new LogStreamManager();
     private FXMLLoader             fxmlLoader;
     private GUI_Controller         controller;
-    
 
     @Override
     public void start (Stage primaryStage) throws Exception{
@@ -60,7 +58,6 @@ public class Main extends Application {
         }
         //Load console
         console = new MavserConsole((TextArea) fxmlLoader.getNamespace().get("console"));
-        
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Scene scene = new Scene(root, (screenSize.getWidth() * 0.5), (screenSize.getHeight() * 0.5));
         // Extracting some nodes from the fxml:
@@ -142,62 +139,69 @@ public class Main extends Application {
 
     /**
      * Printout of error messages and warnings from the program.
+     * 
      * @author Richard
      *
      */
     public class MavserConsole {
-        private boolean allowPrinting = true;
-        private boolean verbose = false;
+
+        private boolean        allowPrinting = true;
+        private boolean        verbose       = false;
         private final TextArea consoleTextArea;
 
         public MavserConsole (TextArea consoleTextArea){
             this.consoleTextArea = consoleTextArea;
             init();
         }
-        
+
         /**
          * Print a regular line to the GUI console.
+         * 
          * @param out The line to prine.
          */
-        public void out(String out){
-            if(!allowPrinting){
+        public void out (String out){
+            if (!allowPrinting) {
                 return;
             }
-            print(out+"\n");
+            print(out + "\n");
         }
-        
+
         /**
          * Print an error to the GUI console.
+         * 
          * @param err The error to print.
          */
-        public void err(String err){
-            if(!allowPrinting){
+        public void err (String err){
+            if (!allowPrinting) {
                 return;
             }
-            print("\t"+err+"\n");
+            print("\t" + err + "\n");
         }
-        
+
         /**
          * Print a verbose String. Generally disabled.
+         * 
          * @param verbose A verbose String to print.
          */
-        public void verbose(String verbose){
-            print(verbose+"\n");
+        public void verbose (String verbose){
+            print(verbose + "\n");
         }
-        
+
         /**
          * Print a line regardless of settings.
+         * 
          * @param str The line to print.
          */
-        public void forceOut(String str){
-            print(str+"\n");
+        public void forceOut (String str){
+            print(str + "\n");
         }
-        
+
         /**
          * Print the given String. Run on JavaFX Application thread.
+         * 
          * @param string The string to print to the console.
          */
-        private void print(String string){
+        private void print (String string){
             Platform.runLater(new Runnable() {
 
                 @Override
@@ -206,41 +210,39 @@ public class Main extends Application {
                 }
             });
         }
-        
+
         /**
          * Disable console output.
          */
-        public void enablePrinting(){
+        public void enablePrinting (){
             setPrinting(true);
         }
-        
+
         /**
          * Enable console output.
          */
-        public void disablePrinting(){
+        public void disablePrinting (){
             setPrinting(false);
         }
-        
-        public void setPrinting(boolean value){
-            if(value == allowPrinting){
+
+        public void setPrinting (boolean value){
+            if (value == allowPrinting) {
                 return;
             }
             allowPrinting = !value;
-            
             out("Printing " + (allowPrinting != true ? "enabled." : "disabled."));
         }
 
         public void init (){
             StringBuilder sb = new StringBuilder();
             sb.append("Welcome to " + Strings.PROJECT_NAME + "!\n");
-            sb.append("Version: " + Strings.VERSION_NUMBER +"\n\n");
+            sb.append("Version: " + Strings.VERSION_NUMBER + "\n\n");
             sb.append("AUTHORS: ");
-            for(String s : Strings.DEVELOPER_NAMES){
+            for (String s : Strings.DEVELOPER_NAMES) {
                 sb.append(s + " | ");
             }
-            sb.delete(sb.length()-2, sb.length());
-            sb.append("\n");
-            
+            sb.delete(sb.length() - 2, sb.length());
+            sb.append("\n\n");
             Platform.runLater(new Runnable() {
 
                 @Override
@@ -248,7 +250,6 @@ public class Main extends Application {
                     consoleTextArea.setText(sb.toString());
                 }
             });
-
         }
     }
 }
