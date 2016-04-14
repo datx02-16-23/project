@@ -60,7 +60,7 @@ public class BarchartRender extends Render {
             }
         }
         List<Element> modified = struct.getModifiedElements();
-        List<Element> reset = struct.getModifiedElements();
+        List<Element> reset = struct.getResetElements();
         //Change values of elements
         ArrayElement ae;
         Data<String, Double> d;
