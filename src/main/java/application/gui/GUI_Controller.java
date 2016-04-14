@@ -133,7 +133,7 @@ public class GUI_Controller implements CommunicatorListener {
     private Timeline autoplayTimeline;
     public void startAutoPlay (){
         playPauseButton.setText("Pause");
-        speedButton.setDisable(true);
+//        speedButton.setDisable(true);
         if(autoplayTimeline != null){
             autoplayTimeline.stop();
         }
@@ -153,7 +153,7 @@ public class GUI_Controller implements CommunicatorListener {
     }
 
     public void stopAutoPlay (){
-        speedButton.setDisable(false);
+//        speedButton.setDisable(false);
         if(autoplayTimeline != null){
             autoplayTimeline.stop();
             playPauseButton.setText("Play");
@@ -202,7 +202,8 @@ public class GUI_Controller implements CommunicatorListener {
         stepDelaySpeedupFactor = stepDelaySpeedupFactor * 2 % 31;
         speedButton.setText(stepDelaySpeedupFactor + "x");
         stepDelay = stepDelayBase / stepDelaySpeedupFactor;
-        KeyFrame k = autoplayTimeline.getKeyFrames().get(0);
+        playPauseButtonClicked();
+        playPauseButtonClicked();
     }
 
     public void aboutProgram (){
