@@ -78,8 +78,14 @@ public class BoxRender extends Render {
     //Ugly way of doing it, but I cant be bothered checking if the element moved.
     private void addElementToGrid (Element e, String style){
         ArrayElement ae = (ArrayElement) e;
-        grid.add(new Label("  " + Arrays.toString(ae.getIndex())), ae.getIndex()[0], 0);
-        grid.add(new GridElement(e, style), ae.getIndex()[0], 1);
+        int[] index = ae.getIndex();
+        if(index.length == 1){
+            grid.add(new Label("  " + Arrays.toString(index)), index[0], 0);
+            grid.add(new GridElement(e, style), index[0], 1);            
+        } else if (index.length == 2){
+            grid.add(new Label("  " + Arrays.toString(index)), index[0], index[1] + 0);
+            grid.add(new GridElement(e, style), index[0], index[1] + 1);       
+        }
     }
 
     /**

@@ -11,14 +11,11 @@ import wrapper.Operation;
 import wrapper.operations.*;
 
 /**
- * A representation of the Array data structure, using doubles as values. <br>
- * <br>
- * <b>IMPORTANT</b>: Can only handle single-dimension Arrays at the moments.
+ * A representation of the Array data structure, using doubles as values.
  * 
  * @author Richard
  *
  */
-// TODO: Add access logging to enable presenting statistics.
 public class Array extends DataStructure {
 
     /**
