@@ -25,7 +25,7 @@ public class BarchartRender extends Render {
 
     public BarchartRender (DataStructure struct){
         this.struct = struct;
-        this.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
         barChart = new BarChart(xAxis, yAxis);

@@ -70,6 +70,7 @@ public class Model implements iModel {
     public void set (Map<String, DataStructure> structs, List<Operation> ops){
         structs.values().forEach(DataStructure::clear); //TODO: Varför rensar vi här?
         step = new Step(new HashMap<String, DataStructure>(structs));
+        operations.clear();
         operations.addAll(ops);
         index = 0;
     }
