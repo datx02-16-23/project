@@ -4,6 +4,7 @@ import application.gui.Main;
 import application.model.iModel;
 import application.visualization.render2d.BarchartRender;
 import application.visualization.render2d.BoxRender;
+import application.visualization.render2d.IndependentElementRender;
 import application.visualization.render2d.Render;
 import javafx.scene.layout.GridPane;
 import wrapper.datastructures.DataStructure;
@@ -23,8 +24,8 @@ public class Visualization extends GridPane {
         int independent = 0;
         for (DataStructure struct : model.getStructures().values()) {
             if(struct.rawType == "independentElement"){
-//                Render r = IndependentElementView();
-//                this.add(render, 1, independent++);
+                Render render = new IndependentElementRender(struct);
+                this.add(render, 1, independent++);
             }
             Render render = getRender(struct);
             if(render != null){

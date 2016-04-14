@@ -287,7 +287,7 @@ public class Array extends DataStructure {
      * @author Richard
      *
      */
-    public class ArrayElement implements Element {
+    public static class ArrayElement implements Element {
 
         private double value;
         private int[]  index;
