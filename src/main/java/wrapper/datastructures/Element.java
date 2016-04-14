@@ -9,7 +9,7 @@ package wrapper.datastructures;
 public interface Element {
     public static final String COLOR_WRITE = "red";
     public static final String COLOR_READ = "green";
-    public static final String COLOR_SWAP = "blue";
+    public static final String COLOR_SWAP = "cyan";
 
     /**
      * Returns the value held by this Element.

@@ -8,11 +8,8 @@
 			},
 			"a2": {
 				"identifier": "a2",
-				"rawType": "array"
-			},
-			"tmp": {
-				"identifier": "tmp",
-				"rawType": "independentElement"
+				"rawType": "array",
+				"visual" : "box"
 			}
 		}
 	},

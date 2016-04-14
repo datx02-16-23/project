@@ -19,8 +19,17 @@ public class Visualization extends GridPane {
 
     public void createVisuals (){
         getChildren().clear();
+        int regular = 0;
+        int independent = 0;
         for (DataStructure struct : model.getStructures().values()) {
-            setRender(struct);
+            if(struct.rawType == "independentElement"){
+//                Render r = IndependentElementView();
+//                this.add(render, 1, independent++);
+            }
+            Render render = getRender(struct);
+            if(render != null){
+                this.add(render, 0, regular++);
+            }
         }
     }
 
@@ -29,16 +38,18 @@ public class Visualization extends GridPane {
      * 
      * @param struct The DataStructure to assign a Render to.
      */
-    private void setRender (DataStructure struct){
+    private Render getRender (DataStructure struct){
         Render render = null;
         String visual = struct.visual == null ? "" : struct.visual;
         outer: for (int attempt = 1; attempt <= 3; attempt++) {
             switch (visual) {
                 case "bar":
-                    render = new BoxRender(struct);
-//                    render = new BarchartRender(struct);
+//                    render = new BoxRender(struct);
+                    System.out.println("bar");
+                    render = new BarchartRender(struct);
                     break outer;
                 case "box":
+                    System.out.println("box");
                     render = new BoxRender(struct);
                     break outer;
                 default:
@@ -54,12 +65,12 @@ public class Visualization extends GridPane {
                             break;
                         default:
                             Main.console.err("Unable to determine Visual style for: " + struct);
-                            break;
+                            return null;
                     }
                     break;
             }
         }
-        getChildren().add(render);
+        return render;
     }
 
     /*

@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import wrapper.datastructures.Array.ArrayElement;
@@ -24,14 +25,14 @@ public class BoxRender extends Render {
 
     public BoxRender (DataStructure struct){
         grid = new GridPane();
-        this.getChildren().add(grid);
+        BorderPane bp = new BorderPane();
+        bp.setTop(new Label("\tidentifier: " + struct.identifier));
+        bp.setCenter(grid);
+        this.getChildren().add(bp);
         this.struct = struct;
         this.setVisible(true);
         this.setMaxWidth(Double.MAX_VALUE);
         this.setMaxHeight(Double.MAX_VALUE);
-        this.setPrefWidth(Double.MAX_VALUE);
-        this.setPrefHeight(Double.MAX_VALUE);
-        this.setStyle("-fx-background-color: #2f4f4f;");
         init();
     }
 
