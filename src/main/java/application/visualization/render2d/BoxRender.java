@@ -1,5 +1,8 @@
 package application.visualization.render2d;
 
+import java.util.List;
+import java.util.Arrays;
+
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -33,7 +36,33 @@ public class BoxRender extends Render {
     @Override
     public void render (){
         System.out.println("box render()");
-        init(); //TODO
+        List<Element> structElements = struct.getElements();
+        if (structElements.size()*2 != grid.getChildren().size()) { //x2 because grid also has labels.
+            System.out.println("init");
+            init();
+        }
+        else {
+            System.out.println("no init");
+            List<Element> modifiedElements = struct.getModifiedElements();
+            List<Element> resetElements = struct.getResetElements();
+            System.out.println(modifiedElements);
+            System.out.println(resetElements);
+            for (Element e : struct.getElements()) {
+                if(modifiedElements.contains(e)){
+                    addElementToGrid(e, e.getColor());                    
+                } else if (resetElements.contains(e)){
+                    addElementToGrid(e, null);
+                }
+            }
+            struct.elementsDrawn();
+        }
+    }
+
+    //Ugly way of doing it, but I cant be bothered checking if the element moved.
+    private void addElementToGrid (Element e, String style){
+        ArrayElement ae = (ArrayElement) e;
+        grid.add(new Label("  " + Arrays.toString(ae.getIndex())), ae.getIndex()[0], 0);
+        grid.add(new GridElement(e, style), ae.getIndex()[0], 1);
     }
 
     /**
@@ -42,9 +71,7 @@ public class BoxRender extends Render {
     private void init (){
         grid.getChildren().clear();
         for (Element e : struct.getElements()) {
-            ArrayElement ae = (ArrayElement) e;
-            grid.add(new Label(ae.getIndex() + ""), ae.getIndex()[0], 0);
-            grid.add(new GridElement(e), ae.getIndex()[0], 0);
+            addElementToGrid((ArrayElement) e, null);
         }
     }
 
@@ -54,23 +81,23 @@ public class BoxRender extends Render {
      * @author Richard
      *
      */
-    private class GridElement extends Pane {
+    private class GridElement extends GridPane {
 
-        private static final String BORDER = "-fx-border-color: black;\n" + "-fx-border-insets: 5;\n" + "-fx-border-width: 3;\n" + "-fx-border-style: dashed;\n";
-        private final Element       e;
-        private final Label         valueLabel;
+        private static final String BORDER = "-fx-border-color: black;\n" + "-fx-border-insets: 1;\n" + "-fx-border-width: 2;\n" + " -fx-border-radius: 3;\n";
 
-        private GridElement (Element e){
-            this.e = e;
-            this.setStyle(BORDER);
+        private GridElement (Element e, String style){
+            if (style == null) {
+                System.out.println("no color");
+                this.setStyle(BORDER);
+            } else {
+                System.out.println("color");
+                this.setStyle(BORDER + "\n-fx-background-color: " + style + ";");                
+            }
             this.setPrefWidth(GRID_SIZE);
             this.setPrefHeight(GRID_SIZE);
             this.setMaxWidth(GRID_SIZE);
             this.setMaxHeight(GRID_SIZE);
-            valueLabel = new Label(e.getValue()+"");
-            valueLabel.setPrefWidth(Double.MAX_VALUE);
-            valueLabel.setPrefHeight(Double.MIN_VALUE);
+            this.getChildren().add(new Label(e.getValue() + ""));
         }
-        //TODO: Override draw method.
     }
 }
