@@ -12,10 +12,11 @@ import wrapper.datastructures.*;
 
 public class BoxRender extends Render {
 
-    public static final double  GRID_SIZE     = 50;
+    public static final double  GRID_SIZE              = 50;
     private final GridPane      grid;
-    private static final String DEFAULT_COLOR = "white";
+    private static final String DEFAULT_COLOR          = "white";
     private final DataStructure struct;
+    private int                 elementsPreviousRender = 0;
 
     public BoxRender (DataStructure struct){
         grid = new GridPane();
@@ -35,27 +36,43 @@ public class BoxRender extends Render {
      */
     @Override
     public void render (){
-        System.out.println("box render()");
         List<Element> structElements = struct.getElements();
-        if (structElements.size()*2 != grid.getChildren().size()) { //x2 because grid also has labels.
-            System.out.println("init");
+        if (structElements.size() != elementsPreviousRender) {
             init();
         }
         else {
-            System.out.println("no init");
             List<Element> modifiedElements = struct.getModifiedElements();
             List<Element> resetElements = struct.getResetElements();
+            System.out.println("\nmodifiedElements:");
             System.out.println(modifiedElements);
+            System.out.println("resetElements:");
             System.out.println(resetElements);
             for (Element e : struct.getElements()) {
-                if(modifiedElements.contains(e)){
-                    addElementToGrid(e, e.getColor());                    
-                } else if (resetElements.contains(e)){
+                if (modifiedElements.contains(e)) {
+                    System.out.println("\tmodified");
+                    addElementToGrid(e, e.getColor());
+                }
+                else if (resetElements.contains(e)) {
+                    System.out.println("\treset");
                     addElementToGrid(e, null);
                 }
             }
             struct.elementsDrawn();
         }
+        elementsPreviousRender = structElements.size();
+    }
+
+    /**
+     * Create and render all elements.
+     */
+    private void init (){
+        System.out.println("\tinit");
+        grid.getChildren().clear();
+        for (Element e : struct.getElements()) {
+            addElementToGrid((ArrayElement) e, null);
+        }
+        elementsPreviousRender = struct.getElements().size();
+        struct.elementsDrawn();
     }
 
     //Ugly way of doing it, but I cant be bothered checking if the element moved.
@@ -66,16 +83,6 @@ public class BoxRender extends Render {
     }
 
     /**
-     * Create and render all elements.
-     */
-    private void init (){
-        grid.getChildren().clear();
-        for (Element e : struct.getElements()) {
-            addElementToGrid((ArrayElement) e, null);
-        }
-    }
-
-    /**
      * The actual drawing surface for the elements.
      * 
      * @author Richard
@@ -83,15 +90,14 @@ public class BoxRender extends Render {
      */
     private class GridElement extends GridPane {
 
-        private static final String BORDER = "-fx-border-color: black;\n" + "-fx-border-insets: 1;\n" + "-fx-border-width: 2;\n" + " -fx-border-radius: 3;\n";
+        private static final String BASE = "-fx-border-color: black;\n" + "-fx-border-insets: 1;\n" + "-fx-border-width: 2;\n" + "-fx-border-radius: 3;\n" + "-fx-background-radius: 5;";
 
         private GridElement (Element e, String style){
             if (style == null) {
-                System.out.println("no color");
-                this.setStyle(BORDER);
-            } else {
-                System.out.println("color");
-                this.setStyle(BORDER + "\n-fx-background-color: " + style + ";");                
+                this.setStyle(BASE + "\n-fx-background-color: white ;");
+            }
+            else {
+                this.setStyle(BASE + "\n-fx-background-color: " + style + ";");
             }
             this.setPrefWidth(GRID_SIZE);
             this.setPrefHeight(GRID_SIZE);

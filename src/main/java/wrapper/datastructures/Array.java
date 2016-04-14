@@ -135,7 +135,6 @@ public class Array extends DataStructure {
             if (value != null) {
                 targetElement.value = op.getValue()[0];
                 targetElement.color = Element.COLOR_WRITE;
-                System.out.println("write: " + targetElement);
                 modifiedElements.add(targetElement);
             }
             else {
@@ -146,7 +145,6 @@ public class Array extends DataStructure {
         ArrayElement sourceElement = this.getElement(op.getSource());
         if (sourceElement != null) {
             sourceElement.color = Element.COLOR_READ;
-            System.out.println("read: " + sourceElement);
             modifiedElements.add(sourceElement);
         }
     }
