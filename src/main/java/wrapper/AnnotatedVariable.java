@@ -34,7 +34,7 @@ public class AnnotatedVariable implements Serializable {
      */
     public String                        visual;
     /**
-     * A map of attribute DEVELOPER_NAMES and their values for this variable, such as maximum size.
+     * A map of attributes and their values for this variable, such as maximum size.
      */
     public final HashMap<String, Object> attributes;
 

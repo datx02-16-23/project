@@ -1,6 +1,11 @@
 package wrapper.datastructures;
 
+import java.util.ArrayList;
+
 import wrapper.AnnotatedVariable;
+import wrapper.Operation;
+import wrapper.operations.Key;
+import wrapper.operations.OperationParser;
 
 /**
  * Contains methods to parse data structures. Cannot be instantiated.
@@ -46,5 +51,11 @@ public class DataStructureParser {
      */
     public static Array unpackArray (AnnotatedVariable av){
         return new Array(av.identifier, av.abstractType, av.visual);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public static int[] parseSize (AnnotatedVariable av){
+        System.out.println(av.attributes);
+        return OperationParser.ensureIntArray((ArrayList<Object>) av.attributes.get(Key.size));
     }
 }

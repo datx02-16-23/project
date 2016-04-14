@@ -148,11 +148,6 @@ public class OperationParser {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private static int[] parseIndex (Operation op){
-        return ensureIntArray((ArrayList<Object>) op.operationBody.get(Key.index));
-    }
-
     private static double[] parseValue (Operation op){
         return ensureDoubleArray(op.operationBody.get(Key.value));
     }
@@ -186,7 +181,7 @@ public class OperationParser {
      * @return An array of ints, or null.
      */
     @SuppressWarnings("unchecked")
-    private static int[] ensureIntArray (Object listOrArray){
+    public static int[] ensureIntArray (Object listOrArray){
         if (listOrArray == null) {
             return null;
         }

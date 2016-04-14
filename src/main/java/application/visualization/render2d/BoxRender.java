@@ -1,11 +1,13 @@
 package application.visualization.render2d;
 
 import java.util.List;
+
+import application.gui.Main;
+
 import java.util.Arrays;
 
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import wrapper.datastructures.Array.ArrayElement;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.*;
@@ -43,17 +45,11 @@ public class BoxRender extends Render {
         else {
             List<Element> modifiedElements = struct.getModifiedElements();
             List<Element> resetElements = struct.getResetElements();
-            System.out.println("\nmodifiedElements:");
-            System.out.println(modifiedElements);
-            System.out.println("resetElements:");
-            System.out.println(resetElements);
             for (Element e : struct.getElements()) {
                 if (modifiedElements.contains(e)) {
-                    System.out.println("\tmodified");
                     addElementToGrid(e, e.getColor());
                 }
                 else if (resetElements.contains(e)) {
-                    System.out.println("\treset");
                     addElementToGrid(e, null);
                 }
             }
@@ -79,12 +75,17 @@ public class BoxRender extends Render {
     private void addElementToGrid (Element e, String style){
         ArrayElement ae = (ArrayElement) e;
         int[] index = ae.getIndex();
+        System.out.println(Arrays.toString(index));
         if(index.length == 1){
+            System.out.println("1d");
             grid.add(new Label("  " + Arrays.toString(index)), index[0], 0);
             grid.add(new GridElement(e, style), index[0], 1);            
         } else if (index.length == 2){
+            System.out.println("2d");
             grid.add(new Label("  " + Arrays.toString(index)), index[0], index[1] + 0);
             grid.add(new GridElement(e, style), index[0], index[1] + 1);       
+        } else {
+            Main.console.err("ERROR: BoxRender cannot draw more than 2 dimensions.");
         }
     }
 

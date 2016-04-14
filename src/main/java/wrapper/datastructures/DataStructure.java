@@ -18,9 +18,9 @@ public abstract class DataStructure extends AnnotatedVariable {
     /**
      * Version number for this class.
      */
-    private static final long     serialVersionUID = Strings.VERSION_NUMBER;
-    protected final List<Element> modifiedElements = new ArrayList<Element>();
-    protected final List<Element> resetElements    = new ArrayList<Element>();
+    private static final long               serialVersionUID = Strings.VERSION_NUMBER;
+    protected transient final List<Element> modifiedElements = new ArrayList<Element>();
+    protected transient final List<Element> resetElements    = new ArrayList<Element>();
 
     public DataStructure (String identifier, String rawType, String abstractType, String visual){
         super(identifier, rawType, abstractType, visual);
@@ -102,7 +102,7 @@ public abstract class DataStructure extends AnnotatedVariable {
     }
 
     /**
-     * Indicate to the DataStructure that the lists returned by {@code getModifiedElements()} <b>and</b> 
+     * Indicate to the DataStructure that the lists returned by {@code getModifiedElements()} <b>and</b>
      * {@code getResetElements} have been drawn.
      */
     public void elementsDrawn (){

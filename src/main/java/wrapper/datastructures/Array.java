@@ -37,10 +37,17 @@ public class Array extends DataStructure {
     public Array (String identifier, String abstractType, String visual){
         super(identifier, "array", abstractType, visual);
         elements = new ArrayList<Element>();
-        capacity = (int[]) super.attributes.get("size");
         if (capacity == null) {
             capacity = new int[] {-1};
         }
+    }
+    
+    /**
+     * Returns the declared Capacity of this Array.
+     * @return The declared Capacity of this Array.
+     */
+    public int[] getCapacity(){
+        return DataStructureParser.parseSize(this);
     }
 
     /**
@@ -57,12 +64,13 @@ public class Array extends DataStructure {
             throw new IllegalArgumentException();
         }
         double[] linearArray = op_init.getValue();
-        capacity = op_init.getSize();
-        if (capacity == null) {
-            capacity = new int[] {linearArray.length}; // Assume
-            // one-dimensional if
-            // size is not
-            // specified.
+        capacity = op_init.getSize(); //Take size declared in Init.
+        if (capacity == null) { //Fall back to size declared in header
+            capacity = getCapacity();
+            System.out.println(Arrays.toString(capacity));
+        }
+        if (capacity == null) { //Use size of values as a last resort.
+            capacity = new int[] {linearArray.length};
         }
         // Initialize specified by the values argument of the init operation.
         int linearIndex = 0;
