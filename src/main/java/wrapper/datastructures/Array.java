@@ -116,23 +116,38 @@ public class Array extends DataStructure {
         ArrayElement var1Element = this.getElement(var1);
         if (var1Element != null) {
             var1Element.value = op.getValues()[0];
+            var1Element.color = Element.COLOR_SWAP;
+            modifiedElements.add(var1Element);
         }
         ArrayElement var2Element = this.getElement(var2);
         if (var2Element != null) {
             var2Element.value = op.getValues()[1];
+            var2Element.color = Element.COLOR_SWAP;
+            modifiedElements.add(var2Element);
         }
     }
 
     private void readORwrite (OP_ReadWrite op){
+        //Manage write
         ArrayElement targetElement = this.getElement(op.getTarget());
         double[] value = op.getValue();
         if (targetElement != null) {
             if (value != null) {
                 targetElement.value = op.getValue()[0];
+                targetElement.color = Element.COLOR_WRITE;
+                System.out.println("write: " + targetElement);
+                modifiedElements.add(targetElement);
             }
             else {
                 Main.console.err("WARNING: Null value in: " + op);
             }
+        }
+        //Manage read
+        ArrayElement sourceElement = this.getElement(op.getSource());
+        if (sourceElement != null) {
+            sourceElement.color = Element.COLOR_READ;
+            System.out.println("read: " + sourceElement);
+            modifiedElements.add(sourceElement);
         }
     }
 
@@ -273,6 +288,7 @@ public class Array extends DataStructure {
 
         private double value;
         private int[]  index;
+        private String color;
 
         /**
          * Construct a new ArrayElement with the given value and index.
@@ -337,6 +353,11 @@ public class Array extends DataStructure {
 
         public String toString (){
             return Arrays.toString(index) + " = " + value;
+        }
+
+        @Override
+        public String getColor (){
+            return color;
         }
     }
 

@@ -7,6 +7,9 @@ package wrapper.datastructures;
  *
  */
 public interface Element {
+    public static final String COLOR_WRITE = "red";
+    public static final String COLOR_READ = "green";
+    public static final String COLOR_SWAP = "blue";
 
     /**
      * Returns the value held by this Element.
@@ -19,4 +22,6 @@ public interface Element {
      * Set the value held by this Element.
      */
     public abstract void setValue (double newValue);
+    
+    public abstract String getColor();
 }

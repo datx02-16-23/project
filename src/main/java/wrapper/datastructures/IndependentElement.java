@@ -156,6 +156,11 @@ public class IndependentElement extends DataStructure implements Element {
         public void setValue (double newValue){
             value = newValue;
         }
+
+        @Override
+        public String getColor (){
+            return null;
+        }
     }
 
     @Override
@@ -168,5 +173,10 @@ public class IndependentElement extends DataStructure implements Element {
     public String getAbstractVisual (){
         Main.console.err("WARNING: getAbstractVisual has not been implemented for Independent Element.");
         return "";
+    }
+
+    @Override
+    public String getColor (){
+        return null;
     }
 }

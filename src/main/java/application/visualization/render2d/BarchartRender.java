@@ -18,6 +18,7 @@ import wrapper.datastructures.Element;
  */
 public class BarchartRender extends Render {
 
+    private static final String                        DEFAULT_COLOR = "#123456";
     private final DataStructure                        struct;
     private final BarChart<String, Double>             barChart;
     private final ObservableList<Data<String, Double>> elemData;
@@ -43,8 +44,6 @@ public class BarchartRender extends Render {
     }
 
     @Override
-    //TODO: Set colour based on what has happened to the individual elements.
-    //http://stackoverflow.com/questions/15233858/how-to-change-color-of-a-single-bar-java-fx
     public void render (){
         List<Element> structElements = struct.getElements();
         int elementsSize = structElements.size();
@@ -56,17 +55,32 @@ public class BarchartRender extends Render {
                 elemData.add(new Data(ae.getIndex()[0] + "", ae.getValue()));
             }
             //Set bar colors
-            for(Node n:barChart.lookupAll(".default-color0.chart-bar")) {
-                      n.setStyle("-fx-bar-fill: #123456;");
+            for (Node n : barChart.lookupAll(".default-color0.chart-bar")) {
+                n.setStyle("-fx-bar-fill: " + DEFAULT_COLOR + ";");
             }
         }
+        List<Element> modified = struct.getModifiedElements();
+        List<Element> reset = struct.getModifiedElements();
+        //Change values of elements
         ArrayElement ae;
         Data<String, Double> d;
+        System.out.println(modified);
+        System.out.println(reset);
         for (int i = 0; i < elementsSize; i++) {
             ae = (ArrayElement) structElements.get(i);
             d = elemData.get(i);
             d.setXValue(ae.getIndex()[0] + "");
             d.setYValue(ae.getValue());
+            //Manage special color.
+            if (modified.contains(ae)) {
+                System.out.println("modified");
+                d.getNode().setStyle("-fx-bar-fill: " + ae.getColor() + ";");
+            }
+            else if (reset.contains(ae)) {
+                System.out.println("reset");
+                d.getNode().setStyle("-fx-bar-fill: " + DEFAULT_COLOR + ";");
+            }
         }
+        struct.elementsDrawn();
     }
 }
