@@ -6,8 +6,10 @@ import application.gui.Main;
 
 import java.util.Arrays;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import wrapper.datastructures.Array.ArrayElement;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.*;
@@ -62,7 +64,6 @@ public class BoxRender extends Render {
      * Create and render all elements.
      */
     private void init (){
-        System.out.println("\tinit");
         grid.getChildren().clear();
         for (Element e : struct.getElements()) {
             addElementToGrid((ArrayElement) e, null);
@@ -95,7 +96,7 @@ public class BoxRender extends Render {
      * @author Richard
      *
      */
-    private class GridElement extends GridPane {
+    private class GridElement extends StackPane {
 
         private static final String BASE = "-fx-border-color: black;\n" + "-fx-border-insets: 1;\n" + "-fx-border-width: 2;\n" + "-fx-border-radius: 3;\n" + "-fx-background-radius: 5;";
 
@@ -110,7 +111,9 @@ public class BoxRender extends Render {
             this.setPrefHeight(GRID_SIZE);
             this.setMaxWidth(GRID_SIZE);
             this.setMaxHeight(GRID_SIZE);
-            this.getChildren().add(new Label(e.getValue() + ""));
+            Label label = new Label(e.getValue() + "");
+            this.getChildren().add(label);
+            StackPane.setAlignment(label,Pos.CENTER);
         }
     }
 }
