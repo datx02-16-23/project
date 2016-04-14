@@ -12,7 +12,7 @@
 		}
 	},
 	"body": [{
-		"operation": "write",
+		"operation": "init",
 		"operationBody": {
 			"source": {},
 			"value": [5, 90, 35, 45, 150, 3],
