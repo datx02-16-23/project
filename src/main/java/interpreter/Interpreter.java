@@ -47,6 +47,7 @@ public class Interpreter {
      */
     public Interpreter (){
         before = new LinkedList<Operation>();
+        after = new LinkedList<Operation>();
         workingSet = new LinkedList<OP_ReadWrite>();
         highOrderRoutine = FLUSH_SET_ADD_HIGH;
         consolidator = new Consolidator();
