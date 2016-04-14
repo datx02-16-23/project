@@ -6,8 +6,6 @@ import wrapper.datastructures.DataStructure;
 import java.util.List;
 import java.util.Map;
 
-import javafx.collections.ObservableList;
-
 // TODO: Javadoc #50
 public interface iModel {
 
