@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import application.assets.Strings;
+import application.gui.Main;
 import wrapper.Locator;
 import wrapper.Operation;
 import wrapper.operations.*;
@@ -104,7 +105,7 @@ public class Array extends DataStructure {
                 swap((OP_Swap) op);
                 break;
             default:
-                System.err.println("OperationType \"" + op.operation + "\" not applicable to " + getClass().getSimpleName());
+                Main.console.err("OperationType \"" + op.operation + "\" not applicable to " + getClass().getSimpleName());
                 break;
         }
     }
@@ -130,7 +131,7 @@ public class Array extends DataStructure {
                 targetElement.value = op.getValue()[0];
             }
             else {
-                System.err.println("WARNING: Null value in: " + op);
+                Main.console.err("WARNING: Null value in: " + op);
             }
         }
     }

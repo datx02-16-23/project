@@ -6,6 +6,7 @@ import application.model.iModel;
 import application.visualization.Visualization;
 import io.LogStreamManager;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
@@ -15,8 +16,10 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.scene.control.TextArea;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 
@@ -26,12 +29,18 @@ import java.io.IOException;
  */
 public class Main extends Application {
 
+    /**
+     * Console for printing system and error messages.
+     */
+    public static MavserConsole console;
+    
     private Stage                  window;
     private Visualization          visualization;
     private final iModel           model = new Model();
     private final LogStreamManager lsm   = new LogStreamManager();
     private FXMLLoader             fxmlLoader;
     private GUI_Controller         controller;
+    
 
     @Override
     public void start (Stage primaryStage) throws Exception{
@@ -49,6 +58,9 @@ public class Main extends Application {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
+        //Load console
+        console = new MavserConsole((TextArea) fxmlLoader.getNamespace().get("console"));
+        
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Scene scene = new Scene(root, (screenSize.getWidth() * 0.5), (screenSize.getHeight() * 0.5));
         // Extracting some nodes from the fxml:
@@ -73,6 +85,8 @@ public class Main extends Application {
         // Add AV
         GridPane visualizationPane = (GridPane) fxmlLoader.getNamespace().get("visualizationPane");
         visualizationPane.add(visualization, 0, 0);
+        // Initialize console
+        //Load main window
         scene.getStylesheets().add(getClass().getResource("/VisualizerStyle.css").toExternalForm());
         window.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
@@ -124,5 +138,99 @@ public class Main extends Application {
 
     public static void main (String[] args){
         launch(args);
+    }
+
+    /**
+     * Printout of error messages and warnings from the program.
+     * @author Richard
+     *
+     */
+    public class MavserConsole {
+        private boolean allowPrinting = true;
+        private final TextArea consoleTextArea;
+
+        public MavserConsole (TextArea consoleTextArea){
+            this.consoleTextArea = consoleTextArea;
+            init();
+        }
+        
+        /**
+         * Print a regular line to the GUI console.
+         * @param out The line to prine.
+         */
+        public void out(String out){
+            if(!allowPrinting){
+                return;
+            }
+            Platform.runLater(new Runnable() {
+
+                @Override
+                public void run (){
+                    consoleTextArea.appendText(out+"\n");
+                }
+            });
+        }
+        
+        /**
+         * Print an error to the GUI console.
+         * @param err The error to print.
+         */
+        public void err(String err){
+            if(!allowPrinting){
+                return;
+            }
+            String line = "\t"+err+"\n"; //Unload main thread.
+            Platform.runLater(new Runnable() {
+
+                @Override
+                public void run (){
+                    consoleTextArea.appendText(line);
+                }
+            });
+        }
+        
+        /**
+         * Disable console output.
+         */
+        public void enablePrinting(){
+            setPrinting(true);
+        }
+        
+        /**
+         * Enable console output.
+         */
+        public void disablePrinting(){
+            setPrinting(false);
+        }
+        
+        public void setPrinting(boolean value){
+            if(value == allowPrinting){
+                return;
+            }
+            allowPrinting = !value;
+            
+            out("Printing " + (allowPrinting != true ? "enabled." : "disabled."));
+        }
+
+        public void init (){
+            StringBuilder sb = new StringBuilder();
+            sb.append("Welcome to " + Strings.PROJECT_NAME + "!\n");
+            sb.append("Version: " + Strings.VERSION_NUMBER +"\n\n");
+            sb.append("DEVELOPERS: ");
+            for(String s : Strings.DEVELOPER_NAMES){
+                sb.append(s + " | ");
+            }
+            sb.delete(sb.length()-2, sb.length());
+            sb.append("\n");
+            
+            Platform.runLater(new Runnable() {
+
+                @Override
+                public void run (){
+                    consoleTextArea.setText(sb.toString());
+                }
+            });
+
+        }
     }
 }

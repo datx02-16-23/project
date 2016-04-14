@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.google.gson.internal.LinkedTreeMap;
 
+import application.gui.Main;
 import wrapper.Locator;
 import wrapper.Operation;
 
@@ -77,7 +78,7 @@ public class OperationParser {
             op_rw = new OP_Read();
         }
         else {
-            System.err.println(("Operation must be \"read\" or \"write\". Got: " + op.operation));
+            Main.console.err(("Operation must be \"read\" or \"write\". Got: " + op.operation));
             return null;
         }
         op_rw.setSource(unpackArrayVariable(op.operationBody.get(Key.source)));

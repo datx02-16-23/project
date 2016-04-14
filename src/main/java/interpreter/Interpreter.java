@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import application.gui.Main;
 import wrapper.Operation;
 import wrapper.operations.*;
 
@@ -69,7 +70,7 @@ public class Interpreter {
      */
     public void setHighOrderRoutine (int newRoutine){
         if (newRoutine < 0 || newRoutine > 4) {
-            System.err.println("INTERPRETER: setHighOrderRoutine(): Invalid high-order routine.");
+            Main.console.err("INTERPRETER: setHighOrderRoutine(): Invalid high-order routine.");
             return;
         }
         highOrderRoutine = newRoutine;
@@ -217,7 +218,7 @@ public class Interpreter {
      * Deconstruct operation into read/write operations.
      */
     private void deconstruct (){
-        System.err.println("DECONSTRUCT has not been implemented yet. Sorry :/.");
+        Main.console.err("DECONSTRUCT has not been implemented yet. Sorry :/.");
     }
 
     /**
@@ -291,7 +292,7 @@ public class Interpreter {
                 consolidator.addConsolidable(new OP_Swap());
                 break;
             default:
-                System.err.println("Cannot consolidate OperationType: " + testCase.toString().toUpperCase());
+                Main.console.err("Cannot consolidate OperationType: " + testCase.toString().toUpperCase());
                 break;
         }
     }

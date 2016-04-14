@@ -11,6 +11,7 @@ import org.jgroups.ReceiverAdapter;
 import com.google.gson.Gson;
 
 import application.assets.Strings;
+import application.gui.Main;
 import wrapper.Wrapper;
 
 /**
@@ -147,7 +148,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
     public void receive (Message incoming){
         Object messageObject = incoming.getObject();
         if (messageObject instanceof MavserMessage == false) {
-            System.err.println("Invalid message type: " + messageObject);
+            Main.console.err("Invalid message type: " + messageObject);
             return;
         }
         MavserMessage message = (MavserMessage) messageObject;
@@ -172,7 +173,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
                 try {
                     addAndFireEvent(gson.fromJson((String) message.payload, Wrapper.class));
                 } catch (Exception e) {
-                    System.err.println("JSON String malformed: " + message.payload);
+                    Main.console.err("JSON String malformed: " + message.payload);
                 }
                 break;
             case MavserMessage.REQUEST_FOR_MEMBER_INFO:
@@ -181,7 +182,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
                 try {
                     jChannel.send(memberInfo);
                 } catch (Exception e) {
-                    System.err.println("Failed to send member information.");
+                    Main.console.err("Failed to send member information.");
                 }
                 break;
             case MavserMessage.MEMBER_INFO:
@@ -191,7 +192,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
                 }
                 break;
             default:
-                System.err.println("Invalid message type: " + message.messageType);
+                Main.console.err("Invalid message type: " + message.messageType);
                 return;
         }
     }
@@ -217,7 +218,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
             try {
                 jChannel.send(m);
             } catch (Exception e) {
-                System.err.println("Failed to send REQUEST_FOR_MEMBER_INFO message.");
+                Main.console.err("Failed to send REQUEST_FOR_MEMBER_INFO message.");
             }
         }
     }
@@ -295,13 +296,13 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
             outMessage.setObject(new MavserMessage(gson.toJson(outgoing), this.senderId, MavserMessage.JSON));
         }
         else {
-            System.err.println("Message could not be sent: Sender mode invalid.");
+            Main.console.err("Message could not be sent: Sender mode invalid.");
             return false;
         }
         try {
             jChannel.send(outMessage);
         } catch (Exception e) {
-            System.err.println("Message could not be sent: " + e);
+            Main.console.err("Message could not be sent: " + e);
             return false;
         }
         return true;
@@ -320,7 +321,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
         try {
             jChannel.send(m);
         } catch (Exception e) {
-            System.err.println("Message could not be sent: " + e);
+            Main.console.err("Message could not be sent: " + e);
             return false;
         }
         return true;

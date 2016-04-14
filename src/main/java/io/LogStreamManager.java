@@ -21,6 +21,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
 import application.assets.Strings;
+import application.gui.Main;
 import io.Communicator.MavserMessage;
 import wrapper.AnnotatedVariable;
 import wrapper.Header;
@@ -126,13 +127,13 @@ public class LogStreamManager implements CommunicatorListener {
             wrapper = gson.fromJson(new JsonReader(new FileReader(logFile)), Wrapper.class);
             unwrap(wrapper);
         } catch (JsonIOException e) {
-            System.err.println("JSON IO error: " + e);
+            Main.console.err("JSON IO error: " + e);
             return false;
         } catch (JsonSyntaxException e) {
-            System.err.println("JSON syntax error: " + e);
+            Main.console.err("JSON syntax error: " + e);
             return false;
         } catch (FileNotFoundException e) {
-            System.err.println("File not found: " + e);
+            Main.console.err("File not found: " + e);
             return false;
         }
         return true;
@@ -321,7 +322,7 @@ public class LogStreamManager implements CommunicatorListener {
             out.flush();
             out.close();
         } catch (Exception e) {
-            System.err.println("Printing failed: " + e);
+            Main.console.err("Printing failed: " + e);
             e.printStackTrace();
         }
     }

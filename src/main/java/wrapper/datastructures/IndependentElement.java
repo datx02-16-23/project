@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import application.assets.Strings;
+import application.gui.Main;
 import wrapper.Operation;
 import wrapper.operations.*;
 
@@ -106,7 +107,7 @@ public class IndependentElement extends DataStructure implements Element {
                 swap((OP_Swap) op);
                 break;
             default:
-                System.err.println("OperationType \"" + op.operation + "\" not applicable to " + getClass().getSimpleName());
+                Main.console.err("OperationType \"" + op.operation + "\" not applicable to " + getClass().getSimpleName());
                 break;
         }
     }

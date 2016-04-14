@@ -261,7 +261,7 @@ public class GUI_Controller implements CommunicatorListener {
 
     // TODO: Implement detailed inspection of operation
     public void inspectSelection (){
-        System.err.println("Not implemented.");
+        Main.console.err("Not implemented.");
     }
 
     public void inputGoToSelecton (){
@@ -547,7 +547,7 @@ public class GUI_Controller implements CommunicatorListener {
 
     public void propertiesFailed (Exception exception){
         if (exception != null) {
-            System.err.println(exception.getMessage());
+            Main.console.err(exception.getMessage());
         }
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/PropertiesAlert.fxml"));
         Stage stage = new Stage();
@@ -680,7 +680,7 @@ public class GUI_Controller implements CommunicatorListener {
     public Properties tryLoadProperties (){
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream(Strings.PROPERTIES_FILE_NAME);
         if (inputStream == null) {
-            System.err.println("Failed to open properties file.");
+            Main.console.err("Failed to open properties file.");
             propertiesFailed(null);
             return DefaultProperties.get();
         }
@@ -691,7 +691,7 @@ public class GUI_Controller implements CommunicatorListener {
             return properties;
         } catch (IOException e) {
             propertiesFailed(e);
-            System.err.println("Property file I/O failed.");
+            Main.console.err("Property file I/O failed.");
             return DefaultProperties.get();
         }
     }

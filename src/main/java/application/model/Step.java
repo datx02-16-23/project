@@ -9,6 +9,8 @@ import wrapper.operations.OperationType;
 import java.util.HashMap;
 import java.util.Map;
 
+import application.gui.Main;
+
 public class Step implements iStep {
 
     private final Map<String, DataStructure> structs;
@@ -68,7 +70,7 @@ public class Step implements iStep {
                     identifier = locator.getIdentifier();
                     struct = structs.get(identifier);
                     if (struct == null) {
-                        System.err.println("WARNING: Undeclared variable \"" + identifier + "\". " + op + " aborted.");
+                        Main.console.err("WARNING: Undeclared variable \"" + identifier + "\". " + op + " aborted.");
                         break;
                     }
                     struct.applyOperation(op);
@@ -78,7 +80,7 @@ public class Step implements iStep {
                     identifier = locator.getIdentifier();
                     struct = structs.get(identifier);
                     if (struct == null) {
-                        System.err.println("WARNING: Undeclared variable \"" + identifier + "\". " + op + " aborted.");
+                        Main.console.err("WARNING: Undeclared variable \"" + identifier + "\". " + op + " aborted.");
                         break;
                     }
                     struct.applyOperation(op);
