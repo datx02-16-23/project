@@ -131,10 +131,11 @@ public class GUI_Controller implements CommunicatorListener {
     }
 
     private Timeline autoplayTimeline;
+
     public void startAutoPlay (){
         playPauseButton.setText("Pause");
 //        speedButton.setDisable(true);
-        if(autoplayTimeline != null){
+        if (autoplayTimeline != null) {
             autoplayTimeline.stop();
         }
         isPlaying = true;
@@ -154,7 +155,7 @@ public class GUI_Controller implements CommunicatorListener {
 
     public void stopAutoPlay (){
 //        speedButton.setDisable(false);
-        if(autoplayTimeline != null){
+        if (autoplayTimeline != null) {
             autoplayTimeline.stop();
             playPauseButton.setText("Play");
             isPlaying = false;
@@ -412,8 +413,13 @@ public class GUI_Controller implements CommunicatorListener {
     }
 
     public void keepInterpreted (){
-        operationHistory.getItems().setAll(interpreterAfter.getItems());
-        model.setOperations(interpreterAfter.getItems());
+        List<Operation> afterItems = interpreterAfter.getItems();
+        if (afterItems.isEmpty()) {
+            return;
+        }
+        stopAutoPlay();
+        operationHistory.getItems().setAll(afterItems);
+        model.setOperations(afterItems);
         updateOperationList();
         saveProperties();
         interpreterView.close();
