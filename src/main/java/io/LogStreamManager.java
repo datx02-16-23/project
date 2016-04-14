@@ -41,8 +41,8 @@ public class LogStreamManager implements CommunicatorListener {
      * Set to {@code true} to enable human readable printing of log files. {@code false} by default to increase
      * performance.
      */
-    public boolean                     PRETTY_PRINTING;
-    private final Gson                 gson = new Gson();
+    public boolean                     PRETTY_PRINTING = false;
+    private final Gson                 gson            = new Gson();
     private final Communicator         communicator;
     private CommunicatorListener       listener;
     private Wrapper                    wrapper;

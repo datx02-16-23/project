@@ -236,23 +236,23 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
         return sb.toString();
     }
 
+    private final List<String> currentMemberStrings = new ArrayList<String>();
+
     /**
      * Returns a list of agents connected to the channel.
      * 
      * @return A list of agents connected to the channel.
      */
-    private final List<String> currentMemberStrings = new ArrayList<String>();
-
     public List<String> getMemberStrings (){
         return currentMemberStrings;
     }
 
+    private final List<String> allMemberStrings = new ArrayList<String>();
     /**
      * Returns a list all agents this JGroupCommunicator has been in contact with.
      * 
      * @return A list all agents this JGroupCommunicator has been in contact with.
      */
-    private final List<String> allMemberStrings = new ArrayList<String>();
 
     public final List<String> getAllMemberStrings (){
         return allMemberStrings;
