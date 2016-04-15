@@ -49,12 +49,9 @@ public class Visualization extends GridPane {
         outer: for (int attempt = 1; attempt <= 3; attempt++) {
             switch (visual) {
                 case "bar":
-//                    render = new BoxRender(struct);
-                    System.out.println("bar");
                     render = new BarchartRender(struct);
                     break outer;
                 case "box":
-                    System.out.println("box");
                     render = new BoxRender(struct);
                     break outer;
                 default:

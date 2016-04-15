@@ -715,7 +715,7 @@ public class GUI_Controller implements CommunicatorListener {
             return properties;
         } catch (IOException e) {
             propertiesFailed(e);
-            System.err.println("Property file I/O failed.");
+            Main.console.err("Property file I/O failed.");
             return DefaultProperties.get();
         }
     }

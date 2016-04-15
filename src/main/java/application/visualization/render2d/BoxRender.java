@@ -76,16 +76,13 @@ public class BoxRender extends Render {
     private void addElementToGrid (Element e, String style){
         ArrayElement ae = (ArrayElement) e;
         int[] index = ae.getIndex();
-        System.out.println(Arrays.toString(index));
         if(index == null){ //Assume IndependentElement
             grid.add(new Label(), 0, 0);
             grid.add(new GridElement(e, style), 0, 1); 
         } else if(index.length == 1){
-            System.out.println("1d");
             grid.add(new Label("  " + Arrays.toString(index)), index[0], 0);
             grid.add(new GridElement(e, style), index[0], 1);            
         } else if (index.length == 2){
-            System.out.println("2d");
             grid.add(new Label("  " + Arrays.toString(index)), index[0], index[1] + 0);
             grid.add(new GridElement(e, style), index[0], index[1] + 1);       
         } else {

@@ -56,7 +56,6 @@ public class DataStructureParser {
     
     @SuppressWarnings("unchecked")
     public static int[] parseSize (AnnotatedVariable av){
-        System.out.println(av.attributes);
         return OperationParser.ensureIntArray((ArrayList<Object>) av.attributes.get(Key.size));
     }
 }

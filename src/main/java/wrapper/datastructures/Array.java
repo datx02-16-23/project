@@ -67,7 +67,6 @@ public class Array extends DataStructure {
         capacity = null;
         if (capacity == null) { //Fall back to size declared in header
             capacity = getCapacity();
-            System.out.println(Arrays.toString(capacity));
         }
         if (capacity == null) { //Use size of values as a last resort.
             capacity = new int[] {linearArray.length};

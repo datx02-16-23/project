@@ -65,8 +65,6 @@ public class BarchartRender extends Render {
         //Change values of elements
         ArrayElement ae;
         Data<String, Double> d;
-        System.out.println(modified);
-        System.out.println(reset);
         for (int i = 0; i < elementsSize; i++) {
             ae = (ArrayElement) structElements.get(i);
             d = elemData.get(i);
@@ -74,11 +72,9 @@ public class BarchartRender extends Render {
             d.setYValue(ae.getValue());
             //Manage special color.
             if (modified.contains(ae)) {
-                System.out.println("modified");
                 d.getNode().setStyle("-fx-bar-fill: " + ae.getColor() + ";");
             }
             else if (reset.contains(ae)) {
-                System.out.println("reset");
                 d.getNode().setStyle("-fx-bar-fill: " + DEFAULT_COLOR + ";");
             }
         }
