@@ -23,7 +23,7 @@ public class OP_Swap extends Operation implements Consolidable {
      * Create a new Swap operation. Note that you must set var1, var2, and value.
      */
     public OP_Swap (){
-        super(OPERATION, new HashMap<Key, Object>(), null, -1);
+        super(OPERATION, new HashMap<Key, Object>(), null, -1, -1, -1, -1);
     }
 
     /**

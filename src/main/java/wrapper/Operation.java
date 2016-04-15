@@ -32,9 +32,21 @@ public class Operation implements Serializable {
     public final String source;
     
     /**
-     * The line number this operation originates from.
+     * The line number this Operation originates from.
      */
-    public final int line;
+    public final int beginLine;
+    /**
+     * The last line of this Operation.
+     */
+    public final int endLine;
+    /**
+     * TODO: Javadoc.
+     */
+    public final int beginColumn;
+    /**
+     * TODO: Javadoc.
+     */
+    public final int endColumn;
 
     /**
      * Create a new Operation with the given operation identifier and body.
@@ -43,11 +55,14 @@ public class Operation implements Serializable {
      * @param operationBody A map containing the identifier of the field (such as "destination" or "value") and the data
      * they contained.
      */
-    public Operation (OperationType operation, HashMap<Key, Object> operationBody, String source, int line){
+    public Operation (OperationType operation, HashMap<Key, Object> operationBody, String source, int beginLine, int endLine, int beginColumn, int endColumn){
         this.operation = operation;
         this.operationBody = operationBody;
         this.source = source;
-        this.line = line;
+        this.beginLine = beginLine;
+        this.endLine = endLine;
+        this.beginColumn = beginColumn;
+        this.endColumn = beginColumn;
     }
 
     public String printOperationBody (){
