@@ -49,7 +49,7 @@ public class IndependentElement extends DataStructure implements Element {
      * Initialize an element with value 0.
      */
     public void initElement (){
-        Element init = new Array.ArrayElement(1337, new int[] {1337});
+        Element init = new Array.ArrayElement(1337, null);
         elements.clear();
         elements.add(init);
     }
@@ -75,8 +75,7 @@ public class IndependentElement extends DataStructure implements Element {
     }
 
     private void init (OP_Init op_init){
-        int[] index = {1337};
-        elements.add(new Array.ArrayElement(op_init.getValue()[0], index));
+        elements.add(new Array.ArrayElement(op_init.getValue()[0], null));
     }
 
     @Override
