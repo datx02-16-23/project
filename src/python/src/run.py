@@ -1,8 +1,6 @@
 # This file executes the different modules, resulting in a output.json file
-from expr import Variable
 from os import path,system
 from create_log import visualize
-from tojson import convert
 from ast import parse,Assign,Name,Str
 from transformer import WriteTransformer,ReadTransformer,PassTransformer
 
@@ -13,6 +11,21 @@ def load_logwriter(operations,output):
 			node.targets[0].id == 'outfile'):
 			node.value = Str(output)
 	return operations.body
+
+class Variable(object):
+	def __init__(self,name,rawType,attributes=None,abstractType=None):
+		self.name = name
+		self.rawType = rawType
+		self.attributes = attributes
+		self.abstractType = abstractType
+
+	def get_json(self):
+		return {
+			'identifier' : self.name,
+			'rawType' : self.rawType,
+			'abstractType' : self.abstractType,
+			'attributes' : self.attributes
+		}
 
 # either write to port or outfile
 if __name__ == '__main__':
@@ -25,7 +38,7 @@ if __name__ == '__main__':
 		operations_read = f.read()
 	operations = load_logwriter(parse(operations_read),output)
 
-	transformers = [PassTransformer('link'), ReadTransformer('read'), WriteTransformer('write')]
+	transformers = [PassTransformer('link'), WriteTransformer('write'), ReadTransformer('read')]
 	# settings
 	# rootdir - where programfiles is located
 	# files - what files should be visualized
@@ -42,7 +55,5 @@ if __name__ == '__main__':
 	visualize(settings)
 	# run userprogram in visualization environment
 	execfile(path.abspath('./testvisualize/main.py'))
-	# convert output to json
-	# convert(output,path.abspath('output.json'),settings['observe'])
 	# right now run cleanup script until a better solution is found
 	# system('sh cleanup.sh')

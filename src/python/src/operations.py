@@ -3,6 +3,7 @@
 ########################################################################
 outfile = None
 outport = 8000
+annotated_variables = None
 
 import socket
 import json
@@ -23,24 +24,44 @@ def eval_variable(expr):
 
 def get_indices(expr):
     if not isinstance(expr,tuple):
-        return expr
+        return ('undefined',expr)
     return get_indices_(expr[0],expr[1:])
 
 def get_indices_(name,value):
     if name == 'subscript':
-        variable = get_indices(value[0])
-        indices = [get_indices(i) if not is_variable(i) else eval_variable(i) for i in value[1:]]
-        return [variable] + indices
+        var = get_indices(value[0])
+        indices = value[1:]
+        return (var,) + indices
     elif name == 'var':
         return value
+
+def resolve_subscript(var,indices):
+    for i in indices:
+        var = var[i]
+    return var
 
 def get_value(expr):
     if not isinstance(expr,tuple):
         return expr
-    elif expr[0] == 'var':
-        return expr[2]
-    elif expr[0] == 'subscript':
-        return get_value(expr[1])
+    return get_value_(expr[0],expr[1:])
+
+def get_value_(name,value):
+    if name == 'var':
+        return value[1]
+    elif name == 'subscript':
+        var = get_value(value[0])
+        return resolve_subscript(var,value[1:])
+
+def contains_variable(expr,variable_name):
+    if not isinstance(expr,tuple):
+        return False
+    elif is_variable(expr): 
+        return expr[1] == variable_name
+    else:
+        for node in expr:
+            if contains_variable(node,variable_name):
+                return True
+    return False
 ########################################################################
 # Json
 ########################################################################
@@ -70,15 +91,19 @@ def put(statement):
 
 def write(src,dst):
     operation = get_operation('write')
+    value = get_value(src)
+    print 'write ',src,dst
+    print value
     operation['operationBody'] = {
-        'source' : to_json(src), 'target' : to_json(dst), 'value' : get_value(src)
+        'source' : to_json(src), 'target' : to_json(dst), 'value' : value
     }
-    put(operation)
-    return get_value(src)
+    return value
 
 def read(statement):
-    put({'type' : 'read', 'source' :  statement, 'value' : get_value(source)})
-    return source
+    print 'read ',statement
+    value = get_value(statement)
+    put({'type' : 'read', 'source' :  statement, 'value' : value})
+    return value
 
 def link(*params):
 	def wrap(func):
