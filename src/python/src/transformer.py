@@ -49,32 +49,30 @@ class ExpressionTransformer(NodeTransformer):
 			expand = add_tuple(value,index)
 		return copy_location(expand,node)
 
-	# ('var',node.id) if Store is context
+	# ('var',node.id, 'Store') if Store is context
 	# ('var',node.id, node) if Load is context
 	def visit_Name(self,node):
 		if node.id == 'False' or node.id == 'True':
 			return node
-		value = [node] if isinstance(node.ctx,Load) else [Name(id='None')]
+		value = [node] if isinstance(node.ctx,Load) else [Str('Store')]
 		return copy_location(
 			Tuple(elts=
 				[Str(s='var'),Str(s=node.id)] + value
 			)
 		,node)
 
-	# ('binop', op, left, right)
-	def visit_BinOp(self,node):
-		return copy_location(
-			Tuple(elts=[
-				Str('binop'),
-				translate_op(type(node.op)),
-				self.visit(node.left),
-				self.visit(node.right)
-			])
-		,node)
-
-	# 'undefined'
-	def visit_Call(self,node):
-		return Str('undefined')
+	#!! Not Supported !!
+	# # ('binop', op, left, right)
+	# def visit_BinOp(self,node):
+	# 	return copy_location(
+	# 		Tuple(elts=[
+	# 			Str('binop'),
+	# 			translate_op(type(node.op)),
+	# 			self.visit(node.left),
+	# 			self.visit(node.right)
+	# 		])
+	# 	,node)
+	def visit_BinOp(self,node):	return node
 
 	# these two need implementing
 	def visit_DictComp(self,node): return node
@@ -117,7 +115,7 @@ class WriteTransformer(OperationTransformer):
 		if len(node.targets) == 1 and (isinstance(node.targets[0],Name) or isinstance(node.targets[0],Subscript)):
 			src = self.expr_transformer.visit(deepcopy(node.value))
 			dst = self.expr_transformer.visit(deepcopy(node.targets[0]))
-			write = self.create_call([src,dst,node.value])
+			write = self.create_call([src,dst])
 			node.value = write
 		return node
 
@@ -125,21 +123,21 @@ class WriteTransformer(OperationTransformer):
 		mod.body.insert(0,
 			Assign(
 				targets = [target],
-				value 	= self.create_call([target,self.expr_transformer.visit(target),target])
+				value 	= self.create_call([target,self.expr_transformer.visit(target)])
 			)
 		)
 
-	def visit_For(self,node):
-		for i,field in enumerate(node.body):
-			node.body[i] = self.visit(field)
-		# inject an (for example) i = write(i,['var','i'])
-		# to keep track of i during loop, not a very good solution though
-		if isinstance(node.target,Name):
-			self.insert_write(node.target,node)
-		else:
-			for target in node.target.elts:
-				self.insert_write(target,node)
-		return node
+	# def visit_For(self,node):
+	# 	for i,field in enumerate(node.body):
+	# 		node.body[i] = self.visit(field)
+	# 	# inject an (for example) i = write(i,['var','i'])
+	# 	# to keep track of i during loop, not a very good solution though
+	# 	if isinstance(node.target,Name):
+	# 		self.insert_write(node.target,node)
+	# 	else:
+	# 		for target in node.target.elts:
+	# 			self.insert_write(target,node)
+	# 	return node
 
 class ReadTransformer(OperationTransformer):
 	def __init__(self,name):

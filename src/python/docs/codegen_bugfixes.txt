@@ -29,3 +29,15 @@ visit_Delete
 	for idx, target in enumerate(node):
 	->
 	for idx, target in enumerate(node.targets):
+
+visit_Raise
+	blankspace missing
+    self.write('raise')
+    ->
+	self.write('raise ')
+
+visit_ExceptHandler
+	fixed typo (probably intentional)
+	def visit_excepthandler(self, node):
+	->
+	def visit_ExceptHandler(self, node):

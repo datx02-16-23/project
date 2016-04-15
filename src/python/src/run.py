@@ -25,7 +25,7 @@ if __name__ == '__main__':
 		operations_read = f.read()
 	operations = load_logwriter(parse(operations_read),output)
 
-	transformers = [PassTransformer('link'), WriteTransformer('write'), ReadTransformer('read')]
+	transformers = [PassTransformer('link'), ReadTransformer('read'), WriteTransformer('write')]
 	# settings
 	# rootdir - where programfiles is located
 	# files - what files should be visualized
@@ -37,12 +37,12 @@ if __name__ == '__main__':
 		'files' : ['main.py'],
 		'operations' : operations,
 		'transformers' : transformers,
-		'observe' : [Variable('a','list',None,None)]}
+		'observe' : [Variable('a','list',abstractType='adjacencymatrix',attributes={'size' : [3,3]})]}
 	# create visulization environment
 	visualize(settings)
 	# run userprogram in visualization environment
 	execfile(path.abspath('./testvisualize/main.py'))
 	# convert output to json
-	convert(output,path.abspath('output.json'),settings['observe'])
+	# convert(output,path.abspath('output.json'),settings['observe'])
 	# right now run cleanup script until a better solution is found
 	# system('sh cleanup.sh')
