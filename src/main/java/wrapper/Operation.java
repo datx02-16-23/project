@@ -27,26 +27,26 @@ public class Operation implements Serializable {
     public final HashMap<Key, Object> operationBody;
     
     /**
-     * The sources code this Operation originates from.
+     * The name of the source file this Operation originates from.
      */
-    public final String source;
+    public String source;
     
     /**
      * The line number this Operation originates from.
      */
-    public final int beginLine;
+    public int beginLine;
     /**
      * The last line of this Operation.
      */
-    public final int endLine;
+    public int endLine;
     /**
      * TODO: Javadoc.
      */
-    public final int beginColumn;
+    public int beginColumn;
     /**
      * TODO: Javadoc.
      */
-    public final int endColumn;
+    public int endColumn;
 
     /**
      * Create a new Operation with the given operation identifier and body.

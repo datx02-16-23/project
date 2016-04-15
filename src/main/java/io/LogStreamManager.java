@@ -46,17 +46,17 @@ public class LogStreamManager implements CommunicatorListener {
     private final Gson                 gson            = new Gson();
     private final Communicator         communicator;
     private CommunicatorListener       listener;
+    //Wrapper fields
     private Wrapper                    wrapper;
     private Map<String, DataStructure> knownVariables;
     private List<Operation>            operations;
+    private Map<String, List<String>>  sources;
 
     /**
      * Creates a new LogStreamManager.
      */
     public LogStreamManager (){
-        communicator = new JGroupCommunicator(this);
-        knownVariables = new HashMap<String, DataStructure>();
-        operations = new ArrayList<Operation>();
+        this(false);
     }
 
     /**
@@ -68,6 +68,7 @@ public class LogStreamManager implements CommunicatorListener {
         communicator = new JGroupCommunicator(this, suppressIncoming);
         knownVariables = new HashMap<String, DataStructure>();
         operations = new ArrayList<Operation>();
+        sources = null;
     }
 
     /**
@@ -104,6 +105,23 @@ public class LogStreamManager implements CommunicatorListener {
      */
     public void setOperations (List<Operation> operations){
         this.operations = operations;
+    }
+
+    /**
+     * Returns the source map held by this LogStreamManager.
+     * 
+     * @return The source map held by this LogStreamManager.
+     */
+    public Map<String, List<String>> getSources (){
+        return sources;
+    }
+
+    /**
+     * Set the source map held by this LogStreamManager.
+     * @param newSources The new source map to be held by this LogStreamManager.
+     */
+    public void setMap (Map<String, List<String>> newSources){
+        sources = newSources;
     }
 
     /**
@@ -167,7 +185,7 @@ public class LogStreamManager implements CommunicatorListener {
     public void printLog (String targetPath){
         HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
         annotatedVariables.putAll(knownVariables);
-        Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables,null);
+        Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables, null);
         printLog(targetPath, new Wrapper(header, operations));
     }
 
@@ -179,7 +197,7 @@ public class LogStreamManager implements CommunicatorListener {
     public boolean streamLogData (){
         HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
         annotatedVariables.putAll(knownVariables);
-        Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables,null);
+        Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables, null);
         return stream(new Wrapper(header, operations));
     }
 
@@ -193,6 +211,7 @@ public class LogStreamManager implements CommunicatorListener {
         if (streamLogData()) {
             operations.clear();
             knownVariables.clear();
+            sources.clear();
             return true;
         }
         return false;
@@ -333,10 +352,15 @@ public class LogStreamManager implements CommunicatorListener {
      * @param wrapper The wrapper to unwrap.
      */
     private void unwrap (Wrapper wrapper){
-        if (wrapper.header != null && wrapper.header.annotatedVariables != null) {
-            Collection<AnnotatedVariable> avList = wrapper.header.annotatedVariables.values();
-            for (AnnotatedVariable av : avList) {
-                knownVariables.put(av.identifier, DataStructureParser.unpackAnnotatedVariable(av));
+        if (wrapper.header != null) {
+            if (wrapper.header.annotatedVariables != null) {
+                Collection<AnnotatedVariable> avList = wrapper.header.annotatedVariables.values();
+                for (AnnotatedVariable av : avList) {
+                    knownVariables.put(av.identifier, DataStructureParser.unpackAnnotatedVariable(av));
+                }
+            }
+            if (wrapper.header.sources != null) {
+                sources = wrapper.header.sources;
             }
         }
         if (wrapper.body != null) {
@@ -368,6 +392,7 @@ public class LogStreamManager implements CommunicatorListener {
      * Clear list of operations and known variables. Equivalent to calling clearOperations() and clearKnownVariables().
      */
     public void clearData (){
+        sources = null;
         knownVariables.clear();
         operations.clear();
     }

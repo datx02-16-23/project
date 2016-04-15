@@ -82,7 +82,15 @@ public class OperationParser {
         op_rw.setSource(unpackArrayVariable(op.operationBody.get(Key.source)));
         op_rw.setTarget(unpackArrayVariable(op.operationBody.get(Key.target)));
         op_rw.setValue(parseValue(op));
+        copySourceInfo(op, op_rw);
         return op_rw;
+    }
+    
+    private static void copySourceInfo(Operation from, Operation to){
+        to.beginLine = from.beginLine;
+        to.endLine = from.endLine;
+        to.beginColumn = from.beginColumn;
+        to.endColumn = from.endColumn;
     }
 
     private static Operation parseSwap (Operation op){
@@ -90,12 +98,14 @@ public class OperationParser {
         op_swap.setVar1(unpackArrayVariable(op.operationBody.get(Key.var1)));
         op_swap.setVar2(unpackArrayVariable(op.operationBody.get(Key.var2)));
         op_swap.setValues(ensureDoubleArray(op.operationBody.get(Key.value)));
+        copySourceInfo(op, op_swap);
         return op_swap;
     }
 
     private static Operation parseMessage (Operation op){
         OP_Message op_message = new OP_Message();
         op_message.setMessage((String) op.operationBody.get(Key.value));
+        copySourceInfo(op, op_message);
         return op_message;
     }
 

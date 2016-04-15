@@ -8,5 +8,5 @@ public abstract class Strings {
     public static final String   DEFAULT_CHANNEL      = "mavser_stream";
     //Credits
     public static final String[] DEVELOPER_NAMES      = {"Johan Gerdin", "Ivar Josefsson", "Dennis Jonsson", "Jonathan Skarstedt", "Simon Smith", "Richard Sundqvist"};
-    public static final long     VERSION_NUMBER       = 0;
+    public static final long     VERSION_NUMBER       = 2;
 }
