@@ -33,7 +33,7 @@ public class SourceViewer extends Pane {
         this.setPrefSize(200, 200);
         this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         this.getChildren().add(root);
-        initTab();
+        initTab(); //Print some brillaint source code.
     }
 
     /**
@@ -92,14 +92,15 @@ public class SourceViewer extends Pane {
         linesView.getSelectionModel().clearSelection();
         linesView.getSelectionModel().selectRange(op.beginLine, op.endLine);
     }
-    
-    private void initTab(){
+
+    private void initTab (){
         Tab newTab = new Tab();
         newTab.setText("sample_source.java");
         //Build ListView
         ListView<String> linesView = new ListView<String>();
         linesView.setEditable(false);
         linesView.getItems().addAll(
+                // @formatter:off
                 "    public void show (Operation op){",
                 "        if (op == null) {",
                 "            return;",
@@ -117,19 +118,31 @@ public class SourceViewer extends Pane {
                 "        linesView.getSelectionModel().clearSelection();",
                 "        linesView.getSelectionModel().selectRange(op.beginLine, op.endLine);",
                 "    }",
+                "    public SourceViewer (){",
+                "        root = new TabPane();",
+                "        nameTabMapping = new HashMap<String, Integer>();",
+                "        root.prefHeightProperty().bind(this.heightProperty());",
+                "        root.prefWidthProperty().bind(this.widthProperty());",
+                "        root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);",
+                "        this.setPrefSize(200, 200);",
+                "        this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);",
+                "        this.getChildren().add(root);",
+                "        initTab(); //Print some brillaint source code.",
+                "    }",
                 "Richard Sundqvist 2016-04-15 14:48");
+                // @formatter:on
         linesView.prefHeightProperty().bind(this.heightProperty());
         linesView.prefWidthProperty().bind(this.widthProperty());
         //Add children
         newTab.setContent(linesView);
         root.getTabs().add(newTab);
-        
         newTab = new Tab();
         newTab.setText("sample_source2.java");
         //Build ListView
         linesView = new ListView<String>();
         linesView.setEditable(false);
         linesView.getItems().addAll(
+                // @formatter:off
                 "    public void trySources (Map<String, List<String>> sources){",
                 "        if (sources == null) {",
                 "            return;",
@@ -142,7 +155,23 @@ public class SourceViewer extends Pane {
                 "            tabNumber++;",
                 "        }",
                 "        root.getSelectionModel().select(0);",
+                "",
+                "    private void addSourceTab (String sourceName, List<String> sourceLines){",
+                "        //Build new Tab",
+                "        Tab newTab = new Tab();",
+                "        newTab.setText(sourceName);",
+                "        //Build ListView",
+                "        ListView<String> linesView = new ListView<String>();",
+                "        linesView.setEditable(false);",
+                "        linesView.getItems().addAll(sourceLines);",
+                "        linesView.prefHeightProperty().bind(this.heightProperty());",
+                "        linesView.prefWidthProperty().bind(this.widthProperty());",
+                "        //Add children",
+                "        newTab.setContent(linesView);",
+                "        root.getTabs().add(newTab);",
+                "    }",
                 "Whisp is a shitty awper!!11oneone");
+                // @formatter:on
         linesView.prefHeightProperty().bind(this.heightProperty());
         linesView.prefWidthProperty().bind(this.widthProperty());
         //Add children
