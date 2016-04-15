@@ -163,6 +163,7 @@ public class Main extends Application {
 
         public MavserConsole (TextArea consoleTextArea){
             this.consoleTextArea = consoleTextArea;
+            consoleTextArea.setEditable(false);
             init();
         }
 

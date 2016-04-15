@@ -80,7 +80,6 @@ public class SourceViewer extends Pane {
         if (op == null) {
             return;
         }
-        System.out.println("op.source= " + op.source);
         Integer sourceTabIndex = nameTabMapping.get(op.source);
         if (sourceTabIndex == null) {
             Main.console.err("No source file given for Operation: " + op);
