@@ -22,7 +22,6 @@ public class IndependentElement extends DataStructure implements Element {
      */
     private static final long                  serialVersionUID = Strings.VERSION_NUMBER;
     private transient final ArrayList<Element> elements         = new ArrayList<Element>();
-    private transient Element                  element          = initElement();
     //	private transient final Element element = new IndependentElementContainer();
 
     /**
@@ -42,26 +41,15 @@ public class IndependentElement extends DataStructure implements Element {
      * @param newElement The new element to be held by this IndependentElement.
      */
     public void setElement (Element newElement){
-        element = newElement;
         elements.clear();
         elements.add(newElement);
     }
 
     private Element initElement (){
-        IndependentElementContainer init = new IndependentElementContainer();
-        element = init;
+        Element init = new Array.ArrayElement(0, new int[] {1337});
         elements.clear();
         elements.add(init);
         return init;
-    }
-
-    /**
-     * Returns the element held by this IndependentElement.
-     * 
-     * @return The element held by this IndependentElement.
-     */
-    public Element getElement (){
-        return element;
     }
 
     public List<Element> getElements (){
@@ -74,7 +62,10 @@ public class IndependentElement extends DataStructure implements Element {
      * @return The value held by the element contained in this IndependentElement.
      */
     public double getValue (){
-        return element.getValue();
+        if (elements.isEmpty()) {
+            return 0;
+        }
+        return elements.get(0).getValue();
     }
 
     public int size (){
@@ -82,15 +73,13 @@ public class IndependentElement extends DataStructure implements Element {
     }
 
     private void init (OP_Init op_init){
-        if (!op_init.getTarget().equals(super.identifier)) {
-            throw new IllegalArgumentException();
-        }
-        element.setValue(op_init.getValue()[0]);
+        int[] index = {1337};
+        elements.add(new Array.ArrayElement(op_init.getValue()[0], index));
     }
 
     @Override
     public void clear (){
-        initElement();
+        elements.clear();
     }
 
     @Override
@@ -113,34 +102,39 @@ public class IndependentElement extends DataStructure implements Element {
     }
 
     private void swap (OP_Swap op){
+        Element e = elements.get(0);
         if (op.getVar1().identifier.equals(this.identifier)) {
-            element.setValue(op.getValues()[0]);
-            element.setColor(COLOR_SWAP);
+            e.setValue(op.getValues()[0]);
+            e.setColor(COLOR_SWAP);
             return;
         }
         if (op.getVar2().identifier.equals(this.identifier)) {
-            element.setValue(op.getValues()[1]);
-            element.setColor(COLOR_SWAP);
+            e.setValue(op.getValues()[1]);
+            e.setColor(COLOR_SWAP);
             return;
         }
     }
 
     private void readORwrite (OP_ReadWrite op){
+        Element e = elements.get(0);
         if (op.getTarget().identifier.equals(this.identifier)) {
-            element.setValue(op.getValue()[0]);
-            modifiedElements.add(element);
-            element.setColor(COLOR_WRITE);
+            e.setValue(op.getValue()[0]);
+            modifiedElements.add(e);
+            e.setColor(COLOR_WRITE);
             return;
         }
         else if (op.getSource().identifier.equals(this.identifier)) {
-            modifiedElements.add(element);
-            element.setColor(COLOR_READ);
+            modifiedElements.add(e);
+            e.setColor(COLOR_READ);
         }
     }
 
     @Override
     public void setValue (double newValue){
-        this.element.setValue(newValue);
+        if(elements.isEmpty()){
+            return;
+        }
+        elements.get(0).setValue(newValue);
     }
 
     @Override
@@ -157,46 +151,11 @@ public class IndependentElement extends DataStructure implements Element {
 
     @Override
     public String getColor (){
-        return element.getColor();
+        return elements.get(0).getColor();
     }
-    
 
     @Override
     public void setColor (String newColor){
-        element.setColor(newColor);  
-    }
-
-    public static class IndependentElementContainer implements Element {
-
-        private double value;
-        private String color;
-
-        public IndependentElementContainer (double value){
-            this.value = value;
-        }
-
-        public IndependentElementContainer (){
-            value = 0;
-        }
-
-        @Override
-        public double getValue (){
-            return value;
-        }
-
-        @Override
-        public void setValue (double newValue){
-            value = newValue;
-        }
-
-        @Override
-        public String getColor (){
-            return color;
-        }
-
-        @Override
-        public void setColor (String newColor){
-            color = newColor;
-        }
+        elements.get(0).setColor(newColor);
     }
 }

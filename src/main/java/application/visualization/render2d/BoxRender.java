@@ -30,9 +30,8 @@ public class BoxRender extends Render {
         bp.setCenter(grid);
         this.getChildren().add(bp);
         this.struct = struct;
-        this.setVisible(true);
-        this.setMaxWidth(Double.MAX_VALUE);
-        this.setMaxHeight(Double.MAX_VALUE);
+        this.setMinSize(0, 0);
+        this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         init();
     }
 
