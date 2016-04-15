@@ -16,7 +16,7 @@ public class Visualization extends GridPane {
 
     public Visualization (iModel model){
         this.model = model;
-        this.setStyle("-fx-background-color: white ;");
+        this.setStyle("-fx-background-color: #123456 ;");
     }
 
     public void createVisuals (){
@@ -27,10 +27,14 @@ public class Visualization extends GridPane {
             if(struct.rawType == "independentElement"){
                 Render render = new IndependentElementRender(struct);
                 this.add(render, 1, independent++);
+                continue;
             }
             Render render = getRender(struct);
             if(render != null){
+                render.setPrefSize(this.getWidth(), this.getHeight());
+                render.setStyle("-fx-background-color: white ;");
                 this.add(render, 0, regular++);
+                continue;
             }
         }
     }
@@ -90,6 +94,7 @@ public class Visualization extends GridPane {
         Render render;
         for(Object o : getChildren()){
             render = (Render) o;
+            render.setPrefSize(this.getWidth(), this.getHeight());
             render.render();
         }
     }

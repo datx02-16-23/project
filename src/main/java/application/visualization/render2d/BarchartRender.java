@@ -29,7 +29,6 @@ public class BarchartRender extends Render {
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
         barChart = new BarChart(xAxis, yAxis);
-        barChart.setMaxSize(0, 0);
         barChart.setLegendVisible(false);
         barChart.setTitle(struct.identifier);
         xAxis.setLabel("Index");
@@ -46,6 +45,7 @@ public class BarchartRender extends Render {
 
     @Override
     public void render (){
+        barChart.setMaxSize(this.getWidth(), this.getHeight());
         List<Element> structElements = struct.getElements();
         int elementsSize = structElements.size();
         if (elemData.size() != elementsSize) { //Difference in size, probably because of an init.
