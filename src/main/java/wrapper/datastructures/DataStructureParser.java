@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import application.gui.Main;
 import wrapper.AnnotatedVariable;
-import wrapper.Operation;
 import wrapper.operations.Key;
 import wrapper.operations.OperationParser;
 

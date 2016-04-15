@@ -597,14 +597,6 @@ public class Simulator extends Application {
             return nbrSentString;
         }
 
-        public SimpleStringProperty getWaitingOperationsList (){
-            return waitingOperationsList;
-        }
-
-        public SimpleStringProperty getSentOperationsList (){
-            return sentOperationsList;
-        }
-
         public int getId (){
             return id;
         }

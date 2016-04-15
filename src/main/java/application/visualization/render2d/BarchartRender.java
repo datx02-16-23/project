@@ -2,7 +2,6 @@ package application.visualization.render2d;
 
 import java.util.List;
 
-import application.gui.Main;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.chart.*;
@@ -23,6 +22,7 @@ public class BarchartRender extends Render {
     private final BarChart<String, Double>             barChart;
     private final ObservableList<Data<String, Double>> elemData;
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public BarchartRender (DataStructure struct){
         this.struct = struct;
         this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -43,6 +43,7 @@ public class BarchartRender extends Render {
         this.getChildren().add(barChart);
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public void render (){
         barChart.setMaxSize(this.getWidth(), this.getHeight());

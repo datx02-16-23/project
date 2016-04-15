@@ -7,9 +7,7 @@ import java.util.Map;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import wrapper.Header;
 import wrapper.Operation;
 
 /**
@@ -77,6 +75,7 @@ public class SourceViewer extends Pane {
      * 
      * @param op The Operation to show.
      */
+    @SuppressWarnings("unchecked")
     public void show (Operation op){
         if (op == null) {
             return;
