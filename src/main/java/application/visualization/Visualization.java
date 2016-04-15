@@ -16,6 +16,7 @@ public class Visualization extends GridPane {
 
     public Visualization (iModel model){
         this.model = model;
+        this.setStyle("-fx-background-color: white ;");
     }
 
     public void createVisuals (){
