@@ -208,11 +208,10 @@ public class GUI_Controller implements CommunicatorListener {
     }
 
     public void aboutProgram (){
-        System.out.print("Placeholder: A project by ");
+        Main.console.out("Placeholder: A project by ");
         for (String name : Strings.DEVELOPER_NAMES) {
-            System.out.print(name + ", ");
+            Main.console.out(name + ", ");
         }
-        System.out.println();
     }
 
     public void openInterpreterView (){
@@ -780,6 +779,6 @@ public class GUI_Controller implements CommunicatorListener {
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.play();
         window.setTitle("SpoooooOOoooOOOooooOOoookster!");
-        System.out.println("GET SPoooooOOoooOOOooooOOoooKED!");
+        Main.console.out("GET SPoooooOOoooOOOooooOOoooKED!");
     }
 }
