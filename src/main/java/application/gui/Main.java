@@ -18,6 +18,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import wrapper.Operation;
 import javafx.scene.control.TextArea;
 
 import java.awt.Dimension;
@@ -223,6 +224,14 @@ public class Main extends Application {
                 }
             });
         }
+        
+        /**
+         * Print an object.
+         * @param o The object to print.
+         */
+        public void out (Object o){
+            out(o.toString());
+        }
 
         /**
          * Disable console output.
@@ -264,5 +273,6 @@ public class Main extends Application {
                 }
             });
         }
+      
     }
 }

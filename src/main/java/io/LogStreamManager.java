@@ -336,7 +336,7 @@ public class LogStreamManager implements CommunicatorListener {
     private void printString (String completePath, String str){
         try {
             PrintStream out = new PrintStream(new FileOutputStream(completePath));
-            System.out.println("Log printed: " + completePath);
+            Main.console.out("Log printed: " + completePath);
             out.print(str);
             out.flush();
             out.close();

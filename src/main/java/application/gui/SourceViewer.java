@@ -78,6 +78,9 @@ public class SourceViewer extends Pane {
      * @param op The Operation to show.
      */
     public void show (Operation op){
+        if(op == null){
+            return;
+        }
         System.out.println(nameTabMapping);
         System.out.println("op.source= " + op.source);
         Integer source = nameTabMapping.get(op.source);

@@ -2,6 +2,7 @@ package wrapper.datastructures;
 
 import java.util.ArrayList;
 
+import application.gui.Main;
 import wrapper.AnnotatedVariable;
 import wrapper.Operation;
 import wrapper.operations.Key;
@@ -27,7 +28,7 @@ public class DataStructureParser {
             case "tree":
                 return null; //TODO: Add parsing of trees.
             default:
-                System.out.print("Unknown data structure raw type: " + av.rawType);
+                Main.console.out("Unknown data structure raw type: " + av.rawType);
                 break;
         }
         return null;

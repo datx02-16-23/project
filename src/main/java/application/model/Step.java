@@ -54,7 +54,7 @@ public class Step implements iStep {
         DataStructure struct;
         switch (opType) {
             case message:
-                System.out.println(op);
+                Main.console.out(op);
                 break;
             case read:
             case write:

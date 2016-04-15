@@ -257,7 +257,8 @@ public class GUI_Controller implements CommunicatorListener {
             @Override
             public void run (){
                 int index = model.getIndex();
-                sourceViewer.show(operationHistory.getItems().get(index));
+                model.getCurrentStep().getLastOp();
+                sourceViewer.show(model.getCurrentStep().getLastOp());
                 operationHistory.getSelectionModel().select(index);
                 operationHistory.getFocusModel().focus(index);
                 operationHistory.scrollTo(index - 1);
@@ -569,7 +570,7 @@ public class GUI_Controller implements CommunicatorListener {
 
     public void propertiesFailed (Exception exception){
         if (exception != null) {
-            System.err.println(exception.getMessage());
+            Main.console.err(exception.getMessage());
         }
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/PropertiesAlert.fxml"));
         Stage stage = new Stage();
@@ -703,7 +704,7 @@ public class GUI_Controller implements CommunicatorListener {
     public Properties tryLoadProperties (){
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream(Strings.PROPERTIES_FILE_NAME);
         if (inputStream == null) {
-            System.err.println("Failed to open properties file.");
+            Main.console.err("Failed to open properties file.");
             propertiesFailed(null);
             return DefaultProperties.get();
         }

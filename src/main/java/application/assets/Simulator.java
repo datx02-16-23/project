@@ -464,7 +464,6 @@ public class Simulator extends Application {
     }
 
     public static void main (String[] args){
-        System.out.println("Launch: main()");
         launch(args);
     }
 

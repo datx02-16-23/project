@@ -29,7 +29,7 @@ public class OperationParser {
             case swap:
                 return parseSwap(op);
             default:
-                System.out.print("Unknown operation type: " + op.operation);
+                Main.console.out("Unknown operation type: " + op.operation);
                 break;
         }
         return null;
@@ -87,6 +87,10 @@ public class OperationParser {
     }
     
     private static void copySourceInfo(Operation from, Operation to){
+        if(from.source == null){
+            return;
+        }
+        to.source = from.source;
         to.beginLine = from.beginLine;
         to.endLine = from.endLine;
         to.beginColumn = from.beginColumn;
