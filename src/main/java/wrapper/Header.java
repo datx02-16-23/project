@@ -2,6 +2,7 @@ package wrapper;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 
 import application.assets.Strings;
 
@@ -29,7 +30,7 @@ public class Header implements Serializable {
     /**
      * A map of source names an their contents.
      */
-    public final HashMap<String, String>            sources;
+    public final HashMap<String, List<String>>      sources;
 
     /**
      * Create a Header item with the given version number and map of annotated variables. Version 0 is reserved for when
@@ -38,7 +39,7 @@ public class Header implements Serializable {
      * @param version The version number for this file.
      * @param annotatedVariables Declaration of annotated variables from the source.
      */
-    public Header (int version, HashMap<String, AnnotatedVariable> annotatedVariables, HashMap<String, String> sources){
+    public Header (int version, HashMap<String, AnnotatedVariable> annotatedVariables, HashMap<String, List<String>> sources){
         this.version = version;
         this.annotatedVariables = annotatedVariables;
         this.sources = sources;
@@ -51,6 +52,6 @@ public class Header implements Serializable {
     public Header (){
         this.version = VERSION_UNKNOWN;
         annotatedVariables = new HashMap<String, AnnotatedVariable>();
-        sources = new HashMap<String, String>();
+        this.sources = new HashMap<String, List<String>>();
     }
 }
