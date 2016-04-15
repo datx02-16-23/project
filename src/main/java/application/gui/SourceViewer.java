@@ -11,7 +11,7 @@ import javafx.scene.layout.Pane;
 import wrapper.Operation;
 
 /**
- * A SourceViewer
+ * Class and methods for displaying and jumping to relevant source code.
  * 
  * @author Richard
  *
@@ -37,15 +37,16 @@ public class SourceViewer extends Pane {
     }
 
     /**
-     * Try to add sources which are to be displayed by this SourceViewer.
+     * Add sources which are to be displayed by this SourceViewer.
      * 
      * @param header The sources to display.
      */
-    public void trySources (Map<String, List<String>> sources){
+    public void addSources (Map<String, List<String>> sources){
         if (sources == null) {
             return;
         }
         root.getTabs().clear();
+        nameTabMapping.clear();
         int tabNumber = 0;
         for (String sourceName : sources.keySet()) {
             addSourceTab(sourceName, sources.get(sourceName));
@@ -83,7 +84,7 @@ public class SourceViewer extends Pane {
         Integer sourceTabIndex = nameTabMapping.get(op.source);
         if (sourceTabIndex == null) {
             Main.console.err("No source file given for Operation: " + op);
-            return; //No source file given for this operation;
+            return;
         }
         //Get ListView
         root.getSelectionModel().select(sourceTabIndex.intValue());
@@ -99,38 +100,16 @@ public class SourceViewer extends Pane {
         //Build ListView
         ListView<String> linesView = new ListView<String>();
         linesView.setEditable(false);
-        linesView.getItems().addAll(
-                // @formatter:off
-                "    public void show (Operation op){",
-                "        if (op == null) {",
-                "            return;",
-                "        }",
-                "        System.out.println(\"op.source= \" + op.source);",
-                "        Integer sourceTabIndex = nameTabMapping.get(op.source);",
-                "        if (sourceTabIndex == null) {",
-                "            Main.console.err(\"No source file given for Operation: \" + op);",
-                "            return; //No source file given for this operation;",
-                "        }",
-                "        //Get ListView",
+        linesView.getItems().addAll("    public void show (Operation op){", "        if (op == null) {", "            return;", "        }",
+                "        Integer sourceTabIndex = nameTabMapping.get(op.source);", "        if (sourceTabIndex == null) {",
+                "            Main.console.err(\"No source file given for Operation: \" + op);", "            return;", "        }", "        //Get ListView",
                 "        root.getSelectionModel().select(sourceTabIndex.intValue());",
-                "        ListView<String> linesView = (ListView<String>) root.getTabs().get(nameTabMapping.get(op.source)).getContent();",
-                "        //Select lines",
-                "        linesView.getSelectionModel().clearSelection();",
-                "        linesView.getSelectionModel().selectRange(op.beginLine, op.endLine);",
-                "    }",
-                "    public SourceViewer (){",
-                "        root = new TabPane();",
-                "        nameTabMapping = new HashMap<String, Integer>();",
-                "        root.prefHeightProperty().bind(this.heightProperty());",
-                "        root.prefWidthProperty().bind(this.widthProperty());",
-                "        root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);",
-                "        this.setPrefSize(200, 200);",
-                "        this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);",
-                "        this.getChildren().add(root);",
-                "        initTab(); //Print some brillaint source code.",
-                "    }",
+                "        ListView<String> linesView = (ListView<String>) root.getTabs().get(nameTabMapping.get(op.source)).getContent();", "        //Select lines",
+                "        linesView.getSelectionModel().clearSelection();", "        linesView.getSelectionModel().selectRange(op.beginLine, op.endLine);", "    }", "    public SourceViewer (){",
+                "        root = new TabPane();", "        nameTabMapping = new HashMap<String, Integer>();", "        root.prefHeightProperty().bind(this.heightProperty());",
+                "        root.prefWidthProperty().bind(this.widthProperty());", "        root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);", "        this.setPrefSize(200, 200);",
+                "        this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);", "        this.getChildren().add(root);", "        initTab(); //Print some brillaint source code.", "    }",
                 "Richard Sundqvist 2016-04-15 14:48");
-                // @formatter:on
         linesView.prefHeightProperty().bind(this.heightProperty());
         linesView.prefWidthProperty().bind(this.widthProperty());
         //Add children
@@ -141,37 +120,14 @@ public class SourceViewer extends Pane {
         //Build ListView
         linesView = new ListView<String>();
         linesView.setEditable(false);
-        linesView.getItems().addAll(
-                // @formatter:off
-                "    public void trySources (Map<String, List<String>> sources){",
-                "        if (sources == null) {",
-                "            return;",
-                "        }",
-                "        root.getTabs().clear();",
-                "        int tabNumber = 0;",
-                "        for (String sourceName : sources.keySet()) {",
-                "           addSourceTab(sourceName, sources.get(sourceName));",
-                "            nameTabMapping.put(sourceName, tabNumber);",
-                "            tabNumber++;",
-                "        }",
-                "        root.getSelectionModel().select(0);",
-                "",
-                "    private void addSourceTab (String sourceName, List<String> sourceLines){",
-                "        //Build new Tab",
-                "        Tab newTab = new Tab();",
-                "        newTab.setText(sourceName);",
-                "        //Build ListView",
-                "        ListView<String> linesView = new ListView<String>();",
-                "        linesView.setEditable(false);",
-                "        linesView.getItems().addAll(sourceLines);",
-                "        linesView.prefHeightProperty().bind(this.heightProperty());",
-                "        linesView.prefWidthProperty().bind(this.widthProperty());",
-                "        //Add children",
-                "        newTab.setContent(linesView);",
-                "        root.getTabs().add(newTab);",
-                "    }",
+        linesView.getItems().addAll("    public void trySources (Map<String, List<String>> sources){", "        if (sources == null) {", "            return;", "        }",
+                "        root.getTabs().clear();", "        nameTabMapping.clear();", "        int tabNumber = 0;", "        for (String sourceName : sources.keySet()) {",
+                "           addSourceTab(sourceName, sources.get(sourceName));", "            nameTabMapping.put(sourceName, tabNumber);", "            tabNumber++;", "        }",
+                "        root.getSelectionModel().select(0);", "", "    private void addSourceTab (String sourceName, List<String> sourceLines){", "        //Build new Tab",
+                "        Tab newTab = new Tab();", "        newTab.setText(sourceName);", "        //Build ListView", "        ListView<String> linesView = new ListView<String>();",
+                "        linesView.setEditable(false);", "        linesView.getItems().addAll(sourceLines);", "        linesView.prefHeightProperty().bind(this.heightProperty());",
+                "        linesView.prefWidthProperty().bind(this.widthProperty());", "        //Add children", "        newTab.setContent(linesView);", "        root.getTabs().add(newTab);", "    }",
                 "Whisp is a shitty awper!!11oneone");
-                // @formatter:on
         linesView.prefHeightProperty().bind(this.heightProperty());
         linesView.prefWidthProperty().bind(this.widthProperty());
         //Add children

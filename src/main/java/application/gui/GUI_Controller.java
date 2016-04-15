@@ -512,7 +512,7 @@ public class GUI_Controller implements CommunicatorListener {
         //Update operation list
         operationHistory.getItems().clear();
         operationHistory.getItems().addAll(lsm.getOperations());
-        sourceViewer.trySources(lsm.getSources());
+        sourceViewer.addSources(lsm.getSources());
         updateLists();
         //Clean lsm
         lsm.clearData();
@@ -540,6 +540,7 @@ public class GUI_Controller implements CommunicatorListener {
                     model.getStructures().putAll(lsm.getKnownVariables());
                     visualization.createVisuals();
                 }
+                sourceViewer.addSources(lsm.getSources());
                 operationHistory.getItems().addAll(lsm.getOperations());
                 totNrOfOpLabel.setText("/ " + operationHistory.getItems().size());
                 lsm.clearData();
