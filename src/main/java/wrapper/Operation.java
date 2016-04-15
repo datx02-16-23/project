@@ -25,6 +25,16 @@ public class Operation implements Serializable {
      * A map containing the identifier of the field (such as "destination" or "value") and the data they contained.
      */
     public final HashMap<Key, Object> operationBody;
+    
+    /**
+     * The sources code this Operation originates from.
+     */
+    public final String source;
+    
+    /**
+     * The line number this operation originates from.
+     */
+    public final int line;
 
     /**
      * Create a new Operation with the given operation identifier and body.
@@ -33,9 +43,11 @@ public class Operation implements Serializable {
      * @param operationBody A map containing the identifier of the field (such as "destination" or "value") and the data
      * they contained.
      */
-    public Operation (OperationType operation, HashMap<Key, Object> operationBody){
+    public Operation (OperationType operation, HashMap<Key, Object> operationBody, String source, int line){
         this.operation = operation;
         this.operationBody = operationBody;
+        this.source = source;
+        this.line = line;
     }
 
     public String printOperationBody (){

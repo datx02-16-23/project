@@ -24,8 +24,6 @@ public class OperationParser {
             case read:
             case write:
                 return parseReadWrite(op);
-            case init:
-                return parseInit(op);
             case message:
                 return parseMessage(op);
             case swap:
@@ -99,14 +97,6 @@ public class OperationParser {
         OP_Message op_message = new OP_Message();
         op_message.setMessage((String) op.operationBody.get(Key.value));
         return op_message;
-    }
-
-    private static Operation parseInit (Operation op){
-        OP_Init op_init = new OP_Init();
-        op_init.setSize(ensureIntArray(op.operationBody.get(Key.size)));
-        op_init.setTarget(unpackArrayVariable(op.operationBody.get(Key.target)));
-        op_init.setValue(parseMultiValue(op));
-        return op_init;
     }
 
     private static double[] parseMultiValue (Operation op){

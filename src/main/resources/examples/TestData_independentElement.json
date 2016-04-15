@@ -4,12 +4,17 @@
 		"annotatedVariables": {
 			"a1": {
 				"identifier": "a1",
-				"rawType": "array"
+				"rawType": "array",
+				"visual" : "box"
 			},
 			"a2": {
 				"identifier": "a2",
 				"rawType": "array",
 				"visual" : "box"
+			},
+			"tmp": {
+				"identifier": "tmp",
+				"rawType": "independentElement"
 			}
 		}
 	},
@@ -22,6 +27,17 @@
 			"value": [1,2,3],
 			"target": {
 				"identifier": "a1"
+			}
+		}
+	}, {
+		"operation": "init",
+		"operationBody": {
+			"size": [
+				3
+			],
+			"value": [1337],
+			"target": {
+				"identifier": "tmp"
 			}
 		}
 	}, {

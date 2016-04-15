@@ -53,11 +53,6 @@ public class Step implements iStep {
         Locator locator;
         DataStructure struct;
         switch (opType) {
-            case init:
-                //Has the operation body value, target and size
-                identifier = ((Locator) op.operationBody.get(Key.target)).getIdentifier();
-                structs.get(identifier).applyOperation(op);
-                break;
             case message:
                 System.out.println(op);
                 break;

@@ -167,7 +167,7 @@ public class LogStreamManager implements CommunicatorListener {
     public void printLog (String targetPath){
         HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
         annotatedVariables.putAll(knownVariables);
-        Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables);
+        Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables,null);
         printLog(targetPath, new Wrapper(header, operations));
     }
 
@@ -179,7 +179,7 @@ public class LogStreamManager implements CommunicatorListener {
     public boolean streamLogData (){
         HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
         annotatedVariables.putAll(knownVariables);
-        Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables);
+        Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables,null);
         return stream(new Wrapper(header, operations));
     }
 
@@ -249,7 +249,7 @@ public class LogStreamManager implements CommunicatorListener {
     public boolean stream (AnnotatedVariable annotatedVariable){
         HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
         annotatedVariables.put(annotatedVariable.identifier, annotatedVariable);
-        Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables);
+        Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables, null);
         return stream(new Wrapper(header, null));
     }
 
@@ -270,7 +270,7 @@ public class LogStreamManager implements CommunicatorListener {
     public void printSimpleLog (String targetPath){
         HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
         annotatedVariables.putAll(knownVariables);
-        Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables);
+        Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables, null);
         printSimpleLog(targetPath + "simple.log", new Wrapper(header, operations));
     }
 

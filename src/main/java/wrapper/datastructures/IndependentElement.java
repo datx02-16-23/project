@@ -74,10 +74,6 @@ public class IndependentElement extends DataStructure implements Element {
         return 1;
     }
 
-    private void init (OP_Init op_init){
-        elements.add(new Array.ArrayElement(op_init.getValue()[0], null));
-    }
-
     @Override
     public void clear (){
         elements.clear();
@@ -86,9 +82,6 @@ public class IndependentElement extends DataStructure implements Element {
     @Override
     public void applyOperation (Operation op){
         switch (op.operation) {
-            case init:
-                init((OP_Init) op);
-                break;
             case read:
             case write:
                 readORwrite((OP_ReadWrite) op);

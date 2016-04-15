@@ -98,7 +98,7 @@ public class Interpreter {
     public void consolidate (List<Operation> listToConsolidate){
         if (highOrderRoutine == ABORT) {
             for (Operation op : listToConsolidate) {
-                if (op.operation == OperationType.message || op.operation == OperationType.init) {
+                if (op.operation == OperationType.message ) {
                     continue; //Acceptable non read/write operation found.
                 }
                 else if (isReadOrWrite(op) == false) {
@@ -183,11 +183,12 @@ public class Interpreter {
             keepSet_addCandidate();
             return tryExpandWorkingSet();
         }
-        else if (candidate.operation == OperationType.init) {
-            flushSet_addCandidate();
-            return tryExpandWorkingSet();
-            //Only read/write operations should remain at this point.
-        }
+        //TODO: Hantera INIT writes.
+//        else if (candidate.operation == OperationType.init) {
+//            flushSet_addCandidate();
+//            return tryExpandWorkingSet();
+//            //Only read/write operations should remain at this point.
+//        }
         else if (isReadOrWrite(candidate) == false) {
             handleHighLevelOperation();
             return tryExpandWorkingSet();

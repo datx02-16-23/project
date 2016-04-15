@@ -28,11 +28,7 @@ import wrapper.Locator;
 import wrapper.Operation;
 import wrapper.Wrapper;
 import wrapper.datastructures.DataStructure;
-import wrapper.operations.OP_Init;
-import wrapper.operations.OP_Message;
-import wrapper.operations.OP_Read;
-import wrapper.operations.OP_Swap;
-import wrapper.operations.OP_Write;
+import wrapper.operations.*;
 
 public class Simulator extends Application {
 
@@ -663,8 +659,9 @@ public class Simulator extends Application {
             updateQueued();
         }
 
+        //TODO: Convert to Write
         public void initOperation (){
-            OP_Init op = new OP_Init();
+            OP_Write op = new OP_Write();
             op.setTarget(new Locator("a1", new int[] {1}));
             op.setValue(
                     new double[] {Math.round(Math.random() * 100), Math.round(Math.random() * 100), Math.round(Math.random() * 100), Math.round(Math.random() * 100), Math.round(Math.random() * 100)});

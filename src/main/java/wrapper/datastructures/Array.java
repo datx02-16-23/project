@@ -59,12 +59,13 @@ public class Array extends DataStructure {
         return elements;
     }
 
-    private void init (OP_Init op_init){
-        if (!op_init.getTarget().getIdentifier().equals(super.identifier)) {
+    //TODO
+    private void init (OP_Write init){
+        if (!init.getTarget().getIdentifier().equals(super.identifier)) {
             throw new IllegalArgumentException();
         }
-        double[] linearArray = op_init.getValue();
-        capacity = op_init.getSize(); //Take size declared in Init.
+        double[] linearArray = init.getValue();
+        capacity = null;
         if (capacity == null) { //Fall back to size declared in header
             capacity = getCapacity();
             System.out.println(Arrays.toString(capacity));
@@ -99,9 +100,6 @@ public class Array extends DataStructure {
     @Override
     public void applyOperation (Operation op){
         switch (op.operation) {
-            case init:
-                init((OP_Init) op);
-                break;
             case read:
             case write:
                 readORwrite((OP_ReadWrite) op);

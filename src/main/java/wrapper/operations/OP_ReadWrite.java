@@ -26,7 +26,7 @@ public abstract class OP_ReadWrite extends Operation {
      * @param operation The name of the operation. Should be "read" or "write".
      */
     public OP_ReadWrite (OperationType operation){
-        super(operation, new HashMap<Key, Object>());
+        super(operation, new HashMap<Key, Object>(), null, -1);
     }
 
     /**
