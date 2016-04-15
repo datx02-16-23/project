@@ -246,7 +246,7 @@ public class GUI_Controller implements CommunicatorListener {
         stopAutoPlay();
         interpreter.consolidate(operationHistory.getItems());
         model.setOperations(operationHistory.getItems());
-        updateOperationList();
+        restartButtonClicked();
     }
 
     private void updateOperationList (){
@@ -417,7 +417,7 @@ public class GUI_Controller implements CommunicatorListener {
         if (afterItems.isEmpty()) {
             return;
         }
-        stopAutoPlay();
+        restartButtonClicked();
         operationHistory.getItems().setAll(afterItems);
         model.setOperations(afterItems);
         updateOperationList();
