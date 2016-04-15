@@ -59,10 +59,9 @@ public class Array extends DataStructure {
         return elements;
     }
 
-    //TODO
     private void init (OP_Write init){
         if (!init.getTarget().getIdentifier().equals(super.identifier)) {
-            throw new IllegalArgumentException();
+            return;
         }
         double[] linearArray = init.getValue();
         capacity = null;
@@ -131,6 +130,9 @@ public class Array extends DataStructure {
     }
 
     private void readORwrite (OP_ReadWrite op){
+        if(op.operation == OperationType.write && op.getValue().length > 1){
+            init((OP_Write) op);
+        }
         //Manage write
         ArrayElement targetElement = this.getElement(op.getTarget());
         double[] value = op.getValue();

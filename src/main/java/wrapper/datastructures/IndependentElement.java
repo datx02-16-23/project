@@ -48,8 +48,8 @@ public class IndependentElement extends DataStructure implements Element {
     /**
      * Initialize an element with value 0.
      */
-    public void initElement (){
-        Element init = new Array.ArrayElement(1337, null);
+    public void initElement (double value){
+        Element init = new Array.ArrayElement(value, null);
         elements.clear();
         elements.add(init);
     }
@@ -97,7 +97,7 @@ public class IndependentElement extends DataStructure implements Element {
 
     private void swap (OP_Swap op){
         if(elements.isEmpty()){
-            return;
+            initElement(op.getValues()[0]);
         }
         Element e = elements.get(0);
         if (op.getVar1().identifier.equals(this.identifier)) {
