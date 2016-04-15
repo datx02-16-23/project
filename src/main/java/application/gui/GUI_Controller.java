@@ -51,6 +51,8 @@ public class GUI_Controller implements CommunicatorListener {
     private final LogStreamManager     lsm;
     private final Interpreter          interpreter;
     private final iModel               model;
+    //SourceViewer
+    private final SourceViewer         sourceViewer;
     // Connection dialog stuff.
     private final SimpleStringProperty currentlyConnected       = new SimpleStringProperty();
     private final SimpleStringProperty allConnected             = new SimpleStringProperty();
@@ -66,14 +68,15 @@ public class GUI_Controller implements CommunicatorListener {
     private ListView<Operation>        operationHistory;
     private boolean                    autoPlayOnIncomingStream = true;
 
-    public GUI_Controller (Visualization visualization, Stage window, iModel model, LogStreamManager lsm){
+    public GUI_Controller (Visualization visualization, Stage window, iModel model, LogStreamManager lsm, SourceViewer sourceViewer){
         this.visualization = visualization;
         this.window = window;
         this.model = model;
         this.lsm = lsm;
         this.lsm.setListener(this);
         this.interpreter = new Interpreter();
-        initConnectedPane();
+        this.sourceViewer = sourceViewer;
+        this.initConnectedPane();
         initSettingsPane();
         initInterpreterPane();
         loadProperties();
@@ -168,7 +171,7 @@ public class GUI_Controller implements CommunicatorListener {
     public void restartButtonClicked (){
         stopAutoPlay();
         model.reset();
-        updateOperationList();
+        updateLists();
         visualization.render();
     }
 
@@ -178,7 +181,7 @@ public class GUI_Controller implements CommunicatorListener {
     public boolean stepForwardButtonClicked (){
         if (model.stepForward()) {
             visualization.render();
-            updateOperationList();
+            updateLists();
             return true;
         }
         return false;
@@ -191,7 +194,7 @@ public class GUI_Controller implements CommunicatorListener {
         stopAutoPlay();
         model.stepBackward();
         visualization.render();
-        updateOperationList();
+        updateLists();
     }
 
     private Button speedButton;
@@ -248,12 +251,13 @@ public class GUI_Controller implements CommunicatorListener {
         restartButtonClicked();
     }
 
-    private void updateOperationList (){
+    private void updateLists (){
         Platform.runLater(new Runnable() {
 
             @Override
             public void run (){
                 int index = model.getIndex();
+                sourceViewer.show(operationHistory.getItems().get(index));
                 operationHistory.getSelectionModel().select(index);
                 operationHistory.getFocusModel().focus(index);
                 operationHistory.scrollTo(index - 1);
@@ -302,7 +306,7 @@ public class GUI_Controller implements CommunicatorListener {
         model.goToStep(index);
         visualization.render();
         currOpTextField.setText("" + index);
-        updateOperationList();
+        updateLists();
     }
 
     private DecimalFormat df;
@@ -419,7 +423,7 @@ public class GUI_Controller implements CommunicatorListener {
         restartButtonClicked();
         operationHistory.getItems().setAll(afterItems);
         model.setOperations(afterItems);
-        updateOperationList();
+        updateLists();
         saveProperties();
         interpreterView.close();
     }
@@ -508,7 +512,8 @@ public class GUI_Controller implements CommunicatorListener {
         //Update operation list
         operationHistory.getItems().clear();
         operationHistory.getItems().addAll(lsm.getOperations());
-        updateOperationList();
+        sourceViewer.trySources(lsm.getSources());
+        updateLists();
         //Clean lsm
         lsm.clearData();
     }
@@ -542,7 +547,7 @@ public class GUI_Controller implements CommunicatorListener {
                     stepForwardButtonClicked();
                 }
                 else {
-                    updateOperationList();
+                    updateLists();
                 }
             }
         });

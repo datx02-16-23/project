@@ -13,7 +13,9 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
@@ -47,7 +49,8 @@ public class Main extends Application {
         // Create a Group view for the AV.
         visualization = new Visualization(model);
         fxmlLoader = new FXMLLoader(getClass().getResource("/VisualizerView.fxml"));
-        controller = new GUI_Controller(visualization, window, model, lsm);
+        SourceViewer sourceViewer = new SourceViewer();
+        controller = new GUI_Controller(visualization, window, model, lsm, sourceViewer);
         fxmlLoader.setController(controller);
         // Load and get the root layout.
         VBox root;
@@ -82,6 +85,13 @@ public class Main extends Application {
             }
         }
         Main.console.out("Loaded " + i + " examples from: " + getClass().getResource("/examples").getFile());
+        // Add SourceViewer
+        AnchorPane sourceViewContainer = (AnchorPane) fxmlLoader.getNamespace().get("sourceViewContainer");
+        sourceViewContainer.getChildren().add(sourceViewer);
+        AnchorPane.setTopAnchor(sourceViewer, 0.0);
+        AnchorPane.setBottomAnchor(sourceViewer, 0.0);
+        AnchorPane.setLeftAnchor(sourceViewer, 0.0);
+        AnchorPane.setRightAnchor(sourceViewer, 0.0);
         // Add AV
         GridPane visualizationPane = (GridPane) fxmlLoader.getNamespace().get("visualizationPane");
         visualizationPane.add(visualization, 0, 0);
