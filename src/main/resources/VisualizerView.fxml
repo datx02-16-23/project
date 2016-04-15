@@ -84,7 +84,7 @@
                   </MenuBar>
                   <SplitPane fx:id="splitPane" dividerPositions="0.2, 0.8" prefHeight="160.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                     <items>
-                        <AnchorPane fx:id="sourceViewContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" style="-fx-background-color: red;" />
+                        <AnchorPane fx:id="sourceViewContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" style="-fx-background-color: #123456;" />
                         <GridPane fx:id="visualizationPane" gridLinesVisible="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="0.0">
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
