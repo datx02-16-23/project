@@ -71,7 +71,8 @@ public class Main extends Application {
         File folder = new File(getClass().getResource("/examples").getFile());
         File[] files = folder.listFiles( (dir, name) -> name.endsWith(".json"));
         // loop through all files and add menu item
-        for (int i = 0; i < files.length; i++) {
+        int i = 0;
+        for (   ; i < files.length; i++) {
             if (files[i].isFile()) {
                 File file = files[i];
                 MenuItem ex = new MenuItem(stylizeExampleName(file.getName()));
@@ -79,6 +80,7 @@ public class Main extends Application {
                 examples.getItems().add(ex);
             }
         }
+        Main.console.out("Loaded "+ i +" examples from: " + getClass().getResource("/examples").getFile());
         // Add AV
         GridPane visualizationPane = (GridPane) fxmlLoader.getNamespace().get("visualizationPane");
         visualizationPane.add(visualization, 0, 0);
