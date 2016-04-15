@@ -20,21 +20,6 @@ def get_variables_(l,r):
 		for v in r:
 			var += get_variables(v)
 		return var
-
-class Variable(object):
-	def __init__(self,name,rawType,attributes=None,abstractType=None):
-		self.name = name
-		self.rawType = rawType
-		self.attributes = attributes
-		self.abstractType = abstractType
-
-	def get_json(self):
-		return {
-			'identifier' : self.name,
-			'rawType' : self.rawType,
-			'abstractType' : self.abstractType,
-			'attributes' : self.attributes
-		}
 			
 class VariableTable(object):
 	def __init__(self):

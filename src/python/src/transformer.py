@@ -6,8 +6,6 @@ from codegen import to_source as ts
 from printnode import ast_visit as printnode
 from copy import deepcopy
 ######################## Utilities ##########################
-DEFINED_OPERATIONS = ['write','read','link']
-
 def translate_op(op):
 	tr_op = {
 		Add: 	Str('+'),
@@ -34,45 +32,67 @@ def is_variable(node):
 		return False
 	else:
 		return isinstance(node.elts[0],Str) and node.elts[0].s == 'var'
+
+BUILTIN = ['False','True']
+def is_builtin(name):
+	return name in BUILTIN
 #############################################################
-class ExpressionTransformer(NodeTransformer):
+class Expression(object):
+	DEFINED_NAMES = []
+
+	def __init__(self,name):
+		self.name = Str(name)
+
+	def get_expression(self,node):
+		return Tuple(elts=[])
+
+class SubscriptExpression(Expression):
+	Expression.DEFINED_NAMES.append('subscript')
+	def __init__(self):
+		super(SubscriptExpression,self).__init__('subscript')
 
 	# ('subscript', to, indices..)
-	def visit_Subscript(self,node):
-		value  = self.visit(node.value)
-		index  = self.visit(node.slice)
-		expand = None
-		if is_variable(value):
-			expand = add_tuple(Tuple(elts=[value]),index)
-			expand.elts = [Str('subscript')] + expand.elts
-		else:
-			expand = add_tuple(value,index)
-		return copy_location(expand,node)
+	def get_expression(self,node):
+		expression = super(SubscriptExpression,self).get_expression(node)
+		if is_variable(node.value):
+			node.value = Tuple(elts=[self.name,node.value])
+		expression = add_tuple(node.value,node.slice)
+		return expression
+
+class NameExpression(Expression):
+	Expression.DEFINED_NAMES.append('var')
+	def __init__(self):
+		super(NameExpression,self).__init__('var')
 
 	# ('var',node.id, 'Store') if Store is context
 	# ('var',node.id, node) if Load is context
-	def visit_Name(self,node):
-		if node.id == 'False' or node.id == 'True':
+	def get_expression(self,node):
+		if is_builtin(node.id):
 			return node
-		value = [node] if isinstance(node.ctx,Load) else [Str('Store')]
-		return copy_location(
-			Tuple(elts=
-				[Str(s='var'),Str(s=node.id)] + value
-			)
-		,node)
+		value = node if isinstance(node.ctx,Load) else Str('Store')
+		return Tuple(elts=[self.name,Str(node.id),value])
 
-	#!! Not Supported !!
-	# # ('binop', op, left, right)
-	# def visit_BinOp(self,node):
-	# 	return copy_location(
-	# 		Tuple(elts=[
-	# 			Str('binop'),
-	# 			translate_op(type(node.op)),
-	# 			self.visit(node.left),
-	# 			self.visit(node.right)
-	# 		])
-	# 	,node)
+
+class ExpressionTransformer(NodeTransformer):
+
+	def is_generated_expression(self,node):
+		if isinstance(node,Tuple):
+			return node.elts[0] in Expression.DEFINED_NAMES
+		else:
+			return False
+
+	def visit_Subscript(self,node):
+		node.value = self.visit(node.value)
+		expression = SubscriptExpression().get_expression(node)
+		return copy_location(expression,node)
+
+	def visit_Name(self,node):
+		expression = NameExpression().get_expression(node)
+		return copy_location(expression,node)
+
 	def visit_BinOp(self,node):	return node
+
+	def visit_Call(self,node): return node
 
 	# these two need implementing
 	def visit_DictComp(self,node): return node
@@ -80,8 +100,11 @@ class ExpressionTransformer(NodeTransformer):
 	def visit_ListComp(self,node): return node
 
 class OperationTransformer(NodeTransformer):
+	DEFINED_OPERATIONS = []
+
 	def __init__(self,name):
 		self.name = name
+		OperationTransformer.DEFINED_OPERATIONS.append(name)
 		self.expr_transformer = ExpressionTransformer()
 
 	# args_ - [ast.Node]
@@ -92,10 +115,13 @@ class OperationTransformer(NodeTransformer):
 			keywords=[]
 		)
 
+	def visit_Call(self,node):
+		for arg in node.args:
+			self.visit(arg)
+		return node
+
 	# Following nodes should generally be avoided
 	# or should be handled diffrently in future
-	def visit_Call(self,node): return node
-
 	def visit_Assign(self,node): return node
 
 	def visit_AugAssign(self,node): return node
@@ -127,25 +153,13 @@ class WriteTransformer(OperationTransformer):
 			)
 		)
 
-	# def visit_For(self,node):
-	# 	for i,field in enumerate(node.body):
-	# 		node.body[i] = self.visit(field)
-	# 	# inject an (for example) i = write(i,['var','i'])
-	# 	# to keep track of i during loop, not a very good solution though
-	# 	if isinstance(node.target,Name):
-	# 		self.insert_write(node.target,node)
-	# 	else:
-	# 		for target in node.target.elts:
-	# 			self.insert_write(target,node)
-	# 	return node
-
 class ReadTransformer(OperationTransformer):
 	def __init__(self,name):
 		super(ReadTransformer,self).__init__(name)
 
 	def create_read(self,node):
 		stmt = self.expr_transformer.visit(deepcopy(node))
-		read = self.create_call([stmt,node])
+		read = self.create_call([stmt])
 		return copy_location(read,node)
 
 	def visit_Subscript(self,node): 
@@ -158,6 +172,20 @@ class ReadTransformer(OperationTransformer):
 		for line in node.body:
 			self.visit(line)
 		return node
+
+	def visit_Assign(self,node):
+		node.value = self.visit(node.value)
+		return node
+
+	def visit_Tuple(self,node):
+		if self.expr_transformer.is_generated_expression(node):
+			return node
+		for e in node.elts:
+			self.visit(e)
+
+wt = WriteTransformer('write')
+rt = ReadTransformer('read')
+print ts(rt.visit(wt.visit(parse("c = a[0] + b[0]"))))
 
 class PassTransformer(OperationTransformer):
 	def __init__(self,name):
