@@ -64,7 +64,8 @@ public class Main extends Application {
         SplitPane sP = (SplitPane) fxmlLoader.getNamespace().get("splitPane");
         VBox sidePanel = (VBox) fxmlLoader.getNamespace().get("rightSidePanel");
         // Hard coding an extra width (-5) to compensate for the width of the divider of splitPane!
-        sP.setDividerPositions(1 - (sidePanel.getPrefWidth() / (scene.getWidth() - 5)));
+        double leftDivider = sidePanel.getPrefWidth() / (scene.getWidth() - 5);
+        sP.setDividerPositions(leftDivider, 1 - leftDivider);
         // Add examples
         Menu examples = (Menu) fxmlLoader.getNamespace().get("examplesMenu");
         // Get all .json files
@@ -72,7 +73,7 @@ public class Main extends Application {
         File[] files = folder.listFiles( (dir, name) -> name.endsWith(".json"));
         // loop through all files and add menu item
         int i = 0;
-        for (   ; i < files.length; i++) {
+        for (; i < files.length; i++) {
             if (files[i].isFile()) {
                 File file = files[i];
                 MenuItem ex = new MenuItem(stylizeExampleName(file.getName()));
@@ -80,7 +81,7 @@ public class Main extends Application {
                 examples.getItems().add(ex);
             }
         }
-        Main.console.out("Loaded "+ i +" examples from: " + getClass().getResource("/examples").getFile());
+        Main.console.out("Loaded " + i + " examples from: " + getClass().getResource("/examples").getFile());
         // Add AV
         GridPane visualizationPane = (GridPane) fxmlLoader.getNamespace().get("visualizationPane");
         visualizationPane.add(visualization, 0, 0);
