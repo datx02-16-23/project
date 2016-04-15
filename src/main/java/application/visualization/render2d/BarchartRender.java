@@ -29,6 +29,7 @@ public class BarchartRender extends Render {
         final CategoryAxis xAxis = new CategoryAxis();
         final NumberAxis yAxis = new NumberAxis();
         barChart = new BarChart(xAxis, yAxis);
+        barChart.setMaxSize(0, 0);
         barChart.setLegendVisible(false);
         barChart.setTitle(struct.identifier);
         xAxis.setLabel("Index");
