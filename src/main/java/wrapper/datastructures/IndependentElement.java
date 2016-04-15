@@ -45,11 +45,13 @@ public class IndependentElement extends DataStructure implements Element {
         elements.add(newElement);
     }
 
-    private Element initElement (){
-        Element init = new Array.ArrayElement(0, new int[] {1337});
+    /**
+     * Initialize an element with value 0.
+     */
+    public void initElement (){
+        Element init = new Array.ArrayElement(1337, new int[] {1337});
         elements.clear();
         elements.add(init);
-        return init;
     }
 
     public List<Element> getElements (){
@@ -102,6 +104,9 @@ public class IndependentElement extends DataStructure implements Element {
     }
 
     private void swap (OP_Swap op){
+        if(elements.isEmpty()){
+            return;
+        }
         Element e = elements.get(0);
         if (op.getVar1().identifier.equals(this.identifier)) {
             e.setValue(op.getValues()[0]);
@@ -116,6 +121,9 @@ public class IndependentElement extends DataStructure implements Element {
     }
 
     private void readORwrite (OP_ReadWrite op){
+        if(elements.isEmpty()){
+            return;
+        }
         Element e = elements.get(0);
         if (op.getTarget().identifier.equals(this.identifier)) {
             e.setValue(op.getValue()[0]);
