@@ -82,15 +82,15 @@ public abstract class OP_ReadWrite extends Operation {
             if (source == null) {
                 sourceStr = valueStr;
                 targetStr = target.toSimpleString();
-                arrow = " <-- "; //Turn arrow.
-                //Target unknown
+                return super.operation.toString().toUpperCase() + ": " + targetStr + " <-- " + sourceStr;
             }
+            //Target unknown
             else {
                 sourceStr = source.toSimpleString();
                 targetStr = valueStr;
             }
         }
-        return super.operation.toString().toUpperCase() + ": " + sourceStr + arrow + targetStr;
+        return super.operation.toString().toUpperCase() + ": " + sourceStr + " --> " + targetStr;
     }
 
     public Locator getTarget (){
