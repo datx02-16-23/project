@@ -127,7 +127,6 @@ public class GUI_Controller implements CommunicatorListener {
     private Button playPauseButton;
 
     public void playPauseButtonClicked (){
-        sourceViewer.clear();
         if (!isPlaying) {
             startAutoPlay();
         }

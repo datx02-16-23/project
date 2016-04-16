@@ -29,7 +29,7 @@ public class SourceViewer extends TabPane {
         this.prefWidthProperty().bind(this.widthProperty());
         this.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        initTab(); //Print some brillaint source code.
+        initTab(); //Print some brilliant source code.
     }
 
     /**
