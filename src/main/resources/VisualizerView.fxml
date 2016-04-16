@@ -147,59 +147,65 @@
                                     <Insets />
                                  </VBox.margin>
                               </GridPane>
-                              <HBox prefHeight="100.0" prefWidth="160.0" VBox.vgrow="NEVER">
+                              <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" VBox.vgrow="ALWAYS">
                                  <children>
-                                    <Label maxHeight="25.0" maxWidth="100.0" minHeight="25.0" minWidth="100.0" prefHeight="25.0" prefWidth="100.0" text="Operation Queue: " />
-                                    <TextField fx:id="currOpTextField" alignment="CENTER_RIGHT" maxHeight="25.0" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="25.0" onAction="#inputGoToSelecton" prefHeight="25.0" prefWidth="80.0" text="0" HBox.hgrow="ALWAYS">
-                                       <tooltip>
-                                          <Tooltip text="Number of operations executed from this list." />
-                                       </tooltip>
-                                    </TextField>
-                                    <Label fx:id="totNrOfOpLabel" maxHeight="25.0" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="25.0" prefHeight="25.0" prefWidth="80.0" text="/ 0" HBox.hgrow="ALWAYS">
-                                       <HBox.margin>
-                                          <Insets left="5.0" right="5.0" />
-                                       </HBox.margin>
-                                       <tooltip>
-                                          <Tooltip text="Total number of operations in the list." />
-                                       </tooltip>
-                                    </Label>
+                                    <HBox prefHeight="100.0" prefWidth="160.0">
+                                       <children>
+                                          <Label maxHeight="25.0" maxWidth="100.0" minHeight="25.0" minWidth="100.0" prefHeight="25.0" prefWidth="100.0" text="Operation Queue: " />
+                                          <TextField fx:id="currOpTextField" alignment="CENTER_RIGHT" maxHeight="25.0" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="25.0" onAction="#inputGoToSelecton" prefHeight="25.0" prefWidth="80.0" text="0" HBox.hgrow="ALWAYS">
+                                             <tooltip>
+                                                <Tooltip text="Number of operations executed from this list." />
+                                             </tooltip>
+                                          </TextField>
+                                          <Label fx:id="totNrOfOpLabel" maxHeight="25.0" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="25.0" prefHeight="25.0" prefWidth="80.0" text="/ 0" HBox.hgrow="ALWAYS">
+                                             <HBox.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </HBox.margin>
+                                             <tooltip>
+                                                <Tooltip text="Total number of operations in the list." />
+                                             </tooltip>
+                                          </Label>
+                                       </children>
+                                    </HBox>
+                                    <ProgressBar fx:id="opProgress" maxHeight="20.0" maxWidth="1.7976931348623157E308" minHeight="20.0" minWidth="0.0" prefHeight="20.0" prefWidth="200.0" progress="0.0">
+                                       <padding>
+                                          <Insets bottom="2.0" top="2.0" />
+                                       </padding>
+                                    </ProgressBar>
+                                    <ListView fx:id="operationHistory" maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="160.0" onMouseClicked="#doubleClickGoTo" prefHeight="999.0" prefWidth="160.0">
+                                       <effect>
+                                          <Glow />
+                                       </effect>
+                                    </ListView>
+                                    <GridPane maxWidth="1.7976931348623157E308">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints fillHeight="false" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#inspectSelection" prefHeight="25.0" prefWidth="118.0" text="Inspect" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
+                                             <tooltip>
+                                                <Tooltip text="Inspect the selected operation." />
+                                             </tooltip>
+                                          </Button>
+                                          <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#gotoSelection" prefHeight="25.0" prefWidth="135.0" text="Jump To" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
+                                             <tooltip>
+                                                <Tooltip text="Jump to the selected operation." />
+                                             </tooltip>
+                                          </Button>
+                                       </children>
+                                       <opaqueInsets>
+                                          <Insets bottom="5.0" />
+                                       </opaqueInsets>
+                                       <padding>
+                                          <Insets bottom="6.0" />
+                                       </padding>
+                                    </GridPane>
                                  </children>
-                              </HBox>
-                              <ProgressBar fx:id="opProgress" maxHeight="20.0" maxWidth="1.7976931348623157E308" minHeight="15.0" minWidth="0.0" prefHeight="15.0" prefWidth="200.0" progress="0.0" VBox.vgrow="NEVER">
-                                 <padding>
-                                    <Insets bottom="-5.0" top="-5.0" />
-                                 </padding>
-                              </ProgressBar>
-                              <ListView fx:id="operationHistory" maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="160.0" onMouseClicked="#doubleClickGoTo" prefHeight="999.0" prefWidth="160.0">
-                                 <effect>
-                                    <Glow />
-                                 </effect>
-                              </ListView>
-                              <GridPane maxWidth="1.7976931348623157E308" VBox.vgrow="NEVER">
-                                <columnConstraints>
-                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                </columnConstraints>
-                                <rowConstraints>
-                                  <RowConstraints fillHeight="false" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                </rowConstraints>
-                                 <children>
-                                    <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#inspectSelection" prefHeight="25.0" prefWidth="118.0" text="Inspect" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
-                                       <tooltip>
-                                          <Tooltip text="Inspect the selected operation." />
-                                       </tooltip></Button>
-                                    <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#gotoSelection" prefHeight="25.0" prefWidth="135.0" text="Jump To" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
-                                       <tooltip>
-                                          <Tooltip text="Jump to the selected operation." />
-                                       </tooltip></Button>
-                                 </children>
-                                 <opaqueInsets>
-                                    <Insets bottom="5.0" />
-                                 </opaqueInsets>
-                                 <padding>
-                                    <Insets bottom="6.0" />
-                                 </padding>
-                              </GridPane>
+                              </VBox>
                            </children>
                         </VBox>
                     </items>

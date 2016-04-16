@@ -64,7 +64,7 @@ public class GUI_Controller implements CommunicatorListener {
     private Label                      totNrOfOpLabel;
     private Label                      settingsSaveState;
     private ProgressBar                opProgress;
-    private InterpreterView                       interpreterView;
+    private InterpreterView            interpreterView;
 
     public GUI_Controller (Visualization visualization, Stage window, iModel model, LogStreamManager lsm, SourcePanel sourceViewer){
         this.visualization = visualization;
@@ -228,7 +228,8 @@ public class GUI_Controller implements CommunicatorListener {
         currOpTextField.setText("" + (index));
         //Text
         totNrOfOpLabel.setText("/ " + operationHistory.getItems().size());
-        //TODO: Progress bar
+        //TODO: Progress bar   
+        opProgress.setProgress(operationHistory.getItems().size() == 0 ? 0 : index / operationHistory.getItems().size());
     }
 
     // TODO: Implement detailed inspection of operation
