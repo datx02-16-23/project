@@ -1,13 +1,13 @@
 package application.gui;
 
 import application.assets.Strings;
-import application.model.Model;
-import application.model.iModel;
+import application.model.*;
 import application.visualization.Visualization;
 import io.LogStreamManager;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -16,11 +16,10 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 
@@ -34,6 +33,10 @@ public class Main extends Application {
      * Console for printing system and error messages.
      */
     public static MavserConsole    console;
+    /**
+     * Indicates wether the program is being run for the first time.
+     */
+    public static boolean          firstRun;
     private Stage                  window;
     private Visualization          visualization;
     private final iModel           model = new Model();
@@ -60,8 +63,11 @@ public class Main extends Application {
         }
         //Load console
         console = new MavserConsole((TextArea) fxmlLoader.getNamespace().get("console"));
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        Scene scene = new Scene(root, (screenSize.getWidth() * 0.5), (screenSize.getHeight() * 0.5));
+        //Window size
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+        double windowWidth = (screenSize.getWidth() * .9);
+        double windowHeight = (screenSize.getHeight() * .9);
+        Scene scene = new Scene(root, windowWidth, windowHeight);
         // Extracting some nodes from the fxml:
         SplitPane sP = (SplitPane) fxmlLoader.getNamespace().get("splitPane");
         VBox sidePanel = (VBox) fxmlLoader.getNamespace().get("rightSidePanel");
@@ -109,10 +115,10 @@ public class Main extends Application {
     }
 
     /**
-     * Make a file name a bit more fancy. For example: "bubble_sort.json" -> "Bubble Sort"
+     * Make a file name a bit more fancy. For example: "bubble_sort.oi" -> "Bubble Sort"
      * 
-     * @param original The file name
-     * @return The file name without '_' and '.json' or .* and there is always an upper case after '_'
+     * @param original The original file name
+     * @return The file name without '_' and '.*' and there is always an upper case after '_'
      */
     private String stylizeExampleName (String original){
         StringBuilder sb = new StringBuilder();
@@ -223,9 +229,10 @@ public class Main extends Application {
                 }
             });
         }
-        
+
         /**
          * Print an object.
+         * 
          * @param o The object to print.
          */
         public void out (Object o){
@@ -272,6 +279,5 @@ public class Main extends Application {
                 }
             });
         }
-      
     }
 }
