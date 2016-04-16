@@ -1,9 +1,10 @@
 package application.gui;
 
 import application.assets.*;
+import application.gui.panels.*;
+import application.gui.views.*;
 import application.model.iModel;
 import application.visualization.Visualization;
-import interpreter.Interpreter;
 import io.*;
 import io.Communicator.*;
 import javafx.animation.Animation;
@@ -11,7 +12,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -22,26 +22,19 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import wrapper.Operation;
-import wrapper.operations.*;
-
 import java.io.*;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-
-import com.sun.javafx.tk.FileChooserType;
 
 /**
  * This is the Controller of MVC for the visualizer GUI.
@@ -51,9 +44,8 @@ public class GUI_Controller implements CommunicatorListener {
     private Visualization              visualization;
     private Stage                      window;
     private final LogStreamManager     lsm;
-    private final Interpreter          interpreter;
     private final iModel               model;
-    private final SourceViewer         sourceViewer;
+    private final SourcePanel          sourceViewer;
     // Connection dialog stuff.
     private final SimpleStringProperty currentlyConnected       = new SimpleStringProperty();
     private final SimpleStringProperty allConnected             = new SimpleStringProperty();
@@ -72,19 +64,19 @@ public class GUI_Controller implements CommunicatorListener {
     private Label                      totNrOfOpLabel;
     private Label                      settingsSaveState;
     private ProgressBar                opProgress;
+    private InterpreterView                       interpreterView;
 
-    public GUI_Controller (Visualization visualization, Stage window, iModel model, LogStreamManager lsm, SourceViewer sourceViewer){
+    public GUI_Controller (Visualization visualization, Stage window, iModel model, LogStreamManager lsm, SourcePanel sourceViewer){
         this.visualization = visualization;
         this.window = window;
         this.model = model;
         this.lsm = lsm;
         this.lsm.PRETTY_PRINTING = true;
         this.lsm.setListener(this);
-        this.interpreter = new Interpreter();
         this.sourceViewer = sourceViewer;
         this.initConnectedPane();
         initSettingsPane();
-        initInterpreterPane();
+        interpreterView = new InterpreterView(window);
         loadProperties();
     }
 
@@ -99,23 +91,6 @@ public class GUI_Controller implements CommunicatorListener {
         settingsView.setWidth(this.window.getWidth() * 0.75);
         settingsView.setHeight(this.window.getHeight() * 0.75);
         settingsView.show();
-    }
-
-    private String translateInterpreterRoutine (){
-        switch (interpreter.getHighOrderRoutine()) {
-            case Interpreter.DISCARD:
-                return "Discard";
-            case Interpreter.FLUSH_SET_ADD_HIGH:
-                return "Flush Set";
-            case Interpreter.KEEP_SET_ADD_HIGH:
-                return "Keep Set";
-            case Interpreter.DECONSTRUCT:
-                return "Deconstruct";
-            case Interpreter.ABORT:
-                return "Abort";
-            default:
-                throw new IllegalArgumentException();
-        }
     }
 
     private CheckBox toggleAutorunStream;
@@ -225,50 +200,11 @@ public class GUI_Controller implements CommunicatorListener {
 
     public void openInterpreterView (){
         stopAutoPlay(); // Prevent concurrent modification exception.
-        // Load settings
-        newRoutine = interpreter.getHighOrderRoutine();
-        interpreterRoutineChooser.getSelectionModel().select(translateInterpreterRoutine());
-        // Setup
-        interpreterBefore.getItems().setAll(operationHistory.getItems());
-        beforeCount.setText("" + interpreterBefore.getItems().size());
-        interpreterAfter.getItems().clear();
-        afterCount.setText("0");
-        setTestCases();
-        //Set size and show
-        interpreterView.setWidth(this.window.getWidth() * 0.75);
-        interpreterView.setHeight(this.window.getHeight() * 0.75);
-        interpreterView.show();
-    }
-
-    private Map<String, Object> interpreterViewNamespace;
-
-    private void setTestCases (){
-        List<OperationType> selectedTypes = interpreter.getTestCases();
-        VBox casesBox = (VBox) interpreterViewNamespace.get("casesBox");
-        //Create CheckBoxes for all Consolidate operation types
-        for (OperationType type : OperationType.values()) {
-            CheckBox cb = new CheckBox(type.toString());
-            cb.setOnAction(event -> {
-                if(cb.isSelected()){
-                    interpreter.addTestCase(type);
-                } else {
-                    interpreter.removeTestCase(type);
-                }
-            });
-            if(selectedTypes.contains(type)){
-                cb.setSelected(true);
-            } else {
-                cb.setSelected(false);
-            }
-            casesBox.getChildren().add(cb);
-        }
+        interpreterView.show(this.operationHistory.getItems());
     }
 
     public void interpretOperationHistory (){
-        stopAutoPlay();
-        interpreter.consolidate(operationHistory.getItems());
-        model.setOperations(operationHistory.getItems());
-        restartButtonClicked();
+        System.out.println("TODO: interpretOperationHistory ()");
     }
 
     private void updateLists (){
@@ -279,13 +215,20 @@ public class GUI_Controller implements CommunicatorListener {
                 int index = model.getIndex();
                 model.getCurrentStep().getLastOp();
                 sourceViewer.show(model.getCurrentStep().getLastOp());
-                operationHistory.getSelectionModel().select(index);
-                operationHistory.getFocusModel().focus(index);
-                operationHistory.scrollTo(index - 1);
-                currOpTextField.setText("" + (index));
-                totNrOfOpLabel.setText("/ " + operationHistory.getItems().size());
+                updateOperationList(index);
             }
         });
+    }
+
+    private void updateOperationList (int index){
+        //List selection and position
+        operationHistory.getSelectionModel().select(index);
+        operationHistory.getFocusModel().focus(index);
+        operationHistory.scrollTo(index - 1);
+        currOpTextField.setText("" + (index));
+        //Text
+        totNrOfOpLabel.setText("/ " + operationHistory.getItems().size());
+        //TODO: Progress bar
     }
 
     // TODO: Implement detailed inspection of operation
@@ -362,86 +305,6 @@ public class GUI_Controller implements CommunicatorListener {
         p.setPrefHeight(this.window.getHeight() * 0.75);
         Scene dialogScene = new Scene(p, this.window.getWidth() * 0.75, this.window.getHeight() * 0.75);
         settingsView.setScene(dialogScene);
-    }
-
-    private Stage               interpreterView;
-    private ListView<Operation> interpreterBefore, interpreterAfter;
-    private TextField           beforeCount, afterCount;
-
-    @SuppressWarnings("unchecked")
-    private void initInterpreterPane (){
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/InterpreterView.fxml"));
-        fxmlLoader.setController(this);
-        interpreterView = new Stage();
-        interpreterView.getIcons().add(new Image(GUI_Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
-        interpreterView.initModality(Modality.APPLICATION_MODAL);
-        interpreterView.setTitle(Strings.PROJECT_NAME + ": Interpreter");
-        interpreterView.initOwner(this.window);
-        GridPane p = null;
-        try {
-            p = fxmlLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // Buttons
-        interpreterView.setOnCloseRequest(event -> {
-            event.consume(); // Better to do this now than missing it later.
-            discardInterpreted();
-        });
-        // Get namespace items
-        // High order routine
-        interpreterRoutineChooser = (ChoiceBox<String>) fxmlLoader.getNamespace().get("routineChooser");
-        interpreterRoutineChooser.getSelectionModel().selectedItemProperty().addListener(event -> {
-            interpreterRoutineChooser();
-        });
-        interpreterRoutineChooser.setItems(FXCollections.observableArrayList("Discard", "Flush Set", "Keep Set", "Deconstruct", "Abort"));
-        interpreterViewNamespace = fxmlLoader.getNamespace();
-        // Lists
-        interpreterBefore = (ListView<Operation>) interpreterViewNamespace.get("interpreterBefore");
-        interpreterAfter = (ListView<Operation>) interpreterViewNamespace.get("interpreterAfter");
-        beforeCount = (TextField) interpreterViewNamespace.get("beforeCount");
-        afterCount = (TextField) interpreterViewNamespace.get("afterCount");
-        List<Operation> afterItems = interpreterAfter.getItems();
-        // Interpret button
-        Button interpret = (Button) fxmlLoader.getNamespace().get("interpret");
-        interpret.setOnAction(event -> {
-            afterItems.clear();
-            afterItems.addAll(interpreterBefore.getItems());
-            interpreter.consolidate(afterItems);
-            afterCount.setText("" + afterItems.size());
-        });
-        // <-- button
-        Button moveToBefore = (Button) fxmlLoader.getNamespace().get("moveToBefore");
-        moveToBefore.setOnAction(event -> {
-            if (afterItems.isEmpty() == false) {
-                interpreterBefore.getItems().setAll(afterItems);
-                beforeCount.setText("" + interpreterBefore.getItems().size());
-                afterItems.clear();
-                afterCount.setText("0");
-            }
-        });
-        p.setPrefWidth(this.window.getWidth() * 0.75);
-        p.setPrefHeight(this.window.getHeight() * 0.75);
-        Scene dialogScene = new Scene(p, this.window.getWidth() * 0.75, this.window.getHeight() * 0.75);
-        interpreterView.setScene(dialogScene);
-    }
-
-    public void keepInterpreted (){
-        List<Operation> afterItems = interpreterAfter.getItems();
-        if (afterItems.isEmpty()) {
-            return;
-        }
-        restartButtonClicked();
-        operationHistory.getItems().setAll(afterItems);
-        model.setOperations(afterItems);
-        updateLists();
-        saveProperties();
-        interpreterView.close();
-    }
-
-    public void discardInterpreted (){
-        saveProperties();
-        interpreterView.close();
     }
 
     private void initConnectedPane (){
@@ -736,7 +599,6 @@ public class GUI_Controller implements CommunicatorListener {
     // Load settings
     public void loadProperties (){
         Properties properties = tryLoadProperties();
-        interpreter.setHighOrderRoutine(Integer.parseInt(properties.getProperty("highOrderRoutine")));
         stepDelayBase = Long.parseLong(properties.getProperty("playbackStepDelay"));
         stepDelay = stepDelayBase; // Speedup factor is 1 at startup.
         autoPlayOnIncomingStream = Boolean.parseBoolean(properties.getProperty("autoPlayOnIncomingStream"));
@@ -747,41 +609,12 @@ public class GUI_Controller implements CommunicatorListener {
         Properties properties = new Properties();
         properties.setProperty("playbackStepDelay", "" + stepDelayBase);
         properties.setProperty("autoPlayOnIncomingStream", "" + autoPlayOnIncomingStream);
-        properties.setProperty("highOrderRoutine", "" + interpreter.getHighOrderRoutine());
         try {
             URL url = getClass().getClassLoader().getResource(Strings.PROPERTIES_FILE_NAME);
             OutputStream outputStream = new FileOutputStream(new File(url.toURI()));
             properties.store(outputStream, Strings.PROJECT_NAME + " user preferences.");
         } catch (Exception e) {
             propertiesFailed(e);
-        }
-    }
-
-    private ChoiceBox<String> interpreterRoutineChooser;
-    private int               newRoutine = -1;
-
-    public void interpreterRoutineChooser (){
-        String choice = interpreterRoutineChooser.getSelectionModel().getSelectedItem();
-        switch (choice) {
-            case "Discard":
-                newRoutine = Interpreter.DISCARD;
-                break;
-            case "Flush Set":
-                newRoutine = Interpreter.FLUSH_SET_ADD_HIGH;
-                break;
-            case "Keep Set":
-                newRoutine = Interpreter.KEEP_SET_ADD_HIGH;
-                break;
-            case "Deconstruct":
-                newRoutine = Interpreter.DECONSTRUCT;
-                break;
-            case "Abort":
-                newRoutine = Interpreter.ABORT;
-                break;
-        }
-        if (newRoutine != interpreter.getHighOrderRoutine()) {
-            interpreter.setHighOrderRoutine(newRoutine);
-            saveProperties();
         }
     }
     /*

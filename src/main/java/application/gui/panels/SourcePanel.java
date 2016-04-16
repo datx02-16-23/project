@@ -1,9 +1,10 @@
-package application.gui;
+package application.gui.panels;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import application.gui.Main;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -15,7 +16,7 @@ import wrapper.Operation;
  * @author Richard
  *
  */
-public class SourceViewer extends TabPane {
+public class SourcePanel extends TabPane {
 
     private final HashMap<String, Integer> nameTabMapping;
     private Map<String, List<String>> sources;
@@ -23,7 +24,7 @@ public class SourceViewer extends TabPane {
     /**
      * Create a new SourceViewer.
      */
-    public SourceViewer (){
+    public SourcePanel (){
         nameTabMapping = new HashMap<String, Integer>();
         this.prefHeightProperty().bind(this.heightProperty());
         this.prefWidthProperty().bind(this.widthProperty());

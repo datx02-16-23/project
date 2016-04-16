@@ -1,6 +1,7 @@
 package application.gui;
 
 import application.assets.Strings;
+import application.gui.panels.SourcePanel;
 import application.model.*;
 import application.visualization.Visualization;
 import io.LogStreamManager;
@@ -51,7 +52,7 @@ public class Main extends Application {
         // Create a Group view for the AV.
         visualization = new Visualization(model);
         fxmlLoader = new FXMLLoader(getClass().getResource("/VisualizerView.fxml"));
-        SourceViewer sourceViewer = new SourceViewer();
+        SourcePanel sourceViewer = new SourcePanel();
         controller = new GUI_Controller(visualization, window, model, lsm, sourceViewer);
         fxmlLoader.setController(controller);
         // Load and get the root layout.

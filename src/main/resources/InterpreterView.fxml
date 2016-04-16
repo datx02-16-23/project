@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -36,7 +35,7 @@
                               <Insets left="5.0" />
                            </padding>
                         </Label>
-                        <TextField fx:id="beforeCount" maxHeight="25.0" maxWidth="50.0" minHeight="25.0" minWidth="50.0" prefHeight="25.0" prefWidth="50.0" text="0" HBox.hgrow="NEVER">
+                        <TextField fx:id="beforeCount" editable="false" maxHeight="25.0" maxWidth="50.0" minHeight="25.0" minWidth="50.0" prefHeight="25.0" prefWidth="50.0" text="0" HBox.hgrow="NEVER">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
@@ -49,12 +48,12 @@
             <VBox maxHeight="1.7976931348623157E308" maxWidth="85.0" minWidth="85.0" prefHeight="300.0" prefWidth="85.0">
                <children>
                   <Pane maxWidth="85.0" minWidth="75.0" prefHeight="200.0" prefWidth="85.0" />
-                  <Button fx:id="interpret" maxHeight="30.0" maxWidth="85.0" minHeight="30.0" minWidth="75.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" text="Interpret">
+                  <Button maxHeight="30.0" maxWidth="85.0" minHeight="30.0" minWidth="75.0" mnemonicParsing="false" onAction="#interpret" prefHeight="30.0" prefWidth="85.0" text="Interpret">
                      <VBox.margin>
                         <Insets bottom="2.0" top="2.0" />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="moveToBefore" maxHeight="30.0" maxWidth="85.0" minHeight="30.0" minWidth="75.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="85.0" text="&lt;--">
+                  <Button maxHeight="30.0" maxWidth="85.0" minHeight="30.0" minWidth="75.0" mnemonicParsing="false" onAction="#moveToBefore" prefHeight="30.0" prefWidth="85.0" text="&lt;--">
                      <VBox.margin>
                         <Insets bottom="2.0" top="2.0" />
                      </VBox.margin>
@@ -74,7 +73,7 @@
                               <Insets left="5.0" />
                            </padding>
                         </Label>
-                        <TextField fx:id="afterCount" maxHeight="25.0" maxWidth="50.0" minHeight="25.0" minWidth="50.0" prefHeight="25.0" prefWidth="50.0" text="0" HBox.hgrow="NEVER">
+                        <TextField fx:id="afterCount" editable="false" maxHeight="25.0" maxWidth="50.0" minHeight="25.0" minWidth="50.0" prefHeight="25.0" prefWidth="50.0" text="0" HBox.hgrow="NEVER">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
@@ -84,7 +83,7 @@
                   <ListView fx:id="interpreterAfter" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="100.0" prefHeight="150.0" prefWidth="100.0" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
-            <VBox prefHeight="300.0" prefWidth="130.0">
+            <VBox fx:id="casesBox" prefHeight="300.0" prefWidth="130.0">
                <children>
                   <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefHeight="20.0" prefWidth="130.0" text="High-Order Routine:" />
                   <ChoiceBox fx:id="routineChooser" prefHeight="25.0" prefWidth="135.0">
@@ -98,21 +97,6 @@
                      </VBox.margin>
                   </Separator>
                   <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefHeight="20.0" prefWidth="130.0" text="Testcases:" />
-                  <CheckBox fx:id="swap" mnemonicParsing="false" text="Swap">
-                     <VBox.margin>
-                        <Insets bottom="2.0" left="10.0" top="2.0" />
-                     </VBox.margin>
-                  </CheckBox>
-                  <CheckBox disable="true" indeterminate="true" mnemonicParsing="false" text="Zig">
-                     <VBox.margin>
-                        <Insets bottom="2.0" left="10.0" top="2.0" />
-                     </VBox.margin>
-                  </CheckBox>
-                  <CheckBox disable="true" indeterminate="true" mnemonicParsing="false" text="Zag">
-                     <VBox.margin>
-                        <Insets bottom="2.0" left="10.0" top="2.0" />
-                     </VBox.margin>
-                  </CheckBox>
                </children>
                <opaqueInsets>
                   <Insets />
