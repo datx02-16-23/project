@@ -96,17 +96,14 @@ public class IndependentElement extends DataStructure implements Element {
     }
 
     private void swap (OP_Swap op){
-        if(elements.isEmpty()){
-            initElement(op.getValues()[0]);
-        }
         Element e = elements.get(0);
         if (op.getVar1().identifier.equals(this.identifier)) {
-            e.setValue(op.getValues()[0]);
+            e.setValue(op.getValue()[0]);
             e.setColor(COLOR_SWAP);
             return;
         }
         if (op.getVar2().identifier.equals(this.identifier)) {
-            e.setValue(op.getValues()[1]);
+            e.setValue(op.getValue()[1]);
             e.setColor(COLOR_SWAP);
             return;
         }
@@ -114,7 +111,7 @@ public class IndependentElement extends DataStructure implements Element {
 
     private void readORwrite (OP_ReadWrite op){
         if(elements.isEmpty()){
-            return;
+            initElement(op.getValue()[0]);
         }
         Element e = elements.get(0);
         if (op.getTarget().identifier.equals(this.identifier)) {

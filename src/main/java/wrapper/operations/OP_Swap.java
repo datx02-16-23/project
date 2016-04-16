@@ -61,7 +61,7 @@ public class OP_Swap extends Operation implements Consolidable {
         return (Locator) this.operationBody.get(Key.var2);
     }
 
-    public double[] getValues (){
+    public double[] getValue (){
         return (double[]) this.operationBody.get(Key.value);
     }
 

@@ -545,11 +545,11 @@ public class Simulator extends Application {
             //Create init for a1
             OP_Write init_a1 = new OP_Write(srcNames[0], 1, 4, -1, -1);
             init_a1.setTarget(new Locator("a1", null));
-            init_a1.setValue(new double[] {1, 2, 4, 8, 16, 32, 64, 128});//, 256, 512});
+            init_a1.setValue(new double[] {1, 2, 4, 8, 16, 32, 64, 128, 256, 512});
             //Create init for a2
             OP_Write init_a2 = new OP_Write(srcNames[0], 5, 6, -1, -1);
             init_a2.setTarget(new Locator("a2", null));
-            init_a2.setValue(new double[] {512, 256, 128, 64, 32, 16, 8});//, 4, 2, 1});
+            init_a2.setValue(new double[] {512, 256, 128, 64, 32, 16, 8, 4, 2, 1});
             //Create init for tmp
             OP_Write init_tmp = new OP_Write(srcNames[0], 9, 13, -1, -1);
             init_tmp.setTarget(new Locator("tmp", null));
@@ -557,28 +557,35 @@ public class Simulator extends Application {
             inits.add(init_a1);
             inits.add(init_a2);
             inits.add(init_tmp);
-            OP_Write op;
+            OP_ReadWrite op;
             loop: for (int i = 0; i < nbrOfOps; i++) {
-                if (i % 10 == 0) {
+                if (i % 5 == 0) {
                     op = new OP_Write(srcNames[0], 4, 6, -1, -1);
                     loc = new Locator("a1", new int[] {i % arraySize});
                     op.setSource(loc);
                     loc = new Locator("tmp", null);
                     op.setTarget(loc);
-                    op.setValue(new double[] {(i * i) % 2});
+                    op.setValue(new double[] {(i * i) % 3});
+                    _ops.add(op);
                     continue loop;
                 }
                 if (i % 2 == 0) {
-                    op = new OP_Write(srcNames[0], 5, 10, -1, -1);
+                    op = new OP_Read(srcNames[0], 5, 10, -1, -1);
                     loc = new Locator("a1", new int[] {i % arraySize});
                     op.setSource(loc);
                     loc = new Locator("a2", new int[] {(i * 2) % arraySize});
+                    if(i%6 == 0){
+                        loc = null; 
+                    }
                     op.setTarget(loc);
                     op.setValue(new double[] {(i * i) % 2});
                 }
                 else {
                     op = new OP_Write(srcNames[1], 20, 21, -1, -1);
                     loc = new Locator("a2", new int[] {i % arraySize});
+                    if(i%7 == 0){
+                        loc = null; 
+                    }
                     op.setSource(loc);
                     loc = new Locator("a1", new int[] {(i * 2) % arraySize});
                     op.setTarget(loc);

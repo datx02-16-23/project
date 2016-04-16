@@ -21,7 +21,9 @@ public class OP_Read extends OP_ReadWrite {
     public OP_Read (){
         super(OPERATION);
     }
-
+    public OP_Read (String source, int beginLine, int endLine, int beginColumn, int endColumn){
+        super(OPERATION, source, beginLine, endLine, beginColumn, endColumn);
+    }
     /**
      * Set the target variable for this Read operation. The identifier of the variable should be previously declared in
      * the header.

@@ -116,13 +116,13 @@ public class Array extends DataStructure {
         Locator var2 = op.getVar2();
         ArrayElement var1Element = this.getElement(var1);
         if (var1Element != null) {
-            var1Element.value = op.getValues()[0];
+            var1Element.value = op.getValue()[0];
             var1Element.color = Element.COLOR_SWAP;
             modifiedElements.add(var1Element);
         }
         ArrayElement var2Element = this.getElement(var2);
         if (var2Element != null) {
-            var2Element.value = op.getValues()[1];
+            var2Element.value = op.getValue()[1];
             var2Element.color = Element.COLOR_SWAP;
             modifiedElements.add(var2Element);
         }
