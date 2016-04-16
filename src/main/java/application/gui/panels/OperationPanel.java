@@ -31,8 +31,6 @@ public class OperationPanel extends Pane {
     @SuppressWarnings("unchecked")
     public OperationPanel (GUI_Controller controller){
         this.controller = controller;
-        this.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         //Load content
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/OperationListPanel.fxml"));
         fxmlLoader.setController(controller);
@@ -42,22 +40,26 @@ public class OperationPanel extends Pane {
         } catch (IOException e) {
             System.err.println(e);
         }
-//        root.prefHeightProperty().bind(this.heightProperty());
-//        root.prefWidthProperty().bind(this.widthProperty());
+        //Content size
+        root.prefHeightProperty().bind(this.heightProperty());
+        root.prefWidthProperty().bind(this.widthProperty());
         Map<String, Object> namespace = fxmlLoader.getNamespace();
         currOpTextField = (TextField) namespace.get("currOpTextField");
-        currOpTextField.setOnKeyTyped(event -> {
-            onKeyTyped();
+        currOpTextField.setOnAction(event -> {
+            onTextFieldAction();
         });
+        //Fetch namespace items
         totNrOfOpLabel = (Label) namespace.get("totNrOfOpLabel");
         opProgress = (ProgressBar) namespace.get("opProgress");
         operationHistory = (ListView<Operation>) namespace.get("operationHistory");
-        System.out.println(operationHistory);
         items = FXCollections.observableArrayList();
         operationHistory.setItems(items);
-        items.add(new Operation(null, null, null, 0, 0, 0, 0));
+        for (int i = 0; i < 30; i++) {
+            items.add(new Operation(null, null, null, 0, 0, 0, 0));
+        }
         selectionModel = operationHistory.getSelectionModel();
         focusModel = operationHistory.getFocusModel();
+        opProgress.setProgress(-1); //Make the thingy bounce
         this.getChildren().add(root);
     }
 
@@ -75,8 +77,8 @@ public class OperationPanel extends Pane {
         //Text
         int totItems = items.size();
         totNrOfOpLabel.setText("/ " + totItems);
-        //Progress bar   
-        opProgress.setProgress(totItems == 0 ? 0 : index / totItems);
+        //Progress bar 
+        opProgress.setProgress(index / totItems);
     }
 
     /**
@@ -109,7 +111,7 @@ public class OperationPanel extends Pane {
     /**
      * Listener for the current operation box.
      */
-    private void onKeyTyped (){
+    private void onTextFieldAction (){
         int index;
         try {
             currOpTextField.setStyle("-fx-control-inner-background: white;");
