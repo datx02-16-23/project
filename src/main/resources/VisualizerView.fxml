@@ -96,7 +96,7 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
                            <children>
-                              <GridPane id="button_panel" alignment="CENTER" hgap="2.0" maxHeight="80.0" maxWidth="240.0" minHeight="80.0" minWidth="240.0" prefHeight="80.0" prefWidth="240.0" vgap="2.0">
+                              <GridPane id="button_panel" fx:id="buttonsGrid" alignment="CENTER" hgap="2.0" maxHeight="80.0" maxWidth="240.0" minHeight="80.0" minWidth="240.0" prefHeight="80.0" prefWidth="240.0" vgap="2.0">
                                  <children>
                                     <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#stepBackwardButtonClicked" text="Backward" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                                        <font>

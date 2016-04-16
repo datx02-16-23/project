@@ -25,6 +25,7 @@ import javafx.scene.control.TextArea;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * This is the Model of MVC for the visualizer GUI. All its views comes from VisualizerView.fxml, except for a Group
@@ -66,22 +67,21 @@ public class Main extends Application {
             throw new RuntimeException(exception);
         }
         //Load console
-        console = new MavserConsole((TextArea) fxmlLoader.getNamespace().get("console"));
+        Map<String, Object> namespace = fxmlLoader.getNamespace();
+        console = new MavserConsole((TextArea) namespace.get("console"));
         //Window size
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         double windowWidth = (screenSize.getWidth() * .9);
         double windowHeight = (screenSize.getHeight() * .9);
         Scene scene = new Scene(root, windowWidth, windowHeight);
         // Extracting some nodes from the fxml:
-        SplitPane sP = (SplitPane) fxmlLoader.getNamespace().get("splitPane");
-        VBox sidePanel = (VBox) fxmlLoader.getNamespace().get("rightSidePanel");
-        BorderPane operationPanelContainer = (BorderPane) fxmlLoader.getNamespace().get("operationPanelContainer");
+        SplitPane sP = (SplitPane) namespace.get("splitPane");
+        BorderPane operationPanelContainer = (BorderPane) namespace.get("operationPanelContainer");
         operationPanelContainer.setCenter(operationPanel);
-        // Hard coding an extra width (-5) to compensate for the width of the divider of splitPane!
-        double leftDivider = sidePanel.getPrefWidth() / (scene.getWidth() - 5);
+        double leftDivider = (((GridPane) namespace.get("buttonsGrid")).getPrefWidth()+14) / scene.getWidth();
         sP.setDividerPositions(leftDivider, 1 - leftDivider);
         // Add examples
-        Menu examples = (Menu) fxmlLoader.getNamespace().get("examplesMenu");
+        Menu examples = (Menu) namespace.get("examplesMenu");
         // Get all .json files
         File folder = new File(getClass().getResource("/examples").getFile());
         File[] files = folder.listFiles( (dir, name) -> name.endsWith(".oi"));
@@ -97,14 +97,14 @@ public class Main extends Application {
         }
         Main.console.info("Loaded " + i + " examples from: " + getClass().getResource("/examples").getFile());
         // Add SourceViewer
-        AnchorPane sourceViewContainer = (AnchorPane) fxmlLoader.getNamespace().get("sourceViewContainer");
+        AnchorPane sourceViewContainer = (AnchorPane) namespace.get("sourceViewContainer");
         sourceViewContainer.getChildren().add(sourceViewer);
         AnchorPane.setTopAnchor(sourceViewer, 0.0);
         AnchorPane.setBottomAnchor(sourceViewer, 0.0);
         AnchorPane.setLeftAnchor(sourceViewer, 0.0);
         AnchorPane.setRightAnchor(sourceViewer, 0.0);
         // Add AV
-        GridPane visualizationPane = (GridPane) fxmlLoader.getNamespace().get("visualizationPane");
+        GridPane visualizationPane = (GridPane) namespace.get("visualizationPane");
         visualizationPane.add(visualization, 0, 0);
         // Initialize console
         //Load main window
