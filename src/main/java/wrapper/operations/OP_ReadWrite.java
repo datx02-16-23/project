@@ -29,6 +29,10 @@ public abstract class OP_ReadWrite extends Operation {
         super(operation, new HashMap<Key, Object>(), null, -1, -1, -1, -1);
     }
 
+    public OP_ReadWrite (OperationType operation, String source, int beginLine, int endLine, int beginColumn, int endColumn){
+        super(operation, new HashMap<Key, Object>(), source, beginLine, endLine, beginColumn, endColumn);
+    }
+
     /**
      * Set the target variable for this ReadWrite operation. The identifier of the variable should be previously
      * declared in the header.
@@ -64,6 +68,7 @@ public abstract class OP_ReadWrite extends Operation {
         Locator target = getTarget();
         String sourceStr;
         String targetStr;
+        String arrow = " --> ";
         //Source and target known
         if (source != null && target != null) {
             sourceStr = source.toSimpleString();
@@ -77,6 +82,7 @@ public abstract class OP_ReadWrite extends Operation {
             if (source == null) {
                 sourceStr = valueStr;
                 targetStr = target.toSimpleString();
+                arrow = " <-- "; //Turn arrow.
                 //Target unknown
             }
             else {
@@ -84,7 +90,7 @@ public abstract class OP_ReadWrite extends Operation {
                 targetStr = valueStr;
             }
         }
-        return super.operation.toString().toUpperCase() + ": " + sourceStr + " -> " + targetStr;
+        return super.operation.toString().toUpperCase() + ": " + sourceStr + arrow + targetStr;
     }
 
     public Locator getTarget (){
