@@ -94,6 +94,13 @@ public class GUI_Controller implements CommunicatorListener {
         autoPlayOnIncomingStream = toggleAutorunStream.isSelected();
         unsavedChanged();
     }
+    
+    public void clearButtonClicked(){
+        operationPanel.getItems().clear();
+        model.getOperations().clear();
+        model.getStructures().clear();
+        sourceViewer.setSources(null);
+    }
 
     /**
      * Starts playing or pause the AV animation.
@@ -108,6 +115,8 @@ public class GUI_Controller implements CommunicatorListener {
             stopAutoPlay();
         }
     }
+    
+    
 
     private Timeline autoplayTimeline;
 
@@ -188,9 +197,9 @@ public class GUI_Controller implements CommunicatorListener {
     }
 
     public void aboutProgram (){
-        Main.console.out("Placeholder: A project by ");
+        Main.console.info("Placeholder: A project by ");
         for (String name : Strings.DEVELOPER_NAMES) {
-            Main.console.out(name + ", ");
+            Main.console.info(name + ", ");
         }
     }
 
@@ -200,7 +209,7 @@ public class GUI_Controller implements CommunicatorListener {
     }
 
     public void interpretOperationHistory (){
-        System.out.println("TODO: interpretOperationHistory ()");
+        Main.console.force("TODO: interpretOperationHistory()");
     }
 
     /**
@@ -392,11 +401,11 @@ public class GUI_Controller implements CommunicatorListener {
                     model.getOperations().clear();
                     model.getStructures().putAll(lsm.getKnownVariables());
                     visualization.createVisuals();
-                    Main.console.out("Received new AnnotatedVariable(s): " + lsm.getKnownVariables().values());
+                    Main.console.info("Received new AnnotatedVariable(s): " + lsm.getKnownVariables().values());
                 }
-                if(lsm.getSources() != null){
+                if (lsm.getSources() != null) {
                     sourceViewer.setSources(lsm.getSources());
-                    Main.console.out("New source(s) received: " + lsm.getSources().keySet());
+                    Main.console.info("New source(s) received: " + lsm.getSources().keySet());
                 }
                 operationPanel.getItems().addAll(lsm.getOperations());
                 model.getOperations().addAll(lsm.getOperations());
@@ -610,11 +619,38 @@ public class GUI_Controller implements CommunicatorListener {
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.play();
         window.setTitle("SpoooooOOoooOOOooooOOoookster!");
-        Main.console.out("GET SPoooooOOoooOOOooooOOoooKED!");
+        Main.console.info("GET SPoooooOOoooOOOooooOOoooKED!");
     }
 
     //Fulhack
     public OperationPanel getOperationPanel (){
         return operationPanel;
     }
+
+    /*
+     * Console controls.
+     */
+    public void toggleQuietMode (Event e){
+        CheckBox cb = (CheckBox) e.getSource();
+        Main.console.setQuiet(cb.isSelected());
+    }
+
+    public void toggleInformation (Event e){
+        
+        CheckBox cb = (CheckBox) e.getSource();
+        Main.console.setInfo(cb.isSelected());
+    }
+
+    public void toggleError (Event e){
+        CheckBox cb = (CheckBox) e.getSource();
+        Main.console.setError(cb.isSelected());
+    }
+
+    public void toggleDebug (Event e){
+        CheckBox cb = (CheckBox) e.getSource();
+        Main.console.setDebug(cb.isSelected());
+    }
+    /*
+     * Console controls end.
+     */
 }
