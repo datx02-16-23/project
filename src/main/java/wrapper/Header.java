@@ -39,8 +39,9 @@ public class Header implements Serializable {
      * 
      * @param version The version number for this file.
      * @param annotatedVariables Declaration of annotated variables from the source.
+     * @param sources The sources for this Header.
      */
-    public Header (int version, HashMap<String, AnnotatedVariable> annotatedVariables, HashMap<String, List<String>> sources){
+    public Header (int version, Map<String, AnnotatedVariable> annotatedVariables, Map<String, List<String>> sources){
         this.version = version;
         this.annotatedVariables = annotatedVariables;
         this.sources = sources;
