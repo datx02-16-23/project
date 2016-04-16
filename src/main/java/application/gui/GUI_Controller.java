@@ -40,6 +40,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.sun.javafx.tk.FileChooserType;
+
 /**
  * This is the Controller of MVC for the visualizer GUI.
  */
@@ -72,6 +74,7 @@ public class GUI_Controller implements CommunicatorListener {
         this.window = window;
         this.model = model;
         this.lsm = lsm;
+        this.lsm.PRETTY_PRINTING = true;
         this.lsm.setListener(this);
         this.interpreter = new Interpreter();
         this.sourceViewer = sourceViewer;
@@ -124,6 +127,7 @@ public class GUI_Controller implements CommunicatorListener {
     private Button playPauseButton;
 
     public void playPauseButtonClicked (){
+        sourceViewer.clear();
         if (!isPlaying) {
             startAutoPlay();
         }
@@ -486,12 +490,16 @@ public class GUI_Controller implements CommunicatorListener {
      * Used for choosing a file to Visualize.
      */
     public void openFileChooser (){
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Open OI-File");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
-        File file = fileChooser.showOpenDialog(window);
-        if (file != null) { // Null is returned if the users pressed Cancel.
-            setFile(file);
+        FileChooser fc = new FileChooser();
+        fc.setInitialDirectory(new File(System.getProperty("user.home")));
+        fc.setTitle("Open OI-File");
+        fc.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("OI-Files", "*.oi"),
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+                );
+        File source = fc.showOpenDialog(window);
+        if (source != null) {
+            loadFile(source);
         }
     }
 
@@ -500,7 +508,7 @@ public class GUI_Controller implements CommunicatorListener {
      * 
      * @param file
      */
-    void setFile (File file){
+    void loadFile (File file){
         lsm.clearData();
         if (lsm.readLog(file) == false) {
             return;
@@ -555,17 +563,21 @@ public class GUI_Controller implements CommunicatorListener {
     }
 
     public void openDestinationChooser (){
-        DirectoryChooser dc = new DirectoryChooser();
-        dc.setTitle("Choose Output Directory");
-        File outputPath = dc.showDialog(this.window);
-        if (outputPath == null) {
+        FileChooser fc = new FileChooser();
+        fc.setInitialDirectory(new File(System.getProperty("user.home")));
+        fc.setTitle("Save OI-File");
+        fc.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("OI-Files", "*.oi"),
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+                );
+        File target = fc.showSaveDialog(this.window);
+        if (target == null) {
             return;
         }
         lsm.setOperations(model.getOperations());
         lsm.setKnownVariables(model.getStructures());
-        lsm.PRETTY_PRINTING = true;
-        lsm.printLog(outputPath);
-        lsm.PRETTY_PRINTING = false;
+        lsm.setSources(sourceViewer.getSources());
+        lsm.printLog(target);
     }
 
     public void propertiesFailed (Exception exception){
@@ -594,6 +606,8 @@ public class GUI_Controller implements CommunicatorListener {
         stage.toFront();
         stage.show();
     }
+    
+
 
     @Override
     public CommunicatorListener getListener (){

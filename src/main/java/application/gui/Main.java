@@ -85,7 +85,7 @@ public class Main extends Application {
             if (files[i].isFile()) {
                 File file = files[i];
                 MenuItem ex = new MenuItem(stylizeExampleName(file.getName()));
-                ex.setOnAction(event1 -> controller.setFile(file));
+                ex.setOnAction(event1 -> controller.loadFile(file));
                 examples.getItems().add(ex);
             }
         }

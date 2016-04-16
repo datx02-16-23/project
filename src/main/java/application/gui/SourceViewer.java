@@ -18,6 +18,7 @@ import wrapper.Operation;
 public class SourceViewer extends TabPane {
 
     private final HashMap<String, Integer> nameTabMapping;
+    private Map<String, List<String>> sources;
 
     /**
      * Create a new SourceViewer.
@@ -36,12 +37,11 @@ public class SourceViewer extends TabPane {
      * 
      * @param soutces The sources to display.
      */
-    public void setSources (Map<String, List<String>> sources){
+    public void setSources (Map<String, List<String>> newSources){
         if (sources == null) {
             return;
         }
-        this.getTabs().clear();
-        nameTabMapping.clear();
+        this.sources = newSources;
         int tabNumber = 0;
         for (String sourceName : sources.keySet()) {
             addSourceTab(sourceName, sources.get(sourceName));
@@ -85,6 +85,14 @@ public class SourceViewer extends TabPane {
         //Select lines
         ListView<String> linesView = (ListView<String>) this.getTabs().get(nameTabMapping.get(op.source)).getContent();
         linesView.getSelectionModel().selectRange(op.beginLine, op.endLine);
+    }
+    
+    /**
+     * Returns the sources held by this SourceViewer.
+     * @return The sources held by this SourceViewer.
+     */
+    public Map<String, List<String>> getSources(){
+        return sources;
     }
 
     private void initTab (){

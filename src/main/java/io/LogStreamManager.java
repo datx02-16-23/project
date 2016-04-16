@@ -118,9 +118,10 @@ public class LogStreamManager implements CommunicatorListener {
 
     /**
      * Set the source map held by this LogStreamManager.
+     * 
      * @param newSources The new source map to be held by this LogStreamManager.
      */
-    public void setMap (Map<String, List<String>> newSources){
+    public void setSources (Map<String, List<String>> newSources){
         sources = newSources;
     }
 
@@ -168,12 +169,24 @@ public class LogStreamManager implements CommunicatorListener {
 
     /**
      * Print the operations and header information currently held by this LogStreamManager. Set the public variable
-     * {@code PRETTY_PRINTING} to true to enable human-readable output.
+     * {@code PRETTY_PRINTING} to true to enable human-readable output. Will generate a filename automatically on the
+     * form YY-MM-DD_HHMMSS.
      * 
-     * @param targetPath The location to print the log file.
+     * @param targetDir The directory to print the log file.
      */
-    public void printLog (File targetPath){
-        printLog(targetPath.toString());
+    public void printLogAutoName (File targetDir){
+        printLog(targetDir.toString(), true);
+    }
+    
+    /**
+     * Print the operations and header information currently held by this LogStreamManager. Set the public variable
+     * {@code PRETTY_PRINTING} to true to enable human-readable output. Will generate a filename automatically on the
+     * form YY-MM-DD_HHMMSS.
+     * 
+     * @param target The location and file name of the file to print.
+     */
+    public void printLog(File target){
+        printLog(target.toString(), false);
     }
 
     /**
@@ -181,12 +194,13 @@ public class LogStreamManager implements CommunicatorListener {
      * {@code PRETTY_PRINTING} to true to enable human-readable output.
      * 
      * @param targetPath The location to print the log file.
+     * @param autoName
      */
-    public void printLog (String targetPath){
+    public void printLog (String targetPath, boolean autoName){
         HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
         annotatedVariables.putAll(knownVariables);
         Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables, null);
-        printLog(targetPath, new Wrapper(header, operations));
+        printLog(targetPath, new Wrapper(header, operations), autoName);
     }
 
     /**
@@ -318,12 +332,13 @@ public class LogStreamManager implements CommunicatorListener {
      * 
      * @param targetPath The location to print the log file.
      * @param wrapper The wrapper to convert into a log file.
+     * @param addName if {@code true}, a name will be automatically generated.
      */
-    public void printLog (String targetPath, Wrapper wrapper){
+    public void printLog (String targetPath, Wrapper wrapper, boolean addName){
         Gson GSON;
         DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd_HHmmss");
         Calendar cal = Calendar.getInstance();
-        String fileName = File.separator + dateFormat.format(cal.getTime()) + ".json";
+        String fileName = addName ? File.separator + dateFormat.format(cal.getTime()) + ".oi" : "";
         if (PRETTY_PRINTING) {
             GSON = new GsonBuilder().setPrettyPrinting().create();
         }
