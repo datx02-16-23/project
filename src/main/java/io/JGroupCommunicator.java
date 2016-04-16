@@ -9,6 +9,7 @@ import org.jgroups.Message;
 import org.jgroups.ReceiverAdapter;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import application.assets.Strings;
 import application.gui.Main;
@@ -249,12 +250,12 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
     }
 
     private final List<String> allMemberStrings = new ArrayList<String>();
+
     /**
      * Returns a list all agents this JGroupCommunicator has been in contact with.
      * 
      * @return A list all agents this JGroupCommunicator has been in contact with.
      */
-
     public final List<String> getAllMemberStrings (){
         return allMemberStrings;
     }
@@ -269,7 +270,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
     }
 
     /**
-     * Returns the all received Wrappers in queue.
+     * Returns the all received Wrappers in queue, then clears the queue.
      * 
      * @return The all received Wrappers in queue.
      */
@@ -348,6 +349,9 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
      * @param w The wrapper to add the the incoming queue.
      */
     private void addAndFireEvent (Wrapper w){
+        System.out.println("jgroup receive\n");
+//      Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        System.out.println(gson.toJson(w));
         incomingQueue.add(w);
         listener.messageReceived(MavserMessage.WRAPPER);
     }

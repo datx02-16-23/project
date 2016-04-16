@@ -401,7 +401,6 @@ public class GUI_Controller implements CommunicatorListener {
                 }
                 sourceViewer.setSources(lsm.getSources());
                 operationPanel.getItems().addAll(lsm.getOperations());
-                System.out.println("new op!: " + lsm.getOperations());
                 model.getOperations().addAll(lsm.getOperations());
                 operationPanel.update(model.getIndex());
                 lsm.clearData();

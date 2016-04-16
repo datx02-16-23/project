@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import interpreter.Interpreter;
@@ -608,8 +609,8 @@ public class Simulator extends Application {
 
         private HashMap<String, List<String>> buildSources (){
             //Build sources
-            ObservableList<String> sourceOne = FXCollections.observableArrayList();
-            sourceOne.addAll("    public void show (Operation op){", "        if (op == null) {", "            return;", "        }", "        Integer sourceTabIndex = nameTabMapping.get(op.source);",
+            ObservableList<String> tmp1 = FXCollections.observableArrayList();
+            tmp1.addAll("    public void show (Operation op){", "        if (op == null) {", "            return;", "        }", "        Integer sourceTabIndex = nameTabMapping.get(op.source);",
                     "        if (sourceTabIndex == null) {", "            Main.console.err(\"No source file given for Operation: \" + op);", "            return;", "        }",
                     "        //Get ListView", "        this.getSelectionModel().select(sourceTabIndex.intValue());",
                     "        ListView<String> linesView = (ListView<String>) this.getTabs().get(nameTabMapping.get(op.source)).getContent();", "        //Select lines",
@@ -618,8 +619,8 @@ public class Simulator extends Application {
                     "        this.prefWidthProperty().bind(this.widthProperty());", "        this.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);", "        this.setPrefSize(200, 200);",
                     "        this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);", "        this.getChildren().add(this);", "        initTab(); //Print some brillaint source code.", "    }",
                     "Richard Sundqvist 2016-04-15 14:48");
-            ObservableList<String> sourceTwo = FXCollections.observableArrayList();
-            sourceTwo.addAll("    public void trySources (Map<String, List<String>> sources){", "        if (sources == null) {", "            return;", "        }", "        this.getTabs().clear();",
+            ObservableList<String> tmp2 = FXCollections.observableArrayList();
+            tmp2.addAll("    public void trySources (Map<String, List<String>> sources){", "        if (sources == null) {", "            return;", "        }", "        this.getTabs().clear();",
                     "        nameTabMapping.clear();", "        int tabNumber = 0;", "        for (String sourceName : sources.keySet()) {",
                     "           addSourceTab(sourceName, sources.get(sourceName));", "            nameTabMapping.put(sourceName, tabNumber);", "            tabNumber++;", "        }",
                     "        this.getSelectionModel().select(0);", "", "    private void addSourceTab (String sourceName, List<String> sourceLines){", "        //Build new Tab",
@@ -628,6 +629,8 @@ public class Simulator extends Application {
                     "        linesView.prefWidthProperty().bind(this.widthProperty());", "        //Add children", "        newTab.setContent(linesView);", "        this.getTabs().add(newTab);",
                     "    }", "Whisp is a shitty awper!!11oneone");
             srcNames = new String[] {"foo.java", "bar.py"};
+            ArrayList<String> sourceOne = new ArrayList<String>(tmp1);
+            ArrayList<String> sourceTwo = new ArrayList<String>(tmp2);
             srcSizes = new int[] {sourceOne.size(), sourceTwo.size()};
             HashMap<String, List<String>> _sources = new HashMap<String, List<String>>();
             _sources.put(srcNames[0], sourceOne);
@@ -670,7 +673,6 @@ public class Simulator extends Application {
             }
             System.out.println("init!");
             transmit(initWrapper);
-            System.out.println(initWrapper);
             queuedOperations.addAll(inits);
             transmitFirst();
             transmitFirst();
@@ -712,9 +714,12 @@ public class Simulator extends Application {
 
         //Receiver stuff
         public boolean transmit (Wrapper wrapper){
+            System.out.println("stream wrapper");
             try {
                 LSM.stream(wrapper);
+                System.out.println("stream wrapper ok");
             } catch (Exception e) {
+                System.out.println("stream wrapper failed: " + e);
                 return false;
             }
             return true; //Return true if transmit was successful.

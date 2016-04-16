@@ -76,7 +76,7 @@ public class OperationPanel extends Pane {
         int totItems = items.size();
         totNrOfOpLabel.setText("/ " + totItems);
         //Progress bar 
-        opProgress.setProgress(index / totItems);
+        opProgress.setProgress((double)index/ (double)totItems);
     }
 
     /**

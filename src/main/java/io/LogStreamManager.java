@@ -391,6 +391,8 @@ public class LogStreamManager implements CommunicatorListener {
         if (messageType == MavserMessage.WRAPPER) {
             List<Wrapper> wrappers = communicator.getAllQueuedMessages();
             for (Wrapper w : wrappers) {
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                System.out.println(gson.toJson(w));
                 unwrap(w);
             }
             if (listener != null) {
