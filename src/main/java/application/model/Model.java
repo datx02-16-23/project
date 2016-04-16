@@ -15,11 +15,6 @@ public class Model implements iModel {
     private int             index;
 
     @Override
-    public void addStructure (String id, DataStructure structure){
-        step.addDataStructure(id, structure);
-    }
-
-    @Override
     public void reset (){
         index = 0;
         step.reset();
@@ -68,7 +63,7 @@ public class Model implements iModel {
 
     @Override
     public void set (Map<String, DataStructure> structs, List<Operation> ops){
-        structs.values().forEach(DataStructure::clear); //TODO: Varför rensar vi här?
+        structs.values().forEach(DataStructure::clear); //TODO: Varfï¿½r rensar vi hï¿½r?
         step = new Step(new HashMap<String, DataStructure>(structs));
         operations.clear();
         operations.addAll(ops);
@@ -110,10 +105,4 @@ public class Model implements iModel {
         index = 0;
     }
 
-    @Override
-    public void setStructures (Map<String, DataStructure> newStructures){
-        newStructures.values().forEach(DataStructure::clear);
-        step = new Step(new HashMap<String, DataStructure>(newStructures));
-        index = 0;
-    }
 }

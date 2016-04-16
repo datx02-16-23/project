@@ -6,32 +6,70 @@ import wrapper.datastructures.DataStructure;
 import java.util.List;
 import java.util.Map;
 
-// TODO: Javadoc #50
+/**
+ * The model for the visualization application, handles the operations and the datastructures and applies the operations as designated.
+ */
 public interface iModel {
 
-    void addStructure (String id, DataStructure structure);
-
+    /**
+     * Return the model to the state before any operations were applied
+     */
     void reset ();
 
+    /**
+     * Move the model one step forward
+     * @return if the step forward was executed succesfully
+     */
     boolean stepForward ();
 
+    /**
+     * Move the model one step backward. Currently resets model and replays all operations up until current index -1
+     * @return if backwards step was succesfull
+     */
     boolean stepBackward ();
 
+    /**
+     * Set data for the model
+     * @param structs to be modeled
+     * @param ops to be applied to the structs
+     */
     void set (Map<String, DataStructure> structs, List<Operation> ops);
 
-    void setOperations (List<Operation> items);
+    /**
+     * Set the operations to be applied to the structs
+     * @param operations to be applied
+     */
+    void setOperations (List<Operation> operations);
 
-    void setStructures (Map<String, DataStructure> structs);
+    /**
+     * Returns a hashmap with the identifiers and the datastructures
+     */
+    Map<String, DataStructure> getStructures ();
 
-    public Map<String, DataStructure> getStructures ();
+    /**
+     * A list containing all the operations held by the model
+     */
+    List<Operation> getOperations ();
 
-    public List<Operation> getOperations ();
-
+    /**
+     * The current state of the datastructures given the current index contained in an iStep
+     */
     iStep getCurrentStep ();
 
+    /**
+     * Current index
+     * @return
+     */
     int getIndex ();
 
+    /**
+     * Jump to designated index
+     * @param toStepNo index to go to
+     */
     void goToStep (int toStepNo);
 
+    /**
+     * Apply all the operations on the datastructures.
+     */
     void goToEnd ();
 }
