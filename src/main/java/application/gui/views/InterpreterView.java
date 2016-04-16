@@ -7,11 +7,12 @@ import java.util.Map;
 import application.assets.Strings;
 import application.gui.GUI_Controller;
 import interpreter.Interpreter;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
@@ -25,12 +26,12 @@ import wrapper.Operation;
 import wrapper.operations.OperationType;
 
 /**
- * Controller and model for the Interpeter view.
+ * Controller and model for the Interpreter view.
  * 
  * @author Richard
  *
  */
-public class InterpreterView {
+public class InterpreterView implements InvalidationListener{
 
     private final ObservableList<Operation> beforeItems, afterItems;
     private Map<String, Object>             namespace;
@@ -76,7 +77,10 @@ public class InterpreterView {
         ListView<Operation> interpreterBefore = (ListView<Operation>) namespace.get("interpreterBefore");
         ListView<Operation> interpreterAfter = (ListView<Operation>) namespace.get("interpreterAfter");
         beforeItems = interpreterBefore.getItems();
+        System.out.println("beforeItems =" + beforeItems);
         afterItems = interpreterAfter.getItems();
+        beforeItems.addListener(this);
+        afterItems.addListener(this);
         //Counters
         beforeCount = (TextField) namespace.get("beforeCount");
         afterCount = (TextField) namespace.get("afterCount");
@@ -89,11 +93,18 @@ public class InterpreterView {
 
     /**
      * Show the Interpreter View.
+     * 
      * @param ops The list of operations to use.
      */
     public void show (List<Operation> ops){
         receivedItems = ops;
         beforeItems.setAll(receivedItems);
+        interpreterRoutineChooser.getSelectionModel().select(translateInterpreterRoutine());
+        afterItems.clear();
+        loadTestCases();
+        //Set size and show
+        root.setWidth(this.parent.getWidth() * 0.75);
+        root.setHeight(this.parent.getHeight() * 0.75);
         root.show();
     }
 
@@ -102,6 +113,9 @@ public class InterpreterView {
         VBox casesBox = (VBox) namespace.get("casesBox");
         //Create CheckBoxes for all Consolidate operation types
         for (OperationType type : OperationType.values()) {
+            if(!type.consolidable){
+                continue;
+            }
             CheckBox cb = new CheckBox(type.toString());
             cb.setOnAction(event -> {
                 if (cb.isSelected()) {
@@ -119,23 +133,6 @@ public class InterpreterView {
             }
             casesBox.getChildren().add(cb);
         }
-    }
-
-    public void openInterpreterView (){
-        // Load settings
-//        interpreter.setHighOrderRoutine(Integer.parseInt(properties.getProperty("highOrderRoutine")));
-        newRoutine = interpreter.getHighOrderRoutine();
-        interpreterRoutineChooser.getSelectionModel().select(translateInterpreterRoutine());
-        // Setup
-        beforeItems.setAll();
-        beforeCount.setText("" + beforeItems.size());
-        afterItems.clear();
-        afterCount.setText("0");
-        loadTestCases();
-        //Set size and show
-        root.setWidth(this.parent.getWidth() * 0.75);
-        root.setHeight(this.parent.getHeight() * 0.75);
-        root.show();
     }
 
     /**
@@ -211,12 +208,9 @@ public class InterpreterView {
      * onAction for the "<--" button.
      */
     public void moveToBefore (){
-        System.out.println("tobefore");
         if (afterItems.isEmpty() == false) {
             beforeItems.setAll(afterItems);
-            beforeCount.setText("" + beforeItems.size());
             afterItems.clear();
-            afterCount.setText("0");
         }
     }
 
@@ -224,10 +218,15 @@ public class InterpreterView {
      * onAction for the "Interpret" button.
      */
     public void interpret (){
-        System.out.println("interpret");
         afterItems.clear();
         afterItems.addAll(afterItems);
         interpreter.consolidate(afterItems);
         afterCount.setText("" + afterItems.size());
+    }
+
+    @Override
+    public void invalidated (Observable o){
+        beforeCount.setText(""+beforeItems.size());
+        afterCount.setText(""+afterItems.size());
     }
 }
