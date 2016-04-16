@@ -2,7 +2,9 @@ package application.assets;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.GsonBuilder;
 
@@ -10,6 +12,9 @@ import interpreter.Interpreter;
 import io.CommunicatorListener;
 import io.JGroupCommunicator;
 import io.LogStreamManager;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -24,10 +29,9 @@ import javafx.scene.layout.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import wrapper.Locator;
-import wrapper.Operation;
-import wrapper.Wrapper;
-import wrapper.datastructures.DataStructure;
+import javafx.util.Duration;
+import wrapper.*;
+import wrapper.datastructures.*;
 import wrapper.operations.*;
 
 public class Simulator extends Application {
@@ -281,7 +285,7 @@ public class Simulator extends Application {
     private Button buildTransmitAllButton (){
         //Construct "Transmit All" button.
         Button transmitAll = new Button();
-        transmitAll.setText("Transmit All");
+        transmitAll.setText("Transmit All\nFrom List");
         transmitAll.setTooltip(new Tooltip("Transmit all waiting operations."));
         transmitAll.setPrefSize(100, 30);
         transmitAll.setOnAction(new EventHandler<ActionEvent>() {
@@ -296,7 +300,7 @@ public class Simulator extends Application {
     private Button buildTransmitButton (){
         //Construct "Transmit" button
         Button transmit = new Button();
-        transmit.setText("Transmit");
+        transmit.setText("Transmit\nFrom\nList");
         transmit.setTooltip(new Tooltip("Transmit the first waiting operation."));
         transmit.setPrefSize(100, 30);
         transmit.setOnAction(new EventHandler<ActionEvent>() {
@@ -517,16 +521,134 @@ public class Simulator extends Application {
             knownVariables = FXCollections.observableHashMap();
             updateSent();
             updateQueued();
+            build();
+        }
+
+        private Wrapper         initWrapper;
+        private List<Operation> ops;
+        private List<Operation> inits;
+
+        @SuppressWarnings("rawtypes")
+        private void build (){
+            initWrapper = new Wrapper(new Header(1337, buildStructs(), buildSources()), null);
+            ops = buildOps();
+        }
+
+        private List<Operation> buildOps (){
+            int arraySize = 10;
+            int nbrOfOps = 30;
+            ArrayList<Operation> _ops = new ArrayList<Operation>();
+            inits = new ArrayList<Operation>();
+            _ops.ensureCapacity(nbrOfOps + 3);
+            Locator loc;
+            //Create init for a1
+            OP_Write init_a1 = new OP_Write(srcNames[0], 1, 2, -1, -1);
+            loc = new Locator("a1", null);
+            init_a1.setTarget(loc);
+            init_a1.setValue(new double[] {1, 2, 4, 8, 16, 32, 64, 128, 256, 512});
+            //Create init for a2
+            OP_Write init_a2 = new OP_Write(srcNames[0], 1, 2, -1, -1);
+            loc = new Locator("a2", null);
+            init_a2.setTarget(loc);
+            init_a2.setValue(new double[] {512, 256, 128, 64, 32, 16, 8, 4, 2, 1});
+            //Create init for tmp
+            OP_Write init_tmp = new OP_Write(srcNames[0], 1, 2, -1, -1);
+            loc = new Locator("tmp", null);
+            init_tmp.setTarget(loc);
+            init_tmp.setValue(new double[] {1337});
+            inits.add(init_a1);
+            inits.add(init_a2);
+            inits.add(init_tmp);
+            OP_Write op;
+            loop: for (int i = 0; i < nbrOfOps; i++) {
+                if (i % 10 == 0) {
+                    op = new OP_Write(srcNames[0], (i * i) % srcSizes[0], (i * i * 1) % srcSizes[0], -1, -1);
+                    loc = new Locator("a1", new int[] {i % arraySize});
+                    op.setSource(loc);
+                    loc = new Locator("tmp", null);
+                    op.setTarget(loc);
+                    op.setValue(new double[] {(i * i) % 2});
+                    continue loop;
+                }
+                if (i % 2 == 0) {
+                    op = new OP_Write(srcNames[0], (i * i) % srcSizes[0], (i * i * 1) % srcSizes[0], -1, -1);
+                    loc = new Locator("a1", new int[] {i % arraySize});
+                    op.setSource(loc);
+                    loc = new Locator("a2", new int[] {(i * 2) % arraySize});
+                    op.setTarget(loc);
+                    op.setValue(new double[] {(i * i) % 2});
+                }
+                else {
+                    op = new OP_Write(srcNames[0], (i * i) % srcSizes[1], (i * i * 1) % srcSizes[1], -1, -1);
+                    op.setSource(loc);
+                    loc = new Locator("a2", new int[] {i % arraySize});
+                    op.setSource(loc);
+                    loc = new Locator("a1", new int[] {(i * 2) % arraySize});
+                    op.setTarget(loc);
+                    op.setValue(new double[] {(i * i) % 2});
+                }
+            }
+            return _ops;
+        }
+
+        private Map<String, AnnotatedVariable> buildStructs (){
+            Map<String, AnnotatedVariable> _structs = new HashMap<String, AnnotatedVariable>();
+            Array a1 = new Array("a1", null, "box");
+            Array a2 = new Array("a2", null, "box");
+            IndependentElement tmp = new IndependentElement("tmp", null, null);
+            _structs.put(a1.identifier, a1);
+            _structs.put(a2.identifier, a2);
+            _structs.put(tmp.identifier, tmp);
+            return _structs;
+        }
+
+        int      max1, max2;
+        String[] srcNames;
+        int[]    srcSizes;
+
+        private HashMap<String, List<String>> buildSources (){
+            //Build sources
+            ObservableList<String> sourceOne = FXCollections.observableArrayList();
+            sourceOne.addAll("    public void show (Operation op){", "        if (op == null) {", "            return;", "        }", "        Integer sourceTabIndex = nameTabMapping.get(op.source);",
+                    "        if (sourceTabIndex == null) {", "            Main.console.err(\"No source file given for Operation: \" + op);", "            return;", "        }",
+                    "        //Get ListView", "        this.getSelectionModel().select(sourceTabIndex.intValue());",
+                    "        ListView<String> linesView = (ListView<String>) this.getTabs().get(nameTabMapping.get(op.source)).getContent();", "        //Select lines",
+                    "        linesView.getSelectionModel().clearSelection();", "        linesView.getSelectionModel().selectRange(op.beginLine, op.endLine);", "    }", "    public SourceViewer (){",
+                    "        this = new TabPane();", "        nameTabMapping = new HashMap<String, Integer>();", "        this.prefHeightProperty().bind(this.heightProperty());",
+                    "        this.prefWidthProperty().bind(this.widthProperty());", "        this.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);", "        this.setPrefSize(200, 200);",
+                    "        this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);", "        this.getChildren().add(this);", "        initTab(); //Print some brillaint source code.", "    }",
+                    "Richard Sundqvist 2016-04-15 14:48");
+            ObservableList<String> sourceTwo = FXCollections.observableArrayList();
+            sourceTwo.addAll("    public void trySources (Map<String, List<String>> sources){", "        if (sources == null) {", "            return;", "        }", "        this.getTabs().clear();",
+                    "        nameTabMapping.clear();", "        int tabNumber = 0;", "        for (String sourceName : sources.keySet()) {",
+                    "           addSourceTab(sourceName, sources.get(sourceName));", "            nameTabMapping.put(sourceName, tabNumber);", "            tabNumber++;", "        }",
+                    "        this.getSelectionModel().select(0);", "", "    private void addSourceTab (String sourceName, List<String> sourceLines){", "        //Build new Tab",
+                    "        Tab newTab = new Tab();", "        newTab.setText(sourceName);", "        //Build ListView", "        ListView<String> linesView = new ListView<String>();",
+                    "        linesView.setEditable(false);", "        linesView.getItems().addAll(sourceLines);", "        linesView.prefHeightProperty().bind(this.heightProperty());",
+                    "        linesView.prefWidthProperty().bind(this.widthProperty());", "        //Add children", "        newTab.setContent(linesView);", "        this.getTabs().add(newTab);",
+                    "    }", "Whisp is a shitty awper!!11oneone");
+            srcNames = new String[] {"foo.java", "bar.py"};
+            srcSizes = new int[] {sourceOne.size(), sourceTwo.size()};
+            HashMap<String, List<String>> _sources = new HashMap<String, List<String>>();
+            _sources.put(srcNames[0], sourceOne);
+            _sources.put(srcNames[1], sourceTwo);
+            return _sources;
         }
 
         public void transmitOperation (Operation op){
-            ArrayList<Operation> operationList = new ArrayList<Operation>();
-            operationList.add(op);
-            Wrapper message = new Wrapper(null, operationList);
-            if (transmit(message)) {
-                sentOperations.add(op);
-                updateSent();
-            }
+            Platform.runLater(new Runnable() {
+
+                @Override
+                public void run (){
+                    ArrayList<Operation> operationList = new ArrayList<Operation>();
+                    operationList.add(op);
+                    Wrapper message = new Wrapper(null, operationList);
+                    if (transmit(message)) {
+                        sentOperations.add(op);
+                        updateSent();
+                    }
+                }
+            });
         }
 
         public void clearLists (){
@@ -538,50 +660,37 @@ public class Simulator extends Application {
 
         int             sleepDur          = 1500;
         private boolean continousTransmit = false;
+        Timeline        autoplayTimeline;
 
         public void continousTransmit (){
             continousTransmit = !continousTransmit;
             if (continousTransmit == false) {
+                autoplayTimeline.stop();
                 return;
             }
-            new Thread() {
+            System.out.println("init!");
+            transmit(initWrapper);
+            System.out.println(initWrapper);
+            queuedOperations.addAll(inits);
+            transmitFirst();
+            transmitFirst();
+            transmitFirst(); //Transmit inits
+            System.out.println(inits);
+            System.out.println("begin regular ops transmit\n\n");
+            autoplayTimeline = new Timeline();
+            autoplayTimeline.getKeyFrames().add(new KeyFrame(Duration.millis(1500), new EventHandler<ActionEvent>() {
 
-                public void run (){
-                    while(continousTransmit) {
-                        Platform.runLater(new Runnable() {
-
-                            public void run (){
-                                int operation = (int) (Math.random() * 5);
-                                if (queuedOperations.size() < 2) {
-                                    switch (operation) {
-                                        case 0:
-                                            swapOperation();
-                                            break;
-                                        case 1:
-                                            readOperation();
-                                            break;
-                                        case 2:
-                                            writeOperation();
-                                            break;
-                                        case 3:
-                                            initOperation();
-                                            break;
-                                        case 4:
-                                            messageOperation();
-                                            break;
-                                    }
-                                }
-                                transmitFirst();
-                            }
-                        });
-                        try {
-                            sleep((int) (sleepDur / Math.sqrt(1 + queuedOperations.size())));
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                @Override
+                public void handle (ActionEvent actionEvent){
+                    if (queuedOperations.isEmpty()) {
+                        queuedOperations.addAll(ops);
                     }
+                    System.out.println("send!");
+                    transmitFirst();
                 }
-            }.start();
+            }));
+            autoplayTimeline.setCycleCount(Animation.INDEFINITE);
+            autoplayTimeline.play();
         }
 
         //Getters and setters
@@ -670,31 +779,43 @@ public class Simulator extends Application {
         }
 
         public void updateQueued (){
-            nbrQueuedString.set("#Queued/Received: " + queuedOperations.size());
-            if (queuedOperations.isEmpty()) {
-                waitingOperationsList.set("\tNo operations in queue!");
-            }
-            else {
-                StringBuilder sb = new StringBuilder();
-                for (Operation op : queuedOperations) {
-                    sb.append("\t" + op.toSimpleString() + "\n");
+            Platform.runLater(new Runnable() {
+
+                @Override
+                public void run (){
+                    nbrQueuedString.set("#Queued/Received: " + queuedOperations.size());
+                    if (queuedOperations.isEmpty()) {
+                        waitingOperationsList.set("\tNo operations in queue!");
+                    }
+                    else {
+                        StringBuilder sb = new StringBuilder();
+                        for (Operation op : queuedOperations) {
+                            sb.append("\t" + op.toSimpleString() + "\n");
+                        }
+                        waitingOperationsList.set(sb.toString());
+                    }
                 }
-                waitingOperationsList.set(sb.toString());
-            }
+            });
         }
 
         public void updateSent (){
-            nbrSentString.set("#Sent: " + sentOperations.size());
-            if (sentOperations.isEmpty()) {
-                sentOperationsList.set("\tNo operations have been sent!");
-            }
-            else {
-                StringBuilder sb = new StringBuilder();
-                for (Operation op : sentOperations) {
-                    sb.append("\t" + op.toSimpleString() + "\n");
+            Platform.runLater(new Runnable() {
+
+                @Override
+                public void run (){
+                    nbrSentString.set("#Sent: " + sentOperations.size());
+                    if (sentOperations.isEmpty()) {
+                        sentOperationsList.set("\tNo operations have been sent!");
+                    }
+                    else {
+                        StringBuilder sb = new StringBuilder();
+                        for (Operation op : sentOperations) {
+                            sb.append("\t" + op.toSimpleString() + "\n");
+                        }
+                        sentOperationsList.set(sb.toString());
+                    }
                 }
-                sentOperationsList.set(sb.toString());
-            }
+            });
         }
 
         public void interpret (){

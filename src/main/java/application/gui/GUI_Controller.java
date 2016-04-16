@@ -28,10 +28,14 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import wrapper.AnnotatedVariable;
+import wrapper.datastructures.DataStructure;
+
 import java.io.*;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -128,6 +132,8 @@ public class GUI_Controller implements CommunicatorListener {
                 }
             }
         }));
+        autoplayTimeline.setCycleCount(Animation.INDEFINITE);
+        autoplayTimeline.play();
         autoplayTimeline.setCycleCount(Animation.INDEFINITE);
         autoplayTimeline.play();
     }
@@ -369,6 +375,7 @@ public class GUI_Controller implements CommunicatorListener {
     @Override
     public void messageReceived (short messageType){
         if (messageType == MavserMessage.MEMBER_INFO) {
+            System.out.println("member info!");
             List<String> memberStrings = ((JGroupCommunicator) lsm.getCommunicator()).getMemberStrings();
             StringBuilder sb = new StringBuilder();
             for (String s : memberStrings) {
@@ -377,19 +384,25 @@ public class GUI_Controller implements CommunicatorListener {
             currentlyConnected.set(sb.toString());
             return;
         }
+        if (autoPlayOnIncomingStream) {
+            model.goToEnd();
+        }
         Platform.runLater(new Runnable() {
 
             @Override
             public void run (){
-                if (autoPlayOnIncomingStream) {
-                    model.goToEnd();
-                }
+                System.out.println("run!");
+                Map<? extends String, ? extends DataStructure> newVariables = lsm.getKnownVariables();
+                System.out.println("newVariables = " + newVariables);
                 if (lsm.getKnownVariables().isEmpty() == false) {
-                    model.getStructures().putAll(lsm.getKnownVariables());
+                    model.getStructures().putAll(newVariables);
                     visualization.createVisuals();
+                    Main.console.out("Received new AnnotatedVariable(s): " + newVariables.values());
                 }
                 sourceViewer.setSources(lsm.getSources());
                 operationPanel.getItems().addAll(lsm.getOperations());
+                System.out.println("new op!: " + lsm.getOperations());
+                model.getOperations().addAll(lsm.getOperations());
                 operationPanel.update(model.getIndex());
                 lsm.clearData();
                 if (autoPlayOnIncomingStream) {

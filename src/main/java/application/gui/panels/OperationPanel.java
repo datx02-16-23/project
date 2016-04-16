@@ -46,7 +46,7 @@ public class OperationPanel extends Pane {
         Map<String, Object> namespace = fxmlLoader.getNamespace();
         currOpTextField = (TextField) namespace.get("currOpTextField");
         currOpTextField.setOnAction(event -> {
-            onTextFieldAction();
+            textFieldOnAction();
         });
         //Fetch namespace items
         totNrOfOpLabel = (Label) namespace.get("totNrOfOpLabel");
@@ -109,7 +109,7 @@ public class OperationPanel extends Pane {
     /**
      * Listener for the current operation box.
      */
-    private void onTextFieldAction (){
+    private void textFieldOnAction (){
         int index;
         try {
             currOpTextField.setStyle("-fx-control-inner-background: white;");
