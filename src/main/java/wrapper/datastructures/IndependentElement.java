@@ -114,13 +114,13 @@ public class IndependentElement extends DataStructure implements Element {
             initElement(op.getValue()[0]);
         }
         Element e = elements.get(0);
-        if (op.getTarget().identifier.equals(this.identifier)) {
+        if (op.getTarget() != null && op.getTarget().identifier.equals(this.identifier)) {
             e.setValue(op.getValue()[0]);
             modifiedElements.add(e);
             e.setColor(COLOR_WRITE);
             return;
         }
-        else if (op.getSource().identifier.equals(this.identifier)) {
+        else if (op.getSource() != null && op.getSource().identifier.equals(this.identifier)) {
             modifiedElements.add(e);
             e.setColor(COLOR_READ);
         }

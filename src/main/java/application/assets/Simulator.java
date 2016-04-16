@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import interpreter.Interpreter;
@@ -535,13 +534,13 @@ public class Simulator extends Application {
             ops = buildOps();
         }
 
+        int arraySize = 10;
+
         private List<Operation> buildOps (){
-            int arraySize = 10;
             int nbrOfOps = 30;
             ArrayList<Operation> _ops = new ArrayList<Operation>();
             inits = new ArrayList<Operation>();
             _ops.ensureCapacity(nbrOfOps + 3);
-            Locator loc;
             //Create init for a1
             OP_Write init_a1 = new OP_Write(srcNames[0], 1, 4, -1, -1);
             init_a1.setTarget(new Locator("a1", null));
@@ -558,52 +557,46 @@ public class Simulator extends Application {
             inits.add(init_a2);
             inits.add(init_tmp);
             OP_ReadWrite op;
-            loop: for (int i = 0; i < nbrOfOps; i++) {
-                if (i % 5 == 0) {
-                    op = new OP_Write(srcNames[0], 4, 6, -1, -1);
-                    loc = new Locator("a1", new int[] {i % arraySize});
-                    op.setSource(loc);
-                    loc = new Locator("tmp", null);
-                    op.setTarget(loc);
-                    op.setValue(new double[] {(i * i) % 3});
-                    _ops.add(op);
-                    continue loop;
-                }
+            //Generate random ops
+            for (int i = 0; i < nbrOfOps; i++) {
                 if (i % 2 == 0) {
                     op = new OP_Read(srcNames[0], 5, 10, -1, -1);
-                    loc = new Locator("a1", new int[] {i % arraySize});
-                    op.setSource(loc);
-                    loc = new Locator("a2", new int[] {(i * 2) % arraySize});
-                    if(i%6 == 0){
-                        loc = null; 
-                    }
-                    op.setTarget(loc);
-                    op.setValue(new double[] {(i * i) % 2});
+                    op.setSource(randomLocator(false));
+                    op.setTarget(randomLocator(true));
+                    op.setValue(new double[] {((int) (Math.random() * 1337))});
                 }
                 else {
                     op = new OP_Write(srcNames[1], 20, 21, -1, -1);
-                    loc = new Locator("a2", new int[] {i % arraySize});
-                    if(i%7 == 0){
-                        loc = null; 
-                    }
-                    op.setSource(loc);
-                    loc = new Locator("a1", new int[] {(i * 2) % arraySize});
-                    op.setTarget(loc);
-                    op.setValue(new double[] {(i * i) % 2});
+                    op.setSource(randomLocator(true));
+                    op.setTarget(randomLocator(false));
+                    op.setValue(new double[] {((int) (Math.random() * 1337))});
                 }
                 _ops.add(op);
             }
             return _ops;
         }
 
+        private Locator randomLocator (boolean nullable){
+            if (nullable && (int) (Math.random() * 10) < 2) {
+                return null;
+            }
+            return new Locator(varNames[(int) (Math.random() * 3)], new int[] {(int) (Math.random() * arraySize)});
+        }
+
+        String[] varNames;
+
         private Map<String, AnnotatedVariable> buildStructs (){
             Map<String, AnnotatedVariable> _structs = new HashMap<String, AnnotatedVariable>();
+            varNames = new String[3];
             Array a1 = new Array("a1", null, "box");
             Array a2 = new Array("a2", null, "box");
             IndependentElement tmp = new IndependentElement("tmp", null, null);
             _structs.put(a1.identifier, a1);
             _structs.put(a2.identifier, a2);
             _structs.put(tmp.identifier, tmp);
+            varNames[0] = a1.identifier;
+            varNames[1] = a2.identifier;
+            varNames[2] = tmp.identifier;
             return _structs;
         }
 
@@ -653,7 +646,8 @@ public class Simulator extends Application {
                     if (transmit(message)) {
                         sentOperations.add(op);
                         updateSent();
-                    } else {
+                    }
+                    else {
                         System.out.println("fail");
                     }
                 }
@@ -684,7 +678,7 @@ public class Simulator extends Application {
             transmitFirst(); //Transmit inits
             queuedOperations.addAll(ops);
             autoplayTimeline = new Timeline();
-            autoplayTimeline.getKeyFrames().add(new KeyFrame(Duration.millis(1500), new EventHandler<ActionEvent>() {
+            autoplayTimeline.getKeyFrames().add(new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
 
                 @Override
                 public void handle (ActionEvent actionEvent){

@@ -28,14 +28,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import wrapper.AnnotatedVariable;
-import wrapper.datastructures.DataStructure;
-
 import java.io.*;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -185,7 +181,7 @@ public class GUI_Controller implements CommunicatorListener {
      * Change the animation speed
      */
     public void changeSpeedButtonClicked (){
-        stepDelaySpeedupFactor = stepDelaySpeedupFactor * 2 % 31;
+        stepDelaySpeedupFactor = stepDelaySpeedupFactor * 2 % 255;
         speedButton.setText(stepDelaySpeedupFactor + "x");
         stepDelay = stepDelayBase / stepDelaySpeedupFactor;
         playPauseButtonClicked();
@@ -358,15 +354,16 @@ public class GUI_Controller implements CommunicatorListener {
     void loadFile (File file){
         lsm.clearData();
         if (lsm.readLog(file) == false) {
+            Main.console.err("Failed to read log: " + file);
             return;
         }
         //Add operations to model and create Render visuals, then draw them.
         model.set(lsm.getKnownVariables(), lsm.getOperations());
+        sourceViewer.setSources(lsm.getSources());
         visualization.createVisuals();
         visualization.render();
         //Update operation list
         operationPanel.getItems().setAll(lsm.getOperations());
-        sourceViewer.setSources(lsm.getSources());
         updatePanels();
         //Clean lsm
         lsm.clearData();
@@ -392,6 +389,8 @@ public class GUI_Controller implements CommunicatorListener {
             @Override
             public void run (){
                 if (lsm.getKnownVariables().isEmpty() == false) {
+                    model.getStructures().clear();
+                    model.getOperations().clear();
                     model.getStructures().putAll(lsm.getKnownVariables());
                     visualization.createVisuals();
                     Main.console.out("Received new AnnotatedVariable(s): " + lsm.getKnownVariables().values());

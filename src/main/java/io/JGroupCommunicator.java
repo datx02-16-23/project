@@ -9,8 +9,6 @@ import org.jgroups.Message;
 import org.jgroups.ReceiverAdapter;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import application.assets.Strings;
 import application.gui.Main;
 import wrapper.Wrapper;

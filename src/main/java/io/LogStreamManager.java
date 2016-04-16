@@ -145,17 +145,15 @@ public class LogStreamManager implements CommunicatorListener {
         try {
             wrapper = gson.fromJson(new JsonReader(new FileReader(logFile)), Wrapper.class);
             unwrap(wrapper);
+            return true;
         } catch (JsonIOException e) {
             Main.console.err("JSON IO error: " + e);
-            return false;
         } catch (JsonSyntaxException e) {
             Main.console.err("JSON syntax error: " + e);
-            return false;
         } catch (FileNotFoundException e) {
             Main.console.err("File not found: " + e);
-            return false;
-        }
-        return true;
+        }         
+        return false;
     }
 
     /**
@@ -199,7 +197,7 @@ public class LogStreamManager implements CommunicatorListener {
     public void printLog (String targetPath, boolean autoName){
         HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
         annotatedVariables.putAll(knownVariables);
-        Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables, null);
+        Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables, sources);
         printLog(targetPath, new Wrapper(header, operations), autoName);
     }
 

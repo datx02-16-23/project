@@ -84,7 +84,7 @@ public class Main extends Application {
         Menu examples = (Menu) fxmlLoader.getNamespace().get("examplesMenu");
         // Get all .json files
         File folder = new File(getClass().getResource("/examples").getFile());
-        File[] files = folder.listFiles( (dir, name) -> name.endsWith(".json"));
+        File[] files = folder.listFiles( (dir, name) -> name.endsWith(".oi"));
         // loop through all files and add menu item
         int i = 0;
         for (; i < files.length; i++) {

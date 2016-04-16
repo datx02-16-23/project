@@ -36,6 +36,9 @@ public class BoxRender extends Render {
         this.struct = struct;
         calculateSize();
         init();
+        this.setMinSize(100, 40);
+        this.setMaxSize(100, 40);
+        this.setPrefSize(100, 40);
     }
 
     /**

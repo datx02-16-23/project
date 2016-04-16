@@ -70,7 +70,7 @@ public class OperationPanel extends Pane {
     public void update (int index){
         //List selection and position
         selectionModel.select(index);
-        focusModel.focus(index);
+//        focusModel.focus(index);
         operationHistory.scrollTo(index - 1);
         currOpTextField.setText("" + (index));
         int totItems = items.size();
