@@ -95,7 +95,7 @@ public class Main extends Application {
                 examples.getItems().add(ex);
             }
         }
-        Main.console.out("Loaded " + i + " examples from: " + getClass().getResource("/examples").getFile());
+        Main.console.info("Loaded " + i + " examples from: " + getClass().getResource("/examples").getFile());
         // Add SourceViewer
         AnchorPane sourceViewContainer = (AnchorPane) fxmlLoader.getNamespace().get("sourceViewContainer");
         sourceViewContainer.getChildren().add(sourceViewer);
@@ -162,16 +162,19 @@ public class Main extends Application {
     }
 
     /**
-     * Printout of error messages and warnings from the program.
+     * Printout of error messages and warnings from the program. Strings only. Use Object toString to print them.
      * 
      * @author Richard
      *
      */
     public class MavserConsole {
 
-        private boolean        silent  = true;
-        private boolean        verbose = false;
-        private final TextArea consoleTextArea;
+        private static final String force       = "<>\t";
+        public boolean              quiet       = false;
+        public boolean              information = true;
+        public boolean              error       = true;
+        public boolean              debug       = false;
+        public final TextArea       consoleTextArea;
 
         public MavserConsole (TextArea consoleTextArea){
             this.consoleTextArea = consoleTextArea;
@@ -182,13 +185,13 @@ public class Main extends Application {
         /**
          * Print a regular line to the GUI console.
          * 
-         * @param out The line to prine.
+         * @param info The line to prine.
          */
-        public void out (String out){
-            if (!silent) {
+        public void info (String info){
+            if (quiet || !information) {
                 return;
             }
-            print(out + "\n");
+            print(info + "\n");
         }
 
         /**
@@ -197,19 +200,19 @@ public class Main extends Application {
          * @param err The error to print.
          */
         public void err (String err){
-            if (!silent) {
+            if (quiet || !error) {
                 return;
             }
             print("\t" + err + "\n");
         }
 
         /**
-         * Print a verbose String. Generally disabled.
+         * Print a verbose String. Generally DISABLED.
          * 
          * @param out A verbose String to print.
          */
-        public void printVerbose (String out){
-            if (verbose) {
+        public void debug (String out){
+            if (quiet || !debug) {
                 print(out + "\n");
             }
         }
@@ -219,8 +222,8 @@ public class Main extends Application {
          * 
          * @param str The line to print.
          */
-        public void forceOut (String str){
-            print(str + "\n");
+        public void force (String str){
+            print(force + str + "\n");
         }
 
         /**
@@ -239,38 +242,35 @@ public class Main extends Application {
         }
 
         /**
-         * Print an object.
-         * 
-         * @param o The object to print.
+         * Enable or disable information printouts.
          */
-        public void out (Object o){
-            out(o.toString());
+        public void setInfo (boolean value){
+            information = value;
+            force("Information printouts " + (information ? "ENABLED." : "DISABLED."));
         }
 
         /**
-         * Disable console output.
+         * Enable or disable Quiet Mode.
          */
-        public void enablePrinting (){
-            setPrinting(true);
+        public void setQuiet (boolean value){
+            quiet = value;
+            force("Quiet Mode " + (quiet ? "ENABLED." : "DISABLED."));
         }
 
         /**
-         * Enable console output.
+         * Enable or disable debug printouts.
          */
-        public void disablePrinting (){
-            setPrinting(false);
+        public void setDebug (boolean value){
+            debug = value;
+            force("Debug printouts " + (debug ? "ENABLED." : "DISABLED."));
         }
 
-        public void setPrinting (boolean value){
-            if (value == silent) {
-                return;
-            }
-            silent = !value;
-            out("Printing " + (silent != true ? "enabled." : "disabled."));
-        }
-
-        public void setPrintingSilent (boolean value){
-            silent = value;
+        /**
+         * Enable or disable error printouts.
+         */
+        public void setError (boolean value){
+            error = value;
+            force("Error printouts " + (error ? "ENABLED." : "DISABLED."));
         }
 
         public void init (){

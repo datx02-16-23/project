@@ -138,7 +138,7 @@ public class Interpreter {
                     continue; //Acceptable non read/write operation found.
                 }
                 else if (isReadOrWrite(op) == false) {
-                    Main.console.out("ABORT: High level operation found: " + op);
+                    Main.console.info("ABORT: High level operation found: " + op);
                     return consolidationSuccessful;
                 }
             }

@@ -29,7 +29,7 @@ public class OperationParser {
             case swap:
                 return parseSwap(op);
             default:
-                Main.console.out("Unknown operation type: " + op.operation);
+                Main.console.info("Unknown operation type: " + op.operation);
                 break;
         }
         return null;

@@ -224,7 +224,7 @@ public class InterpreterView implements InvalidationListener{
         afterItems.clear();
         afterItems.addAll(beforeItems);
         int n = interpreter.consolidate(afterItems);
-        Main.console.out("Interpretation returned " + n + " new operation(s).");
+        Main.console.info("Interpretation returned " + n + " new operation(s).");
         afterCount.setText("" + afterItems.size());
     }
 

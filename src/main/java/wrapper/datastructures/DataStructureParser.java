@@ -27,7 +27,7 @@ public class DataStructureParser {
             case "tree":
                 return null; //TODO: Add parsing of trees.
             default:
-                Main.console.out("Unknown data structure raw type: " + av.rawType);
+                Main.console.info("Unknown data structure raw type: " + av.rawType);
                 break;
         }
         return null;

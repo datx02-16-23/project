@@ -3,8 +3,7 @@ package application.model;
 import wrapper.Locator;
 import wrapper.Operation;
 import wrapper.datastructures.DataStructure;
-import wrapper.operations.Key;
-import wrapper.operations.OperationType;
+import wrapper.operations.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +53,7 @@ public class Step implements iStep {
         DataStructure struct;
         switch (opType) {
             case message:
-                Main.console.out(op);
+                Main.console.info(((OP_Message)op).getMessage());
                 break;
             case read:
             case write:
