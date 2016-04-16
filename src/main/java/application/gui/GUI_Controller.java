@@ -59,6 +59,7 @@ public class GUI_Controller implements CommunicatorListener {
     private boolean                    autoPlayOnIncomingStream = true;
     private InterpreterView            interpreterView;
     private OperationPanel             operationPanel;
+    private MenuButton                 streamBehaviourMenuButton;
 
     public GUI_Controller (Visualization visualization, Stage window, iModel model, LogStreamManager lsm, SourcePanel sourceViewer){
         this.visualization = visualization;
@@ -94,8 +95,26 @@ public class GUI_Controller implements CommunicatorListener {
         autoPlayOnIncomingStream = toggleAutorunStream.isSelected();
         unsavedChanged();
     }
-    
-    public void clearButtonClicked(){
+
+    public void jumpToEndClicked (Event e){
+        streamBehaviourMenuButton.setText(">>");
+        Main.console.info("Model will always display the latest operation streamed operation.");
+        //TODO: Logic
+    }
+
+    public void continueClicked (Event e){
+        streamBehaviourMenuButton.setText(">");
+        Main.console.info("Autoplay will start when a streamed operation has been received.");
+        //TODO: Logic
+    }
+
+    public void doNothingClicked (Event e){
+        streamBehaviourMenuButton.setText("=");
+        Main.console.info("Streaming will not force model progression.");
+        //TODO: Logic
+    }
+
+    public void clearButtonClicked (){
         operationPanel.getItems().clear();
         model.getOperations().clear();
         model.getStructures().clear();
@@ -115,8 +134,6 @@ public class GUI_Controller implements CommunicatorListener {
             stopAutoPlay();
         }
     }
-    
-    
 
     private Timeline autoplayTimeline;
 
@@ -476,6 +493,8 @@ public class GUI_Controller implements CommunicatorListener {
         //@formatter:off
         playPauseButton     = (Button) namespace.get("playPauseButton");
         speedButton         = (Button) namespace.get("speedButton");
+        streamBehaviourMenuButton = (MenuButton) namespace.get("streamBehaviourMenuButton");
+        System.out.println("streamBehaviourMenuButton = " + streamBehaviourMenuButton);
         //@formatter:on
     }
 
@@ -636,7 +655,6 @@ public class GUI_Controller implements CommunicatorListener {
     }
 
     public void toggleInformation (Event e){
-        
         CheckBox cb = (CheckBox) e.getSource();
         Main.console.setInfo(cb.isSelected());
     }

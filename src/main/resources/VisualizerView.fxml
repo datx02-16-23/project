@@ -6,10 +6,12 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -123,12 +125,28 @@
                                           <Font size="14.0" />
                                        </font>
                                     </Button>
-                                    <Button blendMode="DARKEN" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#oooooOOoooOOOooooOOooo" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+                                    <Button blendMode="DARKEN" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#oooooOOoooOOOooooOOooo" GridPane.columnIndex="3" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
                                     <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clearButtonClicked" text="Clear" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="1">
                                        <font>
                                           <Font name="System Bold" size="9.0" />
                                        </font>
                                     </Button>
+                                    <MenuButton fx:id="streamBehaviourMenuButton" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mnemonicParsing="false" text="&gt;&gt;" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                                      <items>
+                                        <MenuItem mnemonicParsing="false" onAction="#jumpToEndClicked" text="(&gt;&gt;) - Jump To End" />
+                                        <MenuItem mnemonicParsing="false" onAction="#continueClicked" text="(&gt;) - Play" />
+                                          <MenuItem mnemonicParsing="false" onAction="#doNothingClicked" text="(=) - Do Nothing" />
+                                      </items>
+                                       <tooltip>
+                                          <Tooltip text="Determines behaviour when received a stream. &quot;Jump To End&quot; skips to the last operation. &quot;Play&quot; enables autoplay but does not skip. &quot;Do Nothing&quot; leaves autoplay settings and model progression to the user." />
+                                       </tooltip>
+                                       <GridPane.margin>
+                                          <Insets />
+                                       </GridPane.margin>
+                                       <padding>
+                                          <Insets left="7.0" />
+                                       </padding>
+                                    </MenuButton>
                                  </children>
                                  <columnConstraints>
                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
