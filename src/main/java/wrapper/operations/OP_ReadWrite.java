@@ -68,7 +68,6 @@ public abstract class OP_ReadWrite extends Operation {
         Locator target = getTarget();
         String sourceStr;
         String targetStr;
-        String arrow = " --> ";
         //Source and target known
         if (source != null && target != null) {
             sourceStr = source.toSimpleString();
@@ -82,6 +81,7 @@ public abstract class OP_ReadWrite extends Operation {
             if (source == null) {
                 sourceStr = valueStr;
                 targetStr = target.toSimpleString();
+                //target <-- values
                 return super.operation.toString().toUpperCase() + ": " + targetStr + " <-- " + sourceStr;
             }
             //Target unknown
@@ -90,6 +90,7 @@ public abstract class OP_ReadWrite extends Operation {
                 targetStr = valueStr;
             }
         }
+        //source <-- target || values
         return super.operation.toString().toUpperCase() + ": " + sourceStr + " --> " + targetStr;
     }
 
