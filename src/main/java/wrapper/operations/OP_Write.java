@@ -22,6 +22,10 @@ public class OP_Write extends OP_ReadWrite {
         super(OPERATION);
     }
 
+    public OP_Write (String source, int beginLine, int endLine, int beginColumn, int endColumn){
+        super(OPERATION, source, beginLine, endLine, beginColumn, endColumn);
+    }
+
     /**
      * Set the target variable for this Write operation. The identifier of the variable should be previously declared in
      * the header.
