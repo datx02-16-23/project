@@ -26,12 +26,15 @@ public class BoxRender extends Render {
     public BoxRender (DataStructure struct){
         grid = new GridPane();
         BorderPane bp = new BorderPane();
-        bp.setTop(new Label("\tidentifier: " + struct.identifier));
+        if(struct.rawType.equals("independentElement")){
+            bp.setTop(new Label("identifier: " + struct.identifier));    
+        } else {
+            bp.setTop(new Label("\tidentifier: " + struct.identifier));            
+        }
         bp.setCenter(grid);
         this.getChildren().add(bp);
         this.struct = struct;
-        this.setMinSize(0, 0);
-        this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        calculateSize();
         init();
     }
 
@@ -59,6 +62,8 @@ public class BoxRender extends Render {
         }
         elementsPreviousRender = structElements.size();
     }
+    
+
 
     /**
      * Create and render all elements.
@@ -70,8 +75,19 @@ public class BoxRender extends Render {
         }
         elementsPreviousRender = struct.getElements().size();
         struct.elementsDrawn();
+        calculateSize();
     }
-
+    /**
+     * Recalculate size.
+     */
+    private void calculateSize(){
+        int elems = struct.getElements().size();
+        double width = GRID_SIZE*elems+20;
+        double height =  GRID_SIZE*2+20;
+        this.setMinSize(width, height);
+        this.setMaxSize(width, height);
+        this.setPrefSize(width, height);
+    }
     //Ugly way of doing it, but I cant be bothered checking if the element moved.
     private void addElementToGrid (Element e, String style){
         ArrayElement ae = (ArrayElement) e;

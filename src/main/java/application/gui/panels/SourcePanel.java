@@ -87,7 +87,7 @@ public class SourcePanel extends TabPane {
         this.getSelectionModel().select(sourceTabIndex);
         //Select lines
         ListView<String> linesView = (ListView<String>) this.getTabs().get(nameTabMapping.get(op.source)).getContent();
-        linesView.getSelectionModel().selectRange(op.beginLine, op.endLine);
+        linesView.getSelectionModel().select(op.beginLine);
     }
     
     /**
