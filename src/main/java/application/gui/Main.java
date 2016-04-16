@@ -163,8 +163,8 @@ public class Main extends Application {
      */
     public class MavserConsole {
 
-        private boolean        allowPrinting = true;
-        private boolean        verbose       = false;
+        private boolean        silent  = true;
+        private boolean        verbose = false;
         private final TextArea consoleTextArea;
 
         public MavserConsole (TextArea consoleTextArea){
@@ -179,7 +179,7 @@ public class Main extends Application {
          * @param out The line to prine.
          */
         public void out (String out){
-            if (!allowPrinting) {
+            if (!silent) {
                 return;
             }
             print(out + "\n");
@@ -191,7 +191,7 @@ public class Main extends Application {
          * @param err The error to print.
          */
         public void err (String err){
-            if (!allowPrinting) {
+            if (!silent) {
                 return;
             }
             print("\t" + err + "\n");
@@ -200,10 +200,12 @@ public class Main extends Application {
         /**
          * Print a verbose String. Generally disabled.
          * 
-         * @param verbose A verbose String to print.
+         * @param out A verbose String to print.
          */
-        public void verbose (String verbose){
-            print(verbose + "\n");
+        public void printVerbose (String out){
+            if (verbose) {
+                print(out + "\n");
+            }
         }
 
         /**
@@ -254,11 +256,15 @@ public class Main extends Application {
         }
 
         public void setPrinting (boolean value){
-            if (value == allowPrinting) {
+            if (value == silent) {
                 return;
             }
-            allowPrinting = !value;
-            out("Printing " + (allowPrinting != true ? "enabled." : "disabled."));
+            silent = !value;
+            out("Printing " + (silent != true ? "enabled." : "disabled."));
+        }
+
+        public void setPrintingSilent (boolean value){
+            silent = value;
         }
 
         public void init (){
@@ -271,11 +277,12 @@ public class Main extends Application {
             }
             sb.delete(sb.length() - 2, sb.length());
             sb.append("\n\n");
+            String initMessage = sb.toString();
             Platform.runLater(new Runnable() {
 
                 @Override
                 public void run (){
-                    consoleTextArea.setText(sb.toString());
+                    consoleTextArea.setText(initMessage);
                 }
             });
         }
