@@ -52,13 +52,12 @@ public class OperationPanel extends Pane {
         totNrOfOpLabel = (Label) namespace.get("totNrOfOpLabel");
         opProgress = (ProgressBar) namespace.get("opProgress");
         operationHistory = (ListView<Operation>) namespace.get("operationHistory");
+        //List stuff
         items = FXCollections.observableArrayList();
         operationHistory.setItems(items);
-        for (int i = 0; i < 30; i++) {
-            items.add(new Operation(null, null, null, 0, 0, 0, 0));
-        }
         selectionModel = operationHistory.getSelectionModel();
         focusModel = operationHistory.getFocusModel();
+        //Finishing touches and build
         opProgress.setProgress(-1); //Make the thingy bounce
         this.getChildren().add(root);
     }
@@ -74,7 +73,6 @@ public class OperationPanel extends Pane {
         focusModel.focus(index);
         operationHistory.scrollTo(index - 1);
         currOpTextField.setText("" + (index));
-        //Text
         int totItems = items.size();
         totNrOfOpLabel.setText("/ " + totItems);
         //Progress bar 
