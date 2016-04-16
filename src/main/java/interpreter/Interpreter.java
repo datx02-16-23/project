@@ -79,6 +79,7 @@ public class Interpreter {
     /**
      * Attempt to consolidate the supplied list of operations. Returns True if the size of the list has changed as a
      * result on the attempted consolidation. The list provided as argument will not be changed.
+     * 
      * @param operationsToConsolidate The operations to consolidate.
      * @return A consolidated list of operations.
      */
@@ -87,7 +88,7 @@ public class Interpreter {
         consolidate(result);
         return result;
     }
-    
+
     /**
      * Attempt to consolidate the supplied list of operations. Returns True if the size of the list has changed as a
      * result on the attempted consolidation. <br>
@@ -98,7 +99,7 @@ public class Interpreter {
     public void consolidate (List<Operation> listToConsolidate){
         if (highOrderRoutine == ABORT) {
             for (Operation op : listToConsolidate) {
-                if (op.operation == OperationType.message ) {
+                if (op.operation == OperationType.message) {
                     continue; //Acceptable non read/write operation found.
                 }
                 else if (isReadOrWrite(op) == false) {
@@ -183,13 +184,14 @@ public class Interpreter {
             keepSet_addCandidate();
             return tryExpandWorkingSet();
         }
-        //TODO: Hantera INIT writes.
-//        else if (candidate.operation == OperationType.init) {
-//            flushSet_addCandidate();
-//            return tryExpandWorkingSet();
-//            //Only read/write operations should remain at this point.
-//        }
-        else if (isReadOrWrite(candidate) == false) {
+        else if (candidate.operation == OperationType.write) {
+            OP_Write write_candidate = (OP_Write) candidate;
+            if(write_candidate.getValue().length > 1){
+                flushSet_addCandidate();
+                return tryExpandWorkingSet();                
+            }
+        }
+        if (isReadOrWrite(candidate) == false) {
             handleHighLevelOperation();
             return tryExpandWorkingSet();
         }
@@ -273,16 +275,6 @@ public class Interpreter {
     }
 
     /**
-     * Remove a given testcase.
-     * 
-     * @param testCase The testcase to remove.
-     * @param c The Consolidable associated with the testCase.
-     */
-    public void removeTestCase (OperationType testCase, Consolidable c){
-        consolidator.removeTestCase(testCase, c.getRWcount());
-    }
-
-    /**
      * Add a test case to the Interpreter.
      * 
      * @param testCase The test case to add.
@@ -296,6 +288,16 @@ public class Interpreter {
                 Main.console.err("Cannot consolidate OperationType: " + testCase.toString().toUpperCase());
                 break;
         }
+    }
+    
+    /**
+     * Remove a given testcase.
+     * 
+     * @param testCase The testcase to remove.
+     * @param c The Consolidable associated with the testCase.
+     */
+    public void removeTestCase (OperationType testCase, Consolidable c){
+        consolidator.removeTestCase(testCase, c.getRWcount());
     }
 
     /**
@@ -453,9 +455,25 @@ public class Interpreter {
          * Remove a given testCase. When this method returns, the testcase is guaranteed to be removed.
          * 
          * @param testCase The testcase to remove.
+         */
+        public void removeTestCase (OperationType testCase){
+            switch (testCase) {
+                case swap:
+                    removeTestCase(testCase, new OP_Swap().getRWcount());
+                    break;
+                default:
+                    Main.console.err("Unknown Consolidable type: " + testCase);
+                    break;
+            }
+        }
+
+        /**
+         * Remove a given testCase. When this method returns, the testcase is guaranteed to be removed.
+         * 
+         * @param testCase The testcase to remove.
          * @param rwCount The number of variables the test case consists of.
          */
-        public void removeTestCase (OperationType testCase, int rwCount){
+        private void removeTestCase (OperationType testCase, int rwCount){
             Consolidable victim = null;
             for (Consolidable c : invokers[rwCount]) {
                 Operation op = (Operation) c;
