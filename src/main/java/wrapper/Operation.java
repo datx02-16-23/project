@@ -25,28 +25,26 @@ public class Operation implements Serializable {
      * A map containing the identifier of the field (such as "destination" or "value") and the data they contained.
      */
     public final HashMap<Key, Object> operationBody;
-    
     /**
      * The name of the source file this Operation originates from.
      */
-    public String source;
-    
+    public String                     source;
     /**
      * The line number this Operation originates from.
      */
-    public int beginLine;
+    public int                        beginLine;
     /**
      * The last line of this Operation.
      */
-    public int endLine;
+    public int                        endLine;
     /**
      * TODO: Javadoc.
      */
-    public int beginColumn;
+    public int                        beginColumn;
     /**
      * TODO: Javadoc.
      */
-    public int endColumn;
+    public int                        endColumn;
 
     /**
      * Create a new Operation with the given operation identifier and body.
@@ -86,6 +84,6 @@ public class Operation implements Serializable {
     }
 
     public String toString (){
-        return operationBody.toString();
+        return operationBody == null ? "null" : operationBody.toString();
     }
 }
