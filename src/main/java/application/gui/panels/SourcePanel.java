@@ -44,7 +44,6 @@ public class SourcePanel extends TabPane {
             return;
         }
         this.sources = newSources;
-        System.out.println(sources);
         int tabNumber = 0;
         for (String sourceName : sources.keySet()) {
             addSourceTab(sourceName, sources.get(sourceName));

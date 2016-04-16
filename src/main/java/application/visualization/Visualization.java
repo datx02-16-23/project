@@ -31,7 +31,6 @@ public class Visualization extends GridPane {
             }
             Render render = getRender(struct);
             if(render != null){
-                render.setPrefSize(this.getWidth(), this.getHeight());
                 this.add(render, 0, regular++);
                 continue;
             }

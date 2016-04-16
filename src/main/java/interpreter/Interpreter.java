@@ -36,6 +36,7 @@ public class Interpreter {
      * Deconstruct high-level operations into read/write operations.
      */
     public static final int             DECONSTRUCT        = 4;
+    private int                         consolidationSuccessful;
     private int                         highOrderRoutine;
     private final LinkedList<Operation> before;
     private LinkedList<Operation>       after;
@@ -75,7 +76,7 @@ public class Interpreter {
         }
         highOrderRoutine = newRoutine;
     }
-    
+
     /**
      * Add a test case to the Interpreter.
      * 
@@ -91,6 +92,7 @@ public class Interpreter {
                 break;
         }
     }
+
     /**
      * Remove a given testCase. When this method returns, the testcase is guaranteed to be removed.
      * 
@@ -126,8 +128,10 @@ public class Interpreter {
      * <b>NOTE:</b> The list given by the argument {@code operations} will be modified by this method!
      * 
      * @param listToConsolidate The List to consolidate.
+     * @return The number operations creates.
      */
-    public void consolidate (List<Operation> listToConsolidate){
+    public int consolidate (List<Operation> listToConsolidate){
+        consolidationSuccessful = 0;
         if (highOrderRoutine == ABORT) {
             for (Operation op : listToConsolidate) {
                 if (op.operation == OperationType.message) {
@@ -135,7 +139,7 @@ public class Interpreter {
                 }
                 else if (isReadOrWrite(op) == false) {
                     Main.console.out("ABORT: High level operation found: " + op);
-                    return;
+                    return consolidationSuccessful;
                 }
             }
         }
@@ -149,6 +153,7 @@ public class Interpreter {
         //Transfer result to operations
         listToConsolidate.clear();
         listToConsolidate.addAll(after);
+        return consolidationSuccessful;
     }
 
     /**
@@ -217,9 +222,9 @@ public class Interpreter {
         }
         else if (candidate.operation == OperationType.write) {
             OP_Write write_candidate = (OP_Write) candidate;
-            if(write_candidate.getValue().length > 1){
+            if (write_candidate.getValue().length > 1) {
                 flushSet_addCandidate();
-                return tryExpandWorkingSet();                
+                return tryExpandWorkingSet();
             }
         }
         if (isReadOrWrite(candidate) == false) {
@@ -291,6 +296,7 @@ public class Interpreter {
         Operation consolidatedOperation = consolidator.attemptConsolidate(workingSet);
         if (consolidatedOperation != null) {
             after.add(consolidatedOperation);
+            consolidationSuccessful++;
             return true;
         }
         return false;

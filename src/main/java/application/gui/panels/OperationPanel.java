@@ -65,18 +65,21 @@ public class OperationPanel extends Pane {
     /**
      * Update the list position, focus and highlight. Update counters and progress bar.
      * 
-     * @param The index to jump to.
+     * @param The item to select.
+     * @param jump if {@code true}, the list will jump to the selected item.
      */
-    public void update (int index){
+    public void update (int index, boolean jump){
         //List selection and position
-        selectionModel.select(index);
-//        focusModel.focus(index);
-        operationHistory.scrollTo(index - 1);
+        if(jump){
+            selectionModel.select(index);
+            focusModel.focus(index);
+            operationHistory.scrollTo(index-1);
+        }
         currOpTextField.setText("" + (index));
         int totItems = items.size();
         totNrOfOpLabel.setText("/ " + totItems);
         //Progress bar 
-        opProgress.setProgress((double)index/ (double)totItems);
+        opProgress.setProgress((double) index / (double) totItems);
     }
 
     /**

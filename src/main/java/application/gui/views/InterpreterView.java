@@ -6,6 +6,7 @@ import java.util.Map;
 
 import application.assets.Strings;
 import application.gui.GUI_Controller;
+import application.gui.Main;
 import interpreter.Interpreter;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -221,8 +222,9 @@ public class InterpreterView implements InvalidationListener{
      */
     public void interpret (){
         afterItems.clear();
-        afterItems.addAll(afterItems);
-        interpreter.consolidate(afterItems);
+        afterItems.addAll(beforeItems);
+        int n = interpreter.consolidate(afterItems);
+        Main.console.out("Interpretation returned " + n + " new operation(s).");
         afterCount.setText("" + afterItems.size());
     }
 

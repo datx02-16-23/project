@@ -113,11 +113,11 @@ public class GUI_Controller implements CommunicatorListener {
 
     public void startAutoPlay (){
         playPauseButton.setText("Pause");
-//        speedButton.setDisable(true);
         if (autoplayTimeline != null) {
             autoplayTimeline.stop();
         }
         isPlaying = true;
+        stepForwardButtonClicked();
         autoplayTimeline = new Timeline();
         autoplayTimeline.getKeyFrames().add(new KeyFrame(Duration.millis(stepDelay), new EventHandler<ActionEvent>() {
 
@@ -135,7 +135,6 @@ public class GUI_Controller implements CommunicatorListener {
     }
 
     public void stopAutoPlay (){
-//        speedButton.setDisable(false);
         if (autoplayTimeline != null) {
             autoplayTimeline.stop();
             playPauseButton.setText("Play");
@@ -214,7 +213,7 @@ public class GUI_Controller implements CommunicatorListener {
             public void run (){
                 int index = model.getIndex();
                 sourceViewer.show(model.getCurrentStep().getLastOp());
-                operationPanel.update(index);
+                operationPanel.update(index, true);
             }
         });
     }
@@ -230,7 +229,7 @@ public class GUI_Controller implements CommunicatorListener {
     public void goToStep (int index){
         model.goToStep(index);
         visualization.render();
-        operationPanel.update(index);
+        operationPanel.update(index, false);
     }
 
     public void inspectSelection (){
@@ -401,7 +400,7 @@ public class GUI_Controller implements CommunicatorListener {
                 }
                 operationPanel.getItems().addAll(lsm.getOperations());
                 model.getOperations().addAll(lsm.getOperations());
-                operationPanel.update(model.getIndex());
+                operationPanel.update(model.getIndex(), true);
                 lsm.clearData();
                 if (autoPlayOnIncomingStream) {
                     stepForwardButtonClicked();

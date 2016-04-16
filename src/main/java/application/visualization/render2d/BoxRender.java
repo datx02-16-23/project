@@ -36,9 +36,8 @@ public class BoxRender extends Render {
         this.struct = struct;
         calculateSize();
         init();
-        this.setMinSize(100, 40);
-        this.setMaxSize(100, 40);
-        this.setPrefSize(100, 40);
+        this.setMinSize(200, 100);
+        this.setMaxSize(200, 100);
     }
 
     /**
@@ -89,7 +88,6 @@ public class BoxRender extends Render {
         double height =  GRID_SIZE*2+20;
         this.setMinSize(width, height);
         this.setMaxSize(width, height);
-        this.setPrefSize(width, height);
     }
     //Ugly way of doing it, but I cant be bothered checking if the element moved.
     private void addElementToGrid (Element e, String style){
