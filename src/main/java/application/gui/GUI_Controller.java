@@ -22,6 +22,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -52,7 +53,6 @@ public class GUI_Controller implements CommunicatorListener {
     private final LogStreamManager     lsm;
     private final Interpreter          interpreter;
     private final iModel               model;
-    //SourceViewer
     private final SourceViewer         sourceViewer;
     // Connection dialog stuff.
     private final SimpleStringProperty currentlyConnected       = new SimpleStringProperty();
@@ -68,6 +68,10 @@ public class GUI_Controller implements CommunicatorListener {
     private long                       stepDelay                = stepDelayBase / stepDelaySpeedupFactor;
     private ListView<Operation>        operationHistory;
     private boolean                    autoPlayOnIncomingStream = true;
+    private TextField                  currOpTextField;
+    private Label                      totNrOfOpLabel;
+    private Label                      settingsSaveState;
+    private ProgressBar                opProgress;
 
     public GUI_Controller (Visualization visualization, Stage window, iModel model, LogStreamManager lsm, SourceViewer sourceViewer){
         this.visualization = visualization;
@@ -240,10 +244,24 @@ public class GUI_Controller implements CommunicatorListener {
 
     private void setTestCases (){
         List<OperationType> selectedTypes = interpreter.getTestCases();
-        // TODO: Get and set all of them automatically
-        // Swap
-        CheckBox swap = (CheckBox) interpreterViewNamespace.get("swap");
-        swap.setSelected(selectedTypes.contains(OperationType.swap));
+        VBox casesBox = (VBox) interpreterViewNamespace.get("casesBox");
+        //Create CheckBoxes for all Consolidate operation types
+        for (OperationType type : OperationType.values()) {
+            CheckBox cb = new CheckBox(type.toString());
+            cb.setOnAction(event -> {
+                if(cb.isSelected()){
+                    interpreter.addTestCase(type);
+                } else {
+                    interpreter.removeTestCase(type);
+                }
+            });
+            if(selectedTypes.contains(type)){
+                cb.setSelected(true);
+            } else {
+                cb.setSelected(false);
+            }
+            casesBox.getChildren().add(cb);
+        }
     }
 
     public void interpretOperationHistory (){
@@ -402,16 +420,6 @@ public class GUI_Controller implements CommunicatorListener {
                 afterCount.setText("0");
             }
         });
-        // Listeners for TestCase buttons
-        CheckBox swap = (CheckBox) fxmlLoader.getNamespace().get("swap");
-        swap.setOnAction(event -> {
-            if (swap.isSelected()) {
-                interpreter.addTestCase(OperationType.swap);
-            }
-            else {
-                interpreter.removeTestCase(OperationType.swap, new OP_Swap());
-            }
-        });
         p.setPrefWidth(this.window.getWidth() * 0.75);
         p.setPrefHeight(this.window.getHeight() * 0.75);
         Scene dialogScene = new Scene(p, this.window.getWidth() * 0.75, this.window.getHeight() * 0.75);
@@ -492,10 +500,7 @@ public class GUI_Controller implements CommunicatorListener {
         FileChooser fc = new FileChooser();
         fc.setInitialDirectory(new File(System.getProperty("user.home")));
         fc.setTitle("Open OI-File");
-        fc.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("OI-Files", "*.oi"),
-                new FileChooser.ExtensionFilter("All Files", "*.*")
-                );
+        fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("OI-Files", "*.oi"), new FileChooser.ExtensionFilter("All Files", "*.*"));
         File source = fc.showOpenDialog(window);
         if (source != null) {
             loadFile(source);
@@ -565,10 +570,8 @@ public class GUI_Controller implements CommunicatorListener {
         FileChooser fc = new FileChooser();
         fc.setInitialDirectory(new File(System.getProperty("user.home")));
         fc.setTitle("Save OI-File");
-        fc.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("OI-Files", "*.oi"),
-                new FileChooser.ExtensionFilter("All Files", "*.*")
-                );
+        fc.setInitialFileName("bla");
+        fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("OI-Files", "*.oi"), new FileChooser.ExtensionFilter("All Files", "*.*"));
         File target = fc.showSaveDialog(this.window);
         if (target == null) {
             return;
@@ -605,27 +608,24 @@ public class GUI_Controller implements CommunicatorListener {
         stage.toFront();
         stage.show();
     }
-    
-
 
     @Override
     public CommunicatorListener getListener (){
         return null; // VisualizerController doesn't have any listeners.
     }
 
-    // Load components from the main view.
-    private TextField currOpTextField;
-    private Label     totNrOfOpLabel;
-    private Label     settingsSaveState;
-
     @SuppressWarnings("unchecked")
     public void loadMainViewFxID (FXMLLoader mainViewLoader){
-        ObservableMap<String, Object> mainViewNameSpace = mainViewLoader.getNamespace();
-        operationHistory = (ListView<Operation>) mainViewNameSpace.get("operationHistory");
-        playPauseButton = (Button) mainViewNameSpace.get("playPauseButton");
-        currOpTextField = (TextField) mainViewNameSpace.get("currOpTextField");
-        totNrOfOpLabel = (Label) mainViewNameSpace.get("totNrOfOpLabel");
-        speedButton = (Button) mainViewNameSpace.get("speedButton");
+        ObservableMap<String, Object> namespace = mainViewLoader.getNamespace();
+        //Load from main view namespace
+        //@formatter:off
+        operationHistory    = (ListView<Operation>) namespace.get("operationHistory");
+        playPauseButton     = (Button) namespace.get("playPauseButton");
+        currOpTextField     = (TextField) namespace.get("currOpTextField");
+        totNrOfOpLabel      = (Label) namespace.get("totNrOfOpLabel");
+        speedButton         = (Button) namespace.get("speedButton");
+        opProgress          = (ProgressBar) namespace.get("opProgress");
+        //@formatter:on
     }
 
     /*
