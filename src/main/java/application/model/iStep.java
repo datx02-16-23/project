@@ -14,7 +14,5 @@ public interface iStep {
 
     void applyOperation (Operation op);
 
-    void addDataStructure (String id, DataStructure struct);
-
     void reset ();
 }

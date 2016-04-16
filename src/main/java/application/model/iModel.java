@@ -9,8 +9,6 @@ import java.util.Map;
 // TODO: Javadoc #50
 public interface iModel {
 
-    void addStructure (String id, DataStructure structure);
-
     void reset ();
 
     boolean stepForward ();
@@ -21,11 +19,9 @@ public interface iModel {
 
     void setOperations (List<Operation> items);
 
-    void setStructures (Map<String, DataStructure> structs);
+    Map<String, DataStructure> getStructures ();
 
-    public Map<String, DataStructure> getStructures ();
-
-    public List<Operation> getOperations ();
+    List<Operation> getOperations ();
 
     iStep getCurrentStep ();
 

@@ -22,12 +22,7 @@ public class Step implements iStep {
     public Step (Map<String, DataStructure> structs){
         this.structs = structs;
     }
-
-    @Override
-    public void addDataStructure (String identifier, DataStructure struct){
-        structs.put(identifier, struct);
-    }
-
+    
     @Override
     public void reset (){
         lastOp = null;
