@@ -34,12 +34,13 @@ public class SourcePanel extends TabPane {
     }
 
     /**
-     * Set the sources which are to be displayed by this SourceViewer. Does nothing if sources == null.
+     * Set the sources which are to be displayed by this SourceViewer. <b>Clears if newSources is {@code null}.</b>
      * 
      * @param soutces The sources to display.
      */
     public void setSources (Map<String, List<String>> newSources){
-        if (sources == null) {
+        getTabs().clear();
+        if (newSources == null) {
             return;
         }
         this.sources = newSources;
@@ -79,6 +80,7 @@ public class SourcePanel extends TabPane {
         Integer sourceTabIndex = nameTabMapping.get(op.source);
         if (sourceTabIndex == null) {
             Main.console.err("Could not find source file \"" + op.source + "\" for Operation: " + op);
+            Main.console.err("nameTabMapping = " + nameTabMapping);
             return;
         }
         //Select tab

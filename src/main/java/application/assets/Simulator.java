@@ -543,19 +543,16 @@ public class Simulator extends Application {
             _ops.ensureCapacity(nbrOfOps + 3);
             Locator loc;
             //Create init for a1
-            OP_Write init_a1 = new OP_Write(srcNames[0], 1, 2, -1, -1);
-            loc = new Locator("a1", null);
-            init_a1.setTarget(loc);
-            init_a1.setValue(new double[] {1, 2, 4, 8, 16, 32, 64, 128, 256, 512});
+            OP_Write init_a1 = new OP_Write(srcNames[0], 1, 4, -1, -1);
+            init_a1.setTarget(new Locator("a1", null));
+            init_a1.setValue(new double[] {1, 2, 4, 8, 16, 32, 64, 128});//, 256, 512});
             //Create init for a2
-            OP_Write init_a2 = new OP_Write(srcNames[0], 1, 2, -1, -1);
-            loc = new Locator("a2", null);
-            init_a2.setTarget(loc);
-            init_a2.setValue(new double[] {512, 256, 128, 64, 32, 16, 8, 4, 2, 1});
+            OP_Write init_a2 = new OP_Write(srcNames[0], 5, 6, -1, -1);
+            init_a2.setTarget(new Locator("a2", null));
+            init_a2.setValue(new double[] {512, 256, 128, 64, 32, 16, 8});//, 4, 2, 1});
             //Create init for tmp
-            OP_Write init_tmp = new OP_Write(srcNames[0], 1, 2, -1, -1);
-            loc = new Locator("tmp", null);
-            init_tmp.setTarget(loc);
+            OP_Write init_tmp = new OP_Write(srcNames[0], 9, 13, -1, -1);
+            init_tmp.setTarget(new Locator("tmp", null));
             init_tmp.setValue(new double[] {1337});
             inits.add(init_a1);
             inits.add(init_a2);
@@ -563,7 +560,7 @@ public class Simulator extends Application {
             OP_Write op;
             loop: for (int i = 0; i < nbrOfOps; i++) {
                 if (i % 10 == 0) {
-                    op = new OP_Write(srcNames[0], (i * i) % srcSizes[0], (i * i * 1) % srcSizes[0], -1, -1);
+                    op = new OP_Write(srcNames[0], 4, 6, -1, -1);
                     loc = new Locator("a1", new int[] {i % arraySize});
                     op.setSource(loc);
                     loc = new Locator("tmp", null);
@@ -572,7 +569,7 @@ public class Simulator extends Application {
                     continue loop;
                 }
                 if (i % 2 == 0) {
-                    op = new OP_Write(srcNames[0], (i * i) % srcSizes[0], (i * i * 1) % srcSizes[0], -1, -1);
+                    op = new OP_Write(srcNames[0], 5, 10, -1, -1);
                     loc = new Locator("a1", new int[] {i % arraySize});
                     op.setSource(loc);
                     loc = new Locator("a2", new int[] {(i * 2) % arraySize});
@@ -580,14 +577,14 @@ public class Simulator extends Application {
                     op.setValue(new double[] {(i * i) % 2});
                 }
                 else {
-                    op = new OP_Write(srcNames[0], (i * i) % srcSizes[1], (i * i * 1) % srcSizes[1], -1, -1);
-                    op.setSource(loc);
+                    op = new OP_Write(srcNames[1], 20, 21, -1, -1);
                     loc = new Locator("a2", new int[] {i % arraySize});
                     op.setSource(loc);
                     loc = new Locator("a1", new int[] {(i * 2) % arraySize});
                     op.setTarget(loc);
                     op.setValue(new double[] {(i * i) % 2});
                 }
+                _ops.add(op);
             }
             return _ops;
         }
@@ -639,16 +636,18 @@ public class Simulator extends Application {
         }
 
         public void transmitOperation (Operation op){
+            ArrayList<Operation> operationList = new ArrayList<Operation>();
+            operationList.add(op);
+            Wrapper message = new Wrapper(null, operationList);
             Platform.runLater(new Runnable() {
 
                 @Override
                 public void run (){
-                    ArrayList<Operation> operationList = new ArrayList<Operation>();
-                    operationList.add(op);
-                    Wrapper message = new Wrapper(null, operationList);
                     if (transmit(message)) {
                         sentOperations.add(op);
                         updateSent();
+                    } else {
+                        System.out.println("fail");
                     }
                 }
             });
@@ -671,14 +670,12 @@ public class Simulator extends Application {
                 autoplayTimeline.stop();
                 return;
             }
-            System.out.println("init!");
             transmit(initWrapper);
             queuedOperations.addAll(inits);
             transmitFirst();
             transmitFirst();
             transmitFirst(); //Transmit inits
-            System.out.println(inits);
-            System.out.println("begin regular ops transmit\n\n");
+            queuedOperations.addAll(ops);
             autoplayTimeline = new Timeline();
             autoplayTimeline.getKeyFrames().add(new KeyFrame(Duration.millis(1500), new EventHandler<ActionEvent>() {
 
@@ -687,7 +684,6 @@ public class Simulator extends Application {
                     if (queuedOperations.isEmpty()) {
                         queuedOperations.addAll(ops);
                     }
-                    System.out.println("send!");
                     transmitFirst();
                 }
             }));
@@ -714,12 +710,10 @@ public class Simulator extends Application {
 
         //Receiver stuff
         public boolean transmit (Wrapper wrapper){
-            System.out.println("stream wrapper");
             try {
                 LSM.stream(wrapper);
-                System.out.println("stream wrapper ok");
             } catch (Exception e) {
-                System.out.println("stream wrapper failed: " + e);
+                System.out.println(e);
                 return false;
             }
             return true; //Return true if transmit was successful.

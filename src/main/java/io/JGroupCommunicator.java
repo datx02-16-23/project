@@ -349,9 +349,6 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
      * @param w The wrapper to add the the incoming queue.
      */
     private void addAndFireEvent (Wrapper w){
-        System.out.println("jgroup receive\n");
-//      Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        System.out.println(gson.toJson(w));
         incomingQueue.add(w);
         listener.messageReceived(MavserMessage.WRAPPER);
     }

@@ -374,9 +374,8 @@ public class LogStreamManager implements CommunicatorListener {
                     knownVariables.put(av.identifier, DataStructureParser.unpackAnnotatedVariable(av));
                 }
             }
-            if (wrapper.header.sources != null) {
-                sources = wrapper.header.sources;
-            }
+            sources = wrapper.header.sources;
+            
         }
         if (wrapper.body != null) {
             for (Operation op : wrapper.body) {
@@ -391,8 +390,6 @@ public class LogStreamManager implements CommunicatorListener {
         if (messageType == MavserMessage.WRAPPER) {
             List<Wrapper> wrappers = communicator.getAllQueuedMessages();
             for (Wrapper w : wrappers) {
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                System.out.println(gson.toJson(w));
                 unwrap(w);
             }
             if (listener != null) {

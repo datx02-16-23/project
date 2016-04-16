@@ -391,15 +391,15 @@ public class GUI_Controller implements CommunicatorListener {
 
             @Override
             public void run (){
-                System.out.println("run!");
-                Map<? extends String, ? extends DataStructure> newVariables = lsm.getKnownVariables();
-                System.out.println("newVariables = " + newVariables);
                 if (lsm.getKnownVariables().isEmpty() == false) {
-                    model.getStructures().putAll(newVariables);
+                    model.getStructures().putAll(lsm.getKnownVariables());
                     visualization.createVisuals();
-                    Main.console.out("Received new AnnotatedVariable(s): " + newVariables.values());
+                    Main.console.out("Received new AnnotatedVariable(s): " + lsm.getKnownVariables().values());
                 }
-                sourceViewer.setSources(lsm.getSources());
+                if(lsm.getSources() != null){
+                    sourceViewer.setSources(lsm.getSources());
+                    Main.console.out("New source(s) received: " + lsm.getSources().keySet());
+                }
                 operationPanel.getItems().addAll(lsm.getOperations());
                 model.getOperations().addAll(lsm.getOperations());
                 operationPanel.update(model.getIndex());
