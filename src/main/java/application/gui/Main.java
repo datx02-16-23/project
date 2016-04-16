@@ -1,6 +1,7 @@
 package application.gui;
 
 import application.assets.Strings;
+import application.gui.panels.OperationPanel;
 import application.gui.panels.SourcePanel;
 import application.model.*;
 import application.visualization.Visualization;
@@ -15,6 +16,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
@@ -54,6 +56,7 @@ public class Main extends Application {
         fxmlLoader = new FXMLLoader(getClass().getResource("/VisualizerView.fxml"));
         SourcePanel sourceViewer = new SourcePanel();
         controller = new GUI_Controller(visualization, window, model, lsm, sourceViewer);
+        OperationPanel operationPanel = controller.getOperationPanel();
         fxmlLoader.setController(controller);
         // Load and get the root layout.
         VBox root;
@@ -72,6 +75,8 @@ public class Main extends Application {
         // Extracting some nodes from the fxml:
         SplitPane sP = (SplitPane) fxmlLoader.getNamespace().get("splitPane");
         VBox sidePanel = (VBox) fxmlLoader.getNamespace().get("rightSidePanel");
+        BorderPane operationPanelContainer = (BorderPane) fxmlLoader.getNamespace().get("operationPanelContainer");
+        operationPanelContainer.setCenter(operationPanel);
         // Hard coding an extra width (-5) to compensate for the width of the divider of splitPane!
         double leftDivider = sidePanel.getPrefWidth() / (scene.getWidth() - 5);
         sP.setDividerPositions(leftDivider, 1 - leftDivider);

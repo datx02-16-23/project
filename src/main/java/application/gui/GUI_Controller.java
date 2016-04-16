@@ -58,13 +58,9 @@ public class GUI_Controller implements CommunicatorListener {
     private int                        stepDelaySpeedupFactor   = 1;
     private long                       stepDelayBase            = 1500;
     private long                       stepDelay                = stepDelayBase / stepDelaySpeedupFactor;
-    private ListView<Operation>        operationHistory;
     private boolean                    autoPlayOnIncomingStream = true;
-    private TextField                  currOpTextField;
-    private Label                      totNrOfOpLabel;
-    private Label                      settingsSaveState;
-    private ProgressBar                opProgress;
     private InterpreterView            interpreterView;
+    private OperationPanel             operationPanel;
 
     public GUI_Controller (Visualization visualization, Stage window, iModel model, LogStreamManager lsm, SourcePanel sourceViewer){
         this.visualization = visualization;
@@ -74,7 +70,8 @@ public class GUI_Controller implements CommunicatorListener {
         this.lsm.PRETTY_PRINTING = true;
         this.lsm.setListener(this);
         this.sourceViewer = sourceViewer;
-        this.initConnectedPane();
+        this.operationPanel = new OperationPanel(this);
+        initConnectedPane();
         initSettingsPane();
         interpreterView = new InterpreterView(window);
         loadProperties();
@@ -152,7 +149,7 @@ public class GUI_Controller implements CommunicatorListener {
     public void restartButtonClicked (){
         stopAutoPlay();
         model.reset();
-        updateLists();
+        updatePanels();
         visualization.render();
     }
 
@@ -162,7 +159,7 @@ public class GUI_Controller implements CommunicatorListener {
     public boolean stepForwardButtonClicked (){
         if (model.stepForward()) {
             visualization.render();
-            updateLists();
+            updatePanels();
             return true;
         }
         return false;
@@ -175,7 +172,7 @@ public class GUI_Controller implements CommunicatorListener {
         stopAutoPlay();
         model.stepBackward();
         visualization.render();
-        updateLists();
+        updatePanels();
     }
 
     private Button speedButton;
@@ -200,81 +197,59 @@ public class GUI_Controller implements CommunicatorListener {
 
     public void openInterpreterView (){
         stopAutoPlay(); // Prevent concurrent modification exception.
-        interpreterView.show(this.operationHistory.getItems());
+        interpreterView.show(operationPanel.getItems());
     }
 
     public void interpretOperationHistory (){
         System.out.println("TODO: interpretOperationHistory ()");
     }
 
-    private void updateLists (){
+    /**
+     * Update SourcePanel and OperationPanel.
+     */
+    private void updatePanels (){
         Platform.runLater(new Runnable() {
 
             @Override
             public void run (){
                 int index = model.getIndex();
-                model.getCurrentStep().getLastOp();
                 sourceViewer.show(model.getCurrentStep().getLastOp());
-                updateOperationList(index);
+                operationPanel.update(index);
             }
         });
     }
 
-    private void updateOperationList (int index){
-        //List selection and position
-        operationHistory.getSelectionModel().select(index);
-        operationHistory.getFocusModel().focus(index);
-        operationHistory.scrollTo(index - 1);
-        currOpTextField.setText("" + (index));
-        //Text
-        totNrOfOpLabel.setText("/ " + operationHistory.getItems().size());
-        //TODO: Progress bar   
-        opProgress.setProgress(operationHistory.getItems().size() == 0 ? 0 : index / operationHistory.getItems().size());
+    /*
+     * Operation Panel listeners
+     */
+    /**
+     * Jump to the given index.
+     * 
+     * @param index
+     */
+    public void goToStep (int index){
+        model.goToStep(index);
+        visualization.render();
+        operationPanel.update(index);
     }
 
-    // TODO: Implement detailed inspection of operation
     public void inspectSelection (){
         Main.console.err("Not implemented.");
     }
 
-    public void inputGoToSelecton (){
-        int lineOffset;
-        try {
-            currOpTextField.setStyle("-fx-control-inner-background: white;");
-            lineOffset = Integer.parseInt(currOpTextField.getText());
-        } catch (Exception exc) {
-            // NaN
-            currOpTextField.setStyle("-fx-control-inner-background: #C40000;");
-            return;
-        }
-        if (lineOffset < 0) {
-            currOpTextField.setText("invalid");
-            currOpTextField.selectAll();
-            return;
-        }
-        goToOpIndex(lineOffset);
-    }
-
     public void gotoSelection (){
-        int lineOffset = operationHistory.getSelectionModel().getSelectedIndex();
-        goToOpIndex(lineOffset);
+        goToStep(operationPanel.getIndex());
     }
 
-    @SuppressWarnings("unchecked")
-    public void doubleClickGoTo (MouseEvent click){
-        if (click.getClickCount() == 2) {
-            goToOpIndex(((ListView<Operation>) click.getSource()).getSelectionModel().getSelectedIndex());
-        }
+    public void doubleClickGoTo (){
+        goToStep(operationPanel.getIndex());
     }
 
-    private void goToOpIndex (int index){
-        model.goToStep(index);
-        visualization.render();
-        currOpTextField.setText("" + index);
-        updateLists();
-    }
-
+    /*
+     * Operation Panel end.
+     */
     private DecimalFormat df;
+    private Label         settingsSaveState;
 
     private void initSettingsPane (){
         df = new DecimalFormat("#.####");
@@ -386,10 +361,9 @@ public class GUI_Controller implements CommunicatorListener {
         visualization.createVisuals();
         visualization.render();
         //Update operation list
-        operationHistory.getItems().clear();
-        operationHistory.getItems().addAll(lsm.getOperations());
+        operationPanel.getItems().setAll(lsm.getOperations());
         sourceViewer.setSources(lsm.getSources());
-        updateLists();
+        updatePanels();
         //Clean lsm
         lsm.clearData();
     }
@@ -417,14 +391,14 @@ public class GUI_Controller implements CommunicatorListener {
                     visualization.createVisuals();
                 }
                 sourceViewer.setSources(lsm.getSources());
-                operationHistory.getItems().addAll(lsm.getOperations());
-                totNrOfOpLabel.setText("/ " + operationHistory.getItems().size());
+                operationPanel.getItems().addAll(lsm.getOperations());
+                operationPanel.update(model.getIndex());
                 lsm.clearData();
                 if (autoPlayOnIncomingStream) {
                     stepForwardButtonClicked();
                 }
                 else {
-                    updateLists();
+                    updatePanels();
                 }
             }
         });
@@ -483,12 +457,8 @@ public class GUI_Controller implements CommunicatorListener {
         ObservableMap<String, Object> namespace = mainViewLoader.getNamespace();
         //Load from main view namespace
         //@formatter:off
-        operationHistory    = (ListView<Operation>) namespace.get("operationHistory");
         playPauseButton     = (Button) namespace.get("playPauseButton");
-        currOpTextField     = (TextField) namespace.get("currOpTextField");
-        totNrOfOpLabel      = (Label) namespace.get("totNrOfOpLabel");
         speedButton         = (Button) namespace.get("speedButton");
-        opProgress          = (ProgressBar) namespace.get("opProgress");
         //@formatter:on
     }
 
@@ -633,5 +603,10 @@ public class GUI_Controller implements CommunicatorListener {
         mediaPlayer.play();
         window.setTitle("SpoooooOOoooOOOooooOOoookster!");
         Main.console.out("GET SPoooooOOoooOOOooooOOoooKED!");
+    }
+
+    //Fulhack
+    public OperationPanel getOperationPanel (){
+        return operationPanel;
     }
 }

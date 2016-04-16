@@ -1,22 +1,129 @@
 package application.gui.panels;
 
+import java.io.IOException;
+import java.util.Map;
+
+import application.gui.GUI_Controller;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.FocusModel;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MultipleSelectionModel;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import wrapper.Operation;
 
-public class OperationPanel {
+public class OperationPanel extends Pane {
+
+    private final GUI_Controller                    controller;
+    private final TextField                         currOpTextField;
+    private final Label                             totNrOfOpLabel;
+    private final ProgressBar                       opProgress;
+    private final ObservableList<Operation>         items;
+    private final ListView<Operation>               operationHistory;
+    private final MultipleSelectionModel<Operation> selectionModel;
+    private final FocusModel<Operation>             focusModel;
+
+    @SuppressWarnings("unchecked")
+    public OperationPanel (GUI_Controller controller){
+        this.controller = controller;
+        this.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        //Load content
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/OperationListPanel.fxml"));
+        fxmlLoader.setController(controller);
+        VBox root = null;
+        try {
+            root = (VBox) fxmlLoader.load();
+        } catch (IOException e) {
+            System.err.println(e);
+        }
+//        root.prefHeightProperty().bind(this.heightProperty());
+//        root.prefWidthProperty().bind(this.widthProperty());
+        Map<String, Object> namespace = fxmlLoader.getNamespace();
+        currOpTextField = (TextField) namespace.get("currOpTextField");
+        currOpTextField.setOnKeyTyped(event -> {
+            onKeyTyped();
+        });
+        totNrOfOpLabel = (Label) namespace.get("totNrOfOpLabel");
+        opProgress = (ProgressBar) namespace.get("opProgress");
+        operationHistory = (ListView<Operation>) namespace.get("operationHistory");
+        System.out.println(operationHistory);
+        items = FXCollections.observableArrayList();
+        operationHistory.setItems(items);
+        items.add(new Operation(null, null, null, 0, 0, 0, 0));
+        selectionModel = operationHistory.getSelectionModel();
+        focusModel = operationHistory.getFocusModel();
+        this.getChildren().add(root);
+    }
+
     /**
      * Update the list position, focus and highlight. Update counters and progress bar.
+     * 
      * @param The index to jump to.
      */
-    public void update(int index){
-        
+    public void update (int index){
+        //List selection and position
+        selectionModel.select(index);
+        focusModel.focus(index);
+        operationHistory.scrollTo(index - 1);
+        currOpTextField.setText("" + (index));
+        //Text
+        int totItems = items.size();
+        totNrOfOpLabel.setText("/ " + totItems);
+        //Progress bar   
+        opProgress.setProgress(totItems == 0 ? 0 : index / totItems);
     }
 
     /**
      * Returns the items shown by this OperationPanel.
+     * 
      * @return The items shown by this OperationPanel.
      */
-    public ObservableList<Operation> getItems(){
-        return null;
+    public ObservableList<Operation> getItems (){
+        return items;
+    }
+
+    /**
+     * Returns the index of the selected Operation.
+     * 
+     * @return The index of the selected Operation.
+     */
+    public int getIndex (){
+        return selectionModel.getSelectedIndex();
+    }
+
+    /**
+     * Returns the of the selected Operation.
+     * 
+     * @return The selected Operation.
+     */
+    public Operation getOperation (){
+        return selectionModel.getSelectedItem();
+    }
+
+    /**
+     * Listener for the current operation box.
+     */
+    private void onKeyTyped (){
+        int index;
+        try {
+            currOpTextField.setStyle("-fx-control-inner-background: white;");
+            index = Integer.parseInt(currOpTextField.getText());
+        } catch (Exception exc) {
+            // NaN
+            currOpTextField.setStyle("-fx-control-inner-background: #C40000;");
+            return;
+        }
+        if (index < 0) {
+            currOpTextField.setStyle("-fx-control-inner-background: #C40000;");
+            currOpTextField.selectAll();
+            return;
+        }
+        controller.goToStep(index);
     }
 }

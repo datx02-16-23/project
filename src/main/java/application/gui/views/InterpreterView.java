@@ -12,6 +12,7 @@ import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -77,7 +78,6 @@ public class InterpreterView implements InvalidationListener{
         ListView<Operation> interpreterBefore = (ListView<Operation>) namespace.get("interpreterBefore");
         ListView<Operation> interpreterAfter = (ListView<Operation>) namespace.get("interpreterAfter");
         beforeItems = interpreterBefore.getItems();
-        System.out.println("beforeItems =" + beforeItems);
         afterItems = interpreterAfter.getItems();
         beforeItems.addListener(this);
         afterItems.addListener(this);
@@ -111,6 +111,7 @@ public class InterpreterView implements InvalidationListener{
     private void loadTestCases (){
         List<OperationType> selectedTypes = interpreter.getTestCases();
         VBox casesBox = (VBox) namespace.get("casesBox");
+        Insets insets =new Insets(2,0,2,5);
         //Create CheckBoxes for all Consolidate operation types
         for (OperationType type : OperationType.values()) {
             if(!type.consolidable){
@@ -131,6 +132,7 @@ public class InterpreterView implements InvalidationListener{
             else {
                 cb.setSelected(false);
             }
+            cb.setPadding(insets);
             casesBox.getChildren().add(cb);
         }
     }
