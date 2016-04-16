@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox focusTraversable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" style="-fx-background-color: orange;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<VBox focusTraversable="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <HBox maxHeight="25.0" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="0.0" prefHeight="25.0" prefWidth="160.0" VBox.vgrow="NEVER">
          <children>
@@ -34,12 +34,12 @@
             </Label>
          </children>
       </HBox>
-      <ProgressBar fx:id="opProgress" maxHeight="20.0" maxWidth="1.7976931348623157E308" minHeight="20.0" minWidth="0.0" prefHeight="20.0" prefWidth="200.0" progress="0.0">
+      <ProgressBar fx:id="opProgress" maxHeight="20.0" maxWidth="1.7976931348623157E308" minHeight="20.0" minWidth="0.0" prefHeight="20.0" prefWidth="200.0" progress="0.2">
          <padding>
             <Insets bottom="2.0" top="2.0" />
          </padding>
       </ProgressBar>
-      <ListView fx:id="operationHistory" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" minWidth="0.0" onMouseClicked="#doubleClickGoTo" style="-fx-background-color: blue;" VBox.vgrow="ALWAYS">
+      <ListView fx:id="operationHistory" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="150.0" minWidth="0.0" onMouseClicked="#doubleClickGoTo" VBox.vgrow="ALWAYS">
          <effect>
             <Glow />
          </effect>

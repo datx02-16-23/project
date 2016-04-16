@@ -88,7 +88,7 @@
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                         </GridPane>
-                        <VBox fx:id="rightSidePanel" maxHeight="1.7976931348623157E308" maxWidth="400.0" minHeight="85.0" minWidth="5.0" prefHeight="99999.0" prefWidth="190.0" spacing="10.0" style="-fx-background-color: red;">
+                        <VBox fx:id="rightSidePanel" maxHeight="1.7976931348623157E308" maxWidth="400.0" minHeight="85.0" minWidth="5.0" prefHeight="99999.0" prefWidth="190.0" spacing="10.0">
                            <padding>
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
@@ -141,7 +141,7 @@
                                     <Insets />
                                  </VBox.margin>
                               </GridPane>
-                              <BorderPane fx:id="operationPanelContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" style="-fx-background-color: green;" VBox.vgrow="ALWAYS" />
+                              <BorderPane fx:id="operationPanelContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" VBox.vgrow="ALWAYS" />
                            </children>
                         </VBox>
                     </items>
