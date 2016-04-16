@@ -75,6 +75,37 @@ public class Interpreter {
         }
         highOrderRoutine = newRoutine;
     }
+    
+    /**
+     * Add a test case to the Interpreter.
+     * 
+     * @param testCase The test case to add.
+     */
+    public void addTestCase (OperationType testCase){
+        switch (testCase) {
+            case swap:
+                consolidator.addConsolidable(new OP_Swap());
+                break;
+            default:
+                Main.console.err("Cannot consolidate OperationType: " + testCase.toString().toUpperCase());
+                break;
+        }
+    }
+    /**
+     * Remove a given testCase. When this method returns, the testcase is guaranteed to be removed.
+     * 
+     * @param testCase The testcase to remove.
+     */
+    public void removeTestCase (OperationType testCase){
+        switch (testCase) {
+            case swap:
+                consolidator.removeTestCase(testCase, new OP_Swap().getRWcount());
+                break;
+            default:
+                Main.console.err("Unknown Consolidable type: " + testCase);
+                break;
+        }
+    }
 
     /**
      * Attempt to consolidate the supplied list of operations. Returns True if the size of the list has changed as a
@@ -275,32 +306,6 @@ public class Interpreter {
     }
 
     /**
-     * Add a test case to the Interpreter.
-     * 
-     * @param testCase The test case to add.
-     */
-    public void addTestCase (OperationType testCase){
-        switch (testCase) {
-            case swap:
-                consolidator.addConsolidable(new OP_Swap());
-                break;
-            default:
-                Main.console.err("Cannot consolidate OperationType: " + testCase.toString().toUpperCase());
-                break;
-        }
-    }
-    
-    /**
-     * Remove a given testcase.
-     * 
-     * @param testCase The testcase to remove.
-     * @param c The Consolidable associated with the testCase.
-     */
-    public void removeTestCase (OperationType testCase, Consolidable c){
-        consolidator.removeTestCase(testCase, c.getRWcount());
-    }
-
-    /**
      * Returns the Consolidator used by the interpreter.
      * 
      * @return The Consolidator used by the interpreter.
@@ -449,22 +454,6 @@ public class Interpreter {
                 }
             }
             return simpleNames;
-        }
-
-        /**
-         * Remove a given testCase. When this method returns, the testcase is guaranteed to be removed.
-         * 
-         * @param testCase The testcase to remove.
-         */
-        public void removeTestCase (OperationType testCase){
-            switch (testCase) {
-                case swap:
-                    removeTestCase(testCase, new OP_Swap().getRWcount());
-                    break;
-                default:
-                    Main.console.err("Unknown Consolidable type: " + testCase);
-                    break;
-            }
         }
 
         /**
