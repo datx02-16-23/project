@@ -80,7 +80,7 @@ public class SourcePanel extends TabPane {
         Integer sourceTabIndex = nameTabMapping.get(op.source);
         if (sourceTabIndex == null) {
             Main.console.err("Could not find source file \"" + op.source + "\" for Operation: " + op);
-            Main.console.err("nameTabMapping = " + nameTabMapping);
+            Main.console.err("Known sources: " + nameTabMapping.keySet());
             return;
         }
         //Select tab

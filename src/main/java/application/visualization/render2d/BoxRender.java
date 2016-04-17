@@ -17,7 +17,7 @@ import wrapper.datastructures.*;
 
 public class BoxRender extends Render {
 
-    private static final double  GRID_SIZE              = 50;
+    private static final double GRID_SIZE              = 50;
     private final GridPane      grid;
     private static final String DEFAULT_COLOR          = "white";
     private final DataStructure struct;
@@ -28,10 +28,11 @@ public class BoxRender extends Render {
         grid = new GridPane();
         BorderPane bp = new BorderPane();
         //Struct name
-        if(struct.rawType.equals("independentElement")){
-            bp.setTop(new Label("identifier: " + struct.identifier));    
-        } else {
-            bp.setTop(new Label("\tidentifier: " + struct.identifier));            
+        if (struct.rawType.equals("independentElement")) {
+            bp.setTop(new Label("identifier: " + struct.identifier));
+        }
+        else {
+            bp.setTop(new Label("\tidentifier: " + struct.identifier));
         }
         //Build
         bp.setCenter(grid);
@@ -49,6 +50,7 @@ public class BoxRender extends Render {
         List<Element> structElements = struct.getElements();
         if (structElements.size() != elementsPreviousRender) {
             init();
+            elementsPreviousRender = structElements.size();
         }
         else {
             List<Element> modifiedElements = struct.getModifiedElements();
@@ -63,10 +65,7 @@ public class BoxRender extends Render {
             }
             struct.elementsDrawn();
         }
-        elementsPreviousRender = structElements.size();
     }
-    
-
 
     /**
      * Create and render all elements.
@@ -76,34 +75,38 @@ public class BoxRender extends Render {
         for (Element e : struct.getElements()) {
             addElementToGrid(e, null);
         }
-        elementsPreviousRender = struct.getElements().size();
         struct.elementsDrawn();
         calculateSize();
     }
+
     /**
      * Recalculate size.
      */
-    private void calculateSize(){
+    private void calculateSize (){
         int elems = struct.getElements().size();
-        double width = GRID_SIZE*elems+20;
-        double height =  GRID_SIZE*2+20;
+        double width = GRID_SIZE * elems + 20;
+        double height = GRID_SIZE * 2 + 20;
         this.setMinSize(width, height);
         this.setMaxSize(width, height);
     }
+
     //Ugly way of doing it, but I cant be bothered checking if the element moved.
     private void addElementToGrid (Element e, String style){
         ArrayElement ae = (ArrayElement) e;
         int[] index = ae.getIndex();
-        if(index == null){ //Assume IndependentElement
+        if (index == null) { //Assume IndependentElement
             grid.add(new Label(), 0, 0);
-            grid.add(new GridElement(e, style), 0, 1); 
-        } else if(index.length == 1){
+            grid.add(new GridElement(e, style), 0, 1);
+        }
+        else if (index.length == 1) {
             grid.add(new Label("  " + Arrays.toString(index)), index[0], 0);
-            grid.add(new GridElement(e, style), index[0], 1);            
-        } else if (index.length == 2){
+            grid.add(new GridElement(e, style), index[0], 1);
+        }
+        else if (index.length == 2) {
             grid.add(new Label("  " + Arrays.toString(index)), index[0], index[1] + 0);
-            grid.add(new GridElement(e, style), index[0], index[1] + 1);       
-        } else {
+            grid.add(new GridElement(e, style), index[0], index[1] + 1);
+        }
+        else {
             Main.console.err("ERROR: BoxRender cannot draw more than 2 dimensions.");
         }
     }
@@ -131,7 +134,7 @@ public class BoxRender extends Render {
             this.setMaxHeight(GRID_SIZE);
             Label label = new Label(e.getValue() + "");
             this.getChildren().add(label);
-            StackPane.setAlignment(label,Pos.CENTER);
+            StackPane.setAlignment(label, Pos.CENTER);
         }
     }
 }
