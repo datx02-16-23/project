@@ -30,6 +30,7 @@ public class OP_Read extends OP_ReadWrite {
      * 
      * @param target The target variable for this Read operation.
      */
+    @Override
     public void setTarget (Locator target){
         this.operationBody.put(Key.target, target);
     }
@@ -40,6 +41,7 @@ public class OP_Read extends OP_ReadWrite {
      * 
      * @param source The source variable for this Read operation.
      */
+    @Override
     public void setSource (Locator source){
         if (source == null) {
             throw new IllegalArgumentException("Source cannot be null in a Read operation!");
@@ -53,18 +55,22 @@ public class OP_Read extends OP_ReadWrite {
      * 
      * @param value Set the value(s) which were read from {@code source}.
      */
+    @Override
     public void setValue (double[] value){
         this.operationBody.put(Key.value, value);
     }
 
+    @Override
     public Locator getTarget (){
         return (Locator) this.operationBody.get(Key.target);
     }
 
+    @Override
     public Locator getSource (){
         return (Locator) this.operationBody.get(Key.source);
     }
 
+    @Override
     public double[] getValue (){
         return (double[]) this.operationBody.get(Key.value);
     }

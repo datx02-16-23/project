@@ -55,6 +55,7 @@ public class Array extends DataStructure {
      * 
      * @return The list of elements held by this Array.
      */
+    @Override
     public List<Element> getElements (){
         return elements;
     }
@@ -305,6 +306,7 @@ public class Array extends DataStructure {
          * 
          * @return The value held by this ArrayElement.
          */
+        @Override
         public double getValue (){
             return value;
         }
@@ -314,6 +316,7 @@ public class Array extends DataStructure {
          * 
          * @param newValue The new value of this ArrayElement.
          */
+        @Override
         public void setValue (double newValue){
             this.value = newValue;
         }
@@ -353,6 +356,7 @@ public class Array extends DataStructure {
             return this.value == rhs.value && Arrays.equals(this.index, rhs.index);
         }
 
+        @Override
         public String toString (){
             return Arrays.toString(index) + " = " + value;
         }

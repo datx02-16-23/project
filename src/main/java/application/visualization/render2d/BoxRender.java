@@ -73,7 +73,7 @@ public class BoxRender extends Render {
     private void init (){
         grid.getChildren().clear();
         for (Element e : struct.getElements()) {
-            addElementToGrid((ArrayElement) e, null);
+            addElementToGrid(e, null);
         }
         elementsPreviousRender = struct.getElements().size();
         struct.elementsDrawn();

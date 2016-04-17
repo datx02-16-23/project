@@ -259,7 +259,7 @@ public class GUI_Controller implements CommunicatorListener {
     }
 
     public void inspectSelection (){
-        Main.console.err("Not implemented.");
+        Main.console.force("Not implemented.");
     }
 
     public void gotoSelection (){
@@ -494,7 +494,6 @@ public class GUI_Controller implements CommunicatorListener {
         playPauseButton     = (Button) namespace.get("playPauseButton");
         speedButton         = (Button) namespace.get("speedButton");
         streamBehaviourMenuButton = (MenuButton) namespace.get("streamBehaviourMenuButton");
-        System.out.println("streamBehaviourMenuButton = " + streamBehaviourMenuButton);
         //@formatter:on
     }
 

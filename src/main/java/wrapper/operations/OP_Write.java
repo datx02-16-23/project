@@ -32,6 +32,7 @@ public class OP_Write extends OP_ReadWrite {
      * 
      * @param target The target variable for this Write operation.
      */
+    @Override
     public void setTarget (Locator target){
         if (target == null) {
             throw new IllegalArgumentException("Target cannot be null in a Write operation!");
@@ -45,6 +46,7 @@ public class OP_Write extends OP_ReadWrite {
      * 
      * @param source The source variable for this Write operation.
      */
+    @Override
     public void setSource (Locator source){
         this.operationBody.put(Key.source, source);
     }
@@ -54,18 +56,22 @@ public class OP_Write extends OP_ReadWrite {
      * 
      * @param value Set the value(s) written to {@code target}.
      */
+    @Override
     public void setValue (double[] value){
         this.operationBody.put(Key.value, value);
     }
 
+    @Override
     public Locator getTarget (){
         return (Locator) this.operationBody.get(Key.target);
     }
 
+    @Override
     public Locator getSource (){
         return (Locator) this.operationBody.get(Key.source);
     }
 
+    @Override
     public double[] getValue (){
         return (double[]) this.operationBody.get(Key.value);
     }

@@ -130,6 +130,7 @@ public class Simulator extends Application {
         exportQueued.setTooltip(new Tooltip("Export queued/received operations on a JSON format."));
         exportQueued.setOnAction(new EventHandler<ActionEvent>() {
 
+            @Override
             public void handle (ActionEvent event){
                 File f = chooseDirectory(primaryStage);
                 if (f == null) {
@@ -148,6 +149,7 @@ public class Simulator extends Application {
         exportSent.setTooltip(new Tooltip("Export sent operations on a JSON format."));
         exportSent.setOnAction(new EventHandler<ActionEvent>() {
 
+            @Override
             public void handle (ActionEvent event){
                 File f = chooseDirectory(primaryStage);
                 if (f == null) {
@@ -167,6 +169,7 @@ public class Simulator extends Application {
         importList.setTooltip(new Tooltip("Import a log file and append it to queued/received operations."));
         importList.setOnAction(new EventHandler<ActionEvent>() {
 
+            @Override
             public void handle (ActionEvent event){
                 File f = chooseFile(primaryStage);
                 if (f == null) {
@@ -186,6 +189,7 @@ public class Simulator extends Application {
         clearLists.setTooltip(new Tooltip("Clear lists, without transmitting anything."));
         clearLists.setOnAction(new EventHandler<ActionEvent>() {
 
+            @Override
             public void handle (ActionEvent event){
                 sm.clearLists();
             }
@@ -200,6 +204,7 @@ public class Simulator extends Application {
         continuousTransmit.setTooltip(new Tooltip("Trasmit all operations automatically. Creates new random operations if neccessary."));
         continuousTransmit.setOnAction(new EventHandler<ActionEvent>() {
 
+            @Override
             public void handle (ActionEvent event){
                 sm.continousTransmit();
             }
@@ -215,6 +220,7 @@ public class Simulator extends Application {
         message.setPrefSize(100, 30);
         message.setOnAction(new EventHandler<ActionEvent>() {
 
+            @Override
             public void handle (ActionEvent event){
                 sm.messageOperation();
             }
@@ -230,6 +236,7 @@ public class Simulator extends Application {
         init.setPrefSize(100, 30);
         init.setOnAction(new EventHandler<ActionEvent>() {
 
+            @Override
             public void handle (ActionEvent event){
                 sm.initOperation();
             }
@@ -245,6 +252,7 @@ public class Simulator extends Application {
         swap.setPrefSize(100, 30);
         swap.setOnAction(new EventHandler<ActionEvent>() {
 
+            @Override
             public void handle (ActionEvent event){
                 sm.swapOperation();
             }
@@ -260,6 +268,7 @@ public class Simulator extends Application {
         write.setPrefSize(100, 30);
         write.setOnAction(new EventHandler<ActionEvent>() {
 
+            @Override
             public void handle (ActionEvent event){
                 sm.writeOperation();
             }
@@ -275,6 +284,7 @@ public class Simulator extends Application {
         read.setPrefSize(100, 30);
         read.setOnAction(new EventHandler<ActionEvent>() {
 
+            @Override
             public void handle (ActionEvent event){
                 sm.readOperation();
             }
@@ -290,6 +300,7 @@ public class Simulator extends Application {
         transmitAll.setPrefSize(100, 30);
         transmitAll.setOnAction(new EventHandler<ActionEvent>() {
 
+            @Override
             public void handle (ActionEvent event){
                 sm.transmitAll();
             }
@@ -305,6 +316,7 @@ public class Simulator extends Application {
         transmit.setPrefSize(100, 30);
         transmit.setOnAction(new EventHandler<ActionEvent>() {
 
+            @Override
             public void handle (ActionEvent event){
                 sm.transmitFirst();
             }
@@ -336,6 +348,7 @@ public class Simulator extends Application {
         inspectQueued.setPrefSize(250, 30);
         inspectQueued.setOnAction(new EventHandler<ActionEvent>() {
 
+            @Override
             public void handle (ActionEvent event){
                 inspectOperation(waitList);
             }
@@ -349,6 +362,7 @@ public class Simulator extends Application {
         inspectSent.setPrefSize(250, 30);
         inspectSent.setOnAction(new EventHandler<ActionEvent>() {
 
+            @Override
             public void handle (ActionEvent event){
                 inspectOperation(sentList);
             }
@@ -363,6 +377,7 @@ public class Simulator extends Application {
         showMembers.setTooltip(new Tooltip("Request a list of the members connected the channel."));
         showMembers.setOnAction(new EventHandler<ActionEvent>() {
 
+            @Override
             public void handle (ActionEvent event){
                 showMembers();
             }
@@ -382,6 +397,7 @@ public class Simulator extends Application {
         knownVariables.setTooltip(new Tooltip("Open the Known Variables view."));
         knownVariables.setOnAction(new EventHandler<ActionEvent>() {
 
+            @Override
             public void handle (ActionEvent event){
                 knownVariablesView();
             }
@@ -407,6 +423,7 @@ public class Simulator extends Application {
         closeKnownVariablesPane.setPrefSize(100, 50);
         closeKnownVariablesPane.setOnAction(new EventHandler<ActionEvent>() {
 
+            @Override
             public void handle (ActionEvent event){
                 root.getChildren().remove(variablesView);
                 root.getChildren().add(baseView);
@@ -442,6 +459,7 @@ public class Simulator extends Application {
         interpret.setPrefSize(100, 30);
         interpret.setOnAction(new EventHandler<ActionEvent>() {
 
+            @Override
             public void handle (ActionEvent event){
                 sm.interpret();
             }

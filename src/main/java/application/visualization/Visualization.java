@@ -8,7 +8,6 @@ import application.visualization.render2d.IndependentElementRender;
 import application.visualization.render2d.Render;
 import javafx.scene.layout.GridPane;
 import wrapper.datastructures.DataStructure;
-import wrapper.datastructures.IndependentElement;
 
 public class Visualization extends GridPane {
 

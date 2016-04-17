@@ -43,6 +43,7 @@ public class Model implements iModel {
         return true;
     }
 
+    @Override
     public void goToStep (int toStepNo){
         if (operations == null || toStepNo >= operations.size() || toStepNo < 0) {
             return;

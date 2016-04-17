@@ -49,6 +49,7 @@ public class OP_Message extends Operation {
         return (String) this.operationBody.get(Key.value);
     }
 
+    @Override
     public String toString (){
         return "MESSAGE: \"" + getValue() + "\"";
     }

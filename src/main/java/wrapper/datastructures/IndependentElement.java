@@ -54,6 +54,7 @@ public class IndependentElement extends DataStructure implements Element {
         elements.add(init);
     }
 
+    @Override
     public List<Element> getElements (){
         return elements;
     }
@@ -63,6 +64,7 @@ public class IndependentElement extends DataStructure implements Element {
      * 
      * @return The value held by the element contained in this IndependentElement.
      */
+    @Override
     public double getValue (){
         if (elements.isEmpty()) {
             return 0;
@@ -70,6 +72,7 @@ public class IndependentElement extends DataStructure implements Element {
         return elements.get(0).getValue();
     }
 
+    @Override
     public int size (){
         return 1;
     }

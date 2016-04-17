@@ -52,6 +52,7 @@ public abstract class DataStructure extends AnnotatedVariable {
      */
     public abstract void applyOperation (Operation op);
 
+    @Override
     public String toString (){
         return super.identifier + ": " + super.rawType;
     }

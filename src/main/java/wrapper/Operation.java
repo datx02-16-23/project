@@ -83,6 +83,7 @@ public class Operation implements Serializable {
         return operation.toString().toUpperCase();
     }
 
+    @Override
     public String toString (){
         return operationBody == null ? "null" : operationBody.toString();
     }

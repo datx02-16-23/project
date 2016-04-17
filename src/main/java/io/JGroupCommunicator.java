@@ -263,6 +263,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
      * 
      * @return The first received Wrapper in queue.
      */
+    @Override
     public Wrapper popQueuedMessage (){
         return incomingQueue.remove(0);
     }
@@ -272,6 +273,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
      * 
      * @return The all received Wrappers in queue.
      */
+    @Override
     public List<Wrapper> getAllQueuedMessages (){
         ArrayList<Wrapper> allQueuedMessages = new ArrayList<Wrapper>();
         if (incomingQueue.isEmpty() == false) {
@@ -286,6 +288,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
      * 
      * @param outgoing The Wrapper to send.
      */
+    @Override
     public boolean sendWrapper (Wrapper outgoing){
         Message outMessage = new Message();
         if (senderMode == SENDER_MODE_NATIVE) {
@@ -314,6 +317,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
      * @param JSONString The JSON String to send.
      * @return True if the String was successfully sent. False otherwise.
      */
+    @Override
     public boolean sendString (String JSONString){
         Message m = new Message();
         m.setObject(new MavserMessage(JSONString, senderId, MavserMessage.JSON));
@@ -326,6 +330,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
         return true;
     }
 
+    @Override
     public boolean sendWrappers (List<Wrapper> outgoing){
         boolean allSuccessful = true;
         for (Wrapper w : outgoing) {
@@ -337,6 +342,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
     /**
      * Destroy channel and free resources. Should be called before exiting to prevent resource leaks.
      */
+    @Override
     public void close (){
         jChannel.close();
     }

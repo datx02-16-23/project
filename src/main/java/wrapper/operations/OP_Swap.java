@@ -118,6 +118,7 @@ public class OP_Swap extends Operation implements Consolidable {
         return 3;
     }
 
+    @Override
     public String toSimpleString (){
         return toString();
     }

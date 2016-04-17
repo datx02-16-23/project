@@ -151,6 +151,7 @@ public class Main extends Application {
         return sb.toString(); // Shouldn't get called.
     }
 
+    @Override
     public void stop (){
         if (controller != null) {
             controller.stopAutoPlay(); // Kill autoplay thread.
