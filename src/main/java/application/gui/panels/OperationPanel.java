@@ -123,11 +123,6 @@ public class OperationPanel extends Pane {
             currOpTextField.setStyle("-fx-control-inner-background: #C40000;");
             return;
         }
-        if (index < 0) {
-            currOpTextField.setStyle("-fx-control-inner-background: #C40000;");
-            currOpTextField.selectAll();
-            return;
-        }
         controller.goToStep(index);
     }
 }
