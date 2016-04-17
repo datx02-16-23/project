@@ -255,7 +255,7 @@ public class GUI_Controller implements CommunicatorListener {
     public void goToStep (int index){
         model.goToStep(index);
         visualization.render();
-        operationPanel.update(index, false);
+        operationPanel.update(model.getIndex(), false);
     }
 
     public void inspectSelection (){

@@ -78,7 +78,7 @@ public class Main extends Application {
         SplitPane sP = (SplitPane) namespace.get("splitPane");
         BorderPane operationPanelContainer = (BorderPane) namespace.get("operationPanelContainer");
         operationPanelContainer.setCenter(operationPanel);
-        double leftDivider = (((GridPane) namespace.get("buttonsGrid")).getPrefWidth()+14) / scene.getWidth();
+        double leftDivider = (((GridPane) namespace.get("buttonsGrid")).getPrefWidth() + 14) / scene.getWidth();
         sP.setDividerPositions(leftDivider, 1 - leftDivider);
         // Add examples
         Menu examples = (Menu) namespace.get("examplesMenu");
@@ -170,11 +170,14 @@ public class Main extends Application {
      */
     public class MavserConsole {
 
-        private static final String force       = "<>\t";
-        public boolean              quiet       = false;
-        public boolean              information = true;
-        public boolean              error       = true;
-        public boolean              debug       = false;
+        private static final String prepend_force = "<>\t";
+        private static final String prepend_err   = ">\t";
+        private static final String prepend_info  = "";
+        private static final String prepend_debug = "";
+        public boolean              quiet         = false;
+        public boolean              info          = true;
+        public boolean              err           = true;
+        public boolean              debug         = false;
         public final TextArea       consoleTextArea;
 
         public MavserConsole (TextArea consoleTextArea){
@@ -189,10 +192,10 @@ public class Main extends Application {
          * @param info The line to prine.
          */
         public void info (String info){
-            if (quiet || !information) {
+            if (quiet || !this.info) {
                 return;
             }
-            print(info + "\n");
+            print(prepend_info + info + "\n");
         }
 
         /**
@@ -201,34 +204,34 @@ public class Main extends Application {
          * @param err The error to print.
          */
         public void err (String err){
-            if (quiet || !error) {
+            if (quiet || !this.err) {
                 return;
             }
-            print("\t" + err + "\n");
+            print(prepend_err + err + "\n");
         }
 
         /**
-         * Print a verbose String. Generally DISABLED.
+         * Print a debug String. Generally DISABLED.
          * 
-         * @param out A verbose String to print.
+         * @param debug A debug String to print.
          */
-        public void debug (String out){
-            if (quiet || !debug) {
-                print(out + "\n");
+        public void debug (String debug){
+            if (quiet || !this.debug) {
+                print(prepend_debug + debug + "\n");
             }
         }
 
         /**
          * Print a line regardless of settings.
          * 
-         * @param str The line to print.
+         * @param force The line to print.
          */
-        public void force (String str){
-            print(force + str + "\n");
+        public void force (String force){
+            print(prepend_force + force + "\n");
         }
 
         /**
-         * Print the given String. Run on JavaFX Application thread.
+         * Print the given String. Runs on JavaFX Application thread.
          * 
          * @param string The string to print to the console.
          */
@@ -246,8 +249,8 @@ public class Main extends Application {
          * Enable or disable information printouts.
          */
         public void setInfo (boolean value){
-            information = value;
-            force("Information printouts " + (information ? "ENABLED." : "DISABLED."));
+            info = value;
+            force("Information printouts " + (info ? "ENABLED." : "DISABLED."));
         }
 
         /**
@@ -270,8 +273,8 @@ public class Main extends Application {
          * Enable or disable error printouts.
          */
         public void setError (boolean value){
-            error = value;
-            force("Error printouts " + (error ? "ENABLED." : "DISABLED."));
+            err = value;
+            force("Error printouts " + (err ? "ENABLED." : "DISABLED."));
         }
 
         public void init (){

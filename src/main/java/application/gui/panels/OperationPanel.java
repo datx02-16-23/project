@@ -70,16 +70,17 @@ public class OperationPanel extends Pane {
      */
     public void update (int index, boolean jump){
         //List selection and position
-        if(jump){
+        if (jump) {
             selectionModel.select(index);
             focusModel.focus(index);
-            operationHistory.scrollTo(index-1);
+            operationHistory.scrollTo(index - 1);
         }
         currOpTextField.setText("" + (index));
         int totItems = items.size();
         totNrOfOpLabel.setText("/ " + totItems);
         //Progress bar 
-        opProgress.setProgress((double) index / (double) totItems);
+        double progress = totItems == 0 ? -1 : (double) index / (double) totItems;
+        opProgress.setProgress(progress);
     }
 
     /**
