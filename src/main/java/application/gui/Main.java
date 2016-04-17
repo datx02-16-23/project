@@ -19,12 +19,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -50,6 +54,7 @@ public class Main extends Application {
 
     @Override
     public void start (Stage primaryStage) throws Exception{
+        System.out.println("HERE WE GO!");
         window = primaryStage;
         window.setTitle(Strings.PROJECT_NAME);
         // Create a Group view for the AV.
@@ -84,18 +89,24 @@ public class Main extends Application {
         Menu examples = (Menu) namespace.get("examplesMenu");
         // Get all .json files
         File folder = new File(getClass().getResource("/examples").getFile());
-        File[] files = folder.listFiles( (dir, name) -> name.endsWith(".oi"));
-        // loop through all files and add menu item
-        int i = 0;
-        for (; i < files.length; i++) {
-            if (files[i].isFile()) {
-                File file = files[i];
-                MenuItem ex = new MenuItem(stylizeExampleName(file.getName()));
-                ex.setOnAction(event1 -> controller.loadFile(file));
-                examples.getItems().add(ex);
+        Files.walk(Paths.get(folder.getPath())).forEach(filePath -> {
+            if (Files.isRegularFile(filePath)) {
+                System.out.println(filePath);
             }
-        }
-        Main.console.info("Loaded " + i + " examples from: " + getClass().getResource("/examples").getFile());
+        });
+//        File[] files = folder.listFiles( (dir, name) -> name.endsWith(".oi"));
+//        System.out.d("files = " + files);
+//        // loop through all files and add menu item
+//        int i = 0;
+//        for (; i < files.length; i++) {
+//            if (files[i].isFile()) {
+//                File file = files[i];
+//                MenuItem ex = new MenuItem(stylizeExampleName(file.getName()));
+//                ex.setOnAction(event1 -> controller.loadFile(file));
+//                examples.getItems().add(ex);
+//            }
+//        }
+//        Main.console.info("Loaded " + i + " examples from: " + getClass().getResource("/examples").getFile());
         // Add SourceViewer
         AnchorPane sourceViewContainer = (AnchorPane) namespace.get("sourceViewContainer");
         sourceViewContainer.getChildren().add(sourceViewer);
@@ -118,6 +129,7 @@ public class Main extends Application {
         window.show();
         // Load needed components of from main view in Controller.
         controller.loadMainViewFxID(fxmlLoader);
+        System.out.println("I THINK WE MADE IT BOIS!");
     }
 
     /**
@@ -165,7 +177,7 @@ public class Main extends Application {
     /**
      * Printout of error messages and warnings from the program. Strings only. Use Object toString to print them.
      * 
-     * @author Richard
+     * @author Richard Sundqvist
      *
      */
     public class MavserConsole {

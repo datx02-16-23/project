@@ -110,7 +110,7 @@ public class BoxRender extends Render {
     /**
      * The actual drawing surface for the elements.
      * 
-     * @author Richard
+     * @author Richard Sundqvist
      *
      */
     private class GridElement extends StackPane {

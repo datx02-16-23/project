@@ -1,7 +1,5 @@
 package wrapper.datastructures;
 
-import java.util.ArrayList;
-
 import application.gui.Main;
 import wrapper.AnnotatedVariable;
 import wrapper.operations.Key;
@@ -10,10 +8,10 @@ import wrapper.operations.OperationParser;
 /**
  * Contains methods to parse data structures. Cannot be instantiated.
  * 
- * @author Richard
+ * @author Richard Sundqvist
  *
  */
-public class DataStructureParser {
+public abstract class DataStructureParser {
 
     private DataStructureParser (){
     };

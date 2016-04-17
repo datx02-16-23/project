@@ -13,7 +13,7 @@ import wrapper.operations.*;
 /**
  * A representation of the Array data structure, using doubles as values.
  * 
- * @author Richard
+ * @author Richard Sundqvist
  *
  */
 public class Array extends DataStructure {
@@ -284,7 +284,7 @@ public class Array extends DataStructure {
     /**
      * An element in an Array. The elements do not keep track of which Array they belong to.
      * 
-     * @author Richard
+     * @author Richard Sundqvist
      *
      */
     public static class ArrayElement implements Element {

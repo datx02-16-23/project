@@ -16,7 +16,7 @@ import wrapper.Wrapper;
 /**
  * Interprocess communication implementation using the JGroups library.
  * 
- * @author Richard
+ * @author Richard Sundqvist
  *
  */
 public class JGroupCommunicator extends ReceiverAdapter implements Communicator {

@@ -30,7 +30,7 @@ import wrapper.operations.OperationType;
 /**
  * Controller and model for the Interpreter view.
  * 
- * @author Richard
+ * @author Richard Sundqvist
  *
  */
 public class InterpreterView implements InvalidationListener{

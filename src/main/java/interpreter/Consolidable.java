@@ -9,7 +9,7 @@ import wrapper.operations.OP_ReadWrite;
  * A consolidable element can be broken into a series read/write operations. <br>
  * <b>IMPORTANT:</b> Any class implementing Consolidable should inherit Operation!
  * 
- * @author Richard
+ * @author Richard Sundqvist
  *
  */
 public interface Consolidable {

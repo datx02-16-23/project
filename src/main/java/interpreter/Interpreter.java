@@ -11,7 +11,7 @@ import wrapper.operations.*;
 /**
  * Class for consolidating groups of low level operations (read/write).
  * 
- * @author Richard
+ * @author Richard Sundqvist
  *
  */
 public class Interpreter {
@@ -332,7 +332,7 @@ public class Interpreter {
     /**
      * A Consolidator attempts to consolidate low level (read/write) operations into higher level operations.
      * 
-     * @author Richard
+     * @author Richard Sundqvist
      *
      */
     public class Consolidator {

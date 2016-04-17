@@ -13,7 +13,7 @@ import wrapper.Operation;
 /**
  * Class and methods for displaying and jumping to relevant source code. Can only highlight full rows.
  * 
- * @author Richard
+ * @author Richard Sundqvist
  *
  */
 public class SourcePanel extends TabPane {
@@ -114,7 +114,7 @@ public class SourcePanel extends TabPane {
                 "        this = new TabPane();", "        nameTabMapping = new HashMap<String, Integer>();", "        this.prefHeightProperty().bind(this.heightProperty());",
                 "        this.prefWidthProperty().bind(this.widthProperty());", "        this.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);", "        this.setPrefSize(200, 200);",
                 "        this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);", "        this.getChildren().add(this);", "        initTab(); //Print some brillaint source code.", "    }",
-                "Richard Sundqvist 2016-04-15 14:48");
+                "Richard Sundqvist Sundqvist 2016-04-15 14:48");
         linesView.prefHeightProperty().bind(this.heightProperty());
         linesView.prefWidthProperty().bind(this.widthProperty());
         //Add children

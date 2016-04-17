@@ -34,7 +34,7 @@ import wrapper.operations.OperationParser;
 /**
  * A LogStreamManager handles communication between processes, components, and the OS file system.
  * 
- * @author Richard
+ * @author Richard Sundqvist
  */
 public class LogStreamManager implements CommunicatorListener {
 

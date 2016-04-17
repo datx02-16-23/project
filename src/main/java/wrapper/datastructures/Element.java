@@ -3,7 +3,7 @@ package wrapper.datastructures;
 /**
  * An element in a data structure.
  * 
- * @author Richard
+ * @author Richard Sundqvist
  *
  */
 public interface Element {

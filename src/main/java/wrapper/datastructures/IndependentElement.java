@@ -12,7 +12,7 @@ import wrapper.operations.*;
  * An independent variable holding a single element. May for example be used as a temporary variable when performing a
  * swap. IndependentElement extends AnnotatedVariable, and is notably both an Element and a DataStructure.
  * 
- * @author Richard
+ * @author Richard Sundqvist
  *
  */
 public class IndependentElement extends DataStructure implements Element {

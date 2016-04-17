@@ -10,7 +10,7 @@ import wrapper.Operation;
 /**
  * A data structure for use in visualisation.
  * 
- * @author Richard
+ * @author Richard Sundqvist
  *
  */
 public abstract class DataStructure extends AnnotatedVariable {

@@ -633,7 +633,7 @@ public class Simulator extends Application {
                     "        this = new TabPane();", "        nameTabMapping = new HashMap<String, Integer>();", "        this.prefHeightProperty().bind(this.heightProperty());",
                     "        this.prefWidthProperty().bind(this.widthProperty());", "        this.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);", "        this.setPrefSize(200, 200);",
                     "        this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);", "        this.getChildren().add(this);", "        initTab(); //Print some brillaint source code.", "    }",
-                    "Richard Sundqvist 2016-04-15 14:48");
+                    "Richard Sundqvist Sundqvist 2016-04-15 14:48");
             ObservableList<String> tmp2 = FXCollections.observableArrayList();
             tmp2.addAll("    public void trySources (Map<String, List<String>> sources){", "        if (sources == null) {", "            return;", "        }", "        this.getTabs().clear();",
                     "        nameTabMapping.clear();", "        int tabNumber = 0;", "        for (String sourceName : sources.keySet()) {",

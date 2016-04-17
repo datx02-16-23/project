@@ -57,7 +57,7 @@ public interface Communicator {
     /**
      * Wrapper for messages sent and recevied by implementations of the Communicator interface.
      * 
-     * @author Richard
+     * @author Richard Sundqvist
      *
      */
     @SuppressWarnings("serial")

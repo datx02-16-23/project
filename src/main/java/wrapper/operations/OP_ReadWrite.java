@@ -10,7 +10,7 @@ import wrapper.Operation;
 /**
  * A primitive operation from which all other operations on data structures may be constructed.
  * 
- * @author Richard
+ * @author Richard Sundqvist
  *
  */
 public abstract class OP_ReadWrite extends Operation {
