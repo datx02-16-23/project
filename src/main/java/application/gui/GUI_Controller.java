@@ -632,7 +632,7 @@ public class GUI_Controller implements CommunicatorListener {
     /*
      * How to do sound in JavaFX.
      */
-    private boolean oooooOOoooOOOooooOOoooed = true;
+    private boolean oooooOOoooOOOooooOOoooed = false;
     public void oooooOOoooOOOooooOOooo (Event e){
         // https://www.youtube.com/watch?v=inli9ukUKIs
         URL resource = getClass().getResource("/assets/oooooOOoooOOOooooOOooo.mp3");
