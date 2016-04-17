@@ -247,14 +247,20 @@ public class Main extends Application {
 
         /**
          * Enable or disable information printouts.
+         * 
+         * @param value The setting to apply.
          */
         public void setInfo (boolean value){
             info = value;
-            force("Information printouts " + (info ? "ENABLED." : "DISABLED."));
+            if (!quiet) {
+                print(prepend_info + "Information printouts " + (info ? "ENABLED." : "DISABLED.") + "\n");
+            }
         }
 
         /**
          * Enable or disable Quiet Mode.
+         * 
+         * @param value The setting to apply.
          */
         public void setQuiet (boolean value){
             quiet = value;
@@ -263,21 +269,29 @@ public class Main extends Application {
 
         /**
          * Enable or disable debug printouts.
+         * 
+         * @param value The setting to apply.
          */
         public void setDebug (boolean value){
             debug = value;
-            force("Debug printouts " + (debug ? "ENABLED." : "DISABLED."));
+            if (!quiet) {
+                print(prepend_debug + "Debug printouts " + (debug ? "ENABLED." : "DISABLED.") + "\n");
+            }
         }
 
         /**
          * Enable or disable error printouts.
+         * 
+         * @param value The setting to apply.
          */
         public void setError (boolean value){
             err = value;
-            force("Error printouts " + (err ? "ENABLED." : "DISABLED."));
+            if (!quiet) {
+                print(prepend_err + "Error printouts " + (err ? "ENABLED." : "DISABLED.") + "\n");
+            }
         }
 
-        public void init (){
+        private void init (){
             StringBuilder sb = new StringBuilder();
             sb.append("Welcome to " + Strings.PROJECT_NAME + "!\n");
             sb.append("Version: " + Strings.VERSION_NUMBER + "\n\n");

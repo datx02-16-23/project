@@ -208,7 +208,7 @@ public class InterpreterView implements InvalidationListener{
     }
 
     /**
-     * onAction for the "<--" button.
+     * onAction for the "{@literal<}--" button.
      */
     public void moveToBefore (){
         if (afterItems.isEmpty() == false) {

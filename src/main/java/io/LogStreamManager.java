@@ -189,10 +189,11 @@ public class LogStreamManager implements CommunicatorListener {
 
     /**
      * Print the operations and header information currently held by this LogStreamManager. Set the public variable
-     * {@code PRETTY_PRINTING} to true to enable human-readable output.
+     * {@code PRETTY_PRINTING} to true to enable human-readable output. If {@code autoName} is true, a file name
+     * on the form "YY-MM-DD_HHMMSS.oi" will be generated.
      * 
      * @param targetPath The location to print the log file.
-     * @param autoName
+     * @param autoName If {@code true} file name will be created automatically.
      */
     public void printLog (String targetPath, boolean autoName){
         HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
@@ -264,7 +265,7 @@ public class LogStreamManager implements CommunicatorListener {
     /**
      * Stream the given Operation list using the Communicator carried by this LogStreamManager.
      * 
-     * @param operation The operations to stream.
+     * @param operations The operations to stream.
      * @return True if successful, false otherwise.
      */
     public boolean streamOperations (List<Operation> operations){

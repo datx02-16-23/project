@@ -36,7 +36,7 @@ public class SourcePanel extends TabPane {
     /**
      * Set the sources which are to be displayed by this SourceViewer. <b>Clears if newSources is {@code null}.</b>
      * 
-     * @param soutces The sources to display.
+     * @param newSources The sources to display.
      */
     public void setSources (Map<String, List<String>> newSources){
         getTabs().clear();

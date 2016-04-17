@@ -65,7 +65,7 @@ public class OperationPanel extends Pane {
     /**
      * Update the list position, focus and highlight. Update counters and progress bar.
      * 
-     * @param The item to select.
+     * @param index The index to select.
      * @param jump if {@code true}, the list will jump to the selected item.
      */
     public void update (int index, boolean jump){

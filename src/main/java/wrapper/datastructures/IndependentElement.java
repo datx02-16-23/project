@@ -47,6 +47,7 @@ public class IndependentElement extends DataStructure implements Element {
 
     /**
      * Initialize an element with value 0.
+     * @param value The value to initialize with.
      */
     public void initElement (double value){
         Element init = new Array.ArrayElement(value, null);

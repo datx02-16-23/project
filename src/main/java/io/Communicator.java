@@ -33,6 +33,7 @@ public interface Communicator {
      * Send all Wrappers to everyone listening on the current channel.
      * 
      * @param outgoing The list of Wrappers to send.
+     * @return True if all wrappers were successfully sent.
      */
     public boolean sendWrappers (List<Wrapper> outgoing);
 

@@ -42,23 +42,26 @@ public interface iModel {
     void setOperations (List<Operation> operations);
 
     /**
-     * Returns a hashmap with the identifiers and the datastructures
+     * Returns a hashmap with the identifiers and the datastructures.
+     * @return The map of data structures held by this model.
      */
     Map<String, DataStructure> getStructures ();
 
     /**
-     * A list containing all the operations held by the model
+     * A list containing all the operations held by the model.
+     * @return the list of operations held by this model.
      */
     List<Operation> getOperations ();
 
     /**
      * The current state of the datastructures given the current index contained in an iStep
+     * @return the current step of this model.
      */
     iStep getCurrentStep ();
 
     /**
-     * Current index
-     * @return
+     * Return the current index of this model.
+     * @return The current index of this model.
      */
     int getIndex ();
 

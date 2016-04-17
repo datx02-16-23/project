@@ -4,8 +4,7 @@ import application.assets.Strings;
 import wrapper.Locator;
 
 /**
- * Create a new Read operation, from the variable at index specified by {@code source} to the variable at index
- * specified by {@target}. The target may be set null if necessary.
+ * Create a new Read operation.
  */
 public class OP_Read extends OP_ReadWrite {
 

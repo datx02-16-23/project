@@ -182,6 +182,8 @@ public class GUI_Controller implements CommunicatorListener {
 
     /**
      * Step the animation forward
+     * 
+     * @return True if stepForward was successful, false otherwise.
      */
     public boolean stepForwardButtonClicked (){
         if (model.stepForward()) {
@@ -250,9 +252,9 @@ public class GUI_Controller implements CommunicatorListener {
      * Operation Panel listeners
      */
     /**
-     * Jump to the given index.
+     * Jump to the given index. {@code index} less than 0 jumps to start, {@code index} greater than {@code size} jumps to end.
      * 
-     * @param index
+     * @param index The index to jump to.
      */
     public void goToStep (int index){
         model.goToStep(index);
@@ -633,6 +635,7 @@ public class GUI_Controller implements CommunicatorListener {
      * How to do sound in JavaFX.
      */
     private boolean oooooOOoooOOOooooOOoooed = false;
+
     public void oooooOOoooOOOooooOOooo (Event e){
         // https://www.youtube.com/watch?v=inli9ukUKIs
         URL resource = getClass().getResource("/assets/oooooOOoooOOOooooOOooo.mp3");
@@ -640,7 +643,7 @@ public class GUI_Controller implements CommunicatorListener {
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.play();
         Main.console.info("GET SPoooooOOoooOOOooooOOoooKED!");
-        if(!oooooOOoooOOOooooOOoooed){
+        if (!oooooOOoooOOOooooOOoooed) {
             Button spooky = (Button) e.getSource();
             spooky.setBlendMode(BlendMode.SRC_OVER);
             //https://pixabay.com/en/ghost-white-spooky-scary-ghostly-157985/

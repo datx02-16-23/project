@@ -178,8 +178,7 @@ public class OperationParser {
     }
 
     /**
-     * What is returned depends heavily on how the data was received. If passed directly, it will be an likely be and
-     * array. If Processed by Gson, it will probably be an ArrayList<Double>.
+     * Convert a List of ints or doubles to an array of  ints.
      * 
      * @param listOrArray Should be an int array, or an ArrayList of Integers or Doubles.
      * @return An array of ints, or null.

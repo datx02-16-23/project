@@ -18,13 +18,13 @@ public interface iStep {
 
     /**
      * The last applied operation
-     * @return
+     * @return The last applied operation.
      */
     Operation getLastOp ();
 
     /**
      * Modify the step by applying an operation
-     * @param op
+     * @param op The operation to apply.
      */
     void applyOperation (Operation op);
 

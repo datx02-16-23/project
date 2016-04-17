@@ -47,11 +47,16 @@ public class Operation implements Serializable {
     public int                        endColumn;
 
     /**
-     * Create a new Operation with the given operation identifier and body.
+     * /** Create a new Operation.
      * 
      * @param operation The literal name of the operation, such as "init" (initialize) or "read".
      * @param operationBody A map containing the identifier of the field (such as "destination" or "value") and the data
      * they contained.
+     * @param source The source file this operation originates from.
+     * @param beginLine The first line this operation originates from.
+     * @param endLine The last line this operation originates from.
+     * @param beginColumn The first column this operation originates from.
+     * @param endColumn The last line column operation originates from.
      */
     public Operation (OperationType operation, HashMap<Key, Object> operationBody, String source, int beginLine, int endLine, int beginColumn, int endColumn){
         this.operation = operation;

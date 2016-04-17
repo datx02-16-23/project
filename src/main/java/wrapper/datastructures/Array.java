@@ -295,6 +295,8 @@ public class Array extends DataStructure {
 
         /**
          * Construct a new ArrayElement with the given value and index.
+         * @param value The value for this ArrayElement.
+         * @param index The index for this ArrayElement.
          */
         public ArrayElement (double value, int[] index){
             this.value = value;

@@ -20,6 +20,7 @@ public interface Element {
 
     /**
      * Set the value held by this Element.
+     * @param newValue the new value for this Element.
      */
     public abstract void setValue (double newValue);
     
