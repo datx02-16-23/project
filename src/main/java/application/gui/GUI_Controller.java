@@ -19,7 +19,9 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -630,14 +632,23 @@ public class GUI_Controller implements CommunicatorListener {
     /*
      * How to do sound in JavaFX.
      */
-    public void oooooOOoooOOOooooOOooo (){
+    private boolean oooooOOoooOOOooooOOoooed = true;
+    public void oooooOOoooOOOooooOOooo (Event e){
         // https://www.youtube.com/watch?v=inli9ukUKIs
         URL resource = getClass().getResource("/assets/oooooOOoooOOOooooOOooo.mp3");
         Media media = new Media(resource.toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.play();
-        window.setTitle("SpoooooOOoooOOOooooOOoookster!");
         Main.console.info("GET SPoooooOOoooOOOooooOOoooKED!");
+        if(!oooooOOoooOOOooooOOoooed){
+            Button spooky = (Button) e.getSource();
+            spooky.setBlendMode(BlendMode.SRC_OVER);
+            //https://pixabay.com/en/ghost-white-spooky-scary-ghostly-157985/
+            Image img = new Image(getClass().getResourceAsStream("/assets/oooooOOoooOOOooooOOooo.png"));
+            spooky.setGraphic(new ImageView(img));
+            oooooOOoooOOOooooOOoooed = true;
+            window.setTitle("SpoooooOOoooOOOooooOOoookster!");
+        }
     }
 
     //Fulhack
