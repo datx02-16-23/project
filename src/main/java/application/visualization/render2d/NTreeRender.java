@@ -1,40 +1,33 @@
 package application.visualization.render2d;
 
+import java.util.Arrays;
 import java.util.List;
 
 import application.gui.Main;
-
-import java.util.Arrays;
-
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import wrapper.datastructures.Array.ArrayElement;
 import wrapper.datastructures.DataStructure;
-import wrapper.datastructures.*;
+import wrapper.datastructures.Element;
+import wrapper.datastructures.Array.ArrayElement;
 
-public class BoxRender extends Render {
+public class NTreeRender extends Render {
 
-    public static final double  GRID_SIZE              = 50;
+    public static final double  DIAMETER               = 50;
     private final GridPane      grid;
     private static final String DEFAULT_COLOR          = "white";
     private final DataStructure struct;
     private int                 elementsPreviousRender = 0;
 
-    public BoxRender (DataStructure struct){
+    public NTreeRender (DataStructure struct){
+        this.struct = struct;
         grid = new GridPane();
         BorderPane bp = new BorderPane();
-        if(struct.rawType.equals("independentElement")){
-            bp.setTop(new Label("identifier: " + struct.identifier));    
-        } else {
-            bp.setTop(new Label("\tidentifier: " + struct.identifier));            
-        }
+        bp.setTop(new Label("\tidentifier: " + struct.identifier));
         bp.setCenter(grid);
         this.getChildren().add(bp);
-        this.struct = struct;
-        init();
         this.setMinSize(200, 100);
         this.setMaxSize(200, 100);
     }
@@ -63,8 +56,6 @@ public class BoxRender extends Render {
         }
         elementsPreviousRender = structElements.size();
     }
-    
-
 
     /**
      * Create and render all elements.
@@ -78,30 +69,35 @@ public class BoxRender extends Render {
         struct.elementsDrawn();
         calculateSize();
     }
+
     /**
      * Recalculate size.
      */
-    private void calculateSize(){
+    private void calculateSize (){
         int elems = struct.getElements().size();
-        double width = GRID_SIZE*elems+20;
-        double height =  GRID_SIZE*2+20;
+        double width = DIAMETER * elems + 20;
+        double height = DIAMETER * 2 + 20;
         this.setMinSize(width, height);
         this.setMaxSize(width, height);
     }
+
     //Ugly way of doing it, but I cant be bothered checking if the element moved.
     private void addElementToGrid (Element e, String style){
         ArrayElement ae = (ArrayElement) e;
         int[] index = ae.getIndex();
-        if(index == null){ //Assume IndependentElement
+        if (index == null) { //Assume IndependentElement
             grid.add(new Label(), 0, 0);
-            grid.add(new GridElement(e, style), 0, 1); 
-        } else if(index.length == 1){
+            grid.add(new GridElement(e, style), 0, 1);
+        }
+        else if (index.length == 1) {
             grid.add(new Label("  " + Arrays.toString(index)), index[0], 0);
-            grid.add(new GridElement(e, style), index[0], 1);            
-        } else if (index.length == 2){
+            grid.add(new GridElement(e, style), index[0], 1);
+        }
+        else if (index.length == 2) {
             grid.add(new Label("  " + Arrays.toString(index)), index[0], index[1] + 0);
-            grid.add(new GridElement(e, style), index[0], index[1] + 1);       
-        } else {
+            grid.add(new GridElement(e, style), index[0], index[1] + 1);
+        }
+        else {
             Main.console.err("ERROR: BoxRender cannot draw more than 2 dimensions.");
         }
     }
@@ -114,7 +110,7 @@ public class BoxRender extends Render {
      */
     private class GridElement extends StackPane {
 
-        private static final String BASE = "-fx-border-color: black;\n" + "-fx-border-insets: 1;\n" + "-fx-border-width: 2;\n" + "-fx-border-radius: 3;\n" + "-fx-background-radius: 5;";
+        private static final String BASE = "-fx-border-color: black;\n" + "-fx-border-insets: 1;\n" + "-fx-border-width: 2;\n" + "-fx-border-radius: 25;\n" + "-fx-background-radius: 25;";
 
         private GridElement (Element e, String style){
             if (style == null) {
@@ -123,13 +119,13 @@ public class BoxRender extends Render {
             else {
                 this.setStyle(BASE + "\n-fx-background-color: " + style + ";");
             }
-            this.setPrefWidth(GRID_SIZE);
-            this.setPrefHeight(GRID_SIZE);
-            this.setMaxWidth(GRID_SIZE);
-            this.setMaxHeight(GRID_SIZE);
+            this.setPrefWidth(DIAMETER);
+            this.setPrefHeight(DIAMETER);
+            this.setMaxWidth(DIAMETER);
+            this.setMaxHeight(DIAMETER);
             Label label = new Label(e.getValue() + "");
             this.getChildren().add(label);
-            StackPane.setAlignment(label,Pos.CENTER);
+            StackPane.setAlignment(label, Pos.CENTER);
         }
     }
 }
