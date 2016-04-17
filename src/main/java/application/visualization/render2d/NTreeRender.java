@@ -21,10 +21,11 @@ import wrapper.datastructures.Array.ArrayElement;
  */
 public class NTreeRender extends Render {
 
-    private static final double      DIAMETER               = 50;
+    double                           cpkonst                = 200;
+    private static final double      DIAMETER               = 75;
+    private final Canvas             canvas;
     private final int                K;
     private final DataStructure      struct;
-    private final GraphicsContext    context;
     private final ArrayList<Integer> lowerLevelSums         = new ArrayList<Integer>();
     private int                      elementsPreviousRender = 0;
     private int                      totDepth, totBreadth, completedSize;
@@ -51,12 +52,11 @@ public class NTreeRender extends Render {
         lowerLevelSums.add(new Integer(0));
 //        this.setStyle("-fx-background-color: orange ;");
         //Build Canvas
-        Canvas canvas = new Canvas();
+        canvas = new Canvas();
         canvas.widthProperty().bind(this.widthProperty());
         canvas.heightProperty().bind(this.heightProperty());
         canvas.maxWidth(Double.MAX_VALUE);
         canvas.maxHeight(Double.MAX_VALUE);
-        context = canvas.getGraphicsContext2D();
 //        BorderPane bp = new BorderPane();
         //Struct name
 //        bp.setTop(new Label("\tidentifier:\n\n\n " + struct.identifier));
@@ -129,10 +129,14 @@ public class NTreeRender extends Render {
      * Recalculate size.
      */
     private void calculateSize (){
-        double width = hspace * (DIAMETER * totBreadth + 1);
+        double width = totBreadth * (DIAMETER + hspace + 1);
         double height = totDepth * (DIAMETER + vspace);
-        this.setMinSize(width, height);
-        this.setMaxSize(width, height);
+//        this.setMinSize(width, height);
+//        this.setMaxSize(width, height);
+        this.setMinSize(1000, 1000);
+        this.setMaxSize(1000, 1000);
+        System.out.println("width = " + width);
+        System.out.println("height = " + height);
     }
 
     /**
@@ -140,9 +144,9 @@ public class NTreeRender extends Render {
      */
     private void init (){
         calculateDepthAndBreadth();
-        //TODO: Clear canvas
+        GraphicsContext context = canvas.getGraphicsContext2D();
         context.setFill(COLOR_WHITE);
-        context.fillRect(0, 0, 500, 700);
+        context.fillRect(0, 0, this.getWidth(), this.getHeight());
         for (Element e : struct.getElements()) {
             ArrayElement ae = (ArrayElement) e;
             drawElement(ae.getValue() + "", ae.getIndex()[0], null);
@@ -160,7 +164,7 @@ public class NTreeRender extends Render {
     }
 
     private double getY (int depth){
-        return depth * DIAMETER * 2;
+        return depth * DIAMETER * 2 + cpkonst;
     }
 
     /**
@@ -176,24 +180,32 @@ public class NTreeRender extends Render {
         double x, y;
         if (index == 0) { //Root element
             x = this.getMaxWidth() / 2;
-            y = 0;
+            y = 0 + cpkonst;
             breadth = 0;
             depth = 0;
             //TODO: Possible to solve root element without special case?
         }
         else {
-            depth = 1;
-            //Calculate depth and breadth
-            while(lowerLevelSum(depth) <= index) {
-                depth++;
-            }
-            depth--;
-            breadth = (int) (index - lowerLevelSum(depth));
+            depth = getDepth(index);
+            breadth = getBreadth(index, depth);
             y = getY(depth);
             x = getX(breadth, depth);
         }
         //Dispatch
-        drawNode(value, x, y, getFillColor(style), depth, breadth);
+        drawNode(value, x, y, getFillColor(style), depth, breadth, index);
+    }
+
+    private int getDepth (int index){
+        int depth = 1;
+        //Calculate depth and breadth
+        while(lowerLevelSum(depth) <= index) {
+            depth++;
+        }
+        return depth - 1;
+    }
+
+    private int getBreadth (int index, int depth){
+        return index - lowerLevelSum(depth);
     }
 
     /*
@@ -208,26 +220,32 @@ public class NTreeRender extends Render {
      * @param fill The fill color of this node.
      * @param lastRow If {@code true}, no child connection lines are drawn.
      */
-    private void drawNode (String value, double x, double y, Color fill, int depth, int breadth){
+    private void drawNode (String value, double x, double y, Color fill, int depth, int breadth, int index){
+        GraphicsContext context = canvas.getGraphicsContext2D();
         System.out.println("fill = " + fill);
+        System.out.println(context);
         context.setFill(fill);
         context.fillOval(x, y, DIAMETER, DIAMETER);
         //Outline, text, children
         context.setFill(COLOR_BLACK);
         context.setStroke(COLOR_BLACK);
         context.strokeOval(x, y, DIAMETER, DIAMETER);
-        context.fillText(value, x + 6, y + DIAMETER / 2);
+        context.fillText("v: " + value == null ? "null" : value, x + 6, y + DIAMETER / 2);
         //Connect to children
         if (depth == totDepth) {
+            System.out.println("bottom bye!!\n\n");
             return; //Don't connect bottom level
         }
-        x = x + DIAMETER / 2; //x-mid of current node.
-        y = y + DIAMETER; //Bottom of current node.
-        double xOffset = this.getMaxWidth() / Math.pow(K, depth + 1);
-        //chilyY OK
-        double childY = y + DIAMETER * 2; //OK
-        context.strokeLine(x, y, x - xOffset, childY);
-        context.strokeLine(x, y, x + xOffset, childY);
+        System.out.println("lines!");
+        //Origin is always the same.
+        x = x + DIAMETER / 2;
+        y = y + DIAMETER;
+        double xOffset = DIAMETER / 2;
+        double childY = getY(depth + 1);
+        //Stroke lines to all children
+        for (int child = 0; child < K; child++) {
+            context.strokeLine(x, y, getX(getBreadth(K * index + 1 + child, depth + 1), depth + 1) + xOffset, childY);
+        }
     }
 
     /**
