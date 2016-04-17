@@ -17,23 +17,25 @@ import wrapper.datastructures.*;
 
 public class BoxRender extends Render {
 
-    public static final double  GRID_SIZE              = 50;
+    private static final double  GRID_SIZE              = 50;
     private final GridPane      grid;
     private static final String DEFAULT_COLOR          = "white";
     private final DataStructure struct;
     private int                 elementsPreviousRender = 0;
 
     public BoxRender (DataStructure struct){
+        this.struct = struct;
         grid = new GridPane();
         BorderPane bp = new BorderPane();
+        //Struct name
         if(struct.rawType.equals("independentElement")){
             bp.setTop(new Label("identifier: " + struct.identifier));    
         } else {
             bp.setTop(new Label("\tidentifier: " + struct.identifier));            
         }
+        //Build
         bp.setCenter(grid);
         this.getChildren().add(bp);
-        this.struct = struct;
         init();
         this.setMinSize(200, 100);
         this.setMaxSize(200, 100);
