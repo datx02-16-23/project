@@ -10,9 +10,9 @@ import java.util.Map;
 
 public class Model implements iModel {
 
-    private iStep           step = new Step();
+    private iStep                 step       = new Step();
     private final List<Operation> operations = new ArrayList<Operation>();
-    private int             index;
+    private int                   index;
 
     @Override
     public void reset (){
@@ -45,9 +45,14 @@ public class Model implements iModel {
 
     @Override
     public void goToStep (int toStepNo){
-        if (operations == null || toStepNo >= operations.size() || toStepNo < 0) {
+        if (toStepNo <= 0) {
+            reset();
             return;
         }
+        else if (toStepNo >= operations.size()) {
+            toStepNo = operations.size();
+        }
+        //Begin
         if (toStepNo < index) {
             reset(); //Can't go backwards: Start from the beginning
             while(index < toStepNo) {
@@ -105,5 +110,4 @@ public class Model implements iModel {
         operations.addAll(newOperations);
         index = 0;
     }
-
 }
