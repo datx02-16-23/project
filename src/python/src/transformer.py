@@ -54,7 +54,7 @@ class SubscriptExpression(Expression):
 	# ('subscript', to, indices..)
 	def get_expression(self,node):
 		expression = super(SubscriptExpression,self).get_expression(node)
-		if is_variable(node.value):
+		if is_variable(node.value) or isinstance(node.value,List):
 			node.value = Tuple(elts=[self.name,node.value])
 		expression = add_tuple(node.value,node.slice)
 		return expression
@@ -183,9 +183,9 @@ class ReadTransformer(OperationTransformer):
 		for e in node.elts:
 			self.visit(e)
 
-wt = WriteTransformer('write')
-rt = ReadTransformer('read')
-print ts(rt.visit(wt.visit(parse("c = a[0] + b[0]"))))
+# wt = WriteTransformer('write')
+# rt = ReadTransformer('read')
+# print ts(rt.visit(wt.visit(parse("a[1] = [1,2,3][0]"))))
 
 class PassTransformer(OperationTransformer):
 	def __init__(self,name):

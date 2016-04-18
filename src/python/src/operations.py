@@ -2,15 +2,24 @@
 # To be injected into nodes
 ########################################################################
 outfile = None
-outport = 8000
 annotated_variables = None
 
-import socket
-import json
+# outport = 8000
+# import socket
+# import json
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.connect(('localhost', outport))
+# sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# sock.connect(('localhost', outport))
 
+####################################################
+# Activate the virtualenv vdepend for this to work
+####################################################
+from jnius import autoclass
+
+Wrapper = autoclass('Wrapper')
+
+w = Wrapper()
+####################################################
 ########################################################################
 # Expression Evaluation
 ########################################################################
@@ -70,11 +79,14 @@ def get_operation(name):
 
 def to_json(statement):
     indices = get_indices(statement)
-    name = None
-    if isinstance(indices,tuple):
-        name = indices[0] if indices[1] == 'Store' else 'undefined'
-    if name:
-        indices = indices[1:]
+    subscripted = indices[0]
+    # indices[0]
+    #   'undefined'
+    #   name
+    #   (name, value)
+    # indices[1:]
+    name = subscripted[0] if isinstance(subscripted,tuple) else subscripted
+    indices = list(indices[1:]) if isinstance(subscripted,tuple) else None
     statement_json = {
         'identifier' : name,
         'index' : indices
@@ -87,22 +99,24 @@ def put(statement):
     with open(outfile, 'a') as f:
         f.write('%s,' % str(statement))
         f.close()
-    sock.send(json.dumps(statement))
+    #w.send(str(statement))
 
 def write(src,dst):
     operation = get_operation('write')
     value = get_value(src)
-    print 'write ',src,dst
-    print value
     operation['operationBody'] = {
         'source' : to_json(src), 'target' : to_json(dst), 'value' : value
     }
+    put(operation)
     return value
 
 def read(statement):
-    print 'read ',statement
     value = get_value(statement)
-    put({'type' : 'read', 'source' :  statement, 'value' : value})
+    operation = get_operation('read')
+    operation['operationBody'] = {
+        'source' : to_json(statement), 'value' : value
+    }
+    put(operation)
     return value
 
 def link(*params):
