@@ -119,8 +119,8 @@ public class NTreeRender extends Render {
             struct.elementsDrawn();
             int i = struct.getElements().size();
             for (; i < completedSize; i++) {
-                drawElement("zombie", i, "spooky zombie"); //Draw zombies. String will evaluate to black fill.
-                System.out.println("spooky " + i);
+                drawElement("", i, "spooky zombie");
+                System.out.println("zombie");
             }
         }
     }
@@ -169,7 +169,7 @@ public class NTreeRender extends Render {
         int i = struct.getElements().size();
         for (; i < completedSize; i++) {
             drawElement("zombie", i, "spooky zombie"); //Draw zombies. String will evaluate to black fill.
-            System.out.println("spooky " + i);
+            System.out.println("init zombie");
         }
         System.out.println("completedSize = " + completedSize);
         struct.elementsDrawn();
@@ -177,11 +177,13 @@ public class NTreeRender extends Render {
 
     private double getX (int breadth, int depth){
         double p = K_pow(totDepth) / K_pow(depth);
-        //(hspace + node_width) * (p / K) + (node_width + hspace)/K
-        return hspace + (hspace + node_width) * (p / K) * (totDepth - depth) //Indentation 
-        + breadth * ((hspace + node_width) * p);
-        //OK
-        //return (hspace + node_width) * (p - 1) + (breadth * ((hspace + (K * node_width)) * (p)));
+        int p_ind = (totDepth - depth);
+        double indentation = 0;
+        if (p_ind > 0) {
+            indentation = (hspace + node_width) * (totDepth - depth) - node_width / 2;
+        }
+        return hspace + indentation + +breadth * p * ((hspace + node_width));
+//        (hspace + node_width) * (totDepth - depth) - ((totDepth - depth) == 0 ? 0 :node_width/2) //Indentation for all levels except the bottom one. 
     }
 
     private double getY (int depth){
@@ -200,7 +202,7 @@ public class NTreeRender extends Render {
         double x, y;
         if (index == 0) { //Root element
             double p = K_pow(totDepth) / 2;
-            x = hspace + (hspace + node_width) * (p);// + (node_width + hspace) / K;
+            x = hspace + (hspace + node_width) * (p) - (node_width + hspace) / 2;
             y = vspace;
             breadth = 0;
             depth = 0;
@@ -283,7 +285,7 @@ public class NTreeRender extends Render {
             case Element.COLOR_SWAP:
                 return COLOR_SWAP;
             default:
-                return COLOR_BLACK;
+                return Color.GREY;
         }
     }
 
