@@ -10,6 +10,10 @@ public interface Element {
     public static final String COLOR_WRITE = "red";
     public static final String COLOR_READ = "green";
     public static final String COLOR_SWAP = "cyan";
+    /**
+     * The color of an inactive element (for example, when when program leaves the element scope or it is removed.)
+     */
+    public static final String COLOR_INACTIVE = "grey";
 
     /**
      * Returns the value held by this Element.
