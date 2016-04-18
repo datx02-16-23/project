@@ -2,10 +2,7 @@ package application.visualization;
 
 import application.gui.Main;
 import application.model.iModel;
-import application.visualization.render2d.BarchartRender;
-import application.visualization.render2d.BoxRender;
-import application.visualization.render2d.IndependentElementRender;
-import application.visualization.render2d.Render;
+import application.visualization.render2d.*;
 import javafx.scene.layout.GridPane;
 import wrapper.datastructures.DataStructure;
 
@@ -23,13 +20,13 @@ public class Visualization extends GridPane {
         int regular = 0;
         int independent = 0;
         for (DataStructure struct : model.getStructures().values()) {
-            if(struct.rawType == "independentElement"){
+            if (struct.rawType == "independentElement") {
                 Render render = new IndependentElementRender(struct);
                 this.add(render, 1, independent++);
                 continue;
             }
-            Render render = getRender(struct);
-            if(render != null){
+            Render render = resolveRender(struct);
+            if (render != null) {
                 this.add(render, 0, regular++);
                 continue;
             }
@@ -41,10 +38,11 @@ public class Visualization extends GridPane {
      * 
      * @param struct The DataStructure to assign a Render to.
      */
-    private Render getRender (DataStructure struct){
+    private Render resolveRender (DataStructure struct){
         Render render = null;
-        String visual = struct.visual == null ? "" : struct.visual;
-        outer: for (int attempt = 1; attempt <= 3; attempt++) {
+        String visual = struct.visual == null ? "NULL" : struct.visual;
+        System.out.println("visual = " + visual);
+        outer: for (int attempt = 1; attempt < 3; attempt++) {
             switch (visual) {
                 case "bar":
                     render = new BarchartRender(struct);
@@ -52,15 +50,18 @@ public class Visualization extends GridPane {
                 case "box":
                     render = new BoxRender(struct);
                     break outer;
+                case "tree":
+                    render = new KTreeRender(struct, 2);
+                    break outer;
                 default:
                     /*
                      * Visual null or unknown.
                      */
                     switch (attempt) {
-                        case 1: //Fallback 1
+                        case 0: //Fallback 1
                             visual = struct.getAbstractVisual();
                             break;
-                        case 2: //Fallback 2
+                        case 1: //Fallback 2
                             visual = struct.getRawVisual();
                             break;
                         default:
@@ -78,7 +79,7 @@ public class Visualization extends GridPane {
      */
     public void render (){
         Render render;
-        for(Object o : getChildren()){
+        for (Object o : getChildren()) {
             render = (Render) o;
             render.setPrefSize(this.getWidth(), this.getHeight());
             render.render();

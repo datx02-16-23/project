@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import application.gui.Main;
+import javafx.event.EventHandler;
+import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
@@ -37,6 +40,7 @@ public class KTreeRender extends Render {
     private static final Color       COLOR_INACTIVE         = Color.valueOf(Element.COLOR_INACTIVE);
     private static final Color       COLOR_WHITE            = Color.WHITE;
     private static final Color       COLOR_BLACK            = Color.BLACK;
+    private double transX, transY;
 
     /**
      * Create a new NTreeRender with K children and one parent. Note that the behaviour of this Render is undefined for
@@ -59,6 +63,7 @@ public class KTreeRender extends Render {
         lowerLevelSums.add(new Integer(0));
         //Build Canvas
         canvas = new Canvas();
+        moveAndZoom();
         canvas.widthProperty().bind(this.maxWidthProperty());
         canvas.heightProperty().bind(this.maxHeightProperty());
         canvas.maxWidth(Double.MAX_VALUE);
@@ -326,5 +331,54 @@ public class KTreeRender extends Render {
             lowerLevelSums.add(sum);
         }
         return lowerLevelSums.get(targetDepth);
+    }
+    
+    private double scale = 1;
+    private int sign = 1;
+
+    private void moveAndZoom (){
+        canvas.setOnContextMenuRequested(event -> {
+            scale = scale + sign*0.1;
+            System.out.println(scale);
+            if(scale < 0.1){
+                scale = 2;
+            } else if (scale > 2){
+                scale = 0.25;
+            }
+            canvas.setScaleX(scale);
+            canvas.setScaleY(scale);
+        });
+        canvas.setOnMousePressed(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle (MouseEvent mouseEvent){
+                // record a delta distance for the drag and drop operation.
+                transX = canvas.getLayoutX() - mouseEvent.getSceneX();
+                transY = canvas.getLayoutY() - mouseEvent.getSceneY();
+                canvas.setCursor(Cursor.MOVE);
+            }
+        });
+        canvas.setOnMouseReleased(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle (MouseEvent mouseEvent){
+                canvas.setCursor(Cursor.HAND);
+            }
+        });
+        canvas.setOnMouseDragged(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle (MouseEvent mouseEvent){
+                canvas.setLayoutX(mouseEvent.getSceneX() + transX);
+                canvas.setLayoutY(mouseEvent.getSceneY() + transY);
+            }
+        });
+        canvas.setOnMouseEntered(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle (MouseEvent mouseEvent){
+                canvas.setCursor(Cursor.HAND);
+            }
+        });
     }
 }
