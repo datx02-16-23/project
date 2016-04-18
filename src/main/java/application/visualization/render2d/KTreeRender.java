@@ -3,6 +3,7 @@ package application.visualization.render2d;
 import java.util.ArrayList;
 import java.util.List;
 
+import application.gui.Main;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -19,7 +20,7 @@ import wrapper.datastructures.Array.ArrayElement;
  * @author Richard Sundqvist
  *
  */
-public class NTreeRender extends Render {
+public class KTreeRender extends Render {
 
     public static final double       DEFAULT_SIZE           = 40;
     private final double             node_width, node_height;
@@ -33,6 +34,7 @@ public class NTreeRender extends Render {
     private static final Color       COLOR_READ             = Color.valueOf(Element.COLOR_READ);
     private static final Color       COLOR_WRITE            = Color.valueOf(Element.COLOR_WRITE);
     private static final Color       COLOR_SWAP             = Color.valueOf(Element.COLOR_SWAP);
+    private static final Color       COLOR_INACTIVE         = Color.valueOf(Element.COLOR_INACTIVE);
     private static final Color       COLOR_WHITE            = Color.WHITE;
     private static final Color       COLOR_BLACK            = Color.BLACK;
 
@@ -48,7 +50,7 @@ public class NTreeRender extends Render {
      * @param vspace The verital space between elements.
      * @throws IllegalArgumentException If K < 2.
      */
-    public NTreeRender (DataStructure struct, int K, double width, double height, double hspace, double vspace) throws IllegalArgumentException{
+    public KTreeRender (DataStructure struct, int K, double width, double height, double hspace, double vspace) throws IllegalArgumentException{
         if (K < 2) {
             throw new IllegalArgumentException("K must be greater than or equal to 2.");
         }
@@ -57,8 +59,8 @@ public class NTreeRender extends Render {
         lowerLevelSums.add(new Integer(0));
         //Build Canvas
         canvas = new Canvas();
-        canvas.widthProperty().bind(this.widthProperty());
-        canvas.heightProperty().bind(this.heightProperty());
+        canvas.widthProperty().bind(this.maxWidthProperty());
+        canvas.heightProperty().bind(this.maxHeightProperty());
         canvas.maxWidth(Double.MAX_VALUE);
         canvas.maxHeight(Double.MAX_VALUE);
         //Sizing and spacing
@@ -69,6 +71,8 @@ public class NTreeRender extends Render {
         this.getChildren().add(canvas);
         this.setMinSize(200, 100);
         this.setMaxSize(200, 100);
+        
+        Main.console.force("WARNING: At the time of writing (2016-04-18) the KTreeRender class, JavaFX may crash with a NullPointerException when Canvas grows too large.");
     }
 
     /**
@@ -78,8 +82,8 @@ public class NTreeRender extends Render {
      * @param struct The structure to draw as an K-ary tree.
      * @param K The number of children each node has.
      */
-    public NTreeRender (DataStructure struct, int K){
-        this(struct, K, DEFAULT_SIZE * 2, DEFAULT_SIZE, 10, 10);
+    public KTreeRender (DataStructure struct, int K){
+        this(struct, K, DEFAULT_SIZE * 2, DEFAULT_SIZE, DEFAULT_SIZE / 2, DEFAULT_SIZE / 2);
     }
 
     /**
@@ -88,9 +92,8 @@ public class NTreeRender extends Render {
      * 
      * @param struct The structure to draw as a binary tree.
      */
-    public NTreeRender (DataStructure struct){
-        //blä
-        this(struct, 2, DEFAULT_SIZE * 2, DEFAULT_SIZE, 10, 10);
+    public KTreeRender (DataStructure struct){
+        this(struct, 2);
     }
 
     /**
@@ -120,7 +123,6 @@ public class NTreeRender extends Render {
             int i = struct.getElements().size();
             for (; i < completedSize; i++) {
                 drawElement("", i, "spooky zombie");
-                System.out.println("zombie");
             }
         }
     }
@@ -146,12 +148,10 @@ public class NTreeRender extends Render {
      * Recalculate size.
      */
     private void calculateSize (){
-        double width = totBreadth * (node_width * K + hspace);
-        double height = totDepth * (node_height + vspace) + (node_height + vspace) * 3; //Depth doesnt include node + margain above.
+        double width = totBreadth * (node_width + hspace);
+        double height = totDepth * (node_height + vspace) * 2 + vspace - node_height; //Depth doesnt include node + margain above.
         this.setMinSize(width, height);
         this.setMaxSize(width, height);
-        System.out.println("width = " + width);
-        System.out.println("height = " + height);
     }
 
     /**
@@ -161,29 +161,35 @@ public class NTreeRender extends Render {
         calculateDepthAndBreadth(); //Calls calculateSize()
         GraphicsContext context = canvas.getGraphicsContext2D();
         context.setFill(COLOR_WHITE);
-        context.fillRect(0, 0, this.getWidth(), this.getHeight());
+        context.fillRect(0, 0, this.getMaxWidth(), this.getMaxHeight());
+        context.setFill(COLOR_BLACK);
+        context.fillText("identifier: " + struct.identifier + "( " + struct.abstractType + ")", hspace, vspace + 10);
         for (Element e : struct.getElements()) {
             ArrayElement ae = (ArrayElement) e;
             drawElement(ae.getValue() + "", ae.getIndex()[0], null);
         }
         int i = struct.getElements().size();
         for (; i < completedSize; i++) {
-            drawElement("zombie", i, "spooky zombie"); //Draw zombies. String will evaluate to black fill.
-            System.out.println("init zombie");
+            drawElement("", i, "spooky zombie"); //Draw zombies. String will evaluate to black fill.
         }
-        System.out.println("completedSize = " + completedSize);
         struct.elementsDrawn();
     }
 
     private double getX (int breadth, int depth){
-        double p = K_pow(totDepth) / K_pow(depth);
-        int p_ind = (totDepth - depth);
+        //Stepsize at this depth. Farther from root smaller steps
+        double L = (double) K_pow(totDepth) / (double) K_pow(depth);
+        //Apply indentation for every row except the last
         double indentation = 0;
-        if (p_ind > 0) {
-            indentation = (hspace + node_width) * (totDepth - depth) - node_width / 2;
+        if (depth < totDepth) {
+            indentation = (hspace + node_width) * ((L - 1) / 2);
+        }   
+        //Dont multiply by zero
+        if (breadth > 0) {
+            return hspace + indentation + breadth * L * ((hspace + node_width));
         }
-        return hspace + indentation + +breadth * p * ((hspace + node_width));
-//        (hspace + node_width) * (totDepth - depth) - ((totDepth - depth) == 0 ? 0 :node_width/2) //Indentation for all levels except the bottom one. 
+        else {
+            return hspace + indentation;
+        }
     }
 
     private double getY (int depth){
@@ -202,11 +208,10 @@ public class NTreeRender extends Render {
         double x, y;
         if (index == 0) { //Root element
             double p = K_pow(totDepth) / 2;
-            x = hspace + (hspace + node_width) * (p) - (node_width + hspace) / 2;
+            x = hspace + (hspace + node_width) * (p) - ((K + 1) % 2) * (node_width + hspace) / 2;
             y = vspace;
             breadth = 0;
             depth = 0;
-            //TODO: Possible to solve root element without special case?
         }
         else {
             depth = getDepth(index);
@@ -250,8 +255,12 @@ public class NTreeRender extends Render {
         //Outline, text, children
         context.setFill(COLOR_BLACK);
         context.setStroke(COLOR_BLACK);
+        //Value
         context.strokeOval(x, y, node_width, node_height);
         context.fillText("v: " + value == null ? "null" : value, x + 6, y + node_height / 2);
+        //Index
+        context.strokeOval(x, y, node_width, node_height);
+        context.fillText("[" + index + "]", x + node_width + 4, y + node_height / 2);
         //Connect to children
         if (depth == totDepth) {
             return; //Don't connect bottom level
@@ -285,7 +294,7 @@ public class NTreeRender extends Render {
             case Element.COLOR_SWAP:
                 return COLOR_SWAP;
             default:
-                return Color.GREY;
+                return COLOR_INACTIVE;
         }
     }
 
@@ -296,11 +305,11 @@ public class NTreeRender extends Render {
      * @return The number of nodes at depth d.
      */
     private int K_pow (int d){
-        int parts = 1;
+        int p = 1;
         for (int i = 0; i < d; i++) {
-            parts = parts * K;
+            p = p * K;
         }
-        return parts;
+        return p;
     }
 
     /**
