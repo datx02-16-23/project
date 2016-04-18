@@ -21,7 +21,9 @@ import wrapper.datastructures.Array.ArrayElement;
  */
 public class NTreeRender extends Render {
 
-    private static final double      DIAMETER               = 75;
+    public static final double       DEFAULT_SIZE           = 40;
+    private final double             node_width, node_height;
+    private final double             hspace, vspace;
     private final Canvas             canvas;
     private final int                K;
     private final DataStructure      struct;
@@ -40,9 +42,13 @@ public class NTreeRender extends Render {
      * 
      * @param struct The structure to draw as an K-ary tree.
      * @param K The number of children each node has.
+     * @param width The width of the nodes.
+     * @param height The height of the nodes.
+     * @param hspace The horizontal space between elements.
+     * @param vspace The verital space between elements.
      * @throws IllegalArgumentException If K < 2.
      */
-    public NTreeRender (DataStructure struct, int K) throws IllegalArgumentException{
+    public NTreeRender (DataStructure struct, int K, double width, double height, double hspace, double vspace) throws IllegalArgumentException{
         if (K < 2) {
             throw new IllegalArgumentException("K must be greater than or equal to 2.");
         }
@@ -55,9 +61,25 @@ public class NTreeRender extends Render {
         canvas.heightProperty().bind(this.heightProperty());
         canvas.maxWidth(Double.MAX_VALUE);
         canvas.maxHeight(Double.MAX_VALUE);
+        //Sizing and spacing
+        this.node_width = width;
+        this.node_height = height;
+        this.hspace = hspace;
+        this.vspace = vspace;
         this.getChildren().add(canvas);
         this.setMinSize(200, 100);
         this.setMaxSize(200, 100);
+    }
+
+    /**
+     * Create a new NTreeRender with K children and one parent. Note that the behaviour of this Render is undefined for
+     * arrays with more than one indices.
+     * 
+     * @param struct The structure to draw as an K-ary tree.
+     * @param K The number of children each node has.
+     */
+    public NTreeRender (DataStructure struct, int K){
+        this(struct, K, DEFAULT_SIZE * 2, DEFAULT_SIZE, 10, 10);
     }
 
     /**
@@ -67,7 +89,8 @@ public class NTreeRender extends Render {
      * @param struct The structure to draw as a binary tree.
      */
     public NTreeRender (DataStructure struct){
-        this(struct, 2);
+        //blä
+        this(struct, 2, DEFAULT_SIZE * 2, DEFAULT_SIZE, 10, 10);
     }
 
     /**
@@ -94,6 +117,11 @@ public class NTreeRender extends Render {
                 }
             }
             struct.elementsDrawn();
+            int i = struct.getElements().size();
+            for (; i < completedSize; i++) {
+                drawElement("zombie", i, "spooky zombie"); //Draw zombies. String will evaluate to black fill.
+                System.out.println("spooky " + i);
+            }
         }
     }
 
@@ -109,20 +137,17 @@ public class NTreeRender extends Render {
             totDepth++;
         }
         totDepth--;
-        this.completedSize = lowerLevelSums.get(totDepth);
+        this.completedSize = lowerLevelSums.get(totDepth + 1);
         totBreadth = K_pow(totDepth);
         calculateSize();
     }
-
-    private double vspace = DIAMETER;
-    private double hspace = 0;
 
     /**
      * Recalculate size.
      */
     private void calculateSize (){
-        double width = totBreadth * (DIAMETER + hspace + 1);
-        double height = totDepth * (DIAMETER + vspace) + DIAMETER + vspace * 2; //Depth doesnt include node + margain above.
+        double width = totBreadth * (node_width * K + hspace);
+        double height = totDepth * (node_height + vspace) + (node_height + vspace) * 3; //Depth doesnt include node + margain above.
         this.setMinSize(width, height);
         this.setMaxSize(width, height);
         System.out.println("width = " + width);
@@ -133,9 +158,9 @@ public class NTreeRender extends Render {
      * Create and render all elements.
      */
     private void init (){
-        calculateDepthAndBreadth();
+        calculateDepthAndBreadth(); //Calls calculateSize()
         GraphicsContext context = canvas.getGraphicsContext2D();
-        context.setFill(Color.AQUA);
+        context.setFill(COLOR_WHITE);
         context.fillRect(0, 0, this.getWidth(), this.getHeight());
         for (Element e : struct.getElements()) {
             ArrayElement ae = (ArrayElement) e;
@@ -144,23 +169,23 @@ public class NTreeRender extends Render {
         int i = struct.getElements().size();
         for (; i < completedSize; i++) {
             drawElement("zombie", i, "spooky zombie"); //Draw zombies. String will evaluate to black fill.
+            System.out.println("spooky " + i);
         }
+        System.out.println("completedSize = " + completedSize);
         struct.elementsDrawn();
     }
 
     private double getX (int breadth, int depth){
-        double p = (double) totDepth / (double) depth;
-        System.out.println("breadth = " + breadth);
-        System.out.println("depth = " + depth);
-        System.out.println("p = " + p);
-//        return hspace + (hspace + DIAMETER) * (p - 1) + (hspace + DIAMETER) * p * breadth;// - (hspace + DIAMETER)/2;
-        return hspace + ((hspace + DIAMETER) * (p - 1)) + (breadth * ((hspace + DIAMETER) * p)); //* - (hspace + DIAMETER)  (p * 0.5)));*/
-//        return hspace + ((0 + DIAMETER) * (p - 1)) + (breadth * ((hspace + DIAMETER) * p - (hspace + DIAMETER) * (p * 0.5)));
-    
+        double p = K_pow(totDepth) / K_pow(depth);
+        //(hspace + node_width) * (p / K) + (node_width + hspace)/K
+        return hspace + (hspace + node_width) * (p / K) * (totDepth - depth) //Indentation 
+        + breadth * ((hspace + node_width) * p);
+        //OK
+        //return (hspace + node_width) * (p - 1) + (breadth * ((hspace + (K * node_width)) * (p)));
     }
 
     private double getY (int depth){
-        return depth * DIAMETER * 2 + vspace; //Padding on top
+        return depth * node_height * 2 + vspace; //Padding on top
     }
 
     /**
@@ -174,7 +199,8 @@ public class NTreeRender extends Render {
         int breadth, depth;
         double x, y;
         if (index == 0) { //Root element
-            x = this.getMaxWidth() / 2;
+            double p = K_pow(totDepth) / 2;
+            x = hspace + (hspace + node_width) * (p);// + (node_width + hspace) / K;
             y = vspace;
             breadth = 0;
             depth = 0;
@@ -218,22 +244,20 @@ public class NTreeRender extends Render {
     private void drawNode (String value, double x, double y, Color fill, int depth, int breadth, int index){
         GraphicsContext context = canvas.getGraphicsContext2D();
         context.setFill(fill);
-        context.fillOval(x, y, DIAMETER, DIAMETER);
+        context.fillOval(x, y, node_width, node_height);
         //Outline, text, children
         context.setFill(COLOR_BLACK);
         context.setStroke(COLOR_BLACK);
-        context.strokeOval(x, y, DIAMETER, DIAMETER);
-        context.fillText("v: " + value == null ? "null" : value, x + 6, y + DIAMETER / 2);
+        context.strokeOval(x, y, node_width, node_height);
+        context.fillText("v: " + value == null ? "null" : value, x + 6, y + node_height / 2);
         //Connect to children
         if (depth == totDepth) {
-            System.out.println("bottom bye!!\n\n");
             return; //Don't connect bottom level
         }
-        System.out.println("lines!");
         //Origin is always the same.
-        x = x + DIAMETER / 2;
-        y = y + DIAMETER;
-        double xOffset = DIAMETER / 2;
+        x = x + node_width / 2;
+        y = y + node_height;
+        double xOffset = node_width / 2;
         double childY = getY(depth + 1);
         //Stroke lines to all children
         for (int child = 0; child < K; child++) {
