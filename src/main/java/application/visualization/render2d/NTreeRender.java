@@ -21,7 +21,6 @@ import wrapper.datastructures.Array.ArrayElement;
  */
 public class NTreeRender extends Render {
 
-    double                           cpkonst                = 200;
     private static final double      DIAMETER               = 75;
     private final Canvas             canvas;
     private final int                K;
@@ -50,19 +49,12 @@ public class NTreeRender extends Render {
         this.struct = struct;
         this.K = K;
         lowerLevelSums.add(new Integer(0));
-//        this.setStyle("-fx-background-color: orange ;");
         //Build Canvas
         canvas = new Canvas();
         canvas.widthProperty().bind(this.widthProperty());
         canvas.heightProperty().bind(this.heightProperty());
         canvas.maxWidth(Double.MAX_VALUE);
         canvas.maxHeight(Double.MAX_VALUE);
-//        BorderPane bp = new BorderPane();
-        //Struct name
-//        bp.setTop(new Label("\tidentifier:\n\n\n " + struct.identifier));
-//        bp.setStyle("-fx-background-color: blue ;");
-//        bp.setCenter(canvas);
-        //Build
         this.getChildren().add(canvas);
         this.setMinSize(200, 100);
         this.setMaxSize(200, 100);
@@ -123,18 +115,16 @@ public class NTreeRender extends Render {
     }
 
     private double vspace = DIAMETER;
-    private double hspace = DIAMETER;
+    private double hspace = 0;
 
     /**
      * Recalculate size.
      */
     private void calculateSize (){
         double width = totBreadth * (DIAMETER + hspace + 1);
-        double height = totDepth * (DIAMETER + vspace);
-//        this.setMinSize(width, height);
-//        this.setMaxSize(width, height);
-        this.setMinSize(1000, 1000);
-        this.setMaxSize(1000, 1000);
+        double height = totDepth * (DIAMETER + vspace) + DIAMETER + vspace * 2; //Depth doesnt include node + margain above.
+        this.setMinSize(width, height);
+        this.setMaxSize(width, height);
         System.out.println("width = " + width);
         System.out.println("height = " + height);
     }
@@ -145,7 +135,7 @@ public class NTreeRender extends Render {
     private void init (){
         calculateDepthAndBreadth();
         GraphicsContext context = canvas.getGraphicsContext2D();
-        context.setFill(COLOR_WHITE);
+        context.setFill(Color.AQUA);
         context.fillRect(0, 0, this.getWidth(), this.getHeight());
         for (Element e : struct.getElements()) {
             ArrayElement ae = (ArrayElement) e;
@@ -159,12 +149,18 @@ public class NTreeRender extends Render {
     }
 
     private double getX (int breadth, int depth){
-        int nodesOnLevel = this.K_pow(depth);
-        return (double) ((breadth + 1) * this.getMaxWidth()) / (double) (nodesOnLevel + 1);
+        double p = (double) totDepth / (double) depth;
+        System.out.println("breadth = " + breadth);
+        System.out.println("depth = " + depth);
+        System.out.println("p = " + p);
+//        return hspace + (hspace + DIAMETER) * (p - 1) + (hspace + DIAMETER) * p * breadth;// - (hspace + DIAMETER)/2;
+        return hspace + ((hspace + DIAMETER) * (p - 1)) + (breadth * ((hspace + DIAMETER) * p)); //* - (hspace + DIAMETER)  (p * 0.5)));*/
+//        return hspace + ((0 + DIAMETER) * (p - 1)) + (breadth * ((hspace + DIAMETER) * p - (hspace + DIAMETER) * (p * 0.5)));
+    
     }
 
     private double getY (int depth){
-        return depth * DIAMETER * 2 + cpkonst;
+        return depth * DIAMETER * 2 + vspace; //Padding on top
     }
 
     /**
@@ -175,12 +171,11 @@ public class NTreeRender extends Render {
      * @param style The style for this element.
      */
     private void drawElement (String value, int index, String style){
-        System.out.println("value = " + value);
         int breadth, depth;
         double x, y;
         if (index == 0) { //Root element
             x = this.getMaxWidth() / 2;
-            y = 0 + cpkonst;
+            y = vspace;
             breadth = 0;
             depth = 0;
             //TODO: Possible to solve root element without special case?
@@ -222,8 +217,6 @@ public class NTreeRender extends Render {
      */
     private void drawNode (String value, double x, double y, Color fill, int depth, int breadth, int index){
         GraphicsContext context = canvas.getGraphicsContext2D();
-        System.out.println("fill = " + fill);
-        System.out.println(context);
         context.setFill(fill);
         context.fillOval(x, y, DIAMETER, DIAMETER);
         //Outline, text, children
