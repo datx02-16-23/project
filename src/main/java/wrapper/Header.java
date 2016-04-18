@@ -29,9 +29,9 @@ public class Header implements Serializable {
      */
     public final Map<String, AnnotatedVariable> annotatedVariables;
     /**
-     * A map of source names an their contents.
+     * A map of metadata identifiers and their contents.
      */
-    public final Map<String, List<String>>      sources;
+    public final Map<String, List<String>>      metadata;
 
     /**
      * Create a Header item with the given version number and map of annotated variables. Version 0 is reserved for when
@@ -39,12 +39,12 @@ public class Header implements Serializable {
      * 
      * @param version The version number for this file.
      * @param annotatedVariables Declaration of annotated variables from the source.
-     * @param sources The sources for this Header.
+     * @param metadata The metadata for this Header.
      */
-    public Header (int version, Map<String, AnnotatedVariable> annotatedVariables, Map<String, List<String>> sources){
+    public Header (int version, Map<String, AnnotatedVariable> annotatedVariables, Map<String, List<String>> metadata){
         this.version = version;
         this.annotatedVariables = annotatedVariables;
-        this.sources = sources;
+        this.metadata = metadata;
     }
 
     /**
@@ -54,6 +54,23 @@ public class Header implements Serializable {
     public Header (){
         this.version = VERSION_UNKNOWN;
         annotatedVariables = new HashMap<String, AnnotatedVariable>();
-        this.sources = new HashMap<String, List<String>>();
+        this.metadata = new HashMap<String, List<String>>();
+    }
+    
+    /**
+     * Returns the sources contained in the metadata of this Header, if found. Null otherwise.
+     * @return A Map of source names as keys and their lines as a List.
+     */
+    public final Map<String, List<String>> getSources(){
+        if(metadata == null){
+            return null;
+        }
+        Map<String, Object> objectMap = (Map<String, Object>) metadata.get("sources");
+        Map<String, List<String>> sources = new HashMap<String, List<String>>();
+        for(String key : objectMap.keySet()){
+            List<String> lines = (List<String>) objectMap.get(key);
+            sources.put(key, lines);
+        }
+        return sources;
     }
 }

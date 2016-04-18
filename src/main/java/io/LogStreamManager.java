@@ -373,7 +373,7 @@ public class LogStreamManager implements CommunicatorListener {
                     knownVariables.put(av.identifier, DataStructureParser.unpackAnnotatedVariable(av));
                 }
             }
-            sources = wrapper.header.sources;
+//            sources = wrapper.header.sources;
             
         }
         if (wrapper.body != null) {

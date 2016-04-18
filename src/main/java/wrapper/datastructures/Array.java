@@ -41,12 +41,13 @@ public class Array extends DataStructure {
             capacity = new int[] {-1};
         }
     }
-    
+
     /**
      * Returns the declared Capacity of this Array.
+     * 
      * @return The declared Capacity of this Array.
      */
-    public int[] getCapacity(){
+    public int[] getCapacity (){
         return DataStructureParser.parseSize(this);
     }
 
@@ -130,7 +131,7 @@ public class Array extends DataStructure {
     }
 
     private void readORwrite (OP_ReadWrite op){
-        if(op.operation == OperationType.write && op.getValue().length > 1){
+        if (op.operation == OperationType.write && op.getValue().length > 1) {
             init((OP_Write) op);
         }
         //Manage write
@@ -295,6 +296,7 @@ public class Array extends DataStructure {
 
         /**
          * Construct a new ArrayElement with the given value and index.
+         * 
          * @param value The value for this ArrayElement.
          * @param index The index for this ArrayElement.
          */
@@ -381,6 +383,6 @@ public class Array extends DataStructure {
 
     @Override
     public String getAbstractVisual (){
-        return ""; //TODO: Determine visual style for the abstract type of an Array.
+        return abstractType == null ? "NULL" : abstractType;
     }
 }
