@@ -6,6 +6,7 @@ import application.assets.Strings;
 import application.gui.GUI_Controller;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -16,13 +17,15 @@ import javafx.stage.Stage;
 
 public class ExamplesDialog {
 
-    private static final Color STATUS_OK  = Color.web("#00c8ff");
-    private static final Color STATUS_ERR = Color.web("#ff0000");
-    private final TextField    input, mirror;
-    private final Label        status, name;
-    private final Stage        parent, root;
-    private double[] data;
-    
+    private static final double[] EMPTY      = new double[] {};
+    private static final Color    STATUS_OK  = Color.web("#00c8ff");
+    private static final Color    STATUS_ERR = Color.web("#ff0000");
+    private final TextField       input, mirror;
+    private final Label           status, name;
+    private final Stage           parent, root;
+    private final Button          run;
+    private double[]              data;
+
     public ExamplesDialog (Stage parent){
         this.parent = parent;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ExamplesDialog.fxml"));
@@ -50,20 +53,20 @@ public class ExamplesDialog {
         mirror = (TextField) fxmlLoader.getNamespace().get("mirror");
         status = (Label) fxmlLoader.getNamespace().get("status");
         name = (Label) fxmlLoader.getNamespace().get("name");
-        
+        run = (Button) fxmlLoader.getNamespace().get("run");
         Scene dialogScene = new Scene(p, p.getPrefWidth() - 5, p.getPrefHeight());
         root.setScene(dialogScene);
         root.setResizable(false);
     }
 
-
     private boolean validateInput (){
         String input = this.input.getText();
         if (input.length() == 0) {
-            data = null;
+            data = EMPTY;
             mirror.setText("[]");
             status.setText("INPUT VALID");
             status.setTextFill(STATUS_OK);
+            run.setDisable(false);
             return true;
         }
         input = input.replaceAll("\\s+", "");
@@ -83,6 +86,8 @@ public class ExamplesDialog {
                 status.setText("INPUT INVALID");
                 status.setTextFill(STATUS_ERR);
                 mirror.clear();
+                data = null;
+                run.setDisable(true);
                 return false;
             }
         }
@@ -90,6 +95,7 @@ public class ExamplesDialog {
         mirror.setText(Arrays.toString(doubles));
         status.setText("INPUT VALID");
         status.setTextFill(STATUS_OK);
+        run.setDisable(false);
         return true;
     }
 
@@ -100,8 +106,9 @@ public class ExamplesDialog {
      * @return An array of doubles.
      */
     public double[] show (String name){
-        data = null;
+        validateInput();
         this.name.setText(name);
+        //Wait for user input.
         root.showAndWait();
         if (data == null) {
             input.clear();
@@ -114,6 +121,7 @@ public class ExamplesDialog {
 
     public void closeButton (){
         input.clear();
+        mirror.clear();
         data = null;
         root.close();
     }

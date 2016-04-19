@@ -135,6 +135,7 @@ public class GUI_Controller implements CommunicatorListener {
         visualization.clear();
         sourceViewer.clear();
         operationPanel.clear();
+        visualMenu.getItems().clear();
     }
 
     /**
@@ -714,8 +715,7 @@ public class GUI_Controller implements CommunicatorListener {
         if (data == null) {
             return;
         }
-        Main.console.info("Running " + algo.name + " on data:");
-        Main.console.info(Arrays.toString(data));
+        Main.console.info("Running " + algo.name + " on: " + Arrays.toString(data));
         String json = Examples.getExample(algo, data);
         if (json != null) {
             lsm.clearData();
