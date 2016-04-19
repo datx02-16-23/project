@@ -39,6 +39,7 @@ import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -410,13 +411,20 @@ public class GUI_Controller implements CommunicatorListener {
      */
     public void loadFromLSM (){
         //Add operations to model and create Render visuals, then draw them.
-        if(model.getStructures().containsKey(lsm.getDataStructures())){
-            Main.console.force("ERROR: New Data Structure identifier collision:");
-            Main.console.force("Known structures: " + model.getStructures().keySet());
-            Main.console.force("New structures: " + lsm.getDataStructures().keySet());
-            return;
+        Map<String, DataStructure> oldStructs = model.getStructures();
+        Map<String, DataStructure> newStructs = lsm.getDataStructures();
+        for (String oldKey : oldStructs.keySet()) {
+            for (String newKey : newStructs.keySet()) {
+                if (oldKey.equals(newKey)) {
+                    Main.console.force("ERROR: Data Structure identifier collision:");
+                    Main.console.force("Known structures: " + model.getStructures().values());
+                    Main.console.force("Rejected structures: " + lsm.getDataStructures().values());
+                    java.awt.Toolkit.getDefaultToolkit().beep();
+                    return;
+                }
+            }
         }
-        model.getStructures().putAll(lsm.getDataStructures());
+        oldStructs.putAll(newStructs);
         model.getOperations().addAll(lsm.getOperations());
         sourceViewer.addSources(lsm.getSources());
         visualization.clearAndCreateVisuals();
@@ -437,7 +445,7 @@ public class GUI_Controller implements CommunicatorListener {
             visualMenu.getItems().add(mi);
         }
     }
-    
+
     public void openVisualDialog (DataStructure struct){
         if (visualDialog.show(struct)) {
             visualization.clearAndCreateVisuals();
