@@ -19,6 +19,15 @@ public class Model implements iModel {
         index = 0;
         step.reset();
     }
+    
+    /**
+     * Restore the model to its inisual stet.
+     */
+    public void clear(){
+        index = 0;
+        step = new Step();
+        operations.clear();
+    }
 
     @Override
     public boolean stepForward (){

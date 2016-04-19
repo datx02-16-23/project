@@ -125,4 +125,11 @@ public class OperationPanel extends Pane {
         }
         controller.goToStep(index);
     }
+
+    public void clear (){
+        items.clear();
+        totNrOfOpLabel.setText("/ 0");
+        currOpTextField.setText("0");
+        opProgress.setProgress(-1);
+    }
 }

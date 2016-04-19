@@ -36,6 +36,7 @@ import wrapper.Wrapper;
 import java.io.*;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -121,13 +122,14 @@ public class GUI_Controller implements CommunicatorListener {
         //TODO: Logic
     }
 
+    /**
+     * Clear everything.
+     */
     public void clearButtonClicked (){
-        operationPanel.getItems().clear();
-        operationPanel.update(0, false);
-        model.getOperations().clear();
-        model.getStructures().clear();
+        model.clear();
         visualization.clear();
         sourceViewer.clear();
+        operationPanel.clear();
     }
 
     /**
@@ -222,8 +224,6 @@ public class GUI_Controller implements CommunicatorListener {
         stepDelaySpeedupFactor = stepDelaySpeedupFactor * 2 % 255;
         speedButton.setText(stepDelaySpeedupFactor + "x");
         stepDelay = stepDelayBase / stepDelaySpeedupFactor;
-        playPauseButtonClicked();
-        playPauseButtonClicked();
     }
 
     public void aboutProgram (){
@@ -412,7 +412,7 @@ public class GUI_Controller implements CommunicatorListener {
         visualization.createVisuals();
         visualization.render();
         //Update operation list
-        operationPanel.getItems().setAll(lsm.getOperations());
+        operationPanel.getItems().addAll(lsm.getOperations());
         updatePanels();
     }
 
@@ -428,27 +428,14 @@ public class GUI_Controller implements CommunicatorListener {
             currentlyConnected.set(sb.toString());
             return;
         }
-        if (autoPlayOnIncomingStream) {
-            model.goToEnd();
-        }
         Platform.runLater(new Runnable() {
 
             @Override
             public void run (){
-                if (lsm.getKnownVariables().isEmpty() == false) {
-                    model.getStructures().clear();
-                    model.getOperations().clear();
-                    model.getStructures().putAll(lsm.getKnownVariables());
-                    visualization.createVisuals();
-                    Main.console.info("Received new AnnotatedVariable(s): " + lsm.getKnownVariables().values());
+                if (autoPlayOnIncomingStream) {
+                    model.goToEnd();
                 }
-                if (lsm.getSources() != null) {
-                    sourceViewer.addSources(lsm.getSources());
-                    Main.console.info("New source(s) received: " + lsm.getSources().keySet());
-                }
-                operationPanel.getItems().addAll(lsm.getOperations());
-                model.getOperations().addAll(lsm.getOperations());
-                operationPanel.update(model.getIndex(), true);
+                loadFromLSM();
                 lsm.clearData();
                 if (autoPlayOnIncomingStream) {
                     stepForwardButtonClicked();
@@ -684,14 +671,18 @@ public class GUI_Controller implements CommunicatorListener {
      */
     public void loadExample (Algorithm algo){
         double[] data = examplesDialog.show(algo.name);
-        Wrapper w = Examples.getExample(algo, data);
-        if(w == null){
+        if (data == null) {
             return;
         }
-        lsm.clearData();
-        lsm.unwrap(w);
-        loadFromLSM();
-        lsm.clearData();
+        Main.console.info("Running " + algo.name + " on data:");
+        Main.console.info(Arrays.toString(data));
+        String json = Examples.getExample(algo, data);
+        if (json != null) {
+            lsm.clearData();
+            lsm.unwrap(json);
+            loadFromLSM();
+            lsm.clearData();
+        }
     }
 
     /*

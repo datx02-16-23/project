@@ -21,7 +21,8 @@ public class ExamplesDialog {
     private final TextField    input, mirror;
     private final Label        status, name;
     private final Stage        parent, root;
-
+    private double[] data;
+    
     public ExamplesDialog (Stage parent){
         this.parent = parent;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ExamplesDialog.fxml"));
@@ -39,7 +40,7 @@ public class ExamplesDialog {
         }
         root.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
-            root.close();
+            closeButton();
         });
         fxmlLoader.getNamespace();
         input = (TextField) fxmlLoader.getNamespace().get("input");
@@ -55,12 +56,15 @@ public class ExamplesDialog {
         root.setResizable(false);
     }
 
-    private double[] data;
 
-    private void validateInput (){
+    private boolean validateInput (){
         String input = this.input.getText();
         if (input.length() == 0) {
-            return;
+            data = null;
+            mirror.setText("[]");
+            status.setText("INPUT VALID");
+            status.setTextFill(STATUS_OK);
+            return true;
         }
         input = input.replaceAll("\\s+", "");
         input.replaceAll("\\s", "");
@@ -79,13 +83,14 @@ public class ExamplesDialog {
                 status.setText("INPUT INVALID");
                 status.setTextFill(STATUS_ERR);
                 mirror.clear();
-                return;
+                return false;
             }
         }
+        data = doubles;
         mirror.setText(Arrays.toString(doubles));
         status.setText("INPUT VALID");
         status.setTextFill(STATUS_OK);
-        System.out.println();
+        return true;
     }
 
     /**
@@ -99,7 +104,8 @@ public class ExamplesDialog {
         this.name.setText(name);
         root.showAndWait();
         if (data == null) {
-            return new double[] {};
+            input.clear();
+            return null;
         }
         else {
             return data;
@@ -107,6 +113,7 @@ public class ExamplesDialog {
     }
 
     public void closeButton (){
+        input.clear();
         data = null;
         root.close();
     }

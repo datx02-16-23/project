@@ -14,22 +14,22 @@ public interface iStep {
      * Get the current structures in the step
      * @return structures in a map of identifiers and datastructs
      */
-    Map<String, DataStructure> getStructures ();
+    public Map<String, DataStructure> getStructures ();
 
     /**
      * The last applied operation
      * @return The last applied operation.
      */
-    Operation getLastOp ();
+    public Operation getLastOp ();
 
     /**
      * Modify the step by applying an operation
      * @param op The operation to apply.
      */
-    void applyOperation (Operation op);
+    public void applyOperation (Operation op);
 
     /**
      * Reset the step back to the original state before any operations were applied
      */
-    void reset ();
+    public void reset ();
 }
