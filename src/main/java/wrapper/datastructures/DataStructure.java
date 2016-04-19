@@ -21,7 +21,8 @@ public abstract class DataStructure extends AnnotatedVariable {
     private static final long               serialVersionUID = Strings.VERSION_NUMBER;
     protected transient final List<Element> modifiedElements = new ArrayList<Element>();
     protected transient final List<Element> resetElements    = new ArrayList<Element>();
-    protected transient final List<Element> inactiveElements    = new ArrayList<Element>();
+    protected transient final List<Element> inactiveElements = new ArrayList<Element>();
+    public int                              children         = 2; //Fulhack - antal bar i KTree
 
     public DataStructure (String identifier, String rawType, String abstractType, String visual){
         super(identifier, rawType, abstractType, visual);
@@ -57,7 +58,7 @@ public abstract class DataStructure extends AnnotatedVariable {
     public String toString (){
         StringBuilder sb = new StringBuilder();
         sb.append(super.identifier + ": " + super.rawType.toUpperCase());
-        if(super.abstractType != null){
+        if (super.abstractType != null) {
             sb.append(" (" + super.abstractType + ")");
         }
         return sb.toString();
@@ -108,8 +109,8 @@ public abstract class DataStructure extends AnnotatedVariable {
         resetElements.clear();
         inactiveElements.clear();
     }
-    
-    public List<Element> getInactiveElements(){
+
+    public List<Element> getInactiveElements (){
         return inactiveElements;
     }
 

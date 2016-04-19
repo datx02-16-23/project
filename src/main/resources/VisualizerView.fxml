@@ -68,7 +68,7 @@
                               </MenuItem>
                           </items>
                         </Menu>
-                        <Menu mnemonicParsing="false" text="Visualisation" />
+                        <Menu fx:id="visualMenu" mnemonicParsing="false" text="Visualisation" />
                         <Menu fx:id="examplesMenu" mnemonicParsing="false" text="_Examples" />
                         <Menu mnemonicParsing="false" text="_Help">
                            <items>

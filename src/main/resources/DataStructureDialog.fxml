@@ -41,7 +41,7 @@
                         <Insets left="10.0" />
                      </HBox.margin>
                   </Label>
-                  <Spinner fx:id="children" disable="true" editable="true" prefHeight="25.0" prefWidth="68.0" />
+                  <Spinner fx:id="children" min="2" max="16" initialValue="2" disable="true" editable="true" prefHeight="25.0" prefWidth="68.0" />
                </children>
             </HBox>
       </children>

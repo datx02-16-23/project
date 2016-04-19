@@ -19,7 +19,7 @@ public class Visualization extends GridPane {
       getChildren().clear();
     }
 
-    public void createVisuals (){
+    public void clearAndCreateVisuals (){
         getChildren().clear();
         int regular = 0;
         int independent = 0;
@@ -45,7 +45,6 @@ public class Visualization extends GridPane {
     private Render resolveRender (DataStructure struct){
         Render render = null;
         String visual = struct.visual == null ? "NULL" : struct.visual;
-        System.out.println("visual = " + visual);
         outer: for (int attempt = 1; attempt < 3; attempt++) {
             switch (visual) {
                 case "bar":
@@ -55,7 +54,7 @@ public class Visualization extends GridPane {
                     render = new BoxRender(struct);
                     break outer;
                 case "tree":
-                    render = new KTreeRender(struct, 2, 50, 30, 20, 10);
+                    render = new KTreeRender(struct, struct.children, 50, 30, 20, 10);
                     break outer;
                 default:
                     /*

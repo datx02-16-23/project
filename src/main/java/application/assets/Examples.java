@@ -16,11 +16,11 @@ import application.gui.Main;
  * @author Richard Sundqvist
  *
  */
-@Include(classes = {"application.assets.Examples"})
 @SourcePath(path = "C:/Users/Richard/Documents/datx02-16-23/Bachelor/src/main/java/application/assets/")
 public abstract class Examples {
 
     private static double[] arg;
+    private static String   json;
 
     /**
      * Run an algorithm.
@@ -29,7 +29,7 @@ public abstract class Examples {
      * @param data The data to run it on.
      * @return The resulting operations of running the given algorithm on the data.
      */
-    @VisualizeArg(args = {AbstractType.ARRAY})
+    //@VisualizeArg(args = {"", AbstractType.ARRAY})
     public static String getExample (Algorithm algo, double[] data){
         arg = data;
         switch (algo) {
@@ -49,15 +49,17 @@ public abstract class Examples {
                 Main.console.err("No such algorithm: " + algo);
                 break;
         }
+        // om du vill printa här
         print();
-        String json = null;//= anrop_till_annotation();
         return json;
     }
 
-    @Print(path = "")
-    public static void print (){
-        System.out.println("done");
-    }
+    /*
+     denna måste vara definierad i någon annoterad klass i programmet 
+     och kallas när du är färdig
+    */
+    @Print(path="")
+    public static void print(){}
 
     /**
      * Generate a log file for Insertion Sort on the given data. <br>
@@ -67,6 +69,7 @@ public abstract class Examples {
      * @param data The data to run the algorithm on.
      * @return The operations performed by the algorithm on the given data.
      */
+    @VisualizeArg(args = {AbstractType.ARRAY})
     public static void getInsertionSort (double[] data){
         int j; // the number of items sorted so far
         double key; // the item to be inserted
@@ -89,6 +92,7 @@ public abstract class Examples {
      * @param data The data to run the algorithm on.
      * @return The operations performed by the algorithm on the given data.
      */
+    @VisualizeArg(args = {AbstractType.ARRAY})
     public static void getBubbleSort (double[] data){
         int j;
         boolean flag = true; // set flag to true to begin first pass
@@ -114,10 +118,12 @@ public abstract class Examples {
      * @param data The data to run the algorithm on.
      * @return The operations performed by the algorithm on the given data.
      */
+    
     public static void getMergeSort (double[] data){
         mergesort(data);
     }
 
+    @VisualizeArg(args = {AbstractType.ARRAY, AbstractType.ARRAY})
     private static double[] merge (double[] a, double[] b){
         double[] c = new double[a.length + b.length];
         int i = 0, j = 0;
@@ -133,7 +139,9 @@ public abstract class Examples {
         }
         return c;
     }
-
+    
+    
+    @VisualizeArg(args = {AbstractType.ARRAY})
     private static double[] mergesort (double[] input){
         int N = input.length;
         if (N <= 1)

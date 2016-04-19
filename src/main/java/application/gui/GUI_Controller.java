@@ -32,6 +32,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import wrapper.Wrapper;
+import wrapper.datastructures.DataStructure;
 
 import java.io.*;
 import java.net.URL;
@@ -67,6 +68,8 @@ public class GUI_Controller implements CommunicatorListener {
     private OperationPanel             operationPanel;
     private MenuButton                 streamBehaviourMenuButton;
     private final ExamplesDialog       examplesDialog;
+    private Menu                       visualMenu;
+    private VisualDialog               visualDialog;
 
     public GUI_Controller (Visualization visualization, Stage window, iModel model, LogStreamManager lsm, SourcePanel sourceViewer){
         this.visualization = visualization;
@@ -78,6 +81,7 @@ public class GUI_Controller implements CommunicatorListener {
         this.sourceViewer = sourceViewer;
         this.operationPanel = new OperationPanel(this);
         this.examplesDialog = new ExamplesDialog(window);
+        this.visualDialog = new VisualDialog(window);
         initConnectedPane();
         initSettingsPane();
         interpreterView = new InterpreterView(window);
@@ -406,14 +410,41 @@ public class GUI_Controller implements CommunicatorListener {
      */
     public void loadFromLSM (){
         //Add operations to model and create Render visuals, then draw them.
-        model.getStructures().putAll(lsm.getKnownVariables());
+        if(model.getStructures().containsKey(lsm.getDataStructures())){
+            Main.console.force("ERROR: New Data Structure identifier collision:");
+            Main.console.force("Known structures: " + model.getStructures().keySet());
+            Main.console.force("New structures: " + lsm.getDataStructures().keySet());
+            return;
+        }
+        model.getStructures().putAll(lsm.getDataStructures());
         model.getOperations().addAll(lsm.getOperations());
         sourceViewer.addSources(lsm.getSources());
-        visualization.createVisuals();
+        visualization.clearAndCreateVisuals();
         visualization.render();
         //Update operation list
         operationPanel.getItems().addAll(lsm.getOperations());
+        loadVisualMenu();
         updatePanels();
+    }
+
+    private void loadVisualMenu (){
+        for (DataStructure struct : model.getStructures().values()) {
+            MenuItem mi = new MenuItem();
+            mi.setText(struct.identifier + ": " + struct.rawType.toUpperCase());
+            mi.setOnAction(event -> {
+                openVisualDialog(struct);
+            });
+            visualMenu.getItems().add(mi);
+        }
+    }
+    
+    public void openVisualDialog (DataStructure struct){
+        if (visualDialog.show(struct)) {
+            visualization.clearAndCreateVisuals();
+            int step = model.getIndex();
+            model.reset();
+            goToStep(step);
+        }
     }
 
     @Override
@@ -458,7 +489,7 @@ public class GUI_Controller implements CommunicatorListener {
             return;
         }
         lsm.setOperations(model.getOperations());
-        lsm.setKnownVariables(model.getStructures());
+        lsm.setDataStructures(model.getStructures());
         lsm.setSources(sourceViewer.getSources());
         lsm.printLog(target);
     }
@@ -503,6 +534,7 @@ public class GUI_Controller implements CommunicatorListener {
         playPauseButton     = (Button) namespace.get("playPauseButton");
         speedButton         = (Button) namespace.get("speedButton");
         streamBehaviourMenuButton = (MenuButton) namespace.get("streamBehaviourMenuButton");
+        visualMenu = (Menu) namespace.get("visualMenu");
         //@formatter:on
     }
 

@@ -845,7 +845,7 @@ public class Simulator extends Application {
             LSM.clearData();
             LSM.readLog(jsonFile);
             queuedOperations.addAll(LSM.getOperations());
-            knownVariables.putAll(LSM.getKnownVariables());
+            knownVariables.putAll(LSM.getDataStructures());
             updateQueued();
         }
 
@@ -858,7 +858,7 @@ public class Simulator extends Application {
         }
 
         private void exportList (File targetDir, List<Operation> list){
-            LSM.setKnownVariables(knownVariables);
+            LSM.setDataStructures(knownVariables);
             LSM.setOperations(list);
             LSM.printLogAutoName(targetDir);
         }
@@ -874,7 +874,7 @@ public class Simulator extends Application {
                     LSM.clearOperations();
                     updateQueued();
                     //Variables
-                    knownVariables.putAll(LSM.getKnownVariables());
+                    knownVariables.putAll(LSM.getDataStructures());
                     LSM.clearKnownVariables();
                 }
             });

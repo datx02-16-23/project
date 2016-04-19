@@ -159,7 +159,7 @@ public class KTreeRender extends Render {
      */
     private void calculateSize (){
         double width = totBreadth * (node_width + hspace);
-        double height = totDepth * (node_height + vspace) * 2 + vspace - node_height; //Depth doesnt include node + margain above.
+        double height = totDepth * (node_height + vspace) * 2 + vspace; //Depth doesnt include node + margain above.
         this.setMinSize(width, height);
         this.setMaxSize(width, height);
     }
@@ -173,7 +173,7 @@ public class KTreeRender extends Render {
         context.setFill(COLOR_WHITE);
         context.fillRect(0, 0, this.getMaxWidth(), this.getMaxHeight());
         context.setFill(COLOR_BLACK);
-        context.fillText("identifier: " + struct.identifier + "( " + struct.abstractType + ")", hspace, vspace + 10);
+        context.fillText(struct.toString(), hspace, vspace + 10);
         for (Element e : struct.getElements()) {
             ArrayElement ae = (ArrayElement) e;
             drawElement(ae.getValue() + "", ae.getIndex()[0], null);
