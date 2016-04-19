@@ -107,9 +107,20 @@ public class Array extends DataStructure {
             case swap:
                 swap((OP_Swap) op);
                 break;
+            case remove:
+                remove((OP_Remove) op);
             default:
                 Main.console.err("OperationType \"" + op.operation + "\" not applicable to " + getClass().getSimpleName());
                 break;
+        }
+    }
+
+    private void remove (OP_Remove op){
+        Locator target = op.getTarget();
+        Element e = this.getElement(target);
+        if (e != null) {
+            inactiveElements.add(e);
+            e.setColor(Element.COLOR_INACTIVE);
         }
     }
 
@@ -131,7 +142,7 @@ public class Array extends DataStructure {
     }
 
     private void readORwrite (OP_ReadWrite op){
-        if (op.operation == OperationType.write && op.getValue().length > 1) {
+        if (op.operation == OperationType.write && (op.getValue().length > 1)) {
             init((OP_Write) op);
         }
         //Manage write

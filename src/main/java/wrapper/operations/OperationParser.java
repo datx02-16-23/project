@@ -27,6 +27,8 @@ public abstract class OperationParser {
                 return parseMessage(op);
             case swap:
                 return parseSwap(op);
+            case remove:
+                return parseRemove(op);
             default:
                 Main.console.info("Unknown operation type: " + op.operation);
                 break;
@@ -83,6 +85,13 @@ public abstract class OperationParser {
         op_rw.setValue(parseValue(op));
         copySourceInfo(op, op_rw);
         return op_rw;
+    }
+    
+    public static OP_Remove parseRemove(Operation op){
+        OP_Remove op_remove = new OP_Remove();
+        op_remove.setTarget(unpackArrayVariable(op.operationBody.get(Key.target)));
+        copySourceInfo(op, op_remove);
+        return op_remove;
     }
 
     private static void copySourceInfo (Operation from, Operation to){

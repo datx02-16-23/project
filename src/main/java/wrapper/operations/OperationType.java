@@ -4,7 +4,7 @@ package wrapper.operations;
  * The name of the operation.
  */
 public enum OperationType{
-    message, read, write, swap(true);
+    message, read, write, swap(true), remove;
 
     /**
      * True for operations which implement the Consolidable interface.
