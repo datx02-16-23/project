@@ -382,6 +382,15 @@ public class LogStreamManager implements CommunicatorListener {
             }
         }
     }
+    
+    /**
+     * Unwrap a JSON string and store the contents.
+     * @param json THE JSON string to process.
+     */
+    public void unwrap(String json){
+        Wrapper w = gson.fromJson(json, Wrapper.class);
+        unwrap(w);
+    }
 
     @Override
     public void messageReceived (short messageType){

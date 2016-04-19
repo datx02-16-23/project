@@ -1,12 +1,13 @@
 package application.assets;
 
 import com.dennisjonsson.annotation.*;
+import com.dennisjonsson.markup.AbstractType;
 
 import application.gui.Main;
-import wrapper.*;
 
 /**
  * Generates examples for a given array using the selected algorithm.<br>
+ * <br>
  * <b>ACKNOWLEDGEMENTS:</b><br>
  * Insertion Sort: http://mathbits.com/MathBits/Java/arrays/InsertionSort.htm <br>
  * Bubble Sort: http://mathbits.com/MathBits/Java/arrays/Bubble.htm <br>
@@ -15,7 +16,7 @@ import wrapper.*;
  * @author Richard Sundqvist
  *
  */
-@Include(classes = {"capplication.assets.Examples"})
+@Include(classes = {"application.assets.Examples"})
 @SourcePath(path = "C:/Users/Richard/Documents/datx02-16-23/Bachelor/src/main/java/application/assets/")
 public abstract class Examples {
 
@@ -28,27 +29,34 @@ public abstract class Examples {
      * @param data The data to run it on.
      * @return The resulting operations of running the given algorithm on the data.
      */
-    public static Wrapper getExample (Algorithm algo, double[] data){
+    @VisualizeArg(args = {AbstractType.ARRAY})
+    public static String getExample (Algorithm algo, double[] data){
         arg = data;
-        Wrapper w = new Wrapper(null, null);
         switch (algo) {
             case mergesort:
-                w = getMergeSort(arg);
+                getMergeSort(arg);
                 break;
             case bubblesort:
-                w = getBubbleSort(arg);
+                getBubbleSort(arg);
                 break;
             case insertionsort:
-                w = getInsertionSort(arg);
+                getInsertionSort(arg);
                 break;
             case quicksort:
-                w = getQuickSort(arg);
+                getQuickSort(arg);
                 break;
             default:
                 Main.console.err("No such algorithm: " + algo);
                 break;
         }
-        return w;
+        print();
+        String json = null;//= anrop_till_annotation();
+        return json;
+    }
+
+    @Print(path = "")
+    public static void print (){
+        System.out.println("done");
     }
 
     /**
@@ -59,7 +67,7 @@ public abstract class Examples {
      * @param data The data to run the algorithm on.
      * @return The operations performed by the algorithm on the given data.
      */
-    public static Wrapper getInsertionSort (double[] data){
+    public static void getInsertionSort (double[] data){
         int j; // the number of items sorted so far
         double key; // the item to be inserted
         int i;
@@ -72,7 +80,6 @@ public abstract class Examples {
             }
             data[i + 1] = key; // Put the key in its proper location
         }
-        return null;
     }
 
     /**
@@ -82,7 +89,7 @@ public abstract class Examples {
      * @param data The data to run the algorithm on.
      * @return The operations performed by the algorithm on the given data.
      */
-    public static Wrapper getBubbleSort (double[] data){
+    public static void getBubbleSort (double[] data){
         int j;
         boolean flag = true; // set flag to true to begin first pass
         double temp; //holding variable
@@ -98,7 +105,6 @@ public abstract class Examples {
                 }
             }
         }
-        return null;
     }
 
     /**
@@ -108,9 +114,8 @@ public abstract class Examples {
      * @param data The data to run the algorithm on.
      * @return The operations performed by the algorithm on the given data.
      */
-    public static Wrapper getMergeSort (double[] data){
+    public static void getMergeSort (double[] data){
         mergesort(data);
-        return null;
     }
 
     private static double[] merge (double[] a, double[] b){
@@ -150,11 +155,10 @@ public abstract class Examples {
      * @param data The data to run the algorithm on.
      * @return The operations performed by the algorithm on the given data.
      */
-    public static Wrapper getQuickSort (double[] data){
+    public static void getQuickSort (double[] data){
         mergesort(data);
-        return null;
     }
-    
+
     /**
      * The algorithms known to this Examples thingy.
      * 
