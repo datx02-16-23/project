@@ -1,7 +1,11 @@
 package application.assets;
 
+import com.dennisjonsson.annotation.SourcePath;
+
 import application.gui.Main;
 import wrapper.*;
+
+
 
 /**
  * Generates examples for a given array using the selected algorithm.<br>
@@ -13,8 +17,10 @@ import wrapper.*;
  * @author Richard Sundqvist
  *
  */
+@SourcePath(path = "C:/Users/Richard/Documents/datx02-16-23/Bachelor/src/main/java/application/assets/")
 public abstract class Examples {
 
+    private static double[] arg;
     /**
      * Run an algorithm.
      * @param algo The algorithm to load.
@@ -22,16 +28,17 @@ public abstract class Examples {
      * @return The resulting operations of running the given algorithm on the data.
      */
     public static Wrapper getExample (Algorithm algo, double[] data){
+        arg = data;
         Wrapper w = new Wrapper(null, null);
         switch (algo) {
             case mergesort:
-                w = getMergeSort(data);
+                w = getMergeSort(arg);
                 break;
             case bubblesort:
-                w = getBubbleSort(data);
+                w = getBubbleSort(arg);
                 break;
             case insertionsort:
-                w = getInsertionSort(data);
+                w = getInsertionSort(arg);
                 break;
             default:
                 Main.console.err("No such algorithm: " + algo);

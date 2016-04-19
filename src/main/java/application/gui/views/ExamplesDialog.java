@@ -81,12 +81,11 @@ public class ExamplesDialog {
             } catch (Exception e){
                 status.setText("INPUT INVALID");
                 status.setTextFill(STATUS_ERR);
-                break;
+                return;
             }
         }
         status.setText("INPUT VALID");
         status.setTextFill(STATUS_OK);
-        System.out.println(Arrays.toString(data));
         System.out.println();
     }
 

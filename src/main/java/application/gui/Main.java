@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -56,7 +57,6 @@ public class Main extends Application {
 
     @Override
     public void start (Stage primaryStage) throws Exception{
-        System.out.println("HERE WE GO!");
         window = primaryStage;
         window.setTitle(Strings.PROJECT_NAME);
         // Create a Group view for the AV.
