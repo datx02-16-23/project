@@ -3,7 +3,6 @@ package io;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import org.jgroups.JChannel;
@@ -203,6 +202,9 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
                     listener.messageReceived(CommunicatorMessage.CHECKING_IN);
                 }
                 break;
+            case CommunicatorMessage.HELLO:
+                requestMemberInfo(CommunicatorMessage.FIRST_CONTACT);
+                break;
             case CommunicatorMessage.FIRST_CONTACT_ACK:
                 allTransmitters.put(new Integer(senderId), member_string);
                 break;
@@ -372,8 +374,8 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
         incomingQueue.add(w);
         listener.messageReceived(CommunicatorMessage.WRAPPER);
     }
-    
-    public Collection<String> allKnownEntities(){
+
+    public Collection<String> allKnownEntities (){
         return allTransmitters.values();
     }
 }

@@ -32,7 +32,8 @@ import wrapper.datastructures.DataStructureParser;
 import wrapper.operations.OperationParser;
 
 /**
- * A LogStreamManager handles communication between processes, components, and the OS file system.
+ * A LogStreamManager handles communication between processes, components, and the OS file system.<br>
+ * <b>LogStreamManager will not unwrap streamed messages if the listener is null.</b>
  * 
  * @author Richard Sundqvist
  */
@@ -53,7 +54,8 @@ public class LogStreamManager implements CommunicatorListener {
     private Map<String, List<String>>  sources;
 
     /**
-     * Creates a new LogStreamManager.
+     * Creates a new LogStreamManager. <br>
+     * <b>LogStreamManager will not unwrap streamed messages if the listener is null.</b>
      * 
      * @param agentDescriptor The name of the agent using this LogStreamManager, such as "JavaAnnotationProcessor".
      */
@@ -62,7 +64,8 @@ public class LogStreamManager implements CommunicatorListener {
     }
 
     /**
-     * Creates a new LogStreamManager.
+     * Creates a new LogStreamManager. <br>
+     * <b>LogStreamManager will not unwrap streamed messages if the listener is null.</b>
      * 
      * @param suppressIncoming If {@code true}, most incoming messages will be ignored.
      * @param agentDescriptor The name of the agent using this LogStreamManager, such as "JavaAnnotationProcessor".
@@ -397,7 +400,10 @@ public class LogStreamManager implements CommunicatorListener {
 
     @Override
     public void messageReceived (short messageType){
-        //Handle Wrapper messages
+        if (listener == null) {
+            return;
+        }
+        //Handle Wrapper messagess
         if (messageType == CommunicatorMessage.WRAPPER) {
             List<Wrapper> wrappers = communicator.getAllQueuedMessages();
             for (Wrapper w : wrappers) {
@@ -408,8 +414,8 @@ public class LogStreamManager implements CommunicatorListener {
             }
             //Handle Member info messages.
         }
-        else if (messageType == CommunicatorMessage.CHECKING_IN && listener != null) {
-            listener.messageReceived(CommunicatorMessage.CHECKING_IN);
+        else {
+            listener.messageReceived(messageType);
         }
     }
 
