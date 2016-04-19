@@ -60,11 +60,12 @@ public class GUI_Controller implements CommunicatorListener {
     // Settings dialog stuff
     private Stage                  settingsView;
     // Controls
-    private boolean                isPlaying                = false;
-    private int                    stepDelaySpeedupFactor   = 1;
-    private long                   stepDelayBase            = 1500;
-    private long                   stepDelay                = stepDelayBase / stepDelaySpeedupFactor;
-    private boolean                autoPlayOnIncomingStream = true;
+    private boolean                isPlaying              = false;
+    private int                    stepDelaySpeedupFactor = 1;
+    private long                   stepDelayBase          = 1500;
+    private long                   stepDelay              = stepDelayBase / stepDelaySpeedupFactor;
+    private boolean                stream_always_show_last_op     = true;
+    private boolean                stream_start_autoplay  = false;
     private InterpreterView        interpreterView;
     private OperationPanel         operationPanel;
     private MenuButton             streamBehaviourMenuButton;
@@ -95,7 +96,7 @@ public class GUI_Controller implements CommunicatorListener {
         // Playback speed
         perSecField.setText(df.format(1000.0 / stepDelayBase));
         timeBetweenField.setText(df.format(stepDelayBase));
-        toggleAutorunStream.setSelected(autoPlayOnIncomingStream);
+        toggleAutorunStream.setSelected(stream_always_show_last_op);
         //Size and show
         settingsView.setWidth(this.window.getWidth() * 0.75);
         settingsView.setHeight(this.window.getHeight() * 0.75);
@@ -105,26 +106,29 @@ public class GUI_Controller implements CommunicatorListener {
     private CheckBox toggleAutorunStream;
 
     public void toggleAutorunStream (){
-        autoPlayOnIncomingStream = toggleAutorunStream.isSelected();
+        stream_always_show_last_op = toggleAutorunStream.isSelected();
         unsavedChanged();
     }
 
     public void jumpToEndClicked (Event e){
         streamBehaviourMenuButton.setText(">>");
         Main.console.info("Model will always display the latest operation streamed operation.");
-        //TODO: Logic
+        stream_always_show_last_op = true;
+        stream_start_autoplay = false;
     }
 
     public void continueClicked (Event e){
         streamBehaviourMenuButton.setText(">");
         Main.console.info("Autoplay will start when a streamed operation has been received.");
-        //TODO: Logic
+        stream_always_show_last_op = false;
+        stream_start_autoplay = true;
     }
 
     public void doNothingClicked (Event e){
         streamBehaviourMenuButton.setText("=");
         Main.console.info("Streaming will not force model progression.");
-        //TODO: Logic
+        stream_always_show_last_op = false;
+        stream_start_autoplay = false;
     }
 
     /**
@@ -431,12 +435,15 @@ public class GUI_Controller implements CommunicatorListener {
 
             @Override
             public void run (){
-                if (autoPlayOnIncomingStream) {
+                if (stream_always_show_last_op) {
                     model.goToEnd();
+                }
+                else if (stream_start_autoplay) {
+                    startAutoPlay();
                 }
                 loadFromLSM();
                 lsm.clearData();
-                if (autoPlayOnIncomingStream) {
+                if (stream_always_show_last_op) {
                     stepForwardButtonClicked();
                 }
                 else {
@@ -621,14 +628,14 @@ public class GUI_Controller implements CommunicatorListener {
         Properties properties = tryLoadProperties();
         stepDelayBase = Long.parseLong(properties.getProperty("playbackStepDelay"));
         stepDelay = stepDelayBase; // Speedup factor is 1 at startup.
-        autoPlayOnIncomingStream = Boolean.parseBoolean(properties.getProperty("autoPlayOnIncomingStream"));
+        stream_always_show_last_op = Boolean.parseBoolean(properties.getProperty("autoPlayOnIncomingStream"));
     }
 
     // Save settings
     public void saveProperties (){
         Properties properties = new Properties();
         properties.setProperty("playbackStepDelay", "" + stepDelayBase);
-        properties.setProperty("autoPlayOnIncomingStream", "" + autoPlayOnIncomingStream);
+        properties.setProperty("autoPlayOnIncomingStream", "" + stream_always_show_last_op);
         try {
             URL url = getClass().getClassLoader().getResource(Strings.PROPERTIES_FILE_NAME);
             OutputStream outputStream = new FileOutputStream(new File(url.toURI()));
