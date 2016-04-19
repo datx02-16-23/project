@@ -60,12 +60,12 @@ public class GUI_Controller implements CommunicatorListener {
     // Settings dialog stuff
     private Stage                  settingsView;
     // Controls
-    private boolean                isPlaying              = false;
-    private int                    stepDelaySpeedupFactor = 1;
-    private long                   stepDelayBase          = 1500;
-    private long                   stepDelay              = stepDelayBase / stepDelaySpeedupFactor;
-    private boolean                stream_always_show_last_op     = true;
-    private boolean                stream_start_autoplay  = false;
+    private boolean                isPlaying                  = false;
+    private int                    stepDelaySpeedupFactor     = 1;
+    private long                   stepDelayBase              = 1500;
+    private long                   stepDelay                  = stepDelayBase / stepDelaySpeedupFactor;
+    private boolean                stream_always_show_last_op = true;
+    private boolean                stream_start_autoplay      = false;
     private InterpreterView        interpreterView;
     private OperationPanel         operationPanel;
     private MenuButton             streamBehaviourMenuButton;
@@ -160,6 +160,7 @@ public class GUI_Controller implements CommunicatorListener {
 
     public void startAutoPlay (){
         playPauseButton.setText("Pause");
+        speedMenuItem.setDisable(true);
         speedButton.setDisable(true);
         if (autoplayTimeline != null) {
             autoplayTimeline.stop();
@@ -184,6 +185,7 @@ public class GUI_Controller implements CommunicatorListener {
 
     public void stopAutoPlay (){
         speedButton.setDisable(false);
+        speedMenuItem.setDisable(false);
         if (autoplayTimeline != null) {
             autoplayTimeline.stop();
             playPauseButton.setText("Play");
@@ -225,7 +227,8 @@ public class GUI_Controller implements CommunicatorListener {
         updatePanels();
     }
 
-    private Button speedButton;
+    private Button   speedButton;
+    private MenuItem speedMenuItem;
 
     /**
      * Change the animation speed
@@ -510,12 +513,11 @@ public class GUI_Controller implements CommunicatorListener {
     public void loadMainViewFxID (FXMLLoader mainViewLoader){
         ObservableMap<String, Object> namespace = mainViewLoader.getNamespace();
         //Load from main view namespace
-        //@formatter:off
-        playPauseButton     = (Button) namespace.get("playPauseButton");
-        speedButton         = (Button) namespace.get("speedButton");
+        playPauseButton = (Button) namespace.get("playPauseButton");
+        speedButton = (Button) namespace.get("speedButton");
+        speedMenuItem = (MenuItem) namespace.get("speedMenuItem");
         streamBehaviourMenuButton = (MenuButton) namespace.get("streamBehaviourMenuButton");
         visualMenu = (Menu) namespace.get("visualMenu");
-        //@formatter:on
     }
 
     /*

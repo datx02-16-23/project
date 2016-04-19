@@ -50,12 +50,29 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="_Action">
                           <items>
-                              <MenuItem mnemonicParsing="false" onAction="#playPauseButtonClicked" text="Play/Pause" />
-                              <MenuItem mnemonicParsing="false" onAction="#stepForwardButtonClicked" text="Forward" />
-                              <MenuItem mnemonicParsing="false" onAction="#stepBackwardButtonClicked" text="Backward" />
+                              <MenuItem mnemonicParsing="false" onAction="#playPauseButtonClicked" text="Play/Pause">
+                                 <accelerator>
+                                    <KeyCodeCombination alt="UP" code="SPACE" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                 </accelerator></MenuItem>
+                              <MenuItem mnemonicParsing="false" onAction="#stepForwardButtonClicked" text="Forward">
+                                 <accelerator>
+                                    <KeyCodeCombination alt="UP" code="RIGHT" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                 </accelerator></MenuItem>
+                              <MenuItem mnemonicParsing="false" onAction="#stepBackwardButtonClicked" text="Backward">
+                                 <accelerator>
+                                    <KeyCodeCombination alt="UP" code="LEFT" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                 </accelerator></MenuItem>
                               <SeparatorMenuItem mnemonicParsing="false" />
-                              <MenuItem mnemonicParsing="false" onAction="#restartButtonClicked" text="Restart" />
-                              <MenuItem mnemonicParsing="false" onAction="#changeSpeedButtonClicked" text="Change Speed" />
+                              <MenuItem mnemonicParsing="false" onAction="#restartButtonClicked" text="Restart">
+                                 <accelerator>
+                                    <KeyCodeCombination alt="UP" code="UP" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                 </accelerator></MenuItem>
+                              <MenuItem mnemonicParsing="false" onAction="#clearButtonClicked" text="Clear">
+                                 <accelerator>
+                                    <KeyCodeCombination alt="UP" code="F4" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                                 </accelerator>
+                              </MenuItem>
+                              <MenuItem fx:id="speedMenuItem" mnemonicParsing="false" onAction="#changeSpeedButtonClicked" text="Change Speed" />
                               <SeparatorMenuItem mnemonicParsing="false" />
                             <MenuItem mnemonicParsing="false" onAction="#interpretOperationHistory" text="Interpret Now">
                                  <accelerator>
