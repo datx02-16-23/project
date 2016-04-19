@@ -16,6 +16,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import wrapper.datastructures.DataStructure;
 
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class VisualDialog {
 
     private final Stage     parent, root;
@@ -25,7 +26,6 @@ public class VisualDialog {
     private DataStructure   struct;
     private boolean         changed;
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     public VisualDialog (Stage parent){
         this.parent = parent;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/DataStructureDialog.fxml"));

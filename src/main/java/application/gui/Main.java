@@ -21,17 +21,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.scene.control.TextArea;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -43,9 +37,9 @@ public class Main extends Application {
     /**
      * Console for printing system and error messages.
      */
-    public static MavserConsole    console;
+    public static GUIConsole    console;
     /**
-     * Indicates wether the program is being run for the first time.
+     * Indicates whether the program is being run for the first time.
      */
     public static boolean          firstRun;
     private Stage                  window;
@@ -75,7 +69,7 @@ public class Main extends Application {
         }
         //Load console
         Map<String, Object> namespace = fxmlLoader.getNamespace();
-        console = new MavserConsole((TextArea) namespace.get("console"));
+        console = new GUIConsole((TextArea) namespace.get("console"));
         //Window size
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         double windowWidth = (screenSize.getWidth() * .9);
@@ -169,7 +163,7 @@ public class Main extends Application {
      * @author Richard Sundqvist
      *
      */
-    public class MavserConsole {
+    public class GUIConsole {
 
         private static final String prepend_force = "<>\t";
         private static final String prepend_err   = ">\t";
@@ -181,7 +175,7 @@ public class Main extends Application {
         public boolean              debug         = false;
         public final TextArea       consoleTextArea;
 
-        public MavserConsole (TextArea consoleTextArea){
+        public GUIConsole (TextArea consoleTextArea){
             this.consoleTextArea = consoleTextArea;
             consoleTextArea.setEditable(false);
             init();

@@ -36,8 +36,11 @@ import wrapper.datastructures.DataStructure;
 
 import java.io.*;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -491,7 +494,9 @@ public class GUI_Controller implements CommunicatorListener {
         FileChooser fc = new FileChooser();
         fc.setInitialDirectory(new File(System.getProperty("user.home")));
         fc.setTitle("Save OI-File");
-        fc.setInitialFileName("bla");
+        DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd_HHmmss");
+        Calendar cal = Calendar.getInstance();
+        fc.setInitialFileName(dateFormat.format(cal.getTime()));
         fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("OI-Files", "*.oi"), new FileChooser.ExtensionFilter("All Files", "*.*"));
         File target = fc.showSaveDialog(this.window);
         if (target == null) {

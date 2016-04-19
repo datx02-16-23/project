@@ -331,13 +331,13 @@ public class LogStreamManager implements CommunicatorListener {
      * 
      * @param targetPath The location to print the log file.
      * @param wrapper The wrapper to convert into a log file.
-     * @param addName if {@code true}, a name will be automatically generated.
+     * @param autoName if {@code true}, a name will be automatically generated.
      */
-    public void printLog (String targetPath, Wrapper wrapper, boolean addName){
+    public void printLog (String targetPath, Wrapper wrapper, boolean autoName){
         Gson GSON;
         DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd_HHmmss");
         Calendar cal = Calendar.getInstance();
-        String fileName = addName ? File.separator + dateFormat.format(cal.getTime()) + ".oi" : "";
+        String fileName = autoName ? File.separator + dateFormat.format(cal.getTime()) + ".oi" : "";
         if (PRETTY_PRINTING) {
             GSON = new GsonBuilder().setPrettyPrinting().create();
         }
@@ -350,7 +350,7 @@ public class LogStreamManager implements CommunicatorListener {
     private void printString (String completePath, String str){
         try {
             PrintStream out = new PrintStream(new FileOutputStream(completePath));
-            Main.console.info("Log printed: " + completePath);
+            Main.console.force("Log printed: " + completePath);
             out.print(str);
             out.flush();
             out.close();
