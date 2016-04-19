@@ -55,7 +55,12 @@ public abstract class DataStructure extends AnnotatedVariable {
 
     @Override
     public String toString (){
-        return super.identifier + ": " + super.rawType;
+        StringBuilder sb = new StringBuilder();
+        sb.append(super.identifier + ": " + super.rawType.toUpperCase());
+        if(super.abstractType != null){
+            sb.append(" (" + super.abstractType + ")");
+        }
+        return sb.toString();
     }
 
     /**
