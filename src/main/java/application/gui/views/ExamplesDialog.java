@@ -2,27 +2,17 @@ package application.gui.views;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
-
-import com.google.gson.Gson;
-
 import application.assets.Strings;
 import application.gui.GUI_Controller;
-import interpreter.Interpreter;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import wrapper.Operation;
 
 public class ExamplesDialog {
 
@@ -38,6 +28,7 @@ public class ExamplesDialog {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ExamplesDialog.fxml"));
         fxmlLoader.setController(this);
         root = new Stage();
+        root.getIcons().add(new Image(GUI_Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
         root.initModality(Modality.APPLICATION_MODAL);
         root.setTitle(Strings.PROJECT_NAME + ": Example");
         root.initOwner(this.parent);
@@ -47,6 +38,7 @@ public class ExamplesDialog {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
         root.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
             root.close();
@@ -58,7 +50,10 @@ public class ExamplesDialog {
         });
         status = (Label) fxmlLoader.getNamespace().get("status");
         name = (Label) fxmlLoader.getNamespace().get("name");
-        Scene dialogScene = new Scene(p, p.getWidth(), p.getHeight());
+        Scene dialogScene = new Scene(p, p.getPrefWidth()-5, p.getPrefHeight());
+        System.out.println(p.getPrefWidth());
+        System.out.println(p.getMaxHeight());
+        System.out.println(p.getMinHeight());
         root.setScene(dialogScene);
         root.setResizable(false);
     }
