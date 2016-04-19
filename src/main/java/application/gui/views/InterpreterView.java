@@ -110,8 +110,9 @@ public class InterpreterView implements InvalidationListener{
     }
 
     private void loadTestCases (){
-        List<OperationType> selectedTypes = interpreter.getTestCases();
         VBox casesBox = (VBox) namespace.get("casesBox");
+        casesBox.getChildren().clear();
+        List<OperationType> selectedTypes = interpreter.getTestCases();
         Insets insets =new Insets(2,0,2,5);
         //Create CheckBoxes for all Consolidate operation types
         for (OperationType type : OperationType.values()) {
