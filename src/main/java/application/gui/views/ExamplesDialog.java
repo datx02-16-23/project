@@ -18,9 +18,8 @@ public class ExamplesDialog {
 
     private static final Color STATUS_OK  = Color.web("#00c8ff");
     private static final Color STATUS_ERR = Color.web("#ff0000");
-    private final TextField    input;
-    private final Label        status;
-    private final Label        name;
+    private final TextField    input, mirror;
+    private final Label        status, name;
     private final Stage        parent, root;
 
     public ExamplesDialog (Stage parent){
@@ -38,7 +37,6 @@ public class ExamplesDialog {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
         root.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
             root.close();
@@ -48,15 +46,17 @@ public class ExamplesDialog {
         input.setOnKeyTyped(event -> {
             validateInput();
         });
+        mirror = (TextField) fxmlLoader.getNamespace().get("mirror");
         status = (Label) fxmlLoader.getNamespace().get("status");
         name = (Label) fxmlLoader.getNamespace().get("name");
-        Scene dialogScene = new Scene(p, p.getPrefWidth()-5, p.getPrefHeight());
+        
+        Scene dialogScene = new Scene(p, p.getPrefWidth() - 5, p.getPrefHeight());
         root.setScene(dialogScene);
         root.setResizable(false);
     }
 
     private double[] data;
-    
+
     private void validateInput (){
         String input = this.input.getText();
         if (input.length() == 0) {
@@ -73,14 +73,16 @@ public class ExamplesDialog {
         }
         double[] doubles = new double[doubles_string.length];
         for (int i = 0; i < doubles_string.length; i++) {
-            try{
-                doubles[i] = Double.parseDouble(doubles_string[i]);                
-            } catch (Exception e){
+            try {
+                doubles[i] = Double.parseDouble(doubles_string[i]);
+            } catch (Exception e) {
                 status.setText("INPUT INVALID");
                 status.setTextFill(STATUS_ERR);
+                mirror.clear();
                 return;
             }
         }
+        mirror.setText(Arrays.toString(doubles));
         status.setText("INPUT VALID");
         status.setTextFill(STATUS_OK);
         System.out.println();

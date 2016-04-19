@@ -5,8 +5,6 @@ import com.dennisjonsson.annotation.*;
 import application.gui.Main;
 import wrapper.*;
 
-
-
 /**
  * Generates examples for a given array using the selected algorithm.<br>
  * <b>ACKNOWLEDGEMENTS:</b><br>
@@ -22,8 +20,10 @@ import wrapper.*;
 public abstract class Examples {
 
     private static double[] arg;
+
     /**
      * Run an algorithm.
+     * 
      * @param algo The algorithm to load.
      * @param data The data to run it on.
      * @return The resulting operations of running the given algorithm on the data.
@@ -40,6 +40,9 @@ public abstract class Examples {
                 break;
             case insertionsort:
                 w = getInsertionSort(arg);
+                break;
+            case quicksort:
+                w = getQuickSort(arg);
                 break;
             default:
                 Main.console.err("No such algorithm: " + algo);
@@ -141,13 +144,25 @@ public abstract class Examples {
     //End Merge Sort
 
     /**
+     * Generate a log file for Quick Sort on the given data. <br>
+     * <b>Source: </b> {@link }
+     * 
+     * @param data The data to run the algorithm on.
+     * @return The operations performed by the algorithm on the given data.
+     */
+    public static Wrapper getQuickSort (double[] data){
+        mergesort(data);
+        return null;
+    }
+    
+    /**
      * The algorithms known to this Examples thingy.
      * 
      * @author Richard Sundqvist
      *
      */
     public enum Algorithm{
-        mergesort("Merge Sort"), bubblesort("Bubble Sort"), insertionsort("Insertion Sort");
+        mergesort("Merge Sort"), bubblesort("Bubble Sort"), insertionsort("Insertion Sort"), quicksort("Quick Sort");
 
         public final String name;
 
