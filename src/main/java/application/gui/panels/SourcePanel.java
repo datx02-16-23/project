@@ -18,14 +18,15 @@ import wrapper.Operation;
  */
 public class SourcePanel extends TabPane {
 
-    private final HashMap<String, Integer> nameTabMapping;
-    private Map<String, List<String>>      sources;
+    private final HashMap<String, Integer>  nameTabMapping;
+    private final Map<String, List<String>> sources;
 
     /**
      * Create a new SourceViewer.
      */
     public SourcePanel (){
         nameTabMapping = new HashMap<String, Integer>();
+        sources = new HashMap<String, List<String>>();
         this.prefHeightProperty().bind(this.heightProperty());
         this.prefWidthProperty().bind(this.widthProperty());
         this.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);

@@ -51,9 +51,6 @@ public class ExamplesDialog {
         status = (Label) fxmlLoader.getNamespace().get("status");
         name = (Label) fxmlLoader.getNamespace().get("name");
         Scene dialogScene = new Scene(p, p.getPrefWidth()-5, p.getPrefHeight());
-        System.out.println(p.getPrefWidth());
-        System.out.println(p.getMaxHeight());
-        System.out.println(p.getMinHeight());
         root.setScene(dialogScene);
         root.setResizable(false);
     }

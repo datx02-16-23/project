@@ -1,6 +1,6 @@
 package application.assets;
 
-import com.dennisjonsson.annotation.SourcePath;
+import com.dennisjonsson.annotation.*;
 
 import application.gui.Main;
 import wrapper.*;
@@ -17,6 +17,7 @@ import wrapper.*;
  * @author Richard Sundqvist
  *
  */
+@Include(classes = {"capplication.assets.Examples"})
 @SourcePath(path = "C:/Users/Richard/Documents/datx02-16-23/Bachelor/src/main/java/application/assets/")
 public abstract class Examples {
 
