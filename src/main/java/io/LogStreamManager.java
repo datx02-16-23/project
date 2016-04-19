@@ -365,7 +365,7 @@ public class LogStreamManager implements CommunicatorListener {
      * 
      * @param wrapper The wrapper to unwrap.
      */
-    private void unwrap (Wrapper wrapper){
+    public void unwrap (Wrapper wrapper){
         if (wrapper.header != null) {
             if (wrapper.header.annotatedVariables != null) {
                 Collection<AnnotatedVariable> avList = wrapper.header.annotatedVariables.values();

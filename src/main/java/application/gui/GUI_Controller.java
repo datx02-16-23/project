@@ -1,6 +1,7 @@
 package application.gui;
 
 import application.assets.*;
+import application.assets.Examples.Algorithm;
 import application.gui.panels.*;
 import application.gui.views.*;
 import application.model.iModel;
@@ -30,6 +31,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import wrapper.Wrapper;
+
 import java.io.*;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -62,6 +65,7 @@ public class GUI_Controller implements CommunicatorListener {
     private InterpreterView            interpreterView;
     private OperationPanel             operationPanel;
     private MenuButton                 streamBehaviourMenuButton;
+    private final ExamplesDialog       examplesDialog;
 
     public GUI_Controller (Visualization visualization, Stage window, iModel model, LogStreamManager lsm, SourcePanel sourceViewer){
         this.visualization = visualization;
@@ -72,6 +76,7 @@ public class GUI_Controller implements CommunicatorListener {
         this.lsm.setListener(this);
         this.sourceViewer = sourceViewer;
         this.operationPanel = new OperationPanel(this);
+        this.examplesDialog = new ExamplesDialog(window);
         initConnectedPane();
         initSettingsPane();
         interpreterView = new InterpreterView(window);
@@ -256,7 +261,8 @@ public class GUI_Controller implements CommunicatorListener {
      * Operation Panel listeners
      */
     /**
-     * Jump to the given index. {@code index} less than 0 jumps to start, {@code index} greater than {@code size} jumps to end.
+     * Jump to the given index. {@code index} less than 0 jumps to start, {@code index} greater than {@code size} jumps
+     * to end.
      * 
      * @param index The index to jump to.
      */
@@ -384,12 +390,21 @@ public class GUI_Controller implements CommunicatorListener {
      * 
      * @param file
      */
-    void loadFile (File file){
+    public void loadFile (File file){
         lsm.clearData();
         if (lsm.readLog(file) == false) {
             Main.console.err("Failed to read log: " + file);
             return;
         }
+        loadFromLSM();
+        //Clean lsm
+        lsm.clearData();
+    }
+
+    /**
+     * Load the current data from LSM. Does not clear any data.
+     */
+    public void loadFromLSM (){
         //Add operations to model and create Render visuals, then draw them.
         model.getStructures().putAll(lsm.getKnownVariables());
         model.getOperations().addAll(lsm.getOperations());
@@ -399,8 +414,6 @@ public class GUI_Controller implements CommunicatorListener {
         //Update operation list
         operationPanel.getItems().setAll(lsm.getOperations());
         updatePanels();
-        //Clean lsm
-        lsm.clearData();
     }
 
     @Override
@@ -662,6 +675,23 @@ public class GUI_Controller implements CommunicatorListener {
     //Fulhack
     public OperationPanel getOperationPanel (){
         return operationPanel;
+    }
+
+    /**
+     * Load an example.
+     * 
+     * @param w The Wrapper containing the example.
+     */
+    public void loadExample (Algorithm algo){
+        double[] data = examplesDialog.show(algo.name);
+        Wrapper w = Examples.getExample(algo, data);
+        if(w == null){
+            return;
+        }
+        lsm.clearData();
+        lsm.unwrap(w);
+        loadFromLSM();
+        lsm.clearData();
     }
 
     /*

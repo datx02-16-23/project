@@ -1,5 +1,7 @@
 package application.gui;
 
+import application.assets.Examples;
+import application.assets.Examples.Algorithm;
 import application.assets.Strings;
 import application.gui.panels.OperationPanel;
 import application.gui.panels.SourcePanel;
@@ -87,26 +89,13 @@ public class Main extends Application {
         sP.setDividerPositions(leftDivider, 1 - leftDivider);
         // Add examples
         Menu examples = (Menu) namespace.get("examplesMenu");
-        // Get all .json files
-        File folder = new File(getClass().getResource("/examples").getFile());
-        Files.walk(Paths.get(folder.getPath())).forEach(filePath -> {
-            if (Files.isRegularFile(filePath)) {
-                System.out.println(filePath);
-            }
-        });
-//        File[] files = folder.listFiles( (dir, name) -> name.endsWith(".oi"));
-//        System.out.d("files = " + files);
-//        // loop through all files and add menu item
-//        int i = 0;
-//        for (; i < files.length; i++) {
-//            if (files[i].isFile()) {
-//                File file = files[i];
-//                MenuItem ex = new MenuItem(stylizeExampleName(file.getName()));
-//                ex.setOnAction(event1 -> controller.loadFile(file));
-//                examples.getItems().add(ex);
-//            }
-//        }
-//        Main.console.info("Loaded " + i + " examples from: " + getClass().getResource("/examples").getFile());
+        for (Algorithm algo : Examples.Algorithm.values()) {
+            MenuItem algoButton = new MenuItem(algo.name);
+            algoButton.setOnAction(event -> {
+                controller.loadExample(algo);
+            });
+            examples.getItems().add(algoButton);
+        }
         // Add SourceViewer
         AnchorPane sourceViewContainer = (AnchorPane) namespace.get("sourceViewContainer");
         sourceViewContainer.getChildren().add(sourceViewer);
