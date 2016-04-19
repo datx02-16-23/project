@@ -45,7 +45,7 @@ public class Main extends Application {
     private Stage                  window;
     private Visualization          visualization;
     private final iModel           model = new Model();
-    private final LogStreamManager lsm   = new LogStreamManager();
+    private final LogStreamManager lsm   = new LogStreamManager(Strings.PROJECT_NAME + " GUI");
     private FXMLLoader             fxmlLoader;
     private GUI_Controller         controller;
 

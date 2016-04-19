@@ -531,7 +531,7 @@ public class Simulator extends Application {
             waitingOperationsList = new SimpleStringProperty();
             sentOperationsList = new SimpleStringProperty();
             id = (int) (Math.random() * Integer.MAX_VALUE);
-            LSM = new LogStreamManager();
+            LSM = new LogStreamManager(Strings.PROJECT_NAME + " Stream Simulator");
             LSM.PRETTY_PRINTING = true;
             LSM.setListener(this);
             queuedOperations = FXCollections.observableArrayList();

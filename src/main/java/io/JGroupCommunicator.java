@@ -1,6 +1,8 @@
 package io;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
@@ -24,33 +26,34 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
     /**
      * Send messages in native mode (serialised Wrapper).
      */
-    public static final short          SENDER_MODE_NATIVE = 0;
+    public static final short              SENDER_MODE_NATIVE = 0;
     /**
      * Send messages in JSON mode (Wrapper serialised as JSON String).
      */
-    public static final short          SENDER_MODE_JSON   = 1;
+    public static final short              SENDER_MODE_JSON   = 1;
     /**
      * If true, most incoming messages will be ignored. The messageReceived() method of the listener will be called only
      * if the listener has requested a head count of group members. Useful when the owner of this JGroupCommunicator
      * functions exclusively as the sender.
      */
-    public boolean                     suppressIncoming;
-    private int                        senderId;
-    private short                      senderMode;
-    private String                     channel;
-    private final List<Wrapper>        incomingQueue;
-    private final CommunicatorListener listener;
-    private final Gson                 gson;
-    private JChannel                   jChannel;
-    private final HashSet<Integer>     allTransmitters;
+    public final String                    hierarchy;
+    public boolean                         suppressIncoming;
+    private int                            senderId;
+    private short                          senderMode;
+    private String                         channel;
+    private final List<Wrapper>            incomingQueue;
+    private final CommunicatorListener     listener;
+    private final Gson                     gson;
+    private JChannel                       jChannel;
+    private final HashMap<Integer, String> allTransmitters;
 
     /**
      * Create a new JGroupCommunicator with a random transmitter id. Connects to the default channel.
      * 
      * @param listener The listener for this JGroupCommunicator.
      */
-    public JGroupCommunicator (CommunicatorListener listener){
-        this((int) (Math.random() * Integer.MAX_VALUE), Strings.DEFAULT_CHANNEL, listener, false);
+    public JGroupCommunicator (String hierarchy, CommunicatorListener listener){
+        this(hierarchy, (int) (Math.random() * Integer.MAX_VALUE), Strings.DEFAULT_CHANNEL, listener, false);
     }
 
     /**
@@ -59,23 +62,25 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
      * @param listener The listener for this JGroupCommunicator.
      * @param suppressIncoming If true, most incoming messages will be ignored.
      */
-    public JGroupCommunicator (CommunicatorListener listener, boolean suppressIncoming){
-        this((int) (Math.random() * Integer.MAX_VALUE), Strings.DEFAULT_CHANNEL, listener, suppressIncoming);
+    public JGroupCommunicator (String hierarchy, CommunicatorListener listener, boolean suppressIncoming){
+        this(hierarchy, (int) (Math.random() * Integer.MAX_VALUE), Strings.DEFAULT_CHANNEL, listener, suppressIncoming);
     }
 
     /**
      * Create a new JGroupCommunicator with the given transmitter id. Connects to the given channel.
      * 
+     * @param hierarchy The user hierarchy for this JGroupCommunicator.
      * @param senderId The transmitter id for this JGroupCommunicator.
      * @param channel The channel to connect to.
      * @param listener The listener for this JGroupCommunicator.
      * @param suppressIncoming If true, most incoming messages will be ignored.
      */
-    public JGroupCommunicator (int senderId, String channel, CommunicatorListener listener, boolean suppressIncoming){
+    public JGroupCommunicator (String hierarchy, int senderId, String channel, CommunicatorListener listener, boolean suppressIncoming){
         super();
         if (listener == null) {
             throw new IllegalArgumentException("Listener may not be null.");
         }
+        this.hierarchy = "JGroupCommunicator[" + hierarchy + "], id = " + senderId;
         this.senderId = senderId;
         this.channel = channel;
         this.listener = listener;
@@ -83,7 +88,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
         setNativeSenderMode();
         gson = new Gson();
         incomingQueue = new ArrayList<Wrapper>();
-        allTransmitters = new HashSet<Integer>();
+        allTransmitters = new HashMap<Integer, String>();
         try {
             jChannel = new JChannel("udp.xml");
             jChannel.connect(this.channel);
@@ -154,9 +159,8 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
         if (message.senderId == senderId) {
             return; //Don't process our own messages.
         }
-        if (allTransmitters.add(new Integer(message.senderId))) {
-            String s = "" + message.senderId;
-            allMemberStrings.add(s);
+        if (allTransmitters.keySet().contains(new Integer(message.senderId)) == false) {
+            requestMemberInfo(MavserMessage.FIRST_CONTACT);
         }
         switch (message.messageType) {
             case MavserMessage.WRAPPER:
@@ -175,24 +179,47 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
                     Main.console.err("JSON String malformed: " + message.payload);
                 }
                 break;
-            case MavserMessage.REQUEST_FOR_MEMBER_INFO:
-                Message memberInfo = new Message();
-                memberInfo.setObject(new MavserMessage("JGroupCommunicator [ " + getListenerHierarchy() + " ], (id = " + senderId + ")", senderId, MavserMessage.MEMBER_INFO));
-                try {
-                    jChannel.send(memberInfo);
-                } catch (Exception e) {
-                    Main.console.err("Failed to send member information.");
-                }
-                break;
-            case MavserMessage.MEMBER_INFO:
-                if (listenForMemeberInfo) {
-                    currentMemberStrings.add((String) message.payload);
-                    listener.messageReceived(MavserMessage.MEMBER_INFO);
-                }
-                break;
             default:
-                Main.console.err("Invalid message type: " + message.messageType);
-                return;
+                handleInformationExchange((String) message.payload, message.messageType, message.senderId);
+                break;
+        }
+    }
+
+    private void handleInformationExchange (String member_string, short messageType, int senderId){
+        switch (messageType) {
+            case MavserMessage.BROADCAST_CHANNEL_CHECK_IN:
+                sendMemberInfo(MavserMessage.CHECKING_IN);
+                break;
+            case MavserMessage.FIRST_CONTACT:
+                sendMemberInfo(MavserMessage.FIRST_CONTACT_ACK);
+                break;
+            case MavserMessage.CHECKING_IN:
+                if (listenForMemeberInfo) {
+                    currentMemberStrings.add(member_string);
+                    listener.messageReceived(MavserMessage.CHECKING_IN);
+                }
+                break;
+            case MavserMessage.FIRST_CONTACT_ACK:
+                allTransmitters.put(new Integer(senderId), member_string);
+                break;
+        }
+    }
+
+    private void requestMemberInfo (short context){
+        Message memberInfo = new Message();
+        memberInfo.setObject(new MavserMessage(null, senderId, context));
+        try {
+            jChannel.send(memberInfo);
+        } catch (Exception e) {
+        }
+    }
+
+    private void sendMemberInfo (short context){
+        Message memberInfo = new Message();
+        memberInfo.setObject(new MavserMessage(hierarchy, senderId, context));
+        try {
+            jChannel.send(memberInfo);
+        } catch (Exception e) {
         }
     }
 
@@ -211,29 +238,14 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
         }
         else {
             Message m = new Message();
-            m.setObject(new MavserMessage(null, senderId, MavserMessage.REQUEST_FOR_MEMBER_INFO));
-            currentMemberStrings.add("ME: JGroupCommunicator [ " + getListenerHierarchy() + " ], (id = " + senderId + ")");
-            listener.messageReceived(MavserMessage.MEMBER_INFO);
+            m.setObject(new MavserMessage(null, senderId, MavserMessage.BROADCAST_CHANNEL_CHECK_IN));
+            currentMemberStrings.add("ME: " + hierarchy);
+            listener.messageReceived(MavserMessage.CHECKING_IN);
             try {
                 jChannel.send(m);
             } catch (Exception e) {
-                Main.console.err("Failed to send REQUEST_FOR_MEMBER_INFO message.");
             }
         }
-    }
-
-    private String getListenerHierarchy (){
-        if (listener == null) {
-            return "null";
-        }
-        CommunicatorListener theListner = listener;
-        StringBuilder sb = new StringBuilder();
-        while(theListner != null) {
-            sb.append(theListner.getClass().getSimpleName() + "/");
-            theListner = theListner.getListener();
-        }
-        sb.append("null/");
-        return sb.toString();
     }
 
     private final List<String> currentMemberStrings = new ArrayList<String>();
@@ -355,5 +367,9 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
     private void addAndFireEvent (Wrapper w){
         incomingQueue.add(w);
         listener.messageReceived(MavserMessage.WRAPPER);
+    }
+    
+    public Collection<String> allKnownEntities(){
+        return allTransmitters.values();
     }
 }

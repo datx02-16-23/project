@@ -50,30 +50,26 @@ import java.util.Properties;
  */
 public class GUI_Controller implements CommunicatorListener {
 
-    private Visualization              visualization;
-    private Stage                      window;
-    private final LogStreamManager     lsm;
-    private final iModel               model;
-    private final SourcePanel          sourceViewer;
-    // Connection dialog stuff.
-    private final SimpleStringProperty currentlyConnected       = new SimpleStringProperty();
-    private final SimpleStringProperty allConnected             = new SimpleStringProperty();
-    private FXMLLoader                 connectedLoader;
-    private Stage                      connectedView;
+    private Visualization          visualization;
+    private Stage                  window;
+    private final LogStreamManager lsm;
+    private final iModel           model;
+    private final SourcePanel      sourceViewer;
+    private ConnectedView          connectedView;
     // Settings dialog stuff
-    private Stage                      settingsView;
+    private Stage                  settingsView;
     // Controls
-    private boolean                    isPlaying                = false;
-    private int                        stepDelaySpeedupFactor   = 1;
-    private long                       stepDelayBase            = 1500;
-    private long                       stepDelay                = stepDelayBase / stepDelaySpeedupFactor;
-    private boolean                    autoPlayOnIncomingStream = true;
-    private InterpreterView            interpreterView;
-    private OperationPanel             operationPanel;
-    private MenuButton                 streamBehaviourMenuButton;
-    private final ExamplesDialog       examplesDialog;
-    private Menu                       visualMenu;
-    private VisualDialog               visualDialog;
+    private boolean                isPlaying                = false;
+    private int                    stepDelaySpeedupFactor   = 1;
+    private long                   stepDelayBase            = 1500;
+    private long                   stepDelay                = stepDelayBase / stepDelaySpeedupFactor;
+    private boolean                autoPlayOnIncomingStream = true;
+    private InterpreterView        interpreterView;
+    private OperationPanel         operationPanel;
+    private MenuButton             streamBehaviourMenuButton;
+    private final ExamplesDialog   examplesDialog;
+    private Menu                   visualMenu;
+    private VisualDialog           visualDialog;
 
     public GUI_Controller (Visualization visualization, Stage window, iModel model, LogStreamManager lsm, SourcePanel sourceViewer){
         this.visualization = visualization;
@@ -86,7 +82,7 @@ public class GUI_Controller implements CommunicatorListener {
         this.operationPanel = new OperationPanel(this);
         this.examplesDialog = new ExamplesDialog(window);
         this.visualDialog = new VisualDialog(window);
-        initConnectedPane();
+        this.connectedView = new ConnectedView(window, (JGroupCommunicator) lsm.getCommunicator());
         initSettingsPane();
         interpreterView = new InterpreterView(window);
         loadProperties();
@@ -332,44 +328,7 @@ public class GUI_Controller implements CommunicatorListener {
         settingsView.setScene(dialogScene);
     }
 
-    private void initConnectedPane (){
-        JGroupCommunicator jgc = (JGroupCommunicator) lsm.getCommunicator();
-        connectedLoader = new FXMLLoader(getClass().getResource("/ConnectedView.fxml"));
-        connectedView = new Stage();
-        connectedView.getIcons().add(new Image(GUI_Controller.class.getResourceAsStream("/assets/icon_connected.png")));
-        connectedView.initModality(Modality.APPLICATION_MODAL);
-        connectedView.setTitle("Entities View: Channel = \"" + jgc.getChannel() + "\"");
-        connectedView.initOwner(this.window);
-        SplitPane p = null;
-        try {
-            p = connectedLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        TextArea top = (TextArea) connectedLoader.getNamespace().get("connectedEntities");
-        top.textProperty().bind(currentlyConnected);
-        TextArea bottom = (TextArea) connectedLoader.getNamespace().get("allEntities");
-        bottom.textProperty().bind(allConnected);
-        connectedView.setOnCloseRequest(event -> {
-            event.consume(); // Better to do this now than missing it later.
-            jgc.listenForMemberInfo(false);
-            connectedView.close();
-        });
-        Scene dialogScene = new Scene(p, this.window.getWidth() * 0.75, this.window.getHeight() * 0.75);
-        connectedView.setScene(dialogScene);
-    }
-
     public void connectedToChannel (){
-        JGroupCommunicator jgc = (JGroupCommunicator) lsm.getCommunicator();
-        jgc.listenForMemberInfo(true);
-        StringBuilder sb = new StringBuilder();
-        for (String s : jgc.getAllMemberStrings()) {
-            sb.append(s + "\n");
-        }
-        allConnected.set(sb.toString());
-        //Set size and show
-        connectedView.setWidth(this.window.getWidth() * 0.75);
-        connectedView.setHeight(this.window.getHeight() * 0.75);
         connectedView.show();
     }
 
@@ -384,7 +343,7 @@ public class GUI_Controller implements CommunicatorListener {
     /**
      * Used for choosing a file to Visualize.
      */
-    public void openLog (){
+    public void openFileChooser (){
         FileChooser fc = new FileChooser();
         fc.setInitialDirectory(new File(System.getProperty("user.home")));
         fc.setTitle("Open OI-File");
@@ -462,14 +421,9 @@ public class GUI_Controller implements CommunicatorListener {
 
     @Override
     public void messageReceived (short messageType){
-        if (messageType == MavserMessage.MEMBER_INFO) {
-            System.out.println("member info!");
-            List<String> memberStrings = ((JGroupCommunicator) lsm.getCommunicator()).getMemberStrings();
-            StringBuilder sb = new StringBuilder();
-            for (String s : memberStrings) {
-                sb.append(s + "\n");
-            }
-            currentlyConnected.set(sb.toString());
+        if (messageType == MavserMessage.CHECKING_IN) {
+            JGroupCommunicator jgc = (JGroupCommunicator) lsm.getCommunicator();
+            connectedView.update(jgc.getMemberStrings(), jgc.allKnownEntities());
             return;
         }
         Platform.runLater(new Runnable() {
@@ -491,7 +445,7 @@ public class GUI_Controller implements CommunicatorListener {
         });
     }
 
-    public void printLog (){
+    public void openDestinationChooser (){
         FileChooser fc = new FileChooser();
         fc.setInitialDirectory(new File(System.getProperty("user.home")));
         fc.setTitle("Save OI-File");

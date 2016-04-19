@@ -6,7 +6,6 @@ import java.util.List;
 import wrapper.Wrapper;
 
 public interface Communicator {
-
     /**
      * Returns the first received Wrapper in queue. Returns null if the queue is empty.
      * 
@@ -66,19 +65,27 @@ public interface Communicator {
         /**
          * Message containing a Wrapper for variables and operations.
          */
-        public static final short WRAPPER                 = 0;
+        public static final short WRAPPER                    = 0;
         /**
          * Message containing a String on the JSON format, which may be deserialized into a Wrapper.
          */
-        public static final short JSON                    = 1;
+        public static final short JSON                       = 1;
         /**
          * Request for info about connected channel members.
          */
-        public static final short REQUEST_FOR_MEMBER_INFO = 11;
+        public static final short BROADCAST_CHANNEL_CHECK_IN = 11;
         /**
          * Info about the sending member contained as a String in payload.
          */
-        public static final short MEMBER_INFO             = 12;
+        public static final short CHECKING_IN     = 12;
+        /**
+         * Request for info about connected channel members.
+         */
+        public static final short FIRST_CONTACT    = 13;
+        /**
+         * Info about the sending member contained as a String in payload.
+         */
+        public static final short FIRST_CONTACT_ACK                = 14;
         /**
          * They payload for this message. May be null.
          */

@@ -54,18 +54,21 @@ public class LogStreamManager implements CommunicatorListener {
 
     /**
      * Creates a new LogStreamManager.
+     * 
+     * @param agentDescriptor The name of the agent using this LogStreamManager, such as "JavaAnnotationProcessor".
      */
-    public LogStreamManager (){
-        this(false);
+    public LogStreamManager (String agentDescriptor){
+        this(agentDescriptor, false);
     }
 
     /**
      * Creates a new LogStreamManager.
      * 
      * @param suppressIncoming If {@code true}, most incoming messages will be ignored.
+     * @param agentDescriptor The name of the agent using this LogStreamManager, such as "JavaAnnotationProcessor".
      */
-    public LogStreamManager (boolean suppressIncoming){
-        communicator = new JGroupCommunicator(this, suppressIncoming);
+    public LogStreamManager (String agentDescriptor, boolean suppressIncoming){
+        communicator = new JGroupCommunicator("LogStreamManager/" + agentDescriptor, this, suppressIncoming);
         dataStructures = new HashMap<String, DataStructure>();
         operations = new ArrayList<Operation>();
         sources = null;
@@ -152,7 +155,7 @@ public class LogStreamManager implements CommunicatorListener {
             Main.console.err("JSON syntax error: " + e);
         } catch (FileNotFoundException e) {
             Main.console.err("File not found: " + e);
-        }         
+        }
         return false;
     }
 
@@ -175,7 +178,7 @@ public class LogStreamManager implements CommunicatorListener {
     public void printLogAutoName (File targetDir){
         printLog(targetDir.toString(), true);
     }
-    
+
     /**
      * Print the operations and header information currently held by this LogStreamManager. Set the public variable
      * {@code PRETTY_PRINTING} to true to enable human-readable output. Will generate a filename automatically on the
@@ -183,14 +186,14 @@ public class LogStreamManager implements CommunicatorListener {
      * 
      * @param target The location and file name of the file to print.
      */
-    public void printLog(File target){
+    public void printLog (File target){
         printLog(target.toString(), false);
     }
 
     /**
      * Print the operations and header information currently held by this LogStreamManager. Set the public variable
-     * {@code PRETTY_PRINTING} to true to enable human-readable output. If {@code autoName} is true, a file name
-     * on the form "YY-MM-DD_HHMMSS.oi" will be generated.
+     * {@code PRETTY_PRINTING} to true to enable human-readable output. If {@code autoName} is true, a file name on the
+     * form "YY-MM-DD_HHMMSS.oi" will be generated.
      * 
      * @param targetPath The location to print the log file.
      * @param autoName If {@code true} file name will be created automatically.
@@ -374,7 +377,6 @@ public class LogStreamManager implements CommunicatorListener {
                 }
             }
 //            sources = wrapper.header.sources;
-            
         }
         if (wrapper.body != null) {
             for (Operation op : wrapper.body) {
@@ -382,12 +384,13 @@ public class LogStreamManager implements CommunicatorListener {
             }
         }
     }
-    
+
     /**
      * Unwrap a JSON string and store the contents.
+     * 
      * @param json THE JSON string to process.
      */
-    public void unwrap(String json){
+    public void unwrap (String json){
         Wrapper w = gson.fromJson(json, Wrapper.class);
         unwrap(w);
     }
@@ -405,8 +408,8 @@ public class LogStreamManager implements CommunicatorListener {
             }
             //Handle Member info messages.
         }
-        else if (messageType == MavserMessage.MEMBER_INFO && listener != null) {
-            listener.messageReceived(MavserMessage.MEMBER_INFO);
+        else if (messageType == MavserMessage.CHECKING_IN && listener != null) {
+            listener.messageReceived(MavserMessage.CHECKING_IN);
         }
     }
 
