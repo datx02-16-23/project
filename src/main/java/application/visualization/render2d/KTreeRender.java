@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import application.gui.Main;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
 import wrapper.datastructures.Array.ArrayElement;
@@ -40,11 +44,10 @@ public class KTreeRender extends Render {
     private static final Color       COLOR_INACTIVE         = Color.valueOf(Element.COLOR_INACTIVE);
     private static final Color       COLOR_WHITE            = Color.WHITE;
     private static final Color       COLOR_BLACK            = Color.BLACK;
-    private double transX, transY;
+    private double                   transX, transY;
 
     /**
-     * Create a new NTreeRender with K children and one parent. Note that the behaviour of this Render is undefined for
-     * arrays with more than one indices.
+     * Create a new KTreeRender with K children and one parent.
      * 
      * @param struct The structure to draw as an K-ary tree.
      * @param K The number of children each node has.
@@ -76,24 +79,23 @@ public class KTreeRender extends Render {
         this.getChildren().add(canvas);
         this.setMinSize(200, 100);
         this.setMaxSize(200, 100);
-        
         Main.console.force("WARNING: At the time of writing (2016-04-18) the KTreeRender class, JavaFX may crash with a NullPointerException when Canvas grows too large.");
     }
 
     /**
-     * Create a new NTreeRender with K children and one parent. Note that the behaviour of this Render is undefined for
+     * Create a new KTreeRender with K children and one parent. Note that the behaviour of this Render is undefined for
      * arrays with more than one indices.
      * 
      * @param struct The structure to draw as an K-ary tree.
      * @param K The number of children each node has.
+     * @throws IllegalArgumentException If K < 2.
      */
     public KTreeRender (DataStructure struct, int K){
         this(struct, K, DEFAULT_SIZE * 2, DEFAULT_SIZE, DEFAULT_SIZE / 2, DEFAULT_SIZE / 2);
     }
 
     /**
-     * Create a new NTreeRender with two children and one parent. Note that the behaviour of this Render is undefined
-     * for arrays with more than one indices.
+     * Create a new KTreeRender with two children and one parent.
      * 
      * @param struct The structure to draw as a binary tree.
      */
@@ -116,6 +118,9 @@ public class KTreeRender extends Render {
             List<Element> resetElements = struct.getResetElements();
             ArrayElement ae;
             for (Element e : struct.getElements()) {
+                if(animatedElements.contains(e)){
+                    continue; //Animated elements are handled seperately.
+                }
                 ae = (ArrayElement) e;
                 if (modifiedElements.contains(e)) {
                     drawElement(ae.getValue() + "", ae.getIndex()[0], e.getColor());
@@ -187,7 +192,7 @@ public class KTreeRender extends Render {
         double indentation = 0;
         if (depth < totDepth) {
             indentation = (hspace + node_width) * ((L - 1) / 2);
-        }   
+        }
         //Dont multiply by zero
         if (breadth > 0) {
             return hspace + indentation + breadth * L * ((hspace + node_width));
@@ -260,12 +265,15 @@ public class KTreeRender extends Render {
         //Outline, text, children
         context.setFill(COLOR_BLACK);
         context.setStroke(COLOR_BLACK);
+        if (index == 0) { //Mark root
+            context.fillOval(x + node_width / 2 - (node_height / 2) / 2, y - node_height / 2, node_height / 2, node_height / 2);
+        }
         //Value
         context.strokeOval(x, y, node_width, node_height);
         context.fillText("v: " + value == null ? "null" : value, x + 6, y + node_height / 2);
         //Index
         context.strokeOval(x, y, node_width, node_height);
-        context.fillText("[" + index + "]", x + node_width + 4, y + node_height / 2);
+        context.fillText("[" + index + "]", x + node_width + 4, y + node_height / 4);
         //Connect to children
         if (depth == totDepth) {
             return; //Don't connect bottom level
@@ -333,16 +341,59 @@ public class KTreeRender extends Render {
         return lowerLevelSums.get(targetDepth);
     }
     
-    private double scale = 1;
-    private int sign = 1;
+    private final ArrayList<Element> animatedElements = new ArrayList<Element>();
+    /**
+     * Animate a swap between {@code var1} and {@code var2}.
+     * @param var1 The first variable to animate.
+     * @param var2 The second variable to animate.
+     * @param millis Total animation time.
+     */
+    public void animateSwap(Element var1, Element var2, double millis){
+        animatedElements.add(var1);
+        animatedElements.add(var2);
+        int frames = 100;
+        Timeline timeline = new Timeline();
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(millis/frames), new EventHandler<ActionEvent>() {
 
+            @Override
+            public void handle (ActionEvent actionEvent){
+//                KTreeRender.this.drawNode(var, x, y, fill, depth, breadth, index);
+//                KTreeRender.this.drawNode(value, x, y, fill, depth, breadth, index);
+            }
+        }));
+        timeline.play();
+    }
+    
+    /**
+     * Animate a read or write from {@code source} to {@code target}.
+     * @param source The first variable to animate.
+     * @param target The second variable to animate.
+     * @param millis Total animation time.
+     */
+    public void animateReadWrite(Element source, Element target, double millis){
+        Main.console.err("animateReadWrite () has not been implemented.");
+    }
+    
+    /**
+     * Force all animations currently in progress to finish immedieately.
+     */
+    public void animateEnd(){
+        
+    }
+    
+    private double scale = 1;
+    private int    sign  = 1;
+
+    /**
+     * Create listeners to zoom and move.
+     */
     private void moveAndZoom (){
         canvas.setOnContextMenuRequested(event -> {
-            scale = scale + sign*0.1;
-            System.out.println(scale);
-            if(scale < 0.1){
+            scale = scale + sign * 0.1;
+            if (scale < 0.1) {
                 scale = 2;
-            } else if (scale > 2){
+            }
+            else if (scale > 2) {
                 scale = 0.25;
             }
             canvas.setScaleX(scale);

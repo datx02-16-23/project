@@ -14,6 +14,10 @@ public class Visualization extends GridPane {
         this.model = model;
         this.setStyle("-fx-background-color: white ;");
     }
+    
+    public void clear(){
+      getChildren().clear();
+    }
 
     public void createVisuals (){
         getChildren().clear();
@@ -51,7 +55,7 @@ public class Visualization extends GridPane {
                     render = new BoxRender(struct);
                     break outer;
                 case "tree":
-                    render = new KTreeRender(struct, 2);
+                    render = new KTreeRender(struct, 2, 50, 30, 20, 10);
                     break outer;
                 default:
                     /*

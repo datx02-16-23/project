@@ -118,8 +118,10 @@ public class GUI_Controller implements CommunicatorListener {
 
     public void clearButtonClicked (){
         operationPanel.getItems().clear();
+        operationPanel.update(0, false);
         model.getOperations().clear();
         model.getStructures().clear();
+        visualization.clear();
         sourceViewer.setSources(null);
     }
 
