@@ -93,6 +93,10 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
             jChannel = new JChannel("udp.xml");
             jChannel.connect(this.channel);
             jChannel.setReceiver(this);
+            //Say hello
+            Message hello = new Message();
+            hello.setObject(new CommunicatorMessage(null, senderId, CommunicatorMessage.HELLO));
+            jChannel.send(hello);
         } catch (Exception e1) {
             e1.printStackTrace();
         }
@@ -151,25 +155,25 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
     @Override
     public void receive (Message incoming){
         Object messageObject = incoming.getObject();
-        if (messageObject instanceof MavserMessage == false) {
+        if (messageObject instanceof CommunicatorMessage == false) {
             Main.console.err("Invalid message type: " + messageObject);
             return;
         }
-        MavserMessage message = (MavserMessage) messageObject;
+        CommunicatorMessage message = (CommunicatorMessage) messageObject;
         if (message.senderId == senderId) {
             return; //Don't process our own messages.
         }
         if (allTransmitters.keySet().contains(new Integer(message.senderId)) == false) {
-            requestMemberInfo(MavserMessage.FIRST_CONTACT);
+            requestMemberInfo(CommunicatorMessage.FIRST_CONTACT);
         }
         switch (message.messageType) {
-            case MavserMessage.WRAPPER:
+            case CommunicatorMessage.WRAPPER:
                 if (suppressIncoming) {
                     return;
                 }
                 addAndFireEvent((Wrapper) message.payload);
                 break;
-            case MavserMessage.JSON:
+            case CommunicatorMessage.JSON:
                 if (suppressIncoming) {
                     return;
                 }
@@ -187,19 +191,19 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
 
     private void handleInformationExchange (String member_string, short messageType, int senderId){
         switch (messageType) {
-            case MavserMessage.BROADCAST_CHANNEL_CHECK_IN:
-                sendMemberInfo(MavserMessage.CHECKING_IN);
+            case CommunicatorMessage.BROADCAST_CHANNEL_CHECK_IN:
+                sendMemberInfo(CommunicatorMessage.CHECKING_IN);
                 break;
-            case MavserMessage.FIRST_CONTACT:
-                sendMemberInfo(MavserMessage.FIRST_CONTACT_ACK);
+            case CommunicatorMessage.FIRST_CONTACT:
+                sendMemberInfo(CommunicatorMessage.FIRST_CONTACT_ACK);
                 break;
-            case MavserMessage.CHECKING_IN:
+            case CommunicatorMessage.CHECKING_IN:
                 if (listenForMemeberInfo) {
                     currentMemberStrings.add(member_string);
-                    listener.messageReceived(MavserMessage.CHECKING_IN);
+                    listener.messageReceived(CommunicatorMessage.CHECKING_IN);
                 }
                 break;
-            case MavserMessage.FIRST_CONTACT_ACK:
+            case CommunicatorMessage.FIRST_CONTACT_ACK:
                 allTransmitters.put(new Integer(senderId), member_string);
                 break;
         }
@@ -207,7 +211,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
 
     private void requestMemberInfo (short context){
         Message memberInfo = new Message();
-        memberInfo.setObject(new MavserMessage(null, senderId, context));
+        memberInfo.setObject(new CommunicatorMessage(null, senderId, context));
         try {
             jChannel.send(memberInfo);
         } catch (Exception e) {
@@ -216,7 +220,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
 
     private void sendMemberInfo (short context){
         Message memberInfo = new Message();
-        memberInfo.setObject(new MavserMessage(hierarchy, senderId, context));
+        memberInfo.setObject(new CommunicatorMessage(hierarchy, senderId, context));
         try {
             jChannel.send(memberInfo);
         } catch (Exception e) {
@@ -238,9 +242,9 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
         }
         else {
             Message m = new Message();
-            m.setObject(new MavserMessage(null, senderId, MavserMessage.BROADCAST_CHANNEL_CHECK_IN));
+            m.setObject(new CommunicatorMessage(null, senderId, CommunicatorMessage.BROADCAST_CHANNEL_CHECK_IN));
             currentMemberStrings.add("ME: " + hierarchy);
-            listener.messageReceived(MavserMessage.CHECKING_IN);
+            listener.messageReceived(CommunicatorMessage.CHECKING_IN);
             try {
                 jChannel.send(m);
             } catch (Exception e) {
@@ -304,10 +308,10 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
     public boolean sendWrapper (Wrapper outgoing){
         Message outMessage = new Message();
         if (senderMode == SENDER_MODE_NATIVE) {
-            outMessage.setObject(new MavserMessage(outgoing, this.senderId, MavserMessage.WRAPPER));
+            outMessage.setObject(new CommunicatorMessage(outgoing, this.senderId, CommunicatorMessage.WRAPPER));
         }
         else if (senderMode == SENDER_MODE_JSON) {
-            outMessage.setObject(new MavserMessage(gson.toJson(outgoing), this.senderId, MavserMessage.JSON));
+            outMessage.setObject(new CommunicatorMessage(gson.toJson(outgoing), this.senderId, CommunicatorMessage.JSON));
         }
         else {
             Main.console.err("Message could not be sent: Sender mode invalid.");
@@ -332,7 +336,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
     @Override
     public boolean sendString (String JSONString){
         Message m = new Message();
-        m.setObject(new MavserMessage(JSONString, senderId, MavserMessage.JSON));
+        m.setObject(new CommunicatorMessage(JSONString, senderId, CommunicatorMessage.JSON));
         try {
             jChannel.send(m);
         } catch (Exception e) {
@@ -366,7 +370,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
      */
     private void addAndFireEvent (Wrapper w){
         incomingQueue.add(w);
-        listener.messageReceived(MavserMessage.WRAPPER);
+        listener.messageReceived(CommunicatorMessage.WRAPPER);
     }
     
     public Collection<String> allKnownEntities(){

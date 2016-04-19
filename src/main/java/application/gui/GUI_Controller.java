@@ -421,7 +421,7 @@ public class GUI_Controller implements CommunicatorListener {
 
     @Override
     public void messageReceived (short messageType){
-        if (messageType == MavserMessage.CHECKING_IN) {
+        if (messageType == CommunicatorMessage.CHECKING_IN) {
             JGroupCommunicator jgc = (JGroupCommunicator) lsm.getCommunicator();
             connectedView.update(jgc.getMemberStrings(), jgc.allKnownEntities());
             return;

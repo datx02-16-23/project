@@ -60,7 +60,7 @@ public interface Communicator {
      *
      */
     @SuppressWarnings("serial")
-    public class MavserMessage implements Serializable {
+    public class CommunicatorMessage implements Serializable {
 
         /**
          * Message containing a Wrapper for variables and operations.
@@ -70,6 +70,10 @@ public interface Communicator {
          * Message containing a String on the JSON format, which may be deserialized into a Wrapper.
          */
         public static final short JSON                       = 1;
+        /**
+         * Sent when the Communicator starts to announce it's presence, triggering information requests.
+         */
+        public static final short HELLO = 10;
         /**
          * Request for info about connected channel members.
          */
@@ -106,7 +110,7 @@ public interface Communicator {
          * @param senderId The sender id for this message.
          * @param messageType The message type for this message.
          */
-        public MavserMessage (Object payload, int senderId, short messageType){
+        public CommunicatorMessage (Object payload, int senderId, short messageType){
             this.payload = payload;
             this.senderId = senderId;
             this.messageType = messageType;

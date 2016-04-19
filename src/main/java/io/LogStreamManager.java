@@ -22,7 +22,7 @@ import com.google.gson.stream.JsonReader;
 
 import application.assets.Strings;
 import application.gui.Main;
-import io.Communicator.MavserMessage;
+import io.Communicator.CommunicatorMessage;
 import wrapper.AnnotatedVariable;
 import wrapper.Header;
 import wrapper.Operation;
@@ -398,18 +398,18 @@ public class LogStreamManager implements CommunicatorListener {
     @Override
     public void messageReceived (short messageType){
         //Handle Wrapper messages
-        if (messageType == MavserMessage.WRAPPER) {
+        if (messageType == CommunicatorMessage.WRAPPER) {
             List<Wrapper> wrappers = communicator.getAllQueuedMessages();
             for (Wrapper w : wrappers) {
                 unwrap(w);
             }
             if (listener != null) {
-                listener.messageReceived(MavserMessage.WRAPPER);
+                listener.messageReceived(CommunicatorMessage.WRAPPER);
             }
             //Handle Member info messages.
         }
-        else if (messageType == MavserMessage.CHECKING_IN && listener != null) {
-            listener.messageReceived(MavserMessage.CHECKING_IN);
+        else if (messageType == CommunicatorMessage.CHECKING_IN && listener != null) {
+            listener.messageReceived(CommunicatorMessage.CHECKING_IN);
         }
     }
 
