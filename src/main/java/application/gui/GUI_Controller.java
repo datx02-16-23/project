@@ -383,23 +383,23 @@ public class GUI_Controller implements CommunicatorListener {
     /**
      * Used for choosing a file to Visualize.
      */
-    public void openFileChooser (){
+    public void openLog (){
         FileChooser fc = new FileChooser();
         fc.setInitialDirectory(new File(System.getProperty("user.home")));
         fc.setTitle("Open OI-File");
         fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("OI-Files", "*.oi"), new FileChooser.ExtensionFilter("All Files", "*.*"));
         File source = fc.showOpenDialog(window);
         if (source != null) {
-            loadFile(source);
+            readLog(source);
         }
     }
 
     /**
-     * Helper function for {@link #openFileChooser() openFileChooser}
+     * Helper function for {@link #openLog() openFileChooser}
      * 
      * @param file
      */
-    public void loadFile (File file){
+    public void readLog (File file){
         lsm.clearData();
         if (lsm.readLog(file) == false) {
             Main.console.err("Failed to read log: " + file);
@@ -490,7 +490,7 @@ public class GUI_Controller implements CommunicatorListener {
         });
     }
 
-    public void openDestinationChooser (){
+    public void printLog (){
         FileChooser fc = new FileChooser();
         fc.setInitialDirectory(new File(System.getProperty("user.home")));
         fc.setTitle("Save OI-File");
@@ -505,7 +505,10 @@ public class GUI_Controller implements CommunicatorListener {
         lsm.setOperations(model.getOperations());
         lsm.setDataStructures(model.getStructures());
         lsm.setSources(sourceViewer.getSources());
+        boolean old = lsm.PRETTY_PRINTING;
+        lsm.PRETTY_PRINTING = model.getOperations().size() > 100;
         lsm.printLog(target);
+        lsm.PRETTY_PRINTING = old;
     }
 
     public void propertiesFailed (Exception exception){
