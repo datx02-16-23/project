@@ -234,4 +234,8 @@ public class InterpreterView implements InvalidationListener{
         beforeCount.setText(""+beforeItems.size());
         afterCount.setText(""+afterItems.size());
     }
+    
+    public void fast(List<Operation> ops){
+        interpreter.consolidate(ops);
+    }
 }

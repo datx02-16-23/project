@@ -248,7 +248,8 @@ public class GUI_Controller implements CommunicatorListener {
     }
 
     public void interpretOperationHistory (){
-        Main.console.force("TODO: interpretOperationHistory()");
+        interpreterView.fast(model.getOperations());
+        updatePanels();
     }
 
     /**
