@@ -1,8 +1,8 @@
 package application.gui;
 
-import application.assets.Examples;
-import application.assets.Examples.Algorithm;
 import application.assets.Strings;
+import application.assets.examples.Examples;
+import application.assets.examples.Examples.Algorithm;
 import application.gui.panels.OperationPanel;
 import application.gui.panels.SourcePanel;
 import application.model.*;

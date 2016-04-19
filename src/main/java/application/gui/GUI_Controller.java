@@ -1,7 +1,8 @@
 package application.gui;
 
 import application.assets.*;
-import application.assets.Examples.Algorithm;
+import application.assets.examples.Examples;
+import application.assets.examples.Examples.Algorithm;
 import application.gui.panels.*;
 import application.gui.views.*;
 import application.model.iModel;
