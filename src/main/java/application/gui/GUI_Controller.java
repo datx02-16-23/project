@@ -122,7 +122,7 @@ public class GUI_Controller implements CommunicatorListener {
         model.getOperations().clear();
         model.getStructures().clear();
         visualization.clear();
-        sourceViewer.setSources(null);
+        sourceViewer.clear();
     }
 
     /**
@@ -143,6 +143,7 @@ public class GUI_Controller implements CommunicatorListener {
 
     public void startAutoPlay (){
         playPauseButton.setText("Pause");
+        speedButton.setDisable(true);
         if (autoplayTimeline != null) {
             autoplayTimeline.stop();
         }
@@ -165,6 +166,7 @@ public class GUI_Controller implements CommunicatorListener {
     }
 
     public void stopAutoPlay (){
+        speedButton.setDisable(false);
         if (autoplayTimeline != null) {
             autoplayTimeline.stop();
             playPauseButton.setText("Play");
@@ -389,8 +391,9 @@ public class GUI_Controller implements CommunicatorListener {
             return;
         }
         //Add operations to model and create Render visuals, then draw them.
-        model.set(lsm.getKnownVariables(), lsm.getOperations());
-        sourceViewer.setSources(lsm.getSources());
+        model.getStructures().putAll(lsm.getKnownVariables());
+        model.getOperations().addAll(lsm.getOperations());
+        sourceViewer.addSources(lsm.getSources());
         visualization.createVisuals();
         visualization.render();
         //Update operation list
@@ -427,7 +430,7 @@ public class GUI_Controller implements CommunicatorListener {
                     Main.console.info("Received new AnnotatedVariable(s): " + lsm.getKnownVariables().values());
                 }
                 if (lsm.getSources() != null) {
-                    sourceViewer.setSources(lsm.getSources());
+                    sourceViewer.addSources(lsm.getSources());
                     Main.console.info("New source(s) received: " + lsm.getSources().keySet());
                 }
                 operationPanel.getItems().addAll(lsm.getOperations());

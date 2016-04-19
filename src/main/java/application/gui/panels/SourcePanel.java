@@ -19,7 +19,7 @@ import wrapper.Operation;
 public class SourcePanel extends TabPane {
 
     private final HashMap<String, Integer> nameTabMapping;
-    private Map<String, List<String>> sources;
+    private Map<String, List<String>>      sources;
 
     /**
      * Create a new SourceViewer.
@@ -34,22 +34,29 @@ public class SourcePanel extends TabPane {
     }
 
     /**
-     * Set the sources which are to be displayed by this SourceViewer. <b>Clears if newSources is {@code null}.</b>
+     * Add sources which are to be displayed by this SourceViewer.
      * 
      * @param newSources The sources to display.
      */
-    public void setSources (Map<String, List<String>> newSources){
-        getTabs().clear();
+    public void addSources (Map<String, List<String>> newSources){
         if (newSources == null) {
             return;
         }
-        this.sources = newSources;
+        sources.putAll(newSources);;
         int tabNumber = 0;
         for (String sourceName : sources.keySet()) {
             addSourceTab(sourceName, sources.get(sourceName));
             nameTabMapping.put(sourceName, tabNumber++);
         }
         this.getSelectionModel().select(0);
+    }
+
+    /**
+     * Clear sources and tabs.
+     */
+    public void clear (){
+        sources.clear();
+        getTabs().clear();
     }
 
     private void addSourceTab (String sourceName, List<String> sourceLines){
@@ -89,12 +96,13 @@ public class SourcePanel extends TabPane {
         ListView<String> linesView = (ListView<String>) this.getTabs().get(nameTabMapping.get(op.source)).getContent();
         linesView.getSelectionModel().select(op.beginLine);
     }
-    
+
     /**
      * Returns the sources held by this SourceViewer.
+     * 
      * @return The sources held by this SourceViewer.
      */
-    public Map<String, List<String>> getSources(){
+    public Map<String, List<String>> getSources (){
         System.out.println(sources);
         return sources;
     }
