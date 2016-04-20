@@ -37,27 +37,23 @@ public class Main extends Application {
     /**
      * Console for printing system and error messages.
      */
-    public static GUIConsole    console;
+    public static GUIConsole console;
     /**
      * Indicates whether the program is being run for the first time.
      */
-    public static boolean          firstRun;
-    private Stage                  window;
-    private Visualization          visualization;
-    private final iModel           model = new Model();
-    private final LogStreamManager lsm   = new LogStreamManager(Strings.PROJECT_NAME + " GUI");
-    private FXMLLoader             fxmlLoader;
-    private GUI_Controller         controller;
+    public static boolean    firstRun;
+    private GUI_Controller   controller;
 
     @Override
     public void start (Stage primaryStage) throws Exception{
-        window = primaryStage;
-        window.setTitle(Strings.PROJECT_NAME);
+        final iModel model = new Model();
+        final LogStreamManager lsm = new LogStreamManager(Strings.PROJECT_NAME + " GUI");
+        primaryStage.setTitle(Strings.PROJECT_NAME);
         // Create a Group view for the AV.
-        visualization = new Visualization(model);
-        fxmlLoader = new FXMLLoader(getClass().getResource("/VisualizerView.fxml"));
+        Visualization visualization = new Visualization(model);
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/VisualizerView.fxml"));
         SourcePanel sourceViewer = new SourcePanel();
-        controller = new GUI_Controller(visualization, window, model, lsm, sourceViewer);
+        controller = new GUI_Controller(visualization, primaryStage, model, lsm, sourceViewer);
         OperationPanel operationPanel = controller.getOperationPanel();
         fxmlLoader.setController(controller);
         // Load and get the root layout.
@@ -100,19 +96,17 @@ public class Main extends Application {
         // Add AV
         GridPane visualizationPane = (GridPane) namespace.get("visualizationPane");
         visualizationPane.add(visualization, 0, 0);
-        // Initialize console
+        // Load needed components of from main view in Controller.
+        controller.loadMainViewFxID(fxmlLoader);
         //Load main window
         scene.getStylesheets().add(getClass().getResource("/VisualizerStyle.css").toExternalForm());
-        window.setOnCloseRequest(event -> {
+        primaryStage.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
             controller.closeProgram();
         });
-        window.getIcons().add(new Image(Main.class.getResourceAsStream("/assets/icon.png")));
-        window.setScene(scene);
-        window.show();
-        // Load needed components of from main view in Controller.
-        controller.loadMainViewFxID(fxmlLoader);
-        System.out.println("I THINK WE MADE IT BOIS!");
+        primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/assets/icon.png")));
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 
     /**

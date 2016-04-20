@@ -55,23 +55,25 @@ public class GUI_Controller implements CommunicatorListener {
     private Stage                  window;
     private final LogStreamManager lsm;
     private final iModel           model;
-    private final SourcePanel      sourceViewer;
-    private ConnectedView          connectedView;
-    // Settings dialog stuff
-    private Stage                  settingsView;
     // Controls
+    private Menu                   visualMenu;
+    private MenuButton             streamBehaviourMenuButton;
+    private boolean                stream_always_show_last_op = true;
+    private boolean                stream_start_autoplay      = false;
+    //Autoplay
     private boolean                isPlaying                  = false;
     private int                    stepDelaySpeedupFactor     = 1;
     private long                   stepDelayBase              = 1500;
     private long                   stepDelay                  = stepDelayBase / stepDelaySpeedupFactor;
-    private boolean                stream_always_show_last_op = true;
-    private boolean                stream_start_autoplay      = false;
-    private InterpreterView        interpreterView;
-    private OperationPanel         operationPanel;
-    private MenuButton             streamBehaviourMenuButton;
+    // Settings dialog stuff
+    private Stage                  settingsView;
+    //Views, panels, dialogs
+    private final ConnectedView    connectedView;
+    private final InterpreterView  interpreterView;
+    private final SourcePanel      sourceViewer;
+    private final OperationPanel   operationPanel;
     private final ExamplesDialog   examplesDialog;
-    private Menu                   visualMenu;
-    private VisualDialog           visualDialog;
+    private final VisualDialog     visualDialog;
 
     public GUI_Controller (Visualization visualization, Stage window, iModel model, LogStreamManager lsm, SourcePanel sourceViewer){
         this.visualization = visualization;
@@ -385,8 +387,8 @@ public class GUI_Controller implements CommunicatorListener {
         //Add operations to model and create Render visuals, then draw them.
         Map<String, DataStructure> oldStructs = model.getStructures();
         Map<String, DataStructure> newStructs = lsm.getDataStructures();
-        for (String oldKey : oldStructs.keySet()) {
-            for (String newKey : newStructs.keySet()) {
+        for (String newKey : newStructs.keySet()) {
+            for (String oldKey : oldStructs.keySet()) {
                 if (oldKey.equals(newKey)) {
                     Main.console.force("ERROR: Data Structure identifier collision:");
                     Main.console.force("Known structures: " + model.getStructures().values());
