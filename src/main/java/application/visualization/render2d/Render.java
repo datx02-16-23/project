@@ -77,8 +77,8 @@ public abstract class Render extends StackPane {
          */
         // Record a delta distance for the drag and drop operation.
         animated.setOnMousePressed(event -> {
-            transX = animated.getLayoutX() - event.getSceneX();
-            transY = animated.getLayoutY() - event.getSceneY();
+            transX = animated.getTranslateX() - event.getSceneX();
+            transY = animated.getTranslateY() - event.getSceneY();
             animated.setCursor(Cursor.MOVE);
         });
         // Restore cursor
@@ -87,10 +87,10 @@ public abstract class Render extends StackPane {
         });
         // Translate canvases
         animated.setOnMouseDragged(event -> {
-            stationary.setLayoutX(event.getSceneX() + transX);
-            stationary.setLayoutY(event.getSceneY() + transY);
-            animated.setLayoutX(event.getSceneX() + transX);
-            animated.setLayoutY(event.getSceneY() + transY);
+            stationary.setTranslateX(event.getSceneX() + transX);
+            stationary.setTranslateY(event.getSceneY() + transY);
+            animated.setTranslateX(event.getSceneX() + transX);
+            animated.setTranslateY(event.getSceneY() + transY);
         });
         // Set cursor
         animated.setOnMouseEntered(event -> {
