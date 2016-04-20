@@ -31,7 +31,10 @@ public abstract class DataStructure extends AnnotatedVariable {
      * Elements which should not be drawn or should be masked.
      */
     protected transient final List<Element> inactiveElements = new ArrayList<Element>();
-    public transient int                    children         = 2;                       //Fulhack - antal barn i KTree
+    /**
+     * Number of children in KTree, row/vs column major etc.
+     */
+    public transient int                    visualOptions    = 2;
 
     public DataStructure (String identifier, String rawType, String abstractType, String visual){
         super(identifier, rawType, abstractType, visual);

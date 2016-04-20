@@ -48,14 +48,14 @@ public class Visualization extends GridPane {
         String visual = struct.visual == null ? "NULL" : struct.visual;
         outer: for (int attempt = 1; attempt < 3; attempt++) {
             switch (visual) {
-//                case "bar":
-//                    render = new BarcharRender(struct);
-//                    break outer;
+                case "bar":
+                    render = new BarRender(struct, 50, 1, 5, 25);
+                    break outer;
                 case "box":
-                    render = new MatrixRender(struct, Order.ROW_MAJOR, 50, 50, 50, 0);
+                    render = new MatrixRender(struct, Order.COLUMN_MAJOR, 50, 50, 50, 0);
                     break outer;
                 case "tree":
-                    render = new KTreeRender(struct, struct.children, 50, 50, 20, 10);
+                    render = new KTreeRender(struct, struct.visualOptions, 50, 50, 20, 10);
                     break outer;
                 default:
                     /*

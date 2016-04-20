@@ -1,8 +1,5 @@
 package application.visualization.render2d;
 
-import java.util.ArrayList;
-
-import application.visualization.render2d.MatrixRender.Order;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;

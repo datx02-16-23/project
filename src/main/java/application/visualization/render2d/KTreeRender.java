@@ -8,12 +8,9 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
@@ -53,6 +50,7 @@ public class KTreeRender extends Render {
             throw new IllegalArgumentException("K must be greater than or equal to 2.");
         }
         this.K = K;
+        lowerLevelSums.add(new Integer(0));
         Main.console.force("WARNING: At the time of writing (2016-04-18) the KTreeRender class, JavaFX may crash with a NullPointerException when Canvas grows too large.");
     }
 
@@ -103,12 +101,12 @@ public class KTreeRender extends Render {
                     drawElement(ae.getValue() + "", ae.getIndex()[0], null);
                 }
             }
-            struct.elementsDrawn();
             int i = struct.getElements().size();
             for (; i < completedSize; i++) {
                 drawElement("", i, "spooky zombie");
             }
         }
+        struct.elementsDrawn();
     }
 
     /**
@@ -156,7 +154,6 @@ public class KTreeRender extends Render {
         for (; i < completedSize; i++) {
             drawElement("", i, "spooky zombie"); //Draw zombies. String will evaluate to black fill.
         }
-        struct.elementsDrawn();
     }
 
     private double getX (int breadth, int depth){

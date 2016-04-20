@@ -82,8 +82,8 @@ public class VisualDialog {
         if (selectedItem.equals(struct.visual) == false || selectedItem.equals("tree")) {
             changed = true;
             struct.visual = getShortName(selectedItem);
-            if (selectedItem.equals("tree") || struct.children != ((Integer) children.getValue()).intValue()) {
-                struct.children = ((Integer) children.getValue()).intValue();
+            if (selectedItem.equals("tree") || struct.visualOptions != ((Integer) children.getValue()).intValue()) {
+                struct.visualOptions = ((Integer) children.getValue()).intValue();
                 struct.visual = "tree";
             }
             root.close();

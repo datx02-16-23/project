@@ -1,8 +1,6 @@
 package application.assets.examples;
 
 import com.dennisjonsson.annotation.*;
-import com.dennisjonsson.markup.AbstractType;
-
 import application.gui.Main;
 
 /**
