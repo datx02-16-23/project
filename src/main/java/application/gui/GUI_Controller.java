@@ -133,6 +133,7 @@ public class GUI_Controller implements CommunicatorListener {
      * Clear everything.
      */
     public void clearButtonClicked (){
+        visualMenu.setDisable(true);
         model.clear();
         visualization.clear();
         sourceViewer.clear();
@@ -395,6 +396,7 @@ public class GUI_Controller implements CommunicatorListener {
             }
         }
         oldStructs.putAll(newStructs);
+        visualMenu.setDisable(newStructs.isEmpty());
         model.getOperations().addAll(lsm.getOperations());
         sourceViewer.addSources(lsm.getSources());
         visualization.clearAndCreateVisuals();
@@ -510,6 +512,7 @@ public class GUI_Controller implements CommunicatorListener {
         speedMenuItem = (MenuItem) namespace.get("speedMenuItem");
         streamBehaviourMenuButton = (MenuButton) namespace.get("streamBehaviourMenuButton");
         visualMenu = (Menu) namespace.get("visualMenu");
+        visualMenu.setDisable(true);
     }
 
     /*
