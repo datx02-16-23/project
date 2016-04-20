@@ -1,24 +1,20 @@
 ########################################################################
 # To be injected into nodes
 ########################################################################
+from json import dumps
 outfile = None
 annotated_variables = None
-
-# outport = 8000
-# import socket
-# import json
-
-# sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# sock.connect(('localhost', outport))
 
 ####################################################
 # Activate the virtualenv vdepend for this to work
 ####################################################
-from jnius import autoclass
+# import jnius_config
+# jnius_config.set_classpath('.','gson.jar','jgroups.jar','../../../build/classes/main')
+# from jnius import autoclass
 
-Wrapper = autoclass('Wrapper')
+# Wrapper = autoclass('Wrapper')
 
-w = Wrapper()
+# w = Wrapper()
 ####################################################
 ########################################################################
 # Expression Evaluation
@@ -80,11 +76,6 @@ def get_operation(name):
 def to_json(statement):
     indices = get_indices(statement)
     subscripted = indices[0]
-    # indices[0]
-    #   'undefined'
-    #   name
-    #   (name, value)
-    # indices[1:]
     name = subscripted[0] if isinstance(subscripted,tuple) else subscripted
     indices = list(indices[1:]) if isinstance(subscripted,tuple) else None
     statement_json = {
@@ -99,32 +90,33 @@ def put(statement):
     with open(outfile, 'a') as f:
         f.write('%s,' % str(statement))
         f.close()
-    #w.send(str(statement))
+    # print w.send(dumps({'body' : [statement], 'header' : None}))
 
 def write(src,dst):
     operation = get_operation('write')
     value = get_value(src)
     operation['operationBody'] = {
-        'source' : to_json(src), 'target' : to_json(dst), 'value' : value
+        'source' : to_json(src), 'target' : to_json(dst), 'value' : [value]
     }
     put(operation)
     return value
 
 def read(statement):
-    value = get_value(statement)
     operation = get_operation('read')
+    value = get_value(statement)
     operation['operationBody'] = {
-        'source' : to_json(statement), 'value' : value
+        'source' : to_json(statement), 'value' : [value]
     }
     put(operation)
     return value
 
+# Implement for json
 def link(*params):
-	def wrap(func):
-		def call(*args):
-			for param,arg in zip(params,args):
-				put({'type' : 'link', 'param' : param, 'arg' : arg})
-			return func(*tuple(arg['value'] for arg in args))
-		return call
-	return wrap
+    def wrap(func):
+        def call(*args):
+            for param,arg in zip(params,args):
+                write(arg,param)
+            return func(*tuple(get_value(arg) for arg in args))
+        return call
+    return wrap
 ########################################################################

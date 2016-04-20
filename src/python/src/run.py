@@ -1,9 +1,20 @@
 # This file executes the different modules, resulting in a output.json file
 from os import path,system
-from create_log import visualize
+from create_log import create_env,format_log
 from ast import parse,Assign,Name,Str
 from transformer import WriteTransformer,ReadTransformer,PassTransformer
+from json import dump
+####################################################
+# Activate the virtualenv vdepend for this to work
+####################################################
+# import jnius_config
+# jnius_config.set_classpath('.','gson.jar','jgroups.jar','../../../build/classes/main')
+# from jnius import autoclass
 
+# Wrapper = autoclass('Wrapper')
+
+# w = Wrapper()
+####################################################
 def load_logwriter(operations,output):
 	for node in operations.body:
 		if (isinstance(node,Assign) and 
@@ -17,7 +28,7 @@ class Variable(object):
 		self.name = name
 		self.rawType = rawType
 		self.attributes = attributes
-		self.abstractType = abstractType
+		self.abstractType = abstractType if abstractType is not None else rawType
 
 	def get_json(self):
 		return {
@@ -27,10 +38,18 @@ class Variable(object):
 			'attributes' : self.attributes
 		}
 
-# either write to port or outfile
+def create_header(version,variables):
+	annotatedVariables = {}
+	for variable in variables:
+		annotatedVariables[variable.name] = variable.get_json()
+	return {
+		'version' : version,
+		'annotatedVariables' : annotatedVariables
+	}
+
 if __name__ == '__main__':
-	# where to output execution of program
-	output = path.abspath('output.py')
+	# where to output json
+	output = path.abspath('output.json')
 	open(output,'w').close()
 
 	operations_read = None
@@ -39,6 +58,7 @@ if __name__ == '__main__':
 	operations = load_logwriter(parse(operations_read),output)
 
 	transformers = [PassTransformer('link'), WriteTransformer('write'), ReadTransformer('read')]
+
 	# settings
 	# rootdir - where programfiles is located
 	# files - what files should be visualized
@@ -50,10 +70,22 @@ if __name__ == '__main__':
 		'files' : ['main.py'],
 		'operations' : operations,
 		'transformers' : transformers,
-		'observe' : [Variable('a','list',abstractType='adjacencymatrix',attributes={'size' : [3,3]})]}
+		'observe' : [Variable('a','array',abstractType='array',attributes={'size' : [3]})]}
+
 	# create visulization environment
-	visualize(settings)
+	create_env(settings)
+
 	# run userprogram in visualization environment
+	# w.send(create_header(2.0,settings['observe']))
 	execfile(path.abspath('./testvisualize/main.py'))
+
+	# create a valid json output file from buffer
+	output_buffer = format_log(output)
+	with open(output,'w+') as f:
+		final_output = {
+			'header' : create_header(2.0,settings['observe']),
+			'body' : output_buffer
+		}
+		dump(final_output,f)
 	# right now run cleanup script until a better solution is found
 	# system('sh cleanup.sh')

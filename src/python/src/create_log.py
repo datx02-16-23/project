@@ -29,12 +29,8 @@ def setup_env(rootdir,v_env):
 		f.write('')
 		f.close()
 
-# Maybe convert this into a "main" function
-# Also rethink the execution of this function
-# - v_env+... must be fail-safe
-# execfile must be fail-safe
 # given settings variable should be sanity-checked
-def visualize(settings):
+def create_env(settings):
 	# Setup rootdir of visualization folder given source root directory
 	setup_env(settings['rootdir'],settings['v_env'])
 
