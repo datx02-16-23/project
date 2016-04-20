@@ -42,9 +42,14 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.Properties;
 
+import com.dennisjonsson.annotation.Include;
+import com.dennisjonsson.annotation.SourcePath;
+
 /**
  * This is the Controller of MVC for the visualizer GUI.
  */
+@Include(classes = {"application.assets.examples.Examples"})
+@SourcePath(path = "C:/Users/Richard/Documents/datx02-16-23/Bachelor/src/main/java/application/gui/")
 public class GUI_Controller implements CommunicatorListener {
 
     private Visualization          visualization;
@@ -203,11 +208,19 @@ public class GUI_Controller implements CommunicatorListener {
     }
 
     /**
-     * Step the animation forward
+     * Listener for the Forward button.
      * 
-     * @return True if stepForward was successful, false otherwise.
+     * @return The value of stepModelForward().
      */
     public boolean stepForwardButtonClicked (){
+        return stepModelForward();
+    }
+    
+    /**
+     * Steps the model forward and forces any ongoing animations to cancel.
+     * @return True if the model progress. False otherwise.
+     */
+    private boolean stepModelForward(){
         if (model.stepForward()) {
             visualization.render();
             updatePanels();

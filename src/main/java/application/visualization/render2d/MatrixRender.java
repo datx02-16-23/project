@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
+import wrapper.datastructures.Array;
 import wrapper.datastructures.Array.ArrayElement;
 
 public class MatrixRender extends Render {
@@ -18,6 +19,8 @@ public class MatrixRender extends Render {
     private final Order        mo;
     private int                elementsPreviousRender = 0;
     private int                dimensions;
+    private int[]              size;
+    private static final int   PADDING                = 15;
 
     /**
      * Create a new BoxRender.
@@ -33,6 +36,15 @@ public class MatrixRender extends Render {
     public MatrixRender (DataStructure struct, Order mo, double width, double height, double hspace, double vspace){
         super(struct, width, height, hspace, vspace);
         this.mo = mo;
+    }
+
+    /**
+     * Create a new BoxRender with the default settings.
+     * 
+     * @param struct The structure to draw as a Matrix.
+     */
+    public MatrixRender (DataStructure struct){
+        this(struct, Order.ROW_MAJOR, DEFAULT_SIZE, DEFAULT_SIZE, 0, 0);
     }
 
     /**
@@ -69,6 +81,8 @@ public class MatrixRender extends Render {
      * Create and render all elements.
      */
     private void init (){
+        Array a = (Array) struct;
+        size = a.getCapacity() == null ? new int[] {struct.getElements().size(), 1} : a.getCapacity();
         calculateSize();
         GraphicsContext context = stationary.getGraphicsContext2D();
         context.setFill(COLOR_WHITE);
@@ -86,22 +100,23 @@ public class MatrixRender extends Render {
             ArrayElement ae = (ArrayElement) e;
             drawElement(ae.getValue() + "", ae.getIndex(), null);
         }
+        drawIndicies();
     }
 
     private void calculateSize (){
         //TODO
-        double width = 500;
-        double height = 500;
+        double width = PADDING * 2 + vspace + (vspace + node_width) * size[0];
+        double height = PADDING * 2 + hspace + (hspace + node_height) * size[1];
         this.setMinSize(width, height);
         this.setMaxSize(width, height);
     }
 
     private double getX (int column){
-        return vspace + (vspace + node_width) * column;
+        return PADDING + vspace + (vspace + node_width) * column;
     }
 
     private double getY (int row){
-        return hspace + (hspace + node_height) * row;
+        return PADDING + hspace + (hspace + node_height) * row;
     }
 
     /**
@@ -162,8 +177,19 @@ public class MatrixRender extends Render {
     private void drawIndicies (){
         GraphicsContext context = stationary.getGraphicsContext2D();
         context.setFill(COLOR_BLACK);
-//        context.strokeOval(x, y, node_width, node_height);
-//        context.fillText("[" + index + "]", x + node_width + 4, y + node_height / 4);
+        //Column numbering
+        if (size[0] > 1) {
+            for (int i = 0; i < size[0]; i++) {
+                System.out.println("x = " + i);
+                context.fillText("[" + i + "]", getX(i), -10);
+            }
+        }
+        //Row numbering
+        if (size[1] > 1) {
+            for (int i = 0; i < size[1]; i++) {
+                context.fillText("[" + i + "]", -10, getY(i));
+            }
+        }
     }
 
     public enum Order{

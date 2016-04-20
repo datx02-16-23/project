@@ -14,11 +14,13 @@ import application.gui.Main;
  * @author Richard Sundqvist
  *
  */
+
+@Include(classes = {"application.assets.examples.Insertion"})
 @SourcePath(path = "C:/Users/Richard/Documents/datx02-16-23/Bachelor/src/main/java/application/assets/")
 public abstract class Examples {
 
     private static double[] arg;
-    private static String   json;
+    public static String   json;
 
     /**
      * Run an algorithm.
@@ -49,6 +51,7 @@ public abstract class Examples {
         }
         // om du vill printa här
         print();
+        System.out.println("json = " + json);
         return json;
     }
 

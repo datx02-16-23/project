@@ -74,11 +74,6 @@ public class IndependentElement extends DataStructure implements Element {
     }
 
     @Override
-    public int size (){
-        return 1;
-    }
-
-    @Override
     public void clear (){
         elements.clear();
     }

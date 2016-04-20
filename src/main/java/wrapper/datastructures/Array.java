@@ -285,11 +285,6 @@ public class Array extends DataStructure {
         return min;
     }
 
-    @Override
-    public int size (){
-        return elements.size();
-    }
-
     /*
      * Internal class for holding elements
      */

@@ -1,8 +1,11 @@
 package application.assets.examples;
 
+import com.dennisjonsson.annotation.SourcePath;
 import com.dennisjonsson.annotation.VisualizeArg;
 import com.dennisjonsson.markup.AbstractType;
 
+
+@SourcePath(path = "C:/Users/Richard/Documents/datx02-16-23/Bachelor/src/main/java/application/assets/examples")
 abstract class Bubble {
     /**
      * Generate a log file for Bubble Sort on the given data. <br>

@@ -115,7 +115,7 @@ public class KTreeRender extends Render {
      * total number of elements above {@code totDepth}. Using {@code calculateLowerLevelSums} instead.
      */
     private void calculateDepthAndBreadth (){
-        double structSize = struct.size();
+        double structSize = struct.getElements().size();
         totDepth = 0;
         //Calculate the minimum depth which can hold all elements of the array.
         while(lowerLevelSum(totDepth) < structSize) {

@@ -48,13 +48,6 @@ public abstract class DataStructure extends AnnotatedVariable {
     public abstract List<Element> getElements ();
 
     /**
-     * Returns the number of elements held by this DataStructure.
-     * 
-     * @return The number of elements held by this DataStructure.
-     */
-    public abstract int size ();
-
-    /**
      * Clear all set values in the structure
      */
     public abstract void clear ();
