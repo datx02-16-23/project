@@ -1,20 +1,19 @@
 package application.visualization.render2d;
 
-import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
 
-public abstract class Render extends Pane {
+public abstract class Render extends StackPane {
 
     public static final double    DEFAULT_SIZE           = 40;
     protected final double        node_width, node_height;
     protected final double        hspace, vspace;
-    protected final Canvas        canvas;
+    protected final Canvas        stationary, animated;
     protected final DataStructure struct;
     protected int                 elementsPreviousRender = 0;
     protected static final Color  COLOR_READ             = Color.valueOf(Element.COLOR_READ);
@@ -30,27 +29,37 @@ public abstract class Render extends Pane {
     public Render (DataStructure struct, double width, double height, double hspace, double vspace){
         this.struct = struct;
         //Build Canvas
-        canvas = new Canvas();
-        moveAndZoom();
-        canvas.widthProperty().bind(this.maxWidthProperty());
-        canvas.heightProperty().bind(this.maxHeightProperty());
-        canvas.maxWidth(Double.MAX_VALUE);
-        canvas.maxHeight(Double.MAX_VALUE);
+        stationary = new Canvas();
+        stationary.setMouseTransparent(true);
+        animated = new Canvas();
+        initDragAndZoom();
+        stationary.widthProperty().bind(this.maxWidthProperty());
+        stationary.heightProperty().bind(this.maxHeightProperty());
+        stationary.maxWidth(Double.MAX_VALUE);
+        stationary.maxHeight(Double.MAX_VALUE);
+        animated.widthProperty().bind(this.maxWidthProperty());
+        animated.heightProperty().bind(this.maxHeightProperty());
+        animated.maxWidth(Double.MAX_VALUE);
+        animated.maxHeight(Double.MAX_VALUE);
         //Sizing and spacing
         this.node_width = width;
         this.node_height = height;
         this.hspace = hspace;
         this.vspace = vspace;
-        this.getChildren().add(canvas);
+        this.getChildren().add(stationary);
+        this.getChildren().add(animated);
         this.setMinSize(200, 100);
         this.setMaxSize(200, 100);
     }
 
     /**
-     * Create listeners to zoom and move.
+     * Create listeners to drag and zoom.
      */
-    private void moveAndZoom (){
-        canvas.setOnContextMenuRequested(event -> {
+    private void initDragAndZoom (){
+        /*
+         * Zoom
+         */
+        stationary.setOnContextMenuRequested(event -> {
             scale = scale + sign * 0.1;
             if (scale < 0.1) {
                 scale = 2;
@@ -58,44 +67,44 @@ public abstract class Render extends Pane {
             else if (scale > 2) {
                 scale = 0.25;
             }
-            canvas.setScaleX(scale);
-            canvas.setScaleY(scale);
+            stationary.setScaleX(scale);
+            stationary.setScaleY(scale);
+            animated.setScaleX(scale);
+            animated.setScaleY(scale);
         });
-        canvas.setOnMousePressed(new EventHandler<MouseEvent>() {
-
-            @Override
-            public void handle (MouseEvent mouseEvent){
-                // record a delta distance for the drag and drop operation.
-                transX = canvas.getLayoutX() - mouseEvent.getSceneX();
-                transY = canvas.getLayoutY() - mouseEvent.getSceneY();
-                canvas.setCursor(Cursor.MOVE);
-            }
+        /*
+         * Drag
+         */
+        // Record a delta distance for the drag and drop operation.
+        animated.setOnMousePressed(event -> {
+            transX = animated.getLayoutX() - event.getSceneX();
+            transY = animated.getLayoutY() - event.getSceneY();
+            animated.setCursor(Cursor.MOVE);
         });
-        canvas.setOnMouseReleased(new EventHandler<MouseEvent>() {
-
-            @Override
-            public void handle (MouseEvent mouseEvent){
-                canvas.setCursor(Cursor.HAND);
-            }
+        // Restore cursor
+        animated.setOnMouseReleased(event -> {
+            animated.setCursor(Cursor.HAND);
         });
-        canvas.setOnMouseDragged(new EventHandler<MouseEvent>() {
-
-            @Override
-            public void handle (MouseEvent mouseEvent){
-                canvas.setLayoutX(mouseEvent.getSceneX() + transX);
-                canvas.setLayoutY(mouseEvent.getSceneY() + transY);
-            }
+        // Translate canvases
+        animated.setOnMouseDragged(event -> {
+            stationary.setLayoutX(event.getSceneX() + transX);
+            stationary.setLayoutY(event.getSceneY() + transY);
+            animated.setLayoutX(event.getSceneX() + transX);
+            animated.setLayoutY(event.getSceneY() + transY);
         });
-        canvas.setOnMouseEntered(new EventHandler<MouseEvent>() {
-
-            @Override
-            public void handle (MouseEvent mouseEvent){
-                canvas.setCursor(Cursor.HAND);
-            }
+        // Set cursor
+        animated.setOnMouseEntered(event -> {
+            stationary.setCursor(Cursor.HAND);
         });
     }
 
-    public abstract void render ();
+    //TODO: abstract
+    public void render (){
+        GraphicsContext context = this.animated.getGraphicsContext2D();
+        context.setFill(Color.AQUAMARINE);
+        context.clearRect(0, 0, animated.getWidth(), animated.getWidth());
+        context.fillRect(Math.random() * animated.getWidth(), Math.random() * animated.getHeight(), 50, 50);
+    }
 
     /**
      * Get the fill color for the center. Returns white for style == null and black as default.

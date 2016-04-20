@@ -107,6 +107,7 @@ public class KTreeRender extends Render {
             }
         }
         struct.elementsDrawn();
+        super.render();
     }
 
     /**
@@ -141,7 +142,7 @@ public class KTreeRender extends Render {
      */
     private void init (){
         calculateDepthAndBreadth(); //Calls calculateSize()
-        GraphicsContext context = canvas.getGraphicsContext2D();
+        GraphicsContext context = stationary.getGraphicsContext2D();
         context.setFill(COLOR_WHITE);
         context.fillRect(0, 0, this.getMaxWidth(), this.getMaxHeight());
         context.setFill(COLOR_BLACK);
@@ -230,7 +231,7 @@ public class KTreeRender extends Render {
      * @param lastRow If {@code true}, no child connection lines are drawn.
      */
     private void drawNode (String value, double x, double y, Color fill, int depth, int breadth, int index){
-        GraphicsContext context = canvas.getGraphicsContext2D();
+        GraphicsContext context = stationary.getGraphicsContext2D();
         context.setFill(fill);
         context.fillOval(x, y, node_width, node_height);
         //Outline, text, children
