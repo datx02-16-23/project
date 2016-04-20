@@ -71,7 +71,7 @@ public class MatrixRender extends ARender {
             for (Element e : struct.getElements()) {
                 if(struct.getElements().indexOf(e) == 1){
                     System.out.println("animate!");
-                    animate(e, 1000, 1000);
+                    animate(e, 400, 150);
                 }
 //                if (animatedElements.contains(e)) {
 //                    continue; //Animated elements are handled seperately.
@@ -103,7 +103,7 @@ public class MatrixRender extends ARender {
         if (struct.getElements().isEmpty() == false) {
             ArrayElement ae = (ArrayElement) struct.getElements().get(0);
             dimensions = ae.getIndex().length;
-            if (dimensions != 2 || dimensions != 2) {
+            if (dimensions != 2 && dimensions != 1) {
                 Main.console.force("WARNING: Structure " + struct + " has declared " + dimensions + " dimensions. MatrixRender supports only one or two dimensions.");
             }
         }
@@ -214,7 +214,6 @@ public class MatrixRender extends ARender {
             this.optionNbr = optionNbr;
         }
     }
-
     @Override
     public void animate (Element e, int x_end, int y_end){
         Array struct = (Array) this.struct;
@@ -239,6 +238,8 @@ public class MatrixRender extends ARender {
         });
         tl.playFromStart();
     }
+    
+    
 
     int step = 0;
 }

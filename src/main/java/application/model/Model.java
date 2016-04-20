@@ -8,28 +8,42 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Model implements iModel {
+public class Model {
 
-    private iStep                 step       = new Step();
+    private static Model          INSTANCE;
+    private Step                  step       = new Step();
     private final List<Operation> operations = new ArrayList<Operation>();
     private int                   index;
 
-    @Override
+    /**
+     * Returns the Model instance.
+     * 
+     * @return The Model instance.
+     */
+    public static Model instance (){
+        if (INSTANCE == null) {
+            INSTANCE = new Model();
+        }
+        return INSTANCE;
+    }
+
+    private Model (){
+    }
+
     public void reset (){
         index = 0;
         step.reset();
     }
-    
+
     /**
      * Restore the model to its inisual stet.
      */
-    public void clear(){
+    public void clear (){
         index = 0;
         step = new Step();
         operations.clear();
     }
 
-    @Override
     public boolean stepForward (){
         if (operations != null && index < operations.size()) {
             step.applyOperation(operations.get(index));
@@ -39,7 +53,6 @@ public class Model implements iModel {
         return false;
     }
 
-    @Override
     public boolean stepBackward (){
         if (index == 0) {
             return false;
@@ -52,7 +65,6 @@ public class Model implements iModel {
         return true;
     }
 
-    @Override
     public void goToStep (int toStepNo){
         if (toStepNo <= 0) {
             reset();
@@ -76,7 +88,6 @@ public class Model implements iModel {
         //Do nothing if index == toStepNo
     }
 
-    @Override
     public void set (Map<String, DataStructure> structs, List<Operation> ops){
         structs.values().forEach(DataStructure::clear); //TODO: Varf�r rensar vi h�r?
         step = new Step(new HashMap<String, DataStructure>(structs));
@@ -85,17 +96,14 @@ public class Model implements iModel {
         index = 0;
     }
 
-    @Override
-    public iStep getCurrentStep (){
+    public Step getCurrentStep (){
         return step;
     }
 
-    @Override
     public int getIndex (){
         return index;
     }
 
-    @Override
     public void goToEnd (){
         while(operations != null && index < operations.size()) {
             step.applyOperation(operations.get(index));
@@ -103,17 +111,14 @@ public class Model implements iModel {
         }
     }
 
-    @Override
     public Map<String, DataStructure> getStructures (){
         return step.getStructures();
     }
 
-    @Override
     public List<Operation> getOperations (){
         return operations;
     }
 
-    @Override
     public void setOperations (List<Operation> newOperations){
         operations.clear();
         operations.addAll(newOperations);

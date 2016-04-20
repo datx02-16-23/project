@@ -1,7 +1,7 @@
 package application.visualization;
 
 import application.gui.Main;
-import application.model.iModel;
+import application.model.Model;
 import application.visualization.render2d.*;
 import application.visualization.render2d.MatrixRender.Order;
 import javafx.scene.layout.GridPane;
@@ -9,10 +9,10 @@ import wrapper.datastructures.DataStructure;
 
 public class Visualization extends GridPane {
 
-    private final iModel model;
+    private final Model model;
 
-    public Visualization (iModel model){
-        this.model = model;
+    public Visualization (){
+        this.model = Model.instance();
         this.setStyle("-fx-background-color: white ;");
     }
     

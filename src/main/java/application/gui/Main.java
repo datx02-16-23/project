@@ -46,14 +46,13 @@ public class Main extends Application {
 
     @Override
     public void start (Stage primaryStage) throws Exception{
-        final iModel model = new Model();
         final LogStreamManager lsm = new LogStreamManager(Strings.PROJECT_NAME + " GUI");
         primaryStage.setTitle(Strings.PROJECT_NAME);
         // Create a Group view for the AV.
-        Visualization visualization = new Visualization(model);
+        Visualization visualization = new Visualization();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/VisualizerView.fxml"));
         SourcePanel sourceViewer = new SourcePanel();
-        controller = new GUI_Controller(visualization, primaryStage, model, lsm, sourceViewer);
+        controller = new GUI_Controller(visualization, primaryStage, lsm, sourceViewer);
         OperationPanel operationPanel = controller.getOperationPanel();
         fxmlLoader.setController(controller);
         // Load and get the root layout.

@@ -1,13 +1,18 @@
 package application.visualization.render2d;
 
+import java.util.Arrays;
+
+import application.model.Model;
+import javafx.animation.Timeline;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import wrapper.Operation;
+import wrapper.Locator;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
+import wrapper.operations.OP_ReadWrite;
+import wrapper.operations.OP_Swap;
 
 public abstract class ARender extends StackPane {
 
@@ -60,9 +65,8 @@ public abstract class ARender extends StackPane {
         /*
          * Zoom
          */
-        animated.setOnScroll(event->{
+        animated.setOnScroll(event -> {
             sign = event.getDeltaY() > 0 ? 1 : -1;
-            
             scale = scale + sign * 0.1;
             if (scale < 0.1) {
                 scale = 0.1;
@@ -76,7 +80,6 @@ public abstract class ARender extends StackPane {
             stationary.setScaleY(scale);
             animated.setScaleX(scale);
             animated.setScaleY(scale);
-                
         });
         /*
          * Drag
@@ -105,6 +108,7 @@ public abstract class ARender extends StackPane {
     }
 
     public abstract void render ();
+
     public abstract void animate (Element e, int targetX, int targetT);
 
     /**
@@ -128,15 +132,54 @@ public abstract class ARender extends StackPane {
                 return COLOR_INACTIVE;
         }
     }
-    
-    public double[][] generatePoints(double x1, double y1, double x2, double y2, int points){
+
+    public double[][] generatePoints (double x1, double y1, double x2, double y2, int points){
         double[][] ans = new double[2][points];
-        x2 = 0;
-        y2 = 0;
-        for(int i = 0; i < points; i++){
-            ans[0][i] = x2+=10;
-            ans[1][i] = y2+=10;
+        System.out.println("x1 = " + x1);
+        System.out.println("x2 = " + x2);
+        double xstep = (x2 - x1) / points;
+        double k = (y2 - y1) / (x2 - x1);
+        double m = y1 - k * x1;
+        double x = xstep;
+        for (int i = 0; i < points; i++) {
+            x += xstep;
+            ans[0][i] = x;
+            ans[1][i] = k * i + m;
         }
+        System.out.println(Arrays.toString(ans[0]));
+        System.out.println(Arrays.toString(ans[1]));
         return ans;
+    }
+
+    public static class AnimatedOperation {
+
+        public static final short FRAMES   = 100;
+        private short             frame    = 0;
+        private final Timeline    timeline = new Timeline();
+
+        public static AnimatedOperation getAnimatedOperation(OP_ReadWrite op){
+            Model.instance().getStructures().values();
+            Locator source = op.getSource();
+            if(source == null){
+                return null;
+            }
+            Element e;
+            for(DataStructure struct : Model.instance().getStructures().values()){
+                e = struct.getElement(source);
+                if(e != null){
+                    break;
+                }
+            }
+            
+            
+            
+            AnimatedOperation ae;
+            
+            return null;
+        }
+        
+        private AnimatedOperation (Element e, double x_end, double y_end){
+            
+        }
     }
 }

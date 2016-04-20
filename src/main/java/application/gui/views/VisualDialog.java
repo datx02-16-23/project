@@ -92,7 +92,6 @@ public class VisualDialog {
             changed = false;
             root.close();
         }
-        System.out.println("selectedItem");
     }
 
     public boolean show (DataStructure struct){

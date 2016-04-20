@@ -5,6 +5,7 @@ import java.util.List;
 
 import application.assets.Strings;
 import wrapper.AnnotatedVariable;
+import wrapper.Locator;
 import wrapper.Operation;
 
 /**
@@ -136,4 +137,11 @@ public abstract class DataStructure extends AnnotatedVariable {
         resetElements.addAll(modifiedElements);
         modifiedElements.clear();
     }
+    
+    /**
+     * Returns an element based on a Locator.
+     * @param locator The locator to look for.
+     * @return An element if it could be found, null otherwise.
+     */
+    public abstract Element getElement(Locator locator);
 }

@@ -10,7 +10,7 @@ import java.util.Map;
 
 import application.gui.Main;
 
-public class Step implements iStep {
+public class Step {
 
     private final Map<String, DataStructure> structs;
     private Operation                        lastOp;
@@ -23,24 +23,24 @@ public class Step implements iStep {
         this.structs = structs;
     }
     
-    @Override
+    
     public void reset (){
         lastOp = null;
         structs.values().forEach(DataStructure::clear);
     }
 
-    @Override
+    
     public Map<String, DataStructure> getStructures (){
         //Should do a deep copy
         return structs;
     }
 
-    @Override
+    
     public Operation getLastOp (){
         return lastOp;
     }
 
-    @Override
+    
     public void applyOperation (Operation op){
         OperationType opType = op.operation;
         String identifier;

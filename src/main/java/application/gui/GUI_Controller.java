@@ -5,7 +5,7 @@ import application.assets.examples.Examples;
 import application.assets.examples.Examples.Algorithm;
 import application.gui.panels.*;
 import application.gui.views.*;
-import application.model.iModel;
+import application.model.Model;
 import application.visualization.Visualization;
 import io.*;
 import javafx.animation.Animation;
@@ -55,7 +55,7 @@ public class GUI_Controller implements CommunicatorListener {
     private Visualization          visualization;
     private Stage                  window;
     private final LogStreamManager lsm;
-    private final iModel           model;
+    private final Model           model;
     // Controls
     private Menu                   visualMenu;
     private MenuButton             streamBehaviourMenuButton;
@@ -76,10 +76,10 @@ public class GUI_Controller implements CommunicatorListener {
     private final ExamplesDialog   examplesDialog;
     private final VisualDialog     visualDialog;
 
-    public GUI_Controller (Visualization visualization, Stage window, iModel model, LogStreamManager lsm, SourcePanel sourceViewer){
+    public GUI_Controller (Visualization visualization, Stage window, LogStreamManager lsm, SourcePanel sourceViewer){
         this.visualization = visualization;
         this.window = window;
-        this.model = model;
+        model = Model.instance();
         this.lsm = lsm;
         this.lsm.PRETTY_PRINTING = true;
         this.lsm.setListener(this);

@@ -5,6 +5,7 @@ import java.util.List;
 
 import application.assets.Strings;
 import application.gui.Main;
+import wrapper.Locator;
 import wrapper.Operation;
 import wrapper.operations.*;
 
@@ -153,5 +154,14 @@ public class IndependentElement extends DataStructure implements Element {
     @Override
     public void setColor (String newColor){
         elements.get(0).setColor(newColor);
+    }
+
+    @Override
+    public Element getElement (Locator locator){
+        if(locator.getIdentifier().equals(super.identifier) && elements.isEmpty() == false){
+            return elements.get(0);
+        } else {
+            return null;
+        }
     }
 }
