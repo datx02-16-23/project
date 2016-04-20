@@ -506,11 +506,6 @@ public class GUI_Controller implements CommunicatorListener {
         stage.show();
     }
 
-    @Override
-    public CommunicatorListener getListener (){
-        return null; // VisualizerController doesn't have any listeners.
-    }
-
     @SuppressWarnings("unchecked")
     public void loadMainViewFxID (FXMLLoader mainViewLoader){
         ObservableMap<String, Object> namespace = mainViewLoader.getNamespace();

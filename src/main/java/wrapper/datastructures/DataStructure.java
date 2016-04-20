@@ -22,7 +22,7 @@ public abstract class DataStructure extends AnnotatedVariable {
     protected transient final List<Element> modifiedElements = new ArrayList<Element>();
     protected transient final List<Element> resetElements    = new ArrayList<Element>();
     protected transient final List<Element> inactiveElements = new ArrayList<Element>();
-    public int                              children         = 2; //Fulhack - antal bar i KTree
+    public transient int                    children         = 2;                       //Fulhack - antal bar i KTree
 
     public DataStructure (String identifier, String rawType, String abstractType, String visual){
         super(identifier, rawType, abstractType, visual);

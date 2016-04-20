@@ -893,10 +893,5 @@ public class Simulator extends Application {
         public void stop (){
             LSM.getCommunicator().close();
         }
-
-        @Override
-        public CommunicatorListener getListener (){
-            return null; //StreamSimulator doesn't have any listeners.
-        }
     }
 }

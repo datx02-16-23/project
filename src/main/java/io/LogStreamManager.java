@@ -454,9 +454,4 @@ public class LogStreamManager implements CommunicatorListener {
     public void close (){
         communicator.close();
     }
-
-    @Override
-    public CommunicatorListener getListener (){
-        return listener;
-    }
 }
