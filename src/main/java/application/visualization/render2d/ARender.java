@@ -5,10 +5,11 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import wrapper.Operation;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
 
-public abstract class Render extends StackPane {
+public abstract class ARender extends StackPane {
 
     public static final double    DEFAULT_SIZE           = 40;
     protected final double        node_width, node_height;
@@ -26,7 +27,7 @@ public abstract class Render extends StackPane {
     private double                scale                  = 1;
     private int                   sign                   = 1;
 
-    public Render (DataStructure struct, double width, double height, double hspace, double vspace){
+    public ARender (DataStructure struct, double width, double height, double hspace, double vspace){
         this.struct = struct;
         //Build Canvas
         stationary = new Canvas();
@@ -103,13 +104,8 @@ public abstract class Render extends StackPane {
         });
     }
 
-    //TODO: abstract
-    public void render (){
-        GraphicsContext context = this.animated.getGraphicsContext2D();
-        context.setFill(Color.AQUAMARINE);
-        context.clearRect(0, 0, animated.getWidth(), animated.getWidth());
-        context.fillRect(Math.random() * animated.getWidth(), Math.random() * animated.getHeight(), 50, 50);
-    }
+    public abstract void render ();
+    public abstract void animate (Element e, int targetX, int targetT);
 
     /**
      * Get the fill color for the center. Returns white for style == null and black as default.
@@ -131,5 +127,16 @@ public abstract class Render extends StackPane {
             default:
                 return COLOR_INACTIVE;
         }
+    }
+    
+    public double[][] generatePoints(double x1, double y1, double x2, double y2, int points){
+        double[][] ans = new double[2][points];
+        x2 = 0;
+        y2 = 0;
+        for(int i = 0; i < points; i++){
+            ans[0][i] = x2+=10;
+            ans[1][i] = y2+=10;
+        }
+        return ans;
     }
 }

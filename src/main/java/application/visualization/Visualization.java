@@ -30,7 +30,7 @@ public class Visualization extends GridPane {
 //                this.add(render, 1, independent++);
 //                continue;
 //            }
-            Render render = resolveRender(struct);
+            ARender render = resolveRender(struct);
             if (render != null) {
                 this.add(render, 0, regular++);
                 continue;
@@ -43,8 +43,8 @@ public class Visualization extends GridPane {
      * 
      * @param struct The DataStructure to assign a Render to.
      */
-    private Render resolveRender (DataStructure struct){
-        Render render = null;
+    private ARender resolveRender (DataStructure struct){
+        ARender render = null;
         String visual = struct.visual == null ? "NULL" : struct.visual;
         outer: for (int attempt = 1; attempt < 3; attempt++) {
             switch (visual) {
@@ -82,10 +82,9 @@ public class Visualization extends GridPane {
      * Should be called whenever model is updated, does a complete rerender of the structures.
      */
     public void render (){
-        Render render;
+        ARender render;
         for (Object o : getChildren()) {
-            render = (Render) o;
-            render.setPrefSize(this.getWidth(), this.getHeight());
+            render = (ARender) o;
             render.render();
         }
     }

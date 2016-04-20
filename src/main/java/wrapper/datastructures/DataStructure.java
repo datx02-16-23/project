@@ -32,6 +32,10 @@ public abstract class DataStructure extends AnnotatedVariable {
      */
     protected transient final List<Element> inactiveElements = new ArrayList<Element>();
     /**
+     * Animated which are currently being animated.
+     */
+    protected transient final List<Element> animatedElements = new ArrayList<Element>();
+    /**
      * Number of children in KTree, row/vs column major etc.
      */
     public transient int                    visualOptions    = 2;
@@ -117,6 +121,10 @@ public abstract class DataStructure extends AnnotatedVariable {
 
     public List<Element> getInactiveElements (){
         return inactiveElements;
+    }
+    
+    public List<Element> getAnimatedElements (){
+        return animatedElements;
     }
 
     /**

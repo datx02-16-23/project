@@ -16,6 +16,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
+import wrapper.Operation;
 import wrapper.datastructures.Array.ArrayElement;
 
 /**
@@ -27,7 +28,7 @@ import wrapper.datastructures.Array.ArrayElement;
  * @author Richard Sundqvist
  *
  */
-public class KTreeRender extends Render {
+public class KTreeRender extends ARender {
 
     private final int                K;
     private final ArrayList<Integer> lowerLevelSums         = new ArrayList<Integer>();
@@ -107,7 +108,6 @@ public class KTreeRender extends Render {
             }
         }
         struct.elementsDrawn();
-        super.render();
     }
 
     /**
@@ -332,9 +332,10 @@ public class KTreeRender extends Render {
         Main.console.err("animateReadWrite () has not been implemented.");
     }
 
-    /**
-     * Force all animations currently in progress to finish immedieately.
-     */
-    public void animateEnd (){
+    @Override
+    public void animate (Element e, int targetX, int targetT){
+        // TODO Auto-generated method stub
+        
     }
+
 }

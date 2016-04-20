@@ -3,24 +3,31 @@ package application.visualization.render2d;
 import java.util.List;
 
 import application.gui.Main;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
+import wrapper.Operation;
 import wrapper.datastructures.Array;
 import wrapper.datastructures.Array.ArrayElement;
 
-public class MatrixRender extends Render {
+public class MatrixRender extends ARender {
 
     public static final double DEFAULT_SIZE           = 40;
     private final Order        mo;
     private int                elementsPreviousRender = 0;
     private int                dimensions;
     private int[]              size;
-    private static final int   PADDING                = 15;
+    private static final int   PADDING                = 40;
 
     /**
      * Create a new BoxRender.
@@ -62,6 +69,10 @@ public class MatrixRender extends Render {
             List<Element> resetElements = struct.getResetElements();
             ArrayElement ae;
             for (Element e : struct.getElements()) {
+                if(struct.getElements().indexOf(e) == 1){
+                    System.out.println("animate!");
+                    animate(e, 1000, 1000);
+                }
 //                if (animatedElements.contains(e)) {
 //                    continue; //Animated elements are handled seperately.
 //                }
@@ -104,7 +115,6 @@ public class MatrixRender extends Render {
     }
 
     private void calculateSize (){
-        //TODO
         double width = PADDING * 2 + vspace + (vspace + node_width) * size[0];
         double height = PADDING * 2 + hspace + (hspace + node_height) * size[1];
         this.setMinSize(width, height);
@@ -128,7 +138,7 @@ public class MatrixRender extends Render {
      */
     private void drawElement (String value, int[] index, String style){
         double x = 0;
-        double y = 0;
+        double y = PADDING;
         if (mo == Order.COLUMN_MAJOR) {
             x = getX(index[0]);
             if (dimensions == 2) {
@@ -142,7 +152,7 @@ public class MatrixRender extends Render {
             }
         }
         //Dispatch
-        drawNode(value, x, y, getFillColor(style), index);
+        drawNode(value, x, y, getFillColor(style), index, stationary);
     }
 
     /*
@@ -157,8 +167,8 @@ public class MatrixRender extends Render {
      * @param fill The fill color of this node.
      * @param lastRow If {@code true}, no child connection lines are drawn.
      */
-    private void drawNode (String value, double x, double y, Color fill, int[] index){
-        GraphicsContext context = stationary.getGraphicsContext2D();
+    private void drawNode (String value, double x, double y, Color fill, int[] index, Canvas c){
+        GraphicsContext context = c.getGraphicsContext2D();
         context.setFill(fill);
         context.fillRect(x, y, node_width, node_height);
         //Outline, text, children
@@ -180,14 +190,13 @@ public class MatrixRender extends Render {
         //Column numbering
         if (size[0] > 1) {
             for (int i = 0; i < size[0]; i++) {
-                System.out.println("x = " + i);
-                context.fillText("[" + i + "]", getX(i), -10);
+                context.fillText("[" + i + "]", getX(i), PADDING - 10);
             }
         }
         //Row numbering
         if (size[1] > 1) {
             for (int i = 0; i < size[1]; i++) {
-                context.fillText("[" + i + "]", -10, getY(i));
+                context.fillText("[" + i + "]", 5, getY(i) - node_height / 2);
             }
         }
     }
@@ -205,4 +214,31 @@ public class MatrixRender extends Render {
             this.optionNbr = optionNbr;
         }
     }
+
+    @Override
+    public void animate (Element e, int x_end, int y_end){
+        Array struct = (Array) this.struct;
+        int index = struct.getElements().indexOf(e);
+        ArrayElement ae = (ArrayElement) struct.getElements().get(index);
+        double[][] points = generatePoints(getX(ae.getIndex()[0]), getY(0), x_end, y_end, 100);
+        Timeline tl = new Timeline();
+        tl.setCycleCount(100);
+        step = 0;
+        tl.getKeyFrames().add(new KeyFrame(Duration.millis(1500 / 100), new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle (ActionEvent actionEvent){
+                GraphicsContext context = animated.getGraphicsContext2D();
+                context.clearRect(0, 0, 1000, 1000);
+                drawNode(ae.getValue() + "", points[0][step], points[1][step], getFillColor(ae.getColor()), ae.getIndex(), animated);
+                step++;
+            }
+        }));
+        tl.setOnFinished(event -> {
+            System.out.println("done!");
+        });
+        tl.playFromStart();
+    }
+
+    int step = 0;
 }

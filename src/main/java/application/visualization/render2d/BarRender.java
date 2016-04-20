@@ -9,9 +9,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
+import wrapper.Operation;
 import wrapper.datastructures.Array.ArrayElement;
 
-public class BarRender extends Render {
+public class BarRender extends ARender {
 
     public static final double DEFAULT_SIZE           = 40;
     private final double       padding;
@@ -167,5 +168,11 @@ public class BarRender extends Render {
             this.description = description;
             this.optionNbr = optionNbr;
         }
+    }
+
+    @Override
+    public void animate (Element e, int targetX, int targetT){
+        // TODO Auto-generated method stub
+        
     }
 }
