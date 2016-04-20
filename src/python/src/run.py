@@ -16,12 +16,16 @@ from json import dump
 # w = Wrapper()
 ####################################################
 def load_logwriter(operations,output):
-	for node in operations.body:
+	operations_read = None
+	with open(operations,'r') as f:
+		operations_read = f.read()
+	operations_parse = parse(operations_read)
+	for node in operations_parse.body:
 		if (isinstance(node,Assign) and 
 			isinstance(node.targets[0],Name) and 
 			node.targets[0].id == 'outfile'):
 			node.value = Str(output)
-	return operations.body
+	return operations_parse.body
 
 class Variable(object):
 	def __init__(self,name,rawType,attributes=None,abstractType=None):
@@ -47,40 +51,41 @@ def create_header(version,variables):
 		'annotatedVariables' : annotatedVariables
 	}
 
-if __name__ == '__main__':
-	# where to output json
-	output = path.abspath('output.json')
-	open(output,'w').close()
-
-	operations_read = None
-	with open('operations.py','r') as f:
-		operations_read = f.read()
-	operations = load_logwriter(parse(operations_read),output)
+# create_settings
+# root_directory - where program is located
+# files - what files should be visualized
+# variables - output what variables to observe during execution
+# main_file - main file to be executed
+# output - where to store the final LOG file
+def create_settings(root_directory, files, variables, main_file, output):
+	operations = load_logwriter('operations.py',output)
 
 	transformers = [PassTransformer('link'), WriteTransformer('write'), ReadTransformer('read')]
 
-	# settings
-	# rootdir - where programfiles is located
-	# files - what files should be visualized
-	# output - where to store executed statements during run-time
-	# observe - what variables to observe during execution
-	settings = {
-		'rootdir' : path.abspath('./test'),
-		'v_env' : './testvisualize/',
-		'files' : ['main.py'],
-		'operations' : operations,
-		'transformers' : transformers,
-		'observe' : [Variable('a','array',abstractType='array',attributes={'size' : [3]})]}
+	v_env = '%svisualize/' % root_directory
 
+	settings = {
+		'rootdir' : root_directory,
+		'files' : files,
+		'observe' : variables,
+		'main' : v_env+main_file,
+		'output' : output,
+		'v_env' : v_env,
+		'operations' : operations,
+		'transformers' : transformers
+	}
+	return settings
+
+def run(settings):
 	# create visulization environment
 	create_env(settings)
-
 	# run userprogram in visualization environment
 	# w.send(create_header(2.0,settings['observe']))
-	execfile(path.abspath('./testvisualize/main.py'))
+	open(settings['output'],'w').close()
+	execfile(settings['main'],globals())
 
 	# create a valid json output file from buffer
-	output_buffer = format_log(output)
+	output_buffer = format_log(settings['output'])
 	with open(output,'w+') as f:
 		final_output = {
 			'header' : create_header(2.0,settings['observe']),
@@ -88,4 +93,17 @@ if __name__ == '__main__':
 		}
 		dump(final_output,f)
 	# right now run cleanup script until a better solution is found
-	# system('sh cleanup.sh')
+	system('sh cleanup.sh')
+
+if __name__ == '__main__':
+	output = path.abspath('output.json')
+	variables = [Variable('a','array',attributes={'size' : [3]})]
+	settings = create_settings(
+		path.abspath('./test'),	# root directory
+		['main.py'], 			# files
+		variables, 				# variables
+		'main.py', 				# main file
+		output 					# LOG output destination
+	)
+	
+	run(settings)
