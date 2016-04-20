@@ -59,18 +59,23 @@ public abstract class Render extends StackPane {
         /*
          * Zoom
          */
-        stationary.setOnContextMenuRequested(event -> {
+        animated.setOnScroll(event->{
+            sign = event.getDeltaY() > 0 ? 1 : -1;
+            
             scale = scale + sign * 0.1;
             if (scale < 0.1) {
-                scale = 2;
+                scale = 0.1;
+                return;
             }
             else if (scale > 2) {
-                scale = 0.25;
+                scale = 2;
+                return;
             }
             stationary.setScaleX(scale);
             stationary.setScaleY(scale);
             animated.setScaleX(scale);
             animated.setScaleY(scale);
+                
         });
         /*
          * Drag
