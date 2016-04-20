@@ -19,10 +19,19 @@ public abstract class DataStructure extends AnnotatedVariable {
      * Version number for this class.
      */
     private static final long               serialVersionUID = Strings.VERSION_NUMBER;
+    /**
+     * Elements which have been modified and should be drawn with their preferred color.
+     */
     protected transient final List<Element> modifiedElements = new ArrayList<Element>();
+    /**
+     * Elements which are to be reset after being drawn with their preferred color.
+     */
     protected transient final List<Element> resetElements    = new ArrayList<Element>();
+    /**
+     * Elements which should not be drawn or should be masked.
+     */
     protected transient final List<Element> inactiveElements = new ArrayList<Element>();
-    public transient int                    children         = 2;                       //Fulhack - antal bar i KTree
+    public transient int                    children         = 2;                       //Fulhack - antal barn i KTree
 
     public DataStructure (String identifier, String rawType, String abstractType, String visual){
         super(identifier, rawType, abstractType, visual);

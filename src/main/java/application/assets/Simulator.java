@@ -546,7 +546,6 @@ public class Simulator extends Application {
         private List<Operation> ops;
         private List<Operation> inits;
 
-        @SuppressWarnings("rawtypes")
         private void build (){
             initWrapper = new Wrapper(new Header(1337, buildStructs(), buildSources()), null);
             ops = buildOps();
@@ -618,9 +617,7 @@ public class Simulator extends Application {
             return _structs;
         }
 
-        int      max1, max2;
         String[] srcNames;
-        int[]    srcSizes;
 
         private HashMap<String, List<String>> buildSources (){
             //Build sources
@@ -646,7 +643,6 @@ public class Simulator extends Application {
             srcNames = new String[] {"foo.java", "bar.py"};
             ArrayList<String> sourceOne = new ArrayList<String>(tmp1);
             ArrayList<String> sourceTwo = new ArrayList<String>(tmp2);
-            srcSizes = new int[] {sourceOne.size(), sourceTwo.size()};
             HashMap<String, List<String>> _sources = new HashMap<String, List<String>>();
             _sources.put(srcNames[0], sourceOne);
             _sources.put(srcNames[1], sourceTwo);
@@ -679,7 +675,6 @@ public class Simulator extends Application {
             updateQueued();
         }
 
-        int             sleepDur          = 1500;
         private boolean continousTransmit = false;
         Timeline        autoplayTimeline;
 

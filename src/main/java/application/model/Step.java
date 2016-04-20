@@ -82,6 +82,12 @@ public class Step implements iStep {
                 identifier = ((Locator) op.operationBody.get(Key.var2)).getIdentifier();
                 structs.get(identifier).applyOperation(op);
                 break;
+            case remove:
+                identifier = ((Locator) op.operationBody.get(Key.target)).getIdentifier();
+                structs.get(identifier).applyOperation(op);
+                break;
+            default:
+                break;
         }
         lastOp = op;
     }

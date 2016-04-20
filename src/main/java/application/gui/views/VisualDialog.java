@@ -95,7 +95,6 @@ public class VisualDialog {
         System.out.println("selectedItem");
     }
 
-    @SuppressWarnings("unchecked")
     public boolean show (DataStructure struct){
         this.struct = struct;
         name.setText(struct.toString());

@@ -3,6 +3,7 @@ package application.visualization;
 import application.gui.Main;
 import application.model.iModel;
 import application.visualization.render2d.*;
+import application.visualization.render2d.MatrixRender.Order;
 import javafx.scene.layout.GridPane;
 import wrapper.datastructures.DataStructure;
 
@@ -24,11 +25,11 @@ public class Visualization extends GridPane {
         int regular = 0;
         int independent = 0;
         for (DataStructure struct : model.getStructures().values()) {
-            if (struct.rawType == "independentElement") {
-                Render render = new IndependentElementRender(struct);
-                this.add(render, 1, independent++);
-                continue;
-            }
+//            if (struct.rawType == "independentElement") {
+//                Render render = new IndependentElementRender(struct);
+//                this.add(render, 1, independent++);
+//                continue;
+//            }
             Render render = resolveRender(struct);
             if (render != null) {
                 this.add(render, 0, regular++);
@@ -47,14 +48,14 @@ public class Visualization extends GridPane {
         String visual = struct.visual == null ? "NULL" : struct.visual;
         outer: for (int attempt = 1; attempt < 3; attempt++) {
             switch (visual) {
-                case "bar":
-                    render = new BarchartRender(struct);
-                    break outer;
+//                case "bar":
+//                    render = new BarcharRender(struct);
+//                    break outer;
                 case "box":
-                    render = new BoxRender(struct);
+                    render = new MatrixRender(struct, Order.ROW_MAJOR, 50, 50, 50, 0);
                     break outer;
                 case "tree":
-                    render = new KTreeRender(struct, struct.children, 50, 30, 20, 10);
+                    render = new KTreeRender(struct, struct.children, 50, 50, 20, 10);
                     break outer;
                 default:
                     /*

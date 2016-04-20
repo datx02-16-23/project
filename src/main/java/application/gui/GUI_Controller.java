@@ -8,12 +8,10 @@ import application.gui.views.*;
 import application.model.iModel;
 import application.visualization.Visualization;
 import io.*;
-import io.Communicator.*;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableMap;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -32,7 +30,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import wrapper.Wrapper;
 import wrapper.datastructures.DataStructure;
 
 import java.io.*;
@@ -42,7 +39,6 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -506,7 +502,6 @@ public class GUI_Controller implements CommunicatorListener {
         stage.show();
     }
 
-    @SuppressWarnings("unchecked")
     public void loadMainViewFxID (FXMLLoader mainViewLoader){
         ObservableMap<String, Object> namespace = mainViewLoader.getNamespace();
         //Load from main view namespace

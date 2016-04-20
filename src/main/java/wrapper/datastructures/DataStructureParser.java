@@ -51,7 +51,6 @@ public abstract class DataStructureParser {
         return new Array(av.identifier, av.abstractType, av.visual);
     }
     
-    @SuppressWarnings("unchecked")
     public static int[] parseSize (AnnotatedVariable av){
         return OperationParser.ensureIntArray(av.attributes.get(Key.size));
     }

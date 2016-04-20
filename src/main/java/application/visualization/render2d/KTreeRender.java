@@ -9,10 +9,13 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
@@ -29,22 +32,9 @@ import wrapper.datastructures.Array.ArrayElement;
  */
 public class KTreeRender extends Render {
 
-    public static final double       DEFAULT_SIZE           = 40;
-    private final double             node_width, node_height;
-    private final double             hspace, vspace;
-    private final Canvas             canvas;
     private final int                K;
-    private final DataStructure      struct;
     private final ArrayList<Integer> lowerLevelSums         = new ArrayList<Integer>();
-    private int                      elementsPreviousRender = 0;
     private int                      totDepth, totBreadth, completedSize;
-    private static final Color       COLOR_READ             = Color.valueOf(Element.COLOR_READ);
-    private static final Color       COLOR_WRITE            = Color.valueOf(Element.COLOR_WRITE);
-    private static final Color       COLOR_SWAP             = Color.valueOf(Element.COLOR_SWAP);
-    private static final Color       COLOR_INACTIVE         = Color.valueOf(Element.COLOR_INACTIVE);
-    private static final Color       COLOR_WHITE            = Color.WHITE;
-    private static final Color       COLOR_BLACK            = Color.BLACK;
-    private double                   transX, transY;
 
     /**
      * Create a new KTreeRender with K children and one parent.
@@ -58,27 +48,11 @@ public class KTreeRender extends Render {
      * @throws IllegalArgumentException If K < 2.
      */
     public KTreeRender (DataStructure struct, int K, double width, double height, double hspace, double vspace) throws IllegalArgumentException{
+        super(struct, width, height, hspace, vspace);
         if (K < 2) {
             throw new IllegalArgumentException("K must be greater than or equal to 2.");
         }
-        this.struct = struct;
         this.K = K;
-        lowerLevelSums.add(new Integer(0));
-        //Build Canvas
-        canvas = new Canvas();
-        moveAndZoom();
-        canvas.widthProperty().bind(this.maxWidthProperty());
-        canvas.heightProperty().bind(this.maxHeightProperty());
-        canvas.maxWidth(Double.MAX_VALUE);
-        canvas.maxHeight(Double.MAX_VALUE);
-        //Sizing and spacing
-        this.node_width = width;
-        this.node_height = height;
-        this.hspace = hspace;
-        this.vspace = vspace;
-        this.getChildren().add(canvas);
-        this.setMinSize(200, 100);
-        this.setMaxSize(200, 100);
         Main.console.force("WARNING: At the time of writing (2016-04-18) the KTreeRender class, JavaFX may crash with a NullPointerException when Canvas grows too large.");
     }
 
@@ -118,7 +92,7 @@ public class KTreeRender extends Render {
             List<Element> resetElements = struct.getResetElements();
             ArrayElement ae;
             for (Element e : struct.getElements()) {
-                if(animatedElements.contains(e)){
+                if (animatedElements.contains(e)) {
                     continue; //Animated elements are handled seperately.
                 }
                 ae = (ArrayElement) e;
@@ -270,7 +244,12 @@ public class KTreeRender extends Render {
         }
         //Value
         context.strokeOval(x, y, node_width, node_height);
-        context.fillText("v: " + value == null ? "null" : value, x + 6, y + node_height / 2);
+        final Text text = new Text(value);
+        new Scene(new Group(text));
+        text.applyCss();
+        double tw = text.getLayoutBounds().getWidth();
+//        double th = text.getLayoutBounds().getHeight();
+        context.fillText(value, x + node_width / 2 - tw / 2, y + node_height / 2);
         //Index
         context.strokeOval(x, y, node_width, node_height);
         context.fillText("[" + index + "]", x + node_width + 4, y + node_height / 4);
@@ -286,28 +265,6 @@ public class KTreeRender extends Render {
         //Stroke lines to all children
         for (int child = 0; child < K; child++) {
             context.strokeLine(x, y, getX(getBreadth(K * index + 1 + child, depth + 1), depth + 1) + xOffset, childY);
-        }
-    }
-
-    /**
-     * Get the fill color for the center. Returns white for style == null and black as default.
-     * 
-     * @param style The style to return a color for.
-     * @return A color.
-     */
-    private Color getFillColor (String style){
-        if (style == null) {
-            return COLOR_WHITE;
-        }
-        switch (style) {
-            case Element.COLOR_READ:
-                return COLOR_READ;
-            case Element.COLOR_WRITE:
-                return COLOR_WRITE;
-            case Element.COLOR_SWAP:
-                return COLOR_SWAP;
-            default:
-                return COLOR_INACTIVE;
         }
     }
 
@@ -340,20 +297,22 @@ public class KTreeRender extends Render {
         }
         return lowerLevelSums.get(targetDepth);
     }
-    
+
     private final ArrayList<Element> animatedElements = new ArrayList<Element>();
+
     /**
      * Animate a swap between {@code var1} and {@code var2}.
+     * 
      * @param var1 The first variable to animate.
      * @param var2 The second variable to animate.
      * @param millis Total animation time.
      */
-    public void animateSwap(Element var1, Element var2, double millis){
+    public void animateSwap (Element var1, Element var2, double millis){
         animatedElements.add(var1);
         animatedElements.add(var2);
         int frames = 100;
         Timeline timeline = new Timeline();
-        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(millis/frames), new EventHandler<ActionEvent>() {
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(millis / frames), new EventHandler<ActionEvent>() {
 
             @Override
             public void handle (ActionEvent actionEvent){
@@ -363,73 +322,21 @@ public class KTreeRender extends Render {
         }));
         timeline.play();
     }
-    
+
     /**
      * Animate a read or write from {@code source} to {@code target}.
+     * 
      * @param source The first variable to animate.
      * @param target The second variable to animate.
      * @param millis Total animation time.
      */
-    public void animateReadWrite(Element source, Element target, double millis){
+    public void animateReadWrite (Element source, Element target, double millis){
         Main.console.err("animateReadWrite () has not been implemented.");
     }
-    
+
     /**
      * Force all animations currently in progress to finish immedieately.
      */
-    public void animateEnd(){
-        
-    }
-    
-    private double scale = 1;
-    private int    sign  = 1;
-
-    /**
-     * Create listeners to zoom and move.
-     */
-    private void moveAndZoom (){
-        canvas.setOnContextMenuRequested(event -> {
-            scale = scale + sign * 0.1;
-            if (scale < 0.1) {
-                scale = 2;
-            }
-            else if (scale > 2) {
-                scale = 0.25;
-            }
-            canvas.setScaleX(scale);
-            canvas.setScaleY(scale);
-        });
-        canvas.setOnMousePressed(new EventHandler<MouseEvent>() {
-
-            @Override
-            public void handle (MouseEvent mouseEvent){
-                // record a delta distance for the drag and drop operation.
-                transX = canvas.getLayoutX() - mouseEvent.getSceneX();
-                transY = canvas.getLayoutY() - mouseEvent.getSceneY();
-                canvas.setCursor(Cursor.MOVE);
-            }
-        });
-        canvas.setOnMouseReleased(new EventHandler<MouseEvent>() {
-
-            @Override
-            public void handle (MouseEvent mouseEvent){
-                canvas.setCursor(Cursor.HAND);
-            }
-        });
-        canvas.setOnMouseDragged(new EventHandler<MouseEvent>() {
-
-            @Override
-            public void handle (MouseEvent mouseEvent){
-                canvas.setLayoutX(mouseEvent.getSceneX() + transX);
-                canvas.setLayoutY(mouseEvent.getSceneY() + transY);
-            }
-        });
-        canvas.setOnMouseEntered(new EventHandler<MouseEvent>() {
-
-            @Override
-            public void handle (MouseEvent mouseEvent){
-                canvas.setCursor(Cursor.HAND);
-            }
-        });
+    public void animateEnd (){
     }
 }
