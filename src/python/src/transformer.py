@@ -90,7 +90,7 @@ class ExpressionTransformer(NodeTransformer):
 		expression = NameExpression().get_expression(node)
 		return copy_location(expression,node)
 
-	def visit_BinOp(self,node):	return node
+	def visit_BinOp(self,node): return node
 
 	def visit_Call(self,node): return node
 
@@ -108,7 +108,7 @@ class OperationTransformer(NodeTransformer):
 		self.expr_transformer = ExpressionTransformer()
 
 	# args_ - [ast.Node]
-	def create_call(self,args_):
+	def create_call(self,args_,node):
 		return Call(
 			func=Name(id=self.name, ctx=Load()),
 			args=args_,
@@ -141,17 +141,9 @@ class WriteTransformer(OperationTransformer):
 		if len(node.targets) == 1 and (isinstance(node.targets[0],Name) or isinstance(node.targets[0],Subscript)):
 			src = self.expr_transformer.visit(deepcopy(node.value))
 			dst = self.expr_transformer.visit(deepcopy(node.targets[0]))
-			write = self.create_call([src,dst])
+			write = self.create_call([src,dst],node)
 			node.value = write
 		return node
-
-	def insert_write(self,target,mod):
-		mod.body.insert(0,
-			Assign(
-				targets = [target],
-				value 	= self.create_call([target,self.expr_transformer.visit(target)])
-			)
-		)
 
 class ReadTransformer(OperationTransformer):
 	def __init__(self,name):
@@ -159,7 +151,7 @@ class ReadTransformer(OperationTransformer):
 
 	def create_read(self,node):
 		stmt = self.expr_transformer.visit(deepcopy(node))
-		read = self.create_call([stmt])
+		read = self.create_call([stmt],node)
 		return copy_location(read,node)
 
 	def visit_Subscript(self,node): 
@@ -183,10 +175,6 @@ class ReadTransformer(OperationTransformer):
 		for e in node.elts:
 			self.visit(e)
 
-# wt = WriteTransformer('write')
-# rt = ReadTransformer('read')
-# print ts(rt.visit(wt.visit(parse("a[1] = [1,2,3][0]"))))
-
 class PassTransformer(OperationTransformer):
 	def __init__(self,name):
 		super(PassTransformer,self).__init__(name)
@@ -196,14 +184,16 @@ class PassTransformer(OperationTransformer):
 	def extract_params(self,args):
 		reg_args = []
 		for arg in args.args:
-			reg_args.append(Str(arg.id))
+			reg_args.append(self.expr_transformer.visit(arg))
 		return reg_args
+
 	def visit_Module(self,node):
 		for child in iter_child_nodes(node):
 			self.visit(child)
 		for body in self.function_bodies:
 			for field in body:
 				self.visit(field)
+		return node
 
 	def visit_FunctionDef(self,node):
 		self.function_defs.append(node.name)
@@ -218,10 +208,7 @@ class PassTransformer(OperationTransformer):
 	def visit_Call(self,node):
 		if not isinstance(node.func,Attribute) and node.func.id in self.function_defs:
 			for i,arg in enumerate(node.args):
-				node.args[i] = Dict(
-					values=[arg, self.expr_transformer.visit(deepcopy(arg))],
-					keys=[Str('value'),Str('arg')]
-				)
+				node.args[i] = self.expr_transformer.visit(deepcopy(arg))
 		else:
 			for child in iter_child_nodes(node):
 				self.visit(child)

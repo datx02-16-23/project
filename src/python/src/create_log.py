@@ -22,22 +22,11 @@ class MainTransformer(NodeTransformer):
 
 		return node
 
-def setup_env(rootdir,v_env):
-	copy_tree(rootdir,v_env)
-	# This only supports flat layout of files?
-	with open(v_env+'__init__.py','w') as f:
-		f.write('')
-		f.close()
-
-# Maybe convert this into a "main" function
-# Also rethink the execution of this function
-# - v_env+... must be fail-safe
-# execfile must be fail-safe
 # given settings variable should be sanity-checked
-def visualize(settings):
+def create_env(settings):
 	# Setup rootdir of visualization folder given source root directory
-	setup_env(settings['rootdir'],settings['v_env'])
-
+	copy_tree(settings['rootdir'],settings['v_env'])
+	
 	# Generate ast's from given files copied into visualization folder
 	nodes = []
 	for f in settings['files']:
