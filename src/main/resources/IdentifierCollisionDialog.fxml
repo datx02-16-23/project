@@ -40,7 +40,7 @@
                         <Insets right="5.0" />
                      </padding>
                   </Label>
-                  <TextField fx:id="knownStructs" editable="false" maxWidth="402.0" minWidth="200.0" prefHeight="25.0" prefWidth="350.0" />
+                  <TextField fx:id="oldStructs" editable="false" maxWidth="402.0" minWidth="200.0" prefHeight="25.0" prefWidth="350.0" />
                </children>
             </HBox>
             <HBox prefHeight="25.0" prefWidth="200.0">
