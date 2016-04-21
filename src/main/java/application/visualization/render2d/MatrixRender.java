@@ -3,18 +3,14 @@ package application.visualization.render2d;
 import java.util.List;
 
 import application.gui.Main;
-import application.visualization.Visualization;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import application.visualization.animation.Animation;
+import application.visualization.animation.LinearAnimation;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
 import wrapper.datastructures.Array;
@@ -124,15 +120,26 @@ public class MatrixRender extends Render {
     }
 
     /**
-     * Draw an element.
+     * Draw an element. Style can be fetched using {@code e.getColor()}, or use {@code null} for the default color.
      * 
-     * @param value The value to print in this node.
-     * @param index The index of this element.
-     * @param style The style for this element.
-     */
+     * @param e The element to draw.
+     * @param style The style to use (null = default)
+    */
     private void drawElement (Element e, String style){
-        //Dispatch
-        drawNode(e.getValue() + "", this.getX(e), this.getY(e), getFillColor(style), ((ArrayElement) e).getIndex(), LOCAL_STATIONARY);
+        drawNode(e.getValue() + "", getX(e), getY(e), getFillColor(style), ((ArrayElement) e).getIndex(), LOCAL_STATIONARY);
+    }
+
+    /**
+     * Draw an element using the animation canvas. Style can be fetched using {@code e.getColor()}, or use {@code null} for the default color.
+     * 
+     * @param e The element to draw.
+     * @param x The absolute x-coordinate.
+     * @param y The absolute y-coordinate.
+     * @param style The style to use (null = default)
+     */
+    public void drawAnimatedElement(Element e, double x, double y, String style){
+        System.out.println("draw animted element!");
+        drawNode(e.getValue() + "", x, y, getFillColor(style), ((ArrayElement) e).getIndex(), SHARED_ANIMATED);
     }
 
     /*
@@ -195,29 +202,6 @@ public class MatrixRender extends Render {
         }
     }
 
-    @Override
-    public void animate (Element e, double x_end, double y_end){
-        Array struct = (Array) this.struct;
-        int index = struct.getElements().indexOf(e);
-        ArrayElement ae = (ArrayElement) struct.getElements().get(index);
-        double[][] points = generatePoints(getX(ae.getIndex()[0]), getY(0), x_end, y_end, 100);
-        Timeline tl = new Timeline();
-        tl.setCycleCount(100);
-        step = 0;
-        tl.getKeyFrames().add(new KeyFrame(Duration.millis(1500 / 100), new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle (ActionEvent actionEvent){
-                drawNode(ae.getValue() + "", points[0][step], points[1][step], getFillColor(ae.getColor()), ae.getIndex(), SHARED_ANIMATED);
-                step++;
-            }
-        }));
-        tl.setOnFinished(event -> {
-            System.out.println("done!");
-        });
-        tl.playFromStart();
-    }
-
     int step = 0;
 
     @Override
@@ -248,5 +232,11 @@ public class MatrixRender extends Render {
             y = getX(index[0]);
         }
         return y;
+    }
+
+    @Override
+    public void startAnimation (Element e, double x, double y){
+        Animation a = new LinearAnimation(this, e, y, y);
+        a.start();
     }
 }

@@ -45,7 +45,15 @@ public abstract class Render extends Pane {
 
     public abstract void render ();
 
-    public abstract void animate (Element e, double end_x, double end_y);
+    /**
+     * Draw an element using the animation canvas. Style can be fetched using {@code e.getColor()}, or use {@code null} for the default color.
+     * 
+     * @param e The element to draw.
+     * @param x The absolute x-coordinate.
+     * @param y The absolute y-coordinate.
+     * @param style The style to use (null = default)
+     */
+    public abstract void drawAnimatedElement(Element e, double x, double y, String style);
 
     /**
      * Get the fill color for the center. Returns white for style == null and black as default.
@@ -69,28 +77,22 @@ public abstract class Render extends Pane {
         }
     }
 
-    public double[][] generatePoints (double x1, double y1, double x2, double y2, int points){
-        double[][] ans = new double[2][points];
-        System.out.println("x1 = " + x1);
-        System.out.println("x2 = " + x2);
-        double xstep = (x2 - x1) / points;
-        double k = (y2 - y1) / (x2 - x1);
-        double m = y1 - k * x1;
-        double x = xstep;
-        for (int i = 0; i < points; i++) {
-            x += xstep;
-            ans[0][i] = x;
-            ans[1][i] = k * i + m;
-        }
-        System.out.println(Arrays.toString(ans[0]));
-        System.out.println(Arrays.toString(ans[1]));
-        return ans;
-    }
-
+    /**
+     * Returns the absolute x-coordinate of an element.
+     * @param e An element to resolve coordinates for.
+     * @return The absolute x-coordinate of the element.
+     */
     public abstract double getX (Element e);
 
+    /**
+     * Returns the absolute y-coordinate of an element.
+     * @param e An element to resolve coordinates for.
+     * @return The absolute y-coordinate of the element.
+     */
     public abstract double getY (Element e);
-
+    /**
+     * Order the Render to calculate it's preferred size. Should be shadowed by inheriting types.
+     */
     public void calculatePrefSize (){
         LOCAL_STATIONARY.getGraphicsContext2D().clearRect(0, 0, LOCAL_STATIONARY.getWidth(), LOCAL_STATIONARY.getHeight());
     }
@@ -144,4 +146,21 @@ public abstract class Render extends Pane {
             LOCAL_STATIONARY.setCursor(Cursor.HAND);
         });
     }
+    
+    /**
+     * Return the DataStructure held by this Render.
+     * @return The DataStructure held by this Render.
+     */
+    public DataStructure getDataStructur(){
+        return struct;
+    }
+
+    /**
+     * Start an animation of an element to a point.
+     * @param e The element to animate.
+     * @param x End point x-coordinate.
+     * @param y End point y-coordinate.
+     */
+    public abstract void startAnimation (Element e, double x, double y);
+
 }

@@ -2,7 +2,6 @@ package application.visualization.render2d;
 
 import java.util.List;
 
-import application.visualization.Visualization;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
@@ -181,7 +180,12 @@ public class BarRender extends Render {
     }
 
     @Override
-    public void animate (Element e, double end_x, double end_y){
+    public void drawAnimatedElement (Element e, double x, double y, String style){
+        // TODO Auto-generated method stub
+    }
+
+    @Override
+    public void startAnimation (Element e, double x, double y){
         // TODO Auto-generated method stub
         
     }

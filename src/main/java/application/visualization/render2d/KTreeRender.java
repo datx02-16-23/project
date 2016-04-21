@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import application.gui.Main;
-import application.visualization.Visualization;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -17,7 +16,6 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
-import wrapper.Operation;
 import wrapper.datastructures.Array.ArrayElement;
 
 /**
@@ -343,7 +341,13 @@ public class KTreeRender extends Render {
     }
 
     @Override
-    public void animate (Element e, double end_x, double end_y){
+    public void drawAnimatedElement (Element e, double x, double y, String style){
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void startAnimation (Element e, double x, double y){
         // TODO Auto-generated method stub
         
     }

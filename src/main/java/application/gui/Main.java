@@ -5,7 +5,6 @@ import application.assets.examples.Examples;
 import application.assets.examples.Examples.Algorithm;
 import application.gui.panels.OperationPanel;
 import application.gui.panels.SourcePanel;
-import application.model.*;
 import application.visualization.Visualization;
 import io.LogStreamManager;
 import javafx.application.Application;

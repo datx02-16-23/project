@@ -142,7 +142,7 @@ public class Visualization extends StackPane {
     }
 
     public void animate (Operation op){
-        if (op.operation == OperationType.read & op.operation == OperationType.write) {
+        if (op.operation == OperationType.read || op.operation == OperationType.write) {
             animateReadWrite((OP_ReadWrite) op);
         }
         else if (op.operation == OperationType.swap) {
@@ -156,6 +156,7 @@ public class Visualization extends StackPane {
         if (source == null || target == null) {
             return;
         }
+        System.out.println("animate rw: " + rw);
         Element src_e = null, tar_e = null;
         Render src_render = null, tar_render = null;
         /**
@@ -182,7 +183,7 @@ public class Visualization extends StackPane {
         /**
          * Start animations
          */
-        src_render.animate(src_e, tar_render.getX(tar_e), tar_render.getY(tar_e));
+        src_render.startAnimation(src_e, tar_render.getX(tar_e), tar_render.getY(tar_e));
     }
 
     /**
@@ -196,6 +197,7 @@ public class Visualization extends StackPane {
         if (var1 == null || var2 == null) {
             return;
         }
+        System.out.println("animate swap: " + swap);
         Element v1_e = null, v2_e = null;
         Render v1_render = null, v2_render = null;
         /**
@@ -223,8 +225,8 @@ public class Visualization extends StackPane {
         /**
          * Start animations
          */
-        v1_render.animate(v1_e, v2_render.getX(v2_e), v2_render.getY(v2_e));
-        v2_render.animate(v2_e, v2_render.getX(v1_e), v2_render.getY(v1_e));
+        v1_render.startAnimation(v1_e, v2_render.getX(v2_e), v2_render.getY(v2_e));
+        v2_render.startAnimation(v2_e, v2_render.getX(v1_e), v2_render.getY(v1_e));
     } //End animate swap
 
     public void clean (){
