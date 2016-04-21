@@ -40,7 +40,7 @@ public class Model {
      */
     public void clear (){
         index = 0;
-        step = new Step();
+        step.reset();
         operations.clear();
     }
 

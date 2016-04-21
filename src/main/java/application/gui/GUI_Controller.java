@@ -394,7 +394,7 @@ public class GUI_Controller implements CommunicatorListener {
     }
 
     private boolean always_clear_old = false;
-    private boolean always_keep_old   = false;
+    private boolean always_keep_old  = false;
 
     /**
      * Load the current data from LSM. Does not clear any data.
@@ -403,47 +403,10 @@ public class GUI_Controller implements CommunicatorListener {
         //Add operations to model and create Render visuals, then draw them.
         Map<String, DataStructure> oldStructs = model.getStructures();
         Map<String, DataStructure> newStructs = lsm.getDataStructures();
-        for (String newKey : newStructs.keySet()) {
-            for (String oldKey : oldStructs.keySet()) {
-                if (oldKey.equals(newKey)) {
-                    Main.console.force("ERROR: Data Structure identifier collision:");
-                    Main.console.force("Known structures: " + model.getStructures().values());
-                    Main.console.force("New structures: " + lsm.getDataStructures().values());
-                    if (always_clear_old) {
-                        Main.console.force("Known structures cleared.");
-                        clearButtonClicked();
-                    }
-                    else if (always_keep_old) {
-                        Main.console.force("New structures rejected.");
-                        return;
-                    }
-                    else {
-                        java.awt.Toolkit.getDefaultToolkit().beep();
-                        short routine = icd.show(oldStructs.values(), oldStructs.values());
-                        switch (routine) {
-                            //Clear old structures, import new
-                            case IdentifierCollisionDialog.ALWAYS_CLEAR_OLD:
-                                always_clear_old = true;
-                                clearButtonClicked();
-                                Main.console.force("Conflicting structures will overrwrite existing for this session.");
-                                break;
-                            case IdentifierCollisionDialog.CLEAR_OLD:
-                                clearButtonClicked();
-                                Main.console.force("Known structures cleared.");
-                                break;
-                            //Reject new structures
-                            case IdentifierCollisionDialog.ALWAYS_KEEP_OLD:
-                                always_keep_old = true;
-                                Main.console.force("Conflicting structures will be rejected for this session.");
-                                return;
-                            case IdentifierCollisionDialog.KEEP_OLD:
-                                Main.console.force("New structures rejected.");
-                                return;
-                        }
-                    }
-                }
-            }
+        if(checkCollision(oldStructs, newStructs) == false){
+            return;
         }
+        System.out.println("reading from lsm");
         oldStructs.putAll(newStructs);
         visualMenu.setDisable(newStructs.isEmpty());
         model.getOperations().addAll(lsm.getOperations());
@@ -454,6 +417,55 @@ public class GUI_Controller implements CommunicatorListener {
         operationPanel.getItems().addAll(lsm.getOperations());
         loadVisualMenu();
         updatePanels();
+    }
+
+    private boolean checkCollision (Map<String, DataStructure> oldStructs, Map<String, DataStructure> newStructs){
+        checkCollison: for (String newKey : newStructs.keySet()) {
+            for (String oldKey : oldStructs.keySet()) {
+                if (oldKey.equals(newKey)) {
+                    Main.console.force("ERROR: Data Structure identifier collision:");
+                    Main.console.force("Known structures: " + model.getStructures().values());
+                    Main.console.force("New structures: " + lsm.getDataStructures().values());
+                    if (always_clear_old) {
+                        Main.console.force("Known structures cleared.");
+                        clearButtonClicked();
+                        break checkCollison;
+                    }
+                    else if (always_keep_old) {
+                        Main.console.force("New structures rejected.");
+                        lsm.clearData();
+                        return false;
+                    }
+                    else {
+                        java.awt.Toolkit.getDefaultToolkit().beep();
+                        short routine = icd.show(oldStructs.values(), oldStructs.values());
+                        switch (routine) {
+                            //Clear old structures, import new
+                            case IdentifierCollisionDialog.ALWAYS_CLEAR_OLD:
+                                always_clear_old = true;
+                                clearButtonClicked();
+                                Main.console.force("Conflicting structures will overrwrite existing for this session.");
+                                break checkCollison;
+                            case IdentifierCollisionDialog.CLEAR_OLD:
+                                clearButtonClicked();
+                                Main.console.force("Known structures cleared.");
+                                break checkCollison;
+                            //Reject new structures
+                            case IdentifierCollisionDialog.ALWAYS_KEEP_OLD:
+                                always_keep_old = true;
+                                Main.console.force("Conflicting structures will be rejected for this session.");
+                                lsm.clearData();
+                                return false;
+                            case IdentifierCollisionDialog.KEEP_OLD:
+                                Main.console.force("New structures rejected.");
+                                lsm.clearData();
+                                return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     private void loadVisualMenu (){

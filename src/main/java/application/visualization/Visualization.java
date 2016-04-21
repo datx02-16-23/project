@@ -54,6 +54,8 @@ public class Visualization extends StackPane {
         System.out.println("create!");
         clear();
         int loc = 0;
+        System.out.println("RENDERS.getChildren().size() = " + RENDERS.getChildren().size());
+        System.out.println("model.getStructures().values() = " + model.getStructures().values());
         for (DataStructure struct : model.getStructures().values()) {
             if (struct.rawType == "independentElement") {
 //                Render render = new IndependentElementRender(struct);
@@ -115,7 +117,6 @@ public class Visualization extends StackPane {
      * Should be called whenever model is updated, does a complete rerender of the structures.
      */
     public void render (Operation op){
-//        System.out.println(RENDERS.getChildren().size());
         Render render;
         for (Object node : RENDERS.getChildren()) {
             render = (Render) node;
