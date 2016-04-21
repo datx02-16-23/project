@@ -5,9 +5,13 @@ from create_log import create_env,format_log
 from ast import parse,Assign,Name,Str
 from transformer import WriteTransformer,ReadTransformer,PassTransformer
 from json import dump
-from wrapper import w
 
+print "================ Python Annotations ================"
+print "Loading wrapper.py..."
+from wrapper import w
 currrent_path = path.dirname(path.abspath(__file__))
+print "Appending %s to sys.path" % currrent_path
+sys.path.insert(0,currrent_path)
 
 def load_logwriter(operations,output):
 	operations_read = None
@@ -21,6 +25,14 @@ def load_logwriter(operations,output):
 			node.value = Str(output)
 	return operations_parse.body
 
+def translate(rawType):
+	types = {
+		'list' : 'array'
+	}
+	if rawType in types:
+		return types[rawType]
+	else:
+		return rawType
 class Variable(object):
 	def __init__(self,name,rawType,attributes=None,abstractType=None):
 		self.name = name
@@ -56,13 +68,15 @@ def create_header(version,variables,files):
 		}
 	}
 
-# create_settings
-# root_directory - where program is located
-# files - what files should be visualized
-# variables - output what variables to observe during execution
-# main_file - main file to be executed
-# output - where to store the final LOG file
 def create_settings(root_directory, files, variables, main_file, output):
+	"""
+	create_settings
+		root_directory 	- root directory of program
+		files 			- files to be observed
+		variables 		- variables to be observed
+		main_file 		- main file of program
+		output 			- where to store LOG output
+	"""
 	settings = {
 		'rootdir' : root_directory,
 		'files' : files,
@@ -73,22 +87,38 @@ def create_settings(root_directory, files, variables, main_file, output):
 	return settings
 
 def run(settings):
-	# additional currently non-user settings
+	"""
+	run
+		settings - 	takes a settings dictionary,
+					can be correctly formatted by calling create_settings
+					with valid parameters
+	"""
+	print "Loading operations.py..."
 	settings['operations'] = load_logwriter(currrent_path+'/operations.py',settings['output'])
+	
+	print "Loading Transformers (parsers)..."
 	settings['transformers'] = [PassTransformer('link'), WriteTransformer('write'), ReadTransformer('read')]
 	settings['v_env'] = '%s/visualize/' % currrent_path
 	settings['main'] = settings['v_env'] + settings['main']
-	# create visulization environment
+
+	print "Creating temporary visualization environment & adding to sys.path at:\n%s" % settings['v_env']
+	sys.path.insert(0,settings['v_env'])
 	create_env(settings)
-	# run userprogram in visualization environment
+	
+	print "Creating Header..."
 	files = [settings['rootdir']+'/'+f for f in settings['files']]
 	header = create_header(2.0,settings['observe'],files)
 	if w is not None:
+		print "Sending header to LogStreamManager"
 		w.send(header)
+	
+	print "Creating/Overwriting output file at:%s" % settings['output']
 	open(settings['output'],'w').close()
+	
+	print "Running main file:\n%s" % settings['main']
 	execfile(settings['main'],globals())
 
-	# create a valid json output file from buffer
+	print "Formatting json buffer from output..."
 	output_buffer = format_log(settings['output'])
 	with open(settings['output'],'w+') as f:
 		final_output = {
@@ -97,4 +127,7 @@ def run(settings):
 		}
 		dump(final_output,f)
 
-	system('rm -rf %s/visualize' % currrent_path)
+	print "Removing visualization environment..."
+	system('rm -rf %s' % settings['v_env'])
+
+	print "Done! Output stored at:\n%s" % settings['output']
