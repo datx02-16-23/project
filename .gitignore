@@ -46,7 +46,6 @@ hs_err_pid*
 .idea/mongoSettings.xml
 
 .idea/
-libs/
 *.iml
 
 ## File-based project format:
