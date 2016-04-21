@@ -2,6 +2,8 @@ package multiset;
 
 import multiset.ArithmeticOperations.iArithmeticOperation;
 
+import java.util.Map;
+
 /**
  * Created by cb on 21/04/16.
  */
@@ -17,7 +19,7 @@ public class Node implements iMember {
     }
 
     @Override
-    public double getValue(int v1, int v2) {
-        return op.evaluate(m1.getValue(v1, v2), m2.getValue(v1, v2));
+    public double getValue(Map<String, Double> variables) {
+        return op.evaluate(m1.getValue(variables), m2.getValue(variables));
     }
 }
