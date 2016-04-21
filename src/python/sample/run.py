@@ -1,10 +1,13 @@
 # This file executes the different modules, resulting in a output.json file
+import sys
 from os import path,system
 from create_log import create_env,format_log
 from ast import parse,Assign,Name,Str
 from transformer import WriteTransformer,ReadTransformer,PassTransformer
 from json import dump
 from wrapper import w
+
+currrent_path = path.dirname(path.abspath(__file__))
 
 def load_logwriter(operations,output):
 	operations_read = None
@@ -63,20 +66,18 @@ def create_settings(root_directory, files, variables, main_file, output):
 	settings = {
 		'rootdir' : root_directory,
 		'files' : files,
-		'observe' : variables,
-		'main' : v_env+main_file,
-		'output' : output,
-		'v_env' : v_env,
-		'operations' : operations,
-		'transformers' : transformers
+		'observe' : variables if isinstance(variables,list) else [variables],
+		'main' : main_file,
+		'output' : output
 	}
 	return settings
 
 def run(settings):
 	# additional currently non-user settings
-	settings['operations'] = load_logwriter('operations.py',output)
+	settings['operations'] = load_logwriter(currrent_path+'/operations.py',settings['output'])
 	settings['transformers'] = [PassTransformer('link'), WriteTransformer('write'), ReadTransformer('read')]
-	settings['v_env'] = '%svisualize/' % settings['rootdir']
+	settings['v_env'] = '%s/visualize/' % currrent_path
+	settings['main'] = settings['v_env'] + settings['main']
 	# create visulization environment
 	create_env(settings)
 	# run userprogram in visualization environment
@@ -95,5 +96,5 @@ def run(settings):
 			'body' : output_buffer
 		}
 		dump(final_output,f)
-	# right now run cleanup script until a better solution is found
-	system('sh cleanup.sh')
+
+	system('rm -rf %s/visualize' % currrent_path)
