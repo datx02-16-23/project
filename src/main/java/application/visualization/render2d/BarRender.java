@@ -67,7 +67,7 @@ public class BarRender extends Render {
      * Create and render all elements.
      */
     private void init (){
-        calculatePrefSize();
+        calculateSize();
         GraphicsContext context = local_canvas.getGraphicsContext2D();
         context.clearRect(0, 0, WIDTH, HEIGHT);
         context.setFill(COLOR_BLACK);
@@ -79,9 +79,9 @@ public class BarRender extends Render {
     }
 
     @Override
-    public void calculatePrefSize (){
+    public void calculateSize (){
         //TODO
-        super.calculatePrefSize();
+        super.calculateSize();
         WIDTH = padding * 2 + (hspace + node_width) * struct.getElements().size();
         HEIGHT = 500;
         this.setPrefSize(WIDTH, HEIGHT);

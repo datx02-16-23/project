@@ -65,6 +65,7 @@ public class MatrixRender extends Render {
             List<Element> resetElements = struct.getResetElements();
             for (Element e : struct.getElements()) {
                 if (modifiedElements.contains(e)) {
+                    System.out.println(e.getColor());
                     drawElement(e, e.getColor());
                 }
                 else if (resetElements.contains(e)) {
@@ -82,7 +83,7 @@ public class MatrixRender extends Render {
     private void init (){
         Array a = (Array) struct;
         size = a.getCapacity() == null ? new int[] {struct.getElements().size(), 1} : a.getCapacity();
-        calculatePrefSize();
+        calculateSize();
         GraphicsContext context = local_canvas.getGraphicsContext2D();
         context.clearRect(0, 0, this.WIDTH, this.HEIGHT);
         context.setFill(COLOR_BLACK);
@@ -101,15 +102,17 @@ public class MatrixRender extends Render {
     }
 
     @Override
-    public void calculatePrefSize (){
-        super.calculatePrefSize();
+    public void calculateSize (){
+        super.calculateSize();
         if (mo == Order.ROW_MAJOR) {
             WIDTH = PADDING * 2 + vspace + (vspace + node_width) * size[0];
             HEIGHT = PADDING * 2 + hspace + (hspace + node_height) * size[1];
+            this.setMaxHeight(HEIGHT);
         }
         else {
             WIDTH = PADDING * 2 + vspace + (vspace + node_width) * size[1];
             HEIGHT = PADDING * 2 + hspace + (hspace + node_height) * size[0];
+            this.setMaxWidth(WIDTH);
         }
         this.setPrefSize(WIDTH, HEIGHT);
     }

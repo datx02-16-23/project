@@ -59,20 +59,22 @@ public class Step {
                     identifier = locator.getIdentifier();
                     struct = structs.get(identifier);
                     if (struct == null) {
-                        Main.console.err("WARNING: Undeclared variable \"" + identifier + "\". " + op + " aborted.");
-                        break;
+                        Main.console.err("WARNING: Undeclared variable \"" + identifier + "\" in " + op);
+//                        break;
+                    } else {
+                        struct.applyOperation(op);                        
                     }
-                    struct.applyOperation(op);
                 }
                 locator = ((Locator) op.operationBody.get(Key.target));
                 if (locator != null) {
                     identifier = locator.getIdentifier();
                     struct = structs.get(identifier);
                     if (struct == null) {
-                        Main.console.err("WARNING: Undeclared variable \"" + identifier + "\". " + op + " aborted.");
-                        break;
+                        Main.console.err("WARNING: Undeclared variable \"" + identifier + "\" in " + op);
+//                        break;
+                    } else {
+                        struct.applyOperation(op);                        
                     }
-                    struct.applyOperation(op);
                 }
                 break;
             case swap:

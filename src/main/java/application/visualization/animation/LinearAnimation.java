@@ -1,5 +1,7 @@
 package application.visualization.animation;
 
+import java.util.Arrays;
+
 import application.visualization.render2d.Render;
 import javafx.animation.KeyFrame;
 import javafx.util.Duration;
@@ -13,14 +15,12 @@ import wrapper.datastructures.Element;
  */
 public class LinearAnimation extends Animation {
 
-    private final double points[][];
+    private double points[][];
 
     public LinearAnimation (Render owner, Element e, double end_x, double end_y){
         super(owner, e);
-        double bx = owner.getCanvas().getTranslateX() + owner.getLayoutX();
-        double by = owner.getCanvas().getTranslateY() + owner.getLayoutY();
-        points = linearAnimationPath(bx + owner.getX(e), by + owner.getY(e), end_x, end_y, frame_count, 0.3);
-        KeyFrame keyframe = new KeyFrame(Duration.millis((ANIMATION_TIME / frame_count)*0.5), event -> {
+        points = linearAnimationPath(Render.getAbsoluteX(owner, e), Render.getAbsoluteY(owner, e), end_x, end_y, frame_count, 0.3);
+        KeyFrame keyframe = new KeyFrame(Duration.millis((ANIMATION_TIME / frame_count) * 0.5), event -> {
             owner.clearAnimatedElement(e, points[0][frame - 1], points[1][frame - 1]);
             owner.drawAnimatedElement(e, points[0][frame], points[1][frame], e.getColor());
             frame++;

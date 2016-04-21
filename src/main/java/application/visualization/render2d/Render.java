@@ -18,7 +18,7 @@ public abstract class Render extends Pane {
     protected double              WIDTH, HEIGHT;
     protected final DataStructure struct;
     protected int                 elementsPreviousRender = 0;
-    protected final Canvas        local_canvas       = new Canvas();
+    protected final Canvas        local_canvas           = new Canvas();
     protected static final Canvas SHARED_ANIMATED        = Visualization.instance().ANIMATED;
     protected static final Color  COLOR_READ             = Color.valueOf(Element.COLOR_READ);
     protected static final Color  COLOR_WRITE            = Color.valueOf(Element.COLOR_WRITE);
@@ -65,7 +65,7 @@ public abstract class Render extends Pane {
      * @param y The y-coordinate to clear.
      */
     public void clearAnimatedElement (Element e, double x, double y){
-        SHARED_ANIMATED.getGraphicsContext2D().clearRect(x - 4, y - 4, node_width + 8, node_height + 8);
+        SHARED_ANIMATED.getGraphicsContext2D().clearRect(x - 2, y - 2, node_width + 4, node_height + 4);
     }
 
     /**
@@ -109,7 +109,7 @@ public abstract class Render extends Pane {
     /**
      * Order the Render to calculate it's preferred size. Should be shadowed by inheriting types.
      */
-    public void calculatePrefSize (){
+    public void calculateSize (){
         local_canvas.getGraphicsContext2D().clearRect(0, 0, local_canvas.getWidth(), local_canvas.getHeight());
     }
 
@@ -125,7 +125,7 @@ public abstract class Render extends Pane {
         /*
          * Zoom
          */
-        local_canvas.setOnScroll(event -> {
+        this.setOnScroll(event -> {
             sign = event.getDeltaY() > 0 ? 1 : -1;
             scale = scale + sign * 0.1;
             if (scale < 0.1) {
@@ -136,30 +136,30 @@ public abstract class Render extends Pane {
                 scale = 2;
                 return;
             }
-            local_canvas.setScaleX(scale);
-            local_canvas.setScaleY(scale);
+            this.setScaleX(scale);
+            this.setScaleY(scale);
         });
         /*
          * Drag
          */
         // Record a delta distance for the drag and drop operation.
-        local_canvas.setOnMousePressed(event -> {
-            transX = local_canvas.getTranslateX() - event.getSceneX();
-            transY = local_canvas.getTranslateY() - event.getSceneY();
-            local_canvas.setCursor(Cursor.MOVE);
+        this.setOnMousePressed(event -> {
+            transX = this.getTranslateX() - event.getSceneX();
+            transY = this.getTranslateY() - event.getSceneY();
+            this.setCursor(Cursor.MOVE);
         });
         // Restore cursor
-        local_canvas.setOnMouseReleased(event -> {
-            local_canvas.setCursor(Cursor.HAND);
+        this.setOnMouseReleased(event -> {
+            this.setCursor(Cursor.HAND);
         });
         // Translate canvases
-        local_canvas.setOnMouseDragged(event -> {
-            local_canvas.setTranslateX(event.getSceneX() + transX);
-            local_canvas.setTranslateY(event.getSceneY() + transY);
+        this.setOnMouseDragged(event -> {
+            this.setTranslateX(event.getSceneX() + transX);
+            this.setTranslateY(event.getSceneY() + transY);
         });
         // Set cursor
-        local_canvas.setOnMouseEntered(event -> {
-            local_canvas.setCursor(Cursor.HAND);
+        this.setOnMouseEntered(event -> {
+            this.setCursor(Cursor.HAND);
         });
     }
 
@@ -181,32 +181,35 @@ public abstract class Render extends Pane {
      */
     public abstract void startAnimation (Element e, double x, double y);
 
-    /**
-     * Returns the Canvas for this Render.
-     * @return The Canvas for this Render.
-     */
-    public Canvas getCanvas(){
-        return local_canvas;
-    }
+//    /**
+//     * Returns the Canvas for this Render.
+//     * 
+//     * @return The Canvas for this Render.
+//     */
+//    public Canvas getCanvas (){
+//        return local_canvas;
+//    }
     /**
      * Returns the absolute x-coordinate for the element e.
+     * 
      * @param owner The owner of the element.
      * @param e An element in owner.
      * @return The absolute x-coordinates of e.
      */
-    public static double getAbsoluteX(Render owner, Element e){
-        double bx = owner.getCanvas().getTranslateX() + owner.getLayoutX();
+    public static double getAbsoluteX (Render owner, Element e){
+        double bx = owner.getTranslateX() + owner.getLayoutX();
         return owner.getX(e) + bx;
     }
-    
+
     /**
      * Returns the absolute y-coordinate for the element e.
+     * 
      * @param owner The owner of the element.
      * @param e An element in owner.
      * @return The absolute y-coordinates of e.
      */
-    public static double getAbsoluteY(Render owner, Element e){
-        double by = owner.getCanvas().getTranslateY() + owner.getLayoutY();
+    public static double getAbsoluteY (Render owner, Element e){
+        double by = owner.getTranslateY() + owner.getLayoutY();
         return owner.getY(e) + by;
     }
 }

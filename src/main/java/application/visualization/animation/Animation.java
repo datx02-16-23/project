@@ -107,6 +107,8 @@ public abstract class Animation {
      * @return An array with the x-coordinate for step i at ans[0][i] and the y-coordinte at ans[1][i].
      */
     public double[][] linearAnimationPath (double x1, double y1, double x2, double y2, int frame_count, double restframes){
+        System.out.println("p1 = (" + x1 + ", " + y1 +")");
+        System.out.println("p2 = (" + x2 + ", " + y2 +")");
         int resting_frames = (int) (frame_count * restframes);
         double[][] ans = new double[2][frame_count + 2];
         double lasty;
@@ -135,6 +137,7 @@ public abstract class Animation {
                 ans[1][i] = y;
             }
         }
+        //Create rest points
         for (; i < ans[0].length; i++) {
             ans[0][i] = x;
             ans[1][i] = lasty;

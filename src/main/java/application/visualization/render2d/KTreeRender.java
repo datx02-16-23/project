@@ -6,17 +6,12 @@ import java.util.List;
 import application.gui.Main;
 import application.visualization.animation.Animation;
 import application.visualization.animation.LinearAnimation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
 import wrapper.datastructures.Array.ArrayElement;
@@ -93,20 +88,13 @@ public class KTreeRender extends Render {
             List<Element> resetElements = struct.getResetElements();
             ArrayElement ae;
             for (Element e : struct.getElements()) {
-                if (animatedElements.contains(e)) {
-                    continue; //Animated elements are handled seperately.
-                }
                 ae = (ArrayElement) e;
                 if (modifiedElements.contains(e)) {
-                    drawElement(e, ae.getIndex()[0], e.getColor());
+                    drawElement(ae, ae.getIndex()[0], e.getColor());
                 }
                 else if (resetElements.contains(e)) {
-                    drawElement(e, ae.getIndex()[0], null);
+                    drawElement(ae, ae.getIndex()[0], null);
                 }
-            }
-            int i = struct.getElements().size();
-            for (; i < completedSize; i++) {
-                drawElement(null, i, "spooky zombie");
             }
         }
         struct.elementsDrawn();
@@ -126,12 +114,12 @@ public class KTreeRender extends Render {
         totDepth--;
         this.completedSize = lowerLevelSums.get(totDepth + 1);
         totBreadth = K_pow(totDepth);
-        calculatePrefSize();
+        calculateSize();
     }
 
     @Override
-    public void calculatePrefSize (){
-        super.calculatePrefSize();
+    public void calculateSize (){
+        super.calculateSize();
         this.WIDTH = totBreadth * (node_width + hspace);
         this.HEIGHT = totDepth * (node_height + vspace) * 2 + vspace; //Depth doesnt include node + margain above.
         this.setPrefSize(WIDTH, HEIGHT);
@@ -148,12 +136,15 @@ public class KTreeRender extends Render {
         context.fillText(struct.toString(), hspace, vspace + 10);
         for (Element e : struct.getElements()) {
             ArrayElement ae = (ArrayElement) e;
-            drawElement(e, ae.getIndex()[0], null);
+            drawElement(ae, ae.getIndex()[0], null);
         }
         int i = struct.getElements().size();
         for (; i < completedSize; i++) {
-            drawElement(null, i, "spooky zombie"); //Draw zombies. String will evaluate to black fill.
+            ArrayElement ae = new ArrayElement(Double.NaN, new int[]{i});
+            struct.getInactiveElements().add(ae);
+            drawElement(ae, i, "spooky zombie"); //Draw zombies. String will evaluate to black fill.
         }
+        drawConnectors();
     }
 
     private double getX (int breadth, int depth){
@@ -186,23 +177,10 @@ public class KTreeRender extends Render {
      */
     //private void drawElement (String value, int index, String style){
     private void drawElement (Element e, int index, String style){
-        int breadth, depth;
-        double x, y;
-        if (index == 0) { //Root element
-            double p = K_pow(totDepth) / 2;
-            x = hspace + (hspace + node_width) * (p) - ((K + 1) % 2) * (node_width + hspace) / 2;
-            y = vspace;
-            breadth = 0;
-            depth = 0;
-        }
-        else {
-            depth = getDepth(index);
-            breadth = getBreadth(index, depth);
-            y = getY(depth);
-            x = getX(breadth, depth);
-        }
+        double x = getX(e);
+        double y = getY(e);
         //Dispatch
-        drawNode(e == null ? "" : e.getValue() + "", x, y, getFillColor(style), depth, breadth, index, local_canvas);
+        drawNode(e == null ? "" : e.getValue() + "", x, y, getFillColor(style), local_canvas);
     }
 
     private int getDepth (int index){
@@ -230,16 +208,13 @@ public class KTreeRender extends Render {
      * @param fill The fill color of this node.
      * @param lastRow If {@code true}, no child connection lines are drawn.
      */
-    private void drawNode (String value, double x, double y, Color fill, int depth, int breadth, int index, Canvas c){
+    private void drawNode (String value, double x, double y, Color fill, Canvas c){
         GraphicsContext context = c.getGraphicsContext2D();
         context.setFill(fill);
         context.fillOval(x, y, node_width, node_height);
         //Outline, text, children
         context.setFill(COLOR_BLACK);
         context.setStroke(COLOR_BLACK);
-        if (index == 0) { //Mark root
-            context.fillOval(x + node_width / 2 - (node_height / 2) / 2, y - node_height / 2, node_height / 2, node_height / 2);
-        }
         //Value
         context.strokeOval(x, y, node_width, node_height);
         final Text text = new Text(value);
@@ -250,19 +225,36 @@ public class KTreeRender extends Render {
         context.fillText(value, x + node_width / 2 - tw / 2, y + node_height / 2);
         //Index
         context.strokeOval(x, y, node_width, node_height);
-        context.fillText("[" + index + "]", x + node_width + 4, y + node_height / 4);
-        //Connect to children
-        if (depth == totDepth) {
-            return; //Don't connect bottom level
-        }
-        //Origin is always the same.
-        x = x + node_width / 2;
-        y = y + node_height;
+    }
+
+    private void drawConnectors (){
+        GraphicsContext gc = local_canvas.getGraphicsContext2D();
+        ArrayElement ae;
+        double x, y;
+        int index;
+        int depth;
         double xOffset = node_width / 2;
-        double childY = getY(depth + 1);
-        //Stroke lines to all children
-        for (int child = 0; child < K; child++) {
-            context.strokeLine(x, y, getX(getBreadth(K * index + 1 + child, depth + 1), depth + 1) + xOffset, childY);
+        for (int i = 0; i < struct.getElements().size(); i++) {
+            gc.setStroke(Color.BLACK);
+            ae = (ArrayElement) struct.getElements().get(i);
+            index = ae.getIndex()[0];
+            depth = this.getDepth(index);
+            x = getX(ae);
+            y = getY(ae);
+            if (index == 0) { //Mark root
+                gc.fillOval(x + node_width / 2 - (node_height / 2) / 2, y - node_height / 2, node_height / 2, node_height / 2);
+            }
+            if (depth == totDepth) {
+                return;
+            }
+            gc.fillText("[" + index + "]", x + node_width + 4, y + node_height / 4);
+            x = x + node_width / 2;
+            y = y + node_height;
+            double childY = getY(depth + 1);
+            //Stroke lines to all children
+            for (int child = 0; child < K; child++) {
+                gc.strokeLine(x, y, getX(getBreadth(K * index + 1 + child, depth + 1), depth + 1) + xOffset, childY);
+            }
         }
     }
 
@@ -294,42 +286,6 @@ public class KTreeRender extends Render {
             lowerLevelSums.add(sum);
         }
         return lowerLevelSums.get(targetDepth);
-    }
-
-    private final ArrayList<Element> animatedElements = new ArrayList<Element>();
-
-    /**
-     * Animate a swap between {@code var1} and {@code var2}.
-     * 
-     * @param var1 The first variable to animate.
-     * @param var2 The second variable to animate.
-     * @param millis Total animation time.
-     */
-    public void animateSwap (Element var1, Element var2, double millis){
-        animatedElements.add(var1);
-        animatedElements.add(var2);
-        int frames = 100;
-        Timeline timeline = new Timeline();
-        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(millis / frames), new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle (ActionEvent actionEvent){
-//                KTreeRender.this.drawNode(var, x, y, fill, depth, breadth, index);
-//                KTreeRender.this.drawNode(value, x, y, fill, depth, breadth, index);
-            }
-        }));
-        timeline.play();
-    }
-
-    /**
-     * Animate a read or write from {@code source} to {@code target}.
-     * 
-     * @param source The first variable to animate.
-     * @param target The second variable to animate.
-     * @param millis Total animation time.
-     */
-    public void animateReadWrite (Element source, Element target, double millis){
-        Main.console.err("animateReadWrite () has not been implemented.");
     }
 
     @Override
@@ -370,9 +326,7 @@ public class KTreeRender extends Render {
     @Override
     public void drawAnimatedElement (Element e, double x, double y, String style){
         int index = ((ArrayElement) e).getIndex()[0];
-        int depth = this.getDepth(index);
-        int breadth = this.getBreadth(index, depth);
-        this.drawNode(e.getValue()+"", getX(e), getY(e), super.getFillColor(e.getColor()), depth, breadth, index, SHARED_ANIMATED);
+        this.drawNode(e.getValue() + "", getX(e), getY(e), super.getFillColor(e.getColor()), SHARED_ANIMATED);
     }
 
     public void startAnimation (Element e, double x, double y){

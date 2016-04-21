@@ -10,7 +10,6 @@ import application.visualization.render2d.MatrixRender.Order;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import wrapper.Locator;
 import wrapper.Operation;
 import wrapper.datastructures.DataStructure;
@@ -100,13 +99,13 @@ public class Visualization extends StackPane {
         outer: for (int attempt = 1; attempt < 3; attempt++) {
             switch (visual) {
                 case "bar":
-                    render = new BarRender(struct, 50, 1, 5, 25);
+                    render = new BarRender(struct, 40, 1, 5, 25);
                     break outer;
                 case "box":
-                    render = new MatrixRender(struct, Order.COLUMN_MAJOR, 50, 50, 50, 0);
+                    render = new MatrixRender(struct, Order.COLUMN_MAJOR, 40, 40, 0, 0);
                     break outer;
                 case "tree":
-                    render = new KTreeRender(struct, struct.visualOptions, 50, 50, 20, 10);
+                    render = new KTreeRender(struct, struct.visualOptions, 40, 40, 0, 10);
                     break outer;
                 default:
                     /*
@@ -198,10 +197,12 @@ public class Visualization extends StackPane {
             src_render.startAnimation(src_e, Render.getAbsoluteX(tar_render, tar_e), Render.getAbsoluteY(tar_render, tar_e));
         }
         else if (src_e != null && tar_e == null) {
+            System.out.println("no target");
             //Render read without target
             src_render.startAnimation(src_e, Render.getAbsoluteX(src_render, src_e), Render.getAbsoluteY(src_render, src_e) - 50);
         }
         else if (src_e == null && tar_e != null) {
+            System.out.println("no source");
             //Render write without source
             tar_render.startAnimation(tar_e, Render.getAbsoluteX(tar_render, tar_e), Render.getAbsoluteY(tar_render, tar_e) + 50);
         }

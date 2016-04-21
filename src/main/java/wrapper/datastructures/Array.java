@@ -147,8 +147,11 @@ public class Array extends DataStructure {
         }
         //Manage write
         ArrayElement targetElement = this.getElement(op.getTarget());
+        ArrayElement sourceElement = this.getElement(op.getSource());
+        System.out.println(targetElement);
         double[] value = op.getValue();
         if (targetElement != null) {
+            System.out.println("writw!");
             if (value != null) {
                 targetElement.value = op.getValue()[0];
                 targetElement.color = Element.COLOR_WRITE;
@@ -159,8 +162,7 @@ public class Array extends DataStructure {
             }
         }
         //Manage read
-        ArrayElement sourceElement = this.getElement(op.getSource());
-        if (sourceElement != null) {
+        else if (sourceElement != null) {
             sourceElement.color = Element.COLOR_READ;
             modifiedElements.add(sourceElement);
         }
