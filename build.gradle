@@ -13,6 +13,7 @@ repositories {
 dependencies {
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'org.jgroups:jgroups:3.6.8.Final'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 
