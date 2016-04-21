@@ -29,5 +29,6 @@ public class LinearAnimation extends Animation {
           System.out.println("frame!");
         });
         keyframes.add(keyframe);
+        timeline.playFromStart();
     }
 }

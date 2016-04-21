@@ -43,9 +43,9 @@ public abstract class Animation {
      * Start the animation from the beginning.
      */
     public void start (){
-        frame = 0;
-        timeline.playFromStart();
-        System.out.println("\nSTART: keyframes.size() = " + keyframes.size());
+//        frame = 0;
+//        timeline.playFromStart();
+//        System.out.println("\nSTART: keyframes.size() = " + keyframes.size());
     }
 
     /**
