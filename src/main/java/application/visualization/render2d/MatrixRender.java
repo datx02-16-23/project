@@ -17,7 +17,6 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
-import wrapper.Operation;
 import wrapper.datastructures.Array;
 import wrapper.datastructures.Array.ArrayElement;
 
@@ -242,4 +241,16 @@ public class MatrixRender extends Render {
     }
 
     int step = 0;
+
+    @Override
+    public double getX (Element e){
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double getY (Element e){
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }

@@ -10,7 +10,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
-import wrapper.Operation;
 import wrapper.datastructures.Array.ArrayElement;
 
 public class BarRender extends Render {
@@ -172,5 +171,17 @@ public class BarRender extends Render {
     @Override
     public void animate (Element e, int targetX, int targetT){
         // TODO Auto-generated method stub
+    }
+
+    @Override
+    public double getX (Element e){
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double getY (Element e){
+        // TODO Auto-generated method stub
+        return 0;
     }
 }

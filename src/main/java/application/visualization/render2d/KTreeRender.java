@@ -334,4 +334,16 @@ public class KTreeRender extends Render {
     public void animate (Element e, int targetX, int targetT){
         // TODO Auto-generated method stub
     }
+
+    @Override
+    public double getX (Element e){
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public double getY (Element e){
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }

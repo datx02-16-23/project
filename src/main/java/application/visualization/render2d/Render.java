@@ -93,6 +93,9 @@ public abstract class Render extends Pane {
         return ans;
     }
     
+    public abstract double getX(Element e);
+    public abstract double getY(Element e);
+    
     public void calculatePrefSize(){
         local.getGraphicsContext2D().clearRect(0, 0, local.getWidth(), local.getHeight());
     }
