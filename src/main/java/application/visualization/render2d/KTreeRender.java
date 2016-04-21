@@ -140,7 +140,7 @@ public class KTreeRender extends Render {
         }
         int i = struct.getElements().size();
         for (; i < completedSize; i++) {
-            ArrayElement ae = new ArrayElement(Double.NaN, new int[]{i});
+            ArrayElement ae = new ArrayElement(Double.NaN, new int[] {i});
             struct.getInactiveElements().add(ae);
             drawElement(ae, i, "spooky zombie"); //Draw zombies. String will evaluate to black fill.
         }
@@ -325,10 +325,10 @@ public class KTreeRender extends Render {
 
     @Override
     public void drawAnimatedElement (Element e, double x, double y, String style){
-        int index = ((ArrayElement) e).getIndex()[0];
-        this.drawNode(e.getValue() + "", getX(e), getY(e), super.getFillColor(e.getColor()), SHARED_ANIMATED);
+        drawNode(e.getValue() + "", x, y, super.getFillColor(e.getColor()), SHARED_ANIMATED);
     }
 
+    @Override
     public void startAnimation (Element e, double x, double y){
         Animation a = new LinearAnimation(this, e, x, y);
         a.start();

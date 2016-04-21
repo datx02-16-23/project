@@ -417,6 +417,7 @@ public class GUI_Controller implements CommunicatorListener {
             return;
         }
         oldStructs.putAll(newStructs);
+        visualMenu.getItems().clear();
         visualMenu.setDisable(newStructs.isEmpty());
         model.getOperations().addAll(lsm.getOperations());
         sourceViewer.addSources(lsm.getSources());

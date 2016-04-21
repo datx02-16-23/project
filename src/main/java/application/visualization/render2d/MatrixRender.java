@@ -75,7 +75,6 @@ public class MatrixRender extends Render {
         }
         struct.elementsDrawn();
     }
-    
 
     /**
      * Create and render all elements.
@@ -133,19 +132,6 @@ public class MatrixRender extends Render {
      */
     private void drawElement (Element e, String style){
         drawNode(e.getValue() + "", getX(e), getY(e), getFillColor(style), ((ArrayElement) e).getIndex(), local_canvas);
-    }
-
-    /**
-     * Draw an element using the animation canvas. Style can be fetched using {@code e.getColor()}, or use {@code null}
-     * for the default color.
-     * 
-     * @param e The element to draw.
-     * @param x The absolute x-coordinate.
-     * @param y The absolute y-coordinate.
-     * @param style The style to use (null = default)
-     */
-    public void drawAnimatedElement (Element e, double x, double y, String style){
-        drawNode(e.getValue() + "", x, y, getFillColor(style), ((ArrayElement) e).getIndex(), SHARED_ANIMATED);
     }
 
     /*
@@ -238,6 +224,11 @@ public class MatrixRender extends Render {
             y = getX(index[0]);
         }
         return y;
+    }
+
+    @Override
+    public void drawAnimatedElement (Element e, double x, double y, String style){
+        drawNode(e.getValue() + "", x, y, getFillColor(style), ((ArrayElement) e).getIndex(), SHARED_ANIMATED);
     }
 
     @Override
