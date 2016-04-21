@@ -4,7 +4,7 @@ from os.path import abspath
 
 if __name__ == '__main__':
 	# API for create_settings and Variable needed
-	# to create LOG
+	# to create LOG.
 	#
 	# annotations.create_settings Parameters
 	#	root_directory, - root directory of program
