@@ -2,6 +2,8 @@ package multiset;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by cb on 21/04/16.
@@ -16,35 +18,23 @@ public class Expression {
 
     /**
      * The method to be called when a collision occurs
-     * @param v1
-     * @param v2
+     * @param variables
+     * @param variables
      */
-    public List<Integer> apply(int v1, int v2){
+    public Set<String> apply(Map<String, Double> variables){
 
-        if(conditional.evaluate(v1, v2)){
-            return result(v1, v2);
-        } else if(conditional.evaluate(v2, v1)){
-            return result(v2, v1);
+        if(conditional.evaluate(variables)){
+            return result(variables);
+        } else if(conditional.evaluate(variables)){
+            return result(variables);
         }
 
         //If no match we return both elements
-        return toList(v1, v2);
+        return variables.keySet();
     }
 
-    private List<Integer> result(int v1, int v2){
-        return toList(v1, v2);
+    private Set<String> result(Map<String, Double> variables){
+        return variables.keySet();
     }
 
-    /**
-     * Helper class to quickly create a list out of two variables
-     * @param v1
-     * @param v2
-     * @return
-     */
-    private List<Integer> toList(int v1, int v2){
-        List<Integer> l = new ArrayList<>(2);
-        l.add(v1);
-        l.add(v2);
-        return l;
-    }
 }

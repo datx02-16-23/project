@@ -1,6 +1,9 @@
 package multiset;
 
-import multiset.Conditional.BooleanOperations.iBooleanComparison;
+
+import multiset.BooleanOperations.iBooleanComparison;
+
+import java.util.Map;
 
 /**
  * Created by cb on 21/04/16.
@@ -16,11 +19,11 @@ public class Root {
         this.m2 = m2;
     }
 
-    public boolean evaluate(int v1, int v2){
+    public boolean evaluate(Map<String, Double> variables){
         //Calculate value of left hand side
-        double lhs = m1.getValue(v1, v2);
+        double lhs = m1.getValue(variables);
         //Calculate value of right hand side
-        double rhs = m2.getValue(v1, v2);
+        double rhs = m2.getValue(variables);
         return op.evaluate(lhs, rhs);
     }
 
