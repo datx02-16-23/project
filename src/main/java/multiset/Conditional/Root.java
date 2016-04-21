@@ -4,11 +4,11 @@ package multiset.Conditional;
  * Created by cb on 21/04/16.
  */
 public class Root {
-    BooleanOperation op;
-    Member m1;
-    Member m2;
+    iBooleanComparison op;
+    iMember m1;
+    iMember m2;
 
-    public Root(Member m1, Member m2, BooleanOperation op){
+    public Root(iMember m1, iMember m2, iBooleanComparison op){
         this.op = op;
         this.m1 = m1;
         this.m2 = m2;
