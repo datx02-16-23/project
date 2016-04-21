@@ -1,5 +1,7 @@
 package multiset.Conditional;
 
+import multiset.Conditional.BooleanOperations.iBooleanComparison;
+
 /**
  * Created by cb on 21/04/16.
  */

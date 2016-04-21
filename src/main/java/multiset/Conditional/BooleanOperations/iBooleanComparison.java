@@ -1,4 +1,4 @@
-package multiset.Conditional;
+package multiset.Conditional.BooleanOperations;
 
 /**
  * Created by cb on 21/04/16.
