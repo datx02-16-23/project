@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import application.gui.Main;
 import application.model.Model;
+import application.visualization.animation.Animation;
 import application.visualization.render2d.*;
 import application.visualization.render2d.MatrixRender.Order;
 import javafx.scene.canvas.Canvas;
@@ -76,12 +77,12 @@ public class Visualization extends StackPane {
             Render render = resolveRender(struct);
             if (struct.rawType == "independentElement") {
                 render = new MatrixRender(struct);
-                RENDERS.add(render, small++, 1);
+                RENDERS.add(render, 1, small++);
             }
             else {
                 render.setPrefWidth(this.getWidth());
                 render.setPrefHeight(this.getHeight());
-                RENDERS.add(render, reg++, 0, GridPane.REMAINING, GridPane.REMAINING);
+                RENDERS.add(render, 0, reg++);
             }
             struct_render_mapping.put(struct.identifier, render);
         }
@@ -137,8 +138,19 @@ public class Visualization extends StackPane {
             render.render();
         }
         if (animate && op != null) {
+            Animation.finishAll();
+            cleanAnimatedCanvas();
             animate(op);
         }
+    }
+    
+    /**
+     * Set the animation time in millisections for <b>ALL</b> animations.
+     * 
+     * @param millis The new animation time in milliseconds.
+     */
+    public static final void setAnimationTime (long millis){
+        Animation.setAnimationTime(millis);
     }
 
     public void animate (Operation op){
@@ -156,7 +168,6 @@ public class Visualization extends StackPane {
         if (source == null || target == null) {
             return;
         }
-        System.out.println("animate rw: " + rw);
         Element src_e = null, tar_e = null;
         Render src_render = null, tar_render = null;
         /**
@@ -197,7 +208,6 @@ public class Visualization extends StackPane {
         if (var1 == null || var2 == null) {
             return;
         }
-        System.out.println("animate swap: " + swap);
         Element v1_e = null, v2_e = null;
         Render v1_render = null, v2_render = null;
         /**
@@ -229,8 +239,8 @@ public class Visualization extends StackPane {
         v2_render.startAnimation(v2_e, v2_render.getX(v1_e), v2_render.getY(v1_e));
     } //End animate swap
 
-    public void clean (){
-        ANIMATED.getGraphicsContext2D().clearRect(0, 0, Double.MAX_VALUE, Double.MAX_VALUE);
+    public void cleanAnimatedCanvas (){
+        ANIMATED.getGraphicsContext2D().clearRect(0, 0, 5000, 5000);
     }
 
     /**

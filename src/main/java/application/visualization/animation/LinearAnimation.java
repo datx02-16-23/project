@@ -13,22 +13,26 @@ import wrapper.datastructures.Element;
  */
 public class LinearAnimation extends Animation {
 
-    //Params
-    private final Element e;
-    private final double  end_x, end_y;
+    private final double points[][];
 
     public LinearAnimation (Render owner, Element e, double end_x, double end_y){
-        super(owner);
-        this.e = e;
-        this.end_x = end_x;
-        this.end_y = end_y;
-        double points[][] = linearPoints(owner.getX(e), owner.getY(e), end_x, end_x, FRAMES); 
+        super(owner, e);
+        double bx = owner.getCanvas().getTranslateX() + owner.getLayoutX();
+        double by = owner.getCanvas().getTranslateY() + owner.getLayoutY();
+//        System.out.println("owner = " + owner.getDataStructure());
+//        System.out.println("getTranslate = " + owner.getTranslateX() +", " + owner.getTranslateY());
+//        System.out.println("getLayout = " + owner.getLayoutX() +", " + owner.getLayoutY());
+        points = linearPoints(bx + owner.getX(e), by + owner.getY(e), end_x, end_y, FRAMES);
         KeyFrame keyframe = new KeyFrame(Duration.millis(ANIMATION_TIME / FRAMES), event -> {
-          owner.drawAnimatedElement(e, points[0][frame], points[1][frame], e.getColor());
-          frame++;
-          System.out.println("frame!");
+            owner.clearAnimatedElement(e, points[0][frame - 1], points[1][frame - 1]);
+            owner.drawAnimatedElement(e, points[0][frame], points[1][frame], e.getColor());
+            frame++;
         });
         keyframes.add(keyframe);
-        timeline.playFromStart();
+    }
+
+    @Override
+    protected void clearFinalFrame (){
+        owner.clearAnimatedElement(e, points[0][FRAMES], points[1][FRAMES]);
     }
 }

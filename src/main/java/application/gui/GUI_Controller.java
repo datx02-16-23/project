@@ -79,6 +79,7 @@ public class GUI_Controller implements CommunicatorListener {
 
     public GUI_Controller (Stage window, LogStreamManager lsm, SourcePanel sourceViewer){
         this.visualization = Visualization.instance();
+        Visualization.setAnimationTime(stepDelay);
         this.window = window;
         model = Model.instance();
         this.lsm = lsm;
@@ -252,6 +253,7 @@ public class GUI_Controller implements CommunicatorListener {
         stepDelaySpeedupFactor = stepDelaySpeedupFactor * 2 % 255;
         speedButton.setText(stepDelaySpeedupFactor + "x");
         stepDelay = stepDelayBase / stepDelaySpeedupFactor;
+        Visualization.setAnimationTime(stepDelay);
     }
 
     public void aboutProgram (){

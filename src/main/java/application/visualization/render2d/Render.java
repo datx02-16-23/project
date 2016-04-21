@@ -46,14 +46,27 @@ public abstract class Render extends Pane {
     public abstract void render ();
 
     /**
-     * Draw an element using the animation canvas. Style can be fetched using {@code e.getColor()}, or use {@code null} for the default color.
+     * Draw an element using the animation canvas. Style can be fetched using {@code e.getColor()}, or use {@code null}
+     * for the default color.
      * 
      * @param e The element to draw.
      * @param x The absolute x-coordinate.
      * @param y The absolute y-coordinate.
      * @param style The style to use (null = default)
      */
-    public abstract void drawAnimatedElement(Element e, double x, double y, String style);
+    public abstract void drawAnimatedElement (Element e, double x, double y, String style);
+
+    /**
+     * Clears an animated element from the shared animation canvas. <br>
+     * Assumed a border thickness of 1. It may be necessary to shadow this method if it doesn't work properly.
+     * 
+     * @param e The element to clear.
+     * @param x The x-coordinate to clear.
+     * @param y The y-coordinate to clear.
+     */
+    public void clearAnimatedElement (Element e, double x, double y){
+        SHARED_ANIMATED.getGraphicsContext2D().clearRect(x - 1, y - 1, node_width + 2, node_height + 2);
+    }
 
     /**
      * Get the fill color for the center. Returns white for style == null and black as default.
@@ -79,6 +92,7 @@ public abstract class Render extends Pane {
 
     /**
      * Returns the absolute x-coordinate of an element.
+     * 
      * @param e An element to resolve coordinates for.
      * @return The absolute x-coordinate of the element.
      */
@@ -86,10 +100,12 @@ public abstract class Render extends Pane {
 
     /**
      * Returns the absolute y-coordinate of an element.
+     * 
      * @param e An element to resolve coordinates for.
      * @return The absolute y-coordinate of the element.
      */
     public abstract double getY (Element e);
+
     /**
      * Order the Render to calculate it's preferred size. Should be shadowed by inheriting types.
      */
@@ -146,21 +162,39 @@ public abstract class Render extends Pane {
             LOCAL_STATIONARY.setCursor(Cursor.HAND);
         });
     }
-    
+
     /**
      * Return the DataStructure held by this Render.
+     * 
      * @return The DataStructure held by this Render.
      */
-    public DataStructure getDataStructur(){
+    public DataStructure getDataStructure (){
         return struct;
     }
 
     /**
      * Start an animation of an element to a point.
+     * 
      * @param e The element to animate.
      * @param x End point x-coordinate.
      * @param y End point y-coordinate.
      */
     public abstract void startAnimation (Element e, double x, double y);
 
+    /**
+     * Called by Animation when an animation is finished.
+     * 
+     * @param e The element which has finished animating.
+     */
+    public void animationComplete (Element e){
+        struct.getAnimatedElements().remove(e);
+    }
+    
+    /**
+     * Returns the Canvas for this Render.
+     * @return The Canvas for this Render.
+     */
+    public Canvas getCanvas(){
+        return LOCAL_STATIONARY;
+    }
 }

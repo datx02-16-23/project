@@ -112,11 +112,11 @@ public class MatrixRender extends Render {
     }
 
     private double getX (int column){
-        return PADDING + vspace + (vspace + node_width) * column;
+        return vspace + (vspace + node_width) * column;
     }
 
     private double getY (int row){
-        return PADDING + hspace + (hspace + node_height) * row;
+        return hspace + (hspace + node_height) * row;
     }
 
     /**
@@ -124,21 +124,21 @@ public class MatrixRender extends Render {
      * 
      * @param e The element to draw.
      * @param style The style to use (null = default)
-    */
+     */
     private void drawElement (Element e, String style){
         drawNode(e.getValue() + "", getX(e), getY(e), getFillColor(style), ((ArrayElement) e).getIndex(), LOCAL_STATIONARY);
     }
 
     /**
-     * Draw an element using the animation canvas. Style can be fetched using {@code e.getColor()}, or use {@code null} for the default color.
+     * Draw an element using the animation canvas. Style can be fetched using {@code e.getColor()}, or use {@code null}
+     * for the default color.
      * 
      * @param e The element to draw.
      * @param x The absolute x-coordinate.
      * @param y The absolute y-coordinate.
      * @param style The style to use (null = default)
      */
-    public void drawAnimatedElement(Element e, double x, double y, String style){
-        System.out.println("draw animted element!");
+    public void drawAnimatedElement (Element e, double x, double y, String style){
         drawNode(e.getValue() + "", x, y, getFillColor(style), ((ArrayElement) e).getIndex(), SHARED_ANIMATED);
     }
 
@@ -216,7 +216,7 @@ public class MatrixRender extends Render {
                 x = getY(index[1]);
             }
         }
-        return x;
+        return x + PADDING;
     }
 
     @Override
@@ -231,12 +231,12 @@ public class MatrixRender extends Render {
         else {
             y = getX(index[0]);
         }
-        return y;
+        return y + PADDING;
     }
 
     @Override
     public void startAnimation (Element e, double x, double y){
-        Animation a = new LinearAnimation(this, e, y, y);
+        Animation a = new LinearAnimation(this, e, x, y);
         a.start();
     }
 }
