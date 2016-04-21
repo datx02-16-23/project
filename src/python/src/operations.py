@@ -1,21 +1,13 @@
 ########################################################################
 # To be injected into nodes
 ########################################################################
+from inspect import getfile,currentframe
+from os.path import basename
 from json import dumps
+from wrapper import w
 outfile = None
 annotated_variables = None
 
-####################################################
-# Activate the virtualenv vdepend for this to work
-####################################################
-# import jnius_config
-# jnius_config.set_classpath('.','gson.jar','jgroups.jar','../../../build/classes/main')
-# from jnius import autoclass
-
-# Wrapper = autoclass('Wrapper')
-
-# w = Wrapper()
-####################################################
 ########################################################################
 # Expression Evaluation
 ########################################################################
@@ -70,8 +62,14 @@ def contains_variable(expr,variable_name):
 ########################################################################
 # Json
 ########################################################################
-def get_operation(name):
-    return {'operation' : name, 'operationBody' : {}}
+def get_operation(name,value,begin_line,end_line):
+    return {
+        'operation' : name, 
+        'source' : basename(getfile(currentframe())),
+        'operationBody' : {'value' : value},
+        'beginLine' : begin_line,
+        'endLine' : end_line
+    }
 
 def to_json(statement):
     indices = get_indices(statement)
@@ -79,9 +77,10 @@ def to_json(statement):
     name = subscripted[0] if isinstance(subscripted,tuple) else subscripted
     indices = list(indices[1:]) if isinstance(subscripted,tuple) else None
     statement_json = {
-        'identifier' : name,
-        'index' : indices
+        'identifier' : name
     }
+    if indices:
+        statement_json['index'] = indices
     return statement_json
 ########################################################################
 # Log Methods
@@ -90,23 +89,21 @@ def put(statement):
     with open(outfile, 'a') as f:
         f.write('%s,' % str(statement))
         f.close()
-    # print w.send(dumps({'body' : [statement], 'header' : None}))
+    if w is not None:
+        print w.send(dumps({'body' : [statement], 'header' : None}))
 
-def write(src,dst):
-    operation = get_operation('write')
+def write(src,dst,begin_line,end_line):
     value = get_value(src)
-    operation['operationBody'] = {
-        'source' : to_json(src), 'target' : to_json(dst), 'value' : [value]
-    }
+    operation = get_operation('write',value,begin_line,end_line)
+    operation['operationBody']['source'] = to_json(src)
+    operation['operationBody']['target'] = to_json(dst)
     put(operation)
     return value
 
-def read(statement):
-    operation = get_operation('read')
+def read(statement,begin_line,end_line):
     value = get_value(statement)
-    operation['operationBody'] = {
-        'source' : to_json(statement), 'value' : [value]
-    }
+    operation = get_operation('read',value,begin_line,end_line)
+    operation['operationBody']['source'] = to_json(statement)
     put(operation)
     return value
 

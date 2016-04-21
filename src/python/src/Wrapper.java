@@ -6,7 +6,7 @@ import io.LogStreamManager;
 
 /*
 	Wrapper
-	A class for wrapping LogStreamManager in python.
+	A class for wrapping LogStreamManager
 */
 public class Wrapper {
 	

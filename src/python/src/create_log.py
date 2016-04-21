@@ -26,7 +26,7 @@ class MainTransformer(NodeTransformer):
 def create_env(settings):
 	# Setup rootdir of visualization folder given source root directory
 	copy_tree(settings['rootdir'],settings['v_env'])
-	
+
 	# Generate ast's from given files copied into visualization folder
 	nodes = []
 	for f in settings['files']:

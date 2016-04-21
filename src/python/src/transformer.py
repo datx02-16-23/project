@@ -36,6 +36,15 @@ def is_variable(node):
 BUILTIN = ['False','True']
 def is_builtin(name):
 	return name in BUILTIN
+
+def get_lineno(node):
+	lineno = [node.lineno]
+	for child in iter_child_nodes(node):
+		if hasattr(child,'lineno'):
+			lineno.append(child.lineno)
+			lineno = lineno + get_lineno(child)
+	return lineno
+
 #############################################################
 class Expression(object):
 	DEFINED_NAMES = []
@@ -109,6 +118,11 @@ class OperationTransformer(NodeTransformer):
 
 	# args_ - [ast.Node]
 	def create_call(self,args_,node):
+		lineno = get_lineno(node)
+		if lineno:
+			begin_line = Num(min(lineno)-1)
+			end_line = Num(max(lineno)-1)
+			args_ = args_ + [begin_line,end_line]
 		return Call(
 			func=Name(id=self.name, ctx=Load()),
 			args=args_,

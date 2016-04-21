@@ -4,17 +4,8 @@ from create_log import create_env,format_log
 from ast import parse,Assign,Name,Str
 from transformer import WriteTransformer,ReadTransformer,PassTransformer
 from json import dump
-####################################################
-# Activate the virtualenv vdepend for this to work
-####################################################
-# import jnius_config
-# jnius_config.set_classpath('.','gson.jar','jgroups.jar','../../../build/classes/main')
-# from jnius import autoclass
+from wrapper import w
 
-# Wrapper = autoclass('Wrapper')
-
-# w = Wrapper()
-####################################################
 def load_logwriter(operations,output):
 	operations_read = None
 	with open(operations,'r') as f:
@@ -42,13 +33,24 @@ class Variable(object):
 			'attributes' : self.attributes
 		}
 
-def create_header(version,variables):
+def create_sources(files):
+	sources = {}
+	for f in files:
+		name = path.basename(f)
+		with open(f,'r') as read:
+			sources[name] = {"sourceLines" : read.read().split('\n')}
+	return sources
+
+def create_header(version,variables,files):
 	annotatedVariables = {}
 	for variable in variables:
 		annotatedVariables[variable.name] = variable.get_json()
 	return {
 		'version' : version,
-		'annotatedVariables' : annotatedVariables
+		'annotatedVariables' : annotatedVariables,
+		'metadata' : {
+			'sources' : create_sources(files)
+		}
 	}
 
 # create_settings
@@ -80,15 +82,18 @@ def run(settings):
 	# create visulization environment
 	create_env(settings)
 	# run userprogram in visualization environment
-	# w.send(create_header(2.0,settings['observe']))
+	files = [settings['rootdir']+'/'+f for f in settings['files']]
+	header = create_header(2.0,settings['observe'],files)
+	if w is not None:
+		w.send(header)
 	open(settings['output'],'w').close()
 	execfile(settings['main'],globals())
 
 	# create a valid json output file from buffer
 	output_buffer = format_log(settings['output'])
-	with open(output,'w+') as f:
+	with open(settings['output'],'w+') as f:
 		final_output = {
-			'header' : create_header(2.0,settings['observe']),
+			'header' : header,
 			'body' : output_buffer
 		}
 		dump(final_output,f)
@@ -97,7 +102,7 @@ def run(settings):
 
 if __name__ == '__main__':
 	output = path.abspath('output.json')
-	variables = [Variable('a','array',attributes={'size' : [3]})]
+	variables = [Variable('c','array',attributes={'size' : [3]})]
 	settings = create_settings(
 		path.abspath('./test'),	# root directory
 		['main.py'], 			# files
