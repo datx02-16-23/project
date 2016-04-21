@@ -1,4 +1,4 @@
-package multiset.Conditional.ArithmeticOperations;
+package multiset.ArithmeticOperations;
 
 /**
  * Created by cb on 21/04/16.

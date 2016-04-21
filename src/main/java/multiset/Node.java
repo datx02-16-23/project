@@ -1,6 +1,6 @@
-package multiset.Conditional;
+package multiset;
 
-import multiset.Conditional.ArithmeticOperations.iArithmeticOperation;
+import multiset.ArithmeticOperations.iArithmeticOperation;
 
 /**
  * Created by cb on 21/04/16.

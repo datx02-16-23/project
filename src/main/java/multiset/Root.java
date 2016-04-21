@@ -1,4 +1,4 @@
-package multiset.Conditional;
+package multiset;
 
 import multiset.Conditional.BooleanOperations.iBooleanComparison;
 
