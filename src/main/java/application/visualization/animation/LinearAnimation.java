@@ -19,11 +19,8 @@ public class LinearAnimation extends Animation {
         super(owner, e);
         double bx = owner.getCanvas().getTranslateX() + owner.getLayoutX();
         double by = owner.getCanvas().getTranslateY() + owner.getLayoutY();
-//        System.out.println("owner = " + owner.getDataStructure());
-//        System.out.println("getTranslate = " + owner.getTranslateX() +", " + owner.getTranslateY());
-//        System.out.println("getLayout = " + owner.getLayoutX() +", " + owner.getLayoutY());
-        points = linearPoints(bx + owner.getX(e), by + owner.getY(e), end_x, end_y, FRAMES);
-        KeyFrame keyframe = new KeyFrame(Duration.millis(ANIMATION_TIME / FRAMES), event -> {
+        points = linearAnimationPath(bx + owner.getX(e), by + owner.getY(e), end_x, end_y, frame_count, 0.3);
+        KeyFrame keyframe = new KeyFrame(Duration.millis((ANIMATION_TIME / frame_count)*0.5), event -> {
             owner.clearAnimatedElement(e, points[0][frame - 1], points[1][frame - 1]);
             owner.drawAnimatedElement(e, points[0][frame], points[1][frame], e.getColor());
             frame++;
@@ -32,7 +29,9 @@ public class LinearAnimation extends Animation {
     }
 
     @Override
-    protected void clearFinalFrame (){
-        owner.clearAnimatedElement(e, points[0][FRAMES], points[1][FRAMES]);
+    protected void ensureCleared (){
+        for (int i = 0; i < points[0].length; i++) {
+            owner.clearAnimatedElement(e, points[0][i], points[1][i]);
+        }
     }
 }

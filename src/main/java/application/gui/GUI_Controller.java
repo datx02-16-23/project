@@ -265,12 +265,20 @@ public class GUI_Controller implements CommunicatorListener {
 
     public void openInterpreterView (){
         stopAutoPlay(); // Prevent concurrent modification exception.
-        interpreterView.show(operationPanel.getItems());
+        if (interpreterView.show(model.getOperations())) {
+            model.reset();
+            visualization.clearAndCreateVisuals();
+            operationPanel.getItems().setAll(model.getOperations());
+//            operationPanel.update(0, true);
+            updatePanels();
+        }
     }
 
     public void interpretOperationHistory (){
         interpreterView.fast(model.getOperations());
         updatePanels();
+        visualization.clearAndCreateVisuals();
+        operationPanel.getItems().addAll(lsm.getOperations());
     }
 
     /**
@@ -405,10 +413,9 @@ public class GUI_Controller implements CommunicatorListener {
         //Add operations to model and create Render visuals, then draw them.
         Map<String, DataStructure> oldStructs = model.getStructures();
         Map<String, DataStructure> newStructs = lsm.getDataStructures();
-        if(checkCollision(oldStructs, newStructs) == false){
+        if (checkCollision(oldStructs, newStructs) == false) {
             return;
         }
-        System.out.println("reading from lsm");
         oldStructs.putAll(newStructs);
         visualMenu.setDisable(newStructs.isEmpty());
         model.getOperations().addAll(lsm.getOperations());
@@ -532,6 +539,7 @@ public class GUI_Controller implements CommunicatorListener {
             return;
         }
         lsm.setOperations(model.getOperations());
+        System.out.println(model.getOperations());
         lsm.setDataStructures(model.getStructures());
         lsm.setSources(sourceViewer.getSources());
         boolean old = lsm.PRETTY_PRINTING;

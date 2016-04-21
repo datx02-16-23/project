@@ -150,8 +150,7 @@ public class LogStreamManager implements CommunicatorListener {
     public boolean readLog (File logFile){
         try {
             wrapper = gson.fromJson(new JsonReader(new FileReader(logFile)), Wrapper.class);
-            unwrap(wrapper);
-            return true;
+            return unwrap(wrapper);
         } catch (JsonIOException e) {
             Main.console.err("JSON IO error: " + e);
         } catch (JsonSyntaxException e) {
@@ -370,32 +369,38 @@ public class LogStreamManager implements CommunicatorListener {
      * Unwrap a wrapper, add contents to knownVariables and operations.
      * 
      * @param wrapper The wrapper to unwrap.
+     * @return True if the wrapper was successfully unwrapped. False otherwise.
      */
-    public void unwrap (Wrapper wrapper){
+    public boolean unwrap (Wrapper wrapper){
         if (wrapper.header != null) {
             if (wrapper.header.annotatedVariables != null) {
-                Collection<AnnotatedVariable> avList = wrapper.header.annotatedVariables.values();
-                for (AnnotatedVariable av : avList) {
-                    dataStructures.put(av.identifier, DataStructureParser.unpackAnnotatedVariable(av));
+                for (AnnotatedVariable av : wrapper.header.annotatedVariables.values()) {
+                    DataStructure ds = DataStructureParser.unpackAnnotatedVariable(av);
+                    if(ds == null){
+                        return false;
+                    }
+                    dataStructures.put(av.identifier, ds);
                 }
             }
-//            sources = wrapper.header.sources;
+            sources = wrapper.header.sources;
         }
         if (wrapper.body != null) {
             for (Operation op : wrapper.body) {
                 operations.add(OperationParser.unpackOperation(op));
             }
         }
+        return true;
     }
 
     /**
      * Unwrap a JSON string and store the contents.
      * 
      * @param json THE JSON string to process.
+     * @return True if the string was successfully parsed and stored. False otherwise.
      */
-    public void unwrap (String json){
+    public boolean unwrap (String json){
         Wrapper w = gson.fromJson(json, Wrapper.class);
-        unwrap(w);
+        return unwrap(w);
     }
 
     @Override
@@ -407,7 +412,9 @@ public class LogStreamManager implements CommunicatorListener {
         if (messageType == CommunicatorMessage.WRAPPER) {
             List<Wrapper> wrappers = communicator.getAllQueuedMessages();
             for (Wrapper w : wrappers) {
-                unwrap(w);
+                if(unwrap(w) == false){
+                    return;
+                }
             }
             if (listener != null) {
                 listener.messageReceived(CommunicatorMessage.WRAPPER);

@@ -29,7 +29,7 @@ public class SourcePanel extends TabPane {
         sources = new HashMap<String, List<String>>();
         this.prefHeightProperty().bind(this.heightProperty());
         this.prefWidthProperty().bind(this.widthProperty());
-        this.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+        this.setTabClosingPolicy(TabPane.TabClosingPolicy.SELECTED_TAB);
         this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         initTab(); //Print some brilliant source code.
     }

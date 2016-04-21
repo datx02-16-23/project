@@ -1,5 +1,7 @@
 package wrapper.datastructures;
 
+import java.util.Arrays;
+
 import application.gui.Main;
 import wrapper.AnnotatedVariable;
 import wrapper.operations.Key;
@@ -25,7 +27,8 @@ public abstract class DataStructureParser {
             case "tree":
                 return null; //TODO: Add parsing of trees.
             default:
-                Main.console.info("Unknown data structure raw type: " + av.rawType);
+                Main.console.err("Unknown Data Structure raw type: \"" + av.rawType +"\"");
+                Main.console.err("Permitted raw types: " + Arrays.toString(RawType.values()));
                 break;
         }
         return null;
@@ -52,6 +55,7 @@ public abstract class DataStructureParser {
     }
     
     public static int[] parseSize (AnnotatedVariable av){
+        System.out.println(av.attributes.get(Key.size));
         return OperationParser.ensureIntArray(av.attributes.get(Key.size));
     }
 }

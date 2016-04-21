@@ -57,15 +57,15 @@ public abstract class Render extends Pane {
     public abstract void drawAnimatedElement (Element e, double x, double y, String style);
 
     /**
-     * Clears an animated element from the shared animation canvas. <br>
-     * Assumed a border thickness of 1. It may be necessary to shadow this method if it doesn't work properly.
+     * Makes an effort to clears an animated element from the shared animation canvas. <br>
+     * It may be necessary to shadow this method if it doesn't work properly.
      * 
      * @param e The element to clear.
      * @param x The x-coordinate to clear.
      * @param y The y-coordinate to clear.
      */
     public void clearAnimatedElement (Element e, double x, double y){
-        SHARED_ANIMATED.getGraphicsContext2D().clearRect(x - 1, y - 1, node_width + 2, node_height + 2);
+        SHARED_ANIMATED.getGraphicsContext2D().clearRect(x - 4, y - 4, node_width + 8, node_height + 8);
     }
 
     /**
@@ -182,19 +182,31 @@ public abstract class Render extends Pane {
     public abstract void startAnimation (Element e, double x, double y);
 
     /**
-     * Called by Animation when an animation is finished.
-     * 
-     * @param e The element which has finished animating.
-     */
-    public void animationComplete (Element e){
-        struct.getAnimatedElements().remove(e);
-    }
-    
-    /**
      * Returns the Canvas for this Render.
      * @return The Canvas for this Render.
      */
     public Canvas getCanvas(){
         return LOCAL_STATIONARY;
+    }
+    /**
+     * Returns the absolute x-coordinate for the element e.
+     * @param owner The owner of the element.
+     * @param e An element in owner.
+     * @return The absolute x-coordinates of e.
+     */
+    public static double getAbsoluteX(Render owner, Element e){
+        double bx = owner.getCanvas().getTranslateX() + owner.getLayoutX();
+        return owner.getX(e) + bx;
+    }
+    
+    /**
+     * Returns the absolute y-coordinate for the element e.
+     * @param owner The owner of the element.
+     * @param e An element in owner.
+     * @return The absolute y-coordinates of e.
+     */
+    public static double getAbsoluteY(Render owner, Element e){
+        double by = owner.getCanvas().getTranslateY() + owner.getLayoutY();
+        return owner.getY(e) + by;
     }
 }

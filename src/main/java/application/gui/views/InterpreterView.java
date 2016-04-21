@@ -33,7 +33,7 @@ import wrapper.operations.OperationType;
  * @author Richard Sundqvist
  *
  */
-public class InterpreterView implements InvalidationListener{
+public class InterpreterView implements InvalidationListener {
 
     private final ObservableList<Operation> beforeItems, afterItems;
     private Map<String, Object>             namespace;
@@ -41,6 +41,7 @@ public class InterpreterView implements InvalidationListener{
     private TextField                       beforeCount, afterCount;
     private final Interpreter               interpreter;
     private final Stage                     parent;
+    private boolean                         keep;
     /**
      * Items received from the caller of show ().
      */
@@ -96,8 +97,9 @@ public class InterpreterView implements InvalidationListener{
      * Show the Interpreter View.
      * 
      * @param ops The list of operations to use.
+     * @return True if the interpreted operations should be kept, false otherwise.
      */
-    public void show (List<Operation> ops){
+    public boolean show (List<Operation> ops){
         receivedItems = ops;
         beforeItems.setAll(receivedItems);
         interpreterRoutineChooser.getSelectionModel().select(translateInterpreterRoutine());
@@ -106,17 +108,18 @@ public class InterpreterView implements InvalidationListener{
         //Set size and show
         root.setWidth(this.parent.getWidth() * 0.75);
         root.setHeight(this.parent.getHeight() * 0.75);
-        root.show();
+        root.showAndWait();
+        return keep;
     }
 
     private void loadTestCases (){
         VBox casesBox = (VBox) namespace.get("casesBox");
         casesBox.getChildren().clear();
         List<OperationType> selectedTypes = interpreter.getTestCases();
-        Insets insets =new Insets(2,0,2,5);
+        Insets insets = new Insets(2, 0, 2, 5);
         //Create CheckBoxes for all Consolidate operation types
         for (OperationType type : OperationType.values()) {
-            if(!type.consolidable){
+            if (!type.consolidable) {
                 continue;
             }
             CheckBox cb = new CheckBox(type.toString());
@@ -146,7 +149,11 @@ public class InterpreterView implements InvalidationListener{
         if (afterItems.isEmpty() == false) {
             receivedItems.clear();
             receivedItems.addAll(afterItems);
+            keep = true;
             root.close();
+        }
+        else {
+            keep = false;
         }
     }
 
@@ -176,7 +183,7 @@ public class InterpreterView implements InvalidationListener{
      * Listener for the "Discard" button.
      */
     public void discardInterpreted (){
-//        saveProperties();
+        keep = false;
         root.close();
     }
 
@@ -231,11 +238,11 @@ public class InterpreterView implements InvalidationListener{
 
     @Override
     public void invalidated (Observable o){
-        beforeCount.setText(""+beforeItems.size());
-        afterCount.setText(""+afterItems.size());
+        beforeCount.setText("" + beforeItems.size());
+        afterCount.setText("" + afterItems.size());
     }
-    
-    public void fast(List<Operation> ops){
+
+    public void fast (List<Operation> ops){
         interpreter.consolidate(ops);
     }
 }

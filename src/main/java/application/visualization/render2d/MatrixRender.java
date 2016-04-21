@@ -23,7 +23,7 @@ public class MatrixRender extends Render {
     private int                elementsPreviousRender = 0;
     private int                dimensions;
     private int[]              size;
-    private static final int   PADDING                = 40;
+    private static final int   PADDING                = 35;
 
     /**
      * Create a new BoxRender.
@@ -63,12 +63,8 @@ public class MatrixRender extends Render {
         else {
             List<Element> modifiedElements = struct.getModifiedElements();
             List<Element> resetElements = struct.getResetElements();
-            List<Element> animatedElements = struct.getAnimatedElements();
             for (Element e : struct.getElements()) {
-                if (animatedElements.contains(e)) {
-                    continue; //Animated elements are handled seperately.
-                }
-                else if (modifiedElements.contains(e)) {
+                if (modifiedElements.contains(e)) {
                     drawElement(e, e.getColor());
                 }
                 else if (resetElements.contains(e)) {
@@ -78,6 +74,7 @@ public class MatrixRender extends Render {
         }
         struct.elementsDrawn();
     }
+    
 
     /**
      * Create and render all elements.
@@ -106,17 +103,23 @@ public class MatrixRender extends Render {
     @Override
     public void calculatePrefSize (){
         super.calculatePrefSize();
-        WIDTH = PADDING * 2 + vspace + (vspace + node_width) * size[0];
-        HEIGHT = PADDING * 2 + hspace + (hspace + node_height) * size[1];
+        if (mo == Order.ROW_MAJOR) {
+            WIDTH = PADDING * 2 + vspace + (vspace + node_width) * size[0];
+            HEIGHT = PADDING * 2 + hspace + (hspace + node_height) * size[1];
+        }
+        else {
+            WIDTH = PADDING * 2 + vspace + (vspace + node_width) * size[1];
+            HEIGHT = PADDING * 2 + hspace + (hspace + node_height) * size[0];
+        }
         this.setPrefSize(WIDTH, HEIGHT);
     }
 
     private double getX (int column){
-        return vspace + (vspace + node_width) * column;
+        return PADDING + vspace + (vspace + node_width) * column;
     }
 
     private double getY (int row){
-        return hspace + (hspace + node_height) * row;
+        return PADDING + hspace + (hspace + node_height) * row;
     }
 
     /**
@@ -216,7 +219,7 @@ public class MatrixRender extends Render {
                 x = getY(index[1]);
             }
         }
-        return x + PADDING;
+        return x;
     }
 
     @Override
@@ -231,7 +234,7 @@ public class MatrixRender extends Render {
         else {
             y = getX(index[0]);
         }
-        return y + PADDING;
+        return y;
     }
 
     @Override

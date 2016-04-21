@@ -384,7 +384,7 @@ public class Array extends DataStructure {
 
     @Override
     public String getRawVisual (){
-        return "bar";
+        return "box";
     }
 
     @Override

@@ -10,6 +10,7 @@ import application.visualization.render2d.MatrixRender.Order;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import wrapper.Locator;
 import wrapper.Operation;
 import wrapper.datastructures.DataStructure;
@@ -138,12 +139,11 @@ public class Visualization extends StackPane {
             render.render();
         }
         if (animate && op != null) {
-            Animation.finishAll();
             cleanAnimatedCanvas();
             animate(op);
         }
     }
-    
+
     /**
      * Set the animation time in millisections for <b>ALL</b> animations.
      * 
@@ -165,7 +165,7 @@ public class Visualization extends StackPane {
     public void animateReadWrite (OP_ReadWrite rw){
         Locator source = rw.getSource();
         Locator target = rw.getTarget();
-        if (source == null || target == null) {
+        if (source == null && target == null) {
             return;
         }
         Element src_e = null, tar_e = null;
@@ -177,7 +177,6 @@ public class Visualization extends StackPane {
             src_e = struct.getElement(source);
             if (src_e != null) {
                 src_render = this.struct_render_mapping.get(struct.identifier);
-                struct.getAnimatedElements().add(src_e);
                 break;
             }
         }
@@ -194,7 +193,18 @@ public class Visualization extends StackPane {
         /**
          * Start animations
          */
-        src_render.startAnimation(src_e, tar_render.getX(tar_e), tar_render.getY(tar_e));
+        if (src_e != null && tar_e != null) {
+            //Render data transfer between two known structures
+            src_render.startAnimation(src_e, Render.getAbsoluteX(tar_render, tar_e), Render.getAbsoluteY(tar_render, tar_e));
+        }
+        else if (src_e != null && tar_e == null) {
+            //Render read without target
+            src_render.startAnimation(src_e, Render.getAbsoluteX(src_render, src_e), Render.getAbsoluteY(src_render, src_e) - 50);
+        }
+        else if (src_e == null && tar_e != null) {
+            //Render write without source
+            tar_render.startAnimation(tar_e, Render.getAbsoluteX(tar_render, tar_e), Render.getAbsoluteY(tar_render, tar_e) + 50);
+        }
     }
 
     /**
@@ -217,7 +227,6 @@ public class Visualization extends StackPane {
             v1_e = struct.getElement(var1);
             if (v1_e != null) {
                 v1_render = this.struct_render_mapping.get(struct.identifier);
-                struct.getAnimatedElements().add(v1_e);
                 break;
             }
         }
@@ -228,19 +237,22 @@ public class Visualization extends StackPane {
             v2_e = struct.getElement(var2);
             if (v2_e != null) {
                 v2_render = this.struct_render_mapping.get(struct.identifier);
-                struct.getAnimatedElements().add(v2_e);
                 break;
             }
         }
         /**
          * Start animations
          */
-        v1_render.startAnimation(v1_e, v2_render.getX(v2_e), v2_render.getY(v2_e));
-        v2_render.startAnimation(v2_e, v2_render.getX(v1_e), v2_render.getY(v1_e));
+        if (v1_e != null && v2_e != null) {
+            v1_render.startAnimation(v1_e, Render.getAbsoluteX(v2_render, v2_e), Render.getAbsoluteY(v2_render, v2_e));
+            v2_render.startAnimation(v2_e, Render.getAbsoluteX(v1_render, v1_e), Render.getAbsoluteY(v1_render, v1_e));
+        }
     } //End animate swap
 
     public void cleanAnimatedCanvas (){
-        ANIMATED.getGraphicsContext2D().clearRect(0, 0, 5000, 5000);
+        ANIMATED.getGraphicsContext2D().clearRect(-5000, -5000, 10000, 10000);
+//        ANIMATED.getGraphicsContext2D().setFill(Color.ALICEBLUE);
+//        ANIMATED.getGraphicsContext2D().fillRect(-5000, -5000, 10000, 10000);
     }
 
     /**

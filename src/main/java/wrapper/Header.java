@@ -31,7 +31,7 @@ public class Header implements Serializable {
     /**
      * A map of metadata identifiers and their contents.
      */
-    public final Map<String, List<String>>      metadata;
+    public final Map<String, List<String>>      sources;
 
     /**
      * Create a Header item with the given version number and map of annotated variables. Version 0 is reserved for when
@@ -39,12 +39,12 @@ public class Header implements Serializable {
      * 
      * @param version The version number for this file.
      * @param annotatedVariables Declaration of annotated variables from the source.
-     * @param metadata The metadata for this Header.
+     * @param sources The sources for this Header.
      */
-    public Header (int version, Map<String, AnnotatedVariable> annotatedVariables, Map<String, List<String>> metadata){
+    public Header (int version, Map<String, AnnotatedVariable> annotatedVariables, Map<String, List<String>> sources){
         this.version = version;
         this.annotatedVariables = annotatedVariables;
-        this.metadata = metadata;
+        this.sources = sources;
     }
 
     /**
@@ -54,7 +54,7 @@ public class Header implements Serializable {
     public Header (){
         this.version = VERSION_UNKNOWN;
         annotatedVariables = new HashMap<String, AnnotatedVariable>();
-        this.metadata = new HashMap<String, List<String>>();
+        this.sources = new HashMap<String, List<String>>();
     }
     
     /**
@@ -62,10 +62,10 @@ public class Header implements Serializable {
      * @return A Map of source names as keys and their lines as a List.
      */
     public final Map<String, List<String>> getSources(){
-        if(metadata == null){
+        if(sources == null){
             return null;
         }
-        Map<String, Object> objectMap = (Map<String, Object>) metadata.get("sources");
+        Map<String, Object> objectMap = (Map<String, Object>) sources.get("sources");
         Map<String, List<String>> sources = new HashMap<String, List<String>>();
         for(String key : objectMap.keySet()){
             List<String> lines = (List<String>) objectMap.get(key);
