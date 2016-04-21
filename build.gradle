@@ -4,8 +4,6 @@ version '1.0-SNAPSHOT'
 apply plugin: 'java'
 
 
-project.ext.lwjglVersion = "3.0.0b"
-
 repositories {
     mavenCentral()
 }

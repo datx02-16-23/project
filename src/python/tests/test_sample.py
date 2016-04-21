@@ -3,14 +3,24 @@ from sample import annotations
 from os.path import abspath
 
 if __name__ == '__main__':
-	#  sample.annotations.create_settings Parameters
-	#	root_directory, files, variables, main_file, output
-	# sample.annotations.Variable Constructor
-	# 	name, rawType, attributes=None, abstractType=None
+	# API for create_settings and Variable needed
+	# to create LOG.
+	#
+	# annotations.create_settings Parameters
+	#	root_directory, - root directory of program
+	#	files, 			- files to observe
+	#	variables, 		- variables to observe
+	#	main_file, 		- main file of program
+	#	output			- where to wite LOG output
+	# annotations.Variable Constructor
+	# 	name, 			- name of variable
+	#	rawType, 		- type of variable
+	#	attributes=None, 
+	#	abstractType=None
 	settings = annotations.create_settings(
-		abspath('./'),
-		['main.py'],
-		sample.annotations.Variable('c','array'),
+		abspath('./test'),
+		['main.py','subf/depend.py'],
+		sample.annotations.Variable('c','list'),
 		'main.py',
 		abspath('output.json')
 	)
