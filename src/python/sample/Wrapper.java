@@ -13,7 +13,7 @@ public class Wrapper {
 	private LogStreamManager lsm;
 
 	public Wrapper() {
-		lsm = new LogStreamManager();
+		lsm = new LogStreamManager("Python Annotations");
 	}
 
 	public boolean send(String jsonString) {
