@@ -97,15 +97,3 @@ def run(settings):
 		dump(final_output,f)
 	# right now run cleanup script until a better solution is found
 	system('sh cleanup.sh')
-
-if __name__ == '__main__':
-	output = path.abspath('output.json')
-	variables = [Variable('c','array',attributes={'size' : [3]})]
-	settings = create_settings(
-		path.abspath('./test'),	# root directory
-		['main.py'], 			# files
-		variables, 				# variables
-		'main.py', 				# main file
-		output 					# LOG output destination
-	)
-	run(settings)
