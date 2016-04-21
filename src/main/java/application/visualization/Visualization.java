@@ -1,6 +1,6 @@
 package application.visualization;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import application.gui.Main;
 import application.model.Model;
@@ -17,13 +17,27 @@ import wrapper.operations.OP_ReadWrite;
 import wrapper.operations.OP_Swap;
 import wrapper.operations.OperationType;
 
+/**
+ * Handler class for visualisations and animations. The ANIMATED Canvas should only be used for moving objects as it is
+ * cleared every iteration.
+ * 
+ * @author Richard Sundqvist
+ *
+ */
 public class Visualization extends StackPane {
 
-    private final Model          model;
-    private static Visualization INSTANCE;
-    private final GridPane       RENDERS  = new GridPane();
-    public final Canvas          ANIMATED = new Canvas();
+    private boolean                       animate;
+    private final Model                   model;
+    private static Visualization          INSTANCE;
+    private final GridPane                RENDERS               = new GridPane();
+    public final Canvas                   ANIMATED              = new Canvas();
+    private final HashMap<String, Render> struct_render_mapping = new HashMap<String, Render>();
 
+    /**
+     * Returns the static instance of Visualization.
+     * 
+     * @return The static Visualization instance.
+     */
     public static Visualization instance (){
         if (INSTANCE == null) {
             INSTANCE = new Visualization();
@@ -31,7 +45,10 @@ public class Visualization extends StackPane {
         return INSTANCE;
     }
 
-    private Visualization (){
+    /**
+     * Create a new Visualization.
+     */
+    public Visualization (){
         this.model = Model.instance();
         //Build Canvas
         ANIMATED.setMouseTransparent(true);
@@ -39,37 +56,34 @@ public class Visualization extends StackPane {
         ANIMATED.heightProperty().bind(this.heightProperty());
         ANIMATED.maxWidth(Double.MAX_VALUE);
         ANIMATED.maxHeight(Double.MAX_VALUE);
-        ANIMATE = true;
+        animate = true;
         //Add stacked canvases
         this.getChildren().add(RENDERS);
         this.getChildren().add(ANIMATED);
     }
 
     public void clear (){
+        struct_render_mapping.clear();
         RENDERS.getChildren().clear();
         ANIMATED.getGraphicsContext2D().clearRect(0, 0, this.getWidth(), this.getHeight());
     }
 
     public void clearAndCreateVisuals (){
-        System.out.println("create!");
         clear();
-        int loc = 0;
-        System.out.println("RENDERS.getChildren().size() = " + RENDERS.getChildren().size());
-        System.out.println("model.getStructures().values() = " + model.getStructures().values());
+        int reg = 0;
+        int small = 0;
         for (DataStructure struct : model.getStructures().values()) {
-            if (struct.rawType == "independentElement") {
-//                Render render = new IndependentElementRender(struct);
-//                root.add(render, loc++, 0);
-//                RENDERS.add(render);
-                continue;
-            }
             Render render = resolveRender(struct);
-            if (render != null) {
+            if (struct.rawType == "independentElement") {
+                render = new MatrixRender(struct);
+                RENDERS.add(render, small++, 1);
+            }
+            else {
                 render.setPrefWidth(this.getWidth());
                 render.setPrefHeight(this.getHeight());
-                RENDERS.add(render, loc++, 0);
-                continue;
+                RENDERS.add(render, reg++, 0, GridPane.REMAINING, GridPane.REMAINING);
             }
+            struct_render_mapping.put(struct.identifier, render);
         }
     }
 
@@ -122,7 +136,7 @@ public class Visualization extends StackPane {
             render = (Render) node;
             render.render();
         }
-        if (ANIMATE && op != null) {
+        if (animate && op != null) {
             animate(op);
         }
     }
@@ -138,46 +152,95 @@ public class Visualization extends StackPane {
 
     public void animateReadWrite (OP_ReadWrite rw){
         Locator source = rw.getSource();
-        if (source == null) {
+        Locator target = rw.getTarget();
+        if (source == null || target == null) {
             return;
         }
-        Element e;
+        Element src_e = null, tar_e = null;
+        Render src_render = null, tar_render = null;
+        /**
+         * Source params
+         */
         for (DataStructure struct : model.getStructures().values()) {
-            e = struct.getElement(source);
-            if (e != null) {
-                struct.getAnimatedElements().add(e);
+            src_e = struct.getElement(source);
+            if (src_e != null) {
+                src_render = this.struct_render_mapping.get(struct.identifier);
+                struct.getAnimatedElements().add(src_e);
                 break;
             }
         }
+        /**
+         * Target params
+         */
+        for (DataStructure struct : model.getStructures().values()) {
+            tar_e = struct.getElement(target);
+            if (tar_e != null) {
+                tar_render = this.struct_render_mapping.get(struct.identifier);
+                break;
+            }
+        }
+        /**
+         * Start animations
+         */
+        src_render.animate(src_e, tar_render.getX(tar_e), tar_render.getY(tar_e));
     }
 
+    /**
+     * Trigger an animation of a swap.
+     * 
+     * @param swap The swap to animate.
+     */
     public void animateSwap (OP_Swap swap){
         Locator var1 = swap.getVar1();
         Locator var2 = swap.getVar2();
-        Element e;
+        if (var1 == null || var2 == null) {
+            return;
+        }
+        Element v1_e = null, v2_e = null;
+        Render v1_render = null, v2_render = null;
+        /**
+         * Var1 params
+         */
         for (DataStructure struct : model.getStructures().values()) {
-            e = struct.getElement(var1);
-            if (e != null) {
-                struct.getAnimatedElements().add(e);
-            }
-            e = struct.getElement(var2);
-            if (e != null) {
-                struct.getAnimatedElements().add(e);
+            v1_e = struct.getElement(var1);
+            if (v1_e != null) {
+                v1_render = this.struct_render_mapping.get(struct.identifier);
+                struct.getAnimatedElements().add(v1_e);
+                break;
             }
         }
-    }
+        /**
+         * Var2 params
+         */
+        for (DataStructure struct : model.getStructures().values()) {
+            v2_e = struct.getElement(var2);
+            if (v2_e != null) {
+                v2_render = this.struct_render_mapping.get(struct.identifier);
+                struct.getAnimatedElements().add(v2_e);
+                break;
+            }
+        }
+        /**
+         * Start animations
+         */
+        v1_render.animate(v1_e, v2_render.getX(v2_e), v2_render.getY(v2_e));
+        v2_render.animate(v2_e, v2_render.getX(v1_e), v2_render.getY(v1_e));
+    } //End animate swap
 
     public void clean (){
         ANIMATED.getGraphicsContext2D().clearRect(0, 0, Double.MAX_VALUE, Double.MAX_VALUE);
     }
 
-    public boolean ANIMATE;
-
+    /**
+     * Toggles animation on and off.
+     * 
+     * @param value The new animation option.
+     */
     public void setAnimate (boolean value){
-        if (value == ANIMATE) {
+        if (value == animate) {
             return;
         }
-        ANIMATE = value;
+//        ANIMATE = value;
         //TODO
     }
 }

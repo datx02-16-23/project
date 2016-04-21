@@ -69,7 +69,7 @@ public class BarRender extends Render {
      */
     private void init (){
         calculatePrefSize();
-        GraphicsContext context = local.getGraphicsContext2D();
+        GraphicsContext context = LOCAL_STATIONARY.getGraphicsContext2D();
         context.clearRect(0, 0, WIDTH, HEIGHT);
         context.setFill(COLOR_BLACK);
         context.fillText(struct.toString(), hspace, vspace + 10);
@@ -126,7 +126,7 @@ public class BarRender extends Render {
      * @param lastRow If {@code true}, no child connection lines are drawn.
      */
     private void drawNode (double value, double x, double y, Color fill, int index){
-        GraphicsContext context = local.getGraphicsContext2D();
+        GraphicsContext context = LOCAL_STATIONARY.getGraphicsContext2D();
         context.setFill(fill);
         context.clearRect(x - 1, padding, node_width + 2, this.HEIGHT + 1);
         context.fillRect(x, y, node_width, node_height * value);
@@ -144,7 +144,7 @@ public class BarRender extends Render {
     }
 
     private void drawAxes (){
-        GraphicsContext context = local.getGraphicsContext2D();
+        GraphicsContext context = LOCAL_STATIONARY.getGraphicsContext2D();
         context.setFill(COLOR_BLACK);
         double y = this.HEIGHT - padding;
         double x = this.WIDTH - padding;
@@ -169,11 +169,6 @@ public class BarRender extends Render {
     }
 
     @Override
-    public void animate (Element e, int targetX, int targetT){
-        // TODO Auto-generated method stub
-    }
-
-    @Override
     public double getX (Element e){
         // TODO Auto-generated method stub
         return 0;
@@ -183,5 +178,11 @@ public class BarRender extends Render {
     public double getY (Element e){
         // TODO Auto-generated method stub
         return 0;
+    }
+
+    @Override
+    public void animate (Element e, double end_x, double end_y){
+        // TODO Auto-generated method stub
+        
     }
 }

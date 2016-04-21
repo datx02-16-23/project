@@ -141,7 +141,7 @@ public class KTreeRender extends Render {
      */
     private void init (){
         calculateDepthAndBreadth(); //Calls calculatePrefSize()
-        GraphicsContext context = local.getGraphicsContext2D();
+        GraphicsContext context = LOCAL_STATIONARY.getGraphicsContext2D();
         context.clearRect(0, 0, this.WIDTH, this.WIDTH);
         context.setFill(COLOR_BLACK);
         context.fillText(struct.toString(), hspace, vspace + 10);
@@ -229,7 +229,7 @@ public class KTreeRender extends Render {
      * @param lastRow If {@code true}, no child connection lines are drawn.
      */
     private void drawNode (String value, double x, double y, Color fill, int depth, int breadth, int index){
-        GraphicsContext context = local.getGraphicsContext2D();
+        GraphicsContext context = LOCAL_STATIONARY.getGraphicsContext2D();
         context.setFill(fill);
         context.fillOval(x, y, node_width, node_height);
         //Outline, text, children
@@ -331,11 +331,6 @@ public class KTreeRender extends Render {
     }
 
     @Override
-    public void animate (Element e, int targetX, int targetT){
-        // TODO Auto-generated method stub
-    }
-
-    @Override
     public double getX (Element e){
         // TODO Auto-generated method stub
         return 0;
@@ -345,5 +340,11 @@ public class KTreeRender extends Render {
     public double getY (Element e){
         // TODO Auto-generated method stub
         return 0;
+    }
+
+    @Override
+    public void animate (Element e, double end_x, double end_y){
+        // TODO Auto-generated method stub
+        
     }
 }

@@ -25,7 +25,6 @@ public class IdentifierCollisionDialog {
     private final TextField   oldStructs, newStructs;
     private final CheckBox    memory;
     private final Stage       parent, root;
-    private boolean           keep_old         = false;
 
     public IdentifierCollisionDialog (Stage parent){
         this.parent = parent;

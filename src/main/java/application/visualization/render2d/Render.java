@@ -2,19 +2,13 @@ package application.visualization.render2d;
 
 import java.util.Arrays;
 
-import application.model.Model;
 import application.visualization.Visualization;
-import javafx.animation.Timeline;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import wrapper.Locator;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
-import wrapper.operations.OP_ReadWrite;
-import wrapper.operations.OP_Swap;
 
 public abstract class Render extends Pane {
 
@@ -24,8 +18,8 @@ public abstract class Render extends Pane {
     protected double              WIDTH, HEIGHT;
     protected final DataStructure struct;
     protected int                 elementsPreviousRender = 0;
-    protected final Canvas        local                  = new Canvas();
-    protected static final Canvas ANIMATED               = Visualization.instance().ANIMATED;
+    protected final Canvas        LOCAL_STATIONARY       = new Canvas();
+    protected static final Canvas SHARED_ANIMATED        = Visualization.instance().ANIMATED;
     protected static final Color  COLOR_READ             = Color.valueOf(Element.COLOR_READ);
     protected static final Color  COLOR_WRITE            = Color.valueOf(Element.COLOR_WRITE);
     protected static final Color  COLOR_SWAP             = Color.valueOf(Element.COLOR_SWAP);
@@ -42,16 +36,16 @@ public abstract class Render extends Pane {
         this.vspace = vspace;
 //        local.widthProperty().bind(this.widthProperty());
 //        local.heightProperty().bind(this.heightProperty());
-        local.setWidth(2000);
-        local.setHeight(2000);
+        LOCAL_STATIONARY.setWidth(2000);
+        LOCAL_STATIONARY.setHeight(2000);
         //Add stacked canvases
-        this.getChildren().add(local);
+        this.getChildren().add(LOCAL_STATIONARY);
         initDragAndZoom();
     }
 
     public abstract void render ();
 
-    public abstract void animate (Element e, int targetX, int targetT);
+    public abstract void animate (Element e, double end_x, double end_y);
 
     /**
      * Get the fill color for the center. Returns white for style == null and black as default.
@@ -92,18 +86,20 @@ public abstract class Render extends Pane {
         System.out.println(Arrays.toString(ans[1]));
         return ans;
     }
-    
-    public abstract double getX(Element e);
-    public abstract double getY(Element e);
-    
-    public void calculatePrefSize(){
-        local.getGraphicsContext2D().clearRect(0, 0, local.getWidth(), local.getHeight());
+
+    public abstract double getX (Element e);
+
+    public abstract double getY (Element e);
+
+    public void calculatePrefSize (){
+        LOCAL_STATIONARY.getGraphicsContext2D().clearRect(0, 0, LOCAL_STATIONARY.getWidth(), LOCAL_STATIONARY.getHeight());
     }
-    
+
     //Drag and Zoom
     private double transX, transY;
     private double scale = 1;
     private int    sign  = 1;
+
     /**
      * Create listeners to drag and zoom.
      */
@@ -111,7 +107,7 @@ public abstract class Render extends Pane {
         /*
          * Zoom
          */
-        local.setOnScroll(event -> {
+        LOCAL_STATIONARY.setOnScroll(event -> {
             sign = event.getDeltaY() > 0 ? 1 : -1;
             scale = scale + sign * 0.1;
             if (scale < 0.1) {
@@ -122,30 +118,30 @@ public abstract class Render extends Pane {
                 scale = 2;
                 return;
             }
-            local.setScaleX(scale);
-            local.setScaleY(scale);
+            LOCAL_STATIONARY.setScaleX(scale);
+            LOCAL_STATIONARY.setScaleY(scale);
         });
         /*
          * Drag
          */
         // Record a delta distance for the drag and drop operation.
-        local.setOnMousePressed(event -> {
-            transX = local.getTranslateX() - event.getSceneX();
-            transY = local.getTranslateY() - event.getSceneY();
-            local.setCursor(Cursor.MOVE);
+        LOCAL_STATIONARY.setOnMousePressed(event -> {
+            transX = LOCAL_STATIONARY.getTranslateX() - event.getSceneX();
+            transY = LOCAL_STATIONARY.getTranslateY() - event.getSceneY();
+            LOCAL_STATIONARY.setCursor(Cursor.MOVE);
         });
         // Restore cursor
-        local.setOnMouseReleased(event -> {
-            local.setCursor(Cursor.HAND);
+        LOCAL_STATIONARY.setOnMouseReleased(event -> {
+            LOCAL_STATIONARY.setCursor(Cursor.HAND);
         });
         // Translate canvases
-        local.setOnMouseDragged(event -> {
-            local.setTranslateX(event.getSceneX() + transX);
-            local.setTranslateY(event.getSceneY() + transY);
+        LOCAL_STATIONARY.setOnMouseDragged(event -> {
+            LOCAL_STATIONARY.setTranslateX(event.getSceneX() + transX);
+            LOCAL_STATIONARY.setTranslateY(event.getSceneY() + transY);
         });
         // Set cursor
-        local.setOnMouseEntered(event -> {
-            local.setCursor(Cursor.HAND);
+        LOCAL_STATIONARY.setOnMouseEntered(event -> {
+            LOCAL_STATIONARY.setCursor(Cursor.HAND);
         });
     }
 }
