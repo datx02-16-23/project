@@ -52,29 +52,30 @@ import com.dennisjonsson.annotation.SourcePath;
 @SourcePath(path = "C:/Users/Richard/Documents/datx02-16-23/Bachelor/src/main/java/application/gui/")
 public class GUI_Controller implements CommunicatorListener {
 
-    private Visualization          visualization;
-    private Stage                  window;
-    private final LogStreamManager lsm;
-    private final Model           model;
+    private Visualization                   visualization;
+    private Stage                           window;
+    private final LogStreamManager          lsm;
+    private final Model                     model;
     // Controls
-    private Menu                   visualMenu;
-    private MenuButton             streamBehaviourMenuButton;
-    private boolean                stream_always_show_last_op = true;
-    private boolean                stream_start_autoplay      = false;
+    private Menu                            visualMenu;
+    private MenuButton                      streamBehaviourMenuButton;
+    private boolean                         stream_always_show_last_op = true;
+    private boolean                         stream_start_autoplay      = false;
     //Autoplay
-    private boolean                isPlaying                  = false;
-    private int                    stepDelaySpeedupFactor     = 1;
-    private long                   stepDelayBase              = 1500;
-    private long                   stepDelay                  = stepDelayBase / stepDelaySpeedupFactor;
+    private boolean                         isPlaying                  = false;
+    private int                             stepDelaySpeedupFactor     = 1;
+    private long                            stepDelayBase              = 1500;
+    private long                            stepDelay                  = stepDelayBase / stepDelaySpeedupFactor;
     // Settings dialog stuff
-    private Stage                  settingsView;
+    private Stage                           settingsView;
     //Views, panels, dialogs
-    private final ConnectedView    connectedView;
-    private final InterpreterView  interpreterView;
-    private final SourcePanel      sourceViewer;
-    private final OperationPanel   operationPanel;
-    private final ExamplesDialog   examplesDialog;
-    private final VisualDialog     visualDialog;
+    private final ConnectedView             connectedView;
+    private final InterpreterView           interpreterView;
+    private final SourcePanel               sourceViewer;
+    private final OperationPanel            operationPanel;
+    private final ExamplesDialog            examplesDialog;
+    private final VisualDialog              visualDialog;
+    private final IdentifierCollisionDialog icd;
 
     public GUI_Controller (Stage window, LogStreamManager lsm, SourcePanel sourceViewer){
         this.visualization = Visualization.instance();
@@ -88,6 +89,7 @@ public class GUI_Controller implements CommunicatorListener {
         this.examplesDialog = new ExamplesDialog(window);
         this.visualDialog = new VisualDialog(window);
         this.connectedView = new ConnectedView(window, (JGroupCommunicator) lsm.getCommunicator());
+        this.icd = new IdentifierCollisionDialog(window);
         initSettingsPane();
         interpreterView = new InterpreterView(window);
         loadProperties();
@@ -215,12 +217,13 @@ public class GUI_Controller implements CommunicatorListener {
     public boolean stepForwardButtonClicked (){
         return stepModelForward();
     }
-    
+
     /**
      * Steps the model forward and forces any ongoing animations to cancel.
+     * 
      * @return True if the model progress. False otherwise.
      */
-    private boolean stepModelForward(){
+    private boolean stepModelForward (){
         if (model.stepForward()) {
             visualization.render(model.getCurrentStep().getLastOp());
             updatePanels();
@@ -390,6 +393,9 @@ public class GUI_Controller implements CommunicatorListener {
         lsm.clearData();
     }
 
+    private boolean always_clear_old = false;
+    private boolean always_keep_old   = false;
+
     /**
      * Load the current data from LSM. Does not clear any data.
      */
@@ -402,9 +408,39 @@ public class GUI_Controller implements CommunicatorListener {
                 if (oldKey.equals(newKey)) {
                     Main.console.force("ERROR: Data Structure identifier collision:");
                     Main.console.force("Known structures: " + model.getStructures().values());
-                    Main.console.force("Rejected structures: " + lsm.getDataStructures().values());
-                    java.awt.Toolkit.getDefaultToolkit().beep();
-                    return;
+                    Main.console.force("New structures: " + lsm.getDataStructures().values());
+                    if (always_clear_old) {
+                        Main.console.force("Known structures cleared.");
+                        clearButtonClicked();
+                    }
+                    else if (always_keep_old) {
+                        Main.console.force("New structures rejected.");
+                        return;
+                    }
+                    else {
+                        java.awt.Toolkit.getDefaultToolkit().beep();
+                        short routine = icd.show(oldStructs.values(), oldStructs.values());
+                        switch (routine) {
+                            //Clear old structures, import new
+                            case IdentifierCollisionDialog.ALWAYS_CLEAR_OLD:
+                                always_clear_old = true;
+                                clearButtonClicked();
+                                Main.console.force("Conflicting structures will overrwrite existing for this session.");
+                                break;
+                            case IdentifierCollisionDialog.CLEAR_OLD:
+                                clearButtonClicked();
+                                Main.console.force("Known structures cleared.");
+                                break;
+                            //Reject new structures
+                            case IdentifierCollisionDialog.ALWAYS_KEEP_OLD:
+                                always_keep_old = true;
+                                Main.console.force("Conflicting structures will be rejected for this session.");
+                                return;
+                            case IdentifierCollisionDialog.KEEP_OLD:
+                                Main.console.force("New structures rejected.");
+                                return;
+                        }
+                    }
                 }
             }
         }
