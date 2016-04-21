@@ -49,10 +49,10 @@ public class Main extends Application {
         final LogStreamManager lsm = new LogStreamManager(Strings.PROJECT_NAME + " GUI");
         primaryStage.setTitle(Strings.PROJECT_NAME);
         // Create a Group view for the AV.
-        Visualization visualization = new Visualization();
+        Visualization visualization = Visualization.instance();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/VisualizerView.fxml"));
         SourcePanel sourceViewer = new SourcePanel();
-        controller = new GUI_Controller(visualization, primaryStage, lsm, sourceViewer);
+        controller = new GUI_Controller(primaryStage, lsm, sourceViewer);
         OperationPanel operationPanel = controller.getOperationPanel();
         fxmlLoader.setController(controller);
         // Load and get the root layout.

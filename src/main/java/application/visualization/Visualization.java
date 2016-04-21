@@ -1,38 +1,71 @@
 package application.visualization;
 
+import java.util.ArrayList;
+
 import application.gui.Main;
 import application.model.Model;
 import application.visualization.render2d.*;
 import application.visualization.render2d.MatrixRender.Order;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
+import wrapper.Locator;
+import wrapper.Operation;
 import wrapper.datastructures.DataStructure;
+import wrapper.datastructures.Element;
+import wrapper.operations.OP_ReadWrite;
+import wrapper.operations.OP_Swap;
+import wrapper.operations.OperationType;
 
-public class Visualization extends GridPane {
+public class Visualization extends StackPane {
 
-    private final Model model;
+    private final Model          model;
+    private static Visualization INSTANCE;
+    private final GridPane       RENDERS  = new GridPane();
+    public final Canvas          ANIMATED = new Canvas();
 
-    public Visualization (){
-        this.model = Model.instance();
-        this.setStyle("-fx-background-color: white ;");
+    public static Visualization instance (){
+        if (INSTANCE == null) {
+            INSTANCE = new Visualization();
+        }
+        return INSTANCE;
     }
-    
-    public void clear(){
-      getChildren().clear();
+
+    private Visualization (){
+        this.model = Model.instance();
+        //Build Canvas
+        ANIMATED.setMouseTransparent(true);
+        ANIMATED.widthProperty().bind(this.widthProperty());
+        ANIMATED.heightProperty().bind(this.heightProperty());
+        ANIMATED.maxWidth(Double.MAX_VALUE);
+        ANIMATED.maxHeight(Double.MAX_VALUE);
+        ANIMATE = true;
+        //Add stacked canvases
+        this.getChildren().add(RENDERS);
+        this.getChildren().add(ANIMATED);
+    }
+
+    public void clear (){
+        RENDERS.getChildren().clear();
+        ANIMATED.getGraphicsContext2D().clearRect(0, 0, this.getWidth(), this.getHeight());
     }
 
     public void clearAndCreateVisuals (){
-        getChildren().clear();
-        int regular = 0;
-        int independent = 0;
+        System.out.println("create!");
+        clear();
+        int loc = 0;
         for (DataStructure struct : model.getStructures().values()) {
-//            if (struct.rawType == "independentElement") {
+            if (struct.rawType == "independentElement") {
 //                Render render = new IndependentElementRender(struct);
-//                this.add(render, 1, independent++);
-//                continue;
-//            }
-            ARender render = resolveRender(struct);
+//                root.add(render, loc++, 0);
+//                RENDERS.add(render);
+                continue;
+            }
+            Render render = resolveRender(struct);
             if (render != null) {
-                this.add(render, 0, regular++);
+                render.setPrefWidth(this.getWidth());
+                render.setPrefHeight(this.getHeight());
+                RENDERS.add(render, loc++, 0);
                 continue;
             }
         }
@@ -43,8 +76,8 @@ public class Visualization extends GridPane {
      * 
      * @param struct The DataStructure to assign a Render to.
      */
-    private ARender resolveRender (DataStructure struct){
-        ARender render = null;
+    private Render resolveRender (DataStructure struct){
+        Render render = null;
         String visual = struct.visual == null ? "NULL" : struct.visual;
         outer: for (int attempt = 1; attempt < 3; attempt++) {
             switch (visual) {
@@ -81,11 +114,69 @@ public class Visualization extends GridPane {
     /**
      * Should be called whenever model is updated, does a complete rerender of the structures.
      */
-    public void render (){
-        ARender render;
-        for (Object o : getChildren()) {
-            render = (ARender) o;
+    public void render (Operation op){
+//        System.out.println(RENDERS.getChildren().size());
+        Render render;
+        for (Object node : RENDERS.getChildren()) {
+            render = (Render) node;
             render.render();
         }
+        if (ANIMATE && op != null) {
+            animate(op);
+        }
+    }
+
+    public void animate (Operation op){
+        if (op.operation == OperationType.read & op.operation == OperationType.write) {
+            animateReadWrite((OP_ReadWrite) op);
+        }
+        else if (op.operation == OperationType.swap) {
+            animateSwap((OP_Swap) op);
+        }
+    }
+
+    public void animateReadWrite (OP_ReadWrite rw){
+        Locator source = rw.getSource();
+        if (source == null) {
+            return;
+        }
+        Element e;
+        for (DataStructure struct : model.getStructures().values()) {
+            e = struct.getElement(source);
+            if (e != null) {
+                struct.getAnimatedElements().add(e);
+                break;
+            }
+        }
+    }
+
+    public void animateSwap (OP_Swap swap){
+        Locator var1 = swap.getVar1();
+        Locator var2 = swap.getVar2();
+        Element e;
+        for (DataStructure struct : model.getStructures().values()) {
+            e = struct.getElement(var1);
+            if (e != null) {
+                struct.getAnimatedElements().add(e);
+            }
+            e = struct.getElement(var2);
+            if (e != null) {
+                struct.getAnimatedElements().add(e);
+            }
+        }
+    }
+
+    public void clean (){
+        ANIMATED.getGraphicsContext2D().clearRect(0, 0, Double.MAX_VALUE, Double.MAX_VALUE);
+    }
+
+    public boolean ANIMATE;
+
+    public void setAnimate (boolean value){
+        if (value == ANIMATE) {
+            return;
+        }
+        ANIMATE = value;
+        //TODO
     }
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import application.gui.Main;
+import application.visualization.Visualization;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -28,10 +29,10 @@ import wrapper.datastructures.Array.ArrayElement;
  * @author Richard Sundqvist
  *
  */
-public class KTreeRender extends ARender {
+public class KTreeRender extends Render {
 
     private final int                K;
-    private final ArrayList<Integer> lowerLevelSums         = new ArrayList<Integer>();
+    private final ArrayList<Integer> lowerLevelSums = new ArrayList<Integer>();
     private int                      totDepth, totBreadth, completedSize;
 
     /**
@@ -124,27 +125,24 @@ public class KTreeRender extends ARender {
         totDepth--;
         this.completedSize = lowerLevelSums.get(totDepth + 1);
         totBreadth = K_pow(totDepth);
-        calculateSize();
+        calculatePrefSize();
     }
 
-    /**
-     * Recalculate size.
-     */
-    private void calculateSize (){
-        double width = totBreadth * (node_width + hspace);
-        double height = totDepth * (node_height + vspace) * 2 + vspace; //Depth doesnt include node + margain above.
-        this.setMinSize(width, height);
-        this.setMaxSize(width, height);
+    @Override
+    public void calculatePrefSize (){
+        super.calculatePrefSize();
+        this.WIDTH = totBreadth * (node_width + hspace);
+        this.HEIGHT = totDepth * (node_height + vspace) * 2 + vspace; //Depth doesnt include node + margain above.
+        this.setPrefSize(WIDTH, HEIGHT);
     }
 
     /**
      * Create and render all elements.
      */
     private void init (){
-        calculateDepthAndBreadth(); //Calls calculateSize()
-        GraphicsContext context = stationary.getGraphicsContext2D();
-        context.setFill(COLOR_WHITE);
-        context.fillRect(0, 0, this.getMaxWidth(), this.getMaxHeight());
+        calculateDepthAndBreadth(); //Calls calculatePrefSize()
+        GraphicsContext context = local.getGraphicsContext2D();
+        context.clearRect(0, 0, this.WIDTH, this.WIDTH);
         context.setFill(COLOR_BLACK);
         context.fillText(struct.toString(), hspace, vspace + 10);
         for (Element e : struct.getElements()) {
@@ -231,7 +229,7 @@ public class KTreeRender extends ARender {
      * @param lastRow If {@code true}, no child connection lines are drawn.
      */
     private void drawNode (String value, double x, double y, Color fill, int depth, int breadth, int index){
-        GraphicsContext context = stationary.getGraphicsContext2D();
+        GraphicsContext context = local.getGraphicsContext2D();
         context.setFill(fill);
         context.fillOval(x, y, node_width, node_height);
         //Outline, text, children
@@ -335,7 +333,5 @@ public class KTreeRender extends ARender {
     @Override
     public void animate (Element e, int targetX, int targetT){
         // TODO Auto-generated method stub
-        
     }
-
 }

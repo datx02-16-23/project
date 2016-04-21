@@ -76,8 +76,8 @@ public class GUI_Controller implements CommunicatorListener {
     private final ExamplesDialog   examplesDialog;
     private final VisualDialog     visualDialog;
 
-    public GUI_Controller (Visualization visualization, Stage window, LogStreamManager lsm, SourcePanel sourceViewer){
-        this.visualization = visualization;
+    public GUI_Controller (Stage window, LogStreamManager lsm, SourcePanel sourceViewer){
+        this.visualization = Visualization.instance();
         this.window = window;
         model = Model.instance();
         this.lsm = lsm;
@@ -204,7 +204,7 @@ public class GUI_Controller implements CommunicatorListener {
         stopAutoPlay();
         model.reset();
         updatePanels();
-        visualization.render();
+        visualization.render(null);
     }
 
     /**
@@ -222,7 +222,7 @@ public class GUI_Controller implements CommunicatorListener {
      */
     private boolean stepModelForward(){
         if (model.stepForward()) {
-            visualization.render();
+            visualization.render(model.getCurrentStep().getLastOp());
             updatePanels();
             return true;
         }
@@ -235,7 +235,7 @@ public class GUI_Controller implements CommunicatorListener {
     public void stepBackwardButtonClicked (){
         stopAutoPlay();
         model.stepBackward();
-        visualization.render();
+        visualization.render(model.getCurrentStep().getLastOp());
         updatePanels();
     }
 
@@ -294,7 +294,7 @@ public class GUI_Controller implements CommunicatorListener {
      */
     public void goToStep (int index){
         model.goToStep(index);
-        visualization.render();
+        visualization.render(model.getCurrentStep().getLastOp());
         operationPanel.update(model.getIndex(), false);
     }
 
@@ -413,7 +413,7 @@ public class GUI_Controller implements CommunicatorListener {
         model.getOperations().addAll(lsm.getOperations());
         sourceViewer.addSources(lsm.getSources());
         visualization.clearAndCreateVisuals();
-        visualization.render();
+        visualization.render(model.getCurrentStep().getLastOp());
         //Update operation list
         operationPanel.getItems().addAll(lsm.getOperations());
         loadVisualMenu();

@@ -3,6 +3,7 @@ package application.visualization.render2d;
 import java.util.List;
 
 import application.gui.Main;
+import application.visualization.Visualization;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -20,7 +21,7 @@ import wrapper.Operation;
 import wrapper.datastructures.Array;
 import wrapper.datastructures.Array.ArrayElement;
 
-public class MatrixRender extends ARender {
+public class MatrixRender extends Render {
 
     public static final double DEFAULT_SIZE           = 40;
     private final Order        mo;
@@ -67,17 +68,14 @@ public class MatrixRender extends ARender {
         else {
             List<Element> modifiedElements = struct.getModifiedElements();
             List<Element> resetElements = struct.getResetElements();
+            List<Element> animatedElements = struct.getAnimatedElements();
             ArrayElement ae;
             for (Element e : struct.getElements()) {
-                if(struct.getElements().indexOf(e) == 1){
-                    System.out.println("animate!");
-                    animate(e, 400, 150);
-                }
-//                if (animatedElements.contains(e)) {
-//                    continue; //Animated elements are handled seperately.
-//                }
                 ae = (ArrayElement) e;
-                if (modifiedElements.contains(e)) {
+                if (animatedElements.contains(e)) {
+                    continue; //Animated elements are handled seperately.
+                }
+                else if (modifiedElements.contains(e)) {
                     drawElement(ae.getValue() + "", ae.getIndex(), e.getColor());
                 }
                 else if (resetElements.contains(e)) {
@@ -94,10 +92,9 @@ public class MatrixRender extends ARender {
     private void init (){
         Array a = (Array) struct;
         size = a.getCapacity() == null ? new int[] {struct.getElements().size(), 1} : a.getCapacity();
-        calculateSize();
-        GraphicsContext context = stationary.getGraphicsContext2D();
-        context.setFill(COLOR_WHITE);
-        context.fillRect(0, 0, this.getMaxWidth(), this.getMaxHeight());
+        calculatePrefSize();
+        GraphicsContext context = local.getGraphicsContext2D();
+        context.clearRect(0, 0, this.WIDTH, this.HEIGHT);
         context.setFill(COLOR_BLACK);
         context.fillText(struct.toString(), hspace, vspace + 10);
         if (struct.getElements().isEmpty() == false) {
@@ -114,11 +111,16 @@ public class MatrixRender extends ARender {
         drawIndicies();
     }
 
-    private void calculateSize (){
-        double width = PADDING * 2 + vspace + (vspace + node_width) * size[0];
-        double height = PADDING * 2 + hspace + (hspace + node_height) * size[1];
-        this.setMinSize(width, height);
-        this.setMaxSize(width, height);
+    @Override
+    public void calculatePrefSize (){
+        super.calculatePrefSize();
+        WIDTH = PADDING * 2 + vspace + (vspace + node_width) * size[0];
+        HEIGHT = PADDING * 2 + hspace + (hspace + node_height) * size[1];
+        this.setPrefSize(WIDTH, HEIGHT);
+        System.out.println("WIDTH = " + WIDTH);
+        System.out.println("HEIGHT = " + HEIGHT);
+        System.out.println("w =" + this.getWidth());
+        System.out.println("h =" + this.getHeight());
     }
 
     private double getX (int column){
@@ -152,7 +154,7 @@ public class MatrixRender extends ARender {
             }
         }
         //Dispatch
-        drawNode(value, x, y, getFillColor(style), index, stationary);
+        drawNode(value, x, y, getFillColor(style), index, local);
     }
 
     /*
@@ -185,7 +187,7 @@ public class MatrixRender extends ARender {
     }
 
     private void drawIndicies (){
-        GraphicsContext context = stationary.getGraphicsContext2D();
+        GraphicsContext context = local.getGraphicsContext2D();
         context.setFill(COLOR_BLACK);
         //Column numbering
         if (size[0] > 1) {
@@ -214,6 +216,7 @@ public class MatrixRender extends ARender {
             this.optionNbr = optionNbr;
         }
     }
+
     @Override
     public void animate (Element e, int x_end, int y_end){
         Array struct = (Array) this.struct;
@@ -227,9 +230,8 @@ public class MatrixRender extends ARender {
 
             @Override
             public void handle (ActionEvent actionEvent){
-                GraphicsContext context = animated.getGraphicsContext2D();
-                context.clearRect(0, 0, 1000, 1000);
-                drawNode(ae.getValue() + "", points[0][step], points[1][step], getFillColor(ae.getColor()), ae.getIndex(), animated);
+                GraphicsContext context = ANIMATED.getGraphicsContext2D();
+                drawNode(ae.getValue() + "", points[0][step], points[1][step], getFillColor(ae.getColor()), ae.getIndex(), ANIMATED);
                 step++;
             }
         }));
@@ -238,8 +240,6 @@ public class MatrixRender extends ARender {
         });
         tl.playFromStart();
     }
-    
-    
 
     int step = 0;
 }

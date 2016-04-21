@@ -2,6 +2,7 @@ package application.visualization.render2d;
 
 import java.util.List;
 
+import application.visualization.Visualization;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
@@ -12,7 +13,7 @@ import wrapper.datastructures.Element;
 import wrapper.Operation;
 import wrapper.datastructures.Array.ArrayElement;
 
-public class BarRender extends ARender {
+public class BarRender extends Render {
 
     public static final double DEFAULT_SIZE           = 40;
     private final double       padding;
@@ -68,10 +69,9 @@ public class BarRender extends ARender {
      * Create and render all elements.
      */
     private void init (){
-        calculateSize();
-        GraphicsContext context = stationary.getGraphicsContext2D();
-        context.setFill(COLOR_WHITE);
-        context.fillRect(0, 0, this.getMaxWidth(), this.getMaxHeight());
+        calculatePrefSize();
+        GraphicsContext context = local.getGraphicsContext2D();
+        context.clearRect(0, 0, WIDTH, HEIGHT);
         context.setFill(COLOR_BLACK);
         context.fillText(struct.toString(), hspace, vspace + 10);
         for (Element e : struct.getElements()) {
@@ -80,12 +80,13 @@ public class BarRender extends ARender {
         }
     }
 
-    private void calculateSize (){
+    @Override
+    public void calculatePrefSize (){
         //TODO
-        double width = padding * 2 + (hspace + node_width) * struct.getElements().size();
-        double height = 1200;
-        this.setMinSize(width, height);
-        this.setMaxSize(width, height);
+        super.calculatePrefSize();
+        WIDTH = padding * 2 + (hspace + node_width) * struct.getElements().size();
+        HEIGHT = 500;
+        this.setPrefSize(WIDTH, HEIGHT);
     }
 
     private double getX (int column){
@@ -96,7 +97,7 @@ public class BarRender extends ARender {
     }
 
     private double getY (double value){
-        return this.getMinHeight() - (node_height) * value - padding;
+        return this.HEIGHT - (node_height) * value - padding;
     }
 
     /**
@@ -126,9 +127,9 @@ public class BarRender extends ARender {
      * @param lastRow If {@code true}, no child connection lines are drawn.
      */
     private void drawNode (double value, double x, double y, Color fill, int index){
-        GraphicsContext context = stationary.getGraphicsContext2D();
+        GraphicsContext context = local.getGraphicsContext2D();
         context.setFill(fill);
-        context.clearRect(x-1, padding, node_width+2, this.getMaxHeight()+1);
+        context.clearRect(x - 1, padding, node_width + 2, this.HEIGHT + 1);
         context.fillRect(x, y, node_width, node_height * value);
         //Outline, text, children
         context.setFill(COLOR_BLACK);
@@ -144,16 +145,14 @@ public class BarRender extends ARender {
     }
 
     private void drawAxes (){
-        GraphicsContext context = stationary.getGraphicsContext2D();
+        GraphicsContext context = local.getGraphicsContext2D();
         context.setFill(COLOR_BLACK);
-        double y = this.getMinHeight() - padding;
-        double x = this.getMinWidth() - padding;
+        double y = this.HEIGHT - padding;
+        double x = this.WIDTH - padding;
         //Y-axis
-        context.strokeLine(padding , padding / 2,
-                           padding , y + padding / 2);
+        context.strokeLine(padding, padding / 2, padding, y + padding / 2);
         //X-axis
-        context.strokeLine(padding / 2    , y+1,
-                           x + padding / 2, y+1);
+        context.strokeLine(padding / 2, y + 1, x + padding / 2, y + 1);
     }
 
     public enum GrowthDirection{
@@ -173,6 +172,5 @@ public class BarRender extends ARender {
     @Override
     public void animate (Element e, int targetX, int targetT){
         // TODO Auto-generated method stub
-        
     }
 }
