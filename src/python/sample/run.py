@@ -60,12 +60,6 @@ def create_header(version,variables,files):
 # main_file - main file to be executed
 # output - where to store the final LOG file
 def create_settings(root_directory, files, variables, main_file, output):
-	operations = load_logwriter('operations.py',output)
-
-	transformers = [PassTransformer('link'), WriteTransformer('write'), ReadTransformer('read')]
-
-	v_env = '%svisualize/' % root_directory
-
 	settings = {
 		'rootdir' : root_directory,
 		'files' : files,
@@ -79,6 +73,10 @@ def create_settings(root_directory, files, variables, main_file, output):
 	return settings
 
 def run(settings):
+	# additional currently non-user settings
+	settings['operations'] = load_logwriter('operations.py',output)
+	settings['transformers'] = [PassTransformer('link'), WriteTransformer('write'), ReadTransformer('read')]
+	settings['v_env'] = '%svisualize/' % settings['rootdir']
 	# create visulization environment
 	create_env(settings)
 	# run userprogram in visualization environment
@@ -110,5 +108,4 @@ if __name__ == '__main__':
 		'main.py', 				# main file
 		output 					# LOG output destination
 	)
-	
 	run(settings)

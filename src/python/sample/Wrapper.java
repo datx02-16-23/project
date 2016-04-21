@@ -1,6 +1,6 @@
 /*
 	Compile Wrapper with this line
-	javac -cp ../../../build/classes/main:gson.jar:jgroups.jar:. Wrapper.java 
+	javac -cp ../../../build/classes/main:jars/gson.jar:jars/jgroups.jar:. Wrapper.java 
 */
 import io.LogStreamManager;
 
