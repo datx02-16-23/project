@@ -18,7 +18,7 @@ public abstract class Render extends Pane {
     protected double              WIDTH, HEIGHT;
     protected final DataStructure struct;
     protected int                 elementsPreviousRender = 0;
-    protected final Canvas        LOCAL_STATIONARY       = new Canvas();
+    protected final Canvas        local_canvas       = new Canvas();
     protected static final Canvas SHARED_ANIMATED        = Visualization.instance().ANIMATED;
     protected static final Color  COLOR_READ             = Color.valueOf(Element.COLOR_READ);
     protected static final Color  COLOR_WRITE            = Color.valueOf(Element.COLOR_WRITE);
@@ -36,10 +36,10 @@ public abstract class Render extends Pane {
         this.vspace = vspace;
 //        local.widthProperty().bind(this.widthProperty());
 //        local.heightProperty().bind(this.heightProperty());
-        LOCAL_STATIONARY.setWidth(2000);
-        LOCAL_STATIONARY.setHeight(2000);
+        local_canvas.setWidth(2000);
+        local_canvas.setHeight(2000);
         //Add stacked canvases
-        this.getChildren().add(LOCAL_STATIONARY);
+        this.getChildren().add(local_canvas);
         initDragAndZoom();
     }
 
@@ -110,7 +110,7 @@ public abstract class Render extends Pane {
      * Order the Render to calculate it's preferred size. Should be shadowed by inheriting types.
      */
     public void calculatePrefSize (){
-        LOCAL_STATIONARY.getGraphicsContext2D().clearRect(0, 0, LOCAL_STATIONARY.getWidth(), LOCAL_STATIONARY.getHeight());
+        local_canvas.getGraphicsContext2D().clearRect(0, 0, local_canvas.getWidth(), local_canvas.getHeight());
     }
 
     //Drag and Zoom
@@ -125,7 +125,7 @@ public abstract class Render extends Pane {
         /*
          * Zoom
          */
-        LOCAL_STATIONARY.setOnScroll(event -> {
+        local_canvas.setOnScroll(event -> {
             sign = event.getDeltaY() > 0 ? 1 : -1;
             scale = scale + sign * 0.1;
             if (scale < 0.1) {
@@ -136,30 +136,30 @@ public abstract class Render extends Pane {
                 scale = 2;
                 return;
             }
-            LOCAL_STATIONARY.setScaleX(scale);
-            LOCAL_STATIONARY.setScaleY(scale);
+            local_canvas.setScaleX(scale);
+            local_canvas.setScaleY(scale);
         });
         /*
          * Drag
          */
         // Record a delta distance for the drag and drop operation.
-        LOCAL_STATIONARY.setOnMousePressed(event -> {
-            transX = LOCAL_STATIONARY.getTranslateX() - event.getSceneX();
-            transY = LOCAL_STATIONARY.getTranslateY() - event.getSceneY();
-            LOCAL_STATIONARY.setCursor(Cursor.MOVE);
+        local_canvas.setOnMousePressed(event -> {
+            transX = local_canvas.getTranslateX() - event.getSceneX();
+            transY = local_canvas.getTranslateY() - event.getSceneY();
+            local_canvas.setCursor(Cursor.MOVE);
         });
         // Restore cursor
-        LOCAL_STATIONARY.setOnMouseReleased(event -> {
-            LOCAL_STATIONARY.setCursor(Cursor.HAND);
+        local_canvas.setOnMouseReleased(event -> {
+            local_canvas.setCursor(Cursor.HAND);
         });
         // Translate canvases
-        LOCAL_STATIONARY.setOnMouseDragged(event -> {
-            LOCAL_STATIONARY.setTranslateX(event.getSceneX() + transX);
-            LOCAL_STATIONARY.setTranslateY(event.getSceneY() + transY);
+        local_canvas.setOnMouseDragged(event -> {
+            local_canvas.setTranslateX(event.getSceneX() + transX);
+            local_canvas.setTranslateY(event.getSceneY() + transY);
         });
         // Set cursor
-        LOCAL_STATIONARY.setOnMouseEntered(event -> {
-            LOCAL_STATIONARY.setCursor(Cursor.HAND);
+        local_canvas.setOnMouseEntered(event -> {
+            local_canvas.setCursor(Cursor.HAND);
         });
     }
 
@@ -186,7 +186,7 @@ public abstract class Render extends Pane {
      * @return The Canvas for this Render.
      */
     public Canvas getCanvas(){
-        return LOCAL_STATIONARY;
+        return local_canvas;
     }
     /**
      * Returns the absolute x-coordinate for the element e.

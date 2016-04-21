@@ -1,6 +1,6 @@
 package application.assets.examples;
 
-import com.dennisjonsson.annotation.*;
+//import com.dennisjonsson.annotation.*;
 import application.gui.Main;
 
 /**
@@ -15,8 +15,8 @@ import application.gui.Main;
  *
  */
 
-@Include(classes = {"application.assets.examples.Insertion"})
-@SourcePath(path = "C:/Users/Richard/Documents/datx02-16-23/Bachelor/src/main/java/application/assets/")
+//@Include(classes = {"application.assets.examples.Insertion"})
+//@SourcePath(path = "C:/Users/Richard/Documents/datx02-16-23/Bachelor/src/main/java/application/assets/")
 public abstract class Examples {
 
     private static double[] arg;
@@ -59,7 +59,7 @@ public abstract class Examples {
      denna måste vara definierad i någon annoterad klass i programmet 
      och kallas när du är färdig
     */
-    @Print(path="")
+//    @Print(path="")
     public static void print(){}
 
     /**

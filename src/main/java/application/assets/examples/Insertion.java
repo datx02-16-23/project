@@ -1,10 +1,10 @@
 package application.assets.examples;
 
-import com.dennisjonsson.annotation.SourcePath;
-import com.dennisjonsson.annotation.VisualizeArg;
-import com.dennisjonsson.markup.AbstractType;
+//import com.dennisjonsson.annotation.SourcePath;
+//import com.dennisjonsson.annotation.VisualizeArg;
+//import com.dennisjonsson.markup.AbstractType;
 
-@SourcePath(path = "C:/Users/Richard/Documents/datx02-16-23/Bachelor/src/main/java/application/assets/examples")
+//@SourcePath(path = "C:/Users/Richard/Documents/datx02-16-23/Bachelor/src/main/java/application/assets/examples")
 class Insertion {
 
     /**
@@ -15,7 +15,7 @@ class Insertion {
      * @param data The data to run the algorithm on.
      * @return The operations performed by the algorithm on the given data.
      */
-    @VisualizeArg(args = {AbstractType.ARRAY})
+//    @VisualizeArg(args = {AbstractType.ARRAY})
     static void sort (double[] data){
         int j; // the number of items sorted so far
         double key; // the item to be inserted

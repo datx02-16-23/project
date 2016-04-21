@@ -41,15 +41,15 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.Properties;
-
-import com.dennisjonsson.annotation.Include;
-import com.dennisjonsson.annotation.SourcePath;
+//
+//import com.dennisjonsson.annotation.Include;
+//import com.dennisjonsson.annotation.SourcePath;
 
 /**
  * This is the Controller of MVC for the visualizer GUI.
  */
-@Include(classes = {"application.assets.examples.Examples"})
-@SourcePath(path = "C:/Users/Richard/Documents/datx02-16-23/Bachelor/src/main/java/application/gui/")
+//@Include(classes = {"application.assets.examples.Examples"})
+//@SourcePath(path = "C:/Users/Richard/Documents/datx02-16-23/Bachelor/src/main/java/application/gui/")
 public class GUI_Controller implements CommunicatorListener {
 
     private Visualization                   visualization;

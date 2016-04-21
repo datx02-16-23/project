@@ -83,7 +83,7 @@ public class MatrixRender extends Render {
         Array a = (Array) struct;
         size = a.getCapacity() == null ? new int[] {struct.getElements().size(), 1} : a.getCapacity();
         calculatePrefSize();
-        GraphicsContext context = LOCAL_STATIONARY.getGraphicsContext2D();
+        GraphicsContext context = local_canvas.getGraphicsContext2D();
         context.clearRect(0, 0, this.WIDTH, this.HEIGHT);
         context.setFill(COLOR_BLACK);
         context.fillText(struct.toString(), hspace, vspace + 10);
@@ -129,7 +129,7 @@ public class MatrixRender extends Render {
      * @param style The style to use (null = default)
      */
     private void drawElement (Element e, String style){
-        drawNode(e.getValue() + "", getX(e), getY(e), getFillColor(style), ((ArrayElement) e).getIndex(), LOCAL_STATIONARY);
+        drawNode(e.getValue() + "", getX(e), getY(e), getFillColor(style), ((ArrayElement) e).getIndex(), local_canvas);
     }
 
     /**
@@ -175,7 +175,7 @@ public class MatrixRender extends Render {
     }
 
     private void drawIndicies (){
-        GraphicsContext context = LOCAL_STATIONARY.getGraphicsContext2D();
+        GraphicsContext context = local_canvas.getGraphicsContext2D();
         context.setFill(COLOR_BLACK);
         //Column numbering
         if (size[0] > 1) {

@@ -68,7 +68,7 @@ public class BarRender extends Render {
      */
     private void init (){
         calculatePrefSize();
-        GraphicsContext context = LOCAL_STATIONARY.getGraphicsContext2D();
+        GraphicsContext context = local_canvas.getGraphicsContext2D();
         context.clearRect(0, 0, WIDTH, HEIGHT);
         context.setFill(COLOR_BLACK);
         context.fillText(struct.toString(), hspace, vspace + 10);
@@ -125,7 +125,7 @@ public class BarRender extends Render {
      * @param lastRow If {@code true}, no child connection lines are drawn.
      */
     private void drawNode (double value, double x, double y, Color fill, int index){
-        GraphicsContext context = LOCAL_STATIONARY.getGraphicsContext2D();
+        GraphicsContext context = local_canvas.getGraphicsContext2D();
         context.setFill(fill);
         context.clearRect(x - 1, padding, node_width + 2, this.HEIGHT + 1);
         context.fillRect(x, y, node_width, node_height * value);
@@ -143,7 +143,7 @@ public class BarRender extends Render {
     }
 
     private void drawAxes (){
-        GraphicsContext context = LOCAL_STATIONARY.getGraphicsContext2D();
+        GraphicsContext context = local_canvas.getGraphicsContext2D();
         context.setFill(COLOR_BLACK);
         double y = this.HEIGHT - padding;
         double x = this.WIDTH - padding;

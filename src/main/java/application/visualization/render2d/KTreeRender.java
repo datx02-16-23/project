@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import application.gui.Main;
+import application.visualization.animation.Animation;
+import application.visualization.animation.LinearAnimation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -95,15 +98,15 @@ public class KTreeRender extends Render {
                 }
                 ae = (ArrayElement) e;
                 if (modifiedElements.contains(e)) {
-                    drawElement(ae.getValue() + "", ae.getIndex()[0], e.getColor());
+                    drawElement(e, ae.getIndex()[0], e.getColor());
                 }
                 else if (resetElements.contains(e)) {
-                    drawElement(ae.getValue() + "", ae.getIndex()[0], null);
+                    drawElement(e, ae.getIndex()[0], null);
                 }
             }
             int i = struct.getElements().size();
             for (; i < completedSize; i++) {
-                drawElement("", i, "spooky zombie");
+                drawElement(null, i, "spooky zombie");
             }
         }
         struct.elementsDrawn();
@@ -139,17 +142,17 @@ public class KTreeRender extends Render {
      */
     private void init (){
         calculateDepthAndBreadth(); //Calls calculatePrefSize()
-        GraphicsContext context = LOCAL_STATIONARY.getGraphicsContext2D();
+        GraphicsContext context = local_canvas.getGraphicsContext2D();
         context.clearRect(0, 0, this.WIDTH, this.WIDTH);
         context.setFill(COLOR_BLACK);
         context.fillText(struct.toString(), hspace, vspace + 10);
         for (Element e : struct.getElements()) {
             ArrayElement ae = (ArrayElement) e;
-            drawElement(ae.getValue() + "", ae.getIndex()[0], null);
+            drawElement(e, ae.getIndex()[0], null);
         }
         int i = struct.getElements().size();
         for (; i < completedSize; i++) {
-            drawElement("", i, "spooky zombie"); //Draw zombies. String will evaluate to black fill.
+            drawElement(null, i, "spooky zombie"); //Draw zombies. String will evaluate to black fill.
         }
     }
 
@@ -181,7 +184,8 @@ public class KTreeRender extends Render {
      * @param index The index of this element.
      * @param style The style for this element.
      */
-    private void drawElement (String value, int index, String style){
+    //private void drawElement (String value, int index, String style){
+    private void drawElement (Element e, int index, String style){
         int breadth, depth;
         double x, y;
         if (index == 0) { //Root element
@@ -198,7 +202,7 @@ public class KTreeRender extends Render {
             x = getX(breadth, depth);
         }
         //Dispatch
-        drawNode(value, x, y, getFillColor(style), depth, breadth, index);
+        drawNode(e == null ? "" : e.getValue() + "", x, y, getFillColor(style), depth, breadth, index, local_canvas);
     }
 
     private int getDepth (int index){
@@ -226,8 +230,8 @@ public class KTreeRender extends Render {
      * @param fill The fill color of this node.
      * @param lastRow If {@code true}, no child connection lines are drawn.
      */
-    private void drawNode (String value, double x, double y, Color fill, int depth, int breadth, int index){
-        GraphicsContext context = LOCAL_STATIONARY.getGraphicsContext2D();
+    private void drawNode (String value, double x, double y, Color fill, int depth, int breadth, int index, Canvas c){
+        GraphicsContext context = c.getGraphicsContext2D();
         context.setFill(fill);
         context.fillOval(x, y, node_width, node_height);
         //Outline, text, children
@@ -330,25 +334,49 @@ public class KTreeRender extends Render {
 
     @Override
     public double getX (Element e){
-        // TODO Auto-generated method stub
-        return 0;
+        int index = ((ArrayElement) e).getIndex()[0];
+        double x;
+        int breadth, depth;
+        if (index == 0) { //Root element
+            double p = K_pow(totDepth) / 2;
+            x = hspace + (hspace + node_width) * (p) - ((K + 1) % 2) * (node_width + hspace) / 2;
+            breadth = 0;
+            depth = 0;
+        }
+        else {
+            depth = getDepth(index);
+            breadth = getBreadth(index, depth);
+            x = getX(breadth, depth);
+        }
+        return x;
     }
 
     @Override
     public double getY (Element e){
-        // TODO Auto-generated method stub
-        return 0;
+        int index = ((ArrayElement) e).getIndex()[0];
+        double y;
+        int depth;
+        if (index == 0) { //Root element
+            y = vspace;
+            depth = 0;
+        }
+        else {
+            depth = getDepth(index);
+            y = getY(depth);
+        }
+        return y;
     }
 
     @Override
     public void drawAnimatedElement (Element e, double x, double y, String style){
-        // TODO Auto-generated method stub
-        
+        int index = ((ArrayElement) e).getIndex()[0];
+        int depth = this.getDepth(index);
+        int breadth = this.getBreadth(index, depth);
+        this.drawNode(e.getValue()+"", getX(e), getY(e), super.getFillColor(e.getColor()), depth, breadth, index, SHARED_ANIMATED);
     }
 
-    @Override
     public void startAnimation (Element e, double x, double y){
-        // TODO Auto-generated method stub
-        
+        Animation a = new LinearAnimation(this, e, x, y);
+        a.start();
     }
 }
