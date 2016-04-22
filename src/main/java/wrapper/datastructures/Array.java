@@ -80,7 +80,10 @@ public class Array extends DataStructure {
         for (; linearIndex < linearArray.length; linearIndex++) {
             // System.out.println(new ArrayElement(linearArray[linearIndex],
             // getIndexInNDimensions(linearIndex, size)));
-            putElement(new ArrayElement(linearArray[linearIndex], getIndexInNDimensions(linearIndex, capacity)));
+            ArrayElement ae = new ArrayElement(linearArray[linearIndex], getIndexInNDimensions(linearIndex, capacity));
+            this.modifiedElements.add(ae);
+            ae.color = Element.COLOR_WRITE;
+            putElement(ae);
         }
         // Initialize elements without given values to 0.
         int linearTotal = 1;
@@ -88,7 +91,10 @@ public class Array extends DataStructure {
             linearTotal = linearTotal * capacity[i];
         }
         for (linearIndex++; linearIndex < linearTotal; linearIndex++) {
-            putElement(new ArrayElement(0.0, getIndexInNDimensions(linearIndex, capacity)));
+            ArrayElement ae = new ArrayElement(0.0, getIndexInNDimensions(linearIndex, capacity));
+            this.modifiedElements.add(ae);
+            ae.color = Element.COLOR_WRITE;
+            putElement(ae);
         }
     }
 
@@ -150,7 +156,6 @@ public class Array extends DataStructure {
         //Manage write
         ArrayElement targetElement = this.getElement(op.getTarget());
         ArrayElement sourceElement = this.getElement(op.getSource());
-        System.out.println(targetElement);
         double[] value = op.getValue();
         if (targetElement != null) {
             if (value != null) {
@@ -166,6 +171,16 @@ public class Array extends DataStructure {
         else if (sourceElement != null) {
             sourceElement.color = Element.COLOR_READ;
             modifiedElements.add(sourceElement);
+        }
+        else if (op.getSource() != null && op.getSource().identifier.equals(super.identifier)) {
+            ArrayElement ae = new ArrayElement(0, op.getSource().index != null? op.getSource().index : new int[]{elements.size()});
+            ae.setColor(Element.COLOR_READ);
+            putElement(ae);
+        }
+        else if (op.getTarget() != null && op.getTarget().identifier.equals(super.identifier)) {
+            ArrayElement ae = new ArrayElement(0, op.getTarget().index != null? op.getTarget().index : new int[]{elements.size()});
+            ae.setColor(Element.COLOR_WRITE);
+            putElement(ae);
         }
     }
 

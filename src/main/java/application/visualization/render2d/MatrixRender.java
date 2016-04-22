@@ -92,8 +92,9 @@ public class MatrixRender extends Render {
             }
         }
         for (Element e : struct.getElements()) {
-            drawElement(e, null);
+            drawElement(e, e.getColor());
         }
+//        struct.elementsDrawn();
         drawIndicies();
     }
 
