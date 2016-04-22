@@ -1,5 +1,7 @@
 package application.visualization;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import application.gui.Main;
@@ -130,10 +132,42 @@ public class Visualization extends StackPane {
     }
 
     /**
+     * Resolves the visual type for a data structure. Returns the default visual for the given structure if no visual
+     * could be found.
+     * 
+     * @param struct The DataStructure to resolve a visual for.
+     * @return A visual type.
+     */
+    public static String resolveVisual (DataStructure struct){
+        String ans = struct.visual;
+        VisualType[] vs = VisualType.values();
+        ArrayList<String> visuals = new ArrayList<String>();
+        for (int i = 0; i < vs.length; i++) {
+            visuals.add(vs[i].toString());
+        }
+        int attempt = 0;
+        while(visuals.contains(ans) == false) {
+            switch (attempt) {
+                case 0: //Fallback 1
+                    ans = struct.getAbstractVisual();
+                    break;
+                case 1: //Fallback 2
+                    ans = struct.getRawVisual();
+                    break;
+                default:
+                    Main.console.err("Failed to resolve visual type for " + struct);
+                    return null;
+            }
+            attempt++;
+        }
+        return ans;
+    }
+
+    /**
      * Should be called whenever model is updated, does a complete rerender of the structures.
      */
     public void render (Operation op){
-        if(op == null){
+        if (op == null) {
             return;
         }
         Render render;

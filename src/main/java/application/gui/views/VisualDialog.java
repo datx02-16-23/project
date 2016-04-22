@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import application.assets.Strings;
 import application.gui.GUI_Controller;
+import application.visualization.Visualization;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -97,10 +98,8 @@ public class VisualDialog {
     public boolean show (DataStructure struct){
         this.struct = struct;
         name.setText(struct.toString());
-        String visual = struct.visual;
-        if (visual == null) {
-            visual = struct.getAbstractVisual();
-        }
+        System.out.println("struct.visual = " + struct.visual);
+        String visual = Visualization.resolveVisual(struct);
         choice.getSelectionModel().select(getLongName(visual));
         if (visual.equals("tree")) {
             children.setDisable(false);
