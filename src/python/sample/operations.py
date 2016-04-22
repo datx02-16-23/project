@@ -14,10 +14,15 @@ annotated_variables = None
 def is_variable(expr):
     return isinstance(expr,tuple) and expr[0] == 'var'
 
-def eval_variable(expr):
-    if not is_variable(expr):
-        raise Exception('%s not a variable!' % str(expr))
-    return expr[2]
+def get_variable(expr):
+    if not isinstance(expr,tuple):
+        return 'undefined'
+    elif is_variable(expr):
+        return expr[1]
+    else:
+        for exp in expr:
+            exp = get_variable(exp)
+            if exp != 'undefined': return exp
 
 def get_indices(expr):
     if not isinstance(expr,tuple):
@@ -92,19 +97,24 @@ def put(statement):
     if w is not None:
         print w.send(dumps({'body' : [statement], 'header' : None}))
 
+def annotated_in(expr):
+    return get_variable(expr) in annotated_variables
+
 def write(src,dst,begin_line,end_line):
     value = get_value(src)
-    operation = get_operation('write',value,begin_line,end_line)
-    operation['operationBody']['source'] = to_json(src)
-    operation['operationBody']['target'] = to_json(dst)
-    put(operation)
+    if annotated_in(src) or annotated_in(dst):
+        operation = get_operation('write',value,begin_line,end_line)
+        operation['operationBody']['source'] = to_json(src)
+        operation['operationBody']['target'] = to_json(dst)
+        put(operation)
     return value
 
 def read(statement,begin_line,end_line):
     value = get_value(statement)
-    operation = get_operation('read',value,begin_line,end_line)
-    operation['operationBody']['source'] = to_json(statement)
-    put(operation)
+    if annotated_in(statement):
+        operation = get_operation('read',value,begin_line,end_line)
+        operation['operationBody']['source'] = to_json(statement)
+        put(operation)
     return value
 
 # Implement for json
@@ -112,7 +122,9 @@ def link(*params):
     def wrap(func):
         def call(*args):
             for param,arg in zip(params,args):
-                write(arg,param)
+                if get_variable(arg) in annotated_variables:
+                    annotated_variables.append(get_variable(param))
+                write(arg,param,0,0)
             return func(*tuple(get_value(arg) for arg in args))
         return call
     return wrap

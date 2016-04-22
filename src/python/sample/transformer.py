@@ -100,12 +100,9 @@ class ExpressionTransformer(NodeTransformer):
 		return copy_location(expression,node)
 
 	def visit_BinOp(self,node): return node
-
 	def visit_Call(self,node): return node
-
-	# these two need implementing
+	def visit_Delete(self,node): return node
 	def visit_DictComp(self,node): return node
-	
 	def visit_ListComp(self,node): return node
 
 class OperationTransformer(NodeTransformer):
@@ -134,18 +131,18 @@ class OperationTransformer(NodeTransformer):
 			self.visit(arg)
 		return node
 
-	# Following nodes should generally be avoided
-	# or should be handled diffrently in future
-	def visit_Assign(self,node): return node
-
-	def visit_AugAssign(self,node): return node
-
-	def visit_Delete(self,node): return node
-
 	def visit_FunctionDef(self,node):
 		for field in node.body:
 			self.visit(field)
 		return node
+
+	# Following nodes should generally be avoided
+	# or should be handled diffrently in future
+	def visit_Assign(self,node): return node
+	def visit_AugAssign(self,node): return node
+	def visit_Delete(self,node): return node
+	def visit_DictComp(self,node): return node
+	def visit_ListComp(self,node): return node	
 
 class WriteTransformer(OperationTransformer):
 	def __init__(self,name):

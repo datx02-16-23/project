@@ -1,8 +1,8 @@
 # This file executes the different modules, resulting in a output.json file
 import sys
 from os import path,system
-from create_log import create_env,format_log
-from ast import parse,Assign,Name,Str
+from create_log import create_env,LogPostProcessor
+from ast import parse,Assign,List,Name,Str,NodeVisitor
 from transformer import WriteTransformer,ReadTransformer,PassTransformer
 from json import dump
 
@@ -13,17 +13,37 @@ currrent_path = path.dirname(path.abspath(__file__))
 print "Appending %s to sys.path" % currrent_path
 sys.path.insert(0,currrent_path)
 
-def load_logwriter(operations,output):
-	operations_read = None
-	with open(operations,'r') as f:
-		operations_read = f.read()
-	operations_parse = parse(operations_read)
-	for node in operations_parse.body:
-		if (isinstance(node,Assign) and 
-			isinstance(node.targets[0],Name) and 
-			node.targets[0].id == 'outfile'):
-			node.value = Str(output)
-	return operations_parse.body
+class OperationsLoader(NodeVisitor):
+	""" Goes through operations.py file and inserts 
+	values into assignments, setting neccessary variables """
+
+	outfile = 'outfile'
+	annotated_variables = 'annotated_variables'
+
+	def __init__(self,operations_path):
+		self.operations = None
+		with open(operations_path,'r') as f:
+			self.operations = parse(f.read())
+
+	def load(self,output_path,variables):
+		self.settings = {
+			OperationsLoader.outfile : Str(output_path),
+			OperationsLoader.annotated_variables : List(elts=
+				[Str(variable.name) for variable in variables]
+			)
+		}
+		self.visit(self.operations)
+		return self.operations
+
+	def visit_Assign(self,node):
+		target = node.targets[0]
+		if isinstance(target,Name):
+			if target.id == OperationsLoader.outfile:
+				node.value = self.settings[OperationsLoader.outfile]
+			elif target.id == OperationsLoader.annotated_variables:
+				node.value = self.settings[OperationsLoader.annotated_variables]
+	
+	def visit_FunctionDef(self,node): return
 
 def translate(rawType):
 	types = {
@@ -33,12 +53,13 @@ def translate(rawType):
 		return types[rawType]
 	else:
 		return rawType
+
 class Variable(object):
 	def __init__(self,name,rawType,attributes=None,abstractType=None):
 		self.name = name
-		self.rawType = rawType
+		self.rawType = translate(rawType)
 		self.attributes = attributes
-		self.abstractType = abstractType if abstractType is not None else rawType
+		self.abstractType = abstractType if abstractType is not None else self.rawType
 
 	def get_json(self):
 		return {
@@ -53,7 +74,7 @@ def create_sources(files):
 	for f in files:
 		name = path.basename(f)
 		with open(f,'r') as read:
-			sources[name] = {"sourceLines" : read.read().split('\n')}
+			sources[name] = read.read().split('\n')
 	return sources
 
 def create_header(version,variables,files):
@@ -63,9 +84,7 @@ def create_header(version,variables,files):
 	return {
 		'version' : version,
 		'annotatedVariables' : annotatedVariables,
-		'metadata' : {
-			'sources' : create_sources(files)
-		}
+		'sources' : create_sources(files)
 	}
 
 def create_settings(root_directory, files, variables, main_file, output):
@@ -82,7 +101,7 @@ def create_settings(root_directory, files, variables, main_file, output):
 		'files' : files,
 		'observe' : variables if isinstance(variables,list) else [variables],
 		'main' : main_file,
-		'output' : output
+		'output' : output + "/output.json"
 	}
 	return settings
 
@@ -94,12 +113,13 @@ def run(settings):
 					with valid parameters
 	"""
 	print "Loading operations.py..."
-	settings['operations'] = load_logwriter(currrent_path+'/operations.py',settings['output'])
+	ol = OperationsLoader(currrent_path+'/operations.py')
+	settings['operations'] = ol.load(settings['output'],settings['observe'])
 	
 	print "Loading Transformers (parsers)..."
 	settings['transformers'] = [PassTransformer('link'), WriteTransformer('write'), ReadTransformer('read')]
 	settings['v_env'] = '%s/visualize/' % currrent_path
-	settings['main'] = settings['v_env'] + settings['main']
+	settings['main'] = settings['v_env'] + path.basename(settings['main'])
 
 	print "Creating temporary visualization environment & adding to sys.path at:\n%s" % settings['v_env']
 	sys.path.insert(0,settings['v_env'])
@@ -119,11 +139,11 @@ def run(settings):
 	execfile(settings['main'],globals())
 
 	print "Formatting json buffer from output..."
-	output_buffer = format_log(settings['output'])
+	output = LogPostProcessor(settings['output']).process(settings['observe'])
 	with open(settings['output'],'w+') as f:
 		final_output = {
 			'header' : header,
-			'body' : output_buffer
+			'body' : output
 		}
 		dump(final_output,f)
 

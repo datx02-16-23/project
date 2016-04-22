@@ -14,10 +14,11 @@ class MainTransformer(NodeTransformer):
 		for tr in self.transformers:
 			tr.visit(node)
 
-		# the nodes will be inserted in backwards order since inserted at index 0
-		# therefore reverse
-		self.operations.reverse()
-		for n in self.operations:
+		# the nodes will be inserted in backwards order 
+		# since inserted at index 0 therefore reverse list
+		operations_body = self.operations.body
+		operations_body.reverse()
+		for n in operations_body:
 			node.body.insert(0,n)
 
 		return node
@@ -44,17 +45,48 @@ def create_env(settings):
 		f.write(to_source(node['parse']))
 		f.close()
 
-def format_log(file_path):
-	output = None
-	with open(file_path,'r') as f:
-		output = f.read()
-		# encapsulate the output in a list
-		output = "output = [%s]" % output[:len(output)-1] # remove trailing ","
-		# Feels like a hacky way of formatting
-		tmp = open('tmp.py','w')
-		tmp.write(output)
-		tmp.close()
-		output = __import__('tmp').output
-		remove('tmp.py')
-		f.close()
+def format_log(output_buffer):
+	# encapsulate the output in a list
+	output = "output = [%s]" % output_buffer[:len(output_buffer)-1] # remove trailing ","
+	# Should use native temporary module
+	tmp = open('tmp.py','w')
+	tmp.write(output)
+	tmp.close()
+	output = __import__('tmp').output
+	remove('tmp.py')
 	return output
+
+def alias(operation,aliases):
+	if isinstance(operation['operationBody'],dict):
+		for k,statement in operation['operationBody'].iteritems():
+			if isinstance(statement,dict) and 'identifier' in statement:
+				name = statement['identifier']
+				statement['identifier'] = aliases[name] if name in aliases else name
+
+def is_init(operation):
+	return ('index' not in operation['operationBody']['target'] and
+			'index' not in operation['operationBody']['source'])
+
+class LogPostProcessor(object):
+	def __init__(self,output_file):
+		output_read = open(output_file,'r')
+		output_buffer = output_read.read()
+		output_read.close()
+		self.output = format_log(output_buffer)
+
+	def process(self,variables):
+		self.names = [variable.name for variable in variables]
+		self.fix_occurrences()
+		return self.output
+
+	def fix_occurrences(self):
+		aliases = {}
+		for operation in self.output:
+			if (operation['operation'] == 'write' and is_init(operation)):
+				target = operation['operationBody']['target']['identifier']
+				if (operation['operationBody']['source']['identifier'] in self.names and
+					target not in aliases and 
+					target not in self.names):
+					aliases[target] = operation['operationBody']['source']['identifier']
+					self.names.append(target)
+			alias(operation,aliases)
