@@ -1,7 +1,5 @@
 package application.visualization.render2d;
 
-import java.util.Arrays;
-
 import application.visualization.Visualization;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
@@ -17,7 +15,6 @@ public abstract class Render extends Pane {
     protected final double        hspace, vspace;
     protected double              WIDTH, HEIGHT;
     protected final DataStructure struct;
-    protected int                 elementsPreviousRender = 0;
     protected final Canvas        local_canvas           = new Canvas();
     protected static final Canvas SHARED_ANIMATED        = Visualization.instance().ANIMATED;
     protected static final Color  COLOR_READ             = Color.valueOf(Element.COLOR_READ);

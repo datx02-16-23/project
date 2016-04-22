@@ -78,10 +78,9 @@ public class KTreeRender extends Render {
      */
     @Override
     public void render (){
-        List<Element> structElements = struct.getElements();
-        if (structElements.size() != elementsPreviousRender) {
+        if (struct.repaintAll) {
             init();
-            elementsPreviousRender = structElements.size();
+            struct.repaintAll = false;
         }
         else {
             List<Element> modifiedElements = struct.getModifiedElements();

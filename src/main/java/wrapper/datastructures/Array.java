@@ -65,6 +65,8 @@ public class Array extends DataStructure {
         if (!init.getTarget().getIdentifier().equals(super.identifier)) {
             return;
         }
+        repaintAll = true;
+        elements.clear();
         double[] linearArray = init.getValue();
         capacity = null;
         if (capacity == null) { //Fall back to size declared in header
@@ -151,7 +153,6 @@ public class Array extends DataStructure {
         System.out.println(targetElement);
         double[] value = op.getValue();
         if (targetElement != null) {
-            System.out.println("writw!");
             if (value != null) {
                 targetElement.value = op.getValue()[0];
                 targetElement.color = Element.COLOR_WRITE;

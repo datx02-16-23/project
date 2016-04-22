@@ -20,7 +20,6 @@ public class MatrixRender extends Render {
 
     public static final double DEFAULT_SIZE           = 40;
     private final Order        mo;
-    private int                elementsPreviousRender = 0;
     private int                dimensions;
     private int[]              size;
     private static final int   PADDING                = 35;
@@ -55,17 +54,15 @@ public class MatrixRender extends Render {
      */
     @Override
     public void render (){
-        List<Element> structElements = struct.getElements();
-        if (structElements.size() != elementsPreviousRender) {
+        if (struct.repaintAll) {
             init();
-            elementsPreviousRender = structElements.size();
+            struct.repaintAll = false;
         }
         else {
             List<Element> modifiedElements = struct.getModifiedElements();
             List<Element> resetElements = struct.getResetElements();
             for (Element e : struct.getElements()) {
                 if (modifiedElements.contains(e)) {
-                    System.out.println(e.getColor());
                     drawElement(e, e.getColor());
                 }
                 else if (resetElements.contains(e)) {

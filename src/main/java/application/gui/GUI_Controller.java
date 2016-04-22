@@ -22,10 +22,12 @@ import javafx.scene.control.*;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -41,15 +43,10 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.Properties;
-//
-//import com.dennisjonsson.annotation.Include;
-//import com.dennisjonsson.annotation.SourcePath;
 
 /**
  * This is the Controller of MVC for the visualizer GUI.
  */
-//@Include(classes = {"application.assets.examples.Examples"})
-//@SourcePath(path = "C:/Users/Richard/Documents/datx02-16-23/Bachelor/src/main/java/application/gui/")
 public class GUI_Controller implements CommunicatorListener {
 
     private Visualization                   visualization;
@@ -229,8 +226,10 @@ public class GUI_Controller implements CommunicatorListener {
             visualization.render(model.getCurrentStep().getLastOp());
             updatePanels();
             return true;
+        } else {
+            visualization.render(model.getCurrentStep().getLastOp());
+            return false;
         }
-        return false;
     }
 
     /**
@@ -790,4 +789,59 @@ public class GUI_Controller implements CommunicatorListener {
     /*
      * Console controls end.
      */
+
+    public void helpPython (){
+
+        WebView wv;
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/HelpJava.fxml"));
+        fxmlLoader.setController(this);
+        Stage root = new Stage();
+        root.getIcons().add(new Image(GUI_Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
+        root.initModality(Modality.NONE);
+        root.setTitle(Strings.PROJECT_NAME + ": Java Help");
+        root.initOwner(window);
+        BorderPane p = null;
+        try {
+            p = fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        root.setOnCloseRequest(event -> {
+            event.consume(); // Better to do this now than missing it later.
+            root.close();
+        });
+        Scene dialogScene = new Scene(p, window.getWidth(), window.getHeight());
+        wv = (WebView) p.getChildren().get(0);
+        wv.getEngine().load("https://www.google.se/");
+//        wv.getEngine().loadContent("hellp!<br>new line?");
+        root.setScene(dialogScene);
+        root.show();
+    }
+
+    public void helpJava (){
+        WebView wv;
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/HelpJava.fxml"));
+        fxmlLoader.setController(this);
+        Stage root = new Stage();
+        root.getIcons().add(new Image(GUI_Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
+        root.initModality(Modality.NONE);
+        root.setTitle(Strings.PROJECT_NAME + ": Java Help");
+        root.initOwner(window); 
+        BorderPane p = null;
+        try {
+            p = fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        root.setOnCloseRequest(event -> {
+            event.consume(); // Better to do this now than missing it later.
+            root.close();
+        });
+        Scene dialogScene = new Scene(p, window.getWidth(), window.getHeight());
+        wv = (WebView) p.getChildren().get(0);
+        wv.getEngine().load("https://docs.google.com/document/d/1W1MdmZLjabvS3eSahuWZayL1TGBceh2JC3JVVjaEntg/pub");
+//        wv.getEngine().loadContent("JavaAnnotationsUserGuideGettingstartedwithannotationsforthe“visualizationtool”.InMavenFirstweneedtosetupthemavendependenciesandcompilerplugin.CopypastethefollowingintoyourProject“pom.xml”.&#60;dependencies&#62;&#60;dependency&#62;&#60;groupId&#62;com.dennisjonsson&#60;/groupId&#62;&#60;artifactId&#62;annotation&#60;/artifactId&#62;&#60;version&#62;1.0-SNAPSHOT&#60;/version&#62;&#60;/dependency&#62;&#60;/dependencies&#62;&#60;build&#62;&#60;plugins&#62;&#60;plugin&#62;&#60;groupId&#62;org.apache.maven.plugins&#60;/groupId&#62;&#60;artifactId&#62;maven-compiler-plugin&#60;/artifactId&#62;&#60;version&#62;3.0&#60;/version&#62;&#60;configuration&#62;&#60;annotationProcessors&#62;&#60;annotationProcessor&#62;com.dennisjonsson.annotation.processor.VisualizeProcessor&#60;/annotationProcessor&#62;&#60;/annotationProcessors&#62;&#60;source&#62;1.8&#60;/source&#62;&#60;target&#62;1.8&#60;/target&#62;&#60;/configuration&#62;&#60;/plugin&#62;&#60;/plugins&#62;&#60;/build&#62;Now,tryandbuildingyourproject.Ifthebuildwassuccessfulyoucanstartusingtheannotationstovisualizeyourdatastructures.Therearefourannotationsyouneedtoapplytoyourcodeinordertoenableavisualization.@SourcePath(path=“path/to/your/project”)Markoneofyourclasseswiththisannotation,preferablyyoumainclass.Thepathshouldspecifytherootfolderofyourproject.@VisualClassAllclassesyouwanttoincludeinavisualizationprogramneedstobemarkedwiththisannotation.@Visualize(abstractType=“array”|“binarytree”|“adjacencymatrix”)Usethisannotationtomarkclassfieldsormethodparameteryouwanttovisualize.Provideyourabstractvisualizationtype,i.e.howyouwantyourdatastructuretobevisualized.");
+        root.setScene(dialogScene);
+        root.show();
+    }
 }

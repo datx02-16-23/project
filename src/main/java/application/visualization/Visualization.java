@@ -99,7 +99,8 @@ public class Visualization extends StackPane {
         outer: for (int attempt = 1; attempt < 3; attempt++) {
             switch (visual) {
                 case "bar":
-                    render = new BarRender(struct, 40, 1, 5, 25);
+//                    render = new BarRender(struct, 40, 1, 5, 25);
+                    render = new BarchartRender(struct);
                     break outer;
                 case "box":
                     render = new MatrixRender(struct, Order.COLUMN_MAJOR, 40, 40, 0, 0);
@@ -132,12 +133,15 @@ public class Visualization extends StackPane {
      * Should be called whenever model is updated, does a complete rerender of the structures.
      */
     public void render (Operation op){
+        if(op == null){
+            return;
+        }
         Render render;
         for (Object node : RENDERS.getChildren()) {
             render = (Render) node;
             render.render();
         }
-        if (animate && op != null) {
+        if (animate) {
             cleanAnimatedCanvas();
             animate(op);
         }
@@ -197,12 +201,10 @@ public class Visualization extends StackPane {
             src_render.startAnimation(src_e, Render.getAbsoluteX(tar_render, tar_e), Render.getAbsoluteY(tar_render, tar_e));
         }
         else if (src_e != null && tar_e == null) {
-            System.out.println("no target");
             //Render read without target
             src_render.startAnimation(src_e, Render.getAbsoluteX(src_render, src_e), Render.getAbsoluteY(src_render, src_e) - 50);
         }
         else if (src_e == null && tar_e != null) {
-            System.out.println("no source");
             //Render write without source
             tar_render.startAnimation(tar_e, Render.getAbsoluteX(tar_render, tar_e), Render.getAbsoluteY(tar_render, tar_e) + 50);
         }

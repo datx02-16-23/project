@@ -36,6 +36,7 @@ public abstract class DataStructure extends AnnotatedVariable {
      * Number of children in KTree, row/vs column major etc.
      */
     public transient int                    visualOptions    = 2;
+    public transient boolean                repaintAll       = false;
 
     public DataStructure (String identifier, String rawType, String abstractType, String visual){
         super(identifier, rawType, abstractType, visual);
