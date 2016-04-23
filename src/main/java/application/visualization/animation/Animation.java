@@ -1,7 +1,6 @@
 package application.visualization.animation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import application.visualization.render2d.Render;

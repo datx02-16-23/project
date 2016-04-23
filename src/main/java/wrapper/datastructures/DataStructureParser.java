@@ -20,11 +20,11 @@ public abstract class DataStructureParser {
 
     public static DataStructure unpackAnnotatedVariable (AnnotatedVariable av){
         switch (av.rawType) {
-            case "array":
+            case array:
                 return unpackArray(av);
-            case "independentElement":
+            case independentElement:
                 return unpackIndependentElement(av);
-            case "tree":
+            case tree:
                 return null; //TODO: Add parsing of trees.
             default:
                 Main.console.err("Unknown Data Structure raw type: \"" + av.rawType +"\"");
@@ -55,7 +55,7 @@ public abstract class DataStructureParser {
     }
     
     public static int[] parseSize (AnnotatedVariable av){
-        System.out.println(av.attributes.get(Key.size));
+//        System.out.println("parseSize size = " + av.attributes.get(Key.size));
         return OperationParser.ensureIntArray(av.attributes.get(Key.size));
     }
 }

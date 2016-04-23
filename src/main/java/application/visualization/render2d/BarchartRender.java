@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.chart.*;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
+import javafx.scene.paint.Color;
 import wrapper.datastructures.Array;
 import wrapper.datastructures.Array.ArrayElement;
 import wrapper.datastructures.DataStructure;
@@ -38,7 +39,7 @@ public class BarchartRender extends Render {
         elemData = elemDataSeries.getData();
         for (Element element : struct.getElements()) {
             Array.ArrayElement e = (Array.ArrayElement) element;
-            elemData.add(new Data(e.getIndex()[0] + "", e.getValue()));
+            elemData.add(new Data(e.getIndex()[0] + "", e.getNumericValue()));
         }
         barChart.getData().add(elemDataSeries);
         this.getChildren().add(barChart);
@@ -55,7 +56,7 @@ public class BarchartRender extends Render {
             ArrayElement ae;
             for (Object o : struct.getElements()) {
                 ae = (ArrayElement) o;
-                elemData.add(new Data(ae.getIndex()[0] + "", ae.getValue()));
+                elemData.add(new Data(ae.getIndex()[0] + "", ae.getNumericValue()));
             }
             //Set bar colors
             for (Node n : barChart.lookupAll(".default-color0.chart-bar")) {
@@ -71,7 +72,7 @@ public class BarchartRender extends Render {
             ae = (ArrayElement) structElements.get(i);
             d = elemData.get(i);
             d.setXValue(ae.getIndex()[0] + "");
-            d.setYValue(ae.getValue());
+            d.setYValue(ae.getNumericValue());
             //Manage special color.
             if (modified.contains(ae)) {
                 d.getNode().setStyle("-fx-bar-fill: " + ae.getColor() + ";");
@@ -84,7 +85,7 @@ public class BarchartRender extends Render {
     }
 
     @Override
-    public void drawAnimatedElement (Element e, double x, double y, String style){
+    public void drawAnimatedElement (Element e, double x, double y, Color style){
         // TODO Auto-generated method stub
     }
 
@@ -103,5 +104,11 @@ public class BarchartRender extends Render {
     @Override
     public void startAnimation (Element e, double x, double y){
         // TODO Auto-generated method stub
+    }
+
+    @Override
+    public RenderSpinnerVF getOptionsSpinnerValueFaxtory (){
+        // TODO Auto-generated method stub
+        return null;
     }
 }

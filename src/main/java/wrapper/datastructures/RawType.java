@@ -8,6 +8,7 @@ package wrapper.datastructures;
  */
 public enum RawType{
     array(AbstractType.tree), //An array of objects or primitivtes.
+    tree,
     independentElement; //A loose element, such as a tmp variable.
 
     /**

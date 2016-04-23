@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
+import wrapper.operations.OperationType;
 import wrapper.datastructures.Array.ArrayElement;
 
 /**
@@ -27,12 +28,13 @@ import wrapper.datastructures.Array.ArrayElement;
  */
 public class KTreeRender extends Render {
 
-    private final int                K;
-    private final ArrayList<Integer> lowerLevelSums = new ArrayList<Integer>();
-    private int                      totDepth, totBreadth, completedSize;
+    private static final RenderSpinnerVF rsvf           = createOptionsSpinner();
+    private final int                    K;
+    private final ArrayList<Integer>     lowerLevelSums = new ArrayList<Integer>();
+    private int                          totDepth, totBreadth, completedSize;
 
     /**
-     * Create a new KTreeRender with K children and one parent.
+     * Create a new KTreeRender with K children and one parent. Will set K = 2 for any K < 2.
      * 
      * @param struct The structure to draw as an K-ary tree.
      * @param K The number of children each node has.
@@ -40,16 +42,16 @@ public class KTreeRender extends Render {
      * @param height The height of the nodes.
      * @param hspace The horizontal space between elements.
      * @param vspace The verital space between elements.
-     * @throws IllegalArgumentException If K < 2.
      */
     public KTreeRender (DataStructure struct, int K, double width, double height, double hspace, double vspace) throws IllegalArgumentException{
         super(struct, width, height, hspace, vspace);
-        if (K < 2) {
-            throw new IllegalArgumentException("K must be greater than or equal to 2.");
-        }
-        this.K = K;
+        this.K = K < 2 ? 2 : K;
         lowerLevelSums.add(new Integer(0));
         Main.console.force("WARNING: At the time of writing (2016-04-18) the KTreeRender class, JavaFX may crash with a NullPointerException when Canvas grows too large.");
+    }
+
+    private static RenderSpinnerVF createOptionsSpinner (){
+        return new RenderSpinnerVF(2, 1337);
     }
 
     /**
@@ -92,7 +94,7 @@ public class KTreeRender extends Render {
                     drawElement(ae, ae.getIndex()[0], e.getColor());
                 }
                 else if (resetElements.contains(e)) {
-                    drawElement(ae, ae.getIndex()[0], null);
+                    drawElement(ae, ae.getIndex()[0], Color.WHITE);
                 }
             }
         }
@@ -135,13 +137,13 @@ public class KTreeRender extends Render {
         context.fillText(struct.toString(), hspace, vspace + 10);
         for (Element e : struct.getElements()) {
             ArrayElement ae = (ArrayElement) e;
-            drawElement(ae, ae.getIndex()[0], null);
+            drawElement(ae, ae.getIndex()[0], Color.WHITE);
         }
         int i = struct.getElements().size();
         for (; i < completedSize; i++) {
             ArrayElement ae = new ArrayElement(Double.NaN, new int[] {i});
             struct.getInactiveElements().add(ae);
-            drawElement(ae, i, "spooky zombie"); //Draw zombies. String will evaluate to black fill.
+            drawElement(ae, i, OperationType.remove.color); //Draw zombies. String will evaluate to black fill.
         }
         drawConnectors();
     }
@@ -175,11 +177,11 @@ public class KTreeRender extends Render {
      * @param style The style for this element.
      */
     //private void drawElement (String value, int index, String style){
-    private void drawElement (Element e, int index, String style){
+    private void drawElement (Element e, int index, Color style){
         double x = getX(e);
         double y = getY(e);
         //Dispatch
-        drawNode(e == null ? "" : e.getValue() + "", x, y, getFillColor(style), local_canvas);
+        drawNode(e == null ? "" : e.getNumericValue() + "", x, y, style, local_canvas);
     }
 
     private int getDepth (int index){
@@ -323,13 +325,20 @@ public class KTreeRender extends Render {
     }
 
     @Override
-    public void drawAnimatedElement (Element e, double x, double y, String style){
-        drawNode(e.getValue() + "", x, y, super.getFillColor(e.getColor()), SHARED_ANIMATED);
+    public void drawAnimatedElement (Element e, double x, double y, Color style){
+        drawNode(e.getNumericValue() + "", x, y, e.getColor(), SHARED_ANIMATED);
     }
 
     @Override
     public void startAnimation (Element e, double x, double y){
         Animation a = new LinearAnimation(this, e, x, y);
         a.start();
+    }
+
+    @Override
+    public RenderSpinnerVF getOptionsSpinnerValueFaxtory (){
+//        System.out.println("\nktree render spinner factory:");
+//        System.out.println(rsvf);
+        return rsvf;
     }
 }

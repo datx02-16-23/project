@@ -96,6 +96,8 @@ public class SourcePanel extends TabPane {
         //Select lines
         ListView<String> linesView = (ListView<String>) this.getTabs().get(nameTabMapping.get(op.source)).getContent();
         linesView.getSelectionModel().select(op.beginLine);
+        linesView.getFocusModel().focus(op.beginLine);
+        linesView.scrollTo(op.beginLine-1);
     }
 
     /**
@@ -104,7 +106,6 @@ public class SourcePanel extends TabPane {
      * @return The sources held by this SourceViewer.
      */
     public Map<String, List<String>> getSources (){
-        System.out.println(sources);
         return sources;
     }
 

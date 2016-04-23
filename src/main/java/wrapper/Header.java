@@ -61,6 +61,7 @@ public class Header implements Serializable {
      * Returns the sources contained in the metadata of this Header, if found. Null otherwise.
      * @return A Map of source names as keys and their lines as a List.
      */
+    @SuppressWarnings("unchecked")
     public final Map<String, List<String>> getSources(){
         if(sources == null){
             return null;

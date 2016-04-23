@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.google.gson.GsonBuilder;
 
+import application.visualization.VisualType;
 import interpreter.Interpreter;
 import io.CommunicatorListener;
 import io.JGroupCommunicator;
@@ -605,8 +606,8 @@ public class Simulator extends Application {
         private Map<String, AnnotatedVariable> buildStructs (){
             Map<String, AnnotatedVariable> _structs = new HashMap<String, AnnotatedVariable>();
             varNames = new String[3];
-            Array a1 = new Array("a1", null, "box");
-            Array a2 = new Array("a2", null, "box");
+            Array a1 = new Array("a1", null, VisualType.box);
+            Array a2 = new Array("a2", null, VisualType.box);
             IndependentElement tmp = new IndependentElement("tmp", null, null);
             _structs.put(a1.identifier, a1);
             _structs.put(a2.identifier, a2);

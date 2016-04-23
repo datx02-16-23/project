@@ -6,8 +6,10 @@ import java.util.List;
 
 import application.assets.Strings;
 import application.gui.Main;
+import application.visualization.VisualType;
 import wrapper.Locator;
 import wrapper.Operation;
+import wrapper.datastructures.RawType.AbstractType;
 import wrapper.operations.*;
 
 /**
@@ -34,8 +36,8 @@ public class Array extends DataStructure {
      * @param abstractType The abstract type for this Array.
      * @param visual The preferred visual for this Array.
      */
-    public Array (String identifier, String abstractType, String visual){
-        super(identifier, "array", abstractType, visual);
+    public Array (String identifier, RawType.AbstractType abstractType, VisualType visual){
+        super(identifier, RawType.array, abstractType, visual);
         elements = new ArrayList<Element>();
         if (capacity == null) {
             capacity = new int[] {-1};
@@ -67,22 +69,21 @@ public class Array extends DataStructure {
         }
         repaintAll = true;
         elements.clear();
-        double[] linearArray = init.getValue();
+        double[] init_values = init.getValue();
         capacity = null;
         if (capacity == null) { //Fall back to size declared in header
             capacity = getCapacity();
         }
         if (capacity == null) { //Use size of values as a last resort.
-            capacity = new int[] {linearArray.length};
+            capacity = new int[] {init_values.length};
         }
         // Initialize specified by the values argument of the init operation.
         int linearIndex = 0;
-        for (; linearIndex < linearArray.length; linearIndex++) {
+        for (; linearIndex < init_values.length; linearIndex++) {
             // System.out.println(new ArrayElement(linearArray[linearIndex],
             // getIndexInNDimensions(linearIndex, size)));
-            ArrayElement ae = new ArrayElement(linearArray[linearIndex], getIndexInNDimensions(linearIndex, capacity));
-            this.modifiedElements.add(ae);
-            ae.color = Element.COLOR_WRITE;
+            ArrayElement ae = new ArrayElement(init_values[linearIndex], getIndexInNDimensions(linearIndex, capacity));
+            ae.color = OperationType.write.color;
             putElement(ae);
         }
         // Initialize elements without given values to 0.
@@ -93,9 +94,10 @@ public class Array extends DataStructure {
         for (linearIndex++; linearIndex < linearTotal; linearIndex++) {
             ArrayElement ae = new ArrayElement(0.0, getIndexInNDimensions(linearIndex, capacity));
             this.modifiedElements.add(ae);
-            ae.color = Element.COLOR_WRITE;
+            ae.color = OperationType.write.color;
             putElement(ae);
         }
+        modifiedElements.addAll(elements);
     }
 
     @Override
@@ -128,7 +130,7 @@ public class Array extends DataStructure {
         Element e = this.getElement(target);
         if (e != null) {
             inactiveElements.add(e);
-            e.setColor(Element.COLOR_INACTIVE);
+            e.setColor(OperationType.remove.color);
         }
     }
 
@@ -137,14 +139,14 @@ public class Array extends DataStructure {
         Locator var2 = op.getVar2();
         ArrayElement var1Element = this.getElement(var1);
         if (var1Element != null) {
-            var1Element.value = op.getValue()[0];
-            var1Element.color = Element.COLOR_SWAP;
+            var1Element.numericValue = op.getValue()[0];
+            var1Element.color = OperationType.swap.color;
             modifiedElements.add(var1Element);
         }
         ArrayElement var2Element = this.getElement(var2);
         if (var2Element != null) {
-            var2Element.value = op.getValue()[1];
-            var2Element.color = Element.COLOR_SWAP;
+            var2Element.numericValue = op.getValue()[1];
+            var2Element.color = OperationType.swap.color;
             modifiedElements.add(var2Element);
         }
     }
@@ -152,6 +154,7 @@ public class Array extends DataStructure {
     private void readORwrite (OP_ReadWrite op){
         if (op.operation == OperationType.write && (op.getValue().length > 1)) {
             init((OP_Write) op);
+            return;
         }
         //Manage write
         ArrayElement targetElement = this.getElement(op.getTarget());
@@ -159,8 +162,8 @@ public class Array extends DataStructure {
         double[] value = op.getValue();
         if (targetElement != null) {
             if (value != null) {
-                targetElement.value = op.getValue()[0];
-                targetElement.color = Element.COLOR_WRITE;
+                targetElement.numericValue = op.getValue()[0];
+                targetElement.color = OperationType.write.color;
                 modifiedElements.add(targetElement);
             }
             else {
@@ -169,17 +172,17 @@ public class Array extends DataStructure {
         }
         //Manage read
         else if (sourceElement != null) {
-            sourceElement.color = Element.COLOR_READ;
+            sourceElement.color = OperationType.read.color;
             modifiedElements.add(sourceElement);
         }
         else if (op.getSource() != null && op.getSource().identifier.equals(super.identifier)) {
-            ArrayElement ae = new ArrayElement(0, op.getSource().index != null? op.getSource().index : new int[]{elements.size()});
-            ae.setColor(Element.COLOR_READ);
+            ArrayElement ae = new ArrayElement(0, op.getSource().index != null ? op.getSource().index : new int[] {elements.size()});
+            ae.color = OperationType.read.color;
             putElement(ae);
         }
         else if (op.getTarget() != null && op.getTarget().identifier.equals(super.identifier)) {
-            ArrayElement ae = new ArrayElement(0, op.getTarget().index != null? op.getTarget().index : new int[]{elements.size()});
-            ae.setColor(Element.COLOR_WRITE);
+            ArrayElement ae = new ArrayElement(0, op.getTarget().index != null ? op.getTarget().index : new int[] {elements.size()});
+            ae.color = OperationType.write.color;
             putElement(ae);
         }
     }
@@ -268,18 +271,18 @@ public class Array extends DataStructure {
         ArrayElement old = null;
         old = getElement(newElement.index);
         if (old != null) {
-            if (newElement.value == old.value) {
+            if (newElement.numericValue == old.numericValue) {
                 return null;
             }
             int replacedElementIndex = elements.indexOf(old);
             elements.remove(old);
             elements.add(replacedElementIndex, newElement);
         }
-        if (newElement.value < min) {
-            min = newElement.value;
+        if (newElement.numericValue < min) {
+            min = newElement.numericValue;
         }
-        if (newElement.value > max) {
-            max = newElement.value;
+        if (newElement.numericValue > max) {
+            max = newElement.numericValue;
         }
         elements.add(newElement);
         return old;
@@ -312,11 +315,9 @@ public class Array extends DataStructure {
      * @author Richard Sundqvist
      *
      */
-    public static class ArrayElement implements Element {
+    public static class ArrayElement extends Element {
 
-        private double value;
-        private int[]  index;
-        private String color;
+        private int[] index;
 
         /**
          * Construct a new ArrayElement with the given value and index.
@@ -325,28 +326,8 @@ public class Array extends DataStructure {
          * @param index The index for this ArrayElement.
          */
         public ArrayElement (double value, int[] index){
-            this.value = value;
+            this.numericValue = value;
             this.index = index;
-        }
-
-        /**
-         * Get the value held by this ArrayElement.
-         * 
-         * @return The value held by this ArrayElement.
-         */
-        @Override
-        public double getValue (){
-            return value;
-        }
-
-        /**
-         * Set the value of this ArrayElement.
-         * 
-         * @param newValue The new value of this ArrayElement.
-         */
-        @Override
-        public void setValue (double newValue){
-            this.value = newValue;
         }
 
         /**
@@ -381,32 +362,27 @@ public class Array extends DataStructure {
                 return false;
             }
             ArrayElement rhs = (ArrayElement) obj;
-            return this.value == rhs.value && Arrays.equals(this.index, rhs.index);
+            return this.numericValue == rhs.numericValue && Arrays.equals(this.index, rhs.index);
         }
 
         @Override
         public String toString (){
-            return Arrays.toString(index) + " = " + value;
-        }
-
-        @Override
-        public String getColor (){
-            return color;
-        }
-
-        @Override
-        public void setColor (String newColor){
-            color = newColor;
+            return Arrays.toString(index) + " = " + numericValue;
         }
     }
 
     @Override
-    public String getRawVisual (){
-        return "box";
-    }
-
-    @Override
-    public String getAbstractVisual (){
-        return abstractType == null ? "NULL" : abstractType;
+    public VisualType resolveVisual (){
+        if (visual != null){
+            return visual;
+        } else if (abstractType != null){
+            if(abstractType == AbstractType.tree){
+                return VisualType.tree;
+            } else {
+                throw new IllegalArgumentException("");
+            }
+        } else {
+            return VisualType.box;
+        }
     }
 }

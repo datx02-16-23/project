@@ -1,7 +1,5 @@
 package application.visualization.animation;
 
-import java.util.Arrays;
-
 import application.visualization.render2d.Render;
 import javafx.animation.KeyFrame;
 import javafx.util.Duration;

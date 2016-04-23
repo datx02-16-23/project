@@ -1,5 +1,7 @@
 package application.visualization.render2d;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import application.gui.Main;
@@ -18,11 +20,25 @@ import wrapper.datastructures.Array.ArrayElement;
 
 public class MatrixRender extends Render {
 
-    public static final double DEFAULT_SIZE           = 40;
-    private final Order        mo;
-    private int                dimensions;
-    private int[]              size;
-    private static final int   PADDING                = 35;
+    private static final RenderSpinnerVF rsvf         = createOptionsSpinner();
+    public static final double           DEFAULT_SIZE = 40;
+    private final Order                  mo;
+    private int[]                        size;
+    private static final int             PADDING      = 35;
+
+    /**
+     * Create a new BoxRender.
+     * 
+     * @param struct The structure to draw as a Matrix.
+     * @param optionNumber Indicates whether this MatrixRender is COLUMN or ROW major.
+     * @param width The width of the nodes.
+     * @param height The height of the nodes.
+     * @param hspace The horizontal space between elements.
+     * @param vspace The vertical space between elements.
+     */
+    public MatrixRender (DataStructure struct, int optionNumber, double width, double height, double hspace, double vspace){
+        this(struct, Order.resolve(optionNumber), width, height, hspace, vspace);
+    }
 
     /**
      * Create a new BoxRender.
@@ -33,11 +49,21 @@ public class MatrixRender extends Render {
      * @param height The height of the nodes.
      * @param hspace The horizontal space between elements.
      * @param vspace The vertical space between elements.
-     * @throws IllegalArgumentException If K < 2.
      */
     public MatrixRender (DataStructure struct, Order mo, double width, double height, double hspace, double vspace){
         super(struct, width, height, hspace, vspace);
         this.mo = mo;
+    }
+
+    private static RenderSpinnerVF createOptionsSpinner (){
+        ArrayList<Integer> values = new ArrayList<Integer>();
+        values.add(Order.ROW_MAJOR.optionNbr);
+        values.add(Order.COLUMN_MAJOR.optionNbr);
+        ArrayList<String> userValues = new ArrayList<String>();
+        userValues.add(Order.ROW_MAJOR.name);
+        userValues.add(Order.COLUMN_MAJOR.name);
+        RenderSpinnerVF rsvf = new RenderSpinnerVF(values, userValues);
+        return rsvf;
     }
 
     /**
@@ -56,7 +82,6 @@ public class MatrixRender extends Render {
     public void render (){
         if (struct.repaintAll) {
             init();
-            struct.repaintAll = false;
         }
         else {
             List<Element> modifiedElements = struct.getModifiedElements();
@@ -66,7 +91,7 @@ public class MatrixRender extends Render {
                     drawElement(e, e.getColor());
                 }
                 else if (resetElements.contains(e)) {
-                    drawElement(e, null);
+                    drawElement(e, Color.WHITE);
                 }
             }
         }
@@ -86,7 +111,7 @@ public class MatrixRender extends Render {
         context.fillText(struct.toString(), hspace, vspace + 10);
         if (struct.getElements().isEmpty() == false) {
             ArrayElement ae = (ArrayElement) struct.getElements().get(0);
-            dimensions = ae.getIndex().length;
+            int dimensions = ae.getIndex().length;
             if (dimensions != 2 && dimensions != 1) {
                 Main.console.force("WARNING: Structure " + struct + " has declared " + dimensions + " dimensions. MatrixRender supports only one or two dimensions.");
             }
@@ -94,8 +119,8 @@ public class MatrixRender extends Render {
         for (Element e : struct.getElements()) {
             drawElement(e, e.getColor());
         }
-//        struct.elementsDrawn();
         drawIndicies();
+        struct.repaintAll = false;
     }
 
     @Override
@@ -107,8 +132,8 @@ public class MatrixRender extends Render {
             this.setMaxHeight(HEIGHT);
         }
         else {
-            WIDTH = PADDING * 2 + vspace + (vspace + node_width) * size[1];
             HEIGHT = PADDING * 2 + hspace + (hspace + node_height) * size[0];
+            WIDTH = PADDING * 2 + vspace + (vspace + node_width) * size[1];
             this.setMaxWidth(WIDTH);
         }
         this.setPrefSize(WIDTH, HEIGHT);
@@ -128,8 +153,8 @@ public class MatrixRender extends Render {
      * @param e The element to draw.
      * @param style The style to use (null = default)
      */
-    private void drawElement (Element e, String style){
-        drawNode(e.getValue() + "", getX(e), getY(e), getFillColor(style), ((ArrayElement) e).getIndex(), local_canvas);
+    private void drawElement (Element e, Color style){
+        drawNode(e.getNumericValue() + "", getX(e), getY(e), style, ((ArrayElement) e).getIndex(), local_canvas);
     }
 
     /*
@@ -165,20 +190,33 @@ public class MatrixRender extends Render {
         GraphicsContext context = local_canvas.getGraphicsContext2D();
         context.setFill(COLOR_BLACK);
         //Column numbering
-        if (size[0] > 1) {
-            for (int i = 0; i < size[0]; i++) {
-                context.fillText("[" + i + "]", getX(i), PADDING - 10);
+        if (mo == Order.ROW_MAJOR) {
+            if (size[0] > 1) { //Column numbering
+                for (int i = 0; i < size[0]; i++) {
+                    context.fillText("[" + i + "]", getX(i), PADDING - 10);
+                }
+            }
+            if (size[1] > 1) { //Row numbering
+                for (int i = 0; i < size[1]; i++) {
+                    context.fillText("[" + i + "]", 5, getY(i) - node_height / 2);
+                }
             }
         }
-        //Row numbering
-        if (size[1] > 1) {
-            for (int i = 0; i < size[1]; i++) {
-                context.fillText("[" + i + "]", 5, getY(i) - node_height / 2);
+        else if (mo == Order.COLUMN_MAJOR) {
+            if (size[0] > 1) { //Row numbering
+                for (int i = 0; i < size[0]; i++) {
+                    context.fillText("[" + i + "]", 5, getY(i) + 10);
+                }
+            }
+            if (size[1] > 1) { //Column numbering
+                for (int i = 0; i < size[1]; i++) {
+                    context.fillText("[" + i + "]", PADDING - 10, getX(i));
+                }
             }
         }
     }
 
-    public enum Order{
+    public static enum Order{
         ROW_MAJOR("Row Major", "The first index will indicate row.", 0), COLUMN_MAJOR("Column Major", "The first index will indicate column.", 1);
 
         public final String name;
@@ -190,6 +228,21 @@ public class MatrixRender extends Render {
             this.description = description;
             this.optionNbr = optionNbr;
         }
+
+        /**
+         * Returns the Order corresponding to the given option number. Defaults to ROW_MAJOR for unknown option numbers.
+         * 
+         * @param optionNbr The option to resolve an order for.
+         * @return An Order.
+         */
+        public static Order resolve (int optionNbr){
+            for (Order o : values()) {
+                if (o.optionNbr == optionNbr) {
+                    return o;
+                }
+            }
+            return ROW_MAJOR;
+        }
     }
 
     int step = 0;
@@ -197,12 +250,12 @@ public class MatrixRender extends Render {
     @Override
     public double getX (Element e){
         int[] index = ((ArrayElement) e).getIndex();
-        double x = 0;
-        if (mo == Order.COLUMN_MAJOR) {
+        double x = PADDING + hspace;
+        if (mo == Order.ROW_MAJOR) {
             x = getX(index[0]);
         }
         else {
-            if (dimensions == 2) {
+            if (index.length == 2) {
                 x = getY(index[1]);
             }
         }
@@ -212,9 +265,9 @@ public class MatrixRender extends Render {
     @Override
     public double getY (Element e){
         int[] index = ((ArrayElement) e).getIndex();
-        double y = PADDING;
-        if (mo == Order.COLUMN_MAJOR) {
-            if (dimensions == 2) {
+        double y = PADDING + vspace;
+        if (mo == Order.ROW_MAJOR) {
+            if (index.length == 2) {
                 y = getY(index[1]);
             }
         }
@@ -225,13 +278,20 @@ public class MatrixRender extends Render {
     }
 
     @Override
-    public void drawAnimatedElement (Element e, double x, double y, String style){
-        drawNode(e.getValue() + "", x, y, getFillColor(style), ((ArrayElement) e).getIndex(), SHARED_ANIMATED);
+    public void drawAnimatedElement (Element e, double x, double y, Color style){
+        drawNode(e.getNumericValue() + "", x, y, style, ((ArrayElement) e).getIndex(), SHARED_ANIMATED);
     }
 
     @Override
     public void startAnimation (Element e, double x, double y){
         Animation a = new LinearAnimation(this, e, x, y);
         a.start();
+    }
+
+    @Override
+    public RenderSpinnerVF getOptionsSpinnerValueFaxtory (){
+//        System.out.println("\nmatrix render spinner factory:");
+//        System.out.println(rsvf);
+        return rsvf;
     }
 }

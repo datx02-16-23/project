@@ -1,21 +1,17 @@
 package application.visualization;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
-import application.gui.Main;
 import application.model.Model;
 import application.visualization.animation.Animation;
 import application.visualization.render2d.*;
-import application.visualization.render2d.MatrixRender.Order;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import wrapper.Locator;
 import wrapper.Operation;
-import wrapper.datastructures.DataStructure;
-import wrapper.datastructures.Element;
+import wrapper.datastructures.*;
 import wrapper.operations.OP_ReadWrite;
 import wrapper.operations.OP_Swap;
 import wrapper.operations.OperationType;
@@ -32,7 +28,9 @@ public class Visualization extends StackPane {
     private boolean                       animate;
     private final Model                   model;
     private static Visualization          INSTANCE;
-    private final GridPane                RENDERS               = new GridPane();
+//    private final GridPane                RENDERS               = new GridPane();
+//  private final AnchorPane                RENDERS               = new AnchorPane();;
+    private final StackPane               RENDERS               = new StackPane();
     public final Canvas                   ANIMATED              = new Canvas();
     private final HashMap<String, Render> struct_render_mapping = new HashMap<String, Render>();
 
@@ -77,90 +75,65 @@ public class Visualization extends StackPane {
         int small = 0;
         for (DataStructure struct : model.getStructures().values()) {
             Render render = resolveRender(struct);
-            if (struct.rawType == "independentElement") {
-                render = new MatrixRender(struct);
-                RENDERS.add(render, 1, small++);
+            if (struct.rawType == RawType.independentElement) {
+                render = new MatrixRender((Array) struct);
+//                RENDERS.add(render, 1, small++);
+                RENDERS.getChildren().add(render);
             }
             else {
                 render.setPrefWidth(this.getWidth());
                 render.setPrefHeight(this.getHeight());
-                RENDERS.add(render, 0, reg++);
+//                RENDERS.add(render, 0, reg++);
+                RENDERS.getChildren().add(render);
             }
             struct_render_mapping.put(struct.identifier, render);
         }
     }
 
     /**
-     * Determines the model to use for this DataStructure. Will iteratively
+     * Determines the model to use for this DataStructure.
      * 
      * @param struct The DataStructure to assign a Render to.
      */
-    private Render resolveRender (DataStructure struct){
+    public static Render resolveRender (DataStructure struct){
         Render render = null;
-        String visual = struct.visual == null ? "NULL" : struct.visual;
-        outer: for (int attempt = 1; attempt < 3; attempt++) {
-            switch (visual) {
-                case "bar":
+        VisualType visual = struct.resolveVisual();
+        System.out.println("visual = " + visual);
+        System.out.println("option = " + struct.visualOption);
+        switch (visual) {
+            case bar:
 //                    render = new BarRender(struct, 40, 1, 5, 25);
-                    render = new BarchartRender(struct);
-                    break outer;
-                case "box":
-                    render = new MatrixRender(struct, Order.COLUMN_MAJOR, 40, 40, 0, 0);
-                    break outer;
-                case "tree":
-                    render = new KTreeRender(struct, struct.visualOptions, 40, 40, 0, 10);
-                    break outer;
-                default:
-                    /*
-                     * Visual null or unknown.
-                     */
-                    switch (attempt) {
-                        case 0: //Fallback 1
-                            visual = struct.getAbstractVisual();
-                            break;
-                        case 1: //Fallback 2
-                            visual = struct.getRawVisual();
-                            break;
-                        default:
-                            Main.console.err("Unable to determine Visual style for: " + struct);
-                            return null;
-                    }
-                    break;
-            }
+                render = new BarchartRender(struct);
+                break;
+            case box:
+                render = new MatrixRender((Array) struct, struct.visualOption, 40, 40, 0, 0);
+                break;
+            case tree:
+                render = new KTreeRender(struct, struct.visualOption, 40, 40, 0, 10);
+                break;
         }
         return render;
     }
 
     /**
-     * Resolves the visual type for a data structure. Returns the default visual for the given structure if no visual
-     * could be found.
-     * 
-     * @param struct The DataStructure to resolve a visual for.
-     * @return A visual type.
+     * @param vt
+     * @return
      */
-    public static String resolveVisual (DataStructure struct){
-        String ans = struct.visual;
-        VisualType[] vs = VisualType.values();
-        ArrayList<String> visuals = new ArrayList<String>();
-        for (int i = 0; i < vs.length; i++) {
-            visuals.add(vs[i].toString());
+    public static Render getRender (VisualType vt){
+        Render render = null;
+        switch (vt) {
+            case bar:
+//                    render = new BarRender(struct, 40, 1, 5, 25);
+                render = new BarchartRender(null);
+                break;
+            case box:
+                render = new MatrixRender(null, -1, -1, -1, -1, -1);
+                break;
+            case tree:
+                render = new KTreeRender(null, -1, -1, -1, -1, -1);
+                break;
         }
-        int attempt = 0;
-        while(visuals.contains(ans) == false) {
-            switch (attempt) {
-                case 0: //Fallback 1
-                    ans = struct.getAbstractVisual();
-                    break;
-                case 1: //Fallback 2
-                    ans = struct.getRawVisual();
-                    break;
-                default:
-                    Main.console.err("Failed to resolve visual type for " + struct);
-                    return null;
-            }
-            attempt++;
-        }
-        return ans;
+        return render;
     }
 
     /**
@@ -236,11 +209,11 @@ public class Visualization extends StackPane {
         }
         else if (src_e != null && tar_e == null) {
             //Render read without target
-            src_render.startAnimation(src_e, Render.getAbsoluteX(src_render, src_e), Render.getAbsoluteY(src_render, src_e) - 50);
+            src_render.startAnimation(src_e, Render.getAbsoluteX(src_render, src_e) - 25, Render.getAbsoluteY(src_render, src_e) - 50);
         }
         else if (src_e == null && tar_e != null) {
             //Render write without source
-            tar_render.startAnimation(tar_e, Render.getAbsoluteX(tar_render, tar_e), Render.getAbsoluteY(tar_render, tar_e) + 50);
+            tar_render.startAnimation(tar_e, Render.getAbsoluteX(tar_render, tar_e) + 25, Render.getAbsoluteY(tar_render, tar_e) + 50);
         }
     }
 
@@ -288,8 +261,6 @@ public class Visualization extends StackPane {
 
     public void cleanAnimatedCanvas (){
         ANIMATED.getGraphicsContext2D().clearRect(-5000, -5000, 10000, 10000);
-//        ANIMATED.getGraphicsContext2D().setFill(Color.ALICEBLUE);
-//        ANIMATED.getGraphicsContext2D().fillRect(-5000, -5000, 10000, 10000);
     }
 
     /**
@@ -298,10 +269,6 @@ public class Visualization extends StackPane {
      * @param value The new animation option.
      */
     public void setAnimate (boolean value){
-        if (value == animate) {
-            return;
-        }
-//        ANIMATE = value;
-        //TODO
+        animate = value;
     }
 }

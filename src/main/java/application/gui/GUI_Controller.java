@@ -480,7 +480,7 @@ public class GUI_Controller implements CommunicatorListener {
     private void loadVisualMenu (){
         for (DataStructure struct : model.getStructures().values()) {
             MenuItem mi = new MenuItem();
-            mi.setText(struct.identifier + ": " + struct.rawType.toUpperCase());
+            mi.setText(struct.identifier + ": " + struct.rawType.toString().toUpperCase());
             mi.setOnAction(event -> {
                 openVisualDialog(struct);
             });
@@ -539,7 +539,6 @@ public class GUI_Controller implements CommunicatorListener {
             return;
         }
         lsm.setOperations(model.getOperations());
-        System.out.println(model.getOperations());
         lsm.setDataStructures(model.getStructures());
         lsm.setSources(sourceViewer.getSources());
         boolean old = lsm.PRETTY_PRINTING;

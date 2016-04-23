@@ -1,42 +1,74 @@
 package wrapper.datastructures;
 
+import javafx.scene.paint.Color;
+
 /**
  * An element in a data structure.
  * 
  * @author Richard Sundqvist
  *
  */
-public interface Element {
-    public static final String COLOR_WRITE = "red";
-    public static final String COLOR_READ = "green";
-    public static final String COLOR_SWAP = "cyan";
-    /**
-     * The color of an inactive element (for example, when when program leaves the element scope or it is removed.)
-     */
-    public static final String COLOR_INACTIVE = "grey";
+public abstract class Element {
+
+    protected double numericValue;
+    protected String value;
+    protected Color  color;
 
     /**
-     * Returns the value held by this Element.
+     * Returns the numeric value held by this Element.
      * 
      * @return The value held by this Element.
      */
-    public abstract double getValue ();
+    public final double getNumericValue (){
+        return numericValue;
+    }
 
     /**
-     * Set the value held by this Element.
+     * Set the numeric value held by this Element.
+     * 
      * @param newValue the new value for this Element.
      */
-    public abstract void setValue (double newValue);
-    
+    public final void setNumericValue (double newValue){
+        this.numericValue = newValue;
+    }
+
+    /**
+     * Get the display value held by this Element. Returns the numeric value if not found.
+     * 
+     * @return The display value held by this Element
+     */
+    public String getValue (){
+        if (value != null) {
+            return value;
+        }
+        else {
+            return (String) value;
+        }
+    }
+
+    /**
+     * Set the display value held by this Element.
+     * 
+     */
+    public void setValue (String newValue){
+        value = newValue;
+    }
+
     /**
      * Returns the colour with which to draw this Element.
+     * 
      * @return The colour with which to draw this Element.
      */
-    public abstract String getColor();
+    public final Color getColor (){
+        return color;
+    }
 
     /**
      * Set The colour with which to draw this Element.
+     * 
      * @param newColor The colour with which to draw this Element.
      */
-    public abstract void setColor(String newColor);
+    public final void setColor (Color newColor){
+        this.color = newColor;
+    }
 }

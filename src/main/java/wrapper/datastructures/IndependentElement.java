@@ -5,6 +5,8 @@ import java.util.List;
 
 import application.assets.Strings;
 import application.gui.Main;
+import application.visualization.VisualType;
+import javafx.scene.paint.Color;
 import wrapper.Locator;
 import wrapper.Operation;
 import wrapper.operations.*;
@@ -16,7 +18,7 @@ import wrapper.operations.*;
  * @author Richard Sundqvist
  *
  */
-public class IndependentElement extends DataStructure implements Element {
+public class IndependentElement extends DataStructure {
 
     /**
      * Version number for this class.
@@ -32,8 +34,8 @@ public class IndependentElement extends DataStructure implements Element {
      * @param abstractType The <b>raw</b> type of the element held by this IndependenElement.
      * @param visual The preferred visual style of the IndependentElement.
      */
-    public IndependentElement (String identifier, String abstractType, String visual){
-        super(identifier, "independentElement", abstractType, visual);
+    public IndependentElement (String identifier, RawType.AbstractType abstractType, VisualType visual){
+        super(identifier, RawType.independentElement, abstractType, visual);
     }
 
     /**
@@ -48,6 +50,7 @@ public class IndependentElement extends DataStructure implements Element {
 
     /**
      * Initialize an element with value 0.
+     * 
      * @param value The value to initialize with.
      */
     public void initElement (double value){
@@ -66,12 +69,11 @@ public class IndependentElement extends DataStructure implements Element {
      * 
      * @return The value held by the element contained in this IndependentElement.
      */
-    @Override
-    public double getValue (){
+    public double getNumericValue (){
         if (elements.isEmpty()) {
             return 0;
         }
-        return elements.get(0).getValue();
+        return elements.get(0).getNumericValue();
     }
 
     @Override
@@ -98,69 +100,60 @@ public class IndependentElement extends DataStructure implements Element {
     private void swap (OP_Swap op){
         Element e = elements.get(0);
         if (op.getVar1().identifier.equals(this.identifier)) {
-            e.setValue(op.getValue()[0]);
-            e.setColor(COLOR_SWAP);
+            e.setNumericValue(op.getValue()[0]);
+            e.setColor(OperationType.swap.color);
             return;
         }
-        if (op.getVar2().identifier.equals(this.identifier)) {
-            e.setValue(op.getValue()[1]);
-            e.setColor(COLOR_SWAP);
+        else if (op.getVar2().identifier.equals(this.identifier)) {
+            e.setNumericValue(op.getValue()[1]);
+            e.setColor(OperationType.swap.color);
             return;
         }
     }
 
     private void readORwrite (OP_ReadWrite op){
-        if(elements.isEmpty()){
+        if (elements.isEmpty()) {
             initElement(op.getValue()[0]);
         }
         Element e = elements.get(0);
         if (op.getTarget() != null && op.getTarget().identifier.equals(this.identifier)) {
-            e.setValue(op.getValue()[0]);
+            e.setNumericValue(op.getValue()[0]);
             modifiedElements.add(e);
-            e.setColor(COLOR_WRITE);
+            e.setColor(OperationType.write.color);
             return;
         }
         else if (op.getSource() != null && op.getSource().identifier.equals(this.identifier)) {
             modifiedElements.add(e);
-            e.setColor(COLOR_READ);
+            e.setColor(OperationType.read.color);
         }
     }
 
-    @Override
-    public void setValue (double newValue){
-        if(elements.isEmpty()){
+    public void setNumericValue (double newValue){
+        if (elements.isEmpty()) {
             return;
         }
-        elements.get(0).setValue(newValue);
+        elements.get(0).setNumericValue(newValue);
     }
 
     @Override
-    public String getRawVisual (){
-        Main.console.err("WARNING: getRawVisual has not been implemented for Independent Element.");
-        return "";
+    public VisualType resolveVisual (){
+        return VisualType.box;
     }
 
-    @Override
-    public String getAbstractVisual (){
-        Main.console.err("WARNING: getAbstractVisual has not been implemented for Independent Element.");
-        return "";
-    }
-
-    @Override
-    public String getColor (){
+    public Color getColor (){
         return elements.get(0).getColor();
     }
 
-    @Override
-    public void setColor (String newColor){
+    public void setColor (Color newColor){
         elements.get(0).setColor(newColor);
     }
 
     @Override
     public Element getElement (Locator locator){
-        if(locator.getIdentifier().equals(super.identifier) && elements.isEmpty() == false){
+        if (locator.getIdentifier().equals(super.identifier) && elements.isEmpty() == false) {
             return elements.get(0);
-        } else {
+        }
+        else {
             return null;
         }
     }

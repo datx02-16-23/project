@@ -4,7 +4,9 @@ import java.io.IOException;
 
 import application.assets.Strings;
 import application.gui.GUI_Controller;
+import application.visualization.VisualType;
 import application.visualization.Visualization;
+import application.visualization.render2d.Render.RenderSpinnerVF;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -22,7 +24,7 @@ public class VisualDialog {
 
     private final Stage     parent, root;
     private final ChoiceBox choice;
-    private final Spinner   children;
+    private final Spinner   options;
     private final Label     name;
     private DataStructure   struct;
     private boolean         changed;
@@ -48,12 +50,11 @@ public class VisualDialog {
         });
         fxmlLoader.getNamespace();
         choice = (ChoiceBox) fxmlLoader.getNamespace().get("choice");
-        choice.setItems(FXCollections.observableArrayList("Boxes", "Bar Chart", "KTree"));
+        choice.setItems(FXCollections.observableArrayList(VisualType.values()));
         choice.setOnAction(event -> {
             chooseVisual();
         });
-        children = (Spinner) fxmlLoader.getNamespace().get("children");
-//        children.ge
+        options = (Spinner) fxmlLoader.getNamespace().get("children");
         name = (Label) fxmlLoader.getNamespace().get("name");
         Scene dialogScene = new Scene(p, p.getPrefWidth() - 5, p.getPrefHeight());
         root.setScene(dialogScene);
@@ -61,12 +62,8 @@ public class VisualDialog {
     }
 
     private void chooseVisual (){
-        if (choice.getSelectionModel().getSelectedItem().equals("KTree")) {
-            children.setDisable(false);
-        }
-        else {
-            children.setDisable(true);
-        }
+        VisualType vt = (VisualType) choice.getSelectionModel().getSelectedItem();
+        setSpinner(vt);
     }
 
     public void closeButton (){
@@ -75,77 +72,67 @@ public class VisualDialog {
     }
 
     public void okButton (){
-        if (choice.getSelectionModel().getSelectedItem() == null) {
+        VisualType vt = (VisualType) choice.getSelectionModel().getSelectedItem();
+        if (vt == null) {
             changed = false;
+            root.close();
             return;
         }
-        String selectedItem = getShortName((String) choice.getSelectionModel().getSelectedItem());
-        if (selectedItem.equals(struct.visual) == false || selectedItem.equals("tree")) {
-            changed = true;
-            struct.visual = getShortName(selectedItem);
-            if (selectedItem.equals("tree") || struct.visualOptions != ((Integer) children.getValue()).intValue()) {
-                struct.visualOptions = ((Integer) children.getValue()).intValue();
-                struct.visual = "tree";
+        if (vt != struct.visual) {
+            //Visual type changed
+            if (vt.hasOptions) {
+                struct.visualOption = (Integer) options.getValue();
             }
+            struct.visual = vt;
+            changed = true;
             root.close();
         }
         else {
-            changed = false;
-            root.close();
+            //Visual type has not changed
+            if (vt.hasOptions) {
+                changed = struct.visualOption != (Integer) options.getValue();
+                if (changed) {
+                    struct.visualOption = (Integer) options.getValue();
+                }
+            }
+            else {
+                changed = false;
+            }
         }
+        root.close();
     }
 
+    /**
+     * Show the visualisation options dialog for a given structure.
+     * 
+     * @param struct A DataStructure.
+     * @return True if the visualisation options have changed, false otherwise.
+     */
     public boolean show (DataStructure struct){
         this.struct = struct;
         name.setText(struct.toString());
-        System.out.println("struct.visual = " + struct.visual);
-        String visual = Visualization.resolveVisual(struct);
-        choice.getSelectionModel().select(getLongName(visual));
-        if (visual.equals("tree")) {
-            children.setDisable(false);
-        }
-        else {
-            children.setDisable(true);
-        }
+        VisualType visual = struct.resolveVisual();
+        choice.getSelectionModel().select(visual);
+        setSpinner(struct.resolveVisual());
         root.showAndWait();
         return changed;
     }
 
-    public String getShortName (String longName){
-        String name = null;
-        switch (longName) {
-            case "Boxes":
-                name = "box";
-                break;
-            case "Bar Chart":
-                name = "bar";
-                break;
-            case "KTree":
-                name = "tree";
-                break;
-            default:
-                name = longName;
-                break;
+    private void setSpinner (VisualType vt){
+//        System.out.println(vt + ", vt.hasOptions = " + vt.hasOptions);
+        if (vt.hasOptions) {
+            RenderSpinnerVF rsvf = Visualization.getRender(vt).getOptionsSpinnerValueFaxtory();
+//            System.out.println(vt + " options: " + rsvf);
+            if (rsvf == null) {
+                options.setDisable(true); //Failed to fetch options.
+            }
+            else {
+                options.setDisable(false);
+                options.setValueFactory(rsvf);
+            }
         }
-        return name;
-    }
-
-    private String getLongName (String shortName){
-        String name = null;
-        switch (shortName) {
-            case "box":
-                name = "Boxes";
-                break;
-            case "bar":
-                name = "Bar Chart";
-                break;
-            case "tree":
-                name = "KTree";
-                break;
-            default:
-                name = shortName;
-                break;
+        else {
+            options.setDisable(true);
         }
-        return name;
     }
 }
