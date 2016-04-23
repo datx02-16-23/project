@@ -53,7 +53,10 @@ class Expression(object):
 		self.name = Str(name)
 
 	def get_expression(self,node):
-		return Tuple(elts=[])
+		raise NotImplementedError
+
+	def get_expression_(self,elts):
+		return Tuple(elts=elts)
 
 class SubscriptExpression(Expression):
 	Expression.DEFINED_NAMES.append('subscript')
@@ -62,9 +65,8 @@ class SubscriptExpression(Expression):
 
 	# ('subscript', to, indices..)
 	def get_expression(self,node):
-		expression = super(SubscriptExpression,self).get_expression(node)
 		if is_variable(node.value) or isinstance(node.value,List):
-			node.value = Tuple(elts=[self.name,node.value])
+			node.value = super(SubscriptExpression,self).get_expression_([self.name,node.value])
 		expression = add_tuple(node.value,node.slice)
 		return expression
 
@@ -79,7 +81,7 @@ class NameExpression(Expression):
 		if is_builtin(node.id):
 			return node
 		value = node if isinstance(node.ctx,Load) else Str('Store')
-		return Tuple(elts=[self.name,Str(node.id),value])
+		return super(NameExpression,self).get_expression_([self.name,Str(node.id),value])
 
 
 class ExpressionTransformer(NodeTransformer):
@@ -117,8 +119,8 @@ class OperationTransformer(NodeTransformer):
 	def create_call(self,args_,node):
 		lineno = get_lineno(node)
 		if lineno:
-			begin_line = Num(min(lineno)-1)
-			end_line = Num(max(lineno)-1)
+			begin_line = Num(min(lineno))
+			end_line = Num(max(lineno))
 			args_ = args_ + [begin_line,end_line]
 		return Call(
 			func=Name(id=self.name, ctx=Load()),

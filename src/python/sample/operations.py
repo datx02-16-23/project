@@ -72,8 +72,8 @@ def get_operation(name,value,begin_line,end_line):
         'operation' : name, 
         'source' : basename(getfile(currentframe())),
         'operationBody' : {'value' : value},
-        'beginLine' : begin_line,
-        'endLine' : end_line
+        'beginLine' : begin_line - 1,
+        'endLine' : end_line - 1
     }
 
 def to_json(statement):

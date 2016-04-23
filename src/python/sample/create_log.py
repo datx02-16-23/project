@@ -23,32 +23,36 @@ class MainTransformer(NodeTransformer):
 
 		return node
 
+# Generate ast's from given files copied into visualization folder
+def generate_nodes(files,v_env):
+	nodes = []
+	for f in files:
+		path = v_env + f
+		with open(path,'r') as read:
+			node = parse(read.read())
+			nodes.append({'path' : path, 'parse' : node})
+	return nodes
+
+# Replace statements in files to be visualized with
+# function calls to methods supplied by operations.py
+def transform(nodes,main_transformer):
+	for node in nodes:
+		with open(node['path'],'w') as node_source:
+			main_transformer.visit(node['parse'])
+			node_source.write(to_source(node['parse']))
+
 # given settings variable should be sanity-checked
 def create_env(settings):
 	# Setup rootdir of visualization folder given source root directory
 	copy_tree(settings['rootdir'],settings['v_env'])
-
-	# Generate ast's from given files copied into visualization folder
-	nodes = []
-	for f in settings['files']:
-		path = settings['v_env']+f
-		fRead = open(path, "r")
-		nodes.append( {'path' : path, 'parse' : parse(fRead.read())} )
-		fRead.close()
-
-	# Replace lines in files to be visualized with
-	# function calls from operations.py
+	nodes = generate_nodes(settings['files'],settings['v_env'])
 	mt = MainTransformer(settings['transformers'],settings['operations'])
-	for node in nodes:
-		f = open(node['path'],'w')
-		mt.visit(node['parse'])
-		f.write(to_source(node['parse']))
-		f.close()
+	transform(nodes,mt)
 
 def format_log(output_buffer):
 	# encapsulate the output in a list
 	output = "output = [%s]" % output_buffer[:len(output_buffer)-1] # remove trailing ","
-	# Should use native temporary module
+	# Should use native temporary module?
 	tmp = open('tmp.py','w')
 	tmp.write(output)
 	tmp.close()
