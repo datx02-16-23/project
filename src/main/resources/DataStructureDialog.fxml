@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane hgap="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="140.0" prefWidth="520.0" vgap="20.0" xmlns="http://javafx.com/javafx/8.0.72" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane hgap="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="140.0" prefWidth="520.0" vgap="20.0" xmlns="http://javafx.com/javafx/8.0.91" xmlns:fx="http://javafx.com/fxml/1">
   <children>
       <ImageView fitHeight="91.0" fitWidth="78.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -35,13 +35,13 @@
         </Label>
             <HBox prefHeight="25.0" prefWidth="200.0">
                <children>
-                  <ChoiceBox fx:id="choice" prefHeight="25.0" prefWidth="226.0" />
-                  <Label prefHeight="25.0" prefWidth="59.0" text="Children:">
+                  <ChoiceBox fx:id="choice" prefHeight="25.0" prefWidth="163.0" />
+                  <Label prefHeight="25.0" prefWidth="59.0" text="Option:">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin>
                   </Label>
-                  <Spinner fx:id="children" min="2" max="16" initialValue="2" disable="true" editable="true" prefHeight="25.0" prefWidth="68.0" />
+                  <Spinner fx:id="children" disable="true" initialValue="2" max="16" min="2" prefHeight="25.0" prefWidth="159.0" />
                </children>
             </HBox>
       </children>

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import application.assets.Strings;
+import application.visualization.VisualType;
 import wrapper.AnnotatedVariable;
 import wrapper.Locator;
 import wrapper.Operation;
@@ -35,10 +36,10 @@ public abstract class DataStructure extends AnnotatedVariable {
     /**
      * Number of children in KTree, row/vs column major etc.
      */
-    public transient int                    visualOptions    = 2;
+    public transient int                    visualOption    = 2;
     public transient boolean                repaintAll       = false;
 
-    public DataStructure (String identifier, String rawType, String abstractType, String visual){
+    public DataStructure (String identifier, RawType rawType, RawType.AbstractType abstractType, VisualType visual){
         super(identifier, rawType, abstractType, visual);
     }
 
@@ -64,7 +65,7 @@ public abstract class DataStructure extends AnnotatedVariable {
     @Override
     public String toString (){
         StringBuilder sb = new StringBuilder();
-        sb.append(super.identifier + ": " + super.rawType.toUpperCase());
+        sb.append(super.identifier + ": " + super.rawType);
         if (super.abstractType != null) {
             sb.append(" (" + super.abstractType + ")");
         }
@@ -72,20 +73,12 @@ public abstract class DataStructure extends AnnotatedVariable {
     }
 
     /**
-     * Returns the default raw visual for this DataStructure. <br>
-     * <b>NOTE:</b> Must never return {@code null}! Use {@code return "";} instead.
+     * Resolves the VisualType for this DataStructure. Will evaluate {@code visual, abstractType} and {@code rawType},
+     * in that order. This method never returns null.
      * 
-     * @return The default raw visual for this DataStructure.
+     * @return The Visual to use for this DataStructure.
      */
-    public abstract String getRawVisual ();
-
-    /**
-     * Returns the default visual for the raw type held by this DataStructure. <br>
-     * <b>NOTE:</b> Must never return {@code null}! Use {@code return "";} instead.
-     * 
-     * @return A visual style if available, null otherwise.
-     */
-    public abstract String getAbstractVisual ();
+    public abstract VisualType resolveVisual ();
 
     /**
      * A list of elements which have been modified. They should be drawn with a different colour. All elements which

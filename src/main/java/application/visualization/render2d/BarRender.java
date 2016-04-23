@@ -52,10 +52,10 @@ public class BarRender extends Render {
 //                }
                 ae = (ArrayElement) e;
                 if (modifiedElements.contains(e)) {
-                    drawElement(ae.getValue(), ae.getIndex(), e.getColor());
+                    drawElement(ae.getNumericValue(), ae.getIndex(), e.getColor());
                 }
                 else if (resetElements.contains(e)) {
-                    drawElement(ae.getValue(), ae.getIndex(), null);
+                    drawElement(ae.getNumericValue(), ae.getIndex(), null);
                 }
             }
         }
@@ -74,7 +74,7 @@ public class BarRender extends Render {
         context.fillText(struct.toString(), hspace, vspace + 10);
         for (Element e : struct.getElements()) {
             ArrayElement ae = (ArrayElement) e;
-            drawElement(ae.getValue(), ae.getIndex(), null);
+            drawElement(ae.getNumericValue(), ae.getIndex(), null);
         }
     }
 
@@ -88,9 +88,6 @@ public class BarRender extends Render {
     }
 
     private double getX (int column){
-        System.out.println();
-        System.out.println(column);
-        System.out.println(padding + hspace + (hspace + node_width) * column);
         return padding + hspace + (hspace + node_width) * column;
     }
 
@@ -105,11 +102,11 @@ public class BarRender extends Render {
      * @param index The index of this element.
      * @param style The style for this element.
      */
-    private void drawElement (double value, int[] index, String style){
+    private void drawElement (double value, int[] index, Color style){
         double x = getX(index[0]);
         double y = getY(value);
         //Dispatch
-        drawNode(value, x, y, getFillColor(style), index[0]);
+        drawNode(value, x, y, style, index[0]);
     }
 
     /*
@@ -180,7 +177,7 @@ public class BarRender extends Render {
     }
 
     @Override
-    public void drawAnimatedElement (Element e, double x, double y, String style){
+    public void drawAnimatedElement (Element e, double x, double y, Color style){
         // TODO Auto-generated method stub
     }
 
@@ -188,5 +185,11 @@ public class BarRender extends Render {
     public void startAnimation (Element e, double x, double y){
         // TODO Auto-generated method stub
         
+    }
+
+    @Override
+    public RenderSpinnerVF getOptionsSpinnerValueFaxtory (){
+        // TODO Auto-generated method stub
+        return null;
     }
 }
