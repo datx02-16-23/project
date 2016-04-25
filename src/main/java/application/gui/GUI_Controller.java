@@ -138,6 +138,7 @@ public class GUI_Controller implements CommunicatorListener {
      * Clear everything.
      */
     public void clearButtonClicked (){
+        visualMenu.getItems().clear();
         visualMenu.setDisable(true);
         model.clear();
         visualization.clear();
@@ -164,8 +165,6 @@ public class GUI_Controller implements CommunicatorListener {
 
     public void startAutoPlay (){
         playPauseButton.setText("Pause");
-        speedMenuItem.setDisable(true);
-        speedButton.setDisable(true);
         if (autoplayTimeline != null) {
             autoplayTimeline.stop();
         }
@@ -188,8 +187,6 @@ public class GUI_Controller implements CommunicatorListener {
     }
 
     public void stopAutoPlay (){
-        speedButton.setDisable(false);
-        speedMenuItem.setDisable(false);
         if (autoplayTimeline != null) {
             autoplayTimeline.stop();
             playPauseButton.setText("Play");
@@ -226,7 +223,8 @@ public class GUI_Controller implements CommunicatorListener {
             visualization.render(model.getCurrentStep().getLastOp());
             updatePanels();
             return true;
-        } else {
+        }
+        else {
             visualization.render(model.getCurrentStep().getLastOp());
             return false;
         }
@@ -249,10 +247,30 @@ public class GUI_Controller implements CommunicatorListener {
      * Change the animation speed
      */
     public void changeSpeedButtonClicked (){
+        boolean isPlaying = this.isPlaying;
+        if (isPlaying) {
+            stopAutoPlay();
+        }
         stepDelaySpeedupFactor = stepDelaySpeedupFactor * 2 % 255;
         speedButton.setText(stepDelaySpeedupFactor + "x");
         stepDelay = stepDelayBase / stepDelaySpeedupFactor;
         Visualization.setAnimationTime(stepDelay);
+        if (isPlaying) {
+            startAutoPlay();
+        }
+    }
+    
+    public void changeSpeedButtonRightClicked(){
+        boolean isPlaying = this.isPlaying;
+        if (isPlaying) {
+            stopAutoPlay();
+        }
+        for(int i = 0; i < 7; i++){
+            changeSpeedButtonClicked();
+        }
+        if (isPlaying) {
+            startAutoPlay();
+        }
     }
 
     public void aboutProgram (){
@@ -790,7 +808,6 @@ public class GUI_Controller implements CommunicatorListener {
      */
 
     public void helpPython (){
-
         WebView wv;
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/HelpJava.fxml"));
         fxmlLoader.setController(this);
@@ -825,7 +842,7 @@ public class GUI_Controller implements CommunicatorListener {
         root.getIcons().add(new Image(GUI_Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
         root.initModality(Modality.NONE);
         root.setTitle(Strings.PROJECT_NAME + ": Java Help");
-        root.initOwner(window); 
+        root.initOwner(window);
         BorderPane p = null;
         try {
             p = fxmlLoader.load();

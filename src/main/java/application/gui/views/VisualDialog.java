@@ -6,7 +6,7 @@ import application.assets.Strings;
 import application.gui.GUI_Controller;
 import application.visualization.VisualType;
 import application.visualization.Visualization;
-import application.visualization.render2d.Render.RenderSpinnerVF;
+import application.visualization.render2d.Render.RenderSVF;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -80,7 +80,7 @@ public class VisualDialog {
         }
         if (vt != struct.visual) {
             //Visual type changed
-            if (vt.hasOptions) {
+            if (vt.has_options) {
                 struct.visualOption = (Integer) options.getValue();
             }
             struct.visual = vt;
@@ -89,7 +89,7 @@ public class VisualDialog {
         }
         else {
             //Visual type has not changed
-            if (vt.hasOptions) {
+            if (vt.has_options) {
                 changed = struct.visualOption != (Integer) options.getValue();
                 if (changed) {
                     struct.visualOption = (Integer) options.getValue();
@@ -120,8 +120,8 @@ public class VisualDialog {
 
     private void setSpinner (VisualType vt){
 //        System.out.println(vt + ", vt.hasOptions = " + vt.hasOptions);
-        if (vt.hasOptions) {
-            RenderSpinnerVF rsvf = Visualization.getRender(vt).getOptionsSpinnerValueFaxtory();
+        if (vt.has_options) {
+            RenderSVF rsvf = Visualization.getRender(vt).getOptionsSpinnerValueFactory();
 //            System.out.println(vt + " options: " + rsvf);
             if (rsvf == null) {
                 options.setDisable(true); //Failed to fetch options.

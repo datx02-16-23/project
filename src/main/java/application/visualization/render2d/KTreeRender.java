@@ -28,7 +28,7 @@ import wrapper.datastructures.Array.ArrayElement;
  */
 public class KTreeRender extends Render {
 
-    private static final RenderSpinnerVF rsvf           = createOptionsSpinner();
+    private static final RenderSVF rsvf           = createOptionsSpinner();
     private final int                    K;
     private final ArrayList<Integer>     lowerLevelSums = new ArrayList<Integer>();
     private int                          totDepth, totBreadth, completedSize;
@@ -50,8 +50,8 @@ public class KTreeRender extends Render {
         Main.console.force("WARNING: At the time of writing (2016-04-18) the KTreeRender class, JavaFX may crash with a NullPointerException when Canvas grows too large.");
     }
 
-    private static RenderSpinnerVF createOptionsSpinner (){
-        return new RenderSpinnerVF(2, 1337);
+    private static RenderSVF createOptionsSpinner (){
+        return new RenderSVF(2, 1337);
     }
 
     /**
@@ -336,7 +336,7 @@ public class KTreeRender extends Render {
     }
 
     @Override
-    public RenderSpinnerVF getOptionsSpinnerValueFaxtory (){
+    public RenderSVF getOptionsSpinnerValueFactory (){
 //        System.out.println("\nktree render spinner factory:");
 //        System.out.println(rsvf);
         return rsvf;

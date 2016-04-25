@@ -152,7 +152,7 @@
                                           <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                                        </GridPane.margin>
                                     </Button>
-                                    <Button id="speed_button" fx:id="speedButton" maxHeight="40.0" maxWidth="60.0" minHeight="40.0" minWidth="60.0" mnemonicParsing="false" onAction="#changeSpeedButtonClicked" prefHeight="40.0" prefWidth="60.0" text="1x" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                                    <Button id="speed_button" fx:id="speedButton" maxHeight="40.0" maxWidth="60.0" minHeight="40.0" minWidth="60.0" mnemonicParsing="false" onAction="#changeSpeedButtonClicked" onContextMenuRequested="#changeSpeedButtonRightClicked" prefHeight="40.0" prefWidth="60.0" text="1x" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                        <font>
                                           <Font size="14.0" />
                                        </font>

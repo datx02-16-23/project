@@ -20,7 +20,7 @@ import wrapper.datastructures.Array.ArrayElement;
 
 public class MatrixRender extends Render {
 
-    private static final RenderSpinnerVF rsvf         = createOptionsSpinner();
+    private static final RenderSVF rsvf         = createOptionsSpinner();
     public static final double           DEFAULT_SIZE = 40;
     private final Order                  mo;
     private int[]                        size;
@@ -55,14 +55,14 @@ public class MatrixRender extends Render {
         this.mo = mo;
     }
 
-    private static RenderSpinnerVF createOptionsSpinner (){
+    private static RenderSVF createOptionsSpinner (){
         ArrayList<Integer> values = new ArrayList<Integer>();
         values.add(Order.ROW_MAJOR.optionNbr);
         values.add(Order.COLUMN_MAJOR.optionNbr);
         ArrayList<String> userValues = new ArrayList<String>();
         userValues.add(Order.ROW_MAJOR.name);
         userValues.add(Order.COLUMN_MAJOR.name);
-        RenderSpinnerVF rsvf = new RenderSpinnerVF(values, userValues);
+        RenderSVF rsvf = new RenderSVF(values, userValues);
         return rsvf;
     }
 
@@ -289,7 +289,7 @@ public class MatrixRender extends Render {
     }
 
     @Override
-    public RenderSpinnerVF getOptionsSpinnerValueFaxtory (){
+    public RenderSVF getOptionsSpinnerValueFactory (){
 //        System.out.println("\nmatrix render spinner factory:");
 //        System.out.println(rsvf);
         return rsvf;

@@ -22,13 +22,17 @@ public abstract class Render extends Pane {
     protected final DataStructure struct;
     protected final Canvas        local_canvas    = new Canvas();
     protected static final Canvas SHARED_ANIMATED = Visualization.instance().ANIMATED;
-//    protected static final Color  COLOR_READ      = Color.valueOf(Element.COLOR_READ);
-//    protected static final Color  COLOR_WRITE     = Color.valueOf(Element.COLOR_WRITE);
-//    protected static final Color  COLOR_SWAP      = Color.valueOf(Element.COLOR_SWAP);
-//    protected static final Color  COLOR_INACTIVE  = Color.valueOf(Element.COLOR_INACTIVE);
     protected static final Color  COLOR_WHITE     = Color.WHITE;
     protected static final Color  COLOR_BLACK     = Color.BLACK;
 
+    /**
+     * 
+     * @param struct
+     * @param width
+     * @param height
+     * @param hspace
+     * @param vspace
+     */
     public Render (DataStructure struct, double width, double height, double hspace, double vspace){
         this.struct = struct;
         //Sizing and spacing
@@ -220,7 +224,7 @@ public abstract class Render extends Pane {
      * 
      * @return A list of options for this Render, or null if there are none.
      */
-    public RenderSpinnerVF getOptionsSpinnerValueFaxtory (){
+    public RenderSVF getOptionsSpinnerValueFactory (){
         return null;
     }
 
@@ -230,7 +234,7 @@ public abstract class Render extends Pane {
      * @author Richard Sundqvist
      *
      */
-    public static class RenderSpinnerVF extends SpinnerValueFactory<Integer> {
+    public static class RenderSVF extends SpinnerValueFactory<Integer> {
 
         //Mode variable
         private final boolean            explicit;
@@ -253,7 +257,7 @@ public abstract class Render extends Pane {
          * @param min
          * @param max
          */
-        public RenderSpinnerVF (int min, int max){
+        public RenderSVF (int min, int max){
             this.min = min;
             this.max = max;
             current = min;
@@ -271,7 +275,7 @@ public abstract class Render extends Pane {
          * @param values The keys for this RenderSpinner.
          * @param userValues Their display values.
          */
-        public RenderSpinnerVF (List<Integer> values, List<String> userValues){
+        public RenderSVF (List<Integer> values, List<String> userValues){
             min = -1;
             max = -1;
             setConverter(new Converter(values, userValues));

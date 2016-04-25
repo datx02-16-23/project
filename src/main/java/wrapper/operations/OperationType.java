@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
  * The name of the operation.
  */
 public enum OperationType{
-    message(null), read(Color.GREEN), write(Color.RED), swap(true, Color.TEAL), remove(Color.GREY);
+    message(null), read(Color.GREEN), write(Color.RED), swap(true, Color.CORNFLOWERBLUE), remove(Color.GREY);
 
     /**
      * True for operations which implement the Consolidable interface.

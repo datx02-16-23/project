@@ -107,7 +107,7 @@ public class BarchartRender extends Render {
     }
 
     @Override
-    public RenderSpinnerVF getOptionsSpinnerValueFaxtory (){
+    public RenderSVF getOptionsSpinnerValueFactory (){
         // TODO Auto-generated method stub
         return null;
     }

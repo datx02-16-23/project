@@ -81,10 +81,11 @@ public class Visualization extends StackPane {
                 RENDERS.getChildren().add(render);
             }
             else {
-                render.setPrefWidth(this.getWidth());
-                render.setPrefHeight(this.getHeight());
+//                render.setPrefWidth(this.getWidth());
+//                render.setPrefHeight(this.getHeight());
 //                RENDERS.add(render, 0, reg++);
                 RENDERS.getChildren().add(render);
+                render.setStyle("-fx-background: red;");
             }
             struct_render_mapping.put(struct.identifier, render);
         }
@@ -98,12 +99,10 @@ public class Visualization extends StackPane {
     public static Render resolveRender (DataStructure struct){
         Render render = null;
         VisualType visual = struct.resolveVisual();
-        System.out.println("visual = " + visual);
-        System.out.println("option = " + struct.visualOption);
         switch (visual) {
             case bar:
-//                    render = new BarRender(struct, 40, 1, 5, 25);
-                render = new BarchartRender(struct);
+                render = new BarRender(struct, 40, 100, 5);
+//                render = new BarchartRender(struct);
                 break;
             case box:
                 render = new MatrixRender((Array) struct, struct.visualOption, 40, 40, 0, 0);

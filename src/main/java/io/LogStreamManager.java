@@ -260,11 +260,11 @@ public class LogStreamManager implements CommunicatorListener {
     /**
      * Stream the given JSON string using the Communicator carried by this LogStreamManager.
      * 
-     * @param JSONString The String to stream.
+     * @param json The JSON String to stream.
      * @return True if successful, false otherwise.
      */
-    public boolean stream (String JSONString){
-        return communicator.sendString(JSONString);
+    public boolean stream (String json){
+        return communicator.sendString(json);
     }
 
     /**
