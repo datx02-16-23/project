@@ -297,5 +297,12 @@ public class Main extends Application {
                 }
             });
         }
+
+        /**
+         * Clear the console.
+         */
+        public void clear (){
+            init();
+        }
     }
 }

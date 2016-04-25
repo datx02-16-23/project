@@ -236,6 +236,14 @@
                               <Insets left="10.0" />
                            </padding>
                         </Label>
+                        <Button maxHeight="20.0" minHeight="20.0" mnemonicParsing="false" onAction="#clearConsole" prefHeight="20.0" prefWidth="107.0" text="Clear">
+                           <VBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </VBox.margin>
+                           <padding>
+                              <Insets top="-2.0" />
+                           </padding>
+                        </Button>
                         <CheckBox mnemonicParsing="false" onAction="#toggleQuietMode" text="Quiet Mode">
                            <VBox.margin>
                               <Insets left="10.0" right="10.0" />

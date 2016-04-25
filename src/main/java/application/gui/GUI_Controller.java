@@ -803,6 +803,10 @@ public class GUI_Controller implements CommunicatorListener {
         CheckBox cb = (CheckBox) e.getSource();
         Main.console.setDebug(cb.isSelected());
     }
+    
+    public void clearConsole(){
+        Main.console.clear();
+    }
     /*
      * Console controls end.
      */
