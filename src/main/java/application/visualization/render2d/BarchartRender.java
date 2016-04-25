@@ -100,15 +100,15 @@ public class BarchartRender extends Render {
         // TODO Auto-generated method stub
         return 0;
     }
-
-    @Override
-    public void startAnimation (Element e, double x, double y){
-        // TODO Auto-generated method stub
-    }
-
     @Override
     public RenderSVF getOptionsSpinnerValueFactory (){
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public void startAnimation (Element e, double start_x, double start_y, double end_x, double end_y){
+        // TODO Auto-generated method stub
+        
     }
 }

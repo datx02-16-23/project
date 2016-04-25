@@ -21,10 +21,10 @@ import wrapper.datastructures.Array.ArrayElement;
 public class MatrixRender extends Render {
 
     private static final RenderSVF rsvf         = createOptionsSpinner();
-    public static final double           DEFAULT_SIZE = 40;
-    private final Order                  mo;
-    private int[]                        size;
-    private static final int             PADDING      = 35;
+    public static final double     DEFAULT_SIZE = 40;
+    private final Order            mo;
+    private int[]                  size;
+    private static final int       PADDING      = 35;
 
     /**
      * Create a new BoxRender.
@@ -283,15 +283,15 @@ public class MatrixRender extends Render {
     }
 
     @Override
-    public void startAnimation (Element e, double x, double y){
-        Animation a = new LinearAnimation(this, e, x, y);
-        a.start();
-    }
-
-    @Override
     public RenderSVF getOptionsSpinnerValueFactory (){
 //        System.out.println("\nmatrix render spinner factory:");
 //        System.out.println(rsvf);
         return rsvf;
+    }
+
+    @Override
+    public void startAnimation (Element e, double start_x, double start_y, double end_x, double end_y){
+        Animation a = new LinearAnimation(this, e, start_x, start_y, end_x, end_y);
+        a.start();
     }
 }

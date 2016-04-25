@@ -181,10 +181,12 @@ public abstract class Render extends Pane {
      * Start an animation of an element to a point.
      * 
      * @param e The element to animate.
-     * @param x End point x-coordinate.
-     * @param y End point y-coordinate.
+     * @param start_x Start point x-coordinate.
+     * @param start_y Start point y-coordinate.
+     * @param end_x End point x-coordinate.
+     * @param end_y End point y-coordinate.
      */
-    public abstract void startAnimation (Element e, double x, double y);
+    public abstract void startAnimation (Element e, double start_x, double start_y, double end_x, double end_y);
 
 //    /**
 //     * Returns the Canvas for this Render.
@@ -201,7 +203,7 @@ public abstract class Render extends Pane {
      * @param e An element in owner.
      * @return The absolute x-coordinates of e.
      */
-    public static double getAbsoluteX (Render owner, Element e){
+    public static double absX (Render owner, Element e){
         double bx = owner.getTranslateX() + owner.getLayoutX();
         return owner.getX(e) + bx;
     }
@@ -213,7 +215,7 @@ public abstract class Render extends Pane {
      * @param e An element in owner.
      * @return The absolute y-coordinates of e.
      */
-    public static double getAbsoluteY (Render owner, Element e){
+    public static double absY (Render owner, Element e){
         double by = owner.getTranslateY() + owner.getLayoutY();
         return owner.getY(e) + by;
     }

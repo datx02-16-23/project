@@ -238,13 +238,13 @@ public class BarRender extends Render {
     }
 
     @Override
-    public void startAnimation (Element e, double x, double y){
-        Animation a = new LinearAnimation(this, e, x, y);
-        a.start();
+    public RenderSVF getOptionsSpinnerValueFactory (){
+        return null; //No options for BarRender
     }
 
     @Override
-    public RenderSVF getOptionsSpinnerValueFactory (){
-        return null; //No options for BarRender
+    public void startAnimation (Element e, double start_x, double start_y, double end_x, double end_y){
+        Animation a = new LinearAnimation(this, e, end_x, end_y);
+        a.start();
     }
 }

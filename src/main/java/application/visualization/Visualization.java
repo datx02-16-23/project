@@ -204,15 +204,18 @@ public class Visualization extends StackPane {
          */
         if (src_e != null && tar_e != null) {
             //Render data transfer between two known structures
-            src_render.startAnimation(src_e, Render.getAbsoluteX(tar_render, tar_e), Render.getAbsoluteY(tar_render, tar_e));
+            src_render.startAnimation(src_e, Render.absX(src_render, src_e), Render.absY(src_render, src_e), //From
+                                             Render.absX(tar_render, tar_e), Render.absY(tar_render, tar_e)); //To
         }
         else if (src_e != null && tar_e == null) {
             //Render read without target
-            src_render.startAnimation(src_e, Render.getAbsoluteX(src_render, src_e) - 25, Render.getAbsoluteY(src_render, src_e) - 50);
+            src_render.startAnimation(src_e, Render.absX(src_render, src_e), Render.absY(src_render, src_e), //From
+                                             Render.absX(src_render, src_e) - 25, Render.absY(src_render, src_e) - 50); //To
         }
         else if (src_e == null && tar_e != null) {
             //Render write without source
-            tar_render.startAnimation(tar_e, Render.getAbsoluteX(tar_render, tar_e) + 25, Render.getAbsoluteY(tar_render, tar_e) + 50);
+            tar_render.startAnimation(tar_e, Render.absX(tar_render, tar_e) + 25, Render.absY(tar_render, tar_e) + 50, //From
+                                             Render.absX(tar_render, tar_e), Render.absY(tar_render, tar_e)); //To
         }
     }
 
@@ -253,8 +256,8 @@ public class Visualization extends StackPane {
          * Start animations
          */
         if (v1_e != null && v2_e != null) {
-            v1_render.startAnimation(v1_e, Render.getAbsoluteX(v2_render, v2_e), Render.getAbsoluteY(v2_render, v2_e));
-            v2_render.startAnimation(v2_e, Render.getAbsoluteX(v1_render, v1_e), Render.getAbsoluteY(v1_render, v1_e));
+            v1_render.startAnimation(v1_e, Render.absX(v1_render, v1_e), Render.absY(v1_render, v1_e), Render.absX(v2_render, v2_e), Render.absY(v2_render, v2_e));
+            v2_render.startAnimation(v2_e, Render.absX(v2_render, v2_e), Render.absY(v2_render, v2_e), Render.absX(v1_render, v1_e), Render.absY(v1_render, v1_e));
         }
     } //End animate swap
 
