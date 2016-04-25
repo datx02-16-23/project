@@ -28,10 +28,10 @@ import wrapper.datastructures.Array.ArrayElement;
  */
 public class KTreeRender extends Render {
 
-    private static final RenderSVF rsvf           = createOptionsSpinner();
-    private final int                    K;
-    private final ArrayList<Integer>     lowerLevelSums = new ArrayList<Integer>();
-    private int                          totDepth, totBreadth, completedSize;
+    private static final RenderSVF   rsvf           = createOptionsSpinner();
+    private final int                K;
+    private final ArrayList<Integer> lowerLevelSums = new ArrayList<Integer>();
+    private int                      totDepth, totBreadth, completedSize;
 
     /**
      * Create a new KTreeRender with K children and one parent. Will set K = 2 for any K < 2.
@@ -340,5 +340,17 @@ public class KTreeRender extends Render {
     public void startAnimation (Element e, double start_x, double start_y, double end_x, double end_y){
         Animation a = new LinearAnimation(this, e, end_x, end_y);
         a.start();
+    }
+
+    @Override
+    public double absX (Element e){
+        double bx = this.getTranslateX() + this.getLayoutX();
+        return this.getX(e) + bx;
+    }
+
+    @Override
+    public double absY (Element e){
+        double by = this.getTranslateY() + this.getLayoutY();
+        return this.getY(e) + by;
     }
 }
