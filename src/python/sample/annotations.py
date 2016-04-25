@@ -105,6 +105,14 @@ def create_settings(root_directory, files, variables, main_file, output):
 	}
 	return settings
 
+def dump_json(header,body,output_path):
+	with open(output_path,'w') as f:
+		final_output = {
+			'header' : header,
+			'body' : body
+		}
+		dump(final_output,f)
+
 def run(settings):
 	"""
 	run
@@ -139,13 +147,16 @@ def run(settings):
 	execfile(settings['main'],globals())
 
 	print "Formatting json buffer from output..."
-	output = LogPostProcessor(settings['output']).process(settings['observe'])
-	with open(settings['output'],'w+') as f:
-		final_output = {
-			'header' : header,
-			'body' : output
-		}
-		dump(final_output,f)
+	processor = LogPostProcessor(settings['output']) 
+	output 	  = processor.process(settings['observe'])
+	
+	dump_json(header,output,settings['output'])
+	# with open(settings['output'],'w+') as f:
+	# 	final_output = {
+	# 		'header' : header,
+	# 		'body' : output
+	# 	}
+	# 	dump(final_output,f)
 
 	print "Removing visualization environment..."
 	system('rm -rf %s' % settings['v_env'])
