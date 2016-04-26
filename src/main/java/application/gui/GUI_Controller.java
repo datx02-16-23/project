@@ -112,44 +112,13 @@ public class GUI_Controller implements CommunicatorListener {
     public void showMultiset(){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MultisetView.fxml"));
         fxmlLoader.setController(this);
-//        multisetView.getIcons().add(new Image(GUI_Controller.class.getResourceAsStream("/assets/icon_settings.png")));
-
-//        initOwner(parentStage);
         VBox p = null;
         try {
             p = fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        window.setScene(new MultisetAnimation(this.window.getWidth() * 0.75, this.window.getHeight() * 0.75));
-
-//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MultisetView.fxml"));
-//        fxmlLoader.setController(this);
-//        multisetView = new Stage();
-//        multisetView.getIcons().add(new Image(GUI_Controller.class.getResourceAsStream("/assets/icon_settings.png")));
-//        multisetView.initModality(Modality.APPLICATION_MODAL);
-//        multisetView.setTitle(Strings.PROJECT_NAME + ": Settings and Preferences");
-//        multisetView.initOwner(this.window);
-//        VBox p = null;
-//        try {
-//            p = fxmlLoader.load();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        p.setPrefWidth(this.window.getWidth() * 0.75);
-//        p.setPrefHeight(this.window.getHeight() * 0.75);
-//        Scene dialogScene = new Scene(p, this.window.getWidth() * 0.75, this.window.getHeight() * 0.75);
-//        multisetView.setScene(dialogScene);
-//
-//        System.out.println("MULTISET!");
-//
-//        multisetView.setWidth(this.window.getWidth() * 0.75);
-//        multisetView.setHeight(this.window.getHeight() * 0.75);
-//
-//
-//        //Size and show
-//        multisetView.show();
-
+        window.setScene(new MultisetAnimation(p, this.window.getWidth() * 0.75, this.window.getHeight() * 0.75, fxmlLoader));
     }
 
     private CheckBox toggleAutorunStream;

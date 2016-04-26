@@ -17,25 +17,8 @@ public class MultisetAnimation extends Scene{
 
 
 
-    public MultisetAnimation(VBox root, double w, double h){
-        super(null,w, h);
-//        this.parentStage = parentStage;
-
-//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MultisetView.fxml"));
-//        fxmlLoader.setController(this);
-////        multisetView.getIcons().add(new Image(GUI_Controller.class.getResourceAsStream("/assets/icon_settings.png")));
-//
-////        initOwner(parentStage);
-//        VBox p = null;
-//        try {
-//            p = fxmlLoader.load();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-//        Scene theScene = new Scene(p, parentStage.getWidth() * 0.75, parentStage.getHeight() * 0.75);
-
-        setRoot(p);
+    public MultisetAnimation(VBox root, double w, double h, FXMLLoader fxmlLoader){
+        super(root,w, h);
 
         Canvas canvas = (Canvas) fxmlLoader.getNamespace().get("ballCanvas");
 
