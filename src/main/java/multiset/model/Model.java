@@ -13,17 +13,10 @@ public class Model implements iModel {
     this.areaWidth = width;
     this.areaHeight = height;
 
-    balls.add(new Ball(3, 3));
-    /*for (int x = 3; x < 24; x += 3){
-      balls.add(new Ball(x, 3));
-      balls.add(new Ball(x + 0.1, 6));
-      balls.add(new Ball(x + 0.2, 9));
-      balls.add(new Ball(x + 0.3, 12));
-      balls.add(new Ball(x + 0.4, 15));
-      balls.add(new Ball(x + 0.5, 18));
-      balls.add(new Ball(x + 0.6, 21));
-      balls.add(new Ball(x + 0.7, 24));
-    }*/
+    for (int x = 10; x < 600; x += 300){
+      for (int y = 10; y < 600; y+= 300)
+        balls.add(new Ball(x, y));
+    }
   }
 
   @Override
