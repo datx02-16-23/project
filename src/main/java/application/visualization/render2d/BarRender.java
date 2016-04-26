@@ -46,9 +46,11 @@ public class BarRender extends Render {
     @Override
     public void render (){
         if (struct.repaintAll) {
+            System.out.println("repaint all");
             init();
         }
         else {
+            System.out.println("repaint modified");
             List<Element> modifiedElements = struct.getModifiedElements();
             List<Element> resetElements = struct.getResetElements();
             ArrayElement ae;
@@ -56,7 +58,7 @@ public class BarRender extends Render {
                 ae = (ArrayElement) e;
                 if (modifiedElements.contains(e)) {
                     drawElement(ae.getNumericValue(), ae.getIndex(), e.getColor());
-                    calculateSize();
+//                    calculateSize();
                 }
                 else if (resetElements.contains(e)) {
                     drawElement(ae.getNumericValue(), ae.getIndex(), DEFAULT_COLOR);
@@ -72,7 +74,7 @@ public class BarRender extends Render {
             return;
         }
         boolean negative = new_max < 0;
-        yAxis_max = (int) Math.ceil(log_$base$(Math.abs(new_max)));
+        yAxis_max = (int) Math.ceil(foo(new_max));
         if (negative) {
             yAxis_max = -yAxis_max;
         }
@@ -84,25 +86,45 @@ public class BarRender extends Render {
             return;
         }
         boolean negative = new_min < 0;
-        yAxis_min = (int) Math.ceil(log_$base$(Math.abs(new_min)));
+        yAxis_min = (int) Math.ceil(foo(new_min));
         if (negative) {
             yAxis_min = -yAxis_min;
         }
     }
 
     /**
-     * Returns the logarithm of the argument in whichever base this BarRender uses. Returns 0 for arg <= 0.
      * 
-     * @param arg The number to get the logarithm of.
-     * @return The logarithm of {@code arg} in base {@code base}.
      */
-    public double log_$base$ (double arg){
-        if (arg <= 0) {
-            return 0;
-        }
-        else {
-            return Math.log(arg) / Math.log(base);
-        }
+    public double foo (double arg){
+        return arg;
+//        if (arg == 0) {
+//            return 0;
+//        }
+//        int sign = arg < 0 ? -1 : 1;
+//        arg = Math.abs(arg);
+//        double ans = 0;
+//        double base;
+//        /*
+//         * 
+//         */
+//        if (arg < 1) {
+//            base = 1 / 10;
+//            while(arg > base) {
+//                base = base * (1 / 10);
+//            }
+//            
+//            while (arg > 0){
+//                ans = ans + 
+//            }
+//        }
+//        /*
+//         * 
+//         */
+//        else {
+//            base = 10;
+//            while(arg < base) {}
+//        }
+//        return sign * ans;
     }
 
     /**
@@ -140,7 +162,7 @@ public class BarRender extends Render {
     }
 
     private double getY (double value){
-        return this.HEIGHT - (node_height) * this.log_$base$(value) - padding;
+        return this.HEIGHT - (node_height) * foo(value) - padding;
     }
 
     /**
@@ -173,12 +195,12 @@ public class BarRender extends Render {
         GraphicsContext context = canvas.getGraphicsContext2D();
         context.setFill(fill);
 //        context.clearRect(x - context.getLineWidth(), padding / 2, node_width + 2 * context.getLineWidth(), this.HEIGHT);
-        context.fillRect(x, y, node_width, node_height * log_$base$(value));
+        context.fillRect(x, y, node_width, node_height * foo(value));
         //Outline, text
         context.setFill(COLOR_BLACK);
         context.setStroke(COLOR_BLACK);
         //Value
-        context.strokeRect(x, y, node_width, node_height * log_$base$(value));
+        context.strokeRect(x, y, node_width, node_height * foo(value));
         final Text text = new Text(value + "");
         new Scene(new Group(text));
         text.applyCss();

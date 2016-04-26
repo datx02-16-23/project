@@ -100,6 +100,7 @@ public class BarchartRender extends Render {
         // TODO Auto-generated method stub
         return 0;
     }
+
     @Override
     public RenderSVF getOptionsSpinnerValueFactory (){
         // TODO Auto-generated method stub
@@ -109,6 +110,17 @@ public class BarchartRender extends Render {
     @Override
     public void startAnimation (Element e, double start_x, double start_y, double end_x, double end_y){
         // TODO Auto-generated method stub
-        
+    }
+
+    @Override
+    public double absX (Element e){
+        double bx = this.getTranslateX() + this.getLayoutX();
+        return this.getX(e) + bx;
+    }
+
+    @Override
+    public double absY (Element e){
+        double by = this.getTranslateY() + this.getLayoutY();
+        return this.getY(e) + by;
     }
 }
