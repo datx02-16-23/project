@@ -24,6 +24,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -32,6 +33,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import multiset.MultisetAnimation;
 import wrapper.datastructures.DataStructure;
 
 import java.io.*;
@@ -65,6 +67,7 @@ public class GUI_Controller implements CommunicatorListener {
     private long                            stepDelay                  = stepDelayBase / stepDelaySpeedupFactor;
     // Settings dialog stuff
     private Stage                           settingsView;
+    private MultisetAnimation               multisetView;
     //Views, panels, dialogs
     private final ConnectedView             connectedView;
     private final InterpreterView           interpreterView;
@@ -104,6 +107,49 @@ public class GUI_Controller implements CommunicatorListener {
         settingsView.setWidth(this.window.getWidth() * 0.75);
         settingsView.setHeight(this.window.getHeight() * 0.75);
         settingsView.show();
+    }
+
+    public void showMultiset(){
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MultisetView.fxml"));
+        fxmlLoader.setController(this);
+//        multisetView.getIcons().add(new Image(GUI_Controller.class.getResourceAsStream("/assets/icon_settings.png")));
+
+//        initOwner(parentStage);
+        VBox p = null;
+        try {
+            p = fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        window.setScene(new MultisetAnimation(this.window.getWidth() * 0.75, this.window.getHeight() * 0.75));
+
+//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MultisetView.fxml"));
+//        fxmlLoader.setController(this);
+//        multisetView = new Stage();
+//        multisetView.getIcons().add(new Image(GUI_Controller.class.getResourceAsStream("/assets/icon_settings.png")));
+//        multisetView.initModality(Modality.APPLICATION_MODAL);
+//        multisetView.setTitle(Strings.PROJECT_NAME + ": Settings and Preferences");
+//        multisetView.initOwner(this.window);
+//        VBox p = null;
+//        try {
+//            p = fxmlLoader.load();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        p.setPrefWidth(this.window.getWidth() * 0.75);
+//        p.setPrefHeight(this.window.getHeight() * 0.75);
+//        Scene dialogScene = new Scene(p, this.window.getWidth() * 0.75, this.window.getHeight() * 0.75);
+//        multisetView.setScene(dialogScene);
+//
+//        System.out.println("MULTISET!");
+//
+//        multisetView.setWidth(this.window.getWidth() * 0.75);
+//        multisetView.setHeight(this.window.getHeight() * 0.75);
+//
+//
+//        //Size and show
+//        multisetView.show();
+
     }
 
     private CheckBox toggleAutorunStream;
@@ -860,7 +906,7 @@ public class GUI_Controller implements CommunicatorListener {
         Scene dialogScene = new Scene(p, window.getWidth(), window.getHeight());
         wv = (WebView) p.getChildren().get(0);
         wv.getEngine().load("https://docs.google.com/document/d/1W1MdmZLjabvS3eSahuWZayL1TGBceh2JC3JVVjaEntg/pub");
-//        wv.getEngine().loadContent("JavaAnnotationsUserGuideGettingstartedwithannotationsforthe“visualizationtool”.InMavenFirstweneedtosetupthemavendependenciesandcompilerplugin.CopypastethefollowingintoyourProject“pom.xml”.&#60;dependencies&#62;&#60;dependency&#62;&#60;groupId&#62;com.dennisjonsson&#60;/groupId&#62;&#60;artifactId&#62;annotation&#60;/artifactId&#62;&#60;version&#62;1.0-SNAPSHOT&#60;/version&#62;&#60;/dependency&#62;&#60;/dependencies&#62;&#60;build&#62;&#60;plugins&#62;&#60;plugin&#62;&#60;groupId&#62;org.apache.maven.plugins&#60;/groupId&#62;&#60;artifactId&#62;maven-compiler-plugin&#60;/artifactId&#62;&#60;version&#62;3.0&#60;/version&#62;&#60;configuration&#62;&#60;annotationProcessors&#62;&#60;annotationProcessor&#62;com.dennisjonsson.annotation.processor.VisualizeProcessor&#60;/annotationProcessor&#62;&#60;/annotationProcessors&#62;&#60;source&#62;1.8&#60;/source&#62;&#60;target&#62;1.8&#60;/target&#62;&#60;/configuration&#62;&#60;/plugin&#62;&#60;/plugins&#62;&#60;/build&#62;Now,tryandbuildingyourproject.Ifthebuildwassuccessfulyoucanstartusingtheannotationstovisualizeyourdatastructures.Therearefourannotationsyouneedtoapplytoyourcodeinordertoenableavisualization.@SourcePath(path=“path/to/your/project”)Markoneofyourclasseswiththisannotation,preferablyyoumainclass.Thepathshouldspecifytherootfolderofyourproject.@VisualClassAllclassesyouwanttoincludeinavisualizationprogramneedstobemarkedwiththisannotation.@Visualize(abstractType=“array”|“binarytree”|“adjacencymatrix”)Usethisannotationtomarkclassfieldsormethodparameteryouwanttovisualize.Provideyourabstractvisualizationtype,i.e.howyouwantyourdatastructuretobevisualized.");
+//        wv.getEngine().loadContent("JavaAnnotationsUserGuideGettingstartedwithannotationsfortheï¿½visualizationtoolï¿½.InMavenFirstweneedtosetupthemavendependenciesandcompilerplugin.CopypastethefollowingintoyourProjectï¿½pom.xmlï¿½.&#60;dependencies&#62;&#60;dependency&#62;&#60;groupId&#62;com.dennisjonsson&#60;/groupId&#62;&#60;artifactId&#62;annotation&#60;/artifactId&#62;&#60;version&#62;1.0-SNAPSHOT&#60;/version&#62;&#60;/dependency&#62;&#60;/dependencies&#62;&#60;build&#62;&#60;plugins&#62;&#60;plugin&#62;&#60;groupId&#62;org.apache.maven.plugins&#60;/groupId&#62;&#60;artifactId&#62;maven-compiler-plugin&#60;/artifactId&#62;&#60;version&#62;3.0&#60;/version&#62;&#60;configuration&#62;&#60;annotationProcessors&#62;&#60;annotationProcessor&#62;com.dennisjonsson.annotation.processor.VisualizeProcessor&#60;/annotationProcessor&#62;&#60;/annotationProcessors&#62;&#60;source&#62;1.8&#60;/source&#62;&#60;target&#62;1.8&#60;/target&#62;&#60;/configuration&#62;&#60;/plugin&#62;&#60;/plugins&#62;&#60;/build&#62;Now,tryandbuildingyourproject.Ifthebuildwassuccessfulyoucanstartusingtheannotationstovisualizeyourdatastructures.Therearefourannotationsyouneedtoapplytoyourcodeinordertoenableavisualization.@SourcePath(path=ï¿½path/to/your/projectï¿½)Markoneofyourclasseswiththisannotation,preferablyyoumainclass.Thepathshouldspecifytherootfolderofyourproject.@VisualClassAllclassesyouwanttoincludeinavisualizationprogramneedstobemarkedwiththisannotation.@Visualize(abstractType=ï¿½arrayï¿½|ï¿½binarytreeï¿½|ï¿½adjacencymatrixï¿½)Usethisannotationtomarkclassfieldsormethodparameteryouwanttovisualize.Provideyourabstractvisualizationtype,i.e.howyouwantyourdatastructuretobevisualized.");
         root.setScene(dialogScene);
         root.show();
     }
