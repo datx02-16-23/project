@@ -19,7 +19,7 @@ public class Conditional {
     public Conditional(String lhs, String rhs, Set<String> variables){
         this.lhs = new ExpressionBuilder(lhs).variables(variables).build();
         this.rhs = new ExpressionBuilder(rhs).variables(variables).build();
-        bdc = new LessThan();
+        bdc = (double a, double b) -> a > b;
 
     }
 
