@@ -34,6 +34,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import multiset.MultisetAnimation;
+import multiset.MultisetController;
 import wrapper.datastructures.DataStructure;
 
 import java.io.*;
@@ -67,7 +68,6 @@ public class GUI_Controller implements CommunicatorListener {
     private long                            stepDelay                  = stepDelayBase / stepDelaySpeedupFactor;
     // Settings dialog stuff
     private Stage                           settingsView;
-    private MultisetAnimation               multisetView;
     //Views, panels, dialogs
     private final ConnectedView             connectedView;
     private final InterpreterView           interpreterView;
@@ -111,14 +111,14 @@ public class GUI_Controller implements CommunicatorListener {
 
     public void showMultiset(){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MultisetView.fxml"));
-        fxmlLoader.setController(this);
+        fxmlLoader.setController(new MultisetController(window));
         VBox p = null;
         try {
             p = fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        window.setScene(new MultisetAnimation(p, this.window.getWidth() * 0.75, this.window.getHeight() * 0.75, fxmlLoader));
+        window.setScene(new MultisetAnimation(p, this.window.getWidth(), this.window.getHeight(), fxmlLoader));
     }
 
     private CheckBox toggleAutorunStream;
@@ -420,7 +420,7 @@ public class GUI_Controller implements CommunicatorListener {
     }
 
     /**
-     * Helper function for {@link #openLog() openFileChooser}
+     * Helper function for {@link #openFileChooser() openFileChooser}
      * 
      * @param file
      */
@@ -779,7 +779,7 @@ public class GUI_Controller implements CommunicatorListener {
     /**
      * Load an example.
      * 
-     * @param w The Wrapper containing the example.
+     * @param algo The Wrapper containing the example.
      */
     public void loadExample (Algorithm algo){
         double[] data = examplesDialog.show(algo.name);

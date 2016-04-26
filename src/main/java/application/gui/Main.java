@@ -75,7 +75,7 @@ public class Main extends Application {
         operationPanelContainer.setCenter(operationPanel);
         double leftDivider = (((GridPane) namespace.get("buttonsGrid")).getPrefWidth() + 14) / scene.getWidth();
         sP.setDividerPositions(leftDivider/5, 1 - leftDivider);
-        // Add examples
+        // Add examples:
         Menu examples = (Menu) namespace.get("examplesMenu");
         for (Algorithm algo : Examples.Algorithm.values()) {
             MenuItem algoButton = new MenuItem(algo.name);
