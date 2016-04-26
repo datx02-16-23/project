@@ -33,7 +33,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import multiset.MultisetAnimation;
+import multiset.MultisetAnimator;
 import multiset.MultisetController;
 import wrapper.datastructures.DataStructure;
 
@@ -118,7 +118,7 @@ public class GUI_Controller implements CommunicatorListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        window.setScene(new MultisetAnimation(p, this.window.getWidth(), this.window.getHeight(), fxmlLoader));
+        window.setScene(new MultisetAnimator(p, 700, 700, fxmlLoader));
     }
 
     private CheckBox toggleAutorunStream;

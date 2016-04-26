@@ -17,7 +17,6 @@ public class MultisetController {
     }
 
     public void goBackPressed(){
-        System.out.println("test");
         window.setScene(scene);
     }
 }
