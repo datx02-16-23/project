@@ -21,7 +21,7 @@
          <image>
             <Image url="@assets/icon_interpreter.png" />
          </image></ImageView>
-    <VBox maxHeight="+Infinity" maxWidth="+Infinity" minHeight="150.0" prefHeight="120.0" prefWidth="400.0" spacing="7.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+    <VBox maxHeight="+Infinity" maxWidth="+Infinity" minHeight="140.0" prefHeight="130.0" prefWidth="400.0" spacing="7.0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="0" GridPane.vgrow="NEVER">
       <children>
         <Label fx:id="name" text="&lt;struct name&gt;" textAlignment="LEFT" wrapText="true">
           <font>
@@ -57,6 +57,9 @@
                </children>
             </HBox>
       </children>
+         <GridPane.margin>
+            <Insets bottom="-13.0" />
+         </GridPane.margin>
     </VBox>
     <HBox maxHeight="30.0" maxWidth="+Infinity" minHeight="30.0" minWidth="-Infinity" prefHeight="30.0" style="-fx-background-color: #123456;" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
       <children>
