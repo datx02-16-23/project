@@ -6,8 +6,6 @@ import application.model.Model;
 import application.visualization.animation.Animation;
 import application.visualization.render2d.*;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import wrapper.Locator;
 import wrapper.Operation;
@@ -76,7 +74,7 @@ public class Visualization extends StackPane {
         for (DataStructure struct : model.getStructures().values()) {
             Render render = resolveRender(struct);
             if (struct.rawType == RawType.independentElement) {
-                render = new MatrixRender((Array) struct);
+                render = new MatrixRender(struct);
 //                RENDERS.add(render, 1, small++);
                 RENDERS.getChildren().add(render);
             }
@@ -105,7 +103,7 @@ public class Visualization extends StackPane {
 //                render = new BarchartRender(struct);
                 break;
             case box:
-                render = new MatrixRender((Array) struct, struct.visualOption, 40, 40, 0, 0);
+                render = new MatrixRender(struct, struct.visualOption, 40, 40, 0, 0);
                 break;
             case tree:
                 render = new KTreeRender(struct, struct.visualOption, 40, 40, 0, 10);

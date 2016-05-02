@@ -5,7 +5,6 @@ import net.objecthunter.exp4j.ExpressionBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 import java.util.Set;
 
 /**

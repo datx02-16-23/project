@@ -35,17 +35,26 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import multiset.MultisetAnimator;
 import multiset.MultisetController;
+import wrapper.Locator;
+import wrapper.Operation;
 import wrapper.datastructures.DataStructure;
+import wrapper.operations.Key;
+import wrapper.operations.OP_Message;
 
 import java.io.*;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * This is the Controller of MVC for the visualizer GUI.
@@ -75,6 +84,7 @@ public class GUI_Controller implements CommunicatorListener {
     private final OperationPanel            operationPanel;
     private final ExamplesDialog            examplesDialog;
     private final VisualDialog              visualDialog;
+    private final CreateStructureDialog     createStructureDialog;
     private final IdentifierCollisionDialog icd;
 
     public GUI_Controller (Stage window, LogStreamManager lsm, SourcePanel sourceViewer){
@@ -89,6 +99,7 @@ public class GUI_Controller implements CommunicatorListener {
         this.operationPanel = new OperationPanel(this);
         this.examplesDialog = new ExamplesDialog(window);
         this.visualDialog = new VisualDialog(window);
+        this.createStructureDialog = new CreateStructureDialog(window);
         this.connectedView = new ConnectedView(window, (JGroupCommunicator) lsm.getCommunicator());
         this.icd = new IdentifierCollisionDialog(window);
         initSettingsPane();
@@ -107,7 +118,7 @@ public class GUI_Controller implements CommunicatorListener {
         settingsView.show();
     }
 
-    public void showMultiset(){
+    public void showMultiset (){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MultisetView.fxml"));
         MultisetController msc = new MultisetController(window);
         fxmlLoader.setController(msc);
@@ -255,8 +266,7 @@ public class GUI_Controller implements CommunicatorListener {
         updatePanels();
     }
 
-    private Button   speedButton;
-    private MenuItem speedMenuItem;
+    private Button speedButton;
 
     /**
      * Change the animation speed
@@ -452,6 +462,7 @@ public class GUI_Controller implements CommunicatorListener {
         visualMenu.getItems().clear();
         visualMenu.setDisable(newStructs.isEmpty());
         model.getOperations().addAll(lsm.getOperations());
+        checkOperationIdentifiers(model.getOperations(), model.getStructures());
         sourceViewer.addSources(lsm.getSources());
         visualization.clearAndCreateVisuals();
         visualization.render(model.getCurrentStep().getLastOp());
@@ -459,6 +470,60 @@ public class GUI_Controller implements CommunicatorListener {
         operationPanel.getItems().addAll(lsm.getOperations());
         loadVisualMenu();
         updatePanels();
+    }
+    
+    private void checkOperationIdentifiers(List<Operation> ops, Map<String, DataStructure> structs){
+        HashSet<String> opsIdentifiers = new HashSet<String>();
+        /*
+         * Gather all operation identifiers.
+         */
+        for(Operation op : ops){
+            String identifier;
+            Locator locator;
+            DataStructure struct;
+            switch (op.operation) {
+                case message:
+                    break;
+                case read:
+                case write:
+                    locator = ((Locator) op.operationBody.get(Key.source));
+                    if (locator != null) {
+                        struct = structs.get(locator.identifier);
+                        if (struct == null) {
+                            opsIdentifiers.add(locator.identifier);
+                        }
+                    }
+                    locator = ((Locator) op.operationBody.get(Key.target));
+                    if (locator != null) {
+                        identifier = locator.identifier;
+                        struct = structs.get(identifier);
+                        if (struct == null) {
+                            opsIdentifiers.add(locator.identifier);
+                        }
+                    }
+                    break;
+                case swap:
+                    break;
+                case remove:
+                    identifier = ((Locator) op.operationBody.get(Key.target)).identifier;
+                    struct = structs.get(identifier);
+                    if (struct == null) {
+                        opsIdentifiers.add(identifier);
+                    }
+                    break;
+            }
+        }
+        Set<String> keyset = structs.keySet();
+        DataStructure newStruct;
+        for(String identifier : opsIdentifiers){
+            if(keyset.contains(identifier) == false){
+                newStruct = createStructureDialog.show(identifier);
+                if(newStruct != null){
+                    structs.put(newStruct.identifier, newStruct);
+                }
+            }
+        }
+        
     }
 
     private boolean checkCollision (Map<String, DataStructure> oldStructs, Map<String, DataStructure> newStructs){
@@ -612,7 +677,7 @@ public class GUI_Controller implements CommunicatorListener {
         //Load from main view namespace
         playPauseButton = (Button) namespace.get("playPauseButton");
         speedButton = (Button) namespace.get("speedButton");
-        speedMenuItem = (MenuItem) namespace.get("speedMenuItem");
+//        speedMenuItem = (MenuItem) namespace.get("speedMenuItem");
         streamBehaviourMenuButton = (MenuButton) namespace.get("streamBehaviourMenuButton");
         visualMenu = (Menu) namespace.get("visualMenu");
         visualMenu.setDisable(true);

@@ -4,7 +4,7 @@ import javafx.animation.AnimationTimer;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.layout.BorderPane;
+//import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import multiset.model.Model;
 import multiset.view.View;
@@ -23,7 +23,7 @@ public class MultisetAnimator extends Scene{
 
         Canvas canvas = (Canvas) fxmlLoader.getNamespace().get("ballCanvas");
 
-        BorderPane parent = (BorderPane) canvas.getParent();
+//        BorderPane parent = (BorderPane) canvas.getParent();
 //        canvas.widthProperty().bind(parent.widthProperty());
 //        canvas.heightProperty().bind(parent.heightProperty());
 //        canvas.setHeight(canvasWidth);

@@ -21,6 +21,11 @@ public abstract class DataStructure extends AnnotatedVariable {
      * Version number for this class.
      */
     private static final long               serialVersionUID = Strings.VERSION_NUMBER;
+
+    /**
+     * The elements held by this DataStructure.
+     */
+    protected transient final List<Element> elements = new ArrayList<Element>();
     /**
      * Elements which have been modified and should be drawn with their preferred color.
      */

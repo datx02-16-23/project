@@ -75,22 +75,4 @@ public class Locator implements Serializable {
     public boolean indexEquals (int[] other){
         return Arrays.equals(this.index, other);
     }
-
-    /**
-     * Returns the identifier for this Locator.
-     * 
-     * @return The identifier for this Locator.
-     */
-    public String getIdentifier (){
-        return identifier;
-    }
-
-    /**
-     * Returns the index for this Locator.
-     * 
-     * @return The index for this Locator.
-     */
-    public int[] getIndex (){
-        return index;
-    }
 }

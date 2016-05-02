@@ -82,7 +82,7 @@ public class SourcePanel extends TabPane {
      */
     @SuppressWarnings("unchecked")
     public void show (Operation op){
-        if (op == null) {
+        if (op == null || op.source == null) {
             return;
         }
         Integer sourceTabIndex = nameTabMapping.get(op.source);

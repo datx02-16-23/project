@@ -7,17 +7,19 @@ package wrapper.datastructures;
  *
  */
 public enum RawType{
-    array(AbstractType.tree), //An array of objects or primitivtes.
-    tree,
-    independentElement; //A loose element, such as a tmp variable.
+    array("Array", AbstractType.tree), //An array of objects or primitivtes.
+    tree("Tree"),
+    independentElement("Independent Element"); //A loose element, such as a tmp variable.
 
     /**
      * The permitted AbstractTypes for this RawType.
      */
-    public final AbstractType[] abstractTypes;
+    public final AbstractType[] absTypes;
+    public final String         prettyName;
 
-    private RawType (AbstractType... types){
-        abstractTypes = types;
+    private RawType (String prettyName, AbstractType... types){
+        this.prettyName = prettyName;
+        absTypes = types;
     }
 
     /**
@@ -27,6 +29,6 @@ public enum RawType{
      *
      */
     public enum AbstractType{
-        tree//A tree with n children and one parent.
+        tree //A tree with n children and one parent.
     }
 }

@@ -24,7 +24,6 @@ public class Array extends DataStructure {
      * Version number for this class.
      */
     private static final long             serialVersionUID = Strings.VERSION_NUMBER;
-    private transient final List<Element> elements;
     private transient int[]               capacity;
     private transient double              min              = Integer.MAX_VALUE;
     private transient double              max              = Integer.MIN_VALUE;
@@ -38,10 +37,13 @@ public class Array extends DataStructure {
      */
     public Array (String identifier, RawType.AbstractType abstractType, VisualType visual){
         super(identifier, RawType.array, abstractType, visual);
-        elements = new ArrayList<Element>();
         if (capacity == null) {
             capacity = new int[] {-1};
         }
+    }
+
+    public Array (String identifier, RawType rawType, AbstractType abstractType, VisualType visual){
+        super(identifier, rawType, abstractType, visual);
     }
 
     /**
@@ -64,7 +66,7 @@ public class Array extends DataStructure {
     }
 
     private void init (OP_Write init){
-        if (!init.getTarget().getIdentifier().equals(super.identifier)) {
+        if (!init.getTarget().identifier.equals(super.identifier)) {
             return;
         }
         repaintAll = true;
