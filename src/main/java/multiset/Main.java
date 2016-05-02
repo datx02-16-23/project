@@ -20,7 +20,6 @@ import multiset.view.iView;
 public class Main extends Application{
     private iModel model;
     private iView view;
-    private Canvas canvas;
     private final int width = 600;
     private final int height = 600;
 
@@ -33,7 +32,7 @@ public class Main extends Application{
 
     private void setupView(Stage primaryStage) {
         Group root = new Group();
-        canvas = new Canvas(width, height);
+        Canvas canvas = new Canvas(width, height);
         root.getChildren().add(canvas);
         primaryStage.setScene(new Scene(root));
         view = new View(model, canvas);
@@ -43,8 +42,8 @@ public class Main extends Application{
 
     private void setupContinousUpdates() {
         final Timeline timeline = new Timeline();
-        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(20), actionEvent -> {
-            model.tick(20);
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(10), actionEvent -> {
+            model.tick(10);
             view.render();
         }));
         timeline.setCycleCount(Animation.INDEFINITE);

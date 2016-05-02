@@ -294,4 +294,16 @@ public class MatrixRender extends Render {
         Animation a = new LinearAnimation(this, e, start_x, start_y, end_x, end_y);
         a.start();
     }
+
+    @Override
+    public double absX (Element e){
+        double bx = this.getTranslateX() + this.getLayoutX();
+        return this.getX(e) + bx;
+    }
+
+    @Override
+    public double absY (Element e){
+        double by = this.getTranslateY() + this.getLayoutY();
+        return this.getY(e) + by;
+    }
 }

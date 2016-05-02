@@ -7,7 +7,7 @@ public class Ball {
 
   
   public Ball(double x, double y) {
-    this(x, y, Math.random(), Math.random(), Math.random()*0.9 + 0.1);
+    this(x, y, Math.random(), Math.random(), 20);
   }
 
   public Ball(double x, double y, double vx, double vy, double r){

@@ -97,8 +97,6 @@ public class GUI_Controller implements CommunicatorListener {
     }
 
     public void showSettings (){
-        settingsView.setWidth(this.window.getWidth() * 0.75);
-        settingsView.setHeight(this.window.getHeight() * 0.75);
         // Playback speed
         perSecField.setText(df.format(1000.0 / stepDelayBase));
         timeBetweenField.setText(df.format(stepDelayBase));
@@ -157,7 +155,7 @@ public class GUI_Controller implements CommunicatorListener {
     public void clearButtonClicked (){
         visualMenu.getItems().clear();
         visualMenu.setDisable(true);
-        model.clear();
+        model.hardClear();
         visualization.clear();
         sourceViewer.clear();
         operationPanel.clear();
@@ -276,13 +274,13 @@ public class GUI_Controller implements CommunicatorListener {
             startAutoPlay();
         }
     }
-    
-    public void changeSpeedButtonRightClicked(){
+
+    public void changeSpeedButtonRightClicked (){
         boolean isPlaying = this.isPlaying;
         if (isPlaying) {
             stopAutoPlay();
         }
-        for(int i = 0; i < 7; i++){
+        for (int i = 0; i < 7; i++) {
             changeSpeedButtonClicked();
         }
         if (isPlaying) {
@@ -820,8 +818,8 @@ public class GUI_Controller implements CommunicatorListener {
         CheckBox cb = (CheckBox) e.getSource();
         Main.console.setDebug(cb.isSelected());
     }
-    
-    public void clearConsole(){
+
+    public void clearConsole (){
         Main.console.clear();
     }
     /*
