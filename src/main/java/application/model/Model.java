@@ -36,11 +36,20 @@ public class Model {
     }
 
     /**
-     * Restore the model to its inisual stet.
+     * Restore the model to its initial state.
      */
     public void clear (){
         index = 0;
         step.reset();
+        operations.clear();
+    }
+    
+    /**
+     * Wipe the model clean.
+     */
+    public void hardClear(){
+        index = 0;
+        step = new Step();
         operations.clear();
     }
 
