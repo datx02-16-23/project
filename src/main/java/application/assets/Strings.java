@@ -2,8 +2,8 @@ package application.assets;
 
 public abstract class Strings {
 
-    public static final String   PROJECT_NAME         = "ADVIce";
-    public static final String   PROJECT_SLOGAN       = "Ez td416 ez life.";
+    public static final String   PROJECT_NAME         = "VAD";
+    public static final String   PROJECT_SLOGAN       = "0 days without a name change!";
     public static final String   PROPERTIES_FILE_NAME = "config.properties";
     public static final String   DEFAULT_CHANNEL      = "mavser_stream";
     //Credits

@@ -111,13 +111,15 @@ public class GUI_Controller implements CommunicatorListener {
 
     public void showMultiset(){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MultisetView.fxml"));
-        fxmlLoader.setController(new MultisetController(window));
+        MultisetController msc = new MultisetController(window);
+        fxmlLoader.setController(msc);
         VBox p = null;
         try {
             p = fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        msc.loadNamespaceItems(fxmlLoader.getNamespace());
         window.setScene(new MultisetAnimator(p, 700, 700, fxmlLoader));
     }
 
