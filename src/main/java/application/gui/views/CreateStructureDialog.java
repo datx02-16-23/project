@@ -57,7 +57,6 @@ public class CreateStructureDialog {
             event.consume();
             closeButton();
         });
-        System.out.println(fxmlLoader.getNamespace());
         /*
          * Raw Type
          */

@@ -84,9 +84,7 @@ public class BarchartRender extends Render {
         super.calculateSize();
         WIDTH = padding * 2 + (hspace + node_width) * struct.getElements().size();
         HEIGHT = padding * 2 + node_height * (Math.abs(struct.getMax()) + Math.abs(struct.getMin()));
-        System.out.println(HEIGHT);
         this.setPrefSize(WIDTH, HEIGHT);
-        System.out.println("axes drawn");
     }
 
     private double getX (int column){
@@ -174,8 +172,7 @@ public class BarchartRender extends Render {
 
     @Override
     public double getX (Element e){
-        ArrayElement ae = (ArrayElement) e;
-        return padding + ae.getIndex()[0] * (hspace + node_width);
+        return getX(((ArrayElement) e).getIndex()[0]);
     }
 
     @Override
