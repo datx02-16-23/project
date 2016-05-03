@@ -1,4 +1,4 @@
-package multiset;
+package multiset.filter;
 
 /**
  * Created by cb on 23/04/16.
