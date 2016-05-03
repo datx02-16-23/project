@@ -1,21 +1,31 @@
 package multiset.model;
 
-import java.util.List;
-import java.util.ArrayList;
+import multiset.filter.Conditional;
+import multiset.filter.iFilter;
+
+import java.util.*;
 
 public class Model implements iModel {
 
   private final double areaWidth;
   private final double areaHeight;
   private final List<Ball> balls = new ArrayList<>();
+  private final iFilter filter;
 
-  public Model(double width, double height) {
+  public Model(double width, double height, iFilter filter, int startRange, int stopRange) {
     this.areaWidth = width;
     this.areaHeight = height;
+    this.filter = filter;
+    List<Integer> values = new ArrayList<>();
 
-    for (int x = 10; x < 600; x += 300){
-      for (int y = 10; y < 600; y+= 300)
-        balls.add(new Ball(x, y));
+    for(int i = startRange; i<stopRange;i++){
+      values.add(i);
+    }
+    Collections.shuffle(values);
+    ListIterator<Integer> valuesIterator = values.listIterator();
+
+    for (int i = 0; i < 10; i++){
+      balls.add(new Ball(Math.random()*500+50, Math.random()*500+50, valuesIterator.next()));
     }
   }
 
@@ -36,9 +46,14 @@ public class Model implements iModel {
       for (Ball b : balls){
         if (a != b && a.collidesWith(b) && activeCollision(a, b)){
           ballCollision(a, b);
+          testConditional(a, b);
         }
       }
     }
+  }
+
+  private void testConditional(Ball a, Ball b){
+    return;
   }
 
 
