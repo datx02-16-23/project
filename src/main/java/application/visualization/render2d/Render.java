@@ -213,7 +213,10 @@ public abstract class Render extends Pane {
      * @param e An element owned by this Render.
      * @return The absolute x-coordinates of e.
      */
-    public abstract double absX (Element e);
+    public double absX (Element e){
+        double bx = this.getTranslateX() + this.getLayoutX();
+        return this.getX(e) + bx;
+    }
 
     /**
      * Returns the absolute y-coordinate for the element e.
@@ -232,7 +235,10 @@ public abstract class Render extends Pane {
      * @param e An element owned by this Render.
      * @return The absolute y-coordinates of e.
      */
-    public abstract double absY (Element e);
+    public double absY (Element e){
+        double by = this.getTranslateY() + this.getLayoutY();
+        return this.getY(e) + by;
+    }
 
     /**
      * Returns the SpinnerValueFactory for this Render, or null if there are no options. The default implementation of

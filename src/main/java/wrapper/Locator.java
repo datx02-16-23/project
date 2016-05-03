@@ -15,7 +15,7 @@ public class Locator implements Serializable {
      */
     private static final long serialVersionUID = Strings.VERSION_NUMBER;
     /**
-     * The identifier for this variable. Will generally match one of the identifiers used as keys in the
+     * The identifier for this Locator. Will generally match one of the identifiers used as keys in the
      * {@code annotatedVariables} HashMap of the variables declared in the header.
      */
     public final String       identifier;

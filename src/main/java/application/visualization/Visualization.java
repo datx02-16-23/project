@@ -99,7 +99,7 @@ public class Visualization extends StackPane {
         VisualType visual = struct.resolveVisual();
         switch (visual) {
             case bar:
-                render = new BarRender(struct, 40, 5, 5);
+                render = new BarchartRender(struct, 40, 5, 5);
 //                render = new BarchartRender(struct);
                 break;
             case box:
@@ -121,7 +121,7 @@ public class Visualization extends StackPane {
         switch (vt) {
             case bar:
 //                    render = new BarRender(struct, 40, 1, 5, 25);
-                render = new BarchartRender(null);
+                render = new BarchartRender_OLD(null);
                 break;
             case box:
                 render = new MatrixRender(null, -1, -1, -1, -1, -1);

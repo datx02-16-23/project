@@ -1,6 +1,5 @@
 package wrapper.datastructures;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -222,7 +221,7 @@ public class Array extends DataStructure {
      * Calculate the product of all lower (to the right) dimension sizes. That is, for dim = 0 in array[i][j][k], dim
      * refers to the dimension indexed by i and the method returns size[1]*size[2].
      * 
-     * @param dim The current dimension. Must be non-negative.
+     * @param dim The current dimension.
      * @return The product of all lower dimension sizes
      */
     private int higherDimSizesProduct (int dim){
