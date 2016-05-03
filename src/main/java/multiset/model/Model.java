@@ -42,20 +42,32 @@ public class Model implements iModel {
   }
 
   private void ballCollisions(double deltaT){
+    //Since we can't remove balls from a list while iterating over it, we need to save the iValueContainers that should be removed
+    Set<iValueContainer> ballsToRemove = new HashSet<>();
+
     for (Ball a : balls){
       for (Ball b : balls){
         if (a != b && a.collidesWith(b) && activeCollision(a, b)){
           ballCollision(a, b);
-          testConditional(a, b);
+          ballsToRemove.addAll(flagBalls(a, b));
         }
       }
     }
+
+    for (Ball ball:ballsToRemove){
+      balls.remove(ball);
+    }
   }
 
-  private void testConditional(Ball a, Ball b){
-    return;
-  }
 
+  private Set<Ball> flagBalls(Ball a, Ball b){
+    filter.evaluate(a, b);
+
+
+
+
+
+  }
 
   private void ballCollision(Ball a, Ball b){
     Vector collisionVector = calculateCollisionVector(a, b);
