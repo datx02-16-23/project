@@ -31,4 +31,9 @@ public enum RawType{
     public enum AbstractType{
         tree //A tree with n children and one parent.
     }
+
+    @Override
+    public String toString (){
+        return prettyName;
+    }
 }
