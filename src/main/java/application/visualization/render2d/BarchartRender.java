@@ -2,8 +2,7 @@ package application.visualization.render2d;
 
 import java.util.List;
 
-import application.visualization.animation.Animation;
-import application.visualization.animation.LinearAnimation;
+import application.visualization.animation.*;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -84,9 +83,7 @@ public class BarchartRender extends Render {
         super.calculateSize();
         WIDTH = padding * 2 + (hspace + node_width) * struct.getElements().size();
         HEIGHT = padding * 2 + node_height * (Math.abs(struct.getMax()) + Math.abs(struct.getMin()));
-        System.out.println(HEIGHT);
         this.setPrefSize(WIDTH, HEIGHT);
-        System.out.println("axes drawn");
     }
 
     private double getX (int column){
@@ -137,8 +134,8 @@ public class BarchartRender extends Render {
         new Scene(new Group(text));
         text.applyCss();
         double tw = text.getLayoutBounds().getWidth();
-        double th = text.getLayoutBounds().getHeight();
-        context.fillText(value + "", x + node_width / 2 - tw / 2, y - th);
+//        double th = text.getLayoutBounds().getHeight();
+        context.fillText(value + "", x + node_width / 2 - tw / 2, y - 5);
     }
 
     private void drawAxes (){
@@ -174,8 +171,7 @@ public class BarchartRender extends Render {
 
     @Override
     public double getX (Element e){
-        ArrayElement ae = (ArrayElement) e;
-        return padding + ae.getIndex()[0] * (hspace + node_width);
+        return getX(((ArrayElement) e).getIndex()[0]);
     }
 
     @Override
@@ -185,12 +181,17 @@ public class BarchartRender extends Render {
 
     @Override
     public void drawAnimatedElement (Element e, double x, double y, Color style){
-//        drawNode(e.getNumericValue(), x, y, style, ((ArrayElement) e).getIndex()[0], SHARED_ANIMATED);
+        drawNode(e.getNumericValue(), x, y, style, ((ArrayElement) e).getIndex()[0], SHARED_ANIMATED);
     }
 
     @Override
     public void startAnimation (Element e, double start_x, double start_y, double end_x, double end_y){
-//        Animation a = new LinearAnimation(this, e, end_x, end_y);
-//        a.start();
+        Animation a = new LinearAnimation(this, e, end_x, end_y);
+        a.start();
+    }
+
+    @Override
+    public void clearAnimatedElement (Element e, double x, double y){
+        SHARED_ANIMATED.getGraphicsContext2D().clearRect(x - 2, y - 15, node_width + 2 * 2, this.HEIGHT+15);
     }
 }
