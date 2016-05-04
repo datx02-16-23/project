@@ -16,11 +16,11 @@ public enum Bdc {
     this.bdc = bdc;
   }
 
-  private String getRepresentation(){
+  public String getRepresentation(){
     return representation;
   }
 
-  private iBdc getBdc(){
+  public iBdc getBdc(){
     return bdc;
   }
 

@@ -25,19 +25,11 @@ public class Conditional {
 
     }
 
-    public Conditional(String lhs, String rhs, Set<String> variables){
-        this.lhs = new ExpressionBuilder(lhs).variables(variables).build();
-        this.rhs = new ExpressionBuilder(rhs).variables(variables).build();
-        bdc = (double a, double b) -> a > b;
-
-    }
 
     public void setVariables(Map<String, Double> variables){
         lhs.setVariables(variables);
         rhs.setVariables(variables);
     }
-
-
 
 
     public boolean evaluate(){
@@ -54,7 +46,11 @@ public class Conditional {
     }
 
     private String extractBdc(String conditional){
-        return ">";
+        for(Bdc bdc:Bdc.values()){
+            if(conditional.contains(bdc.getRepresentation()){
+                return bdc.getRepresentation();
+            }
+        }
     }
 
 }
