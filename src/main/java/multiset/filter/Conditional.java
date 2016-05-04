@@ -1,9 +1,8 @@
-package multiset;
+package multiset.filter;
 
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,7 +12,18 @@ import java.util.Set;
 public class Conditional {
     private final Expression lhs;
     private final Expression rhs;
-    private final BooleanDoubleComparison bdc;
+    private final Bdc.iBdc bdc;
+
+    public Conditional(String conditional, Set<String> variables){
+        String lhs = extractLhs(conditional);
+        String rhs = extractRhs(conditional);
+        String bdc = extractBdc(conditional);
+        this.lhs = new ExpressionBuilder(lhs).variables(variables).build();
+        this.rhs = new ExpressionBuilder(rhs).variables(variables).build();
+        this.bdc = Bdc.getBDC(bdc);
+
+
+    }
 
     public Conditional(String lhs, String rhs, Set<String> variables){
         this.lhs = new ExpressionBuilder(lhs).variables(variables).build();
@@ -27,21 +37,24 @@ public class Conditional {
         rhs.setVariables(variables);
     }
 
+
+
+
     public boolean evaluate(){
         return bdc.compare(lhs.evaluate(), rhs.evaluate());
     }
 
 
-    public static void main(String[] args){
-        Map<String, Double> variables = new HashMap<>();
-        variables.put("a", 3.0);
-        variables.put("b", 4.0);
-        Conditional c = new Conditional("a+b", "a+a", variables.keySet());
-        c.setVariables(variables);
-        System.out.println(c.evaluate());
-
+    private String extractLhs(String conditional){
+        return conditional.split(">")[0].trim();
     }
 
+    private String extractRhs(String conditional){
+        return conditional.split(">")[1].trim();
+    }
 
+    private String extractBdc(String conditional){
+        return ">";
+    }
 
 }

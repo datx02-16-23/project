@@ -1,21 +1,31 @@
 package multiset.model;
 
-import java.util.List;
-import java.util.ArrayList;
+import multiset.filter.Conditional;
+import multiset.filter.iFilter;
+
+import java.util.*;
 
 public class Model implements iModel {
 
   private final double areaWidth;
   private final double areaHeight;
   private final List<Ball> balls = new ArrayList<>();
+  private final iFilter filter;
 
-  public Model(double width, double height) {
+  public Model(double width, double height, iFilter filter, int startRange, int stopRange) {
     this.areaWidth = width;
     this.areaHeight = height;
+    this.filter = filter;
+    List<Integer> values = new ArrayList<>();
 
-    for (int x = 10; x < 600; x += 300){
-      for (int y = 10; y < 600; y+= 300)
-        balls.add(new Ball(x, y));
+    for(int i = startRange; i<stopRange;i++){
+      values.add(i);
+    }
+    Collections.shuffle(values);
+    ListIterator<Integer> valuesIterator = values.listIterator();
+
+    for (int i = 0; i < 10; i++){
+      balls.add(new Ball(Math.random()*500+50, Math.random()*500+50, valuesIterator.next()));
     }
   }
 
@@ -32,15 +42,31 @@ public class Model implements iModel {
   }
 
   private void ballCollisions(double deltaT){
+    //Since we can't remove balls from a list while iterating over it, we need to save the iValueContainers that should be removed
+    Set<iValueContainer> ballsToRemove = new HashSet<>();
+
     for (Ball a : balls){
       for (Ball b : balls){
         if (a != b && a.collidesWith(b) && activeCollision(a, b)){
           ballCollision(a, b);
+          ballsToRemove.addAll(flagBalls(a, b));
         }
       }
     }
+
+    for (iValueContainer ball:ballsToRemove){
+      balls.remove(ball);
+    }
   }
 
+
+  private Set<iValueContainer> flagBalls(Ball a, Ball b){
+    Set<iValueContainer> flagged = new HashSet<>();
+    flagged.add(a);
+    flagged.add(b);
+    flagged.removeAll(filter.evaluate(a, b));
+    return flagged;
+  }
 
   private void ballCollision(Ball a, Ball b){
     Vector collisionVector = calculateCollisionVector(a, b);
