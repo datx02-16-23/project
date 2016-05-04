@@ -13,13 +13,14 @@ public class Input {
   private final String secondVar;
 
   public Input(String stringInput){
+    System.out.println(stringInput);
     stringInput = stringInput.trim();
     String[] split = stringInput.split(",");
     if (split.length != 2){
       throw new IllegalArgumentException();
     }
     firstVar = split[0].replace(" ", "");
-    secondVar = split[0].replace(" ", "");
+    secondVar = split[1].replace(" ", "");
   }
 
   public String getFirstVar(){

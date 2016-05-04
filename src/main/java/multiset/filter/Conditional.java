@@ -17,10 +17,10 @@ public class Conditional {
     private final BooleanDoubleComparison bdc;
 
     public Conditional(String conditional, Set<String> variables){
-        System.out.println(extractLhs(conditional));
-        System.out.println(extractRhs(conditional));
-        this.lhs = new ExpressionBuilder("1+2+3").variables(variables).build();
-        this.rhs = new ExpressionBuilder("2+3").variables(variables).build();
+        String lhs = extractLhs(conditional);
+        String rhs = extractRhs(conditional);
+        this.lhs = new ExpressionBuilder(lhs).variables(variables).build();
+        this.rhs = new ExpressionBuilder(rhs).variables(variables).build();
         bdc = (double a, double b) -> a > b;
 
 
