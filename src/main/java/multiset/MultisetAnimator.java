@@ -29,8 +29,8 @@ public class MultisetAnimator extends Scene{
 //        canvas.setHeight(canvasWidth);
 //        canvas.setWidth(canvasHeight);
 
-        Model model = new Model(canvas.getWidth(), canvas.getHeight());
-        View view = new View(model, canvas);
+        //Model model = new Model(canvas.getWidth(), canvas.getHeight());
+        //View view = new View(model, canvas);
 
         new AnimationTimer()
         {
@@ -45,8 +45,8 @@ public class MultisetAnimator extends Scene{
                 previousTime = currentNanoTime;
 
                 // Model stuff:
-                model.tick(delta*1000);
-                view.render();
+                //model.tick(delta*1000);
+                //view.render();
             }
         }.start();
     }
