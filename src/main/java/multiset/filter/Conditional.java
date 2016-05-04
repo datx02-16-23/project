@@ -38,11 +38,21 @@ public class Conditional {
 
 
     private String extractLhs(String conditional){
-        return conditional.split(">")[0].trim();
+        for(Bdc bdc:Bdc.values()){
+            if(conditional.contains(bdc.getRepresentation())){
+                return conditional.split(bdc.getRepresentation())[0].trim();
+            }
+        }
+        throw new IllegalArgumentException("Missing bdc in conditional");
     }
 
     private String extractRhs(String conditional){
-        return conditional.split(">")[1].trim();
+        for(Bdc bdc:Bdc.values()){
+            if(conditional.contains(bdc.getRepresentation())){
+                return conditional.split(bdc.getRepresentation())[1].trim();
+            }
+        }
+        throw new IllegalArgumentException("Missing bdc in conditional");
     }
 
     private String extractBdc(String conditional){
@@ -51,7 +61,7 @@ public class Conditional {
                 return bdc.getRepresentation();
             }
         }
-        throw new IllegalArgumentException("Missing bdc in conditinal");
+        throw new IllegalArgumentException("Missing bdc in conditional");
     }
 
 }
