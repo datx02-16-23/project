@@ -51,7 +51,7 @@ public class Conditional {
                 return bdc.getRepresentation();
             }
         }
-        return "";
+        throw new IllegalArgumentException("Missing bdc in conditinal");
     }
 
 }
