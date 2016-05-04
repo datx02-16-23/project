@@ -17,9 +17,12 @@ public class Conditional {
     private final BooleanDoubleComparison bdc;
 
     public Conditional(String conditional, Set<String> variables){
-        this.lhs = new ExpressionBuilder(extractLhs(conditional)).variables(variables).build();
-        this.rhs = new ExpressionBuilder(extractRhs(conditional)).variables(variables).build();
+        System.out.println(extractLhs(conditional));
+        System.out.println(extractRhs(conditional));
+        this.lhs = new ExpressionBuilder("1+2+3").variables(variables).build();
+        this.rhs = new ExpressionBuilder("2+3").variables(variables).build();
         bdc = (double a, double b) -> a > b;
+
 
     }
 
@@ -44,11 +47,11 @@ public class Conditional {
 
 
     private String extractLhs(String conditional){
-        return conditional.split(">")[0];
+        return conditional.split(">")[0].trim();
     }
 
     private String extractRhs(String conditional){
-        return conditional.split(">")[1];
+        return conditional.split(">")[1].trim();
     }
 
 }
