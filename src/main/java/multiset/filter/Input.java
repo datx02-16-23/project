@@ -1,7 +1,9 @@
 package multiset.filter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by cb on 03/05/16.
@@ -16,8 +18,8 @@ public class Input {
     if (split.length != 2){
       throw new IllegalArgumentException();
     }
-    firstVar = split[0].trim();
-    secondVar = split[0].trim();
+    firstVar = split[0].replace(" ", "");
+    secondVar = split[0].replace(" ", "");
   }
 
   public String getFirstVar(){
@@ -28,12 +30,11 @@ public class Input {
     return secondVar;
   }
 
-  public List<String> getVars(){
-    List<String> vars = new ArrayList<>();
+  public Set<String> getVars(){
+    Set<String> vars = new HashSet<>();
     vars.add(firstVar);
     vars.add(secondVar);
     return vars;
   }
-
 
 }
