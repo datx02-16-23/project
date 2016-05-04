@@ -20,7 +20,7 @@ public class Conditional {
         String bdc = extractBdc(conditional);
         this.lhs = new ExpressionBuilder(lhs).variables(variables).build();
         this.rhs = new ExpressionBuilder(rhs).variables(variables).build();
-        this.bdc = Bdc.getBDC(bdc);
+        this.bdc = Bdc.getBdc(bdc);
 
 
     }
@@ -47,10 +47,11 @@ public class Conditional {
 
     private String extractBdc(String conditional){
         for(Bdc bdc:Bdc.values()){
-            if(conditional.contains(bdc.getRepresentation()){
+            if(conditional.contains(bdc.getRepresentation())){
                 return bdc.getRepresentation();
             }
         }
+        return "";
     }
 
 }

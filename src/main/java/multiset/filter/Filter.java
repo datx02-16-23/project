@@ -25,6 +25,8 @@ public class Filter implements iFilter{
    * @return The set of iValueContainers that remains after the evaluation
    */
   public Set<iValueContainer> evaluate(iValueContainer a, iValueContainer b){
+
+    //conditional.setVariables();
     Set<iValueContainer> remains = new HashSet<>();
     remains.add(a);
     return remains;
