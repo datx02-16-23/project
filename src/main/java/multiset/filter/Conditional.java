@@ -3,8 +3,6 @@ package multiset.filter;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,14 +12,15 @@ import java.util.Set;
 public class Conditional {
     private final Expression lhs;
     private final Expression rhs;
-    private final BooleanDoubleComparison bdc;
+    private final Bdc.iBdc bdc;
 
     public Conditional(String conditional, Set<String> variables){
         String lhs = extractLhs(conditional);
         String rhs = extractRhs(conditional);
+        String bdc = extractBdc(conditional);
         this.lhs = new ExpressionBuilder(lhs).variables(variables).build();
         this.rhs = new ExpressionBuilder(rhs).variables(variables).build();
-        bdc = (double a, double b) -> a > b;
+        this.bdc = Bdc.getBDC(bdc);
 
 
     }
@@ -52,6 +51,10 @@ public class Conditional {
 
     private String extractRhs(String conditional){
         return conditional.split(">")[1].trim();
+    }
+
+    private String extractBdc(String conditional){
+        return ">";
     }
 
 }

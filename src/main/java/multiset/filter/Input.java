@@ -13,7 +13,6 @@ public class Input {
   private final String secondVar;
 
   public Input(String stringInput){
-    System.out.println(stringInput);
     stringInput = stringInput.trim();
     String[] split = stringInput.split(",");
     if (split.length != 2){

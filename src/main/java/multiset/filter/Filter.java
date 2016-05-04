@@ -14,7 +14,6 @@ public class Filter implements iFilter{
   private final Conditional conditional;
 
   public Filter (String input, String result, String conditional){
-
     this.input = new Input(input);
     this.result = result;
     this.conditional = new Conditional(conditional, this.input.getVars());
