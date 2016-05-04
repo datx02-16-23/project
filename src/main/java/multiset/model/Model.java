@@ -54,19 +54,18 @@ public class Model implements iModel {
       }
     }
 
-    for (Ball ball:ballsToRemove){
+    for (iValueContainer ball:ballsToRemove){
       balls.remove(ball);
     }
   }
 
 
-  private Set<Ball> flagBalls(Ball a, Ball b){
-    filter.evaluate(a, b);
-
-
-
-
-
+  private Set<iValueContainer> flagBalls(Ball a, Ball b){
+    Set<iValueContainer> flagged = new HashSet<>();
+    flagged.add(a);
+    flagged.add(b);
+    flagged.removeAll(filter.evaluate(a, b));
+    return flagged;
   }
 
   private void ballCollision(Ball a, Ball b){
