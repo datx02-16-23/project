@@ -12,7 +12,7 @@ import java.util.Set;
 public class Conditional {
     private final Expression lhs;
     private final Expression rhs;
-    private final Bdc.iBdc bdc;
+    private final iBdc bdc;
 
     public Conditional(String conditional, Set<String> variables){
         String lhs = extractLhs(conditional);

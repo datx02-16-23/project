@@ -33,13 +33,5 @@ public enum Bdc {
     }
     throw new IllegalArgumentException("Unrecognized token");
   }
-
-
-
-  public interface iBdc {
-    boolean compare(double a, double b);
-  }
-
-
 }
 
