@@ -1,6 +1,5 @@
 package multiset.model;
 
-import multiset.filter.Conditional;
 import multiset.filter.iFilter;
 
 import java.util.*;
@@ -19,7 +18,7 @@ public class Model implements iModel {
     List<Integer> values = new ArrayList<>();
 
     for(int i = startRange; i<stopRange;i++){
-      values.add(i);
+      values.add(10);
     }
     Collections.shuffle(values);
     ListIterator<Integer> valuesIterator = values.listIterator();
@@ -64,7 +63,7 @@ public class Model implements iModel {
     Set<iValueContainer> flagged = new HashSet<>();
     flagged.add(a);
     flagged.add(b);
-    flagged.removeAll(filter.evaluate(a, b));
+    flagged.removeAll(filter.filter(a, b));
     return flagged;
   }
 

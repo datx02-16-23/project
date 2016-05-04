@@ -78,7 +78,7 @@ public abstract class DataStructure extends AnnotatedVariable {
     }
 
     /**
-     * Resolves the VisualType for this DataStructure. Will evaluate {@code visual, abstractType} and {@code rawType},
+     * Resolves the VisualType for this DataStructure. Will filter {@code visual, abstractType} and {@code rawType},
      * in that order. This method never returns null.
      * 
      * @return The Visual to use for this DataStructure.
