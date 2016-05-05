@@ -2,6 +2,7 @@ package wrapper.datastructures;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import application.assets.Strings;
 import application.gui.Main;
@@ -22,10 +23,10 @@ public class Array extends DataStructure {
     /**
      * Version number for this class.
      */
-    private static final long             serialVersionUID = Strings.VERSION_NUMBER;
-    private transient int[]               capacity;
-    private transient double              min              = Integer.MAX_VALUE;
-    private transient double              max              = Integer.MIN_VALUE;
+    private static final long serialVersionUID = Strings.VERSION_NUMBER;
+    private transient int[]   capacity;
+    private transient double  min              = Integer.MAX_VALUE;
+    private transient double  max              = Integer.MIN_VALUE;
 
     /**
      * Construct a new Array with the given parameters.
@@ -34,15 +35,13 @@ public class Array extends DataStructure {
      * @param abstractType The abstract type for this Array.
      * @param visual The preferred visual for this Array.
      */
-    public Array (String identifier, RawType.AbstractType abstractType, VisualType visual){
-        super(identifier, RawType.array, abstractType, visual);
-        if (capacity == null) {
-            capacity = new int[] {-1};
-        }
+    public Array (String identifier, RawType.AbstractType abstractType, VisualType visual, Map<String, Object> attributes){
+        super(identifier, RawType.array, abstractType, visual, attributes);
+        capacity = DataStructureParser.parseSize(this);
     }
 
-    public Array (String identifier, RawType rawType, AbstractType abstractType, VisualType visual){
-        super(identifier, rawType, abstractType, visual);
+    protected Array (String identifier, RawType rawType, AbstractType abstractType, VisualType visual, Map<String, Object> attributes){
+        super(identifier, rawType, abstractType, visual, attributes);
     }
 
     /**
@@ -374,15 +373,18 @@ public class Array extends DataStructure {
 
     @Override
     public VisualType resolveVisual (){
-        if (visual != null){
+        if (visual != null) {
             return visual;
-        } else if (abstractType != null){
-            if(abstractType == AbstractType.tree){
+        }
+        else if (abstractType != null) {
+            if (abstractType == AbstractType.tree) {
                 return VisualType.tree;
-            } else {
+            }
+            else {
                 throw new IllegalArgumentException("");
             }
-        } else {
+        }
+        else {
             return VisualType.box;
         }
     }

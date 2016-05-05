@@ -2,6 +2,7 @@ package wrapper;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 import application.assets.Strings;
 import application.visualization.VisualType;
@@ -38,7 +39,7 @@ public class AnnotatedVariable implements Serializable {
     /**
      * A map of attributes and their values for this variable, such as maximum size.
      */
-    public final HashMap<String, Object> attributes;
+    public final Map<String, Object> attributes;
 
     /**
      * Creates a new AnnotatedVariable.
@@ -47,8 +48,9 @@ public class AnnotatedVariable implements Serializable {
      * @param rawType The basic data structure for this variable.
      * @param abstractType The type of data structure this variable logically represents.
      * @param visual The preferred graphical representation for this variable.
+     * @param attributes the map of attributes for this AnnotatedVariable.
      */
-    public AnnotatedVariable (String identifier, RawType rawType, RawType.AbstractType abstractType, VisualType visual){
+    public AnnotatedVariable (String identifier, RawType rawType, RawType.AbstractType abstractType, VisualType visual, Map<String, Object> attributes){
         if (identifier == null) {
             throw new NullPointerException("Identifier may not be null!");
         }
@@ -56,6 +58,13 @@ public class AnnotatedVariable implements Serializable {
         this.rawType = rawType;
         this.abstractType = abstractType;
         this.visual = visual;
-        this.attributes = new HashMap<String, Object>();
+        this.attributes = attributes == null? new HashMap<String, Object>() : attributes;
+    }
+
+    public String toString (){
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getName() + ": rawType = " + rawType + ", abstractType = " + abstractType + ", visual = " + visual);
+        sb.append(", attributes = " + attributes);
+        return sb.toString();
     }
 }

@@ -2,6 +2,7 @@ package wrapper.datastructures;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import application.assets.Strings;
 import application.visualization.VisualType;
@@ -44,8 +45,8 @@ public abstract class DataStructure extends AnnotatedVariable {
     public transient int                    visualOption    = 2;
     public transient boolean                repaintAll       = false;
 
-    public DataStructure (String identifier, RawType rawType, RawType.AbstractType abstractType, VisualType visual){
-        super(identifier, rawType, abstractType, visual);
+    public DataStructure (String identifier, RawType rawType, RawType.AbstractType abstractType, VisualType visual, Map<String, Object> attributes){
+        super(identifier, rawType, abstractType, visual, attributes);
     }
 
     /**

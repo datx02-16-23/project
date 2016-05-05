@@ -197,7 +197,7 @@ public class MatrixRender extends Render {
             }
             if (size[1] > 1) { //Row numbering
                 for (int i = 0; i < size[1]; i++) {
-                    context.fillText("[" + i + "]", 5, getY(i) - node_height / 2);
+                    context.fillText("[" + i + "]", 5, PADDING + getY(i) - node_height / 2);
                 }
             }
         }
@@ -209,7 +209,7 @@ public class MatrixRender extends Render {
             }
             if (size[1] > 1) { //Column numbering
                 for (int i = 0; i < size[1]; i++) {
-                    context.fillText("[" + i + "]", PADDING - 10, getX(i));
+                    context.fillText("[" + i + "]", getX(i), PADDING - 10);
                 }
             }
         }

@@ -44,7 +44,7 @@ public class LogStreamManager implements CommunicatorListener {
      * performance.
      */
     public boolean                     PRETTY_PRINTING = false;
-    private final Gson                 gson            = new Gson();
+    private final Gson                 gson            = GsonContructor.build();
     private final Communicator         communicator;
     private CommunicatorListener       listener;
     //Wrapper fields

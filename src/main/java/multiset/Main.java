@@ -7,16 +7,12 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import multiset.filter.Conditional;
 import multiset.filter.Filter;
 import multiset.filter.iFilter;
 import multiset.model.Model;
 import multiset.model.iModel;
 import multiset.view.View;
 import multiset.view.iView;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created by cb on 24/04/16.

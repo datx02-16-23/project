@@ -47,10 +47,11 @@ public class Conditional {
 
     private String extractBdc(String conditional){
         for(Bdc bdc:Bdc.values()){
-            if(conditional.contains(bdc.getRepresentation()){
+            if(conditional.contains(bdc.getRepresentation())){
                 return bdc.getRepresentation();
             }
         }
+        return "FIXA FOR FAEN IVAR!"; //TODO: Fixa
     }
 
 }

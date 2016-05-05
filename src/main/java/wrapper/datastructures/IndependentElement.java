@@ -1,7 +1,7 @@
 package wrapper.datastructures;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import application.assets.Strings;
 import application.gui.Main;
@@ -34,8 +34,8 @@ public class IndependentElement extends Array {
      * @param abstractType The <b>raw</b> type of the element held by this IndependentElement.
      * @param visual The preferred visual style of the IndependentElement.
      */
-    public IndependentElement (String identifier, RawType.AbstractType abstractType, VisualType visual){
-        super(identifier, RawType.independentElement, abstractType, visual);
+    public IndependentElement (String identifier, RawType.AbstractType abstractType, VisualType visual, Map<String, Object> attributes){
+        super(identifier, RawType.independentElement, abstractType, visual, attributes);
     }
 
     /**
