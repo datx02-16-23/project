@@ -143,7 +143,7 @@ public class KTreeRender extends Render {
         for (; i < completedSize; i++) {
             ArrayElement ae = new ArrayElement(Double.NaN, new int[] {i});
             struct.getInactiveElements().add(ae);
-            drawElement(ae, i, OperationType.remove.color); //Draw zombies. String will evaluate to black fill.
+            drawElement(ae, i, OperationType.remove.color); //Draw zombies. String will filter to black fill.
         }
         drawConnectors();
     }

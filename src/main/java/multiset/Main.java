@@ -28,7 +28,7 @@ public class Main extends Application{
     public void start(Stage primaryStage) throws Exception {
         String input = "m, n";
         String result = "m";
-        String conditional = "m > n";
+        String conditional = "m = n";
         filter = new Filter(input, result, conditional);
 
         model = new Model(width, height, filter, 1, 11);
