@@ -157,7 +157,7 @@ public class Interpreter {
     }
 
     /**
-     * Build and filter working sets until all operations in {@code before} have been processed. When this method
+     * Build and evaluate working sets until all operations in {@code before} have been processed. When this method
      * returns, {@code before.size()} will be 0.
      */
     private void consolidate (){

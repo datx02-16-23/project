@@ -1,31 +1,29 @@
 package multiset.model;
 
-import multiset.filter.iFilter;
-
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Model implements iModel {
 
   private final double areaWidth;
   private final double areaHeight;
   private final List<Ball> balls = new ArrayList<>();
-  private final iFilter filter;
 
-  public Model(double width, double height, iFilter filter, int startRange, int stopRange) {
+  public Model(double width, double height) {
     this.areaWidth = width;
     this.areaHeight = height;
-    this.filter = filter;
-    List<Integer> values = new ArrayList<>();
 
-    for(int i = startRange; i<stopRange;i++){
-      values.add(10);
-    }
-    Collections.shuffle(values);
-    ListIterator<Integer> valuesIterator = values.listIterator();
-
-    for (int i = 0; i < 10; i++){
-      balls.add(new Ball(Math.random()*500+50, Math.random()*500+50, valuesIterator.next()));
-    }
+    balls.add(new Ball(3, 3));
+    /*for (int x = 3; x < 24; x += 3){
+      balls.add(new Ball(x, 3));
+      balls.add(new Ball(x + 0.1, 6));
+      balls.add(new Ball(x + 0.2, 9));
+      balls.add(new Ball(x + 0.3, 12));
+      balls.add(new Ball(x + 0.4, 15));
+      balls.add(new Ball(x + 0.5, 18));
+      balls.add(new Ball(x + 0.6, 21));
+      balls.add(new Ball(x + 0.7, 24));
+    }*/
   }
 
   @Override
@@ -41,31 +39,15 @@ public class Model implements iModel {
   }
 
   private void ballCollisions(double deltaT){
-    //Since we can't remove balls from a list while iterating over it, we need to save the iValueContainers that should be removed
-    Set<iValueContainer> ballsToRemove = new HashSet<>();
-
     for (Ball a : balls){
       for (Ball b : balls){
         if (a != b && a.collidesWith(b) && activeCollision(a, b)){
           ballCollision(a, b);
-          ballsToRemove.addAll(flagBalls(a, b));
         }
       }
     }
-
-    for (iValueContainer ball:ballsToRemove){
-      balls.remove(ball);
-    }
   }
 
-
-  private Set<iValueContainer> flagBalls(Ball a, Ball b){
-    Set<iValueContainer> flagged = new HashSet<>();
-    flagged.add(a);
-    flagged.add(b);
-    flagged.removeAll(filter.filter(a, b));
-    return flagged;
-  }
 
   private void ballCollision(Ball a, Ball b){
     Vector collisionVector = calculateCollisionVector(a, b);

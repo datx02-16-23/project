@@ -33,9 +33,4 @@ public class Wrapper implements Serializable {
         this.header = header;
         this.body = body;
     }
-    
-    public String toString(){
-        return "header = " + header + ",\n"
-                + "body = " + body;
-    }
 }

@@ -30,7 +30,7 @@ public class View implements iView{
 
     private void clear(){
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc.setFill(Color.WHEAT);
+        gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
@@ -38,6 +38,6 @@ public class View implements iView{
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Color.RED);
 
-        gc.fillOval(b.getX(), b.getY(), b.getR(), b.getR());
+        gc.fillOval(b.getX(), b.getY(), b.getR()*20, b.getR()*20);
     }
 }

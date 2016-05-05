@@ -74,8 +74,4 @@ public class Header implements Serializable {
         }
         return sources;
     }
-    
-    public String toString(){
-        return "Header: v = " + version + ", annotatedVariables = " + annotatedVariables;
-    }
 }

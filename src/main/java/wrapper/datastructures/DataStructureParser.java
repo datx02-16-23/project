@@ -15,7 +15,8 @@ import wrapper.operations.OperationParser;
  */
 public abstract class DataStructureParser {
 
-    private DataStructureParser (){};
+    private DataStructureParser (){
+    };
 
     public static DataStructure unpackAnnotatedVariable (AnnotatedVariable av){
         switch (av.rawType) {
@@ -26,7 +27,7 @@ public abstract class DataStructureParser {
             case tree:
                 return null; //TODO: Add parsing of trees.
             default:
-                Main.console.err("Unknown Data Structure raw type: \"" + av.rawType + "\"");
+                Main.console.err("Unknown Data Structure raw type: \"" + av.rawType +"\"");
                 Main.console.err("Permitted raw types: " + Arrays.toString(RawType.values()));
                 break;
         }
@@ -40,7 +41,7 @@ public abstract class DataStructureParser {
      * @return An unpacked IndependentElement.
      */
     private static IndependentElement unpackIndependentElement (AnnotatedVariable av){
-        return new IndependentElement(av.identifier, av.abstractType, av.visual, av.attributes);
+        return new IndependentElement(av.identifier, av.abstractType, av.visual);
     }
 
     /**
@@ -50,10 +51,11 @@ public abstract class DataStructureParser {
      * @return An unpacked Array.
      */
     public static Array unpackArray (AnnotatedVariable av){
-        return new Array(av.identifier, av.abstractType, av.visual, av.attributes);
+        return new Array(av.identifier, av.abstractType, av.visual);
     }
-
+    
     public static int[] parseSize (AnnotatedVariable av){
-        return OperationParser.ensureIntArray(av.attributes.get(Key.size.name()));
+//        System.out.println("parseSize size = " + av.attributes.get(Key.size));
+        return OperationParser.ensureIntArray(av.attributes.get(Key.size));
     }
 }

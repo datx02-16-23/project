@@ -1,7 +1,6 @@
 package wrapper.operations;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.google.gson.internal.LinkedTreeMap;
 
@@ -87,8 +86,8 @@ public abstract class OperationParser {
         copySourceInfo(op, op_rw);
         return op_rw;
     }
-
-    public static OP_Remove parseRemove (Operation op){
+    
+    public static OP_Remove parseRemove(Operation op){
         OP_Remove op_remove = new OP_Remove();
         op_remove.setTarget(unpackArrayVariable(op.operationBody.get(Key.target)));
         copySourceInfo(op, op_remove);
@@ -165,7 +164,7 @@ public abstract class OperationParser {
         return ensureDoubleArray(op.operationBody.get(Key.value));
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings("unchecked")
     private static double[] ensureDoubleArray (Object object){
         if (object == null) {
             return null;
@@ -176,31 +175,14 @@ public abstract class OperationParser {
         if (object instanceof Double) {
             return new double[] {(Double) object};
         }
-        if (object instanceof ArrayList && ((ArrayList) object).get(0) instanceof ArrayList) {
-            ArrayList<Double> fulhack = new ArrayList<Double>();
-            for (List<Double> list : (ArrayList<ArrayList<Double>>) object) {
-                for (Double d : list) {
-                    fulhack.add(d);
-                }
-            }
-            double[] array = new double[fulhack.size()];
-            int i = 0;
-            for (Double d : fulhack) {
-                array[i] = d.doubleValue();
-                i++;
-            }
-            return array;
+        ArrayList<Double> listOfDoubles = (ArrayList<Double>) object;
+        double[] array = new double[listOfDoubles.size()];
+        int i = 0;
+        for (Double d : listOfDoubles) {
+            array[i] = d.doubleValue();
+            i++;
         }
-        else {
-            ArrayList<Double> listOfDoubles = (ArrayList<Double>) object;
-            double[] array = new double[listOfDoubles.size()];
-            int i = 0;
-            for (Double d : listOfDoubles) {
-                array[i] = d.doubleValue();
-                i++;
-            }
-            return array;
-        }
+        return array;
     }
 
     /**

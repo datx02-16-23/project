@@ -606,9 +606,9 @@ public class Simulator extends Application {
         private Map<String, AnnotatedVariable> buildStructs (){
             Map<String, AnnotatedVariable> _structs = new HashMap<String, AnnotatedVariable>();
             varNames = new String[3];
-            Array a1 = new Array("a1", null, VisualType.box, null);
-            Array a2 = new Array("a2", null, VisualType.box, null);
-            IndependentElement tmp = new IndependentElement("tmp", null, null, null);
+            Array a1 = new Array("a1", null, VisualType.box);
+            Array a2 = new Array("a2", null, VisualType.box);
+            IndependentElement tmp = new IndependentElement("tmp", null, null);
             _structs.put(a1.identifier, a1);
             _structs.put(a2.identifier, a2);
             _structs.put(tmp.identifier, tmp);

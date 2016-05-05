@@ -44,7 +44,7 @@ public class LogStreamManager implements CommunicatorListener {
      * performance.
      */
     public boolean                     PRETTY_PRINTING = false;
-    private final Gson                 gson            = GsonContructor.build();
+    private final Gson                 gson            = new Gson();
     private final Communicator         communicator;
     private CommunicatorListener       listener;
     //Wrapper fields
@@ -372,7 +372,6 @@ public class LogStreamManager implements CommunicatorListener {
      * @return True if the wrapper was successfully unwrapped. False otherwise.
      */
     public boolean unwrap (Wrapper wrapper){
-        System.out.println(wrapper);
         if (wrapper.header != null) {
             if (wrapper.header.annotatedVariables != null) {
                 for (AnnotatedVariable av : wrapper.header.annotatedVariables.values()) {

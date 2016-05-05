@@ -74,7 +74,7 @@ public class Main extends Application {
         BorderPane operationPanelContainer = (BorderPane) namespace.get("operationPanelContainer");
         operationPanelContainer.setCenter(operationPanel);
         double leftDivider = (((GridPane) namespace.get("buttonsGrid")).getPrefWidth() + 14) / scene.getWidth();
-        sP.setDividerPositions(leftDivider / 5, 1 - leftDivider);
+        sP.setDividerPositions(leftDivider/5, 1 - leftDivider);
         // Add examples:
         Menu examples = (Menu) namespace.get("examplesMenu");
         for (Algorithm algo : Examples.Algorithm.values()) {
@@ -280,7 +280,7 @@ public class Main extends Application {
 
         private void init (){
             StringBuilder sb = new StringBuilder();
-            sb.append("Welcome to " + Strings.PROJECT_NAME + ": " + Strings.PROJECT_SLOGAN + "\n");
+            sb.append("Welcome to " + Strings.PROJECT_NAME + "!\n");
             sb.append("Version: " + Strings.VERSION_NUMBER + "\n\n");
             sb.append("AUTHORS: ");
             for (String s : Strings.DEVELOPER_NAMES) {

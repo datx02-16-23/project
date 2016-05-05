@@ -1,8 +1,8 @@
 package wrapper.datastructures;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import application.assets.Strings;
 import application.gui.Main;
@@ -23,10 +23,11 @@ public class Array extends DataStructure {
     /**
      * Version number for this class.
      */
-    private static final long serialVersionUID = Strings.VERSION_NUMBER;
-    private transient int[]   capacity;
-    private transient double  min              = Integer.MAX_VALUE;
-    private transient double  max              = Integer.MIN_VALUE;
+    private static final long             serialVersionUID = Strings.VERSION_NUMBER;
+    private transient final List<Element> elements;
+    private transient int[]               capacity;
+    private transient double              min              = Integer.MAX_VALUE;
+    private transient double              max              = Integer.MIN_VALUE;
 
     /**
      * Construct a new Array with the given parameters.
@@ -35,13 +36,12 @@ public class Array extends DataStructure {
      * @param abstractType The abstract type for this Array.
      * @param visual The preferred visual for this Array.
      */
-    public Array (String identifier, RawType.AbstractType abstractType, VisualType visual, Map<String, Object> attributes){
-        super(identifier, RawType.array, abstractType, visual, attributes);
-        capacity = DataStructureParser.parseSize(this);
-    }
-
-    protected Array (String identifier, RawType rawType, AbstractType abstractType, VisualType visual, Map<String, Object> attributes){
-        super(identifier, rawType, abstractType, visual, attributes);
+    public Array (String identifier, RawType.AbstractType abstractType, VisualType visual){
+        super(identifier, RawType.array, abstractType, visual);
+        elements = new ArrayList<Element>();
+        if (capacity == null) {
+            capacity = new int[] {-1};
+        }
     }
 
     /**
@@ -64,7 +64,7 @@ public class Array extends DataStructure {
     }
 
     private void init (OP_Write init){
-        if (!init.getTarget().identifier.equals(super.identifier)) {
+        if (!init.getTarget().getIdentifier().equals(super.identifier)) {
             return;
         }
         repaintAll = true;
@@ -220,7 +220,7 @@ public class Array extends DataStructure {
      * Calculate the product of all lower (to the right) dimension sizes. That is, for dim = 0 in array[i][j][k], dim
      * refers to the dimension indexed by i and the method returns size[1]*size[2].
      * 
-     * @param dim The current dimension.
+     * @param dim The current dimension. Must be non-negative.
      * @return The product of all lower dimension sizes
      */
     private int higherDimSizesProduct (int dim){
@@ -373,18 +373,15 @@ public class Array extends DataStructure {
 
     @Override
     public VisualType resolveVisual (){
-        if (visual != null) {
+        if (visual != null){
             return visual;
-        }
-        else if (abstractType != null) {
-            if (abstractType == AbstractType.tree) {
+        } else if (abstractType != null){
+            if(abstractType == AbstractType.tree){
                 return VisualType.tree;
-            }
-            else {
+            } else {
                 throw new IllegalArgumentException("");
             }
-        }
-        else {
+        } else {
             return VisualType.box;
         }
     }

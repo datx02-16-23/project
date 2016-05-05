@@ -49,13 +49,11 @@ public abstract class Render extends Pane {
         initDragAndZoom();
     }
 
-    /**
-     * Order the render to draw the elements of the Data Structure it carries.
-     */
     public abstract void render ();
 
     /**
-     * Draw an element using the animation canvas.
+     * Draw an element using the animation canvas. Style can be fetched using {@code e.getColor()}, or use {@code null}
+     * for the default color.
      * 
      * @param e The element to draw.
      * @param x The absolute x-coordinate.
@@ -76,6 +74,27 @@ public abstract class Render extends Pane {
         SHARED_ANIMATED.getGraphicsContext2D().clearRect(x - 2, y - 2, node_width + 4, node_height + 4);
     }
 
+//    /**
+//     * Get the fill color for the center. Returns white for style == null and black as default.
+//     * 
+//     * @param style The style to return a color for.
+//     * @return A color.
+//     */
+//    public final Color getFillColor (String style){
+//        if (style == null) {
+//            return COLOR_WHITE;
+//        }
+//        switch (style) {
+//            case Element.COLOR_READ:
+//                return COLOR_READ;
+//            case Element.COLOR_WRITE:
+//                return COLOR_WRITE;
+//            case Element.COLOR_SWAP:
+//                return COLOR_SWAP;
+//            default:
+//                return COLOR_INACTIVE;
+//        }
+//    }
     /**
      * Returns the absolute x-coordinate of an element.
      * 
@@ -150,7 +169,7 @@ public abstract class Render extends Pane {
     }
 
     /**
-     * Returns the DataStructure held by this Render.
+     * Return the DataStructure held by this Render.
      * 
      * @return The DataStructure held by this Render.
      */
@@ -169,6 +188,14 @@ public abstract class Render extends Pane {
      */
     public abstract void startAnimation (Element e, double start_x, double start_y, double end_x, double end_y);
 
+//    /**
+//     * Returns the Canvas for this Render.
+//     * 
+//     * @return The Canvas for this Render.
+//     */
+//    public Canvas getCanvas (){
+//        return local_canvas;
+//    }
     /**
      * Returns the absolute x-coordinate for the element e.
      * 
@@ -177,18 +204,8 @@ public abstract class Render extends Pane {
      * @return The absolute x-coordinates of e.
      */
     public static double absX (Render owner, Element e){
-        return owner.absX(e);
-    }
-
-    /**
-     * Returns the absolute x-coordinate for the element e.
-     * 
-     * @param e An element owned by this Render.
-     * @return The absolute x-coordinates of e.
-     */
-    public double absX (Element e){
-        double bx = this.getTranslateX() + this.getLayoutX();
-        return this.getX(e) + bx;
+        double bx = owner.getTranslateX() + owner.getLayoutX();
+        return owner.getX(e) + bx;
     }
 
     /**
@@ -199,18 +216,8 @@ public abstract class Render extends Pane {
      * @return The absolute y-coordinates of e.
      */
     public static double absY (Render owner, Element e){
-        return owner.absY(e);
-    }
-
-    /**
-     * Returns the absolute y-coordinate for the element e.
-     * 
-     * @param e An element owned by this Render.
-     * @return The absolute y-coordinates of e.
-     */
-    public double absY (Element e){
-        double by = this.getTranslateY() + this.getLayoutY();
-        return this.getY(e) + by;
+        double by = owner.getTranslateY() + owner.getLayoutY();
+        return owner.getY(e) + by;
     }
 
     /**
@@ -224,7 +231,7 @@ public abstract class Render extends Pane {
     }
 
     /**
-     * SpinnerValueFactory for Render implementations.
+     * SpinnerValueFactory for Renders.
      * 
      * @author Richard Sundqvist
      *
@@ -248,11 +255,9 @@ public abstract class Render extends Pane {
         private int                      current;
 
         /**
-         * Creates a new RenderSVF with the specified min and max value. Increments will occur in steps of one. Rollover
-         * is applied, so {@code max + 1 = min} and vice versa.
          * 
-         * @param min The minimum value.
-         * @param max The maximum value.
+         * @param min
+         * @param max
          */
         public RenderSVF (int min, int max){
             this.min = min;
@@ -267,8 +272,7 @@ public abstract class Render extends Pane {
         }
 
         /**
-         * Creates a new RenderSVF with the specified values and userValues. The user values is what will be shown to
-         * the user when going through the options of the spinner.
+         * Creates a
          * 
          * @param values The keys for this RenderSpinner.
          * @param userValues Their display values.
@@ -316,11 +320,6 @@ public abstract class Render extends Pane {
             }
         }
 
-        /**
-         * Converter for the SpinnerSVF class.
-         * @author Richard Sundqvist
-         *
-         */
         private class Converter extends StringConverter<Integer> {
 
             private final HashMap<Integer, String> conversion;

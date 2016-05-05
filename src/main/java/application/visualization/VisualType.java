@@ -1,33 +1,29 @@
 package application.visualization;
 
 public enum VisualType{
-    bar("Bar Chart", "bar"), box("Boxes", "box", true), tree("KTree", "tree", true);
+    bar("Bar Chart"), box("Boxes", true), tree("KTree", true);
 
-    public final String  pretty;
-    public final String  json;
+    public final String  name;
     public final boolean has_options;
 
-    private VisualType (String pretty, String json, boolean has_options){
-        this.pretty = pretty;
-        this.json = json;
+    private VisualType (String name, boolean has_options){
+        this.name = name;
         this.has_options = has_options;
     }
 
-    private VisualType (String pretty, String json){
-        this(pretty, json, false);
+    private VisualType (String name){
+        this(name, false);
     }
-    
-
 
     /**
      * Returns the VisualType corresponding to the stylish name (VisualType.<type>.name).
      * 
-     * @param pretty The name to resolve.
+     * @param stylish_name The name to resolve.
      * @return A VisualType, or null if the stylish name was unknown.
      */
-    public static VisualType resolveVisualType (String pretty){
+    public static VisualType resolveVisualType (String stylish_name){
         for (VisualType vt : values()) {
-            if (vt.pretty.equals(pretty)) {
+            if (vt.name.equals(stylish_name)) {
                 return vt;
             }
         }
@@ -35,21 +31,6 @@ public enum VisualType{
     }
 
     public String toString (){
-        return this.pretty;
-    }
-    
-    /**
-     * Returns the VisualType corresponding to the json name.
-     * 
-     * @param json The name to resolve.
-     * @return A VisualType, or null if the stylish name was unknown.
-     */
-    public static VisualType fromString (String json){
-        for (VisualType vt : values()) {
-            if (vt.json.equals(json)) {
-                return vt;
-            }
-        }
-        return null;
+        return this.name;
     }
 }
