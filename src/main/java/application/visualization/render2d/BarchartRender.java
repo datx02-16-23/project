@@ -51,7 +51,6 @@ public class BarchartRender extends Render {
                 ae = (ArrayElement) e;
                 if (modifiedElements.contains(e)) {
                     drawElement(ae.getNumericValue(), ae.getIndex(), e.getColor());
-//                    calculateSize();
                 }
                 else if (resetElements.contains(e)) {
                     drawElement(ae.getNumericValue(), ae.getIndex(), DEFAULT_COLOR);
@@ -70,7 +69,7 @@ public class BarchartRender extends Render {
         context.clearRect(-5000, -5000, 10000, 10000);
         calculateSize();
         context.setFill(COLOR_BLACK);
-        context.fillText(struct.toString(), 5, 10);
+        context.fillText(struct.toString(), 0, 10);
         for (Element e : struct.getElements()) {
             ArrayElement ae = (ArrayElement) e;
             drawElement(ae.getNumericValue(), ae.getIndex(), DEFAULT_COLOR);
@@ -80,10 +79,11 @@ public class BarchartRender extends Render {
 
     @Override
     public void calculateSize (){
-        super.calculateSize();
-        WIDTH = padding * 2 + (hspace + node_width) * struct.getElements().size();
+        WIDTH = padding * 3 + (hspace + node_width) * struct.getElements().size();
         HEIGHT = padding * 2 + node_height * (Math.abs(struct.getMax()) + Math.abs(struct.getMin()));
+        this.setMinSize(WIDTH, HEIGHT);
         this.setPrefSize(WIDTH, HEIGHT);
+        this.setMaxSize(WIDTH, HEIGHT);
     }
 
     private double getX (int column){

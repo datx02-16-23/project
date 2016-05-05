@@ -43,6 +43,9 @@ public abstract class Render extends Pane {
         this.vspace = vspace;
         local_canvas.widthProperty().bind(this.widthProperty());
         local_canvas.heightProperty().bind(this.heightProperty());
+        this.setMinSize(150, 150);
+        this.setPrefSize(150, 150);
+        this.setMaxSize(150, 150);
         //Add stacked canvases
         this.getChildren().add(local_canvas);
         initDragAndZoom();
@@ -92,7 +95,7 @@ public abstract class Render extends Pane {
     public abstract double getY (Element e);
 
     /**
-     * Order the Render to calculate it's preferred size. Should be shadowed by inheriting types.
+     * Order the Render to calculate it's size. Should be shadowed by inheriting types.
      */
     public void calculateSize (){
         local_canvas.getGraphicsContext2D().clearRect(0, 0, local_canvas.getWidth(), local_canvas.getHeight());
