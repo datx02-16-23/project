@@ -1,21 +1,22 @@
 package multiset.model;
 
-public class Ball {
-  private double x, y, vx, vy, r;
+public class Ball implements iValueContainer{
+  private double x, y, vx, vy, r, value;
   private boolean gravity = false;
   private final RgbColor color;
 
   
-  public Ball(double x, double y) {
-    this(x, y, Math.random(), Math.random(), Math.random()*0.9 + 0.1);
+  public Ball(double x, double y, double value) {
+    this(x, y, Math.random(), Math.random(), 20, value);
   }
 
-  public Ball(double x, double y, double vx, double vy, double r){
+  public Ball(double x, double y, double vx, double vy, double r, double value){
     this.x = x;
     this.y = y;
     this.vx = vx;
     this.vy = vy;
     this.r = r;
+    this.value = value;
     color = new RgbColor();
   }
   
@@ -84,6 +85,10 @@ public class Ball {
   public void setVy(double vy){
     this.vy = vy;
   }
-  
 
+
+  @Override
+  public double getValue() {
+    return value;
+  }
 }

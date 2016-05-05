@@ -42,9 +42,9 @@ public abstract class Examples {
             case insertionsort:
                 Insertion.sort(arg);
                 break;
-            case quicksort:
-                Quick.sort(arg);
-                break;
+//            case quicksort:
+//                Quick.sort(arg);
+//                break;
             default:
                 Main.console.err("No such algorithm: " + algo);
                 break;

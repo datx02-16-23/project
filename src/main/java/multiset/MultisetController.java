@@ -1,13 +1,9 @@
 package multiset;
 
-import java.io.IOException;
 import java.util.Map;
 
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**

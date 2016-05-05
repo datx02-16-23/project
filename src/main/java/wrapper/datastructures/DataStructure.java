@@ -2,6 +2,7 @@ package wrapper.datastructures;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import application.assets.Strings;
 import application.visualization.VisualType;
@@ -21,6 +22,11 @@ public abstract class DataStructure extends AnnotatedVariable {
      * Version number for this class.
      */
     private static final long               serialVersionUID = Strings.VERSION_NUMBER;
+
+    /**
+     * The elements held by this DataStructure.
+     */
+    protected transient final List<Element> elements = new ArrayList<Element>();
     /**
      * Elements which have been modified and should be drawn with their preferred color.
      */
@@ -39,8 +45,8 @@ public abstract class DataStructure extends AnnotatedVariable {
     public transient int                    visualOption    = 2;
     public transient boolean                repaintAll       = false;
 
-    public DataStructure (String identifier, RawType rawType, RawType.AbstractType abstractType, VisualType visual){
-        super(identifier, rawType, abstractType, visual);
+    public DataStructure (String identifier, RawType rawType, RawType.AbstractType abstractType, VisualType visual, Map<String, Object> attributes){
+        super(identifier, rawType, abstractType, visual, attributes);
     }
 
     /**
@@ -73,7 +79,7 @@ public abstract class DataStructure extends AnnotatedVariable {
     }
 
     /**
-     * Resolves the VisualType for this DataStructure. Will evaluate {@code visual, abstractType} and {@code rawType},
+     * Resolves the VisualType for this DataStructure. Will filter {@code visual, abstractType} and {@code rawType},
      * in that order. This method never returns null.
      * 
      * @return The Visual to use for this DataStructure.

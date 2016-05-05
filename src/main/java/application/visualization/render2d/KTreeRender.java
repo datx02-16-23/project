@@ -28,10 +28,10 @@ import wrapper.datastructures.Array.ArrayElement;
  */
 public class KTreeRender extends Render {
 
-    private static final RenderSVF rsvf           = createOptionsSpinner();
-    private final int                    K;
-    private final ArrayList<Integer>     lowerLevelSums = new ArrayList<Integer>();
-    private int                          totDepth, totBreadth, completedSize;
+    private static final RenderSVF   rsvf           = createOptionsSpinner();
+    private final int                K;
+    private final ArrayList<Integer> lowerLevelSums = new ArrayList<Integer>();
+    private int                      totDepth, totBreadth, completedSize;
 
     /**
      * Create a new KTreeRender with K children and one parent. Will set K = 2 for any K < 2.
@@ -47,7 +47,7 @@ public class KTreeRender extends Render {
         super(struct, width, height, hspace, vspace);
         this.K = K < 2 ? 2 : K;
         lowerLevelSums.add(new Integer(0));
-        Main.console.force("WARNING: At the time of writing (2016-04-18) the KTreeRender class, JavaFX may crash with a NullPointerException when Canvas grows too large.");
+//        Main.console.force("WARNING: At the time of writing (2016-04-18) the KTreeRender class, JavaFX may crash with a NullPointerException when Canvas grows too large.");
     }
 
     private static RenderSVF createOptionsSpinner (){
@@ -143,7 +143,7 @@ public class KTreeRender extends Render {
         for (; i < completedSize; i++) {
             ArrayElement ae = new ArrayElement(Double.NaN, new int[] {i});
             struct.getInactiveElements().add(ae);
-            drawElement(ae, i, OperationType.remove.color); //Draw zombies. String will evaluate to black fill.
+            drawElement(ae, i, OperationType.remove.color); //Draw zombies. String will filter to black fill.
         }
         drawConnectors();
     }
@@ -340,5 +340,17 @@ public class KTreeRender extends Render {
     public void startAnimation (Element e, double start_x, double start_y, double end_x, double end_y){
         Animation a = new LinearAnimation(this, e, end_x, end_y);
         a.start();
+    }
+
+    @Override
+    public double absX (Element e){
+        double bx = this.getTranslateX() + this.getLayoutX();
+        return this.getX(e) + bx;
+    }
+
+    @Override
+    public double absY (Element e){
+        double by = this.getTranslateY() + this.getLayoutY();
+        return this.getY(e) + by;
     }
 }

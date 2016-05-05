@@ -1,7 +1,6 @@
 package application.visualization.render2d;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import application.gui.Main;
@@ -198,7 +197,7 @@ public class MatrixRender extends Render {
             }
             if (size[1] > 1) { //Row numbering
                 for (int i = 0; i < size[1]; i++) {
-                    context.fillText("[" + i + "]", 5, getY(i) - node_height / 2);
+                    context.fillText("[" + i + "]", 5, PADDING + getY(i) - node_height / 2);
                 }
             }
         }
@@ -210,7 +209,7 @@ public class MatrixRender extends Render {
             }
             if (size[1] > 1) { //Column numbering
                 for (int i = 0; i < size[1]; i++) {
-                    context.fillText("[" + i + "]", PADDING - 10, getX(i));
+                    context.fillText("[" + i + "]", getX(i), PADDING - 10);
                 }
             }
         }
@@ -293,5 +292,17 @@ public class MatrixRender extends Render {
     public void startAnimation (Element e, double start_x, double start_y, double end_x, double end_y){
         Animation a = new LinearAnimation(this, e, start_x, start_y, end_x, end_y);
         a.start();
+    }
+
+    @Override
+    public double absX (Element e){
+        double bx = this.getTranslateX() + this.getLayoutX();
+        return this.getX(e) + bx;
+    }
+
+    @Override
+    public double absY (Element e){
+        double by = this.getTranslateY() + this.getLayoutY();
+        return this.getY(e) + by;
     }
 }

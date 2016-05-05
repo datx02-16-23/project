@@ -1,7 +1,7 @@
 package wrapper.datastructures;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import application.assets.Strings;
 import application.gui.Main;
@@ -18,24 +18,24 @@ import wrapper.operations.*;
  * @author Richard Sundqvist
  *
  */
-public class IndependentElement extends DataStructure {
+public class IndependentElement extends Array {
 
     /**
      * Version number for this class.
      */
     private static final long                  serialVersionUID = Strings.VERSION_NUMBER;
-    private transient final ArrayList<Element> elements         = new ArrayList<Element>();
+//    private transient final ArrayList<Element> elements         = new ArrayList<Element>();
     //	private transient final Element element = new IndependentElementContainer();
 
     /**
      * Create a new IndependentElement.
      * 
      * @param identifier The identifier for this IndependentElement.
-     * @param abstractType The <b>raw</b> type of the element held by this IndependenElement.
+     * @param abstractType The <b>raw</b> type of the element held by this IndependentElement.
      * @param visual The preferred visual style of the IndependentElement.
      */
-    public IndependentElement (String identifier, RawType.AbstractType abstractType, VisualType visual){
-        super(identifier, RawType.independentElement, abstractType, visual);
+    public IndependentElement (String identifier, RawType.AbstractType abstractType, VisualType visual, Map<String, Object> attributes){
+        super(identifier, RawType.independentElement, abstractType, visual, attributes);
     }
 
     /**
@@ -54,7 +54,7 @@ public class IndependentElement extends DataStructure {
      * @param value The value to initialize with.
      */
     public void initElement (double value){
-        Element init = new Array.ArrayElement(value, null);
+        Element init = new Array.ArrayElement(value, new int[]{0});
         elements.clear();
         elements.add(init);
     }
@@ -95,6 +95,7 @@ public class IndependentElement extends DataStructure {
                 Main.console.err("OperationType \"" + op.operation + "\" not applicable to " + getClass().getSimpleName());
                 break;
         }
+        repaintAll = true;
     }
 
     private void swap (OP_Swap op){
@@ -149,9 +150,16 @@ public class IndependentElement extends DataStructure {
     }
 
     @Override
-    public Element getElement (Locator locator){
-        if (locator.getIdentifier().equals(super.identifier) && elements.isEmpty() == false) {
-            return elements.get(0);
+    public ArrayElement getElement (Locator locator){
+        if(locator == null){
+            return null;
+        }
+        if (locator.
+                identifier.
+                equals(
+                        super.identifier) && 
+                elements.isEmpty() == false) {
+            return (ArrayElement) elements.get(0);
         }
         else {
             return null;
