@@ -80,8 +80,6 @@ public class Array extends DataStructure {
         // Initialize specified by the values argument of the init operation.
         int linearIndex = 0;
         for (; linearIndex < init_values.length; linearIndex++) {
-            // System.out.println(new ArrayElement(linearArray[linearIndex],
-            // getIndexInNDimensions(linearIndex, size)));
             ArrayElement ae = new ArrayElement(init_values[linearIndex], getIndexInNDimensions(linearIndex, capacity));
             ae.color = OperationType.write.color;
             putElement(ae);

@@ -58,7 +58,6 @@ public abstract class GsonContructor {
             in.beginObject();
             while(in.hasNext()) {
                 String name = in.nextName();
-                System.out.println("name = " + name);
                 switch (name) {
                     case "identifier":
                         identifier = in.nextString();

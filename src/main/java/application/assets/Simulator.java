@@ -663,7 +663,7 @@ public class Simulator extends Application {
                         updateSent();
                     }
                     else {
-                        System.out.println("fail");
+                        System.err.println("failed to transmit");
                     }
                 }
             });
@@ -728,7 +728,7 @@ public class Simulator extends Application {
             try {
                 LSM.stream(wrapper);
             } catch (Exception e) {
-                System.out.println(e);
+                System.err.println(e);
                 return false;
             }
             return true; //Return true if transmit was successful.

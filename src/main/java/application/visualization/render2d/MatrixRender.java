@@ -128,13 +128,13 @@ public class MatrixRender extends Render {
         if (mo == Order.ROW_MAJOR) {
             WIDTH = PADDING * 2 + vspace + (vspace + node_width) * size[0];
             HEIGHT = PADDING * 2 + hspace + (hspace + node_height) * size[1];
-            this.setMaxHeight(HEIGHT);
         }
         else {
             HEIGHT = PADDING * 2 + hspace + (hspace + node_height) * size[0];
             WIDTH = PADDING * 2 + vspace + (vspace + node_width) * size[1];
-            this.setMaxWidth(WIDTH);
         }
+        this.setMaxSize(WIDTH, HEIGHT);
+        this.setMinSize(WIDTH, HEIGHT);
         this.setPrefSize(WIDTH, HEIGHT);
     }
 
@@ -283,8 +283,6 @@ public class MatrixRender extends Render {
 
     @Override
     public RenderSVF getOptionsSpinnerValueFactory (){
-//        System.out.println("\nmatrix render spinner factory:");
-//        System.out.println(rsvf);
         return rsvf;
     }
 

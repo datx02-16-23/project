@@ -3,6 +3,7 @@ package application.visualization.render2d;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import application.visualization.Visualization;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
@@ -40,10 +41,8 @@ public abstract class Render extends Pane {
         this.node_height = height;
         this.hspace = hspace;
         this.vspace = vspace;
-//        local.widthProperty().bind(this.widthProperty());
-//        local.heightProperty().bind(this.heightProperty());
-        local_canvas.setWidth(2000);
-        local_canvas.setHeight(2000);
+        local_canvas.widthProperty().bind(this.widthProperty());
+        local_canvas.heightProperty().bind(this.heightProperty());
         //Add stacked canvases
         this.getChildren().add(local_canvas);
         initDragAndZoom();
@@ -146,6 +145,11 @@ public abstract class Render extends Pane {
         // Set cursor
         this.setOnMouseEntered(event -> {
             this.setCursor(Cursor.HAND);
+            this.setStyle("-fx-border-color: #123456;-fx-border-radius: 5;-fx-border-width: 3;-fx-border-insets:-5;");
+        });
+        this.setOnMouseExited(event -> {
+            this.setCursor(null);
+            this.setStyle(null);
         });
     }
 
@@ -318,6 +322,7 @@ public abstract class Render extends Pane {
 
         /**
          * Converter for the SpinnerSVF class.
+         * 
          * @author Richard Sundqvist
          *
          */

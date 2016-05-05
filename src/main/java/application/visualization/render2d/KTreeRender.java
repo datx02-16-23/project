@@ -331,8 +331,6 @@ public class KTreeRender extends Render {
 
     @Override
     public RenderSVF getOptionsSpinnerValueFactory (){
-//        System.out.println("\nktree render spinner factory:");
-//        System.out.println(rsvf);
         return rsvf;
     }
 

@@ -9,7 +9,7 @@ package wrapper.datastructures;
 public enum RawType{
     array("Array", "array", AbstractType.tree), //An array of objects or primitivtes.
     tree("Tree", "tree"),
-    independentElement("Independent Element", "independentElement"); //A loose element, such as a tmp variable.
+    independentElement("Orphan", "independentElement"); //A loose element, such as a tmp variable.
 
     /**
      * The permitted AbstractTypes for this RawType.

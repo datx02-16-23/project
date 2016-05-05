@@ -119,10 +119,8 @@ public class VisualDialog {
     }
 
     private void setSpinner (VisualType vt){
-//        System.out.println(vt + ", vt.hasOptions = " + vt.hasOptions);
         if (vt.has_options) {
             RenderSVF rsvf = Visualization.getRender(vt).getOptionsSpinnerValueFactory();
-//            System.out.println(vt + " options: " + rsvf);
             if (rsvf == null) {
                 options.setDisable(true); //Failed to fetch options.
             }
