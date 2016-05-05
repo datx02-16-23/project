@@ -372,6 +372,7 @@ public class LogStreamManager implements CommunicatorListener {
      * @return True if the wrapper was successfully unwrapped. False otherwise.
      */
     public boolean unwrap (Wrapper wrapper){
+        System.out.println(wrapper);
         if (wrapper.header != null) {
             if (wrapper.header.annotatedVariables != null) {
                 for (AnnotatedVariable av : wrapper.header.annotatedVariables.values()) {

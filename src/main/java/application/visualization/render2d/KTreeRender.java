@@ -47,7 +47,7 @@ public class KTreeRender extends Render {
         super(struct, width, height, hspace, vspace);
         this.K = K < 2 ? 2 : K;
         lowerLevelSums.add(new Integer(0));
-        Main.console.force("WARNING: At the time of writing (2016-04-18) the KTreeRender class, JavaFX may crash with a NullPointerException when Canvas grows too large.");
+//        Main.console.force("WARNING: At the time of writing (2016-04-18) the KTreeRender class, JavaFX may crash with a NullPointerException when Canvas grows too large.");
     }
 
     private static RenderSVF createOptionsSpinner (){

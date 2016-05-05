@@ -13,9 +13,7 @@ import wrapper.datastructures.Array.ArrayElement;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
 
-/**
- * Created by cb on 14/04/16.
- */
+@Deprecated
 public class BarchartRender_OLD extends Render {
 
     private static final String                        DEFAULT_COLOR = "#123456";

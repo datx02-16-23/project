@@ -165,7 +165,7 @@ public abstract class OperationParser {
         return ensureDoubleArray(op.operationBody.get(Key.value));
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private static double[] ensureDoubleArray (Object object){
         if (object == null) {
             return null;
@@ -176,7 +176,7 @@ public abstract class OperationParser {
         if (object instanceof Double) {
             return new double[] {(Double) object};
         }
-        if (object instanceof ArrayList) {
+        if (object instanceof ArrayList && ((ArrayList) object).get(0) instanceof ArrayList) {
             ArrayList<Double> fulhack = new ArrayList<Double>();
             for (List<Double> list : (ArrayList<ArrayList<Double>>) object) {
                 for (Double d : list) {

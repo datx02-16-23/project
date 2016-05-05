@@ -49,7 +49,7 @@ public class SourcePanel extends TabPane {
             addSourceTab(sourceName, sources.get(sourceName));
             nameTabMapping.put(sourceName, tabNumber++);
         }
-        this.getSelectionModel().select(0);
+//        this.getSelectionModel().select(0);
     }
 
     /**

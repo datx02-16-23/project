@@ -36,14 +36,14 @@ public abstract class GsonContructor {
      * @return A Gson instance that works properly.
      */
     public static Gson getGson (boolean prettyPrinting){
-        gsonBuilder.registerTypeAdapter(AnnotatedVariable.class, new AnnotatedVariableAdapter());
+//        gsonBuilder.registerTypeAdapter(AnnotatedVariable.class, new AnnotatedVariableAdapter());
         if (prettyPrinting) {
             gsonBuilder.setPrettyPrinting();
         }
         return gsonBuilder.create();
     }
 
-    public static class AnnotatedVariableAdapter extends TypeAdapter<AnnotatedVariable> {
+    private static class AnnotatedVariableAdapter extends TypeAdapter<AnnotatedVariable> {
 
         @Override
         public void write (JsonWriter out, AnnotatedVariable value) throws IOException{
@@ -53,12 +53,13 @@ public abstract class GsonContructor {
 
         @Override
         public AnnotatedVariable read (JsonReader in) throws IOException{
-            System.out.println("reading!");
             String identifier = null, rawType = null, abstractType = null, visual = null;
             Map<String, Object> attributes = null;
             in.beginObject();
             while(in.hasNext()) {
-                switch (in.nextName()) {
+                String name = in.nextName();
+                System.out.println("name = " + name);
+                switch (name) {
                     case "identifier":
                         identifier = in.nextString();
                         break;
@@ -85,7 +86,10 @@ public abstract class GsonContructor {
         private void populateAttributes (Map<String, Object> attributes, JsonReader in) throws IOException{
             ArrayList<Integer> size = new ArrayList<Integer>();
             in.beginObject();
-            in.nextName();
+            if(in.peek() == JsonToken.END_OBJECT){
+                return;
+            }
+            in.nextName(); //Assume nextName() is "size".
             in.beginArray();
             outer: while(true) {
                 if (in.peek() == JsonToken.NUMBER) {
