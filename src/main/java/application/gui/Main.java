@@ -42,10 +42,11 @@ public class Main extends Application {
      */
     public static boolean    firstRun;
     private GUI_Controller   controller;
+    private LogStreamManager lsm;
 
     @Override
     public void start (Stage primaryStage) throws Exception{
-        final LogStreamManager lsm = new LogStreamManager(Strings.PROJECT_NAME + " GUI");
+        lsm = new LogStreamManager(Strings.PROJECT_NAME + " GUI");
         primaryStage.setTitle(Strings.PROJECT_NAME);
         // Create a Group view for the AV.
         Visualization visualization = Visualization.instance();
@@ -143,6 +144,7 @@ public class Main extends Application {
         if (controller != null) {
             controller.stopAutoPlay(); // Kill autoplay thread.
         }
+        lsm.close();
     }
 
     public static void main (String[] args){
@@ -165,7 +167,7 @@ public class Main extends Application {
         public boolean              info          = true;
         public boolean              err           = true;
         public boolean              debug         = false;
-        public final TextArea       consoleTextArea;
+        private final TextArea      consoleTextArea;
 
         public GUIConsole (TextArea consoleTextArea){
             this.consoleTextArea = consoleTextArea;
@@ -286,8 +288,7 @@ public class Main extends Application {
             for (String s : Strings.DEVELOPER_NAMES) {
                 sb.append(s + " | ");
             }
-            sb.delete(sb.length() - 2, sb.length());
-            sb.append("\n\n");
+            sb.replace(sb.length() - 2, sb.length(), "\n\n");
             String initMessage = sb.toString();
             Platform.runLater(new Runnable() {
 

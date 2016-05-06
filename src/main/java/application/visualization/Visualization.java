@@ -69,21 +69,14 @@ public class Visualization extends StackPane {
 
     public void clearAndCreateVisuals (){
         clear();
-        int reg = 0;
-        int small = 0;
         for (DataStructure struct : model.getStructures().values()) {
             Render render = resolveRender(struct);
             if (struct.rawType == RawType.independentElement) {
                 render = new MatrixRender(struct);
-//                RENDERS.add(render, 1, small++);
                 RENDERS.getChildren().add(render);
             }
             else {
-//                render.setPrefWidth(this.getWidth());
-//                render.setPrefHeight(this.getHeight());
-//                RENDERS.add(render, 0, reg++);
                 RENDERS.getChildren().add(render);
-                render.setStyle("-fx-background: red;");
             }
             struct_render_mapping.put(struct.identifier, render);
         }
@@ -120,8 +113,7 @@ public class Visualization extends StackPane {
         Render render = null;
         switch (vt) {
             case bar:
-//                    render = new BarRender(struct, 40, 1, 5, 25);
-                render = new BarchartRender_OLD(null);
+                render = new BarchartRender(null, 40, 1, 5);
                 break;
             case box:
                 render = new MatrixRender(null, -1, -1, -1, -1, -1);

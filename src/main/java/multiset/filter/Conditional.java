@@ -12,7 +12,7 @@ import java.util.Set;
 public class Conditional {
     private final Expression lhs;
     private final Expression rhs;
-    private final Bdc.iBdc bdc;
+    private final iBdc bdc;
 
     public Conditional(String conditional, Set<String> variables){
         String lhs = extractLhs(conditional);
@@ -20,7 +20,7 @@ public class Conditional {
         String bdc = extractBdc(conditional);
         this.lhs = new ExpressionBuilder(lhs).variables(variables).build();
         this.rhs = new ExpressionBuilder(rhs).variables(variables).build();
-        this.bdc = Bdc.getBDC(bdc);
+        this.bdc = Bdc.getBdc(bdc);
 
 
     }
@@ -38,19 +38,30 @@ public class Conditional {
 
 
     private String extractLhs(String conditional){
-        return conditional.split(">")[0].trim();
+        for(Bdc bdc:Bdc.values()){
+            if(conditional.contains(bdc.getRepresentation())){
+                return conditional.split(bdc.getRepresentation())[0].trim();
+            }
+        }
+        throw new IllegalArgumentException("Missing bdc in conditional");
     }
 
     private String extractRhs(String conditional){
-        return conditional.split(">")[1].trim();
+        for(Bdc bdc:Bdc.values()){
+            if(conditional.contains(bdc.getRepresentation())){
+                return conditional.split(bdc.getRepresentation())[1].trim();
+            }
+        }
+        throw new IllegalArgumentException("Missing bdc in conditional");
     }
 
     private String extractBdc(String conditional){
         for(Bdc bdc:Bdc.values()){
-            if(conditional.contains(bdc.getRepresentation()){
+            if(conditional.contains(bdc.getRepresentation())){
                 return bdc.getRepresentation();
             }
         }
+        throw new IllegalArgumentException("Missing bdc in conditional");
     }
 
 }

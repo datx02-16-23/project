@@ -6,6 +6,7 @@ package multiset.filter;
 public enum Bdc {
   LESS ("<", (double a, double b) -> a < b),
   LESSOREQUALS ("<=", (double a, double b) -> a <= b),
+  EQUALS ("=", (double a, double b) -> Double.compare(a, b) == 0),
   GREATER (">", (double a, double b) -> a > b);
 
   private final String representation;
@@ -24,21 +25,14 @@ public enum Bdc {
     return bdc;
   }
 
-  public static iBdc getBDC(String representation){
-    System.out.println(representation);
+
+  public static iBdc getBdc(String representation){
     for (Bdc bdc: Bdc.values()){
-      System.out.println(bdc.getRepresentation());
       if (bdc.getRepresentation().equals(representation)){
         return bdc.getBdc();
       }
     }
     throw new IllegalArgumentException("Unrecognized token");
   }
-
-  public interface iBdc {
-    boolean compare(double a, double b);
-  }
-
-
 }
 

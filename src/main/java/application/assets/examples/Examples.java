@@ -51,7 +51,6 @@ public abstract class Examples {
         }
         // om du vill printa här
         print();
-        System.out.println("json = " + json);
         return json;
     }
 

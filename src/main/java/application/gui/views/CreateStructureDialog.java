@@ -131,14 +131,14 @@ public class CreateStructureDialog {
         raw = (RawType) rawType.getSelectionModel().getSelectedItem();
         switch (raw) {
             case array:
-                struct = new Array(identifier, abs, vis);
+                struct = new Array(identifier, abs, vis, null);
                 break;
             case tree:
                 struct = null;
                 Main.console.err("Not supported yet.");
                 break;
             case independentElement:
-                struct = new IndependentElement(identifier, abs, vis);
+                struct = new IndependentElement(identifier, abs, vis, null);
                 break;
         }
     }

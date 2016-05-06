@@ -3,7 +3,6 @@ package application.visualization.render2d;
 import java.util.ArrayList;
 import java.util.List;
 
-import application.gui.Main;
 import application.visualization.animation.Animation;
 import application.visualization.animation.LinearAnimation;
 import javafx.scene.Group;
@@ -12,10 +11,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import wrapper.datastructures.Array.ArrayElement;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
 import wrapper.operations.OperationType;
-import wrapper.datastructures.Array.ArrayElement;
 
 /**
  * A Render for Arrays with abstract type Tree. Can draw any K-ary tree for K >= 2, where K is the number of children a
@@ -47,7 +46,7 @@ public class KTreeRender extends Render {
         super(struct, width, height, hspace, vspace);
         this.K = K < 2 ? 2 : K;
         lowerLevelSums.add(new Integer(0));
-        Main.console.force("WARNING: At the time of writing (2016-04-18) the KTreeRender class, JavaFX may crash with a NullPointerException when Canvas grows too large.");
+//        Main.console.force("WARNING: At the time of writing (2016-04-18) the KTreeRender class, JavaFX may crash with a NullPointerException when Canvas grows too large.");
     }
 
     private static RenderSVF createOptionsSpinner (){
@@ -121,9 +120,11 @@ public class KTreeRender extends Render {
     @Override
     public void calculateSize (){
         super.calculateSize();
-        this.WIDTH = totBreadth * (node_width + hspace);
+        this.WIDTH = totBreadth * (node_width + hspace) + 25;
         this.HEIGHT = totDepth * (node_height + vspace) * 2 + vspace; //Depth doesnt include node + margain above.
+        this.setMinSize(WIDTH, HEIGHT);
         this.setPrefSize(WIDTH, HEIGHT);
+        this.setMaxSize(WIDTH, HEIGHT);
     }
 
     /**
@@ -143,7 +144,7 @@ public class KTreeRender extends Render {
         for (; i < completedSize; i++) {
             ArrayElement ae = new ArrayElement(Double.NaN, new int[] {i});
             struct.getInactiveElements().add(ae);
-            drawElement(ae, i, OperationType.remove.color); //Draw zombies. String will evaluate to black fill.
+            drawElement(ae, i, OperationType.remove.color); //Draw zombies. String will filter to black fill.
         }
         drawConnectors();
     }
@@ -331,8 +332,6 @@ public class KTreeRender extends Render {
 
     @Override
     public RenderSVF getOptionsSpinnerValueFactory (){
-//        System.out.println("\nktree render spinner factory:");
-//        System.out.println(rsvf);
         return rsvf;
     }
 
