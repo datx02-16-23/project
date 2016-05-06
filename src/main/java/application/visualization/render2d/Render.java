@@ -5,26 +5,36 @@ import java.util.HashMap;
 import java.util.List;
 
 import application.visualization.Visualization;
+import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
 
-public abstract class Render extends Pane {
+public abstract class Render extends StackPane {
 
-    public static final double    DEFAULT_SIZE    = 40;
+    private static final Border   BORDER_DRAGGABLE = new Border(new BorderStroke(Color.web("#123456"), BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(3), new Insets(-5)));
+
+    public static final double    DEFAULT_SIZE     = 40;
     protected final double        node_width, node_height;
     protected final double        hspace, vspace;
     protected double              WIDTH, HEIGHT;
+    
     protected final DataStructure struct;
-    protected final Canvas        local_canvas    = new Canvas();
-    protected static final Canvas SHARED_ANIMATED = Visualization.instance().ANIMATED;
-    protected static final Color  COLOR_WHITE     = Color.WHITE;
-    protected static final Color  COLOR_BLACK     = Color.BLACK;
+    protected final Canvas        local_canvas     = new Canvas();
+    
+    protected static final Canvas SHARED_ANIMATED  = Visualization.instance().ANIMATED;
+    protected static final Color  COLOR_WHITE      = Color.WHITE;
+    protected static final Color  COLOR_BLACK      = Color.BLACK;
 
     /**
      * 
@@ -148,11 +158,11 @@ public abstract class Render extends Pane {
         // Set cursor
         this.setOnMouseEntered(event -> {
             this.setCursor(Cursor.HAND);
-            this.setStyle("-fx-border-color: #123456;-fx-border-radius: 5;-fx-border-width: 3;-fx-border-insets:-5;");
+            this.setBorder(BORDER_DRAGGABLE);
         });
         this.setOnMouseExited(event -> {
             this.setCursor(null);
-            this.setStyle(null);
+            this.setBorder(null);
         });
     }
 
@@ -360,7 +370,7 @@ public abstract class Render extends Pane {
             @Override
             public Integer fromString (String string){
                 if (explicit) {
-                    Integer ans = new Integer(-1);
+                    Integer ans = null;
                     for (Integer i : conversion.keySet()) {
                         if (conversion.get(i).equals(string)) {
                             ans = i;

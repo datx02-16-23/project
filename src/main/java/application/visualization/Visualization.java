@@ -120,8 +120,7 @@ public class Visualization extends StackPane {
         Render render = null;
         switch (vt) {
             case bar:
-//                    render = new BarRender(struct, 40, 1, 5, 25);
-                render = new BarchartRender_OLD(null);
+                render = new BarchartRender(null, 40, 1, 5);
                 break;
             case box:
                 render = new MatrixRender(null, -1, -1, -1, -1, -1);

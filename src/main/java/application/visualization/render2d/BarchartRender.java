@@ -79,8 +79,8 @@ public class BarchartRender extends Render {
 
     @Override
     public void calculateSize (){
-        WIDTH = padding * 3 + (hspace + node_width) * struct.getElements().size();
-        HEIGHT = padding * 2 + node_height * (Math.abs(struct.getMax()) + Math.abs(struct.getMin()));
+        WIDTH = padding * 2 + (hspace + node_width) * struct.getElements().size();
+        HEIGHT = padding * 3 + node_height * (Math.abs(struct.getMax()) + Math.abs(struct.getMin()));
         this.setMinSize(WIDTH, HEIGHT);
         this.setPrefSize(WIDTH, HEIGHT);
         this.setMaxSize(WIDTH, HEIGHT);
