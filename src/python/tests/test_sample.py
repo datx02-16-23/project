@@ -19,9 +19,9 @@ if __name__ == '__main__':
 	#	abstractType=None
 	settings = annotations.create_settings(
 		abspath('./test'),
-		['main.py','subf/depend.py'],
-		sample.annotations.Variable('c','list'),
-		'main.py',
-		abspath('output.json')
+		['/main.py'],
+		sample.annotations.Variable('twodimlist','list',attributes={'size' : [3,3]}),
+		'/main.py',
+		abspath('./test')
 	)
 	annotations.run(settings)

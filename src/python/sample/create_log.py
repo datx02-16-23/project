@@ -68,9 +68,11 @@ def alias(operation,aliases):
 				statement['identifier'] = aliases[name] if name in aliases else name
 
 def is_init(operation):
-	return ('index' not in operation['operationBody']['target'] and
-			'index' not in operation['operationBody']['source'])
-
+	if 'source' in operation['operationBody']:
+		return ('index' not in operation['operationBody']['target'] and
+				'index' not in operation['operationBody']['source'])
+	else:
+		return 'index' not in operation['operationBody']['target']
 class LogPostProcessor(object):
 	def __init__(self,output_file):
 		output_read = open(output_file,'r')
@@ -88,7 +90,8 @@ class LogPostProcessor(object):
 		for operation in self.output:
 			if (operation['operation'] == 'write' and is_init(operation)):
 				target = operation['operationBody']['target']['identifier']
-				if (operation['operationBody']['source']['identifier'] in self.names and
+				if ('source' in operation['operationBody'] and
+					operation['operationBody']['source']['identifier'] in self.names and
 					target not in aliases and 
 					target not in self.names):
 					aliases[target] = operation['operationBody']['source']['identifier']

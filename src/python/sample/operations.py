@@ -104,7 +104,9 @@ def write(src,dst,begin_line,end_line):
     value = get_value(src)
     if annotated_in(src) or annotated_in(dst):
         operation = get_operation('write',value,begin_line,end_line)
-        operation['operationBody']['source'] = to_json(src)
+        source = to_json(src)
+        if source['identifier'] != 'undefined':
+            operation['operationBody']['source'] = source
         operation['operationBody']['target'] = to_json(dst)
         put(operation)
     return value

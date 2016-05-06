@@ -69,6 +69,9 @@ class Variable(object):
 			'attributes' : self.attributes
 		}
 
+	def __repr__(self):
+		return "(Name = %s, Type = %s)" % (self.name,self.rawType)
+
 def create_sources(files):
 	sources = {}
 	for f in files:
@@ -87,21 +90,37 @@ def create_header(version,variables,files):
 		'sources' : create_sources(files)
 	}
 
+def format_path(path):
+	return path if not path.startswith('/') else path[1:]
+
+def format_variables(variables):
+	variables_ = []
+	if not isinstance(variables,list):
+		variables = [variables]
+	for variable in variables:
+		if isinstance(variable,dict):
+			variables_.append(Variable(**variable))
+		elif isinstance(variable,Variable):
+			variables_.append(variable)
+	return variables_
+
 def create_settings(root_directory, files, variables, main_file, output):
 	"""
 	create_settings
-		root_directory 	- root directory of program
-		files 			- files to be observed
-		variables 		- variables to be observed
-		main_file 		- main file of program
-		output 			- where to store LOG output
+		root_directory 	- root directory of program		"path/to/root"
+		files 			- files to be observed			[files,...]
+		variables 		- variables to be observed		[Variable,...]
+		main_file 		- main file of program			"relative/path/from/root/to/main"
+		output 			- where to store LOG output 	"path/to/store/output"
 	"""
+	files = [format_path(f) for f in files]
+	variables = format_variables(variables)
 	settings = {
-		'rootdir' : root_directory,
+		'rootdir' : root_directory if root_directory.endswith('/') else root_directory+'/',
 		'files' : files,
-		'observe' : variables if isinstance(variables,list) else [variables],
-		'main' : main_file,
-		'output' : output + "/output.json"
+		'observe' : variables,
+		'main' : format_path(main_file),
+		'output' : output + "/output.oi"
 	}
 	return settings
 
@@ -134,7 +153,7 @@ def run(settings):
 	create_env(settings)
 	
 	print "Creating Header..."
-	files = [settings['rootdir']+'/'+f for f in settings['files']]
+	files = [settings['rootdir']+f for f in settings['files']]
 	header = create_header(2.0,settings['observe'],files)
 	if w is not None:
 		print "Sending header to LogStreamManager"
@@ -149,14 +168,7 @@ def run(settings):
 	print "Formatting json buffer from output..."
 	processor = LogPostProcessor(settings['output']) 
 	output 	  = processor.process(settings['observe'])
-	
 	dump_json(header,output,settings['output'])
-	# with open(settings['output'],'w+') as f:
-	# 	final_output = {
-	# 		'header' : header,
-	# 		'body' : output
-	# 	}
-	# 	dump(final_output,f)
 
 	print "Removing visualization environment..."
 	system('rm -rf %s' % settings['v_env'])
