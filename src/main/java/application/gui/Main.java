@@ -167,7 +167,7 @@ public class Main extends Application {
         public boolean              info          = true;
         public boolean              err           = true;
         public boolean              debug         = false;
-        public final TextArea       consoleTextArea;
+        private final TextArea      consoleTextArea;
 
         public GUIConsole (TextArea consoleTextArea){
             this.consoleTextArea = consoleTextArea;

@@ -3,7 +3,6 @@ package application.visualization.render2d;
 import java.util.ArrayList;
 import java.util.List;
 
-import application.gui.Main;
 import application.visualization.animation.Animation;
 import application.visualization.animation.LinearAnimation;
 import javafx.scene.Group;
@@ -12,10 +11,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import wrapper.datastructures.Array.ArrayElement;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
 import wrapper.operations.OperationType;
-import wrapper.datastructures.Array.ArrayElement;
 
 /**
  * A Render for Arrays with abstract type Tree. Can draw any K-ary tree for K >= 2, where K is the number of children a

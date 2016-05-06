@@ -19,7 +19,7 @@ public class AnnotatedVariable implements Serializable {
     private static final long        serialVersionUID = Strings.VERSION_NUMBER;
     /**
      * The identifier for this variable. For example, the indentifier for the variable created by the line
-     * "{@code int myVar = 1337;}" would be "myVar".
+     * "{@code int myVar = 1337;}" would be "{@code myVar}".
      */
     public final String              identifier;
     /**
