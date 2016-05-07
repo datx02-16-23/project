@@ -20,6 +20,7 @@ public class SourcePanel extends TabPane {
 
     private final HashMap<String, Integer>  nameTabMapping;
     private final Map<String, List<String>> sources;
+    private boolean                         initTabs = true;
 
     /**
      * Create a new SourceViewer.
@@ -31,7 +32,9 @@ public class SourcePanel extends TabPane {
         this.prefWidthProperty().bind(this.widthProperty());
         this.setTabClosingPolicy(TabPane.TabClosingPolicy.SELECTED_TAB);
         this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        initTab(); //Print some brilliant source code.
+        if (initTabs) {
+            initTab(); //Print some brilliant source code.            
+        }
     }
 
     /**
@@ -43,13 +46,16 @@ public class SourcePanel extends TabPane {
         if (newSources == null) {
             return;
         }
+        if (initTabs) {
+            initTabs = false;
+            clear();
+        }
         sources.putAll(newSources);;
         int tabNumber = 0;
         for (String sourceName : sources.keySet()) {
             addSourceTab(sourceName, sources.get(sourceName));
             nameTabMapping.put(sourceName, tabNumber++);
         }
-//        this.getSelectionModel().select(0);
     }
 
     /**
@@ -60,6 +66,12 @@ public class SourcePanel extends TabPane {
         getTabs().clear();
     }
 
+    /**
+     * Create a tab for a source file.
+     * 
+     * @param sourceName The name of the source file.
+     * @param sourceLines The lines for the source file.
+     */
     private void addSourceTab (String sourceName, List<String> sourceLines){
         //Build new Tab
         Tab newTab = new Tab();
@@ -76,7 +88,8 @@ public class SourcePanel extends TabPane {
     }
 
     /**
-     * Jump to the appropriate tab and line number for this Operation.
+     * Jump to the appropriate tab and line number for this Operation. Will abort if {@code op == null} or
+     * {@code op.source == null}.
      * 
      * @param op The Operation to show.
      */
@@ -92,12 +105,12 @@ public class SourcePanel extends TabPane {
             return;
         }
         //Select tab
-        this.getSelectionModel().select(sourceTabIndex);
+        getSelectionModel().select(sourceTabIndex);
         //Select lines
-        ListView<String> linesView = (ListView<String>) this.getTabs().get(nameTabMapping.get(op.source)).getContent();
+        ListView<String> linesView = (ListView<String>) getTabs().get(nameTabMapping.get(op.source)).getContent();
         linesView.getSelectionModel().select(op.beginLine);
         linesView.getFocusModel().focus(op.beginLine);
-        linesView.scrollTo(op.beginLine-1);
+        linesView.scrollTo(op.beginLine - 1);
     }
 
     /**
@@ -109,6 +122,7 @@ public class SourcePanel extends TabPane {
         return sources;
     }
 
+    @Deprecated
     private void initTab (){
         Tab newTab = new Tab();
         newTab.setText("sample_source.java");

@@ -2,10 +2,18 @@ package application.visualization;
 
 import java.util.HashMap;
 
+import application.gui.GUI_Controller;
 import application.model.Model;
 import application.visualization.animation.Animation;
 import application.visualization.render2d.*;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import wrapper.Locator;
 import wrapper.Operation;
@@ -23,11 +31,10 @@ import wrapper.operations.OperationType;
  */
 public class Visualization extends StackPane {
 
+    private static final HintPane         hintPane              = new HintPane();
     private boolean                       animate;
     private final Model                   model;
     private static Visualization          INSTANCE;
-//    private final GridPane                RENDERS               = new GridPane();
-//  private final AnchorPane                RENDERS               = new AnchorPane();;
     private final StackPane               RENDERS               = new StackPane();
     public final Canvas                   ANIMATED              = new Canvas();
     private final HashMap<String, Render> struct_render_mapping = new HashMap<String, Render>();
@@ -59,12 +66,14 @@ public class Visualization extends StackPane {
         //Add stacked canvases
         this.getChildren().add(RENDERS);
         this.getChildren().add(ANIMATED);
+        this.getChildren().add(hintPane);
     }
 
     public void clear (){
         struct_render_mapping.clear();
         RENDERS.getChildren().clear();
         ANIMATED.getGraphicsContext2D().clearRect(0, 0, this.getWidth(), this.getHeight());
+        hintPane.setVisible(true);
     }
 
     public void clearAndCreateVisuals (){
@@ -80,6 +89,7 @@ public class Visualization extends StackPane {
             }
             struct_render_mapping.put(struct.identifier, render);
         }
+        hintPane.setVisible(RENDERS.getChildren().isEmpty());
     }
 
     /**
@@ -93,7 +103,6 @@ public class Visualization extends StackPane {
         switch (visual) {
             case bar:
                 render = new BarchartRender(struct, 40, 5, 5);
-//                render = new BarchartRender(struct);
                 break;
             case box:
                 render = new MatrixRender(struct, struct.visualOption, 40, 40, 0, 0);
@@ -106,6 +115,7 @@ public class Visualization extends StackPane {
     }
 
     /**
+     * TODO: remove this method
      * @param vt
      * @return
      */
@@ -195,17 +205,17 @@ public class Visualization extends StackPane {
         if (src_e != null && tar_e != null) {
             //Render data transfer between two known structures
             src_render.startAnimation(src_e, Render.absX(src_render, src_e), Render.absY(src_render, src_e), //From
-                                             Render.absX(tar_render, tar_e), Render.absY(tar_render, tar_e)); //To
+                    Render.absX(tar_render, tar_e), Render.absY(tar_render, tar_e)); //To
         }
         else if (src_e != null && tar_e == null) {
             //Render read without target
             src_render.startAnimation(src_e, Render.absX(src_render, src_e), Render.absY(src_render, src_e), //From
-                                             Render.absX(src_render, src_e) - 25, Render.absY(src_render, src_e) - 50); //To
+                    Render.absX(src_render, src_e) - 25, Render.absY(src_render, src_e) - 50); //To
         }
         else if (src_e == null && tar_e != null) {
             //Render write without source
             tar_render.startAnimation(tar_e, Render.absX(tar_render, tar_e) + 25, Render.absY(tar_render, tar_e) + 50, //From
-                                             Render.absX(tar_render, tar_e), Render.absY(tar_render, tar_e)); //To
+                    Render.absX(tar_render, tar_e), Render.absY(tar_render, tar_e)); //To
         }
     }
 
@@ -262,5 +272,19 @@ public class Visualization extends StackPane {
      */
     public void setAnimate (boolean value){
         animate = value;
+    }
+
+    /**
+     * Hint pane for the visualiser window.
+     * @author Richard Sundqvist
+     *
+     */
+    private static class HintPane extends Pane {
+
+        public HintPane (){
+            Image image = new Image(GUI_Controller.class.getResourceAsStream("/assets/upload.png"));
+            this.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false))));
+            this.setVisible(true);
+        }
     }
 }

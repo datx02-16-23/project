@@ -7,7 +7,7 @@ package wrapper.datastructures;
  *
  */
 public enum RawType{
-    array("Array", "array", AbstractType.tree), //An array of objects or primitivtes.
+    array("Array", "array", AbstractType.tree), //An array of objects or primitives.
     tree("Tree", "tree"),
     independentElement("Orphan", "independentElement"); //A loose element, such as a tmp variable.
 
@@ -32,7 +32,7 @@ public enum RawType{
      */
     public static RawType fromString (String json){
         for (RawType rt : RawType.values()) {
-            if(rt.json.equals(json)){
+            if (rt.json.equals(json)) {
                 return rt;
             }
         }
@@ -43,7 +43,7 @@ public enum RawType{
     public String toString (){
         return pretty;
     }
-    
+
     /**
      * The abstract type of the data structure, if applicable.
      * 
@@ -64,7 +64,7 @@ public enum RawType{
         public String toString (){
             return this.pretty;
         }
-        
+
         /**
          * Parse a json string.
          * 
@@ -73,7 +73,7 @@ public enum RawType{
          */
         public static AbstractType fromString (String json){
             for (AbstractType at : AbstractType.values()) {
-                if(at.json.equals(json)){
+                if (at.json.equals(json)) {
                     return at;
                 }
             }

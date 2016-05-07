@@ -13,15 +13,16 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.ObservableMap;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -82,6 +83,9 @@ public class GUI_Controller implements CommunicatorListener {
     private final VisualDialog              visualDialog;
     private final CreateStructureDialog     createStructureDialog;
     private final IdentifierCollisionDialog icd;
+    //Buttons
+    private Button                          backwardButton, forwardButton, playPauseButton;
+    private Button                          restartButton, clearButton, speedButton;
 
     public GUI_Controller (Stage window, LogStreamManager lsm, SourcePanel sourceViewer){
         this.visualization = Visualization.instance();
@@ -167,13 +171,12 @@ public class GUI_Controller implements CommunicatorListener {
         sourceViewer.clear();
         operationPanel.clear();
         visualMenu.getItems().clear();
+        setButtons();
     }
 
     /**
      * Starts playing or pause the AV animation.
      */
-    private Button playPauseButton;
-
     public void playPauseButtonClicked (){
         if (!isPlaying) {
             startAutoPlay();
@@ -193,17 +196,11 @@ public class GUI_Controller implements CommunicatorListener {
         isPlaying = true;
         stepForwardButtonClicked();
         autoplayTimeline = new Timeline();
-        autoplayTimeline.getKeyFrames().add(new KeyFrame(Duration.millis(stepDelay), new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle (ActionEvent actionEvent){
-                if (stepForwardButtonClicked() == false) {
-                    stopAutoPlay();
-                }
+        autoplayTimeline.getKeyFrames().add(new KeyFrame(Duration.millis(stepDelay), event -> {
+            if (stepForwardButtonClicked() == false) {
+                stopAutoPlay();
             }
         }));
-        autoplayTimeline.setCycleCount(Animation.INDEFINITE);
-        autoplayTimeline.play();
         autoplayTimeline.setCycleCount(Animation.INDEFINITE);
         autoplayTimeline.play();
     }
@@ -224,6 +221,7 @@ public class GUI_Controller implements CommunicatorListener {
         model.reset();
         updatePanels();
         visualization.render(null);
+        setButtons();
     }
 
     /**
@@ -232,22 +230,25 @@ public class GUI_Controller implements CommunicatorListener {
      * @return The value of stepModelForward().
      */
     public boolean stepForwardButtonClicked (){
-        return stepModelForward();
+        boolean ans = stepModelForward();
+        return ans;
     }
 
     /**
      * Steps the model forward and forces any ongoing animations to cancel.
      * 
-     * @return True if the model progress. False otherwise.
+     * @return True if the model could progress. False otherwise.
      */
     private boolean stepModelForward (){
         if (model.stepForward()) {
-            visualization.render(model.getCurrentStep().getLastOp());
+            visualization.render(model.getLastOp());
             updatePanels();
+            setButtons();
             return true;
         }
         else {
-            visualization.render(model.getCurrentStep().getLastOp());
+            visualization.render(model.getLastOp());
+            setButtons();
             return false;
         }
     }
@@ -257,12 +258,12 @@ public class GUI_Controller implements CommunicatorListener {
      */
     public void stepBackwardButtonClicked (){
         stopAutoPlay();
-        model.stepBackward();
-        visualization.render(model.getCurrentStep().getLastOp());
-        updatePanels();
+        if(model.stepBackward()){
+            visualization.render(model.getLastOp());
+            setButtons();
+            updatePanels();            
+        }
     }
-
-    private Button speedButton;
 
     /**
      * Change the animation speed
@@ -328,7 +329,7 @@ public class GUI_Controller implements CommunicatorListener {
             @Override
             public void run (){
                 int index = model.getIndex();
-                sourceViewer.show(model.getCurrentStep().getLastOp());
+                sourceViewer.show(model.getLastOp());
                 operationPanel.update(index, true);
             }
         });
@@ -345,7 +346,7 @@ public class GUI_Controller implements CommunicatorListener {
      */
     public void goToStep (int index){
         model.goToStep(index);
-        visualization.render(model.getCurrentStep().getLastOp());
+        visualization.render(model.getLastOp());
         operationPanel.update(model.getIndex(), false);
     }
 
@@ -428,17 +429,19 @@ public class GUI_Controller implements CommunicatorListener {
     /**
      * Helper function for {@link #openFileChooser() openFileChooser}
      * 
-     * @param file
+     * @param file The file to load.
      */
     public void readLog (File file){
         lsm.clearData();
-        if (lsm.readLog(file) == false) {
-            Main.console.err("Failed to read log: " + file);
-            return;
+        boolean success = lsm.readLog(file);
+        if (success) {
+            loadFromLSM();
+            lsm.clearData();
+            Main.console.info("Import successful: " + file);
         }
-        loadFromLSM();
-        //Clean lsm
-        lsm.clearData();
+        else {
+            Main.console.err("Import failed: " + file);
+        }
     }
 
     private boolean always_clear_old = false;
@@ -461,19 +464,20 @@ public class GUI_Controller implements CommunicatorListener {
         checkOperationIdentifiers(model.getOperations(), model.getStructures());
         sourceViewer.addSources(lsm.getSources());
         visualization.clearAndCreateVisuals();
-        visualization.render(model.getCurrentStep().getLastOp());
+        visualization.render(model.getLastOp());
         //Update operation list
         operationPanel.getItems().addAll(lsm.getOperations());
         loadVisualMenu();
         updatePanels();
+        setButtons();
     }
-    
-    private void checkOperationIdentifiers(List<Operation> ops, Map<String, DataStructure> structs){
+
+    private void checkOperationIdentifiers (List<Operation> ops, Map<String, DataStructure> structs){
         HashSet<String> opsIdentifiers = new HashSet<String>();
         /*
          * Gather all operation identifiers.
          */
-        for(Operation op : ops){
+        for (Operation op : ops) {
             String identifier;
             Locator locator;
             DataStructure struct;
@@ -511,15 +515,14 @@ public class GUI_Controller implements CommunicatorListener {
         }
         Set<String> keyset = structs.keySet();
         DataStructure newStruct;
-        for(String identifier : opsIdentifiers){
-            if(keyset.contains(identifier) == false){
+        for (String identifier : opsIdentifiers) {
+            if (keyset.contains(identifier) == false) {
                 newStruct = createStructureDialog.show(identifier);
-                if(newStruct != null){
+                if (newStruct != null) {
                     structs.put(newStruct.identifier, newStruct);
                 }
             }
         }
-        
     }
 
     private boolean checkCollision (Map<String, DataStructure> oldStructs, Map<String, DataStructure> newStructs){
@@ -591,6 +594,9 @@ public class GUI_Controller implements CommunicatorListener {
         }
     }
 
+    /**
+     * Method for reception of streamed messages.
+     */
     @Override
     public void messageReceived (short messageType){
         if (messageType >= 10) {
@@ -672,11 +678,16 @@ public class GUI_Controller implements CommunicatorListener {
         ObservableMap<String, Object> namespace = mainViewLoader.getNamespace();
         //Load from main view namespace
         playPauseButton = (Button) namespace.get("playPauseButton");
+        restartButton = (Button) namespace.get("restartButton");
+        backwardButton = (Button) namespace.get("backwardButton");
+        forwardButton = (Button) namespace.get("forwardButton");
+        clearButton = (Button) namespace.get("clearButton");
         speedButton = (Button) namespace.get("speedButton");
 //        speedMenuItem = (MenuItem) namespace.get("speedMenuItem");
         streamBehaviourMenuButton = (MenuButton) namespace.get("streamBehaviourMenuButton");
         visualMenu = (Menu) namespace.get("visualMenu");
         visualMenu.setDisable(true);
+        setButtons();
     }
 
     /*
@@ -815,7 +826,7 @@ public class GUI_Controller implements CommunicatorListener {
     private boolean oooooOOoooOOOooooOOoooed = false;
 
     public void oooooOOoooOOOooooOOooo (Event e){
-        // https://www.youtube.com/watch?v=inli9ukUKIs
+        //Sound: https://www.youtube.com/watch?v=inli9ukUKIs
         URL resource = getClass().getResource("/assets/oooooOOoooOOOooooOOooo.mp3");
         Media media = new Media(resource.toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
@@ -824,7 +835,7 @@ public class GUI_Controller implements CommunicatorListener {
         if (!oooooOOoooOOOooooOOoooed) {
             Button spooky = (Button) e.getSource();
             spooky.setBlendMode(BlendMode.SRC_OVER);
-            //https://pixabay.com/en/ghost-white-spooky-scary-ghostly-157985/
+            //Image: https://pixabay.com/en/ghost-white-spooky-scary-ghostly-157985/
             Image img = new Image(getClass().getResourceAsStream("/assets/oooooOOoooOOOooooOOooo.png"));
             spooky.setGraphic(new ImageView(img));
             oooooOOoooOOOooooOOoooed = true;
@@ -840,13 +851,14 @@ public class GUI_Controller implements CommunicatorListener {
     /**
      * Load an example.
      * 
-     * @param algo The Wrapper containing the example.
+     * @param algo The algorithm to run.
      */
     public void loadExample (Algorithm algo){
         double[] data = examplesDialog.show(algo.name);
         if (data == null) {
             return;
         }
+        Main.console.force("Not implemented yet. Sorry :/");
         Main.console.info("Running " + algo.name + " on: " + Arrays.toString(data));
         String json = Examples.getExample(algo, data);
         if (json != null) {
@@ -887,9 +899,31 @@ public class GUI_Controller implements CommunicatorListener {
      * Console controls end.
      */
 
+    public void dragDropped (DragEvent event){
+        Dragboard db = event.getDragboard();
+        boolean hasFiles = db.hasFiles();
+        if (hasFiles) {
+            for (File file : db.getFiles()) {
+                readLog(file);
+            }
+        }
+        event.setDropCompleted(hasFiles);
+        event.consume();
+    }
+
+    public void dragOver (DragEvent event){
+        Dragboard db = event.getDragboard();
+        if (db.hasFiles()) {
+            event.acceptTransferModes(TransferMode.COPY);
+        }
+        else {
+            event.consume();
+        }
+    }
+
     public void helpPython (){
         WebView wv;
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/HelpJava.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/HelpPython.fxml"));
         fxmlLoader.setController(this);
         Stage root = new Stage();
         root.getIcons().add(new Image(GUI_Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
@@ -909,7 +943,6 @@ public class GUI_Controller implements CommunicatorListener {
         Scene dialogScene = new Scene(p, window.getWidth(), window.getHeight());
         wv = (WebView) p.getChildren().get(0);
         wv.getEngine().load("https://www.google.se/");
-//        wv.getEngine().loadContent("hellp!<br>new line?");
         root.setScene(dialogScene);
         root.show();
     }
@@ -936,8 +969,29 @@ public class GUI_Controller implements CommunicatorListener {
         Scene dialogScene = new Scene(p, window.getWidth(), window.getHeight());
         wv = (WebView) p.getChildren().get(0);
         wv.getEngine().load("https://docs.google.com/document/d/1W1MdmZLjabvS3eSahuWZayL1TGBceh2JC3JVVjaEntg/pub");
-//        wv.getEngine().loadContent("JavaAnnotationsUserGuideGettingstartedwithannotationsforthe�visualizationtool�.InMavenFirstweneedtosetupthemavendependenciesandcompilerplugin.CopypastethefollowingintoyourProject�pom.xml�.&#60;dependencies&#62;&#60;dependency&#62;&#60;groupId&#62;com.dennisjonsson&#60;/groupId&#62;&#60;artifactId&#62;annotation&#60;/artifactId&#62;&#60;version&#62;1.0-SNAPSHOT&#60;/version&#62;&#60;/dependency&#62;&#60;/dependencies&#62;&#60;build&#62;&#60;plugins&#62;&#60;plugin&#62;&#60;groupId&#62;org.apache.maven.plugins&#60;/groupId&#62;&#60;artifactId&#62;maven-compiler-plugin&#60;/artifactId&#62;&#60;version&#62;3.0&#60;/version&#62;&#60;configuration&#62;&#60;annotationProcessors&#62;&#60;annotationProcessor&#62;com.dennisjonsson.annotation.processor.VisualizeProcessor&#60;/annotationProcessor&#62;&#60;/annotationProcessors&#62;&#60;source&#62;1.8&#60;/source&#62;&#60;target&#62;1.8&#60;/target&#62;&#60;/configuration&#62;&#60;/plugin&#62;&#60;/plugins&#62;&#60;/build&#62;Now,tryandbuildingyourproject.Ifthebuildwassuccessfulyoucanstartusingtheannotationstovisualizeyourdatastructures.Therearefourannotationsyouneedtoapplytoyourcodeinordertoenableavisualization.@SourcePath(path=�path/to/your/project�)Markoneofyourclasseswiththisannotation,preferablyyoumainclass.Thepathshouldspecifytherootfolderofyourproject.@VisualClassAllclassesyouwanttoincludeinavisualizationprogramneedstobemarkedwiththisannotation.@Visualize(abstractType=�array�|�binarytree�|�adjacencymatrix�)Usethisannotationtomarkclassfieldsormethodparameteryouwanttovisualize.Provideyourabstractvisualizationtype,i.e.howyouwantyourdatastructuretobevisualized.");
         root.setScene(dialogScene);
         root.show();
+    }
+
+    /**
+     * Set enable/disable on buttons.
+     */
+    public void setButtons (){
+        //Model clear?
+        if (model.isHardCleared()) {
+            playPauseButton.setDisable(true);
+            forwardButton.setDisable(true);
+            backwardButton.setDisable(true);
+            restartButton.setDisable(true);
+            clearButton.setDisable(true);
+            return;
+        }
+        boolean forward = !model.tryStepForward();
+        playPauseButton.setDisable(forward);
+        forwardButton.setDisable(forward);
+        boolean backward = !model.tryStepBackward();
+        backwardButton.setDisable(backward);
+        restartButton.setDisable(backward);
+        clearButton.setDisable(false);
     }
 }
