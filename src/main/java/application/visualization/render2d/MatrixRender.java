@@ -3,6 +3,7 @@ package application.visualization.render2d;
 import java.util.ArrayList;
 import java.util.List;
 
+import application.gui.GUI_Controller;
 import application.gui.Main;
 import application.visualization.animation.Animation;
 import application.visualization.animation.LinearAnimation;
@@ -10,6 +11,12 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import wrapper.datastructures.Array;
@@ -54,8 +61,10 @@ public class MatrixRender extends Render {
         this.mo = mo;
         GraphicsContext context = local_canvas.getGraphicsContext2D();
 //      context.clearRect(0, 0, this.WIDTH, this.HEIGHT);
-        context.setFill(COLOR_BLACK);
-        context.fillText(struct.toString(), hspace, vspace + 10);
+        if(struct != null){
+            context.setFill(COLOR_BLACK);
+            context.fillText(struct.toString(), hspace, vspace + 10);            
+        }
 //        init();
     }
 
@@ -106,6 +115,7 @@ public class MatrixRender extends Render {
      * Create and render all elements.
      */
     private void init (){
+        this.setBackground(null);
         Array a = (Array) struct;
         size = a.getCapacity() == null ? new int[] {struct.getElements().size(), 1} : a.getCapacity();
         calculateSize();
@@ -123,8 +133,6 @@ public class MatrixRender extends Render {
         for (Element e : struct.getElements()) {
             drawElement(e, e.getColor());
         }
-        System.out.println("WIDTH = " + WIDTH);
-        System.out.println("HEIGHT = " + HEIGHT);
         drawIndicies();
         struct.repaintAll = false;
     }

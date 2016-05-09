@@ -132,6 +132,7 @@ public class KTreeRender extends Render {
      * Create and render all elements.
      */
     private void init (){
+        this.setBackground(null);
         calculateDepthAndBreadth(); //Calls calculatePrefSize()
         GraphicsContext context = local_canvas.getGraphicsContext2D();
         context.clearRect(0, 0, this.WIDTH, this.WIDTH);

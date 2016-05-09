@@ -40,6 +40,7 @@ public class BarchartRender_OLD extends Render {
         }
         barChart.getData().add(elemDataSeries);
         this.getChildren().add(barChart);
+        this.setBackground(null);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})

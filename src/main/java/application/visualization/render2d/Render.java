@@ -4,11 +4,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import application.gui.GUI_Controller;
 import application.visualization.Visualization;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -22,19 +29,19 @@ import wrapper.datastructures.Element;
 
 public abstract class Render extends StackPane {
 
-    private static final Border   BORDER_DRAGGABLE = new Border(new BorderStroke(Color.web("#123456"), BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(3), new Insets(-5)));
-
-    public static final double    DEFAULT_SIZE     = 40;
-    protected final double        node_width, node_height;
-    protected final double        hspace, vspace;
-    protected double              WIDTH, HEIGHT;
-    
-    protected final DataStructure struct;
-    protected final Canvas        local_canvas     = new Canvas();
-    
-    protected static final Canvas SHARED_ANIMATED  = Visualization.instance().ANIMATED;
-    protected static final Color  COLOR_WHITE      = Color.WHITE;
-    protected static final Color  COLOR_BLACK      = Color.BLACK;
+    private static final Background ARRAY_BACKGROUND  = getArrayBg();
+    private static final Background ORPHAN_BACKGROUND = getOrphanBg();
+    private static final Background TREE_BACKGROUND   = getTreeBg();
+    private static final Border     BORDER_DRAGGABLE  = new Border(new BorderStroke(Color.web("#123456"), BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(3), new Insets(-5)));
+    public static final double      DEFAULT_SIZE      = 40;
+    protected final double          node_width, node_height;
+    protected final double          hspace, vspace;
+    protected double                WIDTH, HEIGHT;
+    protected final DataStructure   struct;
+    protected final Canvas          local_canvas      = new Canvas();
+    protected static final Canvas   SHARED_ANIMATED   = Visualization.instance().ANIMATED;
+    protected static final Color    COLOR_WHITE       = Color.WHITE;
+    protected static final Color    COLOR_BLACK       = Color.BLACK;
 
     /**
      * 
@@ -60,12 +67,25 @@ public abstract class Render extends StackPane {
 //        this.setHeight(150);
 //        this.setSize(150, 150);
         setSize(150, 150);
+        this.setBackground(getStructBackground(struct));
         //Add stacked canvases
         this.getChildren().add(local_canvas);
         initDragAndZoom();
     }
-    
-    protected void setSize(double width, double height){
+
+    private static Background getStructBackground (DataStructure struct){
+        switch (struct.rawType) {
+            case array:
+                return ARRAY_BACKGROUND;
+            case tree:
+                return TREE_BACKGROUND;
+            case independentElement:
+                return ORPHAN_BACKGROUND;
+        }
+        return null;
+    }
+
+    protected void setSize (double width, double height){
         this.setMinSize(width, height);
         this.setPrefSize(width, height);
         this.setMaxSize(width, height);
@@ -396,5 +416,20 @@ public abstract class Render extends StackPane {
                 }
             }
         }
+    }
+
+    private static Background getArrayBg (){
+        return new Background(new BackgroundImage(new Image(GUI_Controller.class
+                .getResourceAsStream("/assets/array.png")), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
+    }
+
+    private static Background getOrphanBg (){
+        return new Background(new BackgroundImage(new Image(GUI_Controller.class
+                .getResourceAsStream("/assets/orphan2.png")), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
+    }
+
+    private static Background getTreeBg (){
+        return new Background(new BackgroundImage(new Image(GUI_Controller.class
+                .getResourceAsStream("/assets/tree.png")), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
     }
 }
