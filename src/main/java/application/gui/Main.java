@@ -282,7 +282,7 @@ public class Main extends Application {
 
         private void init (){
             StringBuilder sb = new StringBuilder();
-            sb.append("Welcome to " + Strings.PROJECT_NAME + ": " + Strings.PROJECT_SLOGAN + "\n");
+            sb.append("Welcome to " + Strings.PROJECT_NAME + ": User Testing 2016-05-09\n");
             sb.append("Version: " + Strings.VERSION_NUMBER + "\n\n");
             sb.append("AUTHORS: ");
             for (String s : Strings.DEVELOPER_NAMES) {
