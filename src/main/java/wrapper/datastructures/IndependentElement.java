@@ -1,6 +1,5 @@
 package wrapper.datastructures;
 
-import java.util.List;
 import java.util.Map;
 
 import application.assets.Strings;
@@ -9,11 +8,13 @@ import application.visualization.VisualType;
 import javafx.scene.paint.Color;
 import wrapper.Locator;
 import wrapper.Operation;
-import wrapper.operations.*;
+import wrapper.operations.OP_ReadWrite;
+import wrapper.operations.OP_Swap;
+import wrapper.operations.OperationType;
 
 /**
  * An independent variable holding a single element. May for example be used as a temporary variable when performing a
- * swap. IndependentElement extends AnnotatedVariable, and is notably both an Element and a DataStructure.
+ * swap.
  * 
  * @author Richard Sundqvist
  *

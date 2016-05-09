@@ -1,13 +1,11 @@
 package wrapper.datastructures;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import application.assets.Strings;
 import application.gui.Main;
 import application.visualization.VisualType;
-import javafx.collections.ObservableList;
 import wrapper.Locator;
 import wrapper.Operation;
 import wrapper.datastructures.RawType.AbstractType;
