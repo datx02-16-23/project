@@ -47,12 +47,13 @@ class OperationsLoader(NodeVisitor):
 
 def translate(rawType):
 	types = {
-		'list' : 'array'
+		'list' : 'array',
+		'array' : 'array'
 	}
 	if rawType in types:
 		return types[rawType]
 	else:
-		return rawType
+		return 'independentElement'
 
 class Variable(object):
 	def __init__(self,name,rawType,attributes=None,abstractType=None):
