@@ -108,7 +108,7 @@ public abstract class Render extends StackPane {
      * Order the Render to calculate it's size. Should be shadowed by inheriting types.
      */
     public void calculateSize (){
-        local_canvas.getGraphicsContext2D().clearRect(0, 0, local_canvas.getWidth(), local_canvas.getHeight());
+        local_canvas.getGraphicsContext2D().clearRect(0, 0, WIDTH, HEIGHT);
     }
 
     //Drag and Zoom

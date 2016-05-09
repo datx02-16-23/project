@@ -1,6 +1,7 @@
 package application.visualization.render2d;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import application.gui.Main;
@@ -52,6 +53,7 @@ public class MatrixRender extends Render {
     public MatrixRender (DataStructure struct, Order mo, double width, double height, double hspace, double vspace){
         super(struct, width, height, hspace, vspace);
         this.mo = mo;
+        init();
     }
 
     private static RenderSVF createOptionsSpinner (){
@@ -101,11 +103,14 @@ public class MatrixRender extends Render {
      * Create and render all elements.
      */
     private void init (){
+        if(struct == null){
+            return;
+        }
         Array a = (Array) struct;
         size = a.getCapacity() == null ? new int[] {struct.getElements().size(), 1} : a.getCapacity();
         calculateSize();
         GraphicsContext context = local_canvas.getGraphicsContext2D();
-        context.clearRect(0, 0, this.WIDTH, this.HEIGHT);
+//        context.clearRect(0, 0, this.WIDTH, this.HEIGHT);
         context.setFill(COLOR_BLACK);
         context.fillText(struct.toString(), hspace, vspace + 10);
         if (struct.getElements().isEmpty() == false) {
@@ -124,7 +129,6 @@ public class MatrixRender extends Render {
 
     @Override
     public void calculateSize (){
-        super.calculateSize();
         if (mo == Order.ROW_MAJOR) {
             WIDTH = PADDING * 2 + vspace + (vspace + node_width) * size[0];
             if (size.length == 2) {
@@ -146,6 +150,7 @@ public class MatrixRender extends Render {
         this.setMaxSize(WIDTH, HEIGHT);
         this.setMinSize(WIDTH, HEIGHT);
         this.setPrefSize(WIDTH, HEIGHT);
+        super.calculateSize();
     }
 
     private double getX (int column){
