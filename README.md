@@ -1,4 +1,4 @@
-# Mavser
+# VAD - Visualization of Annotated Data structures
 Very fancy algorithm and data structure visualization tool
 
 # Building
