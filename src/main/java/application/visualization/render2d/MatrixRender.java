@@ -205,7 +205,7 @@ public class MatrixRender extends Render {
                     context.fillText("[" + i + "]", getX(i), PADDING - 10);
                 }
             }
-            if (size[1] > 1) { //Row numbering
+            if (size.length == 2 && size[1] > 1) { //Row numbering
                 for (int i = 0; i < size[1]; i++) {
                     context.fillText("[" + i + "]", 5, PADDING + getY(i) - node_height / 2);
                 }
@@ -217,7 +217,7 @@ public class MatrixRender extends Render {
                     context.fillText("[" + i + "]", 5, getY(i) + 10);
                 }
             }
-            if (size[1] > 1) { //Column numbering
+            if (size.length == 2 && size[1] > 1) { //Column numbering
                 for (int i = 0; i < size[1]; i++) {
                     context.fillText("[" + i + "]", getX(i), PADDING - 10);
                 }
