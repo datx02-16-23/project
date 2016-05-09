@@ -6,7 +6,7 @@ import application.gui.Main;
 /**
  * Generates examples for a given array using the selected algorithm.<br>
  * <br>
- * <b>ACKNOWLEDGEMENTS:</b><br>
+ * <b>Sources:</b><br>
  * Insertion Sort: http://mathbits.com/MathBits/Java/arrays/InsertionSort.htm <br>
  * Bubble Sort: http://mathbits.com/MathBits/Java/arrays/Bubble.htm <br>
  * Merge Sort: http://algs4.cs.princeton.edu/14analysis/Mergesort.java.html <br>

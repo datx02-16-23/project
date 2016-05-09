@@ -6,6 +6,7 @@ import java.util.Map;
 
 import application.gui.Main;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import wrapper.Operation;
@@ -21,6 +22,7 @@ public class SourcePanel extends TabPane {
     private final HashMap<String, Integer>  nameTabMapping;
     private final Map<String, List<String>> sources;
     private boolean                         initTabs = true;
+    private double                          divPos   = 0;
 
     /**
      * Create a new SourceViewer.
@@ -64,6 +66,9 @@ public class SourcePanel extends TabPane {
     public void clear (){
         sources.clear();
         getTabs().clear();
+        SplitPane sp = (SplitPane) this.getParent().getParent().getParent();
+        divPos = sp.getDividerPositions()[0];
+        sp.setDividerPosition(0, 0);
     }
 
     /**
@@ -85,6 +90,8 @@ public class SourcePanel extends TabPane {
         //Add children
         newTab.setContent(linesView);
         this.getTabs().add(newTab);
+        SplitPane sp = (SplitPane) this.getParent().getParent().getParent();
+        sp.setDividerPosition(0, divPos);
     }
 
     /**

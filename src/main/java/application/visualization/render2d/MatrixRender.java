@@ -1,7 +1,6 @@
 package application.visualization.render2d;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import application.gui.Main;
@@ -13,10 +12,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import wrapper.datastructures.DataStructure;
-import wrapper.datastructures.Element;
 import wrapper.datastructures.Array;
 import wrapper.datastructures.Array.ArrayElement;
+import wrapper.datastructures.DataStructure;
+import wrapper.datastructures.Element;
 
 public class MatrixRender extends Render {
 
