@@ -52,6 +52,10 @@ public class MatrixRender extends Render {
     public MatrixRender (DataStructure struct, Order mo, double width, double height, double hspace, double vspace){
         super(struct, width, height, hspace, vspace);
         this.mo = mo;
+        GraphicsContext context = local_canvas.getGraphicsContext2D();
+//      context.clearRect(0, 0, this.WIDTH, this.HEIGHT);
+        context.setFill(COLOR_BLACK);
+        context.fillText(struct.toString(), hspace, vspace + 10);
 //        init();
     }
 
