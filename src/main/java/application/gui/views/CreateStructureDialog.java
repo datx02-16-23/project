@@ -176,12 +176,12 @@ public class CreateStructureDialog {
      * Show the DataStructure creation dialog.
      * 
      * @param identifier The name of the new structure.
-     * @return A new DataStructure.
+     * @return A new DataStructure. Returns {@code null} if the user cancelled.
      */
     public DataStructure show (String identifier){
         this.identifier = identifier;
         struct = null;
-        name.setText("Creates Variable: " + identifier);
+        name.setText("Create Variable: \"" + identifier +"\"");
         root.showAndWait();
         return struct;
     }
@@ -203,6 +203,6 @@ public class CreateStructureDialog {
     }
 
     public void ignoreStructure (){
-        //TODO: manana manana (no funny characters!)
+        //TODO: implement
     }
 }

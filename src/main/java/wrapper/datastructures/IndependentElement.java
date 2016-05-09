@@ -59,11 +59,6 @@ public class IndependentElement extends Array {
         elements.add(init);
     }
 
-    @Override
-    public List<Element> getElements (){
-        return elements;
-    }
-
     /**
      * Get the value held by the element contained in this IndependentElement.
      * 

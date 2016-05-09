@@ -6,6 +6,9 @@ import java.util.Map;
 
 import application.assets.Strings;
 import application.visualization.VisualType;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import wrapper.AnnotatedVariable;
 import wrapper.Locator;
 import wrapper.Operation;
@@ -21,29 +24,56 @@ public abstract class DataStructure extends AnnotatedVariable {
     /**
      * Version number for this class.
      */
-    private static final long               serialVersionUID = Strings.VERSION_NUMBER;
-
+    private static final long                         serialVersionUID = Strings.VERSION_NUMBER;
     /**
      * The elements held by this DataStructure.
      */
-    protected transient final List<Element> elements = new ArrayList<Element>();
+    protected transient final ObservableList<Element> elements         = FXCollections.observableArrayList();
     /**
-     * Elements which have been modified and should be drawn with their preferred color.
+     * Elements which have been modified and should be drawn with their preferred colour.
      */
-    protected transient final List<Element> modifiedElements = new ArrayList<Element>();
+    protected transient final ObservableList<Element> modifiedElements = FXCollections.observableArrayList();
     /**
-     * Elements which are to be reset after being drawn with their preferred color.
+     * Elements which are to be reset after being drawn with their preferred colour.
      */
-    protected transient final List<Element> resetElements    = new ArrayList<Element>();
+    protected transient final ObservableList<Element> resetElements    = FXCollections.observableArrayList();
     /**
      * Elements which should not be drawn or should be masked.
      */
-    protected transient final List<Element> inactiveElements = new ArrayList<Element>();
+    protected transient final ObservableList<Element> inactiveElements = FXCollections.observableArrayList();
+    protected transient final SimpleIntegerProperty   numReads         = new SimpleIntegerProperty(0);
+    
+    /**
+     * Returns the SimpleIntegerProperty counting number of Read operations performed on this DataStructure.
+     * @return A SimpleIntegerProperty.
+     */
+    public SimpleIntegerProperty getNumReads (){
+        return numReads;
+    }
+
+    /**
+     * Returns the SimpleIntegerProperty counting number of Write operations performed on this DataStructure.
+     * @return A SimpleIntegerProperty.
+     */
+    public SimpleIntegerProperty getNumWrites (){
+        return numWrites;
+    }
+
+    /**
+     * Returns the SimpleIntegerProperty counting number of Swap operations performed on this DataStructure.
+     * @return A SimpleIntegerProperty.
+     */
+    public SimpleIntegerProperty getNumSwaps (){
+        return numSwaps;
+    }
+
+    protected transient final SimpleIntegerProperty   numWrites        = new SimpleIntegerProperty(0);
+    protected transient final SimpleIntegerProperty   numSwaps         = new SimpleIntegerProperty(0);
     /**
      * Number of children in KTree, row/vs column major etc.
      */
-    public transient int                    visualOption    = 2;
-    public transient boolean                repaintAll       = false;
+    public transient int                              visualOption     = 2;
+    public transient boolean                          repaintAll       = false;
 
     public DataStructure (String identifier, RawType rawType, RawType.AbstractType abstractType, VisualType visual, Map<String, Object> attributes){
         super(identifier, rawType, abstractType, visual, attributes);
@@ -54,7 +84,9 @@ public abstract class DataStructure extends AnnotatedVariable {
      * 
      * @return The list of elements held by this DataStructure.
      */
-    public abstract List<Element> getElements ();
+    public ObservableList<Element> getElements (){
+        return elements;
+    }
 
     /**
      * Clear all set values in the structure
@@ -79,8 +111,8 @@ public abstract class DataStructure extends AnnotatedVariable {
     }
 
     /**
-     * Resolves the VisualType for this DataStructure. Will filter {@code visual, abstractType} and {@code rawType},
-     * in that order. This method never returns null.
+     * Resolves the VisualType for this DataStructure. Will filter {@code visual, abstractType} and {@code rawType}, in
+     * that order. This method never returns null.
      * 
      * @return The Visual to use for this DataStructure.
      */
@@ -93,7 +125,7 @@ public abstract class DataStructure extends AnnotatedVariable {
      * 
      * @return A list of elements which have been modified.
      */
-    public List<Element> getModifiedElements (){
+    public ObservableList<Element> getModifiedElements (){
         return modifiedElements;
     }
 
@@ -103,7 +135,7 @@ public abstract class DataStructure extends AnnotatedVariable {
      * 
      * @return A list of elements whose colour should be reset.
      */
-    public List<Element> getResetElements (){
+    public ObservableList<Element> getResetElements (){
         return resetElements;
     }
 
@@ -116,7 +148,7 @@ public abstract class DataStructure extends AnnotatedVariable {
         inactiveElements.clear();
     }
 
-    public List<Element> getInactiveElements (){
+    public ObservableList<Element> getInactiveElements (){
         return inactiveElements;
     }
 

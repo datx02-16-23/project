@@ -36,8 +36,9 @@ public class Visualization extends StackPane {
     private final Model                   model;
     private static Visualization          INSTANCE;
     private final StackPane               RENDERS               = new StackPane();
-    public final Canvas                   ANIMATED              = new Canvas();
+    private final Overlay                 overlay;
     private final HashMap<String, Render> struct_render_mapping = new HashMap<String, Render>();
+    public final Canvas                   ANIMATED              = new Canvas();
 
     /**
      * Returns the static instance of Visualization.
@@ -67,17 +68,21 @@ public class Visualization extends StackPane {
         this.getChildren().add(RENDERS);
         this.getChildren().add(ANIMATED);
         this.getChildren().add(hintPane);
+        overlay = new Overlay();
+//        this.getChildren().add(overlay.getNode());
     }
 
     public void clear (){
         struct_render_mapping.clear();
         RENDERS.getChildren().clear();
         ANIMATED.getGraphicsContext2D().clearRect(0, 0, this.getWidth(), this.getHeight());
+//        overlay.clear();
         hintPane.setVisible(true);
     }
 
     public void clearAndCreateVisuals (){
         clear();
+        overlay.clear();
         for (DataStructure struct : model.getStructures().values()) {
             Render render = resolveRender(struct);
             if (struct.rawType == RawType.independentElement) {
@@ -87,8 +92,10 @@ public class Visualization extends StackPane {
             else {
                 RENDERS.getChildren().add(render);
             }
+//            overlay.addNode(new ArrayInfoPane((Array) struct));
             struct_render_mapping.put(struct.identifier, render);
         }
+//        overlay.expandAll();
         hintPane.setVisible(RENDERS.getChildren().isEmpty());
     }
 
@@ -116,6 +123,7 @@ public class Visualization extends StackPane {
 
     /**
      * TODO: remove this method
+     * 
      * @param vt
      * @return
      */
@@ -276,6 +284,7 @@ public class Visualization extends StackPane {
 
     /**
      * Hint pane for the visualiser window.
+     * 
      * @author Richard Sundqvist
      *
      */
@@ -283,7 +292,8 @@ public class Visualization extends StackPane {
 
         public HintPane (){
             Image image = new Image(GUI_Controller.class.getResourceAsStream("/assets/upload.png"));
-            this.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false))));
+            this.setBackground(
+                    new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false))));
             this.setVisible(true);
         }
     }

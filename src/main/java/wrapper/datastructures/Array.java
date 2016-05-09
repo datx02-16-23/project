@@ -7,6 +7,7 @@ import java.util.Map;
 import application.assets.Strings;
 import application.gui.Main;
 import application.visualization.VisualType;
+import javafx.collections.ObservableList;
 import wrapper.Locator;
 import wrapper.Operation;
 import wrapper.datastructures.RawType.AbstractType;
@@ -34,33 +35,34 @@ public class Array extends DataStructure {
      * @param identifier The identifier for this Array.
      * @param abstractType The abstract type for this Array.
      * @param visual The preferred visual for this Array.
+     * @param attributes The attributes for this Array.
      */
     public Array (String identifier, RawType.AbstractType abstractType, VisualType visual, Map<String, Object> attributes){
         super(identifier, RawType.array, abstractType, visual, attributes);
-        capacity = DataStructureParser.parseSize(this);
+        capacity = getCapacity();
     }
 
+    /**
+     * Construct a new Array with the given parameters. This constructor exists for use by the IndependentElement
+     * structure.
+     * 
+     * @param identifier The identifier for this Array.
+     * @param rawType The rawType for this Array.
+     * @param abstractType The abstract type for this Array.
+     * @param visual The preferred visual for this Array.
+     * @param attributes The attributes for this Array.
+     */
     protected Array (String identifier, RawType rawType, AbstractType abstractType, VisualType visual, Map<String, Object> attributes){
         super(identifier, rawType, abstractType, visual, attributes);
     }
 
     /**
-     * Returns the declared Capacity of this Array.
+     * Returns the declared capacity of this Array.
      * 
-     * @return The declared Capacity of this Array.
+     * @return The declared capacity of this Array.
      */
     public int[] getCapacity (){
         return DataStructureParser.parseSize(this);
-    }
-
-    /**
-     * Returns the list of elements held by this Array. Used when drawing.
-     * 
-     * @return The list of elements held by this Array.
-     */
-    @Override
-    public List<Element> getElements (){
-        return elements;
     }
 
     private void init (OP_Write init){
@@ -70,7 +72,6 @@ public class Array extends DataStructure {
         repaintAll = true;
         elements.clear();
         double[] init_values = init.getValue();
-        capacity = null;
         if (capacity == null) { //Fall back to size declared in header
             capacity = getCapacity();
         }
@@ -146,6 +147,9 @@ public class Array extends DataStructure {
             var2Element.numericValue = op.getValue()[1];
             var2Element.color = OperationType.swap.color;
             modifiedElements.add(var2Element);
+        }
+        if (var1Element != null || var2Element != null) {
+            numSwaps.set(numSwaps.get() + 1);
         }
     }
 

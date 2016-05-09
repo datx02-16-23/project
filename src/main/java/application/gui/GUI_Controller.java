@@ -170,7 +170,6 @@ public class GUI_Controller implements CommunicatorListener {
         visualization.clear();
         sourceViewer.clear();
         operationPanel.clear();
-        visualMenu.getItems().clear();
         setButtons();
     }
 
@@ -230,8 +229,7 @@ public class GUI_Controller implements CommunicatorListener {
      * @return The value of stepModelForward().
      */
     public boolean stepForwardButtonClicked (){
-        boolean ans = stepModelForward();
-        return ans;
+        return stepModelForward();
     }
 
     /**
@@ -303,12 +301,11 @@ public class GUI_Controller implements CommunicatorListener {
     }
 
     public void openInterpreterView (){
-        stopAutoPlay(); // Prevent concurrent modification exception.
+        stopAutoPlay();
         if (interpreterView.show(model.getOperations())) {
             model.reset();
             visualization.clearAndCreateVisuals();
             operationPanel.getItems().setAll(model.getOperations());
-//            operationPanel.update(0, true);
             updatePanels();
         }
     }
@@ -317,7 +314,7 @@ public class GUI_Controller implements CommunicatorListener {
         interpreterView.fast(model.getOperations());
         updatePanels();
         visualization.clearAndCreateVisuals();
-        operationPanel.getItems().addAll(lsm.getOperations());
+        operationPanel.getItems().setAll(lsm.getOperations());
     }
 
     /**
@@ -573,7 +570,7 @@ public class GUI_Controller implements CommunicatorListener {
         }
         return true;
     }
-
+    
     private void loadVisualMenu (){
         for (DataStructure struct : model.getStructures().values()) {
             MenuItem mi = new MenuItem();
@@ -683,7 +680,6 @@ public class GUI_Controller implements CommunicatorListener {
         forwardButton = (Button) namespace.get("forwardButton");
         clearButton = (Button) namespace.get("clearButton");
         speedButton = (Button) namespace.get("speedButton");
-//        speedMenuItem = (MenuItem) namespace.get("speedMenuItem");
         streamBehaviourMenuButton = (MenuButton) namespace.get("streamBehaviourMenuButton");
         visualMenu = (Menu) namespace.get("visualMenu");
         visualMenu.setDisable(true);
