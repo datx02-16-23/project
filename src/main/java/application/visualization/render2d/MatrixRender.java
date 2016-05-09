@@ -53,7 +53,7 @@ public class MatrixRender extends Render {
     public MatrixRender (DataStructure struct, Order mo, double width, double height, double hspace, double vspace){
         super(struct, width, height, hspace, vspace);
         this.mo = mo;
-        init();
+//        init();
     }
 
     private static RenderSVF createOptionsSpinner (){
@@ -103,9 +103,6 @@ public class MatrixRender extends Render {
      * Create and render all elements.
      */
     private void init (){
-        if(struct == null){
-            return;
-        }
         Array a = (Array) struct;
         size = a.getCapacity() == null ? new int[] {struct.getElements().size(), 1} : a.getCapacity();
         calculateSize();
@@ -123,6 +120,8 @@ public class MatrixRender extends Render {
         for (Element e : struct.getElements()) {
             drawElement(e, e.getColor());
         }
+        System.out.println("WIDTH = " + WIDTH);
+        System.out.println("HEIGHT = " + HEIGHT);
         drawIndicies();
         struct.repaintAll = false;
     }
@@ -147,9 +146,12 @@ public class MatrixRender extends Render {
                 WIDTH = PADDING * 2 + vspace + (vspace + node_width) * 1;
             }
         }
-        this.setMaxSize(WIDTH, HEIGHT);
-        this.setMinSize(WIDTH, HEIGHT);
-        this.setPrefSize(WIDTH, HEIGHT);
+//        this.setMaxSize(WIDTH, HEIGHT);
+//        this.setMinSize(WIDTH, HEIGHT);
+//        this.setPrefSize(WIDTH, HEIGHT);
+        setSize(WIDTH, HEIGHT);
+//        System.out.println("this: w = " + this.getWidth() + ", h = " + this.getHeight());
+//        System.out.println("local_canvas: w = " + local_canvas.getWidth() + ", h = " + local_canvas.getHeight());
         super.calculateSize();
     }
 

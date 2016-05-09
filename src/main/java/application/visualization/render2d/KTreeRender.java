@@ -119,12 +119,13 @@ public class KTreeRender extends Render {
 
     @Override
     public void calculateSize (){
-        super.calculateSize();
         this.WIDTH = totBreadth * (node_width + hspace) + 25;
         this.HEIGHT = totDepth * (node_height + vspace) * 2 + vspace; //Depth doesnt include node + margain above.
-        this.setMinSize(WIDTH, HEIGHT);
-        this.setPrefSize(WIDTH, HEIGHT);
-        this.setMaxSize(WIDTH, HEIGHT);
+//        this.setMinSize(WIDTH, HEIGHT);
+//        this.setPrefSize(WIDTH, HEIGHT);
+//        this.setMaxSize(WIDTH, HEIGHT);
+        setSize(WIDTH, HEIGHT);
+        super.calculateSize();
     }
 
     /**

@@ -53,12 +53,24 @@ public abstract class Render extends StackPane {
         this.vspace = vspace;
         local_canvas.widthProperty().bind(this.widthProperty());
         local_canvas.heightProperty().bind(this.heightProperty());
-        this.setMinSize(150, 150);
-        this.setPrefSize(150, 150);
-        this.setMaxSize(150, 150);
+//        this.setMinSize(150, 150);
+//        this.setPrefSize(150, 150);
+//        this.setMaxSize(150, 150);
+//        this.setWidth(150);
+//        this.setHeight(150);
+//        this.setSize(150, 150);
+        setSize(150, 150);
         //Add stacked canvases
         this.getChildren().add(local_canvas);
         initDragAndZoom();
+    }
+    
+    protected void setSize(double width, double height){
+        this.setMinSize(width, height);
+        this.setPrefSize(width, height);
+        this.setMaxSize(width, height);
+        this.setWidth(width);
+        this.setHeight(height);
     }
 
     /**
