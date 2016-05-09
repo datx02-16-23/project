@@ -49,15 +49,9 @@ public abstract class Examples {
                 Main.console.err("No such algorithm: " + algo);
                 break;
         }
-        // om du vill printa här
         print();
         return json;
     }
-
-    /*
-     denna måste vara definierad i någon annoterad klass i programmet 
-     och kallas när du är färdig
-    */
 //    @Print(path="")
     public static void print(){}
 
