@@ -75,7 +75,7 @@ public class Visualization extends StackPane {
     public void clear (){
         struct_render_mapping.clear();
         RENDERS.getChildren().clear();
-        ANIMATED.getGraphicsContext2D().clearRect(0, 0, this.getWidth(), this.getHeight());
+        ANIMATED.getGraphicsContext2D().clearRect(0, 0, ANIMATED.getWidth(), ANIMATED.getHeight());
 //        overlay.clear();
         hintPane.setVisible(true);
     }
@@ -85,13 +85,7 @@ public class Visualization extends StackPane {
         overlay.clear();
         for (DataStructure struct : model.getStructures().values()) {
             Render render = resolveRender(struct);
-            if (struct.rawType == RawType.independentElement) {
-                render = new MatrixRender(struct);
-                RENDERS.getChildren().add(render);
-            }
-            else {
-                RENDERS.getChildren().add(render);
-            }
+            RENDERS.getChildren().add(render);
 //            overlay.addNode(new ArrayInfoPane((Array) struct));
             struct_render_mapping.put(struct.identifier, render);
         }

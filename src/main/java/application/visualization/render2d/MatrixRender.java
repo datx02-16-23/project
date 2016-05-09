@@ -127,11 +127,21 @@ public class MatrixRender extends Render {
         super.calculateSize();
         if (mo == Order.ROW_MAJOR) {
             WIDTH = PADDING * 2 + vspace + (vspace + node_width) * size[0];
-            HEIGHT = PADDING * 2 + hspace + (hspace + node_height) * size[1];
+            if (size.length == 2) {
+                HEIGHT = PADDING * 2 + hspace + (hspace + node_height) * size[1];
+            }
+            else {
+                HEIGHT = PADDING * 2 + hspace + (hspace + node_height) * 1;
+            }
         }
         else {
             HEIGHT = PADDING * 2 + hspace + (hspace + node_height) * size[0];
-            WIDTH = PADDING * 2 + vspace + (vspace + node_width) * size[1];
+            if (size.length == 2) {
+                WIDTH = PADDING * 2 + vspace + (vspace + node_width) * size[1];
+            }
+            else {
+                WIDTH = PADDING * 2 + vspace + (vspace + node_width) * 1;
+            }
         }
         this.setMaxSize(WIDTH, HEIGHT);
         this.setMinSize(WIDTH, HEIGHT);
