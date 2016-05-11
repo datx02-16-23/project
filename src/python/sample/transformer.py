@@ -145,6 +145,7 @@ class OperationTransformer(NodeTransformer):
 	def visit_Delete(self,node): return node
 	def visit_DictComp(self,node): return node
 	def visit_ListComp(self,node): return node	
+	def visit_IfExp(self,node): return node
 
 class WriteTransformer(OperationTransformer):
 	def __init__(self,name):

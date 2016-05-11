@@ -19,9 +19,9 @@ if __name__ == '__main__':
 	#	abstractType=None
 	settings = annotations.create_settings(
 		abspath('./test'),
-		['/main2.py'],
-		sample.annotations.Variable('twodimlist','list',attributes={'size' : [3,3]}),
-		'/main2.py',
+		['/main.py'],
+		sample.annotations.Variable('graph','list',attributes={'size' : [3,5]}),
+		'/main.py',
 		abspath('./test')
 	)
 	annotations.run(settings)
