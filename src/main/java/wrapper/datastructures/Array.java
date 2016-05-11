@@ -90,7 +90,7 @@ public class Array extends DataStructure {
         }
         for (linearIndex++; linearIndex < linearTotal; linearIndex++) {
             ArrayElement ae = new ArrayElement(0.0, getIndexInNDimensions(linearIndex, capacity));
-            this.modifiedElements.add(ae);
+            modifiedElements.add(ae);
             ae.color = OperationType.write.color;
             putElement(ae);
         }
@@ -100,6 +100,7 @@ public class Array extends DataStructure {
     @Override
     public void clear (){
         elements.clear();
+        clearElementLists();
         min = Integer.MAX_VALUE;
         max = Integer.MIN_VALUE;
     }
@@ -116,6 +117,7 @@ public class Array extends DataStructure {
                 break;
             case remove:
                 remove((OP_Remove) op);
+                break;
             default:
                 Main.console.err("OperationType \"" + op.operation + "\" not applicable to " + getClass().getSimpleName());
                 break;
@@ -123,11 +125,15 @@ public class Array extends DataStructure {
     }
 
     private void remove (OP_Remove op){
-        Locator target = op.getTarget();
-        Element e = this.getElement(target);
+        Element e = this.getElement(op.getTarget());
         if (e != null) {
-            inactiveElements.add(e);
-            e.setColor(OperationType.remove.color);
+        	if(inactiveElements.remove(e)){
+        		resetElements.add(e); //Reactive element if it were already inactive.
+        	} else {
+        		inactiveElements.add(e);
+        		e.setColor(OperationType.remove.color);
+        		
+        	}
         }
     }
 
@@ -139,12 +145,14 @@ public class Array extends DataStructure {
             var1Element.numericValue = op.getValue()[0];
             var1Element.color = OperationType.swap.color;
             modifiedElements.add(var1Element);
+            inactiveElements.remove(var1Element);
         }
         ArrayElement var2Element = this.getElement(var2);
         if (var2Element != null) {
             var2Element.numericValue = op.getValue()[1];
             var2Element.color = OperationType.swap.color;
             modifiedElements.add(var2Element);
+            inactiveElements.remove(var2Element);
         }
         if (var1Element != null || var2Element != null) {
             numSwaps.set(numSwaps.get() + 1);
@@ -165,6 +173,7 @@ public class Array extends DataStructure {
                 targetElement.numericValue = op.getValue()[0];
                 targetElement.color = OperationType.write.color;
                 modifiedElements.add(targetElement);
+                inactiveElements.remove(targetElement);
             }
             else {
                 Main.console.err("WARNING: Null value in: " + op);
@@ -174,6 +183,7 @@ public class Array extends DataStructure {
         else if (sourceElement != null) {
             sourceElement.color = OperationType.read.color;
             modifiedElements.add(sourceElement);
+            inactiveElements.remove(sourceElement);
         }
         else if (op.getSource() != null && op.getSource().identifier.equals(super.identifier)) {
             ArrayElement ae = new ArrayElement(0, op.getSource().index != null ? op.getSource().index : new int[] {elements.size()});

@@ -11,7 +11,7 @@ public class OP_Remove extends OP_ReadWrite {
      * Create an empty Remove operation.
      */
     public OP_Remove (){
-        super(OperationType.read);
+        super(OperationType.remove);
     }
 
 

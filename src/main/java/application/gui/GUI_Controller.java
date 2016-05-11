@@ -219,7 +219,7 @@ public class GUI_Controller implements CommunicatorListener {
         stopAutoPlay();
         model.reset();
         updatePanels();
-        visualization.render(null);
+        visualization.clearAndCreateVisuals();
         setButtons();
     }
 
@@ -257,6 +257,7 @@ public class GUI_Controller implements CommunicatorListener {
     public void stepBackwardButtonClicked (){
         stopAutoPlay();
         if(model.stepBackward()){
+        	visualization.clearAndCreateVisuals();
             visualization.render(model.getLastOp());
             setButtons();
             updatePanels();            
@@ -343,6 +344,7 @@ public class GUI_Controller implements CommunicatorListener {
      */
     public void goToStep (int index){
         model.goToStep(index);
+        visualization.clearAndCreateVisuals();
         visualization.render(model.getLastOp());
         operationPanel.update(model.getIndex(), false);
     }

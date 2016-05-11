@@ -138,7 +138,7 @@ public abstract class DataStructure extends AnnotatedVariable {
     }
 
     /**
-     * Clear {@code modifierElements()} and {@code resetElements()} lists.
+     * Clear {@code modifierElements()}, {@code resetElements()} and {@code inactiveElements()}lists.
      */
     public void clearElementLists (){
         modifiedElements.clear();
@@ -146,6 +146,10 @@ public abstract class DataStructure extends AnnotatedVariable {
         inactiveElements.clear();
     }
 
+    /**
+     * Returns the list of inactive elements.
+     * @return The list of inactive elements.
+     */
     public ObservableList<Element> getInactiveElements (){
         return inactiveElements;
     }
