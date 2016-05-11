@@ -134,7 +134,7 @@ public class Array extends DataStructure {
 			Main.console.err("OperationType \"" + op.operation + "\" not applicable to " + getClass().getSimpleName());
 			break;
 		}
-		inactive = false;
+		super.setActive(true);
 	}
 
 	private void swap(OP_Swap op) {

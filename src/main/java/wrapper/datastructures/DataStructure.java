@@ -49,7 +49,7 @@ public abstract class DataStructure extends AnnotatedVariable {
 	 * If True, this entire DataStructure is considered inactive (as opposed to
 	 * just a single element).
 	 */
-	protected transient boolean inactive = false;
+	private transient boolean active = true;
 	/**
 	 * The current background color for elements with no preference.
 	 */
@@ -254,9 +254,9 @@ public abstract class DataStructure extends AnnotatedVariable {
 	 * Toggle the active setting of this DataStructure.
 	 */
 	protected void toggleActive() {
-		inactive = !inactive;
+		active = !active;
 		repaintAll = true;
-		if (inactive) {
+		if (active == false) {
 			backgroundColor = OperationType.remove.color;
 		} else {
 			backgroundColor = baseColor;
@@ -268,7 +268,17 @@ public abstract class DataStructure extends AnnotatedVariable {
 	 * @return True if this structure is active.
 	 */
 	public boolean isActive(){
-		return !inactive;
+		return active;
+	}
+	
+	/**
+	 * Set the active status of this DataStructure.
+	 * @param value The new active status of this DataStructure.
+	 */
+	public void setActive(boolean value){
+		if(value != active){
+			toggleActive();
+		}
 	}
 
 	/**

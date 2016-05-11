@@ -106,7 +106,7 @@ public class IndependentElement extends Array {
 			break;
 		}
 		repaintAll = true;
-		inactive = false;
+		super.setActive(true);
 	}
 
 	private void swap(OP_Swap op) {
