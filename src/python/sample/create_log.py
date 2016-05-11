@@ -73,12 +73,16 @@ def is_init(operation):
 				'index' not in operation['operationBody']['source'])
 	else:
 		return 'index' not in operation['operationBody']['target']
+
 class LogPostProcessor(object):
 	def __init__(self,output_file):
-		output_read = open(output_file,'r')
-		output_buffer = output_read.read()
-		output_read.close()
-		self.output = format_log(output_buffer)
+		with open(output_file,'r') as output_read:
+			output_buffer = output_read.read()
+			self.output = format_log(output_buffer)
+		# output_read = open(output_file,'r')
+		# output_buffer = output_read.read()
+		# output_read.close()
+		# self.output = format_log(output_buffer)
 
 	def process(self,variables):
 		self.names = [variable.name for variable in variables]
@@ -92,8 +96,8 @@ class LogPostProcessor(object):
 				target = operation['operationBody']['target']['identifier']
 				if ('source' in operation['operationBody'] and
 					operation['operationBody']['source']['identifier'] in self.names and
-					target not in aliases and 
+					# target not in aliases and 
 					target not in self.names):
 					aliases[target] = operation['operationBody']['source']['identifier']
-					self.names.append(target)
+					# self.names.append(target)
 			alias(operation,aliases)

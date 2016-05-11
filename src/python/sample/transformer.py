@@ -1,6 +1,3 @@
-# from ast import Subscript,Tuple,List, Num,Str,Name, Call,Assign, Store,Load
-# from ast import dump,fix_missing_locations,copy_location,parse,NodeTransformer
-# from ast import Add
 from ast import *
 from codegen import to_source as ts
 from printnode import ast_visit as printnode

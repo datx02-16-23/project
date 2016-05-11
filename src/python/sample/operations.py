@@ -119,7 +119,6 @@ def read(statement,begin_line,end_line):
         put(operation)
     return value
 
-# Implement for json
 def link(*params):
     def wrap(func):
         def call(*args):
