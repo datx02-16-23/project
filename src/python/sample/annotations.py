@@ -148,9 +148,10 @@ def run(settings):
 	settings['transformers'] = [PassTransformer('link'), WriteTransformer('write'), ReadTransformer('read')]
 	settings['v_env'] = '%s/visualize/' % currrent_path
 	settings['main'] = settings['v_env'] + path.basename(settings['main'])
-
-	print "Creating temporary visualization environment & adding to sys.path at:\n%s" % settings['v_env']
-	sys.path.insert(0,settings['v_env'])
+	
+	if settings['v_env'] not in sys.path:
+		print "Creating temporary visualization environment & adding to sys.path at:\n%s" % settings['v_env']
+		sys.path.insert(0,settings['v_env'])
 	create_env(settings)
 	
 	print "Creating Header..."
