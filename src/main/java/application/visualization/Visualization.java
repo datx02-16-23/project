@@ -189,7 +189,7 @@ public class Visualization extends StackPane {
 	}
 
 	private void animateRemove(OP_Remove remove) {
-		
+
 	}
 
 	public void animateReadWrite(OP_ReadWrite rw) {

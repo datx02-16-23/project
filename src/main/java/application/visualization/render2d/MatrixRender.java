@@ -120,7 +120,7 @@ public class MatrixRender extends Render {
 				} else if (modifiedElements.contains(e)) {
 					drawElement(e, e.getColor());
 				} else if (resetElements.contains(e)) {
-					drawElement(e, Color.WHITE);
+					drawElement(e, struct.getDefaultElementBackground());
 				}
 			}
 		}
@@ -147,9 +147,16 @@ public class MatrixRender extends Render {
 						+ " dimensions. MatrixRender supports only one or two dimensions.");
 			}
 		}
-		for (Element e : struct.getElements()) {
-			drawElement(e, e.getColor());
+		if(struct.isActive()){
+			for (Element e : struct.getElements()) {
+				drawElement(e, e.getColor());
+			}
+		} else {
+			for (Element e : struct.getElements()) {
+				drawInactiveElement(e);
+			}
 		}
+
 		drawIndicies();
 		struct.repaintAll = false;
 	}
