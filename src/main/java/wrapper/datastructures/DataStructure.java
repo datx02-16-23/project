@@ -132,7 +132,7 @@ public abstract class DataStructure extends AnnotatedVariable {
 	 * Apply an operation to the structure
 	 * 
 	 * @param op
-	 *            to be applied
+	 *            The operation to be apply.
 	 */
 	public abstract void applyOperation(Operation op);
 

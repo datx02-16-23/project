@@ -129,11 +129,12 @@ public class Array extends DataStructure {
 			break;
 		case remove:
 			remove((OP_Remove) op);
-			break;
+			return;
 		default:
 			Main.console.err("OperationType \"" + op.operation + "\" not applicable to " + getClass().getSimpleName());
 			break;
 		}
+		inactive = false;
 	}
 
 	private void swap(OP_Swap op) {

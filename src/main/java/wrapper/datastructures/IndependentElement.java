@@ -9,6 +9,7 @@ import javafx.scene.paint.Color;
 import wrapper.Locator;
 import wrapper.Operation;
 import wrapper.operations.OP_ReadWrite;
+import wrapper.operations.OP_Remove;
 import wrapper.operations.OP_Swap;
 import wrapper.operations.OperationType;
 
@@ -97,11 +98,15 @@ public class IndependentElement extends Array {
 		case swap:
 			swap((OP_Swap) op);
 			break;
+		case remove:
+			remove((OP_Remove) op);
+			return;
 		default:
 			Main.console.err("OperationType \"" + op.operation + "\" not applicable to " + getClass().getSimpleName());
 			break;
 		}
 		repaintAll = true;
+		inactive = false;
 	}
 
 	private void swap(OP_Swap op) {
