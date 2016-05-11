@@ -1,1 +1,0 @@
-{"body": [], "header": {"sources": {"main2.py": ["", "a = [1,2,3]"]}, "version": 2.0, "annotatedVariables": {"twodimlist": {"attributes": {"size": [3, 3]}, "identifier": "twodimlist", "rawType": "array", "abstractType": "array"}}}}
