@@ -27,7 +27,7 @@ import wrapper.operations.OperationType;
 
 public class MatrixRender extends Render {
 
-	private static final RenderSVF rsvf = createOptionsSpinner();
+	private static final RenderSVF RSVF = createOptionsSpinner();
 	public static final double DEFAULT_SIZE = 40;
 	private final Order mo;
 	private int[] size;
@@ -74,12 +74,10 @@ public class MatrixRender extends Render {
 		super(struct, width, height, hspace, vspace);
 		this.mo = mo;
 		GraphicsContext context = local_canvas.getGraphicsContext2D();
-		// context.clearRect(0, 0, this.WIDTH, this.HEIGHT);
 		if (struct != null) {
 			context.setFill(COLOR_BLACK);
 			context.fillText(struct.toString(), hspace, vspace + 10);
 		}
-		// init();
 	}
 
 	private static RenderSVF createOptionsSpinner() {
@@ -339,7 +337,7 @@ public class MatrixRender extends Render {
 
 	@Override
 	public RenderSVF getOptionsSpinnerValueFactory() {
-		return rsvf;
+		return RSVF;
 	}
 
 	@Override

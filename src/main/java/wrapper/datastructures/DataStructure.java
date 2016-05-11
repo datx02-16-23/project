@@ -3,6 +3,7 @@ package wrapper.datastructures;
 import java.util.Map;
 
 import application.assets.Strings;
+import application.gui.Main;
 import application.visualization.VisualType;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
@@ -111,6 +112,7 @@ public abstract class DataStructure extends AnnotatedVariable {
 			Map<String, Object> attributes, Color baseColor) {
 		super(identifier, rawType, abstractType, visual, attributes);
 		this.baseColor = baseColor;
+		this.backgroundColor = baseColor;
 	}
 
 	/**
