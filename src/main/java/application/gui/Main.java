@@ -28,9 +28,7 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * This is the Model of MVC for the visualizer GUI. All its views comes from
- * VisualizerView.fxml, except for a Group view that is used for the AV. Its
- * controller is VisualizerController.
+ * Entry class for the GUI.
  */
 public class Main extends Application {
 
@@ -47,7 +45,7 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		lsm = new LogStreamManager(Strings.PROJECT_NAME + " GUI");
+		lsm = new LogStreamManager(Strings.PROJECT_NAME + "_GUI");
 		primaryStage.setTitle(Strings.PROJECT_NAME);
 		// Create a Group view for the AV.
 		Visualization visualization = Visualization.instance();
@@ -77,7 +75,7 @@ public class Main extends Application {
 		operationPanelContainer.setCenter(operationPanel);
 		double leftDivider = (((GridPane) namespace.get("buttonsGrid")).getPrefWidth() + 14) / scene.getWidth();
 		sP.setDividerPositions(leftDivider / 5, 1 - leftDivider);
-		// Add examples:
+		// Add examples
 		Menu examples = (Menu) namespace.get("examplesMenu");
 		for (Algorithm algo : Examples.Algorithm.values()) {
 			MenuItem algoButton = new MenuItem(algo.name);
@@ -111,14 +109,15 @@ public class Main extends Application {
 
 	/**
 	 * Make a file name a bit more fancy. For example: "bubble_sort.oi" ->
-	 * "Bubble Sort"
+	 * "Bubble Sort". Specifically, this method will return the file name
+	 * without '_' and '.*' and there is always an upper case after '_'.
 	 * 
 	 * @param original
 	 *            The original file name
-	 * @return The file name without '_' and '.*' and there is always an upper
-	 *         case after '_'
+	 * @return A stylized file name.
 	 */
-	private String stylizeExampleName(String original) {
+	@SuppressWarnings("unused")
+	private String stylizeFileName(String original) {
 		StringBuilder sb = new StringBuilder();
 		char currentChar;
 		boolean nextUpper = false;

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import application.assets.Strings;
-import interpreter.Consolidable;
 import wrapper.Locator;
 import wrapper.Operation;
 
@@ -18,14 +17,13 @@ public class OP_Swap extends Operation implements Consolidable {
 	 * Version number for this class.
 	 */
 	private static final long serialVersionUID = Strings.VERSION_NUMBER;
-	private static final OperationType OPERATION = OperationType.swap;
 
 	/**
 	 * Create a new Swap operation. Note that you must set var1, var2, and
 	 * value.
 	 */
 	public OP_Swap() {
-		super(OPERATION, new HashMap<Key, Object>(), null, -1, -1, -1, -1);
+		super(OperationType.swap, new HashMap<Key, Object>(), null, -1, -1, -1, -1);
 	}
 
 	/**
@@ -75,7 +73,7 @@ public class OP_Swap extends Operation implements Consolidable {
 
 	@Override
 	public String toString() {
-		return "SWAP: " + getVar1().toSimpleString() + " <-> " + getVar2().toSimpleString();
+		return "SWAP: " + getVar1().toString() + " <-> " + getVar2().toString();
 	}
 
 	/**
@@ -94,8 +92,20 @@ public class OP_Swap extends Operation implements Consolidable {
 		OP_ReadWrite rw0 = rwList.get(0);
 		OP_ReadWrite rw1 = rwList.get(1);
 		OP_ReadWrite rw2 = rwList.get(2);
-		if (rw0.getSource() == null || rw0.getTarget() == null || rw1.getSource() == null || rw1.getTarget() == null
-				|| rw2.getSource() == null || rw2.getTarget() == null) {
+
+//		Locator op0_source = rw0.getSource();
+//		Locator op0_target = rw0.getTarget();
+		
+//		Locator op1_source = rw1.getSource();
+//		Locator op1_target = rw1.getTarget();
+		
+//		Locator op2_source = rw2.getSource();
+//		Locator op2_target = rw2.getTarget();
+		
+		if (rw0.getSource() == null || rw0.getTarget() == null ||
+			rw1.getSource() == null || rw1.getTarget() == null ||
+			rw2.getSource() == null || rw2.getTarget() == null)
+		{
 			return null; // All sources/targets must be known.
 		}
 		Locator var1, tmp, var2;

@@ -1,9 +1,8 @@
-package interpreter;
+package wrapper.operations;
 
 import java.util.List;
 
 import wrapper.Operation;
-import wrapper.operations.OP_ReadWrite;
 
 /**
  * A consolidable element can be broken into a series read/write operations.

@@ -26,7 +26,7 @@ public class OP_Remove extends OP_ReadWrite {
 
 	@Override
 	public String toString() {
-		return super.operation.toString().toUpperCase() + ": " + getTarget().toSimpleString();
+		return super.operation.toString().toUpperCase() + ": " + getTarget().toString();
 	}
 
 	public Locator getTarget() {

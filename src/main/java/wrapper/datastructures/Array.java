@@ -117,27 +117,9 @@ public class Array extends DataStructure {
 		max = Integer.MIN_VALUE;
 	}
 
-	@Override
-	public void applyOperation(Operation op) {
-		switch (op.operation) {
-		case read:
-		case write:
-			readORwrite((OP_ReadWrite) op);
-			break;
-		case swap:
-			swap((OP_Swap) op);
-			break;
-		case remove:
-			remove((OP_Remove) op);
-			return;
-		default:
-			Main.console.err("OperationType \"" + op.operation + "\" not applicable to " + getClass().getSimpleName());
-			break;
-		}
-		super.setActive(true);
-	}
 
-	private void swap(OP_Swap op) {
+
+	protected void executeSwap(OP_Swap op) {
 		Locator var1 = op.getVar1();
 		Locator var2 = op.getVar2();
 		ArrayElement var1Element = this.getElement(var1);
@@ -159,7 +141,7 @@ public class Array extends DataStructure {
 		}
 	}
 
-	private void readORwrite(OP_ReadWrite op) {
+	protected void executeRW(OP_ReadWrite op) {
 		if (op.operation == OperationType.write && (op.getValue().length > 1)) {
 			init((OP_Write) op);
 			return;

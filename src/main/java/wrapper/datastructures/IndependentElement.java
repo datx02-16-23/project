@@ -3,13 +3,10 @@ package wrapper.datastructures;
 import java.util.Map;
 
 import application.assets.Strings;
-import application.gui.Main;
 import application.visualization.VisualType;
-import javafx.scene.paint.Color;
 import wrapper.Locator;
 import wrapper.Operation;
 import wrapper.operations.OP_ReadWrite;
-import wrapper.operations.OP_Remove;
 import wrapper.operations.OP_Swap;
 import wrapper.operations.OperationType;
 
@@ -26,10 +23,6 @@ public class IndependentElement extends Array {
 	 * Version number for this class.
 	 */
 	private static final long serialVersionUID = Strings.VERSION_NUMBER;
-	// private transient final ArrayList<Element> elements = new
-	// ArrayList<Element>();
-	// private transient final Element element = new
-	// IndependentElementContainer();
 
 	/**
 	 * Create a new IndependentElement.
@@ -90,26 +83,12 @@ public class IndependentElement extends Array {
 
 	@Override
 	public void applyOperation(Operation op) {
-		switch (op.operation) {
-		case read:
-		case write:
-			readORwrite((OP_ReadWrite) op);
-			break;
-		case swap:
-			swap((OP_Swap) op);
-			break;
-		case remove:
-			remove((OP_Remove) op);
-			return;
-		default:
-			Main.console.err("OperationType \"" + op.operation + "\" not applicable to " + getClass().getSimpleName());
-			break;
-		}
-		repaintAll = true;
-		super.setActive(true);
+		super.applyOperation(op);
+		repaintAll = true; // Clears background. Theres only one Element present
+							// anyway.
 	}
 
-	private void swap(OP_Swap op) {
+	protected void executeSwap(OP_Swap op) {
 		Element e = elements.get(0);
 		if (op.getVar1().identifier.equals(this.identifier)) {
 			e.setNumericValue(op.getValue()[0]);
@@ -122,7 +101,8 @@ public class IndependentElement extends Array {
 		}
 	}
 
-	private void readORwrite(OP_ReadWrite op) {
+	@Override
+	protected void executeRW(OP_ReadWrite op) {
 		if (elements.isEmpty()) {
 			initElement(op.getValue()[0]);
 		}
@@ -138,24 +118,9 @@ public class IndependentElement extends Array {
 		}
 	}
 
-	public void setNumericValue(double newValue) {
-		if (elements.isEmpty()) {
-			return;
-		}
-		elements.get(0).setNumericValue(newValue);
-	}
-
 	@Override
 	public VisualType resolveVisual() {
 		return VisualType.box;
-	}
-
-	public Color getColor() {
-		return elements.get(0).getColor();
-	}
-
-	public void setColor(Color newColor) {
-		elements.get(0).setColor(newColor);
 	}
 
 	@Override

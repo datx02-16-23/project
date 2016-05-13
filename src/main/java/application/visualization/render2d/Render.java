@@ -75,6 +75,10 @@ public abstract class Render extends StackPane {
 	}
 
 	private static Background getStructBackground(DataStructure struct) {
+		if (struct == null) {
+			return null;
+		}
+
 		switch (struct.rawType) {
 		case array:
 			return ARRAY_BACKGROUND;
@@ -82,10 +86,16 @@ public abstract class Render extends StackPane {
 			return TREE_BACKGROUND;
 		case independentElement:
 			return ORPHAN_BACKGROUND;
+		default:
+			return null;
 		}
-		return null;
 	}
 
+	/**
+	 * Calls setMinSize, setPrefSize, setMaxSize, setWidth and setHeight
+	 * @param width The width of this Render.
+	 * @param height The height of this Render.
+	 */
 	protected void setSize(double width, double height) {
 		this.setMinSize(width, height);
 		this.setPrefSize(width, height);

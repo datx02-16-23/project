@@ -42,10 +42,6 @@ public class Locator implements Serializable {
 
 	@Override
 	public String toString() {
-		return "{\"identifier\":" + identifier + ", \"index\": " + Arrays.toString(index) + "}";
-	}
-
-	public String toSimpleString() {
 		return identifier + (index == null ? "" : Arrays.toString(index));
 	}
 

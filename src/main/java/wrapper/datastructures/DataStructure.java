@@ -12,7 +12,9 @@ import javafx.scene.paint.Color;
 import wrapper.AnnotatedVariable;
 import wrapper.Locator;
 import wrapper.Operation;
+import wrapper.operations.OP_ReadWrite;
 import wrapper.operations.OP_Remove;
+import wrapper.operations.OP_Swap;
 import wrapper.operations.OperationType;
 
 /**
@@ -46,7 +48,7 @@ public abstract class DataStructure extends AnnotatedVariable {
 	 */
 	protected transient final ObservableList<Element> inactiveElements = FXCollections.observableArrayList();
 	/**
-	 * If True, this entire DataStructure is considered inactive (as opposed to
+	 * If false, this entire DataStructure is considered inactive (as opposed to
 	 * just a single element).
 	 */
 	private transient boolean active = true;
@@ -136,7 +138,40 @@ public abstract class DataStructure extends AnnotatedVariable {
 	 * @param op
 	 *            The operation to be apply.
 	 */
-	public abstract void applyOperation(Operation op);
+	public void applyOperation(Operation op) {
+		switch (op.operation) {
+		case read:
+		case write:
+			executeRW((OP_ReadWrite) op);
+			break;
+		case swap:
+			executeSwap((OP_Swap) op);
+			break;
+		case remove:
+			executeRemove((OP_Remove) op);
+			return;
+		default:
+			Main.console.err("OperationType \"" + op.operation + "\" unknown.");
+			break;
+		}
+		setActive(true);
+	}
+
+	/**
+	 * Execute a read/write operation.
+	 * 
+	 * @param op
+	 *            The operation to execute.
+	 */
+	protected abstract void executeRW(OP_ReadWrite op);
+
+	/**
+	 * Execute a swap operation.
+	 * 
+	 * @param op
+	 *            The operation to execute.
+	 */
+	protected abstract void executeSwap(OP_Swap op);
 
 	@Override
 	public String toString() {
@@ -149,9 +184,9 @@ public abstract class DataStructure extends AnnotatedVariable {
 	}
 
 	/**
-	 * Resolves the VisualType for this DataStructure. Will filter
-	 * {@code visual, abstractType} and {@code rawType}, in that order. This
-	 * method never returns null.
+	 * Resolves the VisualType for this DataStructure. Will check {@code visual}
+	 * , {@code abstractType}, and {@code rawType}, in that order. This method
+	 * never may not null.
 	 * 
 	 * @return The Visual to use for this DataStructure.
 	 */
@@ -205,8 +240,8 @@ public abstract class DataStructure extends AnnotatedVariable {
 	 * been drawn.
 	 */
 	public void elementsDrawn() {
-		resetElements.clear();
-		resetElements.addAll(modifiedElements);
+		// resetElements.clear();
+		resetElements.setAll(modifiedElements);
 		modifiedElements.clear();
 	}
 
@@ -214,18 +249,21 @@ public abstract class DataStructure extends AnnotatedVariable {
 	 * Returns an element based on a Locator.
 	 * 
 	 * @param locator
-	 *            The locator to look for.
+	 *            The locator for the Element.
 	 * @return An element if it could be found, null otherwise.
 	 */
 	public abstract Element getElement(Locator locator);
 
 	/**
-	 * Mark an element as inactive. If this method is called
+	 * Mark an element as inactive. If this method is called with an active
+	 * element as target, the element will be reactivated. If the target of the
+	 * Remove operation has an identifier equaling the identifier of this
+	 * DataStructure but no index, the entire structure will become inactive.
 	 * 
 	 * @param op
 	 *            A Remove operation.
 	 */
-	protected void remove(OP_Remove op) {
+	protected void executeRemove(OP_Remove op) {
 		Locator target = op.getTarget();
 
 		/*
@@ -262,27 +300,32 @@ public abstract class DataStructure extends AnnotatedVariable {
 			backgroundColor = baseColor;
 		}
 	}
-	
+
 	/**
 	 * Returns True if this structure is active. False otherwise.
+	 * 
 	 * @return True if this structure is active.
 	 */
-	public boolean isActive(){
+	public boolean isActive() {
 		return active;
 	}
-	
+
 	/**
 	 * Set the active status of this DataStructure.
-	 * @param value The new active status of this DataStructure.
+	 * 
+	 * @param value
+	 *            The new active status of this DataStructure.
 	 */
-	public void setActive(boolean value){
-		if(value != active){
+	public void setActive(boolean value) {
+		if (value != active) {
 			toggleActive();
 		}
 	}
 
 	/**
-	 * Returns the background Color to use for regular elements unaffected by recent operations.
+	 * Returns the background Color to use for elements unaffected by recent
+	 * operations.
+	 * 
 	 * @return A Color to use as background.
 	 * 
 	 */

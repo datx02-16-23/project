@@ -79,8 +79,8 @@ public abstract class OP_ReadWrite extends Operation {
 		String targetStr;
 		// Source and target known
 		if (source != null && target != null) {
-			sourceStr = source.toSimpleString();
-			targetStr = target.toSimpleString();
+			sourceStr = source.toString();
+			targetStr = target.toString();
 			// Assume source or target known.
 		} else {
 			double[] value = getValue();
@@ -88,13 +88,13 @@ public abstract class OP_ReadWrite extends Operation {
 			// Source unknown
 			if (source == null) {
 				sourceStr = valueStr;
-				targetStr = target.toSimpleString();
+				targetStr = target.toString();
 				// target <-- values
 				return super.operation.toString().toUpperCase() + ": " + targetStr + " <-- " + sourceStr;
 			}
 			// Target unknown
 			else {
-				sourceStr = source.toSimpleString();
+				sourceStr = source.toString();
 				targetStr = valueStr;
 			}
 		}

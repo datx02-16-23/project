@@ -3,7 +3,6 @@ package application.visualization;
 import java.util.HashMap;
 
 import application.gui.GUI_Controller;
-import application.gui.Main;
 import application.model.Model;
 import application.visualization.animation.Animation;
 import application.visualization.render2d.*;
@@ -22,7 +21,6 @@ import wrapper.datastructures.*;
 import wrapper.operations.OP_ReadWrite;
 import wrapper.operations.OP_Remove;
 import wrapper.operations.OP_Swap;
-import wrapper.operations.OperationType;
 
 /**
  * Handler class for visualisations and animations. The ANIMATED Canvas should
