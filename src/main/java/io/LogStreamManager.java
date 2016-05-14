@@ -217,7 +217,7 @@ public class LogStreamManager implements CommunicatorListener {
 	 * Print the operations and header information currently held by this
 	 * LogStreamManager. Set the public variable {@code PRETTY_PRINTING} to true
 	 * to enable human-readable output. If {@code autoName} is true, a file name
-	 * on the form "YY-MM-DD_HHMMSS.oi" will be generated.
+	 * on the form "YY-MM-DD_HHMMSS.json" will be generated.
 	 * 
 	 * @param targetPath
 	 *            The location to print the log file.
@@ -386,7 +386,7 @@ public class LogStreamManager implements CommunicatorListener {
 		Gson GSON;
 		DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd_HHmmss");
 		Calendar cal = Calendar.getInstance();
-		String fileName = autoName ? File.separator + dateFormat.format(cal.getTime()) + ".oi" : "";
+		String fileName = autoName ? File.separator + dateFormat.format(cal.getTime()) + ".json" : "";
 		if (PRETTY_PRINTING) {
 			GSON = new GsonBuilder().setPrettyPrinting().create();
 		} else {

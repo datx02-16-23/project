@@ -417,7 +417,7 @@ public class GUI_Controller implements CommunicatorListener {
 		FileChooser fc = new FileChooser();
 		fc.setInitialDirectory(new File(System.getProperty("user.home")));
 		fc.setTitle("Open OI-File");
-		fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("OI-Files", "*.oi"),
+		fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON-Files", "*.json"),
 				new FileChooser.ExtensionFilter("All Files", "*.*"));
 		File source = fc.showOpenDialog(window);
 		if (source != null) {
@@ -628,7 +628,7 @@ public class GUI_Controller implements CommunicatorListener {
 		DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd_HHmmss");
 		Calendar cal = Calendar.getInstance();
 		fc.setInitialFileName(dateFormat.format(cal.getTime()));
-		fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("OI-Files", "*.oi"),
+		fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON-Files", "*.json"),
 				new FileChooser.ExtensionFilter("All Files", "*.*"));
 		File target = fc.showSaveDialog(this.window);
 		if (target == null) {
