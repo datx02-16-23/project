@@ -108,7 +108,7 @@ public class Main extends Application {
 	}
 
 	/**
-	 * Make a file name a bit more fancy. For example: "bubble_sort.oi" ->
+	 * Make a file name a bit more fancy. For example: "bubble_sort.json" ->
 	 * "Bubble Sort". Specifically, this method will return the file name
 	 * without '_' and '.*' and there is always an upper case after '_'.
 	 * 

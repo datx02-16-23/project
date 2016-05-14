@@ -93,8 +93,11 @@ public abstract class Render extends StackPane {
 
 	/**
 	 * Calls setMinSize, setPrefSize, setMaxSize, setWidth and setHeight
-	 * @param width The width of this Render.
-	 * @param height The height of this Render.
+	 * 
+	 * @param width
+	 *            The width of this Render.
+	 * @param height
+	 *            The height of this Render.
 	 */
 	protected void setSize(double width, double height) {
 		this.setMinSize(width, height);
@@ -124,9 +127,8 @@ public abstract class Render extends StackPane {
 	public abstract void drawAnimatedElement(Element e, double x, double y, Color color);
 
 	/**
-	 * Makes an effort to clears an animated element from the shared animation
-	 * canvas. <br>
-	 * It may be necessary to shadow this method if it doesn't work properly.
+	 * Clears an element from the Canvas. It may be necessary to shadow this
+	 * method if it doesn't work properly.
 	 * 
 	 * @param e
 	 *            The element to clear.
@@ -305,6 +307,39 @@ public abstract class Render extends StackPane {
 	}
 
 	/**
+	 * Draw an element to the canvas.
+	 * 
+	 * @param e
+	 *            The element to draw.
+	 * @param style
+	 *            The style to use.
+	 * @param canvas
+	 *            The Canvas to draw on.
+	 */
+	public abstract void drawElement(Element e, Color style, Canvas canvas);
+
+	/**
+	 * Erase an element from the given Canvas.
+	 * 
+	 * @param e
+	 *            The elements to erase.
+	 * @param canvas
+	 *            The canvas to erase the element from.
+	 */
+	public abstract void clearElement(Element e, Canvas canvas);
+
+	/**
+	 * Indicates that an element has finished animating. The default
+	 * implementation of this method does nothing.
+	 * 
+	 * @param e
+	 *            The element which finished animating.
+	 */
+	public void finishAnimation(Element e) {
+		//Do nothing.
+	}
+
+	/**
 	 * SpinnerValueFactory for Render implementations.
 	 * 
 	 * @author Richard Sundqvist
@@ -468,4 +503,5 @@ public abstract class Render extends StackPane {
 				new Image(GUI_Controller.class.getResourceAsStream("/assets/tree.png")), BackgroundRepeat.NO_REPEAT,
 				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
 	}
+
 }

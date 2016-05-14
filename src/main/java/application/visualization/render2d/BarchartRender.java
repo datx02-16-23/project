@@ -207,4 +207,16 @@ public class BarchartRender extends Render {
 	public void clearAnimatedElement(Element e, double x, double y) {
 		SHARED_ANIMATED.getGraphicsContext2D().clearRect(x - 2, y - 15, node_width + 2 * 2, this.HEIGHT + 15);
 	}
+
+	@Override
+	public void clearElement(Element e, Canvas c) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void drawElement(Element e, Color style, Canvas canvas) {
+		// TODO Auto-generated method stub
+		
+	}
 }

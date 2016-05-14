@@ -55,6 +55,7 @@ public abstract class Animation {
 	 */
 	public void finish() {
 		timeline.stop();
+		owner.finishAnimation(e);
 		ensureCleared();
 	}
 

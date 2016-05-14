@@ -4,6 +4,7 @@ import java.util.List;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.chart.*;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
@@ -121,5 +122,17 @@ public class BarchartRender_OLD extends Render {
 	public double absY(Element e) {
 		double by = this.getTranslateY() + this.getLayoutY();
 		return this.getY(e) + by;
+	}
+
+	@Override
+	public void clearElement(Element e, Canvas c) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void drawElement(Element e, Color style, Canvas canvas) {
+		// TODO Auto-generated method stub
+		
 	}
 }

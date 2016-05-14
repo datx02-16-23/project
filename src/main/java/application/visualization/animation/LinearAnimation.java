@@ -61,7 +61,8 @@ public class LinearAnimation extends Animation {
 
 	@Override
 	protected void ensureCleared() {
-		for (int i = 0; i < points[0].length; i++) {
+//		for (int i = 0; i < points[0].length; i++) {
+		for (int i = 0; i <= frame; i++) {
 			owner.clearAnimatedElement(e, points[0][i], points[1][i]);
 		}
 	}

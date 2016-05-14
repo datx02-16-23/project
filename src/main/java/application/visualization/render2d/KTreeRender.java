@@ -9,7 +9,9 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import wrapper.datastructures.Array.ArrayElement;
 import wrapper.datastructures.DataStructure;
@@ -376,8 +378,30 @@ public class KTreeRender extends Render {
 
 	@Override
 	public void startAnimation(Element e, double start_x, double start_y, double end_x, double end_y) {
+		// Clear element from stationary canvas.
+		GraphicsContext context = local_canvas.getGraphicsContext2D();
+		double bw = context.getLineWidth(); // Border width
+		bw = 0;
+		context.clearRect(getX(e) - bw, getY(e) - bw, node_width + bw * 2, node_height + bw * 2);
+
+		// Dotted circle
+		context.setLineDashes((node_width + node_height) * .5 * .1);
+		context.strokeOval(getX(e), getY(e), node_width, node_height);
+		context.setLineDashes(null);
+
+		// Start animation
 		Animation a = new LinearAnimation(this, e, end_x, end_y);
 		a.start();
+		// c.getStrokeDashArray()
+		System.out.println("start");
+	}
+
+	@Override
+	public void finishAnimation(Element e) {
+		// Draw element to stationary canvas.
+		// drawElement(e, e.getColor(), local_canvas);
+		System.out.println("draw: " + e);
+		System.out.println("end");
 	}
 
 	@Override
@@ -390,5 +414,17 @@ public class KTreeRender extends Render {
 	public double absY(Element e) {
 		double by = this.getTranslateY() + this.getLayoutY();
 		return this.getY(e) + by;
+	}
+
+	@Override
+	public void clearElement(Element e, Canvas c) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void drawElement(Element e, Color style, Canvas canvas) {
+		// TODO Auto-generated method stub
+
 	}
 }

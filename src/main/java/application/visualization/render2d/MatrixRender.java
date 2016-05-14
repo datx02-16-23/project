@@ -350,4 +350,16 @@ public class MatrixRender extends Render {
 		double by = this.getTranslateY() + this.getLayoutY();
 		return this.getY(e) + by;
 	}
+
+	@Override
+	public void clearElement(Element e, Canvas c) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void drawElement(Element e, Color style, Canvas canvas) {
+		// TODO Auto-generated method stub
+		
+	}
 }
