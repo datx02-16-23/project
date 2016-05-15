@@ -121,7 +121,7 @@ def create_settings(root_directory, files, variables, main_file, output):
 		'files' : files,
 		'observe' : variables,
 		'main' : format_path(main_file),
-		'output' : output + "/output.oi"
+		'output' : output + "/output.json"
 	}
 	return settings
 
