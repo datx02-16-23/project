@@ -4,6 +4,7 @@ from printnode import ast_visit as printnode
 from distutils.dir_util import copy_tree
 from os.path import abspath
 from os import remove
+from constants import *
 
 class MainTransformer(NodeTransformer):
 	def __init__(self,transformers,operations):
@@ -30,23 +31,23 @@ def generate_nodes(files,v_env):
 		path = v_env + f
 		with open(path,'r') as read:
 			node = parse(read.read())
-			nodes.append({'path' : path, 'parse' : node})
+			nodes.append({NODE_PATH : path, NODE_AST : node})
 	return nodes
 
 # Replace statements in files to be visualized with
 # function calls to methods supplied by operations.py
 def transform(nodes,main_transformer):
 	for node in nodes:
-		with open(node['path'],'w') as node_source:
-			main_transformer.visit(node['parse'])
-			node_source.write(to_source(node['parse']))
+		with open(node[NODE_PATH],'w') as node_source:
+			main_transformer.visit(node[NODE_AST])
+			node_source.write(to_source(node[NODE_AST]))
 
 # given settings variable should be sanity-checked
 def create_env(settings):
 	# Setup rootdir of visualization folder given source root directory
-	copy_tree(settings['rootdir'],settings['v_env'])
-	nodes = generate_nodes(settings['files'],settings['v_env'])
-	mt = MainTransformer(settings['transformers'],settings['operations'])
+	copy_tree(settings[SETTINGS_ROOTDIR],settings[SETTINGS_GENLOGENV])
+	nodes = generate_nodes(settings[SETTINGS_FILES],settings[SETTINGS_GENLOGENV])
+	mt = MainTransformer(settings[SETTINGS_TRANSFORMERS],settings[SETTINGS_OPERATIONS])
 	transform(nodes,mt)
 
 def format_log(output_buffer):
@@ -61,18 +62,18 @@ def format_log(output_buffer):
 	return output
 
 def alias(operation,aliases):
-	if isinstance(operation['operationBody'],dict):
-		for k,statement in operation['operationBody'].iteritems():
-			if isinstance(statement,dict) and 'identifier' in statement:
-				name = statement['identifier']
-				statement['identifier'] = aliases[name] if name in aliases else name
+	if isinstance(operation[JSON_OPERATION_BODY],dict):
+		for k,statement in operation[JSON_OPERATION_BODY].iteritems():
+			if isinstance(statement,dict) and JSON_VARIABLE_IDENTIFIER in statement:
+				name = statement[JSON_VARIABLE_IDENTIFIER]
+				statement[JSON_VARIABLE_IDENTIFIER] = aliases[name] if name in aliases else name
 
 def is_init(operation):
-	if 'source' in operation['operationBody']:
-		return ('index' not in operation['operationBody']['target'] and
-				'index' not in operation['operationBody']['source'])
+	if JSON_OPERATION_SOURCE in operation[JSON_OPERATION_BODY]:
+		return (JSON_OPERATION_INDEX not in operation[JSON_OPERATION_BODY][JSON_OPERATION_TARGET] and
+				JSON_OPERATION_INDEX not in operation[JSON_OPERATION_BODY][JSON_OPERATION_SOURCE])
 	else:
-		return 'index' not in operation['operationBody']['target']
+		return JSON_OPERATION_INDEX not in operation[JSON_OPERATION_BODY][JSON_OPERATION_TARGET]
 
 class LogPostProcessor(object):
 	def __init__(self,output_file):
@@ -92,12 +93,12 @@ class LogPostProcessor(object):
 	def _fix_occurrences(self):
 		aliases = {}
 		for operation in self.output:
-			if (operation['operation'] == 'write' and is_init(operation)):
-				target = operation['operationBody']['target']['identifier']
-				if ('source' in operation['operationBody'] and
-					operation['operationBody']['source']['identifier'] in self.names and
+			if (operation[JSON_OPERATION_TYPE] == JSON_OPERATION_TYPE_WRITE and is_init(operation)):
+				target = operation[JSON_OPERATION_BODY][JSON_OPERATION_TARGET][JSON_VARIABLE_IDENTIFIER]
+				if (JSON_OPERATION_SOURCE in operation[JSON_OPERATION_BODY] and
+					operation[JSON_OPERATION_BODY][JSON_OPERATION_SOURCE][JSON_VARIABLE_IDENTIFIER] in self.names and
 					# target not in aliases and 
 					target not in self.names):
-					aliases[target] = operation['operationBody']['source']['identifier']
+					aliases[target] = operation[JSON_OPERATION_BODY][JSON_OPERATION_SOURCE][JSON_VARIABLE_IDENTIFIER]
 					# self.names.append(target)
 			alias(operation,aliases)

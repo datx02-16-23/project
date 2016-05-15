@@ -1,79 +1,38 @@
-import copy
-NOT_AN_EDGE = -1
+# merge sort
+def merge_sort(array):
+    merge_sort_r(array, 0, len(array) -1)
 
-def is_edge(graph,row,col):
-	return graph[row][col] != NOT_AN_EDGE
+# merge sort recursive (used by merge_sort)
+def merge_sort_r(array, first, last):
+    if first < last:
+        sred = (first + last)/2
+        merge_sort_r(array, first, sred)
+        merge_sort_r(array, sred + 1, last)
+        merge(array, first, last, sred)
 
-def move_ok(graph,row,col):
-	return (
-		row < len(graph) and
-		row >= 0 and
-		col < len(graph) and
-		col >= 0 and
-		is_edge(graph,row,col)
-	)
+# merge (used by merge_sort_r)
+def merge(array, first, last, sred):
+    helper_list = []
+    i = first
+    j = sred + 1
+    while i <= sred and j <= last:
+        if array [i] <= array [j]:
+            helper_list.append(array[i])
+            i += 1
+        else:
+            helper_list.append(array [j])
+            j += 1
+    while i <= sred:
+        helper_list.append(array[i])
+        i +=1
+    while j <= last:
+        helper_list.append(array[j])
+        j += 1
+    for k in range(0, last - first + 1):
+        array[first + k] = helper_list [k]
 
-def get_move(graph,row,col):
-	return [(row,col)] if move_ok(graph,row,col) else []
-
-def get_moves(graph,row,col):
-	moves = []
-	moves += get_move(graph,row+1,col)
-	moves += get_move(graph,row-1,col)
-	moves += get_move(graph,row,col+1)
-	moves += get_move(graph,row,col-1)
-	return moves
-
-def move_legal(path,move,visited=None):
-	return move not in path and move not in visited if visited is not None else True
-
-def has_legal_move(graph,path,node):
-	moves = get_moves(graph,*node)
-	for move in moves:
-		if move_legal(path,move):
-			return True
-	return False
-
-def cost(graph,row,col):
-	return graph[row][col]
-
-def is_goal(start,goal):
-	return start == goal
-
-def backtrack(graph,path):
-	node = path.pop()
-	while not has_legal_move(graph,path,node): node = path.pop()
-	return path
-
-def cost_first(graph,start,goal):
-	visited = []
-	current = start
-	path = []
-	while not is_goal(current,goal):
-		path.append(current)
-		moves = get_moves(graph,*current)
-		best_move = None
-		for move in moves:
-			if is_goal(move,goal):
-				best_move = move
-				break
-			if move_legal(path,move,visited):
-				if best_move is None or cost(graph,*move) <= cost(graph,*best_move):
-					best_move = move
-		if best_move is None:
-			visited.append(current)
-			path = backtrack(graph,path)
-			current = path.pop() if len(path) > 0 else start
-		else:
-			current = best_move
-		if len(visited) > 5:
-			break
-	path.append(current)
-	return path
-
-graph = [
-	[1,1,1,1,1],
-	[1,1,1,1,1],
-	[1,1,1,1,1]
-]
-print cost_first(graph,(0,0),(0,3))
+from random import random as r
+rng = 100
+size = 4
+vec = [int(r() * rng) for i in range(0,size)]
+merge_sort(vec)

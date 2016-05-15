@@ -123,7 +123,7 @@ def link(*params):
     def wrap(func):
         def call(*args):
             for param,arg in zip(params,args):
-                if get_variable(arg) in annotated_variables:
+                if get_variable(arg) in annotated_variables and param not in annotated_variables:
                     annotated_variables.append(get_variable(param))
                 write(arg,param,0,0)
             return func(*tuple(get_value(arg) for arg in args))

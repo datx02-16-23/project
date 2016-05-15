@@ -5,6 +5,7 @@ from create_log import create_env,LogPostProcessor
 from ast import parse,Assign,List,Name,Str,NodeVisitor
 from transformer import WriteTransformer,ReadTransformer,PassTransformer
 from json import dump
+from constants import *
 
 print "================ Python Operations Interceptor ================"
 print "Loading wrapper.py..."
@@ -53,7 +54,7 @@ def translate(rawType):
 	if rawType in types:
 		return types[rawType]
 	else:
-		return 'independentElement'
+		return JSON_VARIABLE_RAWTYPE_INDEPENDENTVAR
 
 class Variable(object):
 	def __init__(self,name,rawType,attributes=None,abstractType=None):
@@ -64,10 +65,10 @@ class Variable(object):
 
 	def get_json(self):
 		return {
-			'identifier' : self.name,
-			'rawType' : self.rawType,
-			'abstractType' : self.abstractType,
-			'attributes' : self.attributes
+			JSON_VARIABLE_IDENTIFIER : self.name,
+			JSON_VARIABLE_RAWTYPE : self.rawType,
+			JSON_VARIABLE_ABSTRACTTYPE : self.abstractType,
+			JSON_VARIABLE_ATTRIBUTES : self.attributes
 		}
 
 	def __repr__(self):
@@ -86,9 +87,9 @@ def create_header(version,variables,files):
 	for variable in variables:
 		annotatedVariables[variable.name] = variable.get_json()
 	return {
-		'version' : version,
-		'annotatedVariables' : annotatedVariables,
-		'sources' : create_sources(files)
+		JSON_HEADER_VERSION : version,
+		JSON_HEADER_ANNOTATEDVARIABLES : annotatedVariables,
+		JSON_HEADER_SOURCES : create_sources(files)
 	}
 
 def format_path(path):
@@ -117,19 +118,19 @@ def create_settings(root_directory, files, variables, main_file, output):
 	files = [format_path(f) for f in files]
 	variables = format_variables(variables)
 	settings = {
-		'rootdir' : root_directory if root_directory.endswith('/') else root_directory+'/',
-		'files' : files,
-		'observe' : variables,
-		'main' : format_path(main_file),
-		'output' : output + "/output.json"
+		SETTINGS_ROOTDIR : root_directory if root_directory.endswith('/') else root_directory+'/',
+		SETTINGS_FILES : files,
+		SETTINGS_VARIABLES : variables,
+		SETTINGS_MAIN : format_path(main_file),
+		SETTINGS_OUTPUT : output + "/output.json"
 	}
 	return settings
 
 def dump_json(header,body,output_path):
 	with open(output_path,'w') as f:
 		final_output = {
-			'header' : header,
-			'body' : body
+			JSON_HEADER : header,
+			JSON_BODY : body
 		}
 		dump(final_output,f)
 
@@ -142,37 +143,37 @@ def run(settings):
 	"""
 	print "Loading operations.py..."
 	ol = OperationsLoader(currrent_path+'/operations.py')
-	settings['operations'] = ol.load(settings['output'],settings['observe'])
+	settings[SETTINGS_OPERATIONS] = ol.load(settings[SETTINGS_OUTPUT],settings[SETTINGS_VARIABLES])
 	
 	print "Loading Transformers (parsers)..."
-	settings['transformers'] = [PassTransformer('link'), WriteTransformer('write'), ReadTransformer('read')]
-	settings['v_env'] = '%s/visualize/' % currrent_path
-	settings['main'] = settings['v_env'] + path.basename(settings['main'])
+	settings[SETTINGS_TRANSFORMERS] = [PassTransformer('link'), WriteTransformer('write'), ReadTransformer('read')]
+	settings[SETTINGS_GENLOGENV] = '%s/visualize/' % currrent_path
+	settings[SETTINGS_MAIN] = settings[SETTINGS_GENLOGENV] + path.basename(settings[SETTINGS_MAIN])
 	
-	if settings['v_env'] not in sys.path:
-		print "Creating temporary visualization environment & adding to sys.path at:\n%s" % settings['v_env']
-		sys.path.insert(0,settings['v_env'])
+	if settings[SETTINGS_GENLOGENV] not in sys.path:
+		print "Creating temporary visualization environment & adding to sys.path at:\n%s" % settings[SETTINGS_GENLOGENV]
+		sys.path.insert(0,settings[SETTINGS_GENLOGENV])
 	create_env(settings)
 	
 	print "Creating Header..."
-	files = [settings['rootdir']+f for f in settings['files']]
-	header = create_header(2.0,settings['observe'],files)
+	files = [settings[SETTINGS_ROOTDIR]+f for f in settings[SETTINGS_FILES]]
+	header = create_header(2.0,settings[SETTINGS_VARIABLES],files)
 	if w is not None:
 		print "Sending header to LogStreamManager"
 		w.send(header)
 	
-	print "Creating/Overwriting output file at:%s" % settings['output']
-	open(settings['output'],'w').close()
+	print "Creating/Overwriting output file at:%s" % settings[SETTINGS_OUTPUT]
+	open(settings[SETTINGS_OUTPUT],'w').close()
 	
-	print "Running main file:\n%s" % settings['main']
-	execfile(settings['main'],globals())
+	print "Running main file:\n%s" % settings[SETTINGS_MAIN]
+	execfile(settings[SETTINGS_MAIN],globals())
 
 	print "Formatting json buffer from output..."
-	processor = LogPostProcessor(settings['output']) 
-	output 	  = processor.process(settings['observe'])
-	dump_json(header,output,settings['output'])
+	processor = LogPostProcessor(settings[SETTINGS_OUTPUT]) 
+	output 	  = processor.process(settings[SETTINGS_VARIABLES])
+	dump_json(header,output,settings[SETTINGS_OUTPUT])
 
 	print "Removing visualization environment..."
-	system('rm -rf %s' % settings['v_env'])
+	system('rm -rf %s' % settings[SETTINGS_GENLOGENV])
 
-	print "Done! Output stored at:\n%s" % settings['output']
+	print "Done! Output stored at:\n%s" % settings[SETTINGS_OUTPUT]

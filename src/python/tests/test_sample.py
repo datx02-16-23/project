@@ -20,7 +20,7 @@ if __name__ == '__main__':
 	settings = genlog.create_settings(
 		abspath('./test'),
 		['/main.py'],
-		sample.genlog.Variable('graph','list',attributes={'size' : [3,5]}),
+		sample.genlog.Variable('vec','list'),
 		'/main.py',
 		abspath('./test')
 	)
