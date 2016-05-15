@@ -86,10 +86,10 @@ class LogPostProcessor(object):
 
 	def process(self,variables):
 		self.names = [variable.name for variable in variables]
-		self.fix_occurrences()
+		self._fix_occurrences()
 		return self.output
 
-	def fix_occurrences(self):
+	def _fix_occurrences(self):
 		aliases = {}
 		for operation in self.output:
 			if (operation['operation'] == 'write' and is_init(operation)):

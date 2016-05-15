@@ -6,7 +6,7 @@ from ast import parse,Assign,List,Name,Str,NodeVisitor
 from transformer import WriteTransformer,ReadTransformer,PassTransformer
 from json import dump
 
-print "================ Python Annotations ================"
+print "================ Python Operations Interceptor ================"
 print "Loading wrapper.py..."
 from wrapper import w
 currrent_path = path.dirname(path.abspath(__file__))
