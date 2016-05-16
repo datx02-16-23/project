@@ -18,9 +18,6 @@ class OperationsLoader(NodeVisitor):
 	""" Goes through operations.py file and inserts 
 	values into assignments, setting neccessary variables """
 
-	outfile = 'outfile'
-	annotated_variables = 'annotated_variables'
-
 	def __init__(self,operations_path):
 		self.operations = None
 		with open(operations_path,'r') as f:
@@ -28,8 +25,8 @@ class OperationsLoader(NodeVisitor):
 
 	def load(self,output_path,variables):
 		self.settings = {
-			OperationsLoader.outfile : Str(output_path),
-			OperationsLoader.annotated_variables : List(elts=
+			OPERATIONS_OUTFILE : Str(output_path),
+			OPERATIONS_ANNOTATEDVARIABLES : List(elts=
 				[Str(variable.name) for variable in variables]
 			)
 		}
@@ -39,10 +36,10 @@ class OperationsLoader(NodeVisitor):
 	def visit_Assign(self,node):
 		target = node.targets[0]
 		if isinstance(target,Name):
-			if target.id == OperationsLoader.outfile:
-				node.value = self.settings[OperationsLoader.outfile]
-			elif target.id == OperationsLoader.annotated_variables:
-				node.value = self.settings[OperationsLoader.annotated_variables]
+			if target.id == OPERATIONS_OUTFILE:
+				node.value = self.settings[OPERATIONS_OUTFILE]
+			elif target.id == OPERATIONS_ANNOTATEDVARIABLES:
+				node.value = self.settings[OPERATIONS_ANNOTATEDVARIABLES]
 	
 	def visit_FunctionDef(self,node): return
 
@@ -122,7 +119,7 @@ def create_settings(root_directory, files, variables, main_file, output):
 		SETTINGS_FILES : files,
 		SETTINGS_VARIABLES : variables,
 		SETTINGS_MAIN : format_path(main_file),
-		SETTINGS_OUTPUT : output + "/output.json"
+		SETTINGS_OUTPUT : output + SETTINGS_OUTPUT_PATH
 	}
 	return settings
 
@@ -142,11 +139,11 @@ def run(settings):
 					with valid parameters
 	"""
 	print "Loading operations.py..."
-	ol = OperationsLoader(currrent_path+'/operations.py')
+	ol = OperationsLoader(currrent_path+OPERATIONS_PATH)
 	settings[SETTINGS_OPERATIONS] = ol.load(settings[SETTINGS_OUTPUT],settings[SETTINGS_VARIABLES])
 	
 	print "Loading Transformers (parsers)..."
-	settings[SETTINGS_TRANSFORMERS] = [PassTransformer('link'), WriteTransformer('write'), ReadTransformer('read')]
+	settings[SETTINGS_TRANSFORMERS] = [PassTransformer(TRANSFORMER_NAME_PASS), WriteTransformer(TRANSFORMER_NAME_WRITE), ReadTransformer(TRANSFORMER_NAME_READ)]
 	settings[SETTINGS_GENLOGENV] = '%s/visualize/' % currrent_path
 	settings[SETTINGS_MAIN] = settings[SETTINGS_GENLOGENV] + path.basename(settings[SETTINGS_MAIN])
 	

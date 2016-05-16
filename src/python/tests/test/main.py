@@ -33,6 +33,6 @@ def merge(array, first, last, sred):
 
 from random import random as r
 rng = 100
-size = 4
+size = 20
 vec = [int(r() * rng) for i in range(0,size)]
 merge_sort(vec)
