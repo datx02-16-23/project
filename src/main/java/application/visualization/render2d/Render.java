@@ -548,7 +548,7 @@ public abstract class Render extends StackPane {
 			 * Source and target are known.
 			 */
 		} else { //if (src != null && tar != null)
-			src_rndr.animate(src, src_rndr.absX(src), src_rndr.absY(src), // From
+			src_rndr.animate(tar, src_rndr.absX(src), src_rndr.absY(src), // From
 					tar_rndr.absX(tar), tar_rndr.absY(tar)); // To
 		}
 	}
@@ -562,7 +562,7 @@ public abstract class Render extends StackPane {
 	 * @param var2_rndr
 	 */
 	public void animateSwap(Element var1, Render var1_rndr, Element var2, Render var2_rndr) {
-		var1_rndr.animate(var2, var1_rndr.absX(var1), var1_rndr.absY(var1), var2_rndr.absX(var2),
+		var1_rndr.animate(var1, var1_rndr.absX(var1), var1_rndr.absY(var1), var2_rndr.absX(var2),
 				var2_rndr.absY(var2));
 	}
 
