@@ -4,6 +4,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import application.visualization.animation.Animation;
 import application.visualization.render2d.KTreeRender;
+import application.visualization.render2d.Render;
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 import javafx.collections.ListChangeListener;
 import javafx.scene.canvas.Canvas;
@@ -87,20 +90,20 @@ public class KTreeRender_FX extends KTreeRender implements ListChangeListener<El
 					line.endXProperty().bind(parentVis.layoutXProperty());
 					line.endYProperty().bind(parentVis.layoutYProperty());
 
-					line.setTranslateX(node_width/2);
-					line.setTranslateY(node_height/2);
+					line.setTranslateX(node_width / 2);
+					line.setTranslateY(node_height / 2);
 
 					lines.getChildren().add(line);
 				}
 				nodes.getChildren().add(ghost);
 				elements.put(Arrays.toString(ae.getIndex()), ghost);
 			}
-			
+
 			/*
 			 * Add ghosts to complete the tree.
 			 */
 			for (; i < completedSize; i++) {
-				IndexedElement ae = new IndexedElement(0, new int[]{i});
+				IndexedElement ae = new IndexedElement(0, new int[] { i });
 				ghost = new EllipseElement(ae, node_width / 2, node_height / 2);
 				ghost.setLayoutX(getX(ae));
 				ghost.setLayoutY(getY(ae));
@@ -119,8 +122,8 @@ public class KTreeRender_FX extends KTreeRender implements ListChangeListener<El
 					line.endXProperty().bind(parentVis.layoutXProperty());
 					line.endYProperty().bind(parentVis.layoutYProperty());
 
-					line.setTranslateX(node_width/2);
-					line.setTranslateY(node_height/2);
+					line.setTranslateX(node_width / 2);
+					line.setTranslateY(node_height / 2);
 
 					line.setStrokeLineCap(StrokeLineCap.ROUND);
 					line.setStrokeLineJoin(StrokeLineJoin.BEVEL);
@@ -151,25 +154,77 @@ public class KTreeRender_FX extends KTreeRender implements ListChangeListener<El
 		return getY(e);
 	}
 
+	private String fade_option = "";
+
 	@Override
 	public void startAnimation(Element e, double start_x, double start_y, double end_x, double end_y) {
-//		EllipseElement animated = new EllipseElement(e, node_width / 2, node_height / 2);
-		EllipseElement animated = new EllipseElement(e.getNumericValue(), e.getColor(), node_width / 2, node_height / 2);
+		ParallelTransition trans = new ParallelTransition();
+
+		// EllipseElement animated = new EllipseElement(e, node_width / 2,
+		// node_height / 2);
+		EllipseElement animated = new EllipseElement(e.getNumericValue(), e.getColor(), node_width / 2,
+				node_height / 2);
 		EllipseElement real = elements.get(Arrays.toString(((IndexedElement) e).getIndex()));
 		real.setGhost(true);
 		nodes.getChildren().add(animated);
 
-		TranslateTransition transition = new TranslateTransition(Duration.millis(Animation.ANIMATION_TIME), animated);
-		transition.setOnFinished(event -> {
+		/*
+		 * Move
+		 */
+		TranslateTransition tt = new TranslateTransition(Duration.millis(Animation.ANIMATION_TIME));
+		tt.setOnFinished(event -> {
 			nodes.getChildren().remove(animated);
 			real.setGhost(false);
 		});
 
-		transition.setFromX(start_x);
-		transition.setFromY(start_y);
-		transition.setToX(end_x);
-		transition.setToY(end_y);
-		transition.playFromStart();
+		tt.setFromX(start_x);
+		tt.setFromY(start_y);
+		tt.setToX(end_x);
+		tt.setToY(end_y);
+
+		trans.getChildren().add(tt);
+
+		/*
+		 * Fade
+		 */
+		FadeTransition ft;
+		switch (fade_option) {
+		case "fade_in":
+			ft = new FadeTransition(Duration.millis(Animation.ANIMATION_TIME));
+			trans.getChildren().add(ft);
+
+			ft.setFromValue(0.3);
+			ft.setToValue(1);
+			break;
+		case "fade_out":
+			ft = new FadeTransition(Duration.millis(Animation.ANIMATION_TIME));
+			trans.getChildren().add(ft);
+
+			ft.setFromValue(1.0);
+			ft.setToValue(0.3);
+			break;
+		default:
+			break;
+		}
+
+		trans.setNode(animated);
+		trans.play();
+	}
+
+	public void animateSwap(Element var1, Render var1_render, Element var2, Render var2_render) {
+		fade_option = "disabled";
+		super.animateSwap(var1, var1_render, var2, var2_render);
+	}
+
+	public void animateReadWrite(Element src, Render src_render, Element tar, Render tar_render) {
+		if (tar == null) {
+			fade_option = "fade_out";
+		} else if (src == null) {
+			fade_option = "fade_in";
+		} else { // if (src != null && tar != null)
+			fade_option = "disabled";
+		}
+		super.animateReadWrite(src, src_render, tar, tar_render);
 	}
 
 	/*

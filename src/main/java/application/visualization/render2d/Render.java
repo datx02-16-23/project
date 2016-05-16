@@ -24,8 +24,14 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
+import wrapper.Locator;
+import wrapper.Operation;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
+import wrapper.operations.OP_ReadWrite;
+import wrapper.operations.OP_Remove;
+import wrapper.operations.OP_Swap;
+import wrapper.operations.OperationType;
 
 public abstract class Render extends StackPane {
 
@@ -255,6 +261,7 @@ public abstract class Render extends StackPane {
 	 *            An element in owner.
 	 * @return The absolute x-coordinates of e.
 	 */
+	// TODO remove
 	public static double absX(Render owner, Element e) {
 		return owner.absX(e);
 	}
@@ -280,6 +287,7 @@ public abstract class Render extends StackPane {
 	 *            An element in owner.
 	 * @return The absolute y-coordinates of e.
 	 */
+	// TODO remove
 	public static double absY(Render owner, Element e) {
 		return owner.absY(e);
 	}
@@ -336,7 +344,7 @@ public abstract class Render extends StackPane {
 	 *            The element which finished animating.
 	 */
 	public void finishAnimation(Element e) {
-		//Do nothing.
+		// Do nothing.
 	}
 
 	/**
@@ -502,6 +510,62 @@ public abstract class Render extends StackPane {
 		return new Background(new BackgroundImage(
 				new Image(GUI_Controller.class.getResourceAsStream("/assets/tree.png")), BackgroundRepeat.NO_REPEAT,
 				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
+	}
+
+	/**
+	 * Animates a Swap. The default implementation of this method does nothing.
+	 * 
+	 * @param remove
+	 *            The operation to animate.
+	 */
+	public void animateRemove(OP_Remove remove) {
+		// Do nothing.
+	}
+
+	/**
+	 * Animate a read or write.
+	 * 
+	 * @param src
+	 * @param src_render
+	 * @param tar
+	 * @param tar_render
+	 */
+	public void animateReadWrite(Element src, Render src_render, Element tar, Render tar_render) {
+		/*
+		 * Target is unknown. READ: this -> [x]
+		 */
+		if (tar == null) {
+			src_render.startAnimation(src, src_render.absX(src), src_render.absY(src), // From
+					src_render.absX(src) - node_width * 0.5, src_render.absY(src) - node_height * 1.5); // To
+			/*
+			 * Source is unknown. WRITE: [x] -> this
+			 */
+		} else if (src == null) {
+			tar_render.startAnimation(tar, tar_render.absX(tar) + node_width * 0.5,
+					tar_render.absY(tar) + node_height * 1.5, // From
+					tar_render.absX(tar), tar_render.absY(tar)); // To
+			/*
+			 * Source and target are known.
+			 */
+		} else { //if (src != null && tar != null)
+			src_render.startAnimation(src, src_render.absX(src), src_render.absY(src), // From
+					tar_render.absX(tar), tar_render.absY(tar)); // To
+		}
+	}
+
+	/**
+	 * Animate a swap between two elements.
+	 * 
+	 * @param var1
+	 * @param var1_render
+	 * @param var2
+	 * @param var2_render
+	 */
+	public void animateSwap(Element var1, Render var1_render, Element var2, Render var2_render) {
+		var1_render.startAnimation(var1, var1_render.absX(var1), var1_render.absY(var1), var2_render.absX(var2),
+				var2_render.absY(var2));
+		var2_render.startAnimation(var2, var2_render.absX(var2), var2_render.absY(var2), var1_render.absX(var1),
+				var1_render.absY(var1));
 	}
 
 }

@@ -55,9 +55,6 @@ public class KTreeRender extends Render {
 		super(struct, width, height, hspace, vspace);
 		this.K = K < 2 ? 2 : K;
 		lowerLevelSums.add(new Integer(0));
-		// Main.console.force("WARNING: At the time of writing (2016-04-18) the
-		// KTreeRender class, JavaFX may crash with a NullPointerException when
-		// Canvas grows too large.");
 	}
 
 	private static RenderSVF createOptionsSpinner() {
@@ -116,9 +113,6 @@ public class KTreeRender extends Render {
 
 	/**
 	 * Calculate the depth and breath of the tree.
-	 * {@code (double) (K_pow(totDepth + 1) - 1) / (double) (K - 1)} gives total
-	 * number of elements above {@code totDepth}. Using
-	 * {@code calculateLowerLevelSums} instead.
 	 */
 	private void calculateDepthAndBreadth() {
 		double structSize = struct.getElements().size();
@@ -130,14 +124,13 @@ public class KTreeRender extends Render {
 		totDepth--;
 		this.completedSize = lowerLevelSums.get(totDepth + 1);
 		totBreadth = K_pow(totDepth);
-		// calculateSize();
 	}
 
 	@Override
 	public void calculateSize() {
 		calculateDepthAndBreadth();
 		this.WIDTH = totBreadth * (node_width + hspace) + hspace;
-		this.HEIGHT = (totDepth) * (node_height + vspace) * 2 + node_height - vspace;
+		this.HEIGHT = totDepth * (node_height + vspace) * 2 + node_height - vspace;
 		setSize(WIDTH, HEIGHT);
 		super.calculateSize();
 	}

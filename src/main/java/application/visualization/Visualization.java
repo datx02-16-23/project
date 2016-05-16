@@ -112,7 +112,8 @@ public class Visualization extends StackPane {
 			render = new MatrixRender(struct, struct.visualOption, 40, 40, 0, 0);
 			break;
 		case tree:
-//			render = new KTreeRender(struct, struct.visualOption, 40, 40, 0, 10);
+			// render = new KTreeRender(struct, struct.visualOption, 40, 40, 0,
+			// 10);
 			render = new KTreeRender_FX(struct, 4, 50, 40, 5, 5);
 			break;
 		}
@@ -225,16 +226,14 @@ public class Visualization extends StackPane {
 		 */
 		if (src_e != null && tar_e != null) {
 			// Render data transfer between two known structures
-			src_render.startAnimation(src_e, Render.absX(src_render, src_e), Render.absY(src_render, src_e), // From
-					Render.absX(tar_render, tar_e), Render.absY(tar_render, tar_e)); // To
-		} else if (src_e != null && tar_e == null) {
-			// Render read without target 
-			src_render.startAnimation(src_e, Render.absX(src_render, src_e), Render.absY(src_render, src_e), // From
-					Render.absX(src_render, src_e) - 25, Render.absY(src_render, src_e) - 50); // To
-		} else if (src_e == null && tar_e != null) {
+			src_render.animateReadWrite(src_e, src_render, tar_e, tar_render);
+			tar_render.animateReadWrite(src_e, src_render, tar_e, tar_render);
+		} else if (tar_e == null && src_render != null) {
+			// Render read without target
+			src_render.animateReadWrite(src_e, src_render, null, null);
+		} else if (src_e == null && tar_render != null) {
 			// Render write without source
-			tar_render.startAnimation(tar_e, Render.absX(tar_render, tar_e) + 25, Render.absY(tar_render, tar_e) + 50, // From
-					Render.absX(tar_render, tar_e), Render.absY(tar_render, tar_e)); // To
+			tar_render.animateReadWrite(null, null, tar_e, tar_render);
 		}
 	}
 

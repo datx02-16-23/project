@@ -1,14 +1,14 @@
 package application.visualization.render_NEW;
 
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Rectangle;
 import wrapper.datastructures.Element;
 
-public class EllipseElement extends VisualElement {
-	private static final String url = "/visualization/EllipseElement.fxml";
+public class RectangleElement extends VisualElement {
+	private static final String url = "/visualization/RectangleElement.fxml";
 
 	/**
-	 * Create a static, unbound EllipseElement.
+	 * Create a static, unbound RectangleElement.
 	 * 
 	 * @param value
 	 *            The initial value.
@@ -19,13 +19,13 @@ public class EllipseElement extends VisualElement {
 	 * @param node_height
 	 *            The height of the node.
 	 */
-	public EllipseElement(double value, Color style, double node_width, double node_height) {
+	public RectangleElement(double value, Color style, double node_width, double node_height) {
 		super(value, style, node_width, node_height, url);
 		init();
 	}
 
 	/**
-	 * Create a bound visual EllipseElement.
+	 * Create a bound visual RectangleElement.
 	 * 
 	 * @param element
 	 *            The Element this VisualElement represents
@@ -34,13 +34,13 @@ public class EllipseElement extends VisualElement {
 	 * @param node_height
 	 *            The height of the node.
 	 */
-	public EllipseElement(Element element, double node_width, double node_height) {
+	public RectangleElement(Element element, double node_width, double node_height) {
 		super(element, node_width, node_height, url);
 		init();
 	}
 	
 	private void init(){
-		((Ellipse) shape).setRadiusX(node_width);
-		((Ellipse) shape).setRadiusY(node_height);
+		((Rectangle) shape).setWidth(node_width);
+		((Rectangle) shape).setWidth(node_height);
 	}
 }
