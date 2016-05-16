@@ -12,7 +12,7 @@ import javafx.scene.text.Text;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
 import wrapper.datastructures.Array;
-import wrapper.datastructures.Array.ArrayElement;
+import wrapper.datastructures.Array.IndexedElement;
 
 public class BarchartRender extends Render {
 
@@ -50,9 +50,9 @@ public class BarchartRender extends Render {
 		} else {
 			List<Element> modifiedElements = struct.getModifiedElements();
 			List<Element> resetElements = struct.getResetElements();
-			ArrayElement ae;
+			IndexedElement ae;
 			for (Element e : struct.getElements()) {
-				ae = (ArrayElement) e;
+				ae = (IndexedElement) e;
 				if (modifiedElements.contains(e)) {
 					drawElement(ae.getNumericValue(), ae.getIndex(), e.getColor());
 				} else if (resetElements.contains(e)) {
@@ -74,7 +74,7 @@ public class BarchartRender extends Render {
 		context.setFill(COLOR_BLACK);
 		context.fillText(struct.toString(), 0, 10);
 		for (Element e : struct.getElements()) {
-			ArrayElement ae = (ArrayElement) e;
+			IndexedElement ae = (IndexedElement) e;
 			drawElement(ae.getNumericValue(), ae.getIndex(), DEFAULT_COLOR);
 		}
 		struct.repaintAll = false;
@@ -184,7 +184,7 @@ public class BarchartRender extends Render {
 
 	@Override
 	public double getX(Element e) {
-		return getX(((ArrayElement) e).getIndex()[0]);
+		return getX(((IndexedElement) e).getIndex()[0]);
 	}
 
 	@Override
@@ -194,7 +194,7 @@ public class BarchartRender extends Render {
 
 	@Override
 	public void drawAnimatedElement(Element e, double x, double y, Color style) {
-		drawNode(e.getNumericValue(), x, y, style, ((ArrayElement) e).getIndex()[0], SHARED_ANIMATED);
+		drawNode(e.getNumericValue(), x, y, style, ((IndexedElement) e).getIndex()[0], SHARED_ANIMATED);
 	}
 
 	@Override

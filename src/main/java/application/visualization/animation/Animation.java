@@ -14,7 +14,7 @@ public abstract class Animation {
 	/**
 	 * The animation time in milliseconds.
 	 */
-	protected static long ANIMATION_TIME = 5000;
+	public static long ANIMATION_TIME = 5000;
 	/**
 	 * The number of frames animations use.
 	 */

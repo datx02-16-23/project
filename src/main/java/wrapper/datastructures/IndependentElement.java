@@ -58,7 +58,7 @@ public class IndependentElement extends Array {
 	 *            The value to initialize with.
 	 */
 	public void initElement(double value) {
-		Element init = new Array.ArrayElement(value, new int[] { 0 });
+		Element init = new Array.IndexedElement(value, new int[] { 0 });
 		elements.clear();
 		elements.add(init);
 	}
@@ -91,11 +91,11 @@ public class IndependentElement extends Array {
 	protected void executeSwap(OP_Swap op) {
 		Element e = elements.get(0);
 		if (op.getVar1().identifier.equals(this.identifier)) {
-			e.setNumericValue(op.getValue()[0]);
+			e.setNumValue(op.getValue()[0]);
 			e.setColor(OperationType.swap.color);
 			return;
 		} else if (op.getVar2().identifier.equals(this.identifier)) {
-			e.setNumericValue(op.getValue()[1]);
+			e.setNumValue(op.getValue()[1]);
 			e.setColor(OperationType.swap.color);
 			return;
 		}
@@ -108,7 +108,7 @@ public class IndependentElement extends Array {
 		}
 		Element e = elements.get(0);
 		if (op.getTarget() != null && op.getTarget().identifier.equals(this.identifier)) {
-			e.setNumericValue(op.getValue()[0]);
+			e.setNumValue(op.getValue()[0]);
 			modifiedElements.add(e);
 			e.setColor(OperationType.write.color);
 			return;
@@ -124,12 +124,12 @@ public class IndependentElement extends Array {
 	}
 
 	@Override
-	public ArrayElement getElement(Locator locator) {
+	public IndexedElement getElement(Locator locator) {
 		if (locator == null) {
 			return null;
 		}
 		if (locator.identifier.equals(super.identifier) && elements.isEmpty() == false) {
-			return (ArrayElement) elements.get(0);
+			return (IndexedElement) elements.get(0);
 		} else {
 			return null;
 		}

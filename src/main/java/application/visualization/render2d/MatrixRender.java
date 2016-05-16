@@ -13,7 +13,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import wrapper.datastructures.Array;
-import wrapper.datastructures.Array.ArrayElement;
+import wrapper.datastructures.Array.IndexedElement;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
 import wrapper.operations.OperationType;
@@ -131,7 +131,7 @@ public class MatrixRender extends Render {
 		context.setFill(COLOR_BLACK);
 		context.fillText(struct.toString(), hspace, vspace + 10);
 		if (struct.getElements().isEmpty() == false) {
-			ArrayElement ae = (ArrayElement) struct.getElements().get(0);
+			IndexedElement ae = (IndexedElement) struct.getElements().get(0);
 			int dimensions = ae.getIndex().length;
 			if (dimensions != 2 && dimensions != 1) {
 				Main.console.force("WARNING: Structure " + struct + " has declared " + dimensions
@@ -191,11 +191,11 @@ public class MatrixRender extends Render {
 	 *            The style to use (null = default)
 	 */
 	private void drawElement(Element e, Color style) {
-		drawNode(e.getNumericValue() + "", getX(e), getY(e), style, ((ArrayElement) e).getIndex(), local_canvas);
+		drawNode(e.getNumericValue() + "", getX(e), getY(e), style, ((IndexedElement) e).getIndex(), local_canvas);
 	}
 
 	private void drawInactiveElement(Element e) {
-		drawNode("", getX(e), getY(e), OperationType.remove.color, ((ArrayElement) e).getIndex(), local_canvas);
+		drawNode("", getX(e), getY(e), OperationType.remove.color, ((IndexedElement) e).getIndex(), local_canvas);
 	}
 
 	/*
@@ -297,7 +297,7 @@ public class MatrixRender extends Render {
 
 	@Override
 	public double getX(Element e) {
-		int[] index = ((ArrayElement) e).getIndex();
+		int[] index = ((IndexedElement) e).getIndex();
 		double x = PADDING + hspace;
 		if (mo == Order.ROW_MAJOR) {
 			x = getX(index[0]);
@@ -311,7 +311,7 @@ public class MatrixRender extends Render {
 
 	@Override
 	public double getY(Element e) {
-		int[] index = ((ArrayElement) e).getIndex();
+		int[] index = ((IndexedElement) e).getIndex();
 		double y = PADDING + vspace;
 		if (mo == Order.ROW_MAJOR) {
 			if (index.length == 2) {
@@ -325,7 +325,7 @@ public class MatrixRender extends Render {
 
 	@Override
 	public void drawAnimatedElement(Element e, double x, double y, Color style) {
-		drawNode(e.getNumericValue() + "", x, y, style, ((ArrayElement) e).getIndex(), SHARED_ANIMATED);
+		drawNode(e.getNumericValue() + "", x, y, style, ((IndexedElement) e).getIndex(), SHARED_ANIMATED);
 	}
 
 	@Override

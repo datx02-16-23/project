@@ -9,11 +9,9 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
-import wrapper.datastructures.Array.ArrayElement;
+import wrapper.datastructures.Array.IndexedElement;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
 import wrapper.operations.OperationType;
@@ -32,9 +30,9 @@ import wrapper.operations.OperationType;
 public class KTreeRender extends Render {
 
 	private static final RenderSVF rsvf = createOptionsSpinner();
-	private final int K;
+	protected final int K;
 	private final ArrayList<Integer> lowerLevelSums = new ArrayList<Integer>();
-	private int totDepth, totBreadth, completedSize;
+	protected int totDepth, totBreadth, completedSize;
 
 	/**
 	 * Create a new KTreeRender with K children and one parent. Will set K = 2
@@ -53,8 +51,7 @@ public class KTreeRender extends Render {
 	 * @param vspace
 	 *            The verital space between elements.
 	 */
-	public KTreeRender(DataStructure struct, int K, double width, double height, double hspace, double vspace)
-			throws IllegalArgumentException {
+	public KTreeRender(DataStructure struct, int K, double width, double height, double hspace, double vspace) {
 		super(struct, width, height, hspace, vspace);
 		this.K = K < 2 ? 2 : K;
 		lowerLevelSums.add(new Integer(0));
@@ -104,9 +101,9 @@ public class KTreeRender extends Render {
 		} else {
 			List<Element> modifiedElements = struct.getModifiedElements();
 			List<Element> resetElements = struct.getResetElements();
-			ArrayElement ae;
+			IndexedElement ae;
 			for (Element e : struct.getElements()) {
-				ae = (ArrayElement) e;
+				ae = (IndexedElement) e;
 				if (modifiedElements.contains(e)) {
 					drawElement(ae, ae.getIndex()[0], e.getColor());
 				} else if (resetElements.contains(e)) {
@@ -133,22 +130,14 @@ public class KTreeRender extends Render {
 		totDepth--;
 		this.completedSize = lowerLevelSums.get(totDepth + 1);
 		totBreadth = K_pow(totDepth);
-		calculateSize();
+		// calculateSize();
 	}
 
 	@Override
 	public void calculateSize() {
-		this.WIDTH = totBreadth * (node_width + hspace) + 25;
-		this.HEIGHT = totDepth * (node_height + vspace) * 2 + vspace; // Depth
-																		// doesnt
-																		// include
-																		// node
-																		// +
-																		// margain
-																		// above.
-		// this.setMinSize(WIDTH, HEIGHT);
-		// this.setPrefSize(WIDTH, HEIGHT);
-		// this.setMaxSize(WIDTH, HEIGHT);
+		calculateDepthAndBreadth();
+		this.WIDTH = totBreadth * (node_width + hspace) + hspace;
+		this.HEIGHT = (totDepth) * (node_height + vspace) * 2 + node_height - vspace;
 		setSize(WIDTH, HEIGHT);
 		super.calculateSize();
 	}
@@ -164,12 +153,12 @@ public class KTreeRender extends Render {
 		context.setFill(COLOR_BLACK);
 		context.fillText(struct.toString(), hspace, vspace + 10);
 		for (Element e : struct.getElements()) {
-			ArrayElement ae = (ArrayElement) e;
+			IndexedElement ae = (IndexedElement) e;
 			drawElement(ae, ae.getIndex()[0], Color.WHITE);
 		}
 		int i = struct.getElements().size();
 		for (; i < completedSize; i++) {
-			ArrayElement ae = new ArrayElement(Double.NaN, new int[] { i });
+			IndexedElement ae = new IndexedElement(Double.NaN, new int[] { i });
 			struct.getInactiveElements().add(ae);
 			drawElement(ae, i, OperationType.remove.color); // Draw zombies.
 															// String will
@@ -268,14 +257,14 @@ public class KTreeRender extends Render {
 
 	private void drawConnectors() {
 		GraphicsContext gc = local_canvas.getGraphicsContext2D();
-		ArrayElement ae;
+		IndexedElement ae;
 		double x, y;
 		int index;
 		int depth;
 		double xOffset = node_width / 2;
 		for (int i = 0; i < struct.getElements().size(); i++) {
 			gc.setStroke(Color.BLACK);
-			ae = (ArrayElement) struct.getElements().get(i);
+			ae = (IndexedElement) struct.getElements().get(i);
 			index = ae.getIndex()[0];
 			depth = this.getDepth(index);
 			x = getX(ae);
@@ -335,14 +324,12 @@ public class KTreeRender extends Render {
 
 	@Override
 	public double getX(Element e) {
-		int index = ((ArrayElement) e).getIndex()[0];
+		int index = ((IndexedElement) e).getIndex()[0];
 		double x;
 		int breadth, depth;
 		if (index == 0) { // Root element
 			double p = K_pow(totDepth) / 2;
 			x = hspace + (hspace + node_width) * (p) - ((K + 1) % 2) * (node_width + hspace) / 2;
-			breadth = 0;
-			depth = 0;
 		} else {
 			depth = getDepth(index);
 			breadth = getBreadth(index, depth);
@@ -353,7 +340,7 @@ public class KTreeRender extends Render {
 
 	@Override
 	public double getY(Element e) {
-		int index = ((ArrayElement) e).getIndex()[0];
+		int index = ((IndexedElement) e).getIndex()[0];
 		double y;
 		int depth;
 		if (index == 0) { // Root element

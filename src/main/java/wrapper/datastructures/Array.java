@@ -8,7 +8,6 @@ import application.gui.Main;
 import application.visualization.VisualType;
 import javafx.scene.paint.Color;
 import wrapper.Locator;
-import wrapper.Operation;
 import wrapper.datastructures.RawType.AbstractType;
 import wrapper.operations.*;
 
@@ -76,10 +75,9 @@ public class Array extends DataStructure {
 	}
 
 	private void init(OP_Write init) {
-		if (!init.getTarget().identifier.equals(super.identifier)) {
-			return;
-		}
+
 		repaintAll = true;
+		
 		elements.clear();
 		double[] init_values = init.getValue();
 		if (capacity == null) { // Fall back to size declared in header
@@ -91,8 +89,8 @@ public class Array extends DataStructure {
 		// Initialize specified by the values argument of the init operation.
 		int linearIndex = 0;
 		for (; linearIndex < init_values.length; linearIndex++) {
-			ArrayElement ae = new ArrayElement(init_values[linearIndex], getIndexInNDimensions(linearIndex, capacity));
-			ae.color = OperationType.write.color;
+			IndexedElement ae = new IndexedElement(init_values[linearIndex], getIndexInNDimensions(linearIndex, capacity));
+			ae.setColor(OperationType.write.color);
 			putElement(ae);
 		}
 		// Initialize elements without given values to 0.
@@ -101,9 +99,9 @@ public class Array extends DataStructure {
 			linearTotal = linearTotal * capacity[i];
 		}
 		for (linearIndex++; linearIndex < linearTotal; linearIndex++) {
-			ArrayElement ae = new ArrayElement(0.0, getIndexInNDimensions(linearIndex, capacity));
+			IndexedElement ae = new IndexedElement(0.0, getIndexInNDimensions(linearIndex, capacity));
 			modifiedElements.add(ae);
-			ae.color = OperationType.write.color;
+			ae.setColor(OperationType.write.color);
 			putElement(ae);
 		}
 		modifiedElements.addAll(elements);
@@ -117,22 +115,20 @@ public class Array extends DataStructure {
 		max = Integer.MIN_VALUE;
 	}
 
-
-
 	protected void executeSwap(OP_Swap op) {
 		Locator var1 = op.getVar1();
 		Locator var2 = op.getVar2();
-		ArrayElement var1Element = this.getElement(var1);
+		IndexedElement var1Element = this.getElement(var1);
 		if (var1Element != null) {
-			var1Element.numericValue = op.getValue()[0];
-			var1Element.color = OperationType.swap.color;
+			var1Element.setNumValue(op.getValue()[0]);
+			var1Element.setColor(OperationType.swap.color);
 			modifiedElements.add(var1Element);
 			inactiveElements.remove(var1Element);
 		}
-		ArrayElement var2Element = this.getElement(var2);
+		IndexedElement var2Element = this.getElement(var2);
 		if (var2Element != null) {
-			var2Element.numericValue = op.getValue()[1];
-			var2Element.color = OperationType.swap.color;
+			var2Element.setNumValue(op.getValue()[1]);
+			var2Element.setColor(OperationType.swap.color);
 			modifiedElements.add(var2Element);
 			inactiveElements.remove(var2Element);
 		}
@@ -147,13 +143,13 @@ public class Array extends DataStructure {
 			return;
 		}
 		// Manage write
-		ArrayElement targetElement = this.getElement(op.getTarget());
-		ArrayElement sourceElement = this.getElement(op.getSource());
+		IndexedElement targetElement = this.getElement(op.getTarget());
+		IndexedElement sourceElement = this.getElement(op.getSource());
 		double[] value = op.getValue();
 		if (targetElement != null) {
 			if (value != null) {
-				targetElement.numericValue = op.getValue()[0];
-				targetElement.color = OperationType.write.color;
+				targetElement.setNumValue(op.getValue()[0]);
+				targetElement.setColor(OperationType.write.color);
 				modifiedElements.add(targetElement);
 				inactiveElements.remove(targetElement);
 			} else {
@@ -162,18 +158,18 @@ public class Array extends DataStructure {
 		}
 		// Manage read
 		else if (sourceElement != null) {
-			sourceElement.color = OperationType.read.color;
+			sourceElement.setColor(OperationType.read.color);
 			modifiedElements.add(sourceElement);
 			inactiveElements.remove(sourceElement);
 		} else if (op.getSource() != null && op.getSource().identifier.equals(super.identifier)) {
-			ArrayElement ae = new ArrayElement(0,
+			IndexedElement ae = new IndexedElement(0,
 					op.getSource().index != null ? op.getSource().index : new int[] { elements.size() });
-			ae.color = OperationType.read.color;
+			ae.setColor(OperationType.read.color);
 			putElement(ae);
 		} else if (op.getTarget() != null && op.getTarget().identifier.equals(super.identifier)) {
-			ArrayElement ae = new ArrayElement(0,
+			IndexedElement ae = new IndexedElement(0,
 					op.getTarget().index != null ? op.getTarget().index : new int[] { elements.size() });
-			ae.color = OperationType.write.color;
+			ae.setColor(OperationType.write.color);
 			putElement(ae);
 		}
 	}
@@ -236,7 +232,7 @@ public class Array extends DataStructure {
 	 * @return The element at the location specified by the given locator, if it
 	 *         was valid. Null otherwise.
 	 */
-	public ArrayElement getElement(Locator locator) {
+	public IndexedElement getElement(Locator locator) {
 		if (locator == null || locator.identifier.equals(identifier) == false) {
 			return null;
 		}
@@ -251,9 +247,9 @@ public class Array extends DataStructure {
 	 * @return The element at the given index if the index was valid, null
 	 *         otherwise.
 	 */
-	public ArrayElement getElement(int[] index) {
+	public IndexedElement getElement(int[] index) {
 		for (Element e : elements) {
-			ArrayElement ae = (ArrayElement) e;
+			IndexedElement ae = (IndexedElement) e;
 			if (Arrays.equals(index, ae.index)) {
 				return ae; // Found the element with the same index.
 			}
@@ -269,22 +265,22 @@ public class Array extends DataStructure {
 	 *            The element to insert.
 	 * @return The element which was replaced, if applicable. Null otherwise.
 	 */
-	public ArrayElement putElement(ArrayElement newElement) {
-		ArrayElement old = null;
+	public IndexedElement putElement(IndexedElement newElement) {
+		IndexedElement old = null;
 		old = getElement(newElement.index);
 		if (old != null) {
-			if (newElement.numericValue == old.numericValue) {
+			if (newElement.getNumericValue() == old.getNumericValue()) {
 				return null;
 			}
 			int replacedElementIndex = elements.indexOf(old);
 			elements.remove(old);
 			elements.add(replacedElementIndex, newElement);
 		}
-		if (newElement.numericValue < min) {
-			min = newElement.numericValue;
+		if (newElement.getNumericValue() < min) {
+			min = newElement.getNumericValue();
 		}
-		if (newElement.numericValue > max) {
-			max = newElement.numericValue;
+		if (newElement.getNumericValue() > max) {
+			max = newElement.getNumericValue();
 		}
 		elements.add(newElement);
 		return old;
@@ -312,13 +308,13 @@ public class Array extends DataStructure {
 	 * Internal class for holding elements
 	 */
 	/**
-	 * An element in an Array. The elements do not keep track of which Array
+	 * An indexed element.
 	 * they belong to.
 	 * 
 	 * @author Richard Sundqvist
 	 *
 	 */
-	public static class ArrayElement extends Element {
+	public static class IndexedElement extends Element {
 
 		private int[] index;
 
@@ -330,9 +326,25 @@ public class Array extends DataStructure {
 		 * @param index
 		 *            The index for this ArrayElement.
 		 */
-		public ArrayElement(double value, int[] index) {
-			this.numericValue = value;
-			this.index = index;
+		public IndexedElement(double value, int[] index) {
+			setNumValue(value);
+			setIndex(index);
+		}
+
+		private final int primes[] = { 607, 613, 617, 619, 631, 641, 643, 647, 653, 659, 661, 673, 677, 683, 691, 701,
+				709, 719, 727, 733 };
+
+		@Override
+		public int hashCode() {
+			if (index == null) {
+				super.hashCode();
+			}
+
+			int indexHash = 0;
+			for (int i = 0; i < index.length; i++) {
+				indexHash = index[i] * primes[i];
+			}
+			return super.hashCode() + indexHash;
 		}
 
 		/**
@@ -365,16 +377,16 @@ public class Array extends DataStructure {
 			if (obj == this) {
 				return true;
 			}
-			if (obj instanceof ArrayElement == false) {
+			if (obj instanceof IndexedElement == false) {
 				return false;
 			}
-			ArrayElement rhs = (ArrayElement) obj;
-			return this.numericValue == rhs.numericValue && Arrays.equals(this.index, rhs.index);
+			IndexedElement rhs = (IndexedElement) obj;
+			return this.getNumericValue() == rhs.getNumericValue() && Arrays.equals(this.index, rhs.index);
 		}
 
 		@Override
 		public String toString() {
-			return Arrays.toString(index) + " = " + numericValue;
+			return Arrays.toString(index) + " = " + getNumericValue();
 		}
 	}
 
@@ -392,4 +404,5 @@ public class Array extends DataStructure {
 			return VisualType.box;
 		}
 	}
+
 }

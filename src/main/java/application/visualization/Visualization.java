@@ -6,6 +6,7 @@ import application.gui.GUI_Controller;
 import application.model.Model;
 import application.visualization.animation.Animation;
 import application.visualization.render2d.*;
+import application.visualization.render_NEW.KTreeRender_FX;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
@@ -35,7 +36,7 @@ public class Visualization extends StackPane {
 	private boolean animate;
 	private final Model model;
 	private static Visualization INSTANCE;
-	private final StackPane RENDERS = new StackPane();
+	private final StackPane renders = new StackPane();
 	private final Overlay overlay;
 	private final HashMap<String, Render> struct_render_mapping = new HashMap<String, Render>();
 	public final Canvas ANIMATED = new Canvas();
@@ -65,7 +66,7 @@ public class Visualization extends StackPane {
 		ANIMATED.maxHeight(Double.MAX_VALUE);
 		animate = true;
 		// Add stacked canvases
-		this.getChildren().add(RENDERS);
+		this.getChildren().add(renders);
 		this.getChildren().add(ANIMATED);
 		this.getChildren().add(hintPane);
 		overlay = new Overlay();
@@ -74,7 +75,7 @@ public class Visualization extends StackPane {
 
 	public void clear() {
 		struct_render_mapping.clear();
-		RENDERS.getChildren().clear();
+		renders.getChildren().clear();
 		ANIMATED.getGraphicsContext2D().clearRect(0, 0, ANIMATED.getWidth(), ANIMATED.getHeight());
 		// overlay.clear();
 		hintPane.setVisible(true);
@@ -85,12 +86,12 @@ public class Visualization extends StackPane {
 		overlay.clear();
 		for (DataStructure struct : model.getStructures().values()) {
 			Render render = resolveRender(struct);
-			RENDERS.getChildren().add(render);
+			renders.getChildren().add(render);
 			// overlay.addNode(new ArrayInfoPane((Array) struct));
 			struct_render_mapping.put(struct.identifier, render);
 		}
 		// overlay.expandAll();
-		hintPane.setVisible(RENDERS.getChildren().isEmpty());
+		hintPane.setVisible(renders.getChildren().isEmpty());
 	}
 
 	/**
@@ -111,7 +112,8 @@ public class Visualization extends StackPane {
 			render = new MatrixRender(struct, struct.visualOption, 40, 40, 0, 0);
 			break;
 		case tree:
-			render = new KTreeRender(struct, struct.visualOption, 40, 40, 0, 10);
+//			render = new KTreeRender(struct, struct.visualOption, 40, 40, 0, 10);
+			render = new KTreeRender_FX(struct, 4, 50, 40, 5, 5);
 			break;
 		}
 		return render;
@@ -148,7 +150,7 @@ public class Visualization extends StackPane {
 			return;
 		}
 		Render render;
-		for (Object node : RENDERS.getChildren()) {
+		for (Object node : renders.getChildren()) {
 			render = (Render) node;
 			render.render();
 		}
@@ -226,7 +228,7 @@ public class Visualization extends StackPane {
 			src_render.startAnimation(src_e, Render.absX(src_render, src_e), Render.absY(src_render, src_e), // From
 					Render.absX(tar_render, tar_e), Render.absY(tar_render, tar_e)); // To
 		} else if (src_e != null && tar_e == null) {
-			// Render read without target
+			// Render read without target 
 			src_render.startAnimation(src_e, Render.absX(src_render, src_e), Render.absY(src_render, src_e), // From
 					Render.absX(src_render, src_e) - 25, Render.absY(src_render, src_e) - 50); // To
 		} else if (src_e == null && tar_e != null) {

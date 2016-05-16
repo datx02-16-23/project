@@ -32,7 +32,7 @@ public abstract class Render extends StackPane {
 	private static final Background ARRAY_BACKGROUND = getArrayBg();
 	private static final Background ORPHAN_BACKGROUND = getOrphanBg();
 	private static final Background TREE_BACKGROUND = getTreeBg();
-	private static final Border BORDER_DRAGGABLE = new Border(new BorderStroke(Color.web("#123456"),
+	private static final Border BORDER_MOUSEOVER = new Border(new BorderStroke(Color.web("#123456"),
 			BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(3), new Insets(-5)));
 	public static final double DEFAULT_SIZE = 40;
 	protected final double node_width, node_height;
@@ -213,7 +213,7 @@ public abstract class Render extends StackPane {
 		// Set cursor
 		this.setOnMouseEntered(event -> {
 			this.setCursor(Cursor.HAND);
-			this.setBorder(BORDER_DRAGGABLE);
+			this.setBorder(BORDER_MOUSEOVER);
 		});
 		this.setOnMouseExited(event -> {
 			this.setCursor(null);

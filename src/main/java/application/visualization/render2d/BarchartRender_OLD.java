@@ -10,7 +10,7 @@ import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.paint.Color;
 import wrapper.datastructures.Array;
-import wrapper.datastructures.Array.ArrayElement;
+import wrapper.datastructures.Array.IndexedElement;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
 
@@ -36,7 +36,7 @@ public class BarchartRender_OLD extends Render {
 		Series<String, Double> elemDataSeries = new XYChart.Series<>();
 		elemData = elemDataSeries.getData();
 		for (Element element : struct.getElements()) {
-			Array.ArrayElement e = (Array.ArrayElement) element;
+			Array.IndexedElement e = (Array.IndexedElement) element;
 			elemData.add(new Data(e.getIndex()[0] + "", e.getNumericValue()));
 		}
 		barChart.getData().add(elemDataSeries);
@@ -53,9 +53,9 @@ public class BarchartRender_OLD extends Render {
 		if (elemData.size() != elementsSize) { // Difference in size, probably
 												// because of an init.
 			elemData.clear();
-			ArrayElement ae;
+			IndexedElement ae;
 			for (Object o : struct.getElements()) {
-				ae = (ArrayElement) o;
+				ae = (IndexedElement) o;
 				elemData.add(new Data(ae.getIndex()[0] + "", ae.getNumericValue()));
 			}
 			// Set bar colors
@@ -66,10 +66,10 @@ public class BarchartRender_OLD extends Render {
 		List<Element> modified = struct.getModifiedElements();
 		List<Element> reset = struct.getResetElements();
 		// Change values of elements
-		ArrayElement ae;
+		IndexedElement ae;
 		Data<String, Double> d;
 		for (int i = 0; i < elementsSize; i++) {
-			ae = (ArrayElement) structElements.get(i);
+			ae = (IndexedElement) structElements.get(i);
 			d = elemData.get(i);
 			d.setXValue(ae.getIndex()[0] + "");
 			d.setYValue(ae.getNumericValue());

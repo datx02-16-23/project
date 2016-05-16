@@ -1,6 +1,10 @@
 package wrapper.datastructures;
 
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 /**
  * An element in a data structure.
@@ -10,9 +14,20 @@ import javafx.scene.paint.Color;
  */
 public abstract class Element {
 
-	protected double numericValue;
-	protected String value;
-	protected Color color;
+	private final SimpleStringProperty valueStringProperty = new SimpleStringProperty();
+	private final SimpleDoubleProperty valueDoubleProperty = new SimpleDoubleProperty();
+	private final SimpleObjectProperty<Paint> fillProperty = new SimpleObjectProperty<Paint>();
+	private double numericValue = Double.NaN;
+	private String value;
+	private Color color;
+
+	public SimpleStringProperty valueProperty() {
+		return valueStringProperty;
+	}
+
+	public SimpleObjectProperty<Paint> fillProperty() {
+		return fillProperty;
+	}
 
 	/**
 	 * Returns the numeric value held by this Element.
@@ -29,8 +44,11 @@ public abstract class Element {
 	 * @param newValue
 	 *            the new value for this Element.
 	 */
-	public final void setNumericValue(double newValue) {
-		this.numericValue = newValue;
+	public final void setNumValue(double newValue) {
+		if (numericValue != newValue) {
+			numericValue = newValue;
+			valueStringProperty.setValue(numericValue + "");
+		}
 	}
 
 	/**
@@ -52,7 +70,10 @@ public abstract class Element {
 	 * 
 	 */
 	public void setValue(String newValue) {
-		value = newValue;
+		if (value.equals(newValue) == false) {
+			value = newValue;
+			valueStringProperty.setValue(value);
+		}
 	}
 
 	/**
@@ -72,5 +93,12 @@ public abstract class Element {
 	 */
 	public final void setColor(Color newColor) {
 		this.color = newColor;
+		fillProperty.setValue(color);
 	}
+
+	@Override
+	public int hashCode() {
+		return (int) (numericValue * 17) + (value == null ? 0 : value.hashCode());
+	}
+
 }
