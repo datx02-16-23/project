@@ -274,12 +274,9 @@ public class Visualization extends StackPane {
 		/**
 		 * Start animations
 		 */
-		if (v1_e != null && v2_e != null) {
-			v1_render.startAnimation(v1_e, Render.absX(v1_render, v1_e), Render.absY(v1_render, v1_e),
-					Render.absX(v2_render, v2_e), Render.absY(v2_render, v2_e));
-			v2_render.startAnimation(v2_e, Render.absX(v2_render, v2_e), Render.absY(v2_render, v2_e),
-					Render.absX(v1_render, v1_e), Render.absY(v1_render, v1_e));
-		}
+
+		v1_render.animateSwap(v1_e, v1_render, v2_e, v2_render);
+		v2_render.animateSwap(v2_e, v2_render, v1_e, v1_render);
 	} // End animate swap
 
 	public void cleanAnimatedCanvas() {

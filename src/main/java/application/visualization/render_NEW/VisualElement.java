@@ -173,6 +173,10 @@ public class VisualElement extends Pane {
 	 *            The new value.
 	 */
 	public void setGhost(boolean ghost) {
+		if(ghost != value.isVisible()){
+			return; //Already a ghost.
+		}
+		
 		if (ghost) {
 			shape.fillProperty().unbind();
 			shape.setFill(Color.TRANSPARENT);

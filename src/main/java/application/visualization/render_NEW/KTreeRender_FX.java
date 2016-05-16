@@ -165,16 +165,54 @@ public class KTreeRender_FX extends KTreeRender implements ListChangeListener<El
 		EllipseElement animated = new EllipseElement(e.getNumericValue(), e.getColor(), node_width / 2,
 				node_height / 2);
 		EllipseElement real = elements.get(Arrays.toString(((IndexedElement) e).getIndex()));
-		real.setGhost(true);
+
 		nodes.getChildren().add(animated);
 
+		final boolean useGhost;
+		
+		
+		/*
+		 * Fade
+		 */
+		FadeTransition ft;
+		switch (fade_option) {
+		case "fade_in":
+			useGhost = true;
+
+			ft = new FadeTransition(Duration.millis(Animation.ANIMATION_TIME));
+			trans.getChildren().add(ft);
+
+			ft.setFromValue(0.15);
+			ft.setToValue(1);
+			break;
+
+		case "fade_out":
+			useGhost = false;
+			
+			ft = new FadeTransition(Duration.millis(Animation.ANIMATION_TIME));
+			trans.getChildren().add(ft);
+
+			ft.setFromValue(1.0);
+			ft.setToValue(0);
+			break;
+
+		case "swap":
+			useGhost = true;
+			break;
+		default:
+			useGhost = false;
+			break;
+		}
+		
 		/*
 		 * Move
 		 */
 		TranslateTransition tt = new TranslateTransition(Duration.millis(Animation.ANIMATION_TIME));
 		tt.setOnFinished(event -> {
 			nodes.getChildren().remove(animated);
-			real.setGhost(false);
+			if(useGhost){
+				real.setGhost(false);
+			}
 		});
 
 		tt.setFromX(start_x);
@@ -184,35 +222,14 @@ public class KTreeRender_FX extends KTreeRender implements ListChangeListener<El
 
 		trans.getChildren().add(tt);
 
-		/*
-		 * Fade
-		 */
-		FadeTransition ft;
-		switch (fade_option) {
-		case "fade_in":
-			ft = new FadeTransition(Duration.millis(Animation.ANIMATION_TIME));
-			trans.getChildren().add(ft);
-
-			ft.setFromValue(0.3);
-			ft.setToValue(1);
-			break;
-		case "fade_out":
-			ft = new FadeTransition(Duration.millis(Animation.ANIMATION_TIME));
-			trans.getChildren().add(ft);
-
-			ft.setFromValue(1.0);
-			ft.setToValue(0.3);
-			break;
-		default:
-			break;
-		}
-
+		// Showtime!!
 		trans.setNode(animated);
+		real.setGhost(useGhost);
 		trans.play();
 	}
 
 	public void animateSwap(Element var1, Render var1_render, Element var2, Render var2_render) {
-		fade_option = "disabled";
+		fade_option = "swap";
 		super.animateSwap(var1, var1_render, var2, var2_render);
 	}
 

@@ -564,8 +564,6 @@ public abstract class Render extends StackPane {
 	public void animateSwap(Element var1, Render var1_render, Element var2, Render var2_render) {
 		var1_render.startAnimation(var1, var1_render.absX(var1), var1_render.absY(var1), var2_render.absX(var2),
 				var2_render.absY(var2));
-		var2_render.startAnimation(var2, var2_render.absX(var2), var2_render.absY(var2), var1_render.absX(var1),
-				var1_render.absY(var1));
 	}
 
 }
