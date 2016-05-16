@@ -357,7 +357,7 @@ public class KTreeRender extends Render {
 	}
 
 	@Override
-	public void startAnimation(Element e, double start_x, double start_y, double end_x, double end_y) {
+	public void animate(Element e, double start_x, double start_y, double end_x, double end_y) {
 		// Clear element from stationary canvas.
 		GraphicsContext context = local_canvas.getGraphicsContext2D();
 		double bw = context.getLineWidth(); // Border width

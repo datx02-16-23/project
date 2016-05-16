@@ -198,7 +198,7 @@ public class BarchartRender extends Render {
 	}
 
 	@Override
-	public void startAnimation(Element e, double start_x, double start_y, double end_x, double end_y) {
+	public void animate(Element e, double start_x, double start_y, double end_x, double end_y) {
 		Animation a = new LinearAnimation(this, e, end_x, end_y);
 		a.start();
 	}

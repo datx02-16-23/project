@@ -157,11 +157,9 @@ public class KTreeRender_FX extends KTreeRender implements ListChangeListener<El
 	private String fade_option = "";
 
 	@Override
-	public void startAnimation(Element e, double start_x, double start_y, double end_x, double end_y) {
+	public void animate(Element e, double start_x, double start_y, double end_x, double end_y) {
 		ParallelTransition trans = new ParallelTransition();
 
-		// EllipseElement animated = new EllipseElement(e, node_width / 2,
-		// node_height / 2);
 		EllipseElement animated = new EllipseElement(e.getNumericValue(), e.getColor(), node_width / 2,
 				node_height / 2);
 		EllipseElement real = elements.get(Arrays.toString(((IndexedElement) e).getIndex()));
@@ -169,8 +167,7 @@ public class KTreeRender_FX extends KTreeRender implements ListChangeListener<El
 		nodes.getChildren().add(animated);
 
 		final boolean useGhost;
-		
-		
+
 		/*
 		 * Fade
 		 */
@@ -188,7 +185,7 @@ public class KTreeRender_FX extends KTreeRender implements ListChangeListener<El
 
 		case "fade_out":
 			useGhost = false;
-			
+
 			ft = new FadeTransition(Duration.millis(Animation.ANIMATION_TIME));
 			trans.getChildren().add(ft);
 
@@ -203,14 +200,14 @@ public class KTreeRender_FX extends KTreeRender implements ListChangeListener<El
 			useGhost = false;
 			break;
 		}
-		
+
 		/*
 		 * Move
 		 */
 		TranslateTransition tt = new TranslateTransition(Duration.millis(Animation.ANIMATION_TIME));
 		tt.setOnFinished(event -> {
 			nodes.getChildren().remove(animated);
-			if(useGhost){
+			if (useGhost) {
 				real.setGhost(false);
 			}
 		});

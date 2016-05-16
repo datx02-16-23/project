@@ -250,7 +250,7 @@ public abstract class Render extends StackPane {
 	 * @param end_y
 	 *            End point y-coordinate.
 	 */
-	public abstract void startAnimation(Element e, double start_x, double start_y, double end_x, double end_y);
+	public abstract void animate(Element e, double start_x, double start_y, double end_x, double end_y);
 
 	/**
 	 * Returns the absolute x-coordinate for the element e.
@@ -526,30 +526,30 @@ public abstract class Render extends StackPane {
 	 * Animate a read or write.
 	 * 
 	 * @param src
-	 * @param src_render
+	 * @param src_rndr
 	 * @param tar
-	 * @param tar_render
+	 * @param tar_rndr
 	 */
-	public void animateReadWrite(Element src, Render src_render, Element tar, Render tar_render) {
+	public void animateReadWrite(Element src, Render src_rndr, Element tar, Render tar_rndr) {
 		/*
 		 * Target is unknown. READ: this -> [x]
 		 */
 		if (tar == null) {
-			src_render.startAnimation(src, src_render.absX(src), src_render.absY(src), // From
-					src_render.absX(src) - node_width * 0.5, src_render.absY(src) - node_height * 1.5); // To
+			src_rndr.animate(src, src_rndr.absX(src), src_rndr.absY(src), // From
+					src_rndr.absX(src) - node_width * 0.5, src_rndr.absY(src) - node_height * 1.5); // To
 			/*
 			 * Source is unknown. WRITE: [x] -> this
 			 */
 		} else if (src == null) {
-			tar_render.startAnimation(tar, tar_render.absX(tar) + node_width * 0.5,
-					tar_render.absY(tar) + node_height * 1.5, // From
-					tar_render.absX(tar), tar_render.absY(tar)); // To
+			tar_rndr.animate(tar, tar_rndr.absX(tar) + node_width * 0.5,
+					tar_rndr.absY(tar) + node_height * 1.5, // From
+					tar_rndr.absX(tar), tar_rndr.absY(tar)); // To
 			/*
 			 * Source and target are known.
 			 */
 		} else { //if (src != null && tar != null)
-			src_render.startAnimation(src, src_render.absX(src), src_render.absY(src), // From
-					tar_render.absX(tar), tar_render.absY(tar)); // To
+			src_rndr.animate(src, src_rndr.absX(src), src_rndr.absY(src), // From
+					tar_rndr.absX(tar), tar_rndr.absY(tar)); // To
 		}
 	}
 
@@ -557,13 +557,13 @@ public abstract class Render extends StackPane {
 	 * Animate a swap between two elements.
 	 * 
 	 * @param var1
-	 * @param var1_render
+	 * @param var1_rndr
 	 * @param var2
-	 * @param var2_render
+	 * @param var2_rndr
 	 */
-	public void animateSwap(Element var1, Render var1_render, Element var2, Render var2_render) {
-		var1_render.startAnimation(var1, var1_render.absX(var1), var1_render.absY(var1), var2_render.absX(var2),
-				var2_render.absY(var2));
+	public void animateSwap(Element var1, Render var1_rndr, Element var2, Render var2_rndr) {
+		var1_rndr.animate(var2, var1_rndr.absX(var1), var1_rndr.absY(var1), var2_rndr.absX(var2),
+				var2_rndr.absY(var2));
 	}
 
 }
