@@ -71,8 +71,8 @@ def contains_variable(expr,variable_name):
 def get_operation(name,value,begin_line,end_line):
     return {
         JSON_OPERATION_TYPE : name, 
-        JSON_OPERATION_SOURCE : basename(getfile(currentframe())),
-        JSON_OPERATION_BODY : {JSON_OPERATION_VALUE : value},
+        JSON_OPERATION_BODY_SOURCE : basename(getfile(currentframe())),
+        JSON_OPERATION_BODY : {JSON_OPERATION_BODY_VALUE : value},
         JSON_OPERATION_BEGINLINE : begin_line - 1,
         JSON_OPERATION_ENDLINE : end_line - 1
     }
@@ -86,7 +86,7 @@ def to_json(statement):
         JSON_VARIABLE_IDENTIFIER : name
     }
     if indices:
-        statement_json[JSON_OPERATION_INDEX] = indices
+        statement_json[JSON_OPERATION_BODY_INDEX] = indices
     return statement_json
 ########################################################################
 # Log Methods
@@ -107,8 +107,8 @@ def write(src,dst,begin_line,end_line):
         operation = get_operation(JSON_OPERATION_TYPE_WRITE,value,begin_line,end_line)
         source = to_json(src)
         if source[JSON_VARIABLE_IDENTIFIER] != EXPR_UNDEFINED:
-            operation[JSON_OPERATION_BODY][JSON_OPERATION_SOURCE] = source
-        operation[JSON_OPERATION_BODY][JSON_OPERATION_TARGET] = to_json(dst)
+            operation[JSON_OPERATION_BODY][JSON_OPERATION_BODY_SOURCE] = source
+        operation[JSON_OPERATION_BODY][JSON_OPERATION_BODY_TARGET] = to_json(dst)
         put(operation)
     return value
 
@@ -116,7 +116,7 @@ def read(statement,begin_line,end_line):
     value = get_value(statement)
     if annotated_in(statement):
         operation = get_operation(JSON_OPERATION_TYPE_READ,value,begin_line,end_line)
-        operation[JSON_OPERATION_BODY][JSON_OPERATION_SOURCE] = to_json(statement)
+        operation[JSON_OPERATION_BODY][JSON_OPERATION_BODY_SOURCE] = to_json(statement)
         put(operation)
     return value
 

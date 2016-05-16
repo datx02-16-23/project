@@ -7,7 +7,7 @@ from transformer import WriteTransformer,ReadTransformer,PassTransformer
 from json import dump
 from constants import *
 
-print "================ Python Operations Interceptor ================"
+print "================ Python Logger ================"
 print "Loading wrapper.py..."
 from wrapper import w
 currrent_path = path.dirname(path.abspath(__file__))
@@ -51,7 +51,7 @@ def translate(rawType):
 	if rawType in types:
 		return types[rawType]
 	else:
-		return JSON_VARIABLE_RAWTYPE_INDEPENDENTVAR
+		return JSON_VARIABLE_RAWTYPE_DEFAULT
 
 class Variable(object):
 	def __init__(self,name,rawType,attributes=None,abstractType=None):
@@ -110,7 +110,7 @@ def create_settings(root_directory, files, variables, main_file, output):
 		files 			- files to be observed			[files,...]
 		variables 		- variables to be observed		[Variable,...]
 		main_file 		- main file of program			"relative/path/from/root/to/main"
-		output 			- where to store LOG output 	"path/to/store/output"
+		output 			- where to store PEL output 	"path/to/store/output"
 	"""
 	files = [format_path(f) for f in files]
 	variables = format_variables(variables)
@@ -144,12 +144,12 @@ def run(settings):
 	
 	print "Loading Transformers (parsers)..."
 	settings[SETTINGS_TRANSFORMERS] = [PassTransformer(TRANSFORMER_NAME_PASS), WriteTransformer(TRANSFORMER_NAME_WRITE), ReadTransformer(TRANSFORMER_NAME_READ)]
-	settings[SETTINGS_GENLOGENV] = '%s/visualize/' % currrent_path
-	settings[SETTINGS_MAIN] = settings[SETTINGS_GENLOGENV] + path.basename(settings[SETTINGS_MAIN])
+	settings[SETTINGS_PYLOGGERENV] = '%s/visualize/' % currrent_path
+	settings[SETTINGS_MAIN] = settings[SETTINGS_PYLOGGERENV] + path.basename(settings[SETTINGS_MAIN])
 	
-	if settings[SETTINGS_GENLOGENV] not in sys.path:
-		print "Creating temporary visualization environment & adding to sys.path at:\n%s" % settings[SETTINGS_GENLOGENV]
-		sys.path.insert(0,settings[SETTINGS_GENLOGENV])
+	if settings[SETTINGS_PYLOGGERENV] not in sys.path:
+		print "Creating temporary visualization environment & adding to sys.path at:\n%s" % settings[SETTINGS_PYLOGGERENV]
+		sys.path.insert(0,settings[SETTINGS_PYLOGGERENV])
 	create_env(settings)
 	
 	print "Creating Header..."
@@ -171,6 +171,6 @@ def run(settings):
 	dump_json(header,output,settings[SETTINGS_OUTPUT])
 
 	print "Removing visualization environment..."
-	system('rm -rf %s' % settings[SETTINGS_GENLOGENV])
+	system('rm -rf %s' % settings[SETTINGS_PYLOGGERENV])
 
 	print "Done! Output stored at:\n%s" % settings[SETTINGS_OUTPUT]

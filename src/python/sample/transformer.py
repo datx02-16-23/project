@@ -43,7 +43,6 @@ def get_lineno(node):
 			lineno.append(child.lineno)
 			lineno = lineno + get_lineno(child)
 	return lineno
-
 #############################################################
 class Expression(object):
 	DEFINED_NAMES = []
@@ -74,16 +73,18 @@ class NameExpression(Expression):
 	def __init__(self):
 		super(NameExpression,self).__init__(EXPR_VAR)
 
-	# (EXPR_VAR,node.id, 'Store') if Store is context
+	# (EXPR_VAR,node.id, EXPR_STORE) if Store is context
 	# (EXPR_VAR,node.id, node) if Load is context
 	def get_expression(self,node):
 		if is_builtin(node.id):
 			return node
-		value = node if isinstance(node.ctx,Load) else Str('Store')
+		value = node if isinstance(node.ctx,Load) else Str(EXPR_STORE)
 		return super(NameExpression,self).get_expression_([self.name,Str(node.id),value])
 
 
 class ExpressionTransformer(NodeTransformer):
+	NAME = "expression_transformer"
+	SUPPORTED_NODES = [TRANSFORMER_SUBSCRIPT,TRANSFORMER_NAME]
 
 	def is_generated_expression(self,node):
 		if isinstance(node,Tuple):
@@ -100,11 +101,23 @@ class ExpressionTransformer(NodeTransformer):
 		expression = NameExpression().get_expression(node)
 		return copy_location(expression,node)
 
+	def generic_visit(self,node):
+		print self.SUPPORTED_NODES
+		if type(node).__name__ in self.SUPPORTED_NODES:
+			super(ExpressionTransformer,self).visit(node)
+		else:
+			return node
+
 	def visit_BinOp(self,node): return node
 	def visit_Call(self,node): return node
 	def visit_Delete(self,node): return node
 	def visit_DictComp(self,node): return node
 	def visit_ListComp(self,node): return node
+
+et = ExpressionTransformer()
+node = parse("[[1,2],2,3][a[0]][1]")
+node_ = et.visit(node)
+print ts(node_)
 
 class OperationTransformer(NodeTransformer):
 	DEFINED_OPERATIONS = []
@@ -137,8 +150,8 @@ class OperationTransformer(NodeTransformer):
 			self.visit(field)
 		return node
 
-	# Following nodes should generally be avoided
-	# or should be handled diffrently in future
+	# Following nodes should generally be avoided 
+	# if not specifically needed for implementation
 	def visit_Assign(self,node): return node
 	def visit_AugAssign(self,node): return node
 	def visit_Delete(self,node): return node

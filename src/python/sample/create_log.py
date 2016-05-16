@@ -45,8 +45,8 @@ def transform(nodes,main_transformer):
 # given settings variable should be sanity-checked
 def create_env(settings):
 	# Setup rootdir of visualization folder given source root directory
-	copy_tree(settings[SETTINGS_ROOTDIR],settings[SETTINGS_GENLOGENV])
-	nodes = generate_nodes(settings[SETTINGS_FILES],settings[SETTINGS_GENLOGENV])
+	copy_tree(settings[SETTINGS_ROOTDIR],settings[SETTINGS_PYLOGGERENV])
+	nodes = generate_nodes(settings[SETTINGS_FILES],settings[SETTINGS_PYLOGGERENV])
 	mt = MainTransformer(settings[SETTINGS_TRANSFORMERS],settings[SETTINGS_OPERATIONS])
 	transform(nodes,mt)
 
@@ -62,28 +62,24 @@ def format_log(output_buffer):
 	return output
 
 def alias(operation,aliases):
-	if isinstance(operation[JSON_OPERATION_BODY],dict):
-		for k,statement in operation[JSON_OPERATION_BODY].iteritems():
-			if isinstance(statement,dict) and JSON_VARIABLE_IDENTIFIER in statement:
-				name = statement[JSON_VARIABLE_IDENTIFIER]
-				statement[JSON_VARIABLE_IDENTIFIER] = aliases[name] if name in aliases else name
+	if isinstance(operation[BODY],dict):
+		for k,statement in operation[BODY].iteritems():
+			if isinstance(statement,dict) and IDENTIFIER in statement:
+				name = statement[IDENTIFIER]
+				statement[IDENTIFIER] = aliases[name] if name in aliases else name
 
 def is_init(operation):
-	if JSON_OPERATION_SOURCE in operation[JSON_OPERATION_BODY]:
-		return (JSON_OPERATION_INDEX not in operation[JSON_OPERATION_BODY][JSON_OPERATION_TARGET] and
-				JSON_OPERATION_INDEX not in operation[JSON_OPERATION_BODY][JSON_OPERATION_SOURCE])
+	if SOURCE in operation[BODY]:
+		return (INDEX not in operation[BODY][TARGET] and
+				INDEX not in operation[BODY][SOURCE])
 	else:
-		return JSON_OPERATION_INDEX not in operation[JSON_OPERATION_BODY][JSON_OPERATION_TARGET]
+		return INDEX not in operation[BODY][TARGET]
 
 class LogPostProcessor(object):
 	def __init__(self,output_file):
 		with open(output_file,'r') as output_read:
 			output_buffer = output_read.read()
 			self.output = format_log(output_buffer)
-		# output_read = open(output_file,'r')
-		# output_buffer = output_read.read()
-		# output_read.close()
-		# self.output = format_log(output_buffer)
 
 	def process(self,variables):
 		self.names = [variable.name for variable in variables]
@@ -93,12 +89,12 @@ class LogPostProcessor(object):
 	def _fix_occurrences(self):
 		aliases = {}
 		for operation in self.output:
-			if (operation[JSON_OPERATION_TYPE] == JSON_OPERATION_TYPE_WRITE and is_init(operation)):
-				target = operation[JSON_OPERATION_BODY][JSON_OPERATION_TARGET][JSON_VARIABLE_IDENTIFIER]
-				if (JSON_OPERATION_SOURCE in operation[JSON_OPERATION_BODY] and
-					operation[JSON_OPERATION_BODY][JSON_OPERATION_SOURCE][JSON_VARIABLE_IDENTIFIER] in self.names and
+			if (operation[JSON_OPERATION_TYPE] == WRITE and is_init(operation)):
+				target = operation[BODY][TARGET][IDENTIFIER]
+				if (SOURCE in operation[BODY] and
+					operation[BODY][SOURCE][IDENTIFIER] in self.names and
 					# target not in aliases and 
 					target not in self.names):
-					aliases[target] = operation[JSON_OPERATION_BODY][JSON_OPERATION_SOURCE][JSON_VARIABLE_IDENTIFIER]
+					aliases[target] = operation[BODY][SOURCE][IDENTIFIER]
 					# self.names.append(target)
 			alias(operation,aliases)

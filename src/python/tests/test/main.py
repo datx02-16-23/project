@@ -1,38 +1,30 @@
-# merge sort
-def merge_sort(array):
-    merge_sort_r(array, 0, len(array) -1)
+def shellSort(alist):
+    sublistcount = len(alist)//2
+    while sublistcount > 0:
 
-# merge sort recursive (used by merge_sort)
-def merge_sort_r(array, first, last):
-    if first < last:
-        sred = (first + last)/2
-        merge_sort_r(array, first, sred)
-        merge_sort_r(array, sred + 1, last)
-        merge(array, first, last, sred)
+        for startposition in range(sublistcount):
+            gapInsertionSort(alist,startposition,sublistcount)
 
-# merge (used by merge_sort_r)
-def merge(array, first, last, sred):
-    helper_list = []
-    i = first
-    j = sred + 1
-    while i <= sred and j <= last:
-        if array [i] <= array [j]:
-            helper_list.append(array[i])
-            i += 1
-        else:
-            helper_list.append(array [j])
-            j += 1
-    while i <= sred:
-        helper_list.append(array[i])
-        i +=1
-    while j <= last:
-        helper_list.append(array[j])
-        j += 1
-    for k in range(0, last - first + 1):
-        array[first + k] = helper_list [k]
+        print("After increments of size",sublistcount,"The list is",alist)
+
+        sublistcount = sublistcount // 2
+
+def gapInsertionSort(alist,start,gap):
+    for i in range(start+gap,len(alist),gap):
+
+        currentvalue = alist[i]
+        position = i
+
+        while position>=gap and alist[position-gap]>currentvalue:
+            alist[position]=alist[position-gap]
+            position = position-gap
+
+        alist[position]=currentvalue
+
 
 from random import random as r
 rng = 100
-size = 20
-vec = [int(r() * rng) for i in range(0,size)]
-merge_sort(vec)
+size = 10
+# vec = [int(r() * rng) for i in range(0,size)]
+vec = [54,26,93,17,77,31,44,55,20]
+shellSort(vec)
