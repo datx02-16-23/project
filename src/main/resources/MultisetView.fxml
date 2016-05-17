@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
@@ -10,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" style="-fx-background-color: #123456;" xmlns="http://javafx.com/javafx/8.0.91" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" style="-fx-background-color: #123456;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" VBox.vgrow="ALWAYS">
          <center>
@@ -23,32 +29,12 @@
                <children>
                   <HBox>
                      <children>
-                        <Label maxHeight="25.0" maxWidth="100.0" minHeight="25.0" minWidth="75.0" prefHeight="25.0" prefWidth="100.0" text="Range:">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                        </Label>
-                        <TextField fx:id="range" maxWidth="1.7976931348623157E308" minWidth="300.0" prefWidth="300.0" promptText="For example: [1, 2]" text="dsa" HBox.hgrow="ALWAYS" />
-                     </children>
-                  </HBox>
-                  <HBox>
-                     <children>
-                        <Label maxWidth="100.0" minWidth="75.0" prefWidth="100.0" text="Conditional:">
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                        </Label>
-                        <TextField fx:id="cond" maxWidth="1.7976931348623157E308" minWidth="300.0" prefWidth="300.0" promptText="Optional" HBox.hgrow="ALWAYS" />
-                     </children>
-                  </HBox>
-                  <HBox>
-                     <children>
                         <Label maxWidth="100.0" minWidth="75.0" prefWidth="100.0" text="Input">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField fx:id="input" maxWidth="1.7976931348623157E308" minWidth="300.0" prefWidth="300.0" promptText="For example: [1, 1.1, 3, 5, 2, 1]" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="input" maxWidth="1.7976931348623157E308" minWidth="300.0" onKeyPressed="#keyListener" prefWidth="300.0" promptText="For example: m, n" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                   <HBox>
@@ -58,7 +44,27 @@
                               <Insets left="10.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField fx:id="output" maxHeight="25.0" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="300.0" prefHeight="25.0" prefWidth="300.0" promptText="The result of your query will appear here." HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="output" maxHeight="25.0" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="300.0" onKeyPressed="#keyListener" prefHeight="25.0" prefWidth="300.0" promptText="The result of your query." HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Label maxWidth="100.0" minWidth="75.0" prefWidth="100.0" text="Conditional:">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField fx:id="cond" maxWidth="1.7976931348623157E308" minWidth="300.0" onKeyPressed="#keyListener" prefWidth="300.0" promptText="For example m &gt; n" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Label maxHeight="25.0" maxWidth="100.0" minHeight="25.0" minWidth="75.0" prefHeight="25.0" prefWidth="100.0" text="Range:">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField fx:id="range" maxWidth="1.7976931348623157E308" minWidth="300.0" onKeyPressed="#keyListener" prefWidth="300.0" promptText="For example: [1, 2, 3]" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                </children>

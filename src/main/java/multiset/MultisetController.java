@@ -10,6 +10,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -77,6 +79,15 @@ public class MultisetController {
 		model = new Model(ballCanvas.getWidth(), ballCanvas.getHeight(), filter, 2, 20);
 		view = new View(model, ballCanvas);
 		timeline.play();
+	}
+
+	/**
+	 * Called from textfields
+	 */
+	public void keyListener(KeyEvent event){
+		if(event.getCode() == KeyCode.ENTER) {
+			event.consume(); // "You shall not pass"
+		}
 	}
 
 	/**
