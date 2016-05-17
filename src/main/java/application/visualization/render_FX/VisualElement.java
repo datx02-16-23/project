@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import application.gui.Main;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Border;
@@ -111,6 +112,7 @@ public class VisualElement extends Pane {
 		}
 
 		shape = (Shape) fxmlLoader.getNamespace().get("shape");
+		shape.setCursor(Cursor.HAND);
 		value = (Label) fxmlLoader.getNamespace().get("value");
 		index = (Label) fxmlLoader.getNamespace().get("index");
 		tooltip = (Tooltip) fxmlLoader.getNamespace().get("tooltip");

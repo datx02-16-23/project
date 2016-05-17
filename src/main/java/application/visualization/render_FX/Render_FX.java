@@ -169,7 +169,7 @@ public abstract class Render_FX extends Pane {
 	private void loadBase() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(url));
 		fxmlLoader.setController(this);
-		
+
 		try {
 			root = (GridPane) fxmlLoader.load();
 		} catch (IOException e) {
@@ -178,20 +178,16 @@ public abstract class Render_FX extends Pane {
 		}
 		root.setMinSize(150, 20);
 
-		//Content pane
+		// Content pane
 		content = (Pane) fxmlLoader.getNamespace().get("content");
 		content.getChildren().add(this.nodes);
 		content.setBackground(getStructBackground(struct));
 		setSize(150, 150);
-		
-		//Name label
+
+		// Name label
 		Label name = (Label) fxmlLoader.getNamespace().get("name");
 		name.setText(struct.identifier);
-		
-		//Set header background
-		GridPane header = (GridPane) fxmlLoader.getNamespace().get("header");
-		header.setStyle("-fx-background-color: rgba(18, 52, 86, 0.7);");
-		
+
 		getChildren().add(root);
 		initDragAndZoom(this);
 	}
@@ -283,8 +279,8 @@ public abstract class Render_FX extends Pane {
 
 		this.setPrefSize(width, height);
 		this.setMaxSize(width, height);
-//		this.setWidth(width);
-//		this.setHeight(height);
+		// this.setWidth(width);
+		// this.setHeight(height);
 	}
 
 	/**
@@ -356,11 +352,11 @@ public abstract class Render_FX extends Pane {
 		node.setOnMousePressed(event -> {
 			transX = this.getTranslateX() - event.getSceneX();
 			transY = this.getTranslateY() - event.getSceneY();
-			this.setCursor(Cursor.MOVE);
+			this.getParent().setCursor(Cursor.CLOSED_HAND);
 		});
 		// Restore cursor
 		node.setOnMouseReleased(event -> {
-			this.setCursor(Cursor.HAND);
+			this.getParent().setCursor(null);
 		});
 		// Translate canvases
 		node.setOnMouseDragged(event -> {
@@ -369,11 +365,11 @@ public abstract class Render_FX extends Pane {
 		});
 		// Set cursor
 		node.setOnMouseEntered(event -> {
-			this.setCursor(Cursor.HAND);
+//			this.setCursor(Cursor.OPEN_HAND);
 			this.setBorder(BORDER_MOUSEOVER);
 		});
 		node.setOnMouseExited(event -> {
-			this.setCursor(null);
+//			this.setCursor(null);
 			this.setBorder(null);
 		});
 	}
@@ -728,8 +724,8 @@ public abstract class Render_FX extends Pane {
 	// TODO
 	public void toggleHidden(Event e) {
 		ToggleButton tb = (ToggleButton) e.getSource();
-		
-		if(tb.isSelected()){
+
+		if (tb.isSelected()) {
 			tb.setText("Expand");
 		} else {
 			tb.setText("Collapse");

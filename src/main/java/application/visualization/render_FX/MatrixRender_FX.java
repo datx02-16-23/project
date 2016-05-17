@@ -47,7 +47,7 @@ public class MatrixRender_FX extends Render_FX {
 		nodes.getChildren().clear();
 		visualElementsMapping.clear();
 
-		setBackground(null);
+		content.setBackground(null);
 
 		// Create nodes
 		VisualElement newVis;
