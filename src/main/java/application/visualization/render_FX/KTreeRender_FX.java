@@ -44,104 +44,99 @@ public class KTreeRender_FX extends Render_FX {
 		super(struct, width, height, hspace, vspace);
 		this.K = K < 2 ? 2 : K;
 		lowerLevelSums.add(new Integer(0));
-		getChildren().add(visual_lines);
+		nodes.getChildren().add(visual_lines);
 		visual_lines.toBack();
 	}
 
 	public void render() {
 		if (struct.repaintAll) {
 			struct.repaintAll = false;
-			if (struct.getElements().isEmpty()) {
-				setBackground(getBackground());
-				return; // Nothing to draw.
-			}
-
-			visual_nodes.getChildren().clear();
-			visual_lines.getChildren().clear();
-			visualElementsMapping.clear();
-
-			setBackground(null);
-
-			// Create nodes
-			calculateSize();
-			VisualElement newVis;
-
-			int i = 0;
-			for (Element e : struct.getElements()) {
-				i++;
-				newVis = new EllipseElement(e, node_width / 2, node_height / 2);
-				IndexedElement ae = (IndexedElement) e;
-				newVis.setLayoutX(getX(ae));	
-				newVis.setLayoutY(getY(ae));
-				((EllipseElement) newVis).setIndex(((IndexedElement) e).getIndex());
-
-				IndexedElement parent_clone = new IndexedElement(0, new int[] { (ae.getIndex()[0] - 1) / K });
-
-				// VisualElement parentVis =
-				// visualElementsMapping.get(parent_clone);
-				EllipseElement parentVis = (EllipseElement) visualElementsMapping
-						.get(Arrays.toString(new int[] { (ae.getIndex()[0] - 1) / K }));
-
-				// Connect child to parent
-				if (parentVis != null) {
-					Line line = new Line();
-
-					// Bind start to child..
-					line.startXProperty().bind(newVis.layoutXProperty());
-					line.startYProperty().bind(newVis.layoutYProperty());
-					// ..and end to parent.
-					line.endXProperty().bind(parentVis.layoutXProperty());
-					line.endYProperty().bind(parentVis.layoutYProperty());
-
-					line.setTranslateX(node_width / 2);
-					line.setTranslateY(node_height / 2);
-
-					visual_lines.getChildren().add(line);
-				}
-				visual_nodes.getChildren().add(newVis);
-				visualElementsMapping.put(Arrays.toString(ae.getIndex()), newVis);
-				// visualElementsMapping.put(ae, ghost);
-			}
-
-			/*
-			 * Add ghosts to complete the tree.
-			 */
-			for (; i < completedSize; i++) {
-				IndexedElement ae = new IndexedElement(0, new int[] { i });
-				newVis = new EllipseElement(ae, node_width / 2, node_height / 2);
-				newVis.setLayoutX(getX(ae));
-				newVis.setLayoutY(getY(ae));
-				newVis.setGhost(true);
-
-				IndexedElement parent_clone = new IndexedElement(0, new int[] { (ae.getIndex()[0] - 1) / K });
-
-				EllipseElement parentVis = (EllipseElement) visualElementsMapping
-						.get(Arrays.toString(new int[] { (ae.getIndex()[0] - 1) / K }));
-						// EllipseElement parentVis = (EllipseElement)
-						// visualElementsMapping.get(parent_clone);
-
-				// Connect child to parent
-				if (parentVis != null) {
-					Line line = new Line();
-
-					// Bind start to child..
-					line.startXProperty().bind(newVis.layoutXProperty());
-					line.startYProperty().bind(newVis.layoutYProperty());
-					// ..and end to parent.
-					line.endXProperty().bind(parentVis.layoutXProperty());
-					line.endYProperty().bind(parentVis.layoutYProperty());
-
-					line.setTranslateX(node_width / 2);
-					line.setTranslateY(node_height / 2);
-
-					line.setStrokeLineCap(StrokeLineCap.ROUND);
-					line.setStrokeLineJoin(StrokeLineJoin.ROUND);
-					visual_lines.getChildren().add(line);
-				}
-				visual_nodes.getChildren().add(newVis);
-			}
+			init();
 		}
 		super.render();
+	}
+
+	@Override
+	public void init() {
+
+		if (struct.getElements().isEmpty()) {
+			return; // Nothing to draw.
+		}
+
+		nodes.getChildren().clear();
+		visual_lines.getChildren().clear();
+		visualElementsMapping.clear();
+
+		setBackground(null);
+
+		// Create nodes
+		calculateSize();
+		VisualElement newVis = null;
+
+		int numElements = 0;
+		for (Element e : struct.getElements()) {
+			numElements++;
+			newVis = new EllipseElement(e, node_width / 2, node_height / 2);
+			IndexedElement ae = (IndexedElement) e;
+			newVis.setLayoutX(getX(ae));
+			newVis.setLayoutY(getY(ae));
+			newVis.setIndex(ae.getIndex());
+
+			connectToParent(ae, newVis);
+
+			nodes.getChildren().add(newVis);
+			visualElementsMapping.put(Arrays.toString(ae.getIndex()), newVis);
+			// visualElementsMapping.put(ae, ghost);
+		}
+		
+		createGhosts(numElements);
+	}
+
+	/**
+	 * Connect a node to its parent.
+	 * @param ae The child node.
+	 * @param newVis The child node visual.
+	 */
+	private void connectToParent(IndexedElement ae, VisualElement newVis) {
+		IndexedElement parent_clone = new IndexedElement(0, new int[] { (ae.getIndex()[0] - 1) / K });
+
+		// VisualElement parentVis =
+		// visualElementsMapping.get(parent_clone);
+		EllipseElement parentVis = (EllipseElement) visualElementsMapping
+				.get(Arrays.toString(new int[] { (ae.getIndex()[0] - 1) / K }));
+
+		// Connect child to parent
+		if (parentVis != null) {
+			Line line = new Line();
+
+			// Bind start to child..
+			line.startXProperty().bind(newVis.layoutXProperty());
+			line.startYProperty().bind(newVis.layoutYProperty());
+			// ..and end to parent.
+			line.endXProperty().bind(parentVis.layoutXProperty());
+			line.endYProperty().bind(parentVis.layoutYProperty());
+
+			line.setTranslateX(node_width / 2);
+			line.setTranslateY(node_height / 2);
+
+			visual_lines.getChildren().add(line);
+		}
+	}
+	
+	/**
+	 * Complete the tree using ghosts.
+	 * @param numElements The number of real elements drawn.
+	 */
+	private void createGhosts(int numElements){
+		EllipseElement newVis = null;
+		for (; numElements < completedSize; numElements++) {
+			IndexedElement ae = new IndexedElement(0, new int[] { numElements });
+			newVis = new EllipseElement(ae, node_width, node_height);
+			newVis.setLayoutX(getX(ae));
+			newVis.setLayoutY(getY(ae));
+			newVis.setGhost(true);
+		}
+		nodes.getChildren().add(newVis);
 	}
 
 	@Override

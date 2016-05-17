@@ -15,6 +15,7 @@ import wrapper.Operation;
 import wrapper.operations.OP_ReadWrite;
 import wrapper.operations.OP_Remove;
 import wrapper.operations.OP_Swap;
+import wrapper.operations.OperationCounter;
 import wrapper.operations.OperationType;
 
 /**
@@ -60,40 +61,19 @@ public abstract class DataStructure extends AnnotatedVariable {
 	 * The preferred background color for elements with no preference.
 	 */
 	protected transient final Color baseColor;
-	protected transient final SimpleIntegerProperty numReads = new SimpleIntegerProperty(0);
-
 	/**
-	 * Returns the SimpleIntegerProperty counting number of Read operations
-	 * performed on this DataStructure.
-	 * 
-	 * @return A SimpleIntegerProperty.
+	 * Counter for operations performed on the structure.
 	 */
-	public SimpleIntegerProperty getNumReads() {
-		return numReads;
+	protected transient final OperationCounter oc = new OperationCounter();
+	
+	/**
+	 * Returns the OperationCounter for this structure.
+	 * @return An OperationCounter.
+	 */
+	public OperationCounter getCounter() {
+		return oc;
 	}
 
-	/**
-	 * Returns the SimpleIntegerProperty counting number of Write operations
-	 * performed on this DataStructure.
-	 * 
-	 * @return A SimpleIntegerProperty.
-	 */
-	public SimpleIntegerProperty getNumWrites() {
-		return numWrites;
-	}
-
-	/**
-	 * Returns the SimpleIntegerProperty counting number of Swap operations
-	 * performed on this DataStructure.
-	 * 
-	 * @return A SimpleIntegerProperty.
-	 */
-	public SimpleIntegerProperty getNumSwaps() {
-		return numSwaps;
-	}
-
-	protected transient final SimpleIntegerProperty numWrites = new SimpleIntegerProperty(0);
-	protected transient final SimpleIntegerProperty numSwaps = new SimpleIntegerProperty(0);
 	/**
 	 * Number of children in KTree, row/vs column major etc.
 	 */
@@ -238,12 +218,15 @@ public abstract class DataStructure extends AnnotatedVariable {
 	 * Indicate to the DataStructure that the lists returned by
 	 * {@code getModifiedElements()} <b>and</b> {@code getResetElements} have
 	 * been drawn.
-	 * @param color The color to use for this element after reset. Null default to white.
+	 * 
+	 * @param color
+	 *            The color to use for this element after reset. Null default to
+	 *            white.
 	 */
 	public void elementsDrawn(Color color) {
 		color = color == null ? Color.WHITE : color;
-		
-		//TODO
+
+		// TODO
 		for (Element e : getResetElements()) {
 			if (getModifiedElements().contains(e) == false) {
 				e.setColor(color);
@@ -292,7 +275,7 @@ public abstract class DataStructure extends AnnotatedVariable {
 				resetElements.add(e); // Reactive element
 			} else {
 				inactiveElements.add(e);
-				e.setColor(OperationType.remove.color);
+				e.count(op);
 			}
 		}
 	}

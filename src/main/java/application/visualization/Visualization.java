@@ -40,7 +40,8 @@ public class Visualization extends StackPane {
 	private final Model model;
 	private static Visualization INSTANCE;
 	private final static Pane animated_nodes = new Pane();
-	private final StackPane renders = new StackPane();
+	private final Pane renders = new Pane();
+//	private final StackPane renders = new StackPane();
 	private final Overlay overlay;
 	private final HashMap<String, Render_FX> struct_render_mapping = new HashMap<String, Render_FX>();
 	public final Canvas ANIMATED = new Canvas();
@@ -125,10 +126,10 @@ public class Visualization extends StackPane {
 			render = new KTreeRender_FX(struct, struct.visualOption, 50, 40, 5, 5);
 			break;
 		case single:
-			render = new SingleElementRender_FX(struct, 60, 40);
+			render = new SingleElementRender_FX(struct, 90, 50);
 			break;
 		}
-		render.setAnimated_nodes(animated_nodes);
+		render.setAnimated(animated_nodes);
 		return render;
 	}
 

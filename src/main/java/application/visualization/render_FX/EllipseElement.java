@@ -41,8 +41,8 @@ public class EllipseElement extends VisualElement {
 	}
 	
 	private void init(){
-		((Ellipse) shape).setRadiusX(node_width);
-		((Ellipse) shape).setRadiusY(node_height);
+		((Ellipse) shape).setRadiusX(node_width/2);
+		((Ellipse) shape).setRadiusY(node_height/2);
 	}
 	
 	public EllipseElement clone(){

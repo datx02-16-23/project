@@ -20,7 +20,7 @@
    <children>
       <StackPane style="-fx-background-color: transparent;">
          <children>
-            <Polygon fx:id="shape" fill="WHITE" stroke="BLACK" strokeType="INSIDE">
+            <Polygon fx:id="shape" fill="WHITE" onMouseClicked="#onMouseClicked" onMouseEntered="#onMouseEntered" onMouseExited="#onMouseExited" stroke="BLACK" strokeType="INSIDE">
               <points>
                 <Double fx:value="-50.0" />
                 <Double fx:value="40.0" />

@@ -5,6 +5,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import wrapper.Operation;
+import wrapper.operations.OperationCounter;
 
 /**
  * An element in a data structure.
@@ -14,9 +16,24 @@ import javafx.scene.paint.Paint;
  */
 public abstract class Element {
 
+	/* 
+	 * Properties
+	 */
 	private final SimpleStringProperty valueStringProperty = new SimpleStringProperty();
 	private final SimpleDoubleProperty valueDoubleProperty = new SimpleDoubleProperty(); //TODO
+	
 	private final SimpleObjectProperty<Paint> fillProperty = new SimpleObjectProperty<Paint>();
+	
+	private final OperationCounter oc = new OperationCounter();
+	
+	/**
+	 * Returns the operation counter.
+	 * @return An OperationCounter.
+	 */
+	public OperationCounter getCounter() {
+		return oc;
+	}
+
 	private double numericValue = Double.NaN;
 	private String value;
 	private Color color;
@@ -86,20 +103,22 @@ public abstract class Element {
 	}
 
 	/**
-	 * Set The colour with which to draw this Element.
+	 * Indicate to the element that it it has been involved in an operation.
 	 * 
-	 * @param newColor
-	 *            The colour with which to draw this Element.
+	 * @param appliedOp The operation type which was applied.
 	 */
-	public final void setColor(Color newColor) {
-		this.color = newColor;
+	public final void count(Operation appliedOp) {
+		this.color = appliedOp.operation.color;
+		fillProperty.setValue(color);
+		oc.count(appliedOp);
+	}
+	
+	/**
+	 * Set the color for this element.
+	 * @param c The color to use
+	 */
+	public void setColor(Color c){
+		this.color = c;
 		fillProperty.setValue(color);
 	}
-
-	//Bad hash - elements are never identified by their values.
-//	@Override
-//	public int hashCode() {
-//		return (int) (numericValue * 17) + (value == null ? 0 : value.hashCode());
-//	}
-
 }

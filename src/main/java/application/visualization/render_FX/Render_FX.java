@@ -1,41 +1,55 @@
 package application.visualization.render_FX;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import application.gui.GUI_Controller;
+import application.gui.Main;
 import application.visualization.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
+import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import wrapper.datastructures.Array.IndexedElement;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
 import wrapper.operations.OP_Remove;
+import wrapper.operations.OperationCounter;
 
-public abstract class Render_FX extends StackPane {
+public abstract class Render_FX extends Pane {
 
 	/*
 	 * Shared stuff.
@@ -44,6 +58,7 @@ public abstract class Render_FX extends StackPane {
 	private static final Background ORPHAN_BACKGROUND = createOrphanBg();
 	private static final Background TREE_BACKGROUND = createTreeBg();
 	private static final Border BORDER_MOUSEOVER = getMOBorder();
+	private static final String url = "/visualization/RenderBase.fxml";
 
 	/**
 	 * Default node width.
@@ -96,29 +111,28 @@ public abstract class Render_FX extends StackPane {
 	/**
 	 * The visual element nodes.
 	 */
-	protected final Pane visual_nodes = new Pane();
+	protected final Pane nodes = new Pane();
+	/**
+	 * Content pane.
+	 */
+	protected Pane content;
 
 	/**
 	 * The pane used when drawing animated elements.
 	 */
 	protected Pane animated_nodes;
-
 	/**
-	 * Returns the Pane used for drawing animated elements.
-	 * 
-	 * @return A Pane.
+	 * The root for the FXML Render.
 	 */
-	public Pane getAnimated_nodes() {
-		return animated_nodes;
-	}
+	private GridPane root;
 
 	/**
 	 * Set the Pane used for drawing animated elements.
 	 * 
 	 * @param animated_nodes
-	 *            A Pane.
+	 *            A Pane for animation.
 	 */
-	public void setAnimated_nodes(Pane animated_nodes) {
+	public void setAnimated(Pane animated_nodes) {
 		this.animated_nodes = animated_nodes;
 	}
 
@@ -138,16 +152,48 @@ public abstract class Render_FX extends StackPane {
 	 */
 	public Render_FX(DataStructure struct, double width, double height, double hspace, double vspace) {
 		this.struct = struct;
-		// Sizing and spacing
+
 		this.node_width = width;
 		this.node_height = height;
 		this.hspace = hspace;
 		this.vspace = vspace;
-		setSize(150, 150);
-		this.setBackground(getStructBackground(struct));
+
 		// Add stacked canvases
-		initDragAndZoom();
-		getChildren().add(visual_nodes);
+		loadBase();
+
+		this.setMinSize(150, 20);
+		this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+		this.setPrefSize(150, 170);
+	}
+
+	private void loadBase() {
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(url));
+		fxmlLoader.setController(this);
+		
+		try {
+			root = (GridPane) fxmlLoader.load();
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
+		root.setMinSize(150, 20);
+
+		//Content pane
+		content = (Pane) fxmlLoader.getNamespace().get("content");
+		content.getChildren().add(this.nodes);
+		content.setBackground(getStructBackground(struct));
+		setSize(150, 150);
+		
+		//Name label
+		Label name = (Label) fxmlLoader.getNamespace().get("name");
+		name.setText(struct.identifier);
+		
+		//Set header background
+		GridPane header = (GridPane) fxmlLoader.getNamespace().get("header");
+		header.setStyle("-fx-background-color: rgba(18, 52, 86, 0.7);");
+		
+		getChildren().add(root);
+		initDragAndZoom(this);
 	}
 
 	/*
@@ -219,7 +265,7 @@ public abstract class Render_FX extends StackPane {
 	}
 
 	/**
-	 * Calls setMinSize, setPrefSize, setMaxSize, setWidth and setHeight
+	 * Calls, setPrefSize, setMaxSize, setWidth and setHeight.
 	 * 
 	 * @param width
 	 *            The width of this Render.
@@ -227,11 +273,18 @@ public abstract class Render_FX extends StackPane {
 	 *            The height of this Render.
 	 */
 	protected void setSize(double width, double height) {
-		this.setMinSize(width, height);
+		content.setMinSize(width, height);
+		content.setPrefSize(width, height);
+		content.setMaxSize(width, height);
+
+		height = height + 35; // Space for header bar
+		root.setPrefSize(width, height);
+		root.setMaxSize(width, height);
+
 		this.setPrefSize(width, height);
 		this.setMaxSize(width, height);
-		this.setWidth(width);
-		this.setHeight(height);
+//		this.setWidth(width);
+//		this.setHeight(height);
 	}
 
 	/**
@@ -279,11 +332,11 @@ public abstract class Render_FX extends StackPane {
 	/**
 	 * Create listeners to drag and zoom.
 	 */
-	private void initDragAndZoom() {
+	private void initDragAndZoom(Node node) {
 		/*
 		 * Zoom
 		 */
-		this.setOnScroll(event -> {
+		node.setOnScroll(event -> {
 			sign = event.getDeltaY() > 0 ? 1 : -1;
 			scale = scale + sign * 0.1;
 			if (scale < 0.1) {
@@ -300,26 +353,26 @@ public abstract class Render_FX extends StackPane {
 		 * Drag
 		 */
 		// Record a delta distance for the drag and drop operation.
-		this.setOnMousePressed(event -> {
+		node.setOnMousePressed(event -> {
 			transX = this.getTranslateX() - event.getSceneX();
 			transY = this.getTranslateY() - event.getSceneY();
 			this.setCursor(Cursor.MOVE);
 		});
 		// Restore cursor
-		this.setOnMouseReleased(event -> {
+		node.setOnMouseReleased(event -> {
 			this.setCursor(Cursor.HAND);
 		});
 		// Translate canvases
-		this.setOnMouseDragged(event -> {
+		node.setOnMouseDragged(event -> {
 			this.setTranslateX(event.getSceneX() + transX);
 			this.setTranslateY(event.getSceneY() + transY);
 		});
 		// Set cursor
-		this.setOnMouseEntered(event -> {
+		node.setOnMouseEntered(event -> {
 			this.setCursor(Cursor.HAND);
-//			this.setBorder(BORDER_MOUSEOVER); //TODO
+			this.setBorder(BORDER_MOUSEOVER);
 		});
-		this.setOnMouseExited(event -> {
+		node.setOnMouseExited(event -> {
 			this.setCursor(null);
 			this.setBorder(null);
 		});
@@ -335,6 +388,7 @@ public abstract class Render_FX extends StackPane {
 	}
 
 	String fade_option = "bla";
+
 	/**
 	 * Start an animation of an element to a point.
 	 * 
@@ -352,11 +406,10 @@ public abstract class Render_FX extends StackPane {
 	public void animate(Element e, double start_x, double start_y, double end_x, double end_y) {
 		ParallelTransition trans = new ParallelTransition();
 
-		// VisualElement real = visualElementsMapping.get(e);		
+		// VisualElement real = visualElementsMapping.get(e);
 		int[] i = ((IndexedElement) e).getIndex();
 		Arrays.copyOf(i, i.length);
-		VisualElement real = visualElementsMapping
-				.get(Arrays.toString(i));
+		VisualElement real = visualElementsMapping.get(Arrays.toString(i));
 
 		VisualElement animated = real.clone();
 		animated.unbind();
@@ -422,7 +475,7 @@ public abstract class Render_FX extends StackPane {
 	 * @return The absolute x-coordinates of e.
 	 */
 	public double absX(Element e) {
-		double bx = getTranslateX() + getLayoutX();
+		double bx = this.getTranslateX() + this.getLayoutX() + content.getLayoutX();
 		return this.getX(e) + bx;
 	}
 
@@ -434,9 +487,14 @@ public abstract class Render_FX extends StackPane {
 	 * @return The absolute y-coordinates of e.
 	 */
 	public double absY(Element e) {
-		double by = getTranslateY() + getLayoutY();
+		double by = this.getTranslateY() + this.getLayoutY() + content.getLayoutY();
 		return this.getY(e) + by;
 	}
+
+	/**
+	 * Force the Render to initialise all elements.
+	 */
+	public abstract void init();
 
 	/**
 	 * Returns the SpinnerValueFactory for this Render, or null if there are no
@@ -653,4 +711,28 @@ public abstract class Render_FX extends StackPane {
 		return ft;
 	}
 
+	// TODO
+	public void showStats() {
+		OperationCounter oc = struct.getCounter();
+		Main.console.info("Statistics for \"" + struct + "\":");
+		Main.console.info("\tReads: " + oc.getReads());
+		Main.console.info("\tWrites: " + oc.getWrites());
+		Main.console.info("\tSwaps: " + oc.getSwap());
+	}
+
+	// TODO
+	public void showOptions() {
+		System.out.println("options");
+	}
+
+	// TODO
+	public void toggleHidden(Event e) {
+		ToggleButton tb = (ToggleButton) e.getSource();
+		
+		if(tb.isSelected()){
+			tb.setText("Expand");
+		} else {
+			tb.setText("Collapse");
+		}
+	}
 }

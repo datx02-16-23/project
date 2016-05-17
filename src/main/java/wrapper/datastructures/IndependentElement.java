@@ -84,19 +84,20 @@ public class IndependentElement extends Array {
 	@Override
 	public void applyOperation(Operation op) {
 		super.applyOperation(op);
-		repaintAll = true; // Clears background. Theres only one Element present
-							// anyway.
+		repaintAll = true;
 	}
 
 	protected void executeSwap(OP_Swap op) {
 		Element e = elements.get(0);
 		if (op.getVar1().identifier.equals(this.identifier)) {
 			e.setNumValue(op.getValue()[0]);
-			e.setColor(OperationType.swap.color);
+			e.count(op);
+			oc.count(op);
 			return;
 		} else if (op.getVar2().identifier.equals(this.identifier)) {
 			e.setNumValue(op.getValue()[1]);
-			e.setColor(OperationType.swap.color);
+			e.count(op);
+			oc.count(op);
 			return;
 		}
 	}
@@ -110,11 +111,13 @@ public class IndependentElement extends Array {
 		if (op.getTarget() != null && op.getTarget().identifier.equals(this.identifier)) {
 			e.setNumValue(op.getValue()[0]);
 			modifiedElements.add(e);
-			e.setColor(OperationType.write.color);
+			e.count(op);
+			oc.count(op);
 			return;
 		} else if (op.getSource() != null && op.getSource().identifier.equals(this.identifier)) {
 			modifiedElements.add(e);
-			e.setColor(OperationType.read.color);
+			e.count(op);
+			oc.count(op);
 		}
 	}
 

@@ -2,13 +2,11 @@ package application.visualization.render_FX;
 
 import java.util.Arrays;
 
-import application.gui.Main;
 import wrapper.datastructures.Array.IndexedElement;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
 
 public class SingleElementRender_FX extends Render_FX {
-
 
 	/**
 	 * Create a new SingleElementRender.
@@ -28,36 +26,38 @@ public class SingleElementRender_FX extends Render_FX {
 	public void render() {
 		if (struct.repaintAll) {
 			struct.repaintAll = false;
-			
-			visualElementsMapping.clear();
-			visual_nodes.getChildren().clear();
-
-			if (struct.getElements().isEmpty()) {
-				setBackground(getBackground());
-				setSize(150, 150);
-				return; // Nothing to drawn.
-			}
-
-			setBackground(null);
-
-//			setSize(node_width + 1, node_height);
-			
-			int i = 0;
-			for (Element e : struct.getElements()) {
-				SingleElement elem = new SingleElement(e, node_width, node_height);
-				visual_nodes.getChildren().add(elem);
-				
-//				visualElementsMapping.put(e, elem);
-				visualElementsMapping.put(Arrays.toString(((IndexedElement) e).getIndex()), elem);
-				if (i > 0) {
-					Main.console.err("Warning: " + getClass().getSimpleName() + " cannot draw more than one element.");
-					Main.console.err("Failed to draw element: " + e);
-				}
-
-				i++;
-			}
+			init();
 		}
 		super.render();
+	}
+
+	public void init() {
+
+		visualElementsMapping.clear();
+		nodes.getChildren().clear();
+
+		if (struct.getElements().isEmpty()) {
+			return; // Nothing to draw.
+		}
+
+		content.setBackground(null);
+		calculateSize();
+
+		//Will probably look like crap with more than one element :D!
+		for (Element e : struct.getElements()) {
+			SingleElement elem = new SingleElement(e, node_width, node_height);
+			nodes.getChildren().add(elem);
+
+			// visualElementsMapping.put(e, elem);
+			visualElementsMapping.put(Arrays.toString(((IndexedElement) e).getIndex()), elem);
+		}
+	}
+
+	@Override
+	public void calculateSize() {
+		width = node_width;
+		height = node_height;
+		setSize(width, height);
 	}
 
 	/**

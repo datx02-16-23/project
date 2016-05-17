@@ -20,7 +20,7 @@
    <children>
       <StackPane style="-fx-background-color: transparent;" GridPane.columnIndex="1">
          <children>
-            <Ellipse fx:id="shape" fill="WHITE" radiusX="40.0" radiusY="30.0" stroke="BLACK" strokeType="INSIDE" />
+            <Ellipse fx:id="shape" fill="WHITE" onMouseClicked="#onMouseClicked" onMouseEntered="#onMouseEntered" onMouseExited="#onMouseExited" radiusX="40.0" radiusY="30.0" stroke="BLACK" strokeType="INSIDE" />
             <Label fx:id="value" alignment="CENTER" contentDisplay="TOP" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mouseTransparent="true" text="VALUE" textAlignment="CENTER">
                <tooltip>
                   <Tooltip fx:id="tooltip" text="Click to show information about this element." />

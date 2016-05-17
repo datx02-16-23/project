@@ -91,7 +91,7 @@ public class Array extends DataStructure {
 		for (; linearIndex < init_values.length; linearIndex++) {
 			IndexedElement ae = new IndexedElement(init_values[linearIndex],
 					getIndexInNDimensions(linearIndex, capacity));
-			ae.setColor(OperationType.write.color);
+			ae.count(init);
 			putElement(ae);
 		}
 		// Initialize elements without given values to 0.
@@ -102,7 +102,7 @@ public class Array extends DataStructure {
 		for (linearIndex++; linearIndex < linearTotal; linearIndex++) {
 			IndexedElement ae = new IndexedElement(0.0, getIndexInNDimensions(linearIndex, capacity));
 			modifiedElements.add(ae);
-			ae.setColor(OperationType.write.color);
+			ae.count(init);
 			putElement(ae);
 		}
 		modifiedElements.addAll(elements);
@@ -122,19 +122,18 @@ public class Array extends DataStructure {
 		IndexedElement var1Element = this.getElement(var1);
 		if (var1Element != null) {
 			var1Element.setNumValue(op.getValue()[0]);
-			var1Element.setColor(OperationType.swap.color);
+			var1Element.count(op);
 			modifiedElements.add(var1Element);
 			inactiveElements.remove(var1Element);
+			oc.count(op);
 		}
 		IndexedElement var2Element = this.getElement(var2);
 		if (var2Element != null) {
 			var2Element.setNumValue(op.getValue()[1]);
-			var2Element.setColor(OperationType.swap.color);
+			var2Element.count(op);
 			modifiedElements.add(var2Element);
 			inactiveElements.remove(var2Element);
-		}
-		if (var1Element != null || var2Element != null) {
-			numSwaps.set(numSwaps.get() + 1);
+			oc.count(op);
 		}
 	}
 
@@ -143,6 +142,7 @@ public class Array extends DataStructure {
 			init((OP_Write) op);
 			return;
 		}
+		oc.count(op);
 		// Manage write
 		IndexedElement targetElement = this.getElement(op.getTarget());
 		IndexedElement sourceElement = this.getElement(op.getSource());
@@ -150,7 +150,7 @@ public class Array extends DataStructure {
 		if (targetElement != null) {
 			if (value != null) {
 				targetElement.setNumValue(op.getValue()[0]);
-				targetElement.setColor(OperationType.write.color);
+				targetElement.count(op);
 				modifiedElements.add(targetElement);
 				inactiveElements.remove(targetElement);
 			} else {
@@ -159,18 +159,18 @@ public class Array extends DataStructure {
 		}
 		// Manage read
 		else if (sourceElement != null) {
-			sourceElement.setColor(OperationType.read.color);
+			sourceElement.count(op);
 			modifiedElements.add(sourceElement);
 			inactiveElements.remove(sourceElement);
 		} else if (op.getSource() != null && op.getSource().identifier.equals(super.identifier)) {
 			IndexedElement ae = new IndexedElement(0,
 					op.getSource().index != null ? op.getSource().index : new int[] { elements.size() });
-			ae.setColor(OperationType.read.color);
+			ae.count(op);
 			putElement(ae);
 		} else if (op.getTarget() != null && op.getTarget().identifier.equals(super.identifier)) {
 			IndexedElement ae = new IndexedElement(0,
 					op.getTarget().index != null ? op.getTarget().index : new int[] { elements.size() });
-			ae.setColor(OperationType.write.color);
+			ae.count(op);
 			putElement(ae);
 		}
 	}

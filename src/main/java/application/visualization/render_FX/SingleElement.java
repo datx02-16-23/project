@@ -1,7 +1,5 @@
 package application.visualization.render_FX;
 
-import java.util.Arrays;
-
 import javafx.scene.paint.Color;
 import wrapper.datastructures.Element;
 

@@ -3,10 +3,10 @@ package application.visualization.render_FX;
 import java.io.IOException;
 import java.util.Arrays;
 
+import application.gui.Main;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -16,6 +16,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 import wrapper.datastructures.Element;
+import wrapper.operations.OperationCounter;
 
 /**
  * A visualisation element. Elements which use the
@@ -28,7 +29,6 @@ import wrapper.datastructures.Element;
  *
  */
 public class VisualElement extends Pane {
-	private static final Border BORDER_MOUSEOVER = createMouseOverBorder();
 	
 	/**
 	 * The URL of the FXML file. Used in cloning.
@@ -99,14 +99,15 @@ public class VisualElement extends Pane {
 
 	private void init(double node_width, double node_height, String fxmlUrl) {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlUrl));
+		fxmlLoader.setController(this);
 		this.fxmlURL = fxmlUrl;
 		// fxmlLoader.setController(this);
 
 		try {
 			root = (GridPane) fxmlLoader.load();
 		} catch (IOException e) {
+			e.printStackTrace();
 			System.exit(-1);
-			// e.printStackTrace();
 		}
 
 		shape = (Shape) fxmlLoader.getNamespace().get("shape");
@@ -152,24 +153,30 @@ public class VisualElement extends Pane {
 	/**
 	 * Listener for the onMouseClicked event.
 	 */
-	public void mouseClicked(MouseEvent me) {
-		System.out.println(element);
-		System.out.println(value);
+	public void onMouseClicked() {
+		OperationCounter oc = element.getCounter();
+		Main.console.info("Statistics for \"" + element + "\":");
+		Main.console.info("\tReads: " + oc.getReads());
+		Main.console.info("\tWrites: " + oc.getWrites());
+		Main.console.info("\tSwaps: " + oc.getSwap());
+		
 	}
 
 	/**
 	 * Listener for the onMouseEntered event.
 	 */
-	public void mouseEntered() {
-		System.out.println("over");
-		root.setBorder(BORDER_MOUSEOVER);
+	public void onMouseEntered() {
+		root.setScaleX(1.25);
+		root.setScaleY(1.25);
+		this.toFront();
 	}
 
 	/**
 	 * Listener for the onMouseExited event.
 	 */
-	public void mouseExited() {
-		root.setBorder(null);
+	public void onMouseExited() {
+		root.setScaleX(1);
+		root.setScaleY(1);
 	}
 
 	/**
@@ -183,13 +190,14 @@ public class VisualElement extends Pane {
 		if (ghost != value.isVisible()) {
 			return; // Ghost status not changed.
 		}
-
 		if (ghost) {
+			shape.setMouseTransparent(true);
 			shape.fillProperty().unbind();
 			shape.setFill(Color.TRANSPARENT);
 			shape.getStrokeDashArray().addAll(5.0);
 			value.setVisible(false);
 		} else {
+			shape.setMouseTransparent(false);
 			shape.fillProperty().bind(element.fillProperty());
 			shape.getStrokeDashArray().clear();
 			value.setVisible(true);
