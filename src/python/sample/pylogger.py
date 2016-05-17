@@ -138,6 +138,7 @@ def run(settings):
 					can be correctly formatted by calling create_settings
 					with valid parameters
 	"""
+	print settings
 	print "Loading operations.py..."
 	ol = OperationsLoader(currrent_path+OPERATIONS_PATH)
 	settings[SETTINGS_OPERATIONS] = ol.load(settings[SETTINGS_OUTPUT],settings[SETTINGS_VARIABLES])
@@ -164,6 +165,9 @@ def run(settings):
 	
 	print "Running main file:\n%s" % settings[SETTINGS_MAIN]
 	execfile(settings[SETTINGS_MAIN],globals())
+	
+	print "Removing %s from sys.path" % settings[SETTINGS_PYLOGGERENV]
+	sys.path.remove(settings[SETTINGS_PYLOGGERENV])
 
 	print "Formatting json buffer from output..."
 	processor = LogPostProcessor(settings[SETTINGS_OUTPUT]) 
