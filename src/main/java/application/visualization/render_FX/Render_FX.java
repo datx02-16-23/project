@@ -125,6 +125,10 @@ public abstract class Render_FX extends Pane {
 	 * The root for the FXML Render.
 	 */
 	private GridPane root;
+	/**
+	 * Name label.
+	 */
+	private Label name;
 
 	/**
 	 * Set the Pane used for drawing animated elements.
@@ -184,9 +188,14 @@ public abstract class Render_FX extends Pane {
 		content.setBackground(getStructBackground(struct));
 		setSize(150, 150);
 
-		// Name label
-		Label name = (Label) fxmlLoader.getNamespace().get("name");
-		name.setText(struct.identifier);
+		// Name labels
+		name = (Label) fxmlLoader.getNamespace().get("name");
+		name.setText(struct.toString());
+		Label name_mo = (Label) fxmlLoader.getNamespace().get("name_mo"); //Visible only on mouseover
+		name_mo.textProperty().bind(name.textProperty());
+
+		Node header = (Node) fxmlLoader.getNamespace().get("header"); //Visible only on mouseover
+		header.visibleProperty().bind(name.visibleProperty().not());
 
 		getChildren().add(root);
 		initDragAndZoom(this);
@@ -366,10 +375,12 @@ public abstract class Render_FX extends Pane {
 		// Set cursor
 		node.setOnMouseEntered(event -> {
 //			this.setCursor(Cursor.OPEN_HAND);
+			name.setVisible(false);
 			this.setBorder(BORDER_MOUSEOVER);
 		});
 		node.setOnMouseExited(event -> {
 //			this.setCursor(null);
+			name.setVisible(true);
 			this.setBorder(null);
 		});
 	}

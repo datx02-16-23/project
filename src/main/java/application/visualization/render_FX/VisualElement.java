@@ -8,10 +8,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -140,16 +136,6 @@ public class VisualElement extends Pane {
 	 */
 	public Element getElement() {
 		return element;
-	}
-
-	/**
-	 * Creates a Border.
-	 * 
-	 * @return A new Border.
-	 */
-	private static Border createMouseOverBorder() {
-		return new Border(
-				new BorderStroke(Color.web("#123456"), BorderStrokeStyle.SOLID, null, new BorderWidths(3), null));
 	}
 
 	/**

@@ -44,7 +44,7 @@ public class KTreeRender_FX extends Render_FX {
 		super(struct, width, height, hspace, vspace);
 		this.K = K < 2 ? 2 : K;
 		lowerLevelSums.add(new Integer(0));
-		nodes.getChildren().add(visual_lines);
+		content.getChildren().add(visual_lines);
 		visual_lines.toBack();
 	}
 
@@ -67,7 +67,7 @@ public class KTreeRender_FX extends Render_FX {
 		visual_lines.getChildren().clear();
 		visualElementsMapping.clear();
 
-		setBackground(null);
+		content.setBackground(null);
 
 		// Create nodes
 		calculateSize();
@@ -76,7 +76,7 @@ public class KTreeRender_FX extends Render_FX {
 		int numElements = 0;
 		for (Element e : struct.getElements()) {
 			numElements++;
-			newVis = new EllipseElement(e, node_width / 2, node_height / 2);
+			newVis = new EllipseElement(e, node_width, node_height);
 			IndexedElement ae = (IndexedElement) e;
 			newVis.setLayoutX(getX(ae));
 			newVis.setLayoutY(getY(ae));
@@ -125,18 +125,19 @@ public class KTreeRender_FX extends Render_FX {
 	
 	/**
 	 * Complete the tree using ghosts.
-	 * @param numElements The number of real elements drawn.
+	 * @param index The index to start from.
 	 */
-	private void createGhosts(int numElements){
-		EllipseElement newVis = null;
-		for (; numElements < completedSize; numElements++) {
-			IndexedElement ae = new IndexedElement(0, new int[] { numElements });
-			newVis = new EllipseElement(ae, node_width, node_height);
-			newVis.setLayoutX(getX(ae));
-			newVis.setLayoutY(getY(ae));
-			newVis.setGhost(true);
+	private void createGhosts(int index){
+		EllipseElement ghostVis = null;
+		for (; index < completedSize; index++) {
+			IndexedElement ghostElem = new IndexedElement(0, new int[] { index });
+			ghostVis = new EllipseElement(ghostElem, node_width, node_height);
+			ghostVis.setLayoutX(getX(ghostElem));
+			ghostVis.setLayoutY(getY(ghostElem));
+			ghostVis.setGhost(true);
+			connectToParent(ghostElem, ghostVis);
+			nodes.getChildren().add(ghostVis);
 		}
-		nodes.getChildren().add(newVis);
 	}
 
 	@Override

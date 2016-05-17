@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
 <GridPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="185.0" prefWidth="150.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
@@ -23,60 +24,71 @@
   </rowConstraints>
    <children>
       <Pane fx:id="content" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" />
-      <GridPane style="-fx-background-color: rgba(18, 52, 86, 0.7);" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
-         <columnConstraints>
-            <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
-            <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
-         </rowConstraints>
+      <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
          <children>
-            <Label fx:id="name" maxHeight="25.0" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="0.0" prefHeight="25.0" text="Label" textFill="WHITE">
-               <GridPane.margin>
+            <GridPane fx:id="header" style="-fx-background-color: rgba(18, 52, 86, 0.7);">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="NEVER" minWidth="10.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label fx:id="name_mo" maxHeight="25.0" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="0.0" prefHeight="25.0" prefWidth="1000.0" text="Name (mouseover)" textFill="WHITE">
+                     <GridPane.margin>
+                        <Insets left="5.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <ButtonBar buttonMinWidth="0.0" GridPane.columnIndex="1">
+                    <buttons>
+                      <Button maxHeight="15.0" maxWidth="35.0" minHeight="15.0" minWidth="35.0" mnemonicParsing="false" onAction="#showStats" prefHeight="15.0" prefWidth="35.0" text="Stats">
+                           <padding>
+                              <Insets bottom="-2.0" top="-2.0" />
+                           </padding>
+                           <font>
+                              <Font size="8.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                        <Button maxHeight="15.0" maxWidth="35.0" minHeight="15.0" minWidth="35.0" mnemonicParsing="false" onAction="#showOptions" prefHeight="15.0" prefWidth="35.0" text="Options">
+                           <padding>
+                              <Insets bottom="-2.0" top="-2.0" />
+                           </padding>
+                           <font>
+                              <Font size="8.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </Button>
+                        <ToggleButton maxHeight="15.0" maxWidth="35.0" minHeight="15.0" minWidth="35.0" mnemonicParsing="false" onAction="#toggleHidden" prefHeight="15.0" prefWidth="35.0" text="Collapse">
+                           <padding>
+                              <Insets bottom="-2.0" top="-2.0" />
+                           </padding>
+                           <font>
+                              <Font size="8.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                        </ToggleButton>
+                    </buttons>
+                     <GridPane.margin>
+                        <Insets left="-15.0" right="5.0" />
+                     </GridPane.margin>
+                  </ButtonBar>
+               </children>
+            </GridPane>
+            <Label fx:id="name" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" text="Name">
+               <padding>
                   <Insets left="5.0" />
-               </GridPane.margin>
+               </padding>
             </Label>
-            <ButtonBar buttonMinWidth="0.0" maxHeight="20.0" maxWidth="1.7976931348623157E308" minHeight="20.0" minWidth="0.0" prefHeight="20.0" GridPane.columnIndex="1">
-              <buttons>
-                <Button maxHeight="15.0" maxWidth="35.0" minHeight="15.0" minWidth="35.0" mnemonicParsing="false" onAction="#showStats" prefHeight="15.0" prefWidth="35.0" text="Stats">
-                     <padding>
-                        <Insets bottom="-2.0" top="-2.0" />
-                     </padding>
-                     <font>
-                        <Font size="8.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="DEFAULT" />
-                     </cursor></Button>
-                  <Button maxHeight="15.0" maxWidth="35.0" minHeight="15.0" minWidth="35.0" mnemonicParsing="false" onAction="#showOptions" prefHeight="15.0" prefWidth="35.0" text="Options">
-                     <padding>
-                        <Insets bottom="-2.0" top="-2.0" />
-                     </padding>
-                     <font>
-                        <Font size="8.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="DEFAULT" />
-                     </cursor></Button>
-                  <ToggleButton maxHeight="15.0" maxWidth="35.0" minHeight="15.0" minWidth="35.0" mnemonicParsing="false" onAction="#toggleHidden" prefHeight="15.0" prefWidth="35.0" text="Collapse">
-                     <padding>
-                        <Insets bottom="-2.0" top="-2.0" />
-                     </padding>
-                     <font>
-                        <Font size="8.0" />
-                     </font>
-                     <cursor>
-                        <Cursor fx:constant="DEFAULT" />
-                     </cursor>
-                  </ToggleButton>
-              </buttons>
-               <GridPane.margin>
-                  <Insets right="5.0" />
-               </GridPane.margin>
-            </ButtonBar>
          </children>
-      </GridPane>
+      </StackPane>
       <Pane maxHeight="15.0" maxWidth="1.7976931348623157E308" minHeight="15.0" minWidth="0.0" prefHeight="15.0" prefWidth="200.0" GridPane.rowIndex="1" />
    </children>
    <cursor>
