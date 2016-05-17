@@ -30,10 +30,12 @@ public class MultisetController {
 	private iModel model;
 	private iView view;
 	private final Stage window;
+	private final Scene previousScene;
 	private final Timeline timeline;
 
 	public MultisetController(Stage window) {
 		this.window = window;
+		this.previousScene = window.getScene();
 		fxmlLoader = new FXMLLoader(getClass().getResource("/MultisetView.fxml"));
 		fxmlLoader.setController(this);
 		VBox p = null;
@@ -57,8 +59,12 @@ public class MultisetController {
 		timeline.setCycleCount(Animation.INDEFINITE);
 	}
 
+	/**
+	 * Called when the "Back" button is pressed.
+	 */
 	public void goBackPressed() {
-
+		timeline.stop();
+		window.setScene(previousScene);
 	}
 
 	/**
