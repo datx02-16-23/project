@@ -102,7 +102,6 @@ class ExpressionTransformer(NodeTransformer):
 		return copy_location(expression,node)
 
 	def generic_visit(self,node):
-		print self.SUPPORTED_NODES
 		if type(node).__name__ in self.SUPPORTED_NODES:
 			super(ExpressionTransformer,self).visit(node)
 		else:
@@ -113,11 +112,6 @@ class ExpressionTransformer(NodeTransformer):
 	def visit_Delete(self,node): return node
 	def visit_DictComp(self,node): return node
 	def visit_ListComp(self,node): return node
-
-et = ExpressionTransformer()
-node = parse("[[1,2],2,3][a[0]][1]")
-node_ = et.visit(node)
-print ts(node_)
 
 class OperationTransformer(NodeTransformer):
 	DEFINED_OPERATIONS = []
