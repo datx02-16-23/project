@@ -57,9 +57,4 @@ public class RectangleElement extends VisualElement {
 		
 		return clone;
 	}
-	
-	//TODO
-	public void setIndex(int[] index){
-		super.index.setText(Arrays.toString(index));
-	}
 }

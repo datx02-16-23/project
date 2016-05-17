@@ -48,8 +48,6 @@ public class MatrixRender_FX extends Render_FX {
 		
 		for(Element e : struct.getElements()){
 			RectangleElement re = new RectangleElement(e, node_width, node_height);
-//			SingleElement re = new SingleElement(e, node_width, node_height);
-//			EllipseElement re = new EllipseElement(e, node_width, node_height);
 			re.setLayoutX(getX(e));
 			re.setLayoutY(getY(e));
 			re.setIndex(((IndexedElement) e).getIndex());
