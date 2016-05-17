@@ -52,7 +52,6 @@ public class Main extends Application {
 		timeline.getKeyFrames().add(new KeyFrame(Duration.millis(renderTime), actionEvent -> {
 			model.tick(renderTime);
 			view.render();
-			//timeline.stop();
 		}));
 		timeline.setCycleCount(Animation.INDEFINITE);
 		timeline.play();

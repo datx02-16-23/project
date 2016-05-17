@@ -34,7 +34,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import multiset.MultisetAnimator;
 import multiset.MultisetController;
 import wrapper.Locator;
 import wrapper.Operation;
@@ -119,17 +118,7 @@ public class GUI_Controller implements CommunicatorListener {
 	}
 
 	public void showMultiset() {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/MultisetView.fxml"));
-		MultisetController msc = new MultisetController(window);
-		fxmlLoader.setController(msc);
-		VBox p = null;
-		try {
-			p = fxmlLoader.load();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		msc.loadNamespaceItems(fxmlLoader.getNamespace());
-		window.setScene(new MultisetAnimator(p, 700, 700, fxmlLoader));
+		new MultisetController(window);
 	}
 
 	private CheckBox toggleAutorunStream;
