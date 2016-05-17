@@ -14,7 +14,7 @@
    <children>
       <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" VBox.vgrow="ALWAYS">
          <center>
-            <Canvas fx:id="ballCanvas" height="109.0" width="500.0" />
+            <Canvas fx:id="ballCanvas" height="600.0" width="600.0" />
          </center>
       </BorderPane>
       <HBox maxHeight="104.0" maxWidth="1.7976931348623157E308" minHeight="104.0" minWidth="0.0" prefHeight="104.0" prefWidth="300.0" style="-fx-background-color: #FFFFFF;">
@@ -58,7 +58,7 @@
                               <Insets left="10.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField fx:id="output" editable="false" maxHeight="25.0" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="300.0" prefHeight="25.0" prefWidth="300.0" promptText="The result of your query will appear here." HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="output" maxHeight="25.0" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="300.0" prefHeight="25.0" prefWidth="300.0" promptText="The result of your query will appear here." HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                </children>

@@ -1,3 +1,4 @@
+from constants import *
 from ast import *
 from codegen import to_source as ts
 from printnode import ast_visit as printnode
@@ -28,11 +29,12 @@ def is_variable(node):
 	if not isinstance(node,Tuple):
 		return False
 	else:
-		return isinstance(node.elts[0],Str) and node.elts[0].s == 'var'
+		return isinstance(node.elts[0],Str) and node.elts[0].s == EXPR_VAR
 
-BUILTIN = ['False','True']
 def is_builtin(name):
-	return name in BUILTIN
+	name_ = deepcopy(name)
+	name_.lower()
+	return name_ in BUILTINS_LOWERCASE
 
 def get_lineno(node):
 	lineno = [node.lineno]
@@ -41,7 +43,6 @@ def get_lineno(node):
 			lineno.append(child.lineno)
 			lineno = lineno + get_lineno(child)
 	return lineno
-
 #############################################################
 class Expression(object):
 	DEFINED_NAMES = []
@@ -56,11 +57,11 @@ class Expression(object):
 		return Tuple(elts=elts)
 
 class SubscriptExpression(Expression):
-	Expression.DEFINED_NAMES.append('subscript')
+	Expression.DEFINED_NAMES.append(EXPR_SUBSCRIPT)
 	def __init__(self):
-		super(SubscriptExpression,self).__init__('subscript')
+		super(SubscriptExpression,self).__init__(EXPR_SUBSCRIPT)
 
-	# ('subscript', to, indices..)
+	# (EXPR_SUBSCRIPT, to, indices..)
 	def get_expression(self,node):
 		if is_variable(node.value) or isinstance(node.value,List):
 			node.value = super(SubscriptExpression,self).get_expression_([self.name,node.value])
@@ -68,20 +69,22 @@ class SubscriptExpression(Expression):
 		return expression
 
 class NameExpression(Expression):
-	Expression.DEFINED_NAMES.append('var')
+	Expression.DEFINED_NAMES.append(EXPR_VAR)
 	def __init__(self):
-		super(NameExpression,self).__init__('var')
+		super(NameExpression,self).__init__(EXPR_VAR)
 
-	# ('var',node.id, 'Store') if Store is context
-	# ('var',node.id, node) if Load is context
+	# (EXPR_VAR,node.id, EXPR_STORE) if Store is context
+	# (EXPR_VAR,node.id, node) if Load is context
 	def get_expression(self,node):
 		if is_builtin(node.id):
 			return node
-		value = node if isinstance(node.ctx,Load) else Str('Store')
+		value = node if isinstance(node.ctx,Load) else Str(EXPR_STORE)
 		return super(NameExpression,self).get_expression_([self.name,Str(node.id),value])
 
 
 class ExpressionTransformer(NodeTransformer):
+	NAME = "expression_transformer"
+	SUPPORTED_NODES = [TRANSFORMER_SUBSCRIPT,TRANSFORMER_NAME]
 
 	def is_generated_expression(self,node):
 		if isinstance(node,Tuple):
@@ -97,6 +100,12 @@ class ExpressionTransformer(NodeTransformer):
 	def visit_Name(self,node):
 		expression = NameExpression().get_expression(node)
 		return copy_location(expression,node)
+
+	def generic_visit(self,node):
+		if type(node).__name__ in self.SUPPORTED_NODES:
+			super(ExpressionTransformer,self).visit(node)
+		else:
+			return node
 
 	def visit_BinOp(self,node): return node
 	def visit_Call(self,node): return node
@@ -135,8 +144,8 @@ class OperationTransformer(NodeTransformer):
 			self.visit(field)
 		return node
 
-	# Following nodes should generally be avoided
-	# or should be handled diffrently in future
+	# Following nodes should generally be avoided 
+	# if not specifically needed for implementation
 	def visit_Assign(self,node): return node
 	def visit_AugAssign(self,node): return node
 	def visit_Delete(self,node): return node

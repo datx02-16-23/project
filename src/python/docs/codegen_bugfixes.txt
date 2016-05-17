@@ -41,3 +41,15 @@ visit_ExceptHandler
 	def visit_excepthandler(self, node):
 	->
 	def visit_ExceptHandler(self, node):
+
+visit_BinOp
+	fixed enclosing paranthesis
+	... 
+		=
+		self.visit(node.left)
+	    self.write(' %s ' % BINOP_SYMBOLS[type(node.op)])
+	    self.visit(node.right)
+    ->
+	self.write('(')
+    ...
+    self.write(')')

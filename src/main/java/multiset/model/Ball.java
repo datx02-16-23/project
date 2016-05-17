@@ -8,7 +8,7 @@ public class Ball implements iValueContainer{
 
   
   public Ball(double x, double y, double value) {
-    this(x, y, Math.random(), Math.random(), 50, value);
+    this(x, y, Math.random()/2, Math.random()/2, 25, value);
   }
 
   public Ball(double x, double y, double vx, double vy, double r, double value){

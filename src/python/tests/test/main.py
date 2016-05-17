@@ -1,79 +1,30 @@
-import copy
-NOT_AN_EDGE = -1
+def shellSort(alist):
+    sublistcount = len(alist)//2
+    while sublistcount > 0:
 
-def is_edge(graph,row,col):
-	return graph[row][col] != NOT_AN_EDGE
+        for startposition in range(sublistcount):
+            gapInsertionSort(alist,startposition,sublistcount)
 
-def move_ok(graph,row,col):
-	return (
-		row < len(graph) and
-		row >= 0 and
-		col < len(graph) and
-		col >= 0 and
-		is_edge(graph,row,col)
-	)
+        print("After increments of size",sublistcount,"The list is",alist)
 
-def get_move(graph,row,col):
-	return [(row,col)] if move_ok(graph,row,col) else []
+        sublistcount = sublistcount // 2
 
-def get_moves(graph,row,col):
-	moves = []
-	moves += get_move(graph,row+1,col)
-	moves += get_move(graph,row-1,col)
-	moves += get_move(graph,row,col+1)
-	moves += get_move(graph,row,col-1)
-	return moves
+def gapInsertionSort(alist,start,gap):
+    for i in range(start+gap,len(alist),gap):
 
-def move_legal(path,move,visited=None):
-	return move not in path and move not in visited if visited is not None else True
+        currentvalue = alist[i]
+        position = i
 
-def has_legal_move(graph,path,node):
-	moves = get_moves(graph,*node)
-	for move in moves:
-		if move_legal(path,move):
-			return True
-	return False
+        while position>=gap and alist[position-gap]>currentvalue:
+            alist[position]=alist[position-gap]
+            position = position-gap
 
-def cost(graph,row,col):
-	return graph[row][col]
+        alist[position]=currentvalue
 
-def is_goal(start,goal):
-	return start == goal
 
-def backtrack(graph,path):
-	node = path.pop()
-	while not has_legal_move(graph,path,node): node = path.pop()
-	return path
-
-def cost_first(graph,start,goal):
-	visited = []
-	current = start
-	path = []
-	while not is_goal(current,goal):
-		path.append(current)
-		moves = get_moves(graph,*current)
-		best_move = None
-		for move in moves:
-			if is_goal(move,goal):
-				best_move = move
-				break
-			if move_legal(path,move,visited):
-				if best_move is None or cost(graph,*move) <= cost(graph,*best_move):
-					best_move = move
-		if best_move is None:
-			visited.append(current)
-			path = backtrack(graph,path)
-			current = path.pop() if len(path) > 0 else start
-		else:
-			current = best_move
-		if len(visited) > 5:
-			break
-	path.append(current)
-	return path
-
-graph = [
-	[1,1,1,1,1],
-	[1,1,1,1,1],
-	[1,1,1,1,1]
-]
-print cost_first(graph,(0,0),(0,3))
+from random import random as r
+rng = 100
+size = 10
+# vec = [int(r() * rng) for i in range(0,size)]
+vec = [54,26,93,17,77,31,44,55,20]
+shellSort(vec)
