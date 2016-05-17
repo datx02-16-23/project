@@ -41,12 +41,12 @@ public class View implements iView {
 
 		// Draw ball
 		gc.setFill(Color.RED);
-		gc.fillOval(b.getX(), b.getY(), b.getR()*2, b.getR()*2);
+		gc.fillOval(b.getX()-b.getR(), b.getY()-b.getR(), b.getR()*2, b.getR()*2);
 
 		// Draw boll value
 		gc.setFill(Color.WHITE);
 		gc.setTextAlign(TextAlignment.CENTER);
 		gc.setTextBaseline(VPos.CENTER);
-		gc.fillText(""+b.getValue(), b.getX()+b.getR(), b.getY()+b.getR());
+		gc.fillText(""+b.getValue(), b.getX(), b.getY());
 	}
 }
