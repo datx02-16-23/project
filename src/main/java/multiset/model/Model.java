@@ -18,7 +18,7 @@ public class Model implements iModel {
 		List<Integer> values = new ArrayList<>();
 
 		for (int i = startRange; i < stopRange; i++) {
-			values.add(10);
+			values.add(i);
 		}
 		Collections.shuffle(values);
 		ListIterator<Integer> valuesIterator = values.listIterator();
@@ -119,12 +119,12 @@ public class Model implements iModel {
 
 	private void wallCollisions(double deltaT) {
 		for (Ball ball : balls) {
-			double x = ball.getX(), y = ball.getY(), r = ball.getR();
-			if ((x < r && ball.getVx() <= 0) || (x > areaWidth - r && ball.getVx() >= 0)) {
+			double x = ball.getX(), y = ball.getY(), d = ball.getR() * 2;
+			if ((x < 0 && ball.getVx() <= 0) || (x > areaWidth - d && ball.getVx() >= 0)) {
 				ball.setVx(ball.getVx() * -1);
 
 			}
-			if ((y < r && ball.getVy() <= 0) || (y > areaHeight - r && ball.getVy() >= 0)) {
+			if ((y < 0 && ball.getVy() <= 0) || (y > areaHeight - d && ball.getVy() >= 0)) {
 				ball.setVy(ball.getVy() * -1);
 				ball.setGravity(false);
 			} else {

@@ -1,8 +1,10 @@
 package multiset.view;
 
+import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 import multiset.model.Ball;
 import multiset.model.iModel;
 
@@ -36,8 +38,15 @@ public class View implements iView {
 
 	private void paintBall(Ball b) {
 		GraphicsContext gc = canvas.getGraphicsContext2D();
-		gc.setFill(Color.RED);
 
-		gc.fillOval(b.getX(), b.getY(), b.getR(), b.getR());
+		// Draw ball
+		gc.setFill(Color.RED);
+		gc.fillOval(b.getX(), b.getY(), b.getR()*2, b.getR()*2);
+
+		// Draw boll value
+		gc.setFill(Color.WHITE);
+		gc.setTextAlign(TextAlignment.CENTER);
+		gc.setTextBaseline(VPos.CENTER);
+		gc.fillText(""+b.getValue(), b.getX()+b.getR(), b.getY()+b.getR());
 	}
 }

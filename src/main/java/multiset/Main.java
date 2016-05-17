@@ -48,9 +48,11 @@ public class Main extends Application {
 
 	private void setupContinousUpdates() {
 		final Timeline timeline = new Timeline();
-		timeline.getKeyFrames().add(new KeyFrame(Duration.millis(10), actionEvent -> {
-			model.tick(10);
+		final int renderTime = 17; // In ms
+		timeline.getKeyFrames().add(new KeyFrame(Duration.millis(renderTime), actionEvent -> {
+			model.tick(renderTime);
 			view.render();
+			//timeline.stop();
 		}));
 		timeline.setCycleCount(Animation.INDEFINITE);
 		timeline.play();
