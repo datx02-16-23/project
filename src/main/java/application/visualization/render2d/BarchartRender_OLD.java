@@ -81,7 +81,7 @@ public class BarchartRender_OLD extends Render {
 				d.getNode().setStyle("-fx-bar-fill: " + DEFAULT_COLOR + ";");
 			}
 		}
-		struct.elementsDrawn();
+		struct.elementsDrawn(null);
 	}
 
 	@Override

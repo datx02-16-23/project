@@ -56,7 +56,7 @@ public class LinearAnimation extends Animation {
 	 *            End y.
 	 */
 	public LinearAnimation(Render owner, Element e, double end_x, double end_y) {
-		this(owner, e, Render.absX(owner, e), Render.absY(owner, e), end_x, end_y);
+		this(owner, e, owner.absX(e), owner.absY(e), end_x, end_y);
 	}
 
 	@Override

@@ -1,14 +1,18 @@
-package application.visualization.render2d;
+package application.visualization.render_FX;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import application.gui.GUI_Controller;
-import application.visualization.Visualization;
+import application.visualization.animation.Animation;
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.Transition;
+import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
@@ -24,77 +28,194 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
+import wrapper.datastructures.Array.IndexedElement;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
 import wrapper.operations.OP_Remove;
 
-public abstract class Render extends StackPane {
+public abstract class Render_FX extends StackPane {
 
-	private static final Background ARRAY_BACKGROUND = getArrayBg();
-	private static final Background ORPHAN_BACKGROUND = getOrphanBg();
-	private static final Background TREE_BACKGROUND = getTreeBg();
-	private static final Border BORDER_MOUSEOVER = new Border(new BorderStroke(Color.web("#123456"),
-			BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(3), new Insets(-5)));
-	public static final double DEFAULT_SIZE = 40;
-	protected final double node_width, node_height;
-	protected final double hspace, vspace;
-	protected double WIDTH, HEIGHT;
-	protected final DataStructure struct;
-	protected final Canvas local_canvas = new Canvas();
-	protected static final Canvas SHARED_ANIMATED = Visualization.instance().ANIMATED;
-	protected static final Color COLOR_WHITE = Color.WHITE;
-	protected static final Color COLOR_BLACK = Color.BLACK;
+	/*
+	 * Shared stuff.
+	 */
+	private static final Background ARRAY_BACKGROUND = createArrayBg();
+	private static final Background ORPHAN_BACKGROUND = createOrphanBg();
+	private static final Background TREE_BACKGROUND = createTreeBg();
+	private static final Border BORDER_MOUSEOVER = getMOBorder();
 
 	/**
+	 * Default node width.
+	 */
+	public static final double DEFAULT_NODE_WIDTH = 60;
+
+	/**
+	 * Default node height.
+	 */
+	public static final double DEFAULT_NODE_HEIGHT = 40;
+
+	/**
+	 * The DataStructure this render represents.
+	 */
+	protected final DataStructure struct;
+
+	/**
+	 * Width of individual elements bounding boxes.
+	 */
+	protected final double node_width;
+	/**
+	 * Height of individual elements bounding boxes.
+	 */
+	protected final double node_height;
+
+	/**
+	 * Horizontal space between elements.
+	 */
+	protected final double hspace;
+	/**
+	 * Vertical space between elements.
+	 */
+	protected final double vspace;
+	/**
+	 * The width of the render.
+	 */
+	protected double width;
+	/**
+	 * The height of the render.
+	 */
+	protected double height;
+
+	/**
+	 * A mapping of actual Elements to VisualElements.
+	 */
+	// protected final HashMap<Element, VisualElement> visualElementsMapping =
+	// new HashMap<Element, VisualElement>();
+	protected final HashMap<String, VisualElement> visualElementsMapping = new HashMap<String, VisualElement>();
+
+	/**
+	 * The visual element nodes.
+	 */
+	protected final Pane visual_nodes = new Pane();
+
+	/**
+	 * The pane used when drawing animated elements.
+	 */
+	protected Pane animated_nodes;
+
+	/**
+	 * Returns the Pane used for drawing animated elements.
+	 * 
+	 * @return A Pane.
+	 */
+	public Pane getAnimated_nodes() {
+		return animated_nodes;
+	}
+
+	/**
+	 * Set the Pane used for drawing animated elements.
+	 * 
+	 * @param animated_nodes
+	 *            A Pane.
+	 */
+	public void setAnimated_nodes(Pane animated_nodes) {
+		this.animated_nodes = animated_nodes;
+	}
+
+	/**
+	 * Creates a new Render.
 	 * 
 	 * @param struct
+	 *            The structure to render.
 	 * @param width
+	 *            The width of the elements in this Render.
 	 * @param height
+	 *            The height of the elements in this Render.
 	 * @param hspace
+	 *            The horizontal space between elements in this Render.
 	 * @param vspace
+	 *            The vertical space between elements in this Render.
 	 */
-	public Render(DataStructure struct, double width, double height, double hspace, double vspace) {
+	public Render_FX(DataStructure struct, double width, double height, double hspace, double vspace) {
 		this.struct = struct;
 		// Sizing and spacing
 		this.node_width = width;
 		this.node_height = height;
 		this.hspace = hspace;
 		this.vspace = vspace;
-		local_canvas.widthProperty().bind(this.widthProperty());
-		local_canvas.heightProperty().bind(this.heightProperty());
-		// this.setMinSize(150, 150);
-		// this.setPrefSize(150, 150);
-		// this.setMaxSize(150, 150);
-		// this.setWidth(150);
-		// this.setHeight(150);
-		// this.setSize(150, 150);
 		setSize(150, 150);
 		this.setBackground(getStructBackground(struct));
 		// Add stacked canvases
-		this.getChildren().add(local_canvas);
 		initDragAndZoom();
+		getChildren().add(visual_nodes);
 	}
 
-	private static Background getStructBackground(DataStructure struct) {
-		if (struct == null) {
-			return null;
-		}
+	/*
+	 * Animation
+	 */
 
-		switch (struct.rawType) {
-		case array:
-			return ARRAY_BACKGROUND;
-		case tree:
-			return TREE_BACKGROUND;
-		case independentElement:
-			return ORPHAN_BACKGROUND;
-		default:
-			return null;
+	/**
+	 * Default animation for a Remove operation. Does nothing.
+	 * 
+	 * @param remove
+	 *            The operation to animate.
+	 */
+	public void animateRemove(OP_Remove remove) {
+		// Do nothing.
+	}
+
+	/**
+	 * Default animations for a read or write.
+	 * 
+	 * @param src
+	 *            The source element.
+	 * @param src_rndr
+	 *            The render for the source element.
+	 * @param tar
+	 *            The target element.
+	 * @param tar_rndr
+	 *            The render for the target element.
+	 */
+	public void animateReadWrite(Element src, Render_FX src_rndr, Element tar, Render_FX tar_rndr) {
+		/*
+		 * Target is unknown. READ: this -> [x]
+		 */
+		if (tar == null) {
+			src_rndr.fade_option = "fade_out";
+			src_rndr.animate(src, src_rndr.absX(src), src_rndr.absY(src), // From
+					src_rndr.absX(src) - node_width * 0.5, src_rndr.absY(src) - node_height * 1.5); // To
+			/*
+			 * Source is unknown. WRITE: [x] -> this
+			 */
+		} else if (src == null) {
+			tar_rndr.fade_option = "fade_in";
+			tar_rndr.animate(tar, tar_rndr.absX(tar) + node_width * 0.5, tar_rndr.absY(tar) + node_height * 1.5, // From
+					tar_rndr.absX(tar), tar_rndr.absY(tar)); // To
+			/*
+			 * Source and target are known.
+			 */
+		} else { // if (src != null && tar != null)
+			tar_rndr.fade_option = "off";
+			tar_rndr.animate(tar, src_rndr.absX(src), src_rndr.absY(src), // From
+					tar_rndr.absX(tar), tar_rndr.absY(tar)); // To
 		}
 	}
-	
-	public void setAnimated(Pane animated){
-		//TODO
+
+	/**
+	 * Default animation of a swap between two elements.
+	 * 
+	 * @param var1
+	 *            The first element.
+	 * @param var1_rndr
+	 *            The render for the first element.
+	 * @param var2
+	 *            The second element.
+	 * @param var2_rndr
+	 *            The render for the second element.
+	 */
+	public void animateSwap(Element var1, Render_FX var1_rndr, Element var2, Render_FX var2_rndr) {
+		var1_rndr.fade_option = "swap";
+		var1_rndr.animate(var2, var1_rndr.absX(var1), var1_rndr.absY(var1), var2_rndr.absX(var2), var2_rndr.absY(var2));
 	}
 
 	/**
@@ -114,37 +235,14 @@ public abstract class Render extends StackPane {
 	}
 
 	/**
-	 * Order the render to draw the elements of the Data Structure it carries.
-	 */
-	public abstract void render();
-
-	/**
-	 * Draw an element using the animation canvas.
+	 * Order the Render_FXto draw the elements of the Data Structure it carries.
+	 * The default implementation of this method only does one thing: <br>
+	 * <br>
 	 * 
-	 * @param e
-	 *            The element to draw.
-	 * @param x
-	 *            The absolute x-coordinate.
-	 * @param y
-	 *            The absolute y-coordinate.
-	 * @param color
-	 *            The style to use (null = default)
+	 * <b>{@code struct.elementsDrawn(Color.WHITE);}</b>
 	 */
-	public abstract void drawAnimatedElement(Element e, double x, double y, Color color);
-
-	/**
-	 * Clears an element from the Canvas. It may be necessary to shadow this
-	 * method if it doesn't work properly.
-	 * 
-	 * @param e
-	 *            The element to clear.
-	 * @param x
-	 *            The x-coordinate to clear.
-	 * @param y
-	 *            The y-coordinate to clear.
-	 */
-	public void clearAnimatedElement(Element e, double x, double y) {
-		SHARED_ANIMATED.getGraphicsContext2D().clearRect(x - 2, y - 2, node_width + 4, node_height + 4);
+	public void render() {
+		struct.elementsDrawn(Color.WHITE);
 	}
 
 	/**
@@ -166,11 +264,11 @@ public abstract class Render extends StackPane {
 	public abstract double getY(Element e);
 
 	/**
-	 * Order the Render to calculate it's size. Should be shadowed by inheriting
-	 * types.
+	 * Order the Render_FX to calculate it's size. The default implementation of
+	 * this method does nothing.
 	 */
 	public void calculateSize() {
-		local_canvas.getGraphicsContext2D().clearRect(0, 0, WIDTH, HEIGHT);
+		// Do nothing.
 	}
 
 	// Drag and Zoom
@@ -219,7 +317,7 @@ public abstract class Render extends StackPane {
 		// Set cursor
 		this.setOnMouseEntered(event -> {
 			this.setCursor(Cursor.HAND);
-			this.setBorder(BORDER_MOUSEOVER);
+//			this.setBorder(BORDER_MOUSEOVER); //TODO
 		});
 		this.setOnMouseExited(event -> {
 			this.setCursor(null);
@@ -236,6 +334,7 @@ public abstract class Render extends StackPane {
 		return struct;
 	}
 
+	String fade_option = "bla";
 	/**
 	 * Start an animation of an element to a point.
 	 * 
@@ -250,7 +349,70 @@ public abstract class Render extends StackPane {
 	 * @param end_y
 	 *            End point y-coordinate.
 	 */
-	public abstract void animate(Element e, double start_x, double start_y, double end_x, double end_y);
+	public void animate(Element e, double start_x, double start_y, double end_x, double end_y) {
+		ParallelTransition trans = new ParallelTransition();
+
+		// VisualElement real = visualElementsMapping.get(e);		
+		int[] i = ((IndexedElement) e).getIndex();
+		Arrays.copyOf(i, i.length);
+		VisualElement real = visualElementsMapping
+				.get(Arrays.toString(i));
+
+		VisualElement animated = real.clone();
+		animated.unbind();
+
+		animated_nodes.getChildren().add(animated);
+
+		final boolean useGhost;
+
+		/*
+		 * Fade
+		 */
+
+		switch (fade_option) {
+		case "fade_in":
+			useGhost = true;
+			trans.getChildren().add(fadeIn());
+			break;
+
+		case "fade_out":
+			useGhost = false;
+			trans.getChildren().add(fadeOut());
+			break;
+
+		case "swap":
+			useGhost = true;
+			break;
+		default:
+			useGhost = false;
+			break;
+		}
+
+		/*
+		 * Move
+		 */
+		TranslateTransition tt = new TranslateTransition(Duration.millis(Animation.ANIMATION_TIME));
+		tt.setOnFinished(event -> {
+			animated_nodes.getChildren().remove(animated);
+			if (useGhost) {
+				real.setGhost(false);
+			}
+		});
+
+		tt.setFromX(start_x);
+		tt.setFromY(start_y);
+		tt.setToX(end_x);
+		tt.setToY(end_y);
+
+		trans.getChildren().add(tt);
+
+		/*
+		 * Showtime!!
+		 */
+		trans.setNode(animated);
+		real.setGhost(useGhost);
+		trans.play();
+	}
 
 	/**
 	 * Returns the absolute x-coordinate for the element e.
@@ -260,7 +422,7 @@ public abstract class Render extends StackPane {
 	 * @return The absolute x-coordinates of e.
 	 */
 	public double absX(Element e) {
-		double bx = this.getTranslateX() + this.getLayoutX();
+		double bx = getTranslateX() + getLayoutX();
 		return this.getX(e) + bx;
 	}
 
@@ -272,7 +434,7 @@ public abstract class Render extends StackPane {
 	 * @return The absolute y-coordinates of e.
 	 */
 	public double absY(Element e) {
-		double by = this.getTranslateY() + this.getLayoutY();
+		double by = getTranslateY() + getLayoutY();
 		return this.getY(e) + by;
 	}
 
@@ -287,40 +449,7 @@ public abstract class Render extends StackPane {
 	}
 
 	/**
-	 * Draw an element to the canvas.
-	 * 
-	 * @param e
-	 *            The element to draw.
-	 * @param style
-	 *            The style to use.
-	 * @param canvas
-	 *            The Canvas to draw on.
-	 */
-	public abstract void drawElement(Element e, Color style, Canvas canvas);
-
-	/**
-	 * Erase an element from the given Canvas.
-	 * 
-	 * @param e
-	 *            The elements to erase.
-	 * @param canvas
-	 *            The canvas to erase the element from.
-	 */
-	public abstract void clearElement(Element e, Canvas canvas);
-
-	/**
-	 * Indicates that an element has finished animating. The default
-	 * implementation of this method does nothing.
-	 * 
-	 * @param e
-	 *            The element which finished animating.
-	 */
-	public void finishAnimation(Element e) {
-		// Do nothing.
-	}
-
-	/**
-	 * SpinnerValueFactory for Render implementations.
+	 * SpinnerValueFactory for Render_FXimplementations.
 	 * 
 	 * @author Richard Sundqvist
 	 *
@@ -466,76 +595,62 @@ public abstract class Render extends StackPane {
 		}
 	}
 
-	private static Background getArrayBg() {
+	/*
+	 * Boring crap.
+	 */
+	private static Background createArrayBg() {
 		return new Background(new BackgroundImage(
 				new Image(GUI_Controller.class.getResourceAsStream("/assets/array.png")), BackgroundRepeat.NO_REPEAT,
 				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
 	}
 
-	private static Background getOrphanBg() {
+	private static Background createOrphanBg() {
 		return new Background(new BackgroundImage(
 				new Image(GUI_Controller.class.getResourceAsStream("/assets/orphan2.png")), BackgroundRepeat.NO_REPEAT,
 				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
 	}
 
-	private static Background getTreeBg() {
+	private static Background createTreeBg() {
 		return new Background(new BackgroundImage(
 				new Image(GUI_Controller.class.getResourceAsStream("/assets/tree.png")), BackgroundRepeat.NO_REPEAT,
 				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
 	}
 
-	/**
-	 * Animates a Swap. The default implementation of this method does nothing.
-	 * 
-	 * @param remove
-	 *            The operation to animate.
-	 */
-	public void animateRemove(OP_Remove remove) {
-		// Do nothing.
+	private static Border getMOBorder() {
+		return new Border(new BorderStroke(Color.web("#123456"), BorderStrokeStyle.SOLID, new CornerRadii(5),
+				new BorderWidths(3), new Insets(-5)));
 	}
 
-	/**
-	 * Animate a read or write.
-	 * 
-	 * @param src
-	 * @param src_rndr
-	 * @param tar
-	 * @param tar_rndr
-	 */
-	public void animateReadWrite(Element src, Render src_rndr, Element tar, Render tar_rndr) {
-		/*
-		 * Target is unknown. READ: this -> [x]
-		 */
-		if (tar == null) {
-			src_rndr.animate(src, src_rndr.absX(src), src_rndr.absY(src), // From
-					src_rndr.absX(src) - node_width * 0.5, src_rndr.absY(src) - node_height * 1.5); // To
-			/*
-			 * Source is unknown. WRITE: [x] -> this
-			 */
-		} else if (src == null) {
-			tar_rndr.animate(tar, tar_rndr.absX(tar) + node_width * 0.5,
-					tar_rndr.absY(tar) + node_height * 1.5, // From
-					tar_rndr.absX(tar), tar_rndr.absY(tar)); // To
-			/*
-			 * Source and target are known.
-			 */
-		} else { //if (src != null && tar != null)
-			src_rndr.animate(tar, src_rndr.absX(src), src_rndr.absY(src), // From
-					tar_rndr.absX(tar), tar_rndr.absY(tar)); // To
+	private static Background getStructBackground(DataStructure struct) {
+		if (struct == null) {
+			return null;
+		}
+
+		switch (struct.rawType) {
+		case array:
+			return ARRAY_BACKGROUND;
+		case tree:
+			return TREE_BACKGROUND;
+		case independentElement:
+			return ORPHAN_BACKGROUND;
+		default:
+			return null;
 		}
 	}
 
-	/**
-	 * Animate a swap between two elements.
-	 * 
-	 * @param var1
-	 * @param var1_rndr
-	 * @param var2
-	 * @param var2_rndr
-	 */
-	public void animateSwap(Element var1, Render var1_rndr, Element var2, Render var2_rndr) {
-		var1_rndr.animate(var2, var1_rndr.absX(var1), var1_rndr.absY(var1), var2_rndr.absX(var2),
-				var2_rndr.absY(var2));
+	public static final Transition fadeIn() {
+		FadeTransition ft = new FadeTransition(Duration.millis(Animation.ANIMATION_TIME));
+
+		ft.setFromValue(1.0);
+		ft.setToValue(0);
+		return ft;
+	}
+
+	public static final Transition fadeOut() {
+		FadeTransition ft = new FadeTransition(Duration.millis(Animation.ANIMATION_TIME));
+		ft.setFromValue(1.0);
+		ft.setToValue(0);
+		return ft;
 	}
 
 }

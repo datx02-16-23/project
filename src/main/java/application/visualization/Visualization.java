@@ -6,7 +6,10 @@ import application.gui.GUI_Controller;
 import application.model.Model;
 import application.visualization.animation.Animation;
 import application.visualization.render2d.*;
-import application.visualization.render_NEW.KTreeRender_FX;
+import application.visualization.render_FX.KTreeRender_FX;
+import application.visualization.render_FX.MatrixRender_FX;
+import application.visualization.render_FX.Render_FX;
+import application.visualization.render_FX.SingleElementRender_FX;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
@@ -36,9 +39,10 @@ public class Visualization extends StackPane {
 	private boolean animate;
 	private final Model model;
 	private static Visualization INSTANCE;
+	private final static Pane animated_nodes = new Pane();
 	private final StackPane renders = new StackPane();
 	private final Overlay overlay;
-	private final HashMap<String, Render> struct_render_mapping = new HashMap<String, Render>();
+	private final HashMap<String, Render_FX> struct_render_mapping = new HashMap<String, Render_FX>();
 	public final Canvas ANIMATED = new Canvas();
 
 	/**
@@ -58,6 +62,10 @@ public class Visualization extends StackPane {
 	 */
 	public Visualization() {
 		this.model = Model.instance();
+		// test pane for animation TODO
+		animated_nodes.setMouseTransparent(true);
+		animated_nodes.maxWidth(Double.MAX_VALUE);
+		animated_nodes.maxHeight(Double.MAX_VALUE);
 		// Build Canvas
 		ANIMATED.setMouseTransparent(true);
 		ANIMATED.widthProperty().bind(this.widthProperty());
@@ -68,6 +76,7 @@ public class Visualization extends StackPane {
 		// Add stacked canvases
 		this.getChildren().add(renders);
 		this.getChildren().add(ANIMATED);
+		this.getChildren().add(animated_nodes);
 		this.getChildren().add(hintPane);
 		overlay = new Overlay();
 		// this.getChildren().add(overlay.getNode());
@@ -85,7 +94,7 @@ public class Visualization extends StackPane {
 		clear();
 		overlay.clear();
 		for (DataStructure struct : model.getStructures().values()) {
-			Render render = resolveRender(struct);
+			Render_FX render = resolveRender(struct);
 			renders.getChildren().add(render);
 			// overlay.addNode(new ArrayInfoPane((Array) struct));
 			struct_render_mapping.put(struct.identifier, render);
@@ -100,23 +109,26 @@ public class Visualization extends StackPane {
 	 * @param struct
 	 *            The DataStructure to assign a Render to.
 	 */
-	public static Render resolveRender(DataStructure struct) {
-		Render render = null;
+	public static Render_FX resolveRender(DataStructure struct) {
+		Render_FX render = null;
 		VisualType visual = struct.resolveVisual();
 		switch (visual) {
 		case bar:
 			// render = new BarchartRender(struct, 40, 5, 5);
-			render = new BarchartRender_OLD(struct);
+//			render = new BarchartRender_OLD(struct);
 			break;
 		case box:
-			render = new MatrixRender(struct, struct.visualOption, 40, 40, 0, 0);
+//			render = new MatrixRender(struct, struct.visualOption, 40, 40, 0, 0);
+			render = new MatrixRender_FX(struct, MatrixRender_FX.Order.resolve(struct.visualOption), 40, 40, 0, 0);
 			break;
 		case tree:
-			// render = new KTreeRender(struct, struct.visualOption, 40, 40, 0,
-			// 10);
-			render = new KTreeRender_FX(struct, 4, 50, 40, 5, 5);
+			render = new KTreeRender_FX(struct, struct.visualOption, 50, 40, 5, 5);
+			break;
+		case single:
+			render = new SingleElementRender_FX(struct, 60, 40);
 			break;
 		}
+		render.setAnimated_nodes(animated_nodes);
 		return render;
 	}
 
@@ -138,6 +150,8 @@ public class Visualization extends StackPane {
 		case tree:
 			render = new KTreeRender(null, -1, -1, -1, -1, -1);
 			break;
+		default:
+			break;
 		}
 		return render;
 	}
@@ -150,9 +164,9 @@ public class Visualization extends StackPane {
 		if (op == null) {
 			return;
 		}
-		Render render;
+		Render_FX render;
 		for (Object node : renders.getChildren()) {
-			render = (Render) node;
+			render = (Render_FX) node;
 			render.render();
 		}
 		if (animate) {
@@ -200,7 +214,7 @@ public class Visualization extends StackPane {
 			return;
 		}
 		Element src_e = null, tar_e = null;
-		Render src_render = null, tar_render = null;
+		Render_FX src_render = null, tar_render = null;
 		/**
 		 * Source params
 		 */
@@ -250,7 +264,7 @@ public class Visualization extends StackPane {
 			return;
 		}
 		Element v1_e = null, v2_e = null;
-		Render v1_render = null, v2_render = null;
+		Render_FX v1_render = null, v2_render = null;
 		/**
 		 * Var1 params
 		 */

@@ -15,7 +15,7 @@ import javafx.scene.paint.Paint;
 public abstract class Element {
 
 	private final SimpleStringProperty valueStringProperty = new SimpleStringProperty();
-	private final SimpleDoubleProperty valueDoubleProperty = new SimpleDoubleProperty();
+	private final SimpleDoubleProperty valueDoubleProperty = new SimpleDoubleProperty(); //TODO
 	private final SimpleObjectProperty<Paint> fillProperty = new SimpleObjectProperty<Paint>();
 	private double numericValue = Double.NaN;
 	private String value;
@@ -96,9 +96,10 @@ public abstract class Element {
 		fillProperty.setValue(color);
 	}
 
-	@Override
-	public int hashCode() {
-		return (int) (numericValue * 17) + (value == null ? 0 : value.hashCode());
-	}
+	//Bad hash - elements are never identified by their values.
+//	@Override
+//	public int hashCode() {
+//		return (int) (numericValue * 17) + (value == null ? 0 : value.hashCode());
+//	}
 
 }

@@ -61,7 +61,7 @@ public class BarchartRender extends Render {
 			}
 		}
 		drawAxes();
-		struct.elementsDrawn();
+		struct.elementsDrawn(null);
 	}
 
 	/**

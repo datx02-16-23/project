@@ -1,7 +1,7 @@
 package application.visualization;
 
 public enum VisualType {
-	bar("Bar Chart", "bar"), box("Boxes", "box", true), tree("KTree", "tree", true);
+	bar("Bar Chart", "bar"), box("Boxes", "box", true), tree("KTree", "tree", true), single("Single Element", "single");
 
 	public final String pretty;
 	public final String json;

@@ -108,7 +108,7 @@ public class KTreeRender extends Render {
 				}
 			}
 		}
-		struct.elementsDrawn();
+		struct.elementsDrawn(null);
 	}
 
 	/**

@@ -238,9 +238,17 @@ public abstract class DataStructure extends AnnotatedVariable {
 	 * Indicate to the DataStructure that the lists returned by
 	 * {@code getModifiedElements()} <b>and</b> {@code getResetElements} have
 	 * been drawn.
-	 * @param color The color to use for this element after reset.
+	 * @param color The color to use for this element after reset. Null default to white.
 	 */
-	public void elementsDrawn() {
+	public void elementsDrawn(Color color) {
+		color = color == null ? Color.WHITE : color;
+		
+		//TODO
+		for (Element e : getResetElements()) {
+			if (getModifiedElements().contains(e) == false) {
+				e.setColor(color);
+			}
+		}
 		// resetElements.clear();
 		resetElements.setAll(modifiedElements);
 		modifiedElements.clear();

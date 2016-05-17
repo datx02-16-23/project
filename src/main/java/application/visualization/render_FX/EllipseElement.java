@@ -1,4 +1,4 @@
-package application.visualization.render_NEW;
+package application.visualization.render_FX;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
@@ -24,6 +24,7 @@ public class EllipseElement extends VisualElement {
 		init();
 	}
 
+
 	/**
 	 * Create a bound visual EllipseElement.
 	 * 
@@ -42,5 +43,17 @@ public class EllipseElement extends VisualElement {
 	private void init(){
 		((Ellipse) shape).setRadiusX(node_width);
 		((Ellipse) shape).setRadiusY(node_height);
+	}
+	
+	public EllipseElement clone(){
+		EllipseElement clone;
+		
+		if(element == null){ //Unbound
+			clone = new EllipseElement(Double.parseDouble(value.getText()), (Color) shape.getFill(), node_width, node_height);
+		} else { //Bound
+			clone = new EllipseElement(element, node_width, node_height);
+		}
+		
+		return clone;
 	}
 }

@@ -120,7 +120,7 @@ public class IndependentElement extends Array {
 
 	@Override
 	public VisualType resolveVisual() {
-		return VisualType.box;
+		return VisualType.single;
 	}
 
 	@Override

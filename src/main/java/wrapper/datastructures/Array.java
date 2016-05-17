@@ -77,7 +77,7 @@ public class Array extends DataStructure {
 	private void init(OP_Write init) {
 
 		repaintAll = true;
-		
+
 		elements.clear();
 		double[] init_values = init.getValue();
 		if (capacity == null) { // Fall back to size declared in header
@@ -89,7 +89,8 @@ public class Array extends DataStructure {
 		// Initialize specified by the values argument of the init operation.
 		int linearIndex = 0;
 		for (; linearIndex < init_values.length; linearIndex++) {
-			IndexedElement ae = new IndexedElement(init_values[linearIndex], getIndexInNDimensions(linearIndex, capacity));
+			IndexedElement ae = new IndexedElement(init_values[linearIndex],
+					getIndexInNDimensions(linearIndex, capacity));
 			ae.setColor(OperationType.write.color);
 			putElement(ae);
 		}
@@ -308,8 +309,7 @@ public class Array extends DataStructure {
 	 * Internal class for holding elements
 	 */
 	/**
-	 * An indexed element.
-	 * they belong to.
+	 * An indexed element. they belong to.
 	 * 
 	 * @author Richard Sundqvist
 	 *
@@ -334,17 +334,18 @@ public class Array extends DataStructure {
 		private final int primes[] = { 607, 613, 617, 619, 631, 641, 643, 647, 653, 659, 661, 673, 677, 683, 691, 701,
 				709, 719, 727, 733 };
 
+		//TODO
 		@Override
 		public int hashCode() {
 			if (index == null) {
-				super.hashCode();
+				return -1;
 			}
 
 			int indexHash = 0;
 			for (int i = 0; i < index.length; i++) {
 				indexHash = index[i] * primes[i];
 			}
-			return super.hashCode() + indexHash;
+			return indexHash;
 		}
 
 		/**
@@ -384,9 +385,11 @@ public class Array extends DataStructure {
 			return this.getNumericValue() == rhs.getNumericValue() && Arrays.equals(this.index, rhs.index);
 		}
 
+		//TODO
 		@Override
 		public String toString() {
-			return Arrays.toString(index) + " = " + getNumericValue();
+			return hashCode()+"";
+//			return Arrays.toString(index) + " = " + getNumericValue();
 		}
 	}
 

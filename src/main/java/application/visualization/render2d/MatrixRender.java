@@ -115,7 +115,7 @@ public class MatrixRender extends Render {
 				}
 			}
 		}
-		struct.elementsDrawn();
+		struct.elementsDrawn(null);
 	}
 
 	/**
@@ -127,7 +127,6 @@ public class MatrixRender extends Render {
 		size = a.getCapacity() == null ? new int[] { struct.getElements().size(), 1 } : a.getCapacity();
 		calculateSize();
 		GraphicsContext context = local_canvas.getGraphicsContext2D();
-		// context.clearRect(0, 0, this.WIDTH, this.HEIGHT);
 		context.setFill(COLOR_BLACK);
 		context.fillText(struct.toString(), hspace, vspace + 10);
 		if (struct.getElements().isEmpty() == false) {
@@ -292,8 +291,6 @@ public class MatrixRender extends Render {
 			return ROW_MAJOR;
 		}
 	}
-
-	int step = 0;
 
 	@Override
 	public double getX(Element e) {

@@ -1,8 +1,7 @@
-package application.visualization.render_NEW;
+package application.visualization.render_FX;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
+import java.util.Arrays;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -12,10 +11,9 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Shape;
 import wrapper.datastructures.Element;
 
@@ -31,6 +29,12 @@ import wrapper.datastructures.Element;
  */
 public class VisualElement extends Pane {
 	private static final Border BORDER_MOUSEOVER = createMouseOverBorder();
+	
+	/**
+	 * The URL of the FXML file. Used in cloning.
+	 */
+	private String fxmlURL;
+	
 
 	/**
 	 * The element this VisualElement represents.
@@ -40,15 +44,15 @@ public class VisualElement extends Pane {
 	 * FXML elements.
 	 */
 	protected Shape shape;
-	protected Label value;
+	protected Label value, index;
 	protected Tooltip tooltip;
-	private StackPane root;
+	private GridPane root;
 
 	/*
-	 *  
+	 * Width and height of the nodes.
 	 */
 	protected double node_width, node_height;
-	
+
 	/**
 	 * Create a static, unbound VisualElement.
 	 * 
@@ -59,11 +63,12 @@ public class VisualElement extends Pane {
 	 * @param node_width
 	 *            The width of the node.
 	 * @param node_height
-	 *            The height of the node.
+	 *            The height of the node. * @param fxmlUrl Path to the FXML file
+	 *            containing the layout for the element.
 	 */
 	public VisualElement(double value, Color style, double node_width, double node_height, String fxmlUrl) {
 		this.element = null;
-
+		
 		init(node_width, node_height, fxmlUrl);
 
 		this.shape.setFill(style);
@@ -94,19 +99,21 @@ public class VisualElement extends Pane {
 
 	private void init(double node_width, double node_height, String fxmlUrl) {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlUrl));
+		this.fxmlURL = fxmlUrl;
 		// fxmlLoader.setController(this);
 
 		try {
-			root = (StackPane) fxmlLoader.load();
+			root = (GridPane) fxmlLoader.load();
 		} catch (IOException e) {
 			System.exit(-1);
 			// e.printStackTrace();
 		}
 
-		shape = (Ellipse) fxmlLoader.getNamespace().get("shape");
+		shape = (Shape) fxmlLoader.getNamespace().get("shape");
 		value = (Label) fxmlLoader.getNamespace().get("value");
+		index = (Label) fxmlLoader.getNamespace().get("index");
 		tooltip = (Tooltip) fxmlLoader.getNamespace().get("tooltip");
-		
+
 		this.node_height = node_height;
 		this.node_width = node_width;
 
@@ -173,10 +180,10 @@ public class VisualElement extends Pane {
 	 *            The new value.
 	 */
 	public void setGhost(boolean ghost) {
-		if(ghost != value.isVisible()){
-			return; //Already a ghost.
+		if (ghost != value.isVisible()) {
+			return; // Ghost status not changed.
 		}
-		
+
 		if (ghost) {
 			shape.fillProperty().unbind();
 			shape.setFill(Color.TRANSPARENT);
@@ -188,5 +195,29 @@ public class VisualElement extends Pane {
 			value.setVisible(true);
 		}
 	}
-
+	
+	public VisualElement clone(){
+		VisualElement clone;
+		
+		if(element == null){ //Unbound
+			clone = new VisualElement(Double.parseDouble(value.getText()), (Color) shape.getFill(), node_height, node_height, fxmlURL);
+		} else { //Bound
+			clone = new VisualElement(element, node_height, node_height, fxmlURL);
+		}
+		
+		return clone;
+	}
+	
+	/**
+	 * Unbind the element, leaving it in whatever state is is currently in.
+	 */
+	public void unbind(){
+		value.textProperty().unbind();
+		shape.fillProperty().unbind();
+	}
+	
+	//TODO
+	public void setIndex(int[] index){
+		this.index.setText(Arrays.toString(index));
+	}
 }
