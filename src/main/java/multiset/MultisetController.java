@@ -86,6 +86,7 @@ public class MultisetController {
 	 */
 	public void keyListener(KeyEvent event){
 		if(event.getCode() == KeyCode.ENTER) {
+			run(); // Run animation
 			event.consume(); // "You shall not pass"
 		}
 	}
