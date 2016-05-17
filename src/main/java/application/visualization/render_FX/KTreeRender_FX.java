@@ -2,10 +2,10 @@ package application.visualization.render_FX;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import application.visualization.render_FX.Render_FX.RenderSVF;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.shape.StrokeLineJoin;
 import wrapper.datastructures.Array.IndexedElement;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
@@ -17,8 +17,8 @@ public class KTreeRender_FX extends Render_FX {
 	 */
 	protected final Pane visual_lines = new Pane();
 
-	private static final RenderSVF rsvf = new RenderSVF(2, 1337); // TODO
-
+	private static final RenderSVF rsvf = new RenderSVF(2, 1337);
+	
 	protected final int K;
 	private final ArrayList<Integer> lowerLevelSums = new ArrayList<Integer>();
 	protected int totDepth, totBreadth, completedSize;
@@ -261,4 +261,9 @@ public class KTreeRender_FX extends Render_FX {
 		height = totDepth * (node_height + vspace) * 2 + node_height - vspace;
 		setSize(width, height);
 	}
+	
+	public RenderSVF getOptionsSpinnerValueFactory() {
+		return rsvf;
+	}
+
 }
