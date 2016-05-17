@@ -23,7 +23,7 @@ public class Model implements iModel {
 		Collections.shuffle(values);
 		ListIterator<Integer> valuesIterator = values.listIterator();
 
-		for (int i = 0; i < 10; i++) {
+		for (int i = startRange; i < stopRange; i++) {
 			balls.add(new Ball(Math.random() * 500 + 50, Math.random() * 500 + 50, valuesIterator.next()));
 		}
 	}

@@ -30,6 +30,7 @@ public class MultisetController {
 	private iModel model;
 	private iView view;
 	private final Stage window;
+	private final Timeline timeline;
 
 	public MultisetController(Stage window) {
 		this.window = window;
@@ -43,6 +44,17 @@ public class MultisetController {
 		}
 		loadNamespaceItems(fxmlLoader.getNamespace());
 		window.setScene(new Scene(p));
+		timeline = new Timeline();
+		setupTimeline();
+	}
+
+	private void setupTimeline(){
+		final int renderTime = 17; // In ms
+		timeline.getKeyFrames().add(new KeyFrame(Duration.millis(renderTime), actionEvent -> {
+			model.tick(renderTime);
+			view.render();
+		}));
+		timeline.setCycleCount(Animation.INDEFINITE);
 	}
 
 	public void goBackPressed() {
@@ -53,12 +65,12 @@ public class MultisetController {
 	 * Called when the "Go!" button is pressed.
 	 */
 	public void run() {
+		timeline.stop();
 		Canvas ballCanvas = (Canvas) fxmlLoader.getNamespace().get("ballCanvas");
 		iFilter filter = new Filter(input.getText(), output.getText(), cond.getText());
-		model = new Model(ballCanvas.getWidth(), ballCanvas.getHeight(), filter, 0, 10);
+		model = new Model(ballCanvas.getWidth(), ballCanvas.getHeight(), filter, 2, 20);
 		view = new View(model, ballCanvas);
-		setupContinousUpdates();
-		System.out.println("Go button pressed!");
+		timeline.play();
 	}
 
 	/**
@@ -74,14 +86,4 @@ public class MultisetController {
 		output = (TextField) namespace.get("output");
 	}
 
-	private void setupContinousUpdates() {
-		final Timeline timeline = new Timeline();
-		final int renderTime = 17; // In ms
-		timeline.getKeyFrames().add(new KeyFrame(Duration.millis(renderTime), actionEvent -> {
-			model.tick(renderTime);
-			view.render();
-		}));
-		timeline.setCycleCount(Animation.INDEFINITE);
-		timeline.play();
-	}
 }
