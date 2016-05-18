@@ -20,7 +20,7 @@ if __name__ == '__main__':
 	settings = pylogger.create_settings(
 		abspath('./test'),
 		['/main.py'],
-		[sample.pylogger.Variable('vec','list')],
+		[sample.pylogger.Variable('a','list'),sample.pylogger.Variable('b','list')],
 		'/main.py',
 		abspath('./test')
 	)

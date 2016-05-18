@@ -1,28 +1,13 @@
-def shellSort(alist):
-    sublistcount = len(alist)//2
-    while sublistcount > 0:
+# y is captured but not replaced with "a" or "b"
+def test_(y):
+    return y
 
-        for startposition in range(sublistcount):
-            gapInsertionSort(alist,startposition,sublistcount)
+def test(x):
+    x = [1,2,3]
+    return test_(x)
 
-        sublistcount = sublistcount // 2
+a = None
+test(a)
 
-def gapInsertionSort(alist,start,gap):
-    for i in range(start+gap,len(alist),gap):
-
-        currentvalue = alist[i]
-        position = i
-
-        while position>=gap and alist[position-gap]>currentvalue:
-            alist[position]=alist[position-gap]
-            position = position-gap
-
-        alist[position]=currentvalue
-
-
-from random import random as r
-rng = 100
-size = 10
-# vec = [int(r() * rng) for i in range(0,size)]
-vec = [54,26,93,17,77,31,44,55,20]
-shellSort(vec)
+b = None
+test(b)
