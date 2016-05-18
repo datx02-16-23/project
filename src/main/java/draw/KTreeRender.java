@@ -14,7 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
-public class KTreeRender extends _Render {
+public class KTreeRender extends ARender {
 
 	/**
 	 * Container for connector lines.

@@ -11,7 +11,7 @@ import gui.Main;
 import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
 
-public class GridRender extends _Render {
+public class GridRender extends ARender {
 
 	private final Order mo;
 	private int[] size;

@@ -174,9 +174,9 @@ public abstract class VisualElementFactory {
 		double x, y;
 		int xInd, yInd;
 
-		for (int i = 0; i < points.length; i++) {
-			xInd = i;
-			yInd = i + 1;
+		for (int i = 1; i < points.length; i++) {
+			xInd = i - 1;
+			yInd = i;
 			x = points[xInd];
 			y = points[yInd];
 

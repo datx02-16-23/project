@@ -8,8 +8,8 @@ import contract.datastructure.DataStructure;
 import contract.datastructure.IndependentElement;
 import contract.datastructure.RawType;
 import contract.datastructure.VisualType;
-import draw._Render;
-import draw._Render.RenderSVF;
+import draw.ARender;
+import draw.ARender.RenderSVF;
 import gui.Main;
 import gui.Controller;
 import javafx.collections.FXCollections;
@@ -189,7 +189,7 @@ public class CreateStructureDialog {
 
 	private void setSpinner(VisualType vt) {
 		if (vt.has_options) {
-			RenderSVF rsvf = _Render.RenderSVF.resolve(struct);
+			RenderSVF rsvf = ARender.RenderSVF.resolve(struct);
 			if (rsvf == null) {
 				visOption.setDisable(true); // Failed to fetch options.
 			} else {

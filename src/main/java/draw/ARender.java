@@ -25,9 +25,14 @@ import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -41,11 +46,12 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 
-public abstract class _Render extends Pane {
+public abstract class ARender extends Pane {
 
 	/*
 	 * Shared stuff.
@@ -133,6 +139,10 @@ public abstract class _Render extends Pane {
 	 * Name label.
 	 */
 	private Label name;
+	/**
+	 * Header bar.
+	 */
+	private Node header;
 
 	/**
 	 * Default constructor. Will use default values: <br>
@@ -144,7 +154,7 @@ public abstract class _Render extends Pane {
 	 * @param struct
 	 *            The DataStructure this Render will draw.
 	 */
-	public _Render(DataStructure struct) {
+	public ARender(DataStructure struct) {
 		this(struct, DEFAULT_NODE_WIDTH, DEFAULT_NODE_HEIGHT, DEFAULT_NODE_HSPACE, DEFAULT_NODE_VSPACE);
 	}
 
@@ -162,7 +172,7 @@ public abstract class _Render extends Pane {
 	 * @param vspace
 	 *            The vertical space between elements in this Render.
 	 */
-	public _Render(DataStructure struct, double width, double height, double hspace, double vspace) {
+	public ARender(DataStructure struct, double width, double height, double hspace, double vspace) {
 		this.struct = struct;
 
 		this.node_width = width;
@@ -199,20 +209,31 @@ public abstract class _Render extends Pane {
 		// Name labels
 		name = (Label) fxmlLoader.getNamespace().get("name");
 		name.setText(struct.toString());
-		Label name_mo = (Label) fxmlLoader.getNamespace().get("name_mo"); // Visible
-																			// only
-																			// on
-																			// mouseover
+		Label name_mo = (Label) fxmlLoader.getNamespace().get("name_mo");
 		name_mo.textProperty().bind(name.textProperty());
 
-		Node header = (Node) fxmlLoader.getNamespace().get("header"); // Visible
-																		// only
-																		// on
-																		// mouseover
-		header.visibleProperty().bind(name.visibleProperty().not());
+		ToolBar headerButtonBar = (ToolBar) fxmlLoader.getNamespace().get("buttons");
+		for (Node b : headerButtonBar.getItems()) {
+			if (((ButtonBase) b).getText().equals("Hide") == false) {
+				nonShowHideButtons.add((ButtonBase) b);
+			}
+		}
+		header = (Node) fxmlLoader.getNamespace().get("header");
+		bindHeader();
 
 		getChildren().add(root);
 		initDragAndZoom(this);
+	}
+
+	// Make header visible only on mousever.
+	private void bindHeader() {
+		header.visibleProperty().bind(name.visibleProperty().not());
+	}
+
+	// Make header visible and enable manual setting of visiblity
+	private void unbindHeader() {
+		name.setVisible(false);
+		header.visibleProperty().unbind();
 	}
 
 	/*
@@ -243,7 +264,7 @@ public abstract class _Render extends Pane {
 	 * @param millis
 	 *            The time in milliseconds the animation should last.
 	 */
-	public void animateReadWrite(Element src, _Render src_rndr, Element tar, _Render tar_rndr, long millis) {
+	public void animateReadWrite(Element src, ARender src_rndr, Element tar, ARender tar_rndr, long millis) {
 		/*
 		 * Target is unknown. READ: this -> [x]
 		 */
@@ -282,7 +303,7 @@ public abstract class _Render extends Pane {
 	 * @param millis
 	 *            The time in milliseconds the animation should last.
 	 */
-	public void animateSwap(Element var1, _Render var1_rndr, Element var2, _Render var2_rndr, long millis) {
+	public void animateSwap(Element var1, ARender var1_rndr, Element var2, ARender var2_rndr, long millis) {
 		var1_rndr.fade_option = "swap";
 		var1_rndr.animate(var2, var1_rndr.absX(var1), var1_rndr.absY(var1), var2_rndr.absX(var2), var2_rndr.absY(var2),
 				millis);
@@ -392,12 +413,16 @@ public abstract class _Render extends Pane {
 		// Set cursor
 		transformationParent.setOnMouseEntered(event -> {
 			// this.setCursor(Cursor.OPEN_HAND);
-			name.setVisible(false);
+			if (header.visibleProperty().isBound()) {
+				name.setVisible(false);
+			}
 			this.setBorder(BORDER_MOUSEOVER);
 		});
 		transformationParent.setOnMouseExited(event -> {
 			// this.setCursor(null);
-			name.setVisible(true);
+			if (header.visibleProperty().isBound()) {
+				name.setVisible(true);
+			}
 			this.setBorder(null);
 		});
 	}
@@ -850,15 +875,51 @@ public abstract class _Render extends Pane {
 		System.out.println("options");
 	}
 
-	// TODO
+	// Center on button when hiding or showing
+	private double conbwhs = 0;
+	// Hide other buttons
+	private final ArrayList<ButtonBase> nonShowHideButtons = new ArrayList<ButtonBase>();
+
 	public void toggleHidden(Event e) {
 		ToggleButton tb = (ToggleButton) e.getSource();
 
 		if (tb.isSelected()) {
-			tb.setText("Expand");
+			tb.setText("Show");
+			collapse();
 		} else {
-			tb.setText("Collapse");
+			tb.setText("Hide");
+			expand();
 		}
+	}
+
+	private void collapse() {
+		Region region = (Region) this.getParent();
+		conbwhs = content.getPrefWidth() - 150;
+		region.setTranslateX(region.getTranslateX() + conbwhs);
+		root.setPrefSize(150, 20);
+		root.setMaxSize(150, 20);
+		this.setPrefSize(150, 20);
+		this.setMaxSize(150, 20);
+		unbindHeader();
+		for(Node n : nonShowHideButtons){
+			n.setVisible(false);
+		}
+		content.setVisible(false);
+	}
+
+	private void expand() {
+		Region region = (Region) this.getParent();
+		region.setTranslateX(region.getTranslateX() - conbwhs);
+		bindHeader();
+		if (content.getBackground() == null) {
+			calculateSize();
+		} else {
+			this.setSize(150, 115);
+		}
+		for(Node n : nonShowHideButtons){
+			n.setVisible(true);
+		}
+		content.setVisible(true);
 	}
 
 	/**

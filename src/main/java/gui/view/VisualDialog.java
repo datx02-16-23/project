@@ -5,8 +5,8 @@ import java.io.IOException;
 import assets.Strings;
 import contract.datastructure.DataStructure;
 import contract.datastructure.VisualType;
-import draw._Render;
-import draw._Render.RenderSVF;
+import draw.ARender;
+import draw.ARender.RenderSVF;
 import gui.Controller;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
@@ -119,7 +119,7 @@ public class VisualDialog {
 
 	private void setSpinner(VisualType vt) {
 		if (vt.has_options) {
-			RenderSVF rsvf = _Render.RenderSVF.resolve(struct);
+			RenderSVF rsvf = ARender.RenderSVF.resolve(struct);
 			if (rsvf == null) {
 				options.setDisable(true); // Failed to fetch options.
 			} else {

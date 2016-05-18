@@ -8,8 +8,8 @@ import contract.datastructure.*;
 import contract.operation.OP_ReadWrite;
 import contract.operation.OP_Remove;
 import contract.operation.OP_Swap;
-import draw.Manager;
-import draw._Render;
+import draw.ARenderManager;
+import draw.ARender;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -55,7 +55,7 @@ public class Visualization extends StackPane {
 	/**
 	 * A mapping of renders and their managers.
 	 */
-	private final HashMap<String, Manager> struct_manager_mapping = new HashMap<String, Manager>();
+	private final HashMap<String, ARenderManager> struct_manager_mapping = new HashMap<String, ARenderManager>();
 
 	/**
 	 * Create a new Visualization.
@@ -83,7 +83,7 @@ public class Visualization extends StackPane {
 	public void clearAndCreateVisuals() {
 		clear();
 		for (DataStructure struct : model.getStructures().values()) {
-			Manager manager = new Manager(struct, animated_nodes);
+			ARenderManager manager = new ARenderManager(struct, animated_nodes);
 			managers.getChildren().add(manager);
 			struct_manager_mapping.put(struct.identifier, manager);
 		}
@@ -99,7 +99,7 @@ public class Visualization extends StackPane {
 	 */
 	public void render(Operation op) {
 		for (Object rm : managers.getChildren()) {
-			((Manager) rm).getRender().render();
+			((ARenderManager) rm).getRender().render();
 		}
 		if (animate && op != null) {
 			animate(op);
@@ -111,7 +111,7 @@ public class Visualization extends StackPane {
 	 */
 	public void init() {
 		for (Object rm : managers.getChildren()) {
-			((Manager) rm).getRender().init();
+			((ARenderManager) rm).getRender().init();
 		}
 
 	}
@@ -176,7 +176,7 @@ public class Visualization extends StackPane {
 			return;
 		}
 		Element src_e = null, tar_e = null;
-		_Render src_render = null, tar_render = null;
+		ARender src_render = null, tar_render = null;
 		/**
 		 * Source params
 		 */
@@ -226,7 +226,7 @@ public class Visualization extends StackPane {
 			return;
 		}
 		Element v1_e = null, v2_e = null;
-		_Render v1_render = null, v2_render = null;
+		ARender v1_render = null, v2_render = null;
 		/**
 		 * Var1 params
 		 */

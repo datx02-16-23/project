@@ -15,19 +15,20 @@ import draw.element.VisualElementFactory;
 import javafx.scene.Node;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
-public class BarchartRender extends _Render implements BoundaryChangeListener {
+public class BarchartRender extends ARender implements BoundaryChangeListener {
 
 	// Using instead of default render field names for clarity.
 	private double renderHeight, padding, barWidth, barMax, unitHeight;
 	private final Array array;
 
 	private Pane axes = new Pane();
-	private final CategoryAxis xAxis = new CategoryAxis();
-	private final NumberAxis yAxis = new NumberAxis();
+//	private final CategoryAxis xAxis = new CategoryAxis();
+//	private final NumberAxis yAxis = new NumberAxis();
 
 	/**
 	 * Create a new BarchartRender.
@@ -124,9 +125,7 @@ public class BarchartRender extends _Render implements BoundaryChangeListener {
 		}
 	}
 	private void sizeChild(BarchartElement be){
-		double barHeight = be.getElement().getNumericValue() * this.unitHeight;
-
-		barHeight = barHeight > this.barMax ? barMax : barHeight;
+		double barHeight = this.barHeight(be);
 
 		be.setBarHeight(barHeight);
 
@@ -137,37 +136,36 @@ public class BarchartRender extends _Render implements BoundaryChangeListener {
 	 * Render the axes.
 	 */
 	private void renderAxes() {
-		if (axes.getChildren().isEmpty()) {
-			// axes.getChildren().add(xAxis);
-			// axes.getChildren().add(yAxis);
-			Line x_ax = new Line(padding, renderHeight - padding, totWidth - padding, renderHeight - padding);
-			x_ax.setStrokeWidth(2);
-			x_ax.setStroke(Color.PINK);
-			axes.getChildren().add(x_ax);
-			Line y_ax = new Line(padding, padding, padding, renderHeight - padding);
-			y_ax.setStrokeWidth(2);
-			y_ax.setStroke(Color.HOTPINK);
-			axes.getChildren().add(y_ax);
+//		if (axes.getChildren().isEmpty()) {
+			/*
+			 * X-Axis
+			 */
+			Line xAxis = new Line(padding/2, renderHeight - padding, totWidth - padding/2, renderHeight - padding);
+			xAxis.setStrokeWidth(2);
+			xAxis.setStroke(Color.PINK);
+			axes.getChildren().add(xAxis);
+			
+			/*
+			 * Y-Axis
+			 */
+			Line yAxis = new Line(padding, padding/2, padding, renderHeight - padding/2);
+			yAxis.setStrokeWidth(2);
+			yAxis.setStroke(Color.HOTPINK);
+			axes.getChildren().add(yAxis);
 
-			Line max_marker = new Line(padding, padding, totWidth - padding, padding);
-			max_marker.setStrokeWidth(2);
-			max_marker.setStroke(Color.HOTPINK);
-			max_marker.getStrokeDashArray().addAll(20.0, 10.0);
-			axes.getChildren().add(max_marker);
-		}
-		/*
-		 * X-Axeis
-		 */
-		xAxis.setLabel("Index");
-		xAxis.setPrefWidth(this.totWidth);
-		xAxis.setLayoutX(0);
-		xAxis.setLayoutY(renderHeight);
-		/*
-		 * X-Axeis
-		 */
-		yAxis.setLabel("Value");
-		yAxis.setPrefWidth(renderHeight);
-		yAxis.setLayoutX(0);
+			/*
+			 * Roof
+			 */
+			Line roof = new Line(padding, padding, totWidth - padding, padding);
+			roof.setStrokeWidth(2);
+			roof.setStroke(Color.HOTPINK);
+			roof.getStrokeDashArray().addAll(20.0, 10.0);
+			axes.getChildren().add(roof);
+			
+			for(Element e : struct.getElements()){
+				createIndexLabel(e);
+			}
+//		}
 	}
 
 	@Override
@@ -181,7 +179,6 @@ public class BarchartRender extends _Render implements BoundaryChangeListener {
 	protected VisualElement createVisualElement(Element e) {
 		VisualElement ve = VisualElementFactory.shape(ElemShape.BAR_ELEMENT, e, barWidth,
 				unitHeight * e.getNumericValue());
-		ve.setInfoArray(((IndexedElement) e).getIndex());
 		return ve;
 	}
 
@@ -194,18 +191,28 @@ public class BarchartRender extends _Render implements BoundaryChangeListener {
 
 	@Override
 	protected void bellsAndWhistles(Element e, VisualElement ve) {
-		System.out.println("bar: baw shape = " + ve.getShape());
+	}
+	
+	private void createIndexLabel(Element e){
+		((IndexedElement) e).getIndex();
+		
+		Label info = new Label();
+		info.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
+		info.setLayoutY(padding);
+		info.setLayoutY(this.getX(e));
+		
+		info.setMouseTransparent(true);
+		
+		axes.getChildren().add(info);
 	}
 
 	@Override
 	public void maxChanged(double newMin, double diff) {
-//		init();
 		sizeChildren();
 	}
 
 	@Override
 	public void minChanged(double newMin, double diff) {
-//		init();
 		sizeChildren();
 	}
 
@@ -222,6 +229,16 @@ public class BarchartRender extends _Render implements BoundaryChangeListener {
 		double by = this.getTranslateY() + this.getLayoutY() + content.getLayoutY();
 //		return by;
 		return barMax + by;
+	}
+	
+	private double barHeight(BarchartElement be){
+		double height = Math.abs(be.getElement().getNumericValue()) * unitHeight;
+		
+		height = height > this.barMax ? barMax : height;
+		
+		//TODO scaling?
+		
+		return height;
 	}
 	
 	/*

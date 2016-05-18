@@ -14,7 +14,7 @@ import javafx.scene.layout.Pane;
  * @author Richard Sundqvist
  *
  */
-public class Manager extends BorderPane implements VisualListener {
+public class ARenderManager extends BorderPane implements VisualListener {
 	/**
 	 * The data structure this thingy is responsible for.
 	 */
@@ -28,12 +28,12 @@ public class Manager extends BorderPane implements VisualListener {
 	/**
 	 * Mapping of renders for the structure.
 	 */
-	private final HashMap<VisualType, _Render> renders = new HashMap<VisualType, _Render>();
+	private final HashMap<VisualType, ARender> renders = new HashMap<VisualType, ARender>();
 
 	/**
 	 * The current render for the structure.
 	 */
-	private _Render render;
+	private ARender render;
 
 	// Used to maintain settings when changing renders.
 	private double scaleX = 1;
@@ -42,7 +42,7 @@ public class Manager extends BorderPane implements VisualListener {
 	private double translateY = 0;
 	private double layoutX = 0;
 	private double layoutY = 0;
-	private _Render oldRender;
+	private ARender oldRender;
 
 	/**
 	 * Create a new thingy.
@@ -53,7 +53,7 @@ public class Manager extends BorderPane implements VisualListener {
 	 *            The Pane used for drawing animations. Will use own canvas if
 	 *            null.
 	 */
-	public Manager(DataStructure struct, Pane animation_pane) {
+	public ARenderManager(DataStructure struct, Pane animation_pane) {
 		this.struct = struct;
 		this.animation_pane = animation_pane;
 		this.setPickOnBounds(false); //Mouse fix.
@@ -111,7 +111,7 @@ public class Manager extends BorderPane implements VisualListener {
 	 * @param struct
 	 *            The DataStructure to create a Render for.
 	 */
-	public _Render resolveRender(DataStructure struct) {
+	public ARender resolveRender(DataStructure struct) {
 		VisualType visual = struct.resolveVisual();
 		switch (visual) {
 		case bar:
@@ -148,7 +148,7 @@ public class Manager extends BorderPane implements VisualListener {
 	 * 
 	 * @return The current Render for the structure.
 	 */
-	public _Render getRender() {
+	public ARender getRender() {
 		return render;
 	}
 	

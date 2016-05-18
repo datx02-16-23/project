@@ -6,7 +6,7 @@ import draw.element.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class SingleElementRender extends _Render {
+public class SingleElementRender extends ARender {
 
 	/**
 	 * Create a new SingleElementRender.
