@@ -2,7 +2,6 @@ package draw;
 
 import java.util.HashMap;
 
-import contract.Operation;
 import contract.datastructure.DataStructure;
 import contract.datastructure.VisualType;
 import contract.datastructure.DataStructure.VisualListener;
@@ -15,7 +14,7 @@ import javafx.scene.layout.Pane;
  * @author Richard Sundqvist
  *
  */
-public class _Manager extends BorderPane implements VisualListener {
+public class Manager extends BorderPane implements VisualListener {
 	/**
 	 * The data structure this thingy is responsible for.
 	 */
@@ -54,7 +53,7 @@ public class _Manager extends BorderPane implements VisualListener {
 	 *            The Pane used for drawing animations. Will use own canvas if
 	 *            null.
 	 */
-	public _Manager(DataStructure struct, Pane animation_pane) {
+	public Manager(DataStructure struct, Pane animation_pane) {
 		this.struct = struct;
 		this.animation_pane = animation_pane;
 		this.setPickOnBounds(false); //Mouse fix.
@@ -116,7 +115,7 @@ public class _Manager extends BorderPane implements VisualListener {
 		VisualType visual = struct.resolveVisual();
 		switch (visual) {
 		case bar:
-			render = new BarchartRender(struct, 40, 300, 40, 10);
+			render = new BarchartRender(struct, 40, 300, 30, 10);
 			break;
 		case box:
 			render = new GridRender(struct, GridRender.Order.resolve(struct.visualOption), 40, 40, 3, 3);

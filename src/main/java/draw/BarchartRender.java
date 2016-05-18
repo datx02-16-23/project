@@ -220,8 +220,8 @@ public class BarchartRender extends _Render implements BoundaryChangeListener {
 	@Override
 	public double absY(Element e) {
 		double by = this.getTranslateY() + this.getLayoutY() + content.getLayoutY();
-		return by;
-//		return barMax + by;
+//		return by;
+		return barMax + by;
 	}
 	
 	/*

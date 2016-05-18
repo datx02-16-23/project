@@ -54,27 +54,24 @@ public class BarchartElement extends RectangleElement {
 	 */
 	public void setBarHeight(double barHeight) {
 		this.height = barHeight;
-
-		// CP java?
+//
+//		// CP java?
 		Rectangle rect = ((Rectangle) shape);
-		rect.setHeight(height * 2);
-		rect.setScaleY(0.5);
-		rect.setTranslateY(height / 2);
+		rect.setHeight(height);
+//		rect.setTranslateY(height / 2);
 	}
 
 	@Override
 	public Shape createShape() {
 		Rectangle rect = new Rectangle();
 		rect.setWidth(width);
-		rect.setHeight(height * 2);
+		rect.setHeight(height);
 		rect.setStroke(Color.BLACK);
-		rect.setScaleY(0.5);
-		rect.setTranslateY(height / 2);
+		rect.translateYProperty().bind(rect.heightProperty().divide(2));
 		return rect;
 	}
 
 	private void init() {
 		value.setTranslateY(-15);
-		info.setTranslateY(1000);
 	}
 }
