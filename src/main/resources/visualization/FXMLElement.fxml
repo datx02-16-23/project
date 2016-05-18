@@ -15,7 +15,7 @@
       <RowConstraints minHeight="0.0" valignment="CENTER" vgrow="ALWAYS" />
    </rowConstraints>
    <children>
-      <StackPane pickOnBounds="false" style="-fx-background-color: transparent;">
+      <StackPane style="-fx-background-color: transparent;">
          <children>
             <StackPane fx:id="shape" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" onMouseClicked="#onMouseClicked" onMouseEntered="#onMouseEntered" onMouseExited="#onMouseExited" prefHeight="40.0" prefWidth="40.0">
                <cursor>

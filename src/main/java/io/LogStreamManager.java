@@ -20,16 +20,16 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
-import application.assets.Strings;
-import application.gui.Main;
+import assets.Strings;
+import contract.AnnotatedVariable;
+import contract.Header;
+import contract.Operation;
+import contract.Wrapper;
+import contract.datastructures.DataStructure;
+import contract.datastructures.DataStructureParser;
+import contract.operations.OperationParser;
+import gui.Main;
 import io.Communicator.CommunicatorMessage;
-import wrapper.AnnotatedVariable;
-import wrapper.Header;
-import wrapper.Operation;
-import wrapper.Wrapper;
-import wrapper.datastructures.DataStructure;
-import wrapper.datastructures.DataStructureParser;
-import wrapper.operations.OperationParser;
 
 /**
  * A LogStreamManager handles communication between processes, components, and

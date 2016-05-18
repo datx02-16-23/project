@@ -3,7 +3,7 @@ package io;
 import java.io.Serializable;
 import java.util.List;
 
-import wrapper.Wrapper;
+import contract.Wrapper;
 
 public interface Communicator {
 	/**

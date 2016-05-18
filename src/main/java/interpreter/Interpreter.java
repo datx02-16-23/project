@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import application.gui.Main;
-import wrapper.Operation;
-import wrapper.operations.*;
+import contract.Operation;
+import contract.operations.*;
+import gui.Main;
 
 /**
  * Class for consolidating groups of low level operations (read/write).

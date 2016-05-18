@@ -10,9 +10,10 @@ import org.jgroups.Message;
 import org.jgroups.ReceiverAdapter;
 
 import com.google.gson.Gson;
-import application.assets.Strings;
-import application.gui.Main;
-import wrapper.Wrapper;
+
+import assets.Strings;
+import contract.Wrapper;
+import gui.Main;
 
 /**
  * Interprocess communication implementation using the JGroups library.

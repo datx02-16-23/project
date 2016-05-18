@@ -3,11 +3,11 @@ package interpreter;
 import java.util.ArrayList;
 import java.util.List;
 
-import wrapper.Operation;
-import wrapper.operations.Consolidable;
-import wrapper.operations.OP_ReadWrite;
-import wrapper.operations.OP_Swap;
-import wrapper.operations.OperationType;
+import contract.Operation;
+import contract.operations.Consolidable;
+import contract.operations.OP_ReadWrite;
+import contract.operations.OP_Swap;
+import contract.operations.OperationType;
 
 /**
 	 * A Consolidator attempts to consolidate low level (read/write) operations
