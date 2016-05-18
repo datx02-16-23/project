@@ -12,13 +12,15 @@ import draw.element.BarchartElement;
 import draw.element.ElemShape;
 import draw.element.VisualElement;
 import draw.element.VisualElementFactory;
+import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.Polyline;
 
 public class BarchartRender extends ARender implements BoundaryChangeListener {
 
@@ -27,8 +29,8 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 	private final Array array;
 
 	private Pane axes = new Pane();
-//	private final CategoryAxis xAxis = new CategoryAxis();
-//	private final NumberAxis yAxis = new NumberAxis();
+	// private final CategoryAxis xAxis = new CategoryAxis();
+	// private final NumberAxis yAxis = new NumberAxis();
 
 	/**
 	 * Create a new BarchartRender.
@@ -104,68 +106,101 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 		calculateSize();
 
 		// Create nodes
-		VisualElement newVis;
+		BarchartElement newVis;
 
 		for (Element e : struct.getElements()) {
-			newVis = createVisualElement(e);
+			newVis =  createVisualElement(e);
 			newVis.setLayoutX(getX(e));
+			System.out.println("getX(e) = " + getX(e));
 
 			nodes.getChildren().add(newVis);
 			visualElementsMapping.put(Arrays.toString(((IndexedElement) e).getIndex()), newVis);
 			bellsAndWhistles(e, newVis);
 		}
-		sizeChildren();
+		fixChildren();
 		renderAxes();
 		return true;
 	}
-
-	private void sizeChildren() {
+	
+	private void fixChildren() {
 		for (Node node : nodes.getChildren()) {
-			sizeChild((BarchartElement) node);
+			((BarchartElement) node).setBotY(barMax);
 		}
-	}
-	private void sizeChild(BarchartElement be){
-		double barHeight = this.barHeight(be);
-
-		be.setBarHeight(barHeight);
-
-		be.setLayoutY(barMax - barHeight);
 	}
 
 	/**
 	 * Render the axes.
 	 */
 	private void renderAxes() {
-//		if (axes.getChildren().isEmpty()) {
-			/*
-			 * X-Axis
-			 */
-			Line xAxis = new Line(padding/2, renderHeight - padding, totWidth - padding/2, renderHeight - padding);
-			xAxis.setStrokeWidth(2);
-			xAxis.setStroke(Color.PINK);
-			axes.getChildren().add(xAxis);
-			
-			/*
-			 * Y-Axis
-			 */
-			Line yAxis = new Line(padding, padding/2, padding, renderHeight - padding/2);
-			yAxis.setStrokeWidth(2);
-			yAxis.setStroke(Color.HOTPINK);
-			axes.getChildren().add(yAxis);
+		// if (axes.getChildren().isEmpty()) {
+		/*
+		 * X-Axis
+		 */
+		Line xAxis = new Line(0, renderHeight - padding, totWidth - padding / 2, renderHeight - padding);
+		xAxis.setStrokeWidth(2);
+		axes.getChildren().add(xAxis);
 
-			/*
-			 * Roof
-			 */
-			Line roof = new Line(padding, padding, totWidth - padding, padding);
-			roof.setStrokeWidth(2);
-			roof.setStroke(Color.HOTPINK);
-			roof.getStrokeDashArray().addAll(20.0, 10.0);
-			axes.getChildren().add(roof);
-			
-			for(Element e : struct.getElements()){
-				createIndexLabel(e);
-			}
-//		}
+		Polyline xArrow = new Polyline(0, 15, 5, 0, 10, 15);
+		xArrow.setStrokeWidth(2);
+		xArrow.setLayoutX(padding / 2 + 5);
+		axes.getChildren().add(xArrow);
+
+		Label xLabel = new Label("Value");
+		xLabel.setLayoutX(padding * 1.5);
+		xLabel.setLayoutY(-5);
+		axes.getChildren().add(xLabel);
+
+		/*
+		 * Y-Axis
+		 */
+		Line yAxis = new Line(padding, padding / 2, padding, renderHeight);
+		yAxis.setStrokeWidth(2);
+		axes.getChildren().add(yAxis);
+		notches();
+
+		Polyline yArrow = new Polyline(0, 0, 15, 5, 0, 10);
+		yArrow.setLayoutX(totWidth - 15);
+		yArrow.setLayoutY(renderHeight - padding - 5);
+		yArrow.setStrokeWidth(2);
+		axes.getChildren().add(yArrow);
+
+		Label yLabel = new Label("Index");
+		yLabel.setLayoutX(totWidth-padding);
+		yLabel.setLayoutY(renderHeight - padding * 0.8);
+		axes.getChildren().add(yLabel);
+
+		/*
+		 * Roof
+		 */
+		Line roof = new Line(padding, padding, totWidth - padding, padding);
+		roof.setStrokeWidth(2);
+		roof.setStroke(Color.HOTPINK);
+		roof.getStrokeDashArray().addAll(20.0, 10.0);
+		axes.getChildren().add(roof);
+
+		for (Element e : struct.getElements()) {
+			createIndexLabel(e);
+		}
+		// }
+	}
+
+	private void notches() {
+		double x = padding / 2;
+		int i = 0;
+		for (double y = barMax; y >= padding; y = y - unitHeight) {
+			// Notch
+			Line line = new Line(padding - 3, y, padding + 3, y);
+			axes.getChildren().add(line);
+
+			// Value
+			Label value = new Label();
+			value.setLayoutY(x);
+			value.setLayoutY(y - 10);
+
+			value.setText(i++ + "");
+
+			axes.getChildren().add(value);
+		}
 	}
 
 	@Override
@@ -176,8 +211,8 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 	}
 
 	@Override
-	protected VisualElement createVisualElement(Element e) {
-		VisualElement ve = VisualElementFactory.shape(ElemShape.BAR_ELEMENT, e, barWidth,
+	protected BarchartElement createVisualElement(Element e) {
+		BarchartElement ve = (BarchartElement) VisualElementFactory.shape(ElemShape.BAR_ELEMENT, e, barWidth,
 				unitHeight * e.getNumericValue());
 		return ve;
 	}
@@ -192,54 +227,62 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 	@Override
 	protected void bellsAndWhistles(Element e, VisualElement ve) {
 	}
-	
-	private void createIndexLabel(Element e){
-		((IndexedElement) e).getIndex();
-		
+
+	private void createIndexLabel(Element e) {
+		int[] index = ((IndexedElement) e).getIndex();
+
 		Label info = new Label();
-		info.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
-		info.setLayoutY(padding);
-		info.setLayoutY(this.getX(e));
-		
+		info.setStyle("-fx-background-color: white;");
+		info.setLayoutY(barMax + 12);
+		info.setLayoutX(this.getX(e) + 5);
+		// info.setLayoutX(100);
+		info.setText(Arrays.toString(index));
+
 		info.setMouseTransparent(true);
-		
+
 		axes.getChildren().add(info);
 	}
 
 	@Override
 	public void maxChanged(double newMin, double diff) {
-		sizeChildren();
+		fixChildren();
 	}
 
 	@Override
 	public void minChanged(double newMin, double diff) {
-		sizeChildren();
+		fixChildren();
 	}
 
 	/**
 	 * Have to override since elements are translated to position them in the
-	 * bar. Will always return the value y-value at the x-axis).
+	 * bar.
 	 * 
 	 * @param e
 	 *            An element owned by this BarcharRender.
-	 * @return The absolute y-coordinates of e (always at the x-axis).
+	 * @return The absolute y-coordinates of e.
 	 */
-	@Override	
+	@Override
 	public double absY(Element e) {
 		double by = this.getTranslateY() + this.getLayoutY() + content.getLayoutY();
 		return barMax + by;
 	}
-	
-	private double barHeight(BarchartElement be){
+
+	private double getElementHeight(Element e) {
+		String key = Arrays.toString(((IndexedElement) e).getIndex());
+		BarchartElement bce = (BarchartElement) visualElementsMapping.get(key);
+		return barHeight(bce);
+	}
+
+	private double barHeight(BarchartElement be) {
 		double height = Math.abs(be.getElement().getNumericValue()) * unitHeight;
-		
+
 		height = height > this.barMax ? barMax : height;
-		
-		//TODO scaling?
-		
+
+		// TODO: Fit?
+
 		return height;
 	}
-	
+
 	/*
 	 * 
 	 * 
@@ -247,5 +290,5 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 	 * 
 	 * 
 	 */
-	
+
 }

@@ -53,12 +53,12 @@ public abstract class VisualElement extends Pane {
 	/**
 	 * Extra info label for stuff such as index.
 	 */
-	protected final Label info = new Label();
+	protected final Label infoLabel = new Label();
 	/*
 	 * FXML elements.
 	 */
 	protected Shape shape;
-	protected Label value;
+	protected Label valueLabel;
 	private GridPane root;
 
 	/**
@@ -93,7 +93,7 @@ public abstract class VisualElement extends Pane {
 		points = null;
 		init(node_width, node_height);
 
-		this.value.setText("" + value);
+		this.valueLabel.setText("" + value);
 		this.shape.setFill(style);
 	}
 
@@ -115,7 +115,7 @@ public abstract class VisualElement extends Pane {
 		init(node_width, node_height);
 
 		// Automatic updating of value
-		value.textProperty().bind(element.valueProperty());
+		valueLabel.textProperty().bind(element.valueProperty());
 		shape.fillProperty().bind(element.fillProperty());
 	}
 
@@ -136,7 +136,7 @@ public abstract class VisualElement extends Pane {
 		this.points = points;
 		init(node_width, node_height);
 
-		this.value.setText("" + value);
+		this.valueLabel.setText("" + value);
 		this.shape.setFill(style);
 	}
 
@@ -156,7 +156,7 @@ public abstract class VisualElement extends Pane {
 		init(node_width, node_height);
 
 		// Automatic updating of value
-		value.textProperty().bind(element.valueProperty());
+		valueLabel.textProperty().bind(element.valueProperty());
 		shape.fillProperty().bind(element.fillProperty());
 	}
 
@@ -189,10 +189,10 @@ public abstract class VisualElement extends Pane {
 		shapePane.setPickOnBounds(true);
 		shapePane.getChildren().add(shape);
 
-		value = (Label) fxmlLoader.getNamespace().get("value");
-		info.setMouseTransparent(true);
-		info.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
-		root.getChildren().add(info);
+		valueLabel = (Label) fxmlLoader.getNamespace().get("value");
+		infoLabel.setMouseTransparent(true);
+		infoLabel.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
+		root.getChildren().add(infoLabel);
 		getChildren().add(root);
 	}
 
@@ -275,7 +275,7 @@ public abstract class VisualElement extends Pane {
 	 *            The new value.
 	 */
 	public void setGhost(boolean ghost) {
-		if (ghost != value.isVisible()) {
+		if (ghost != valueLabel.isVisible()) {
 			return; // Ghost status not changed.
 		}
 		if (ghost) {
@@ -283,12 +283,12 @@ public abstract class VisualElement extends Pane {
 			shape.fillProperty().unbind();
 			shape.setFill(Color.TRANSPARENT);
 			shape.getStrokeDashArray().addAll(5.0);
-			value.setVisible(false);
+			valueLabel.setVisible(false);
 		} else {
 			this.setMouseTransparent(ghost);
 			shape.fillProperty().bind(element.fillProperty());
 			shape.getStrokeDashArray().clear();
-			value.setVisible(true);
+			valueLabel.setVisible(true);
 		}
 	}
 
@@ -296,7 +296,7 @@ public abstract class VisualElement extends Pane {
 	 * Unbind the element, leaving it in whatever state is is currently in.
 	 */
 	public void unbind() {
-		value.textProperty().unbind();
+		valueLabel.textProperty().unbind();
 		shape.fillProperty().unbind();
 	}
 
@@ -317,7 +317,7 @@ public abstract class VisualElement extends Pane {
 	 *            The new visibility setting.
 	 */
 	public void setInfoVisible(boolean visible) {
-		info.setVisible(visible);
+		infoLabel.setVisible(visible);
 	}
 
 	/**
@@ -328,7 +328,7 @@ public abstract class VisualElement extends Pane {
 	 *            The text to render.
 	 */
 	public void setInfoText(String text) {
-		info.setText(text);
+		infoLabel.setText(text);
 		setInfoVisible(true);
 		setInfoPos(infoPos == null ? Pos.BOTTOM_CENTER : infoPos);
 	}
@@ -349,7 +349,7 @@ public abstract class VisualElement extends Pane {
 		} else {
 			setInfoVisible(true);
 		}
-		String text = info.getText();
+		String text = infoLabel.getText();
 
 		if (text.length() == 0) {
 			return;
@@ -389,8 +389,8 @@ public abstract class VisualElement extends Pane {
 			break;
 		}
 
-		info.setTranslateX(tx);
-		info.setTranslateY(ty);
+		infoLabel.setTranslateX(tx);
+		infoLabel.setTranslateY(ty);
 	}
 
 	public VisualElement clone() {

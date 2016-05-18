@@ -1,6 +1,8 @@
 package draw.element;
 
 import contract.datastructure.Element;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.DoubleProperty;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -13,6 +15,8 @@ import javafx.scene.shape.Shape;
  *
  */
 public class BarchartElement extends RectangleElement {
+	
+	private Rectangle rect;
 
 	/**
 	 * Create a static, unbound RectangleElement.
@@ -28,7 +32,7 @@ public class BarchartElement extends RectangleElement {
 	 */
 	public BarchartElement(double value, Paint paint, double node_width, double node_height) {
 		super(value, paint, node_width, node_height);
-		init();
+		this.valueLabel.setTranslateY(-15);
 	}
 
 	/**
@@ -43,7 +47,7 @@ public class BarchartElement extends RectangleElement {
 	 */
 	public BarchartElement(Element element, double node_width, double node_height) {
 		super(element, node_width, node_height);
-		init();
+		valueLabel.setTranslateY(-15);
 	}
 
 	/**
@@ -54,24 +58,37 @@ public class BarchartElement extends RectangleElement {
 	 */
 	public void setBarHeight(double barHeight) {
 		this.height = barHeight;
-//
-//		// CP java?
+		
 		Rectangle rect = ((Rectangle) shape);
 		rect.setHeight(height);
-//		rect.setTranslateY(height / 2);
+		System.out.println("set height");
 	}
 
 	@Override
 	public Shape createShape() {
-		Rectangle rect = new Rectangle();
+		rect = new Rectangle();
 		rect.setWidth(width);
 		rect.setHeight(height);
 		rect.setStroke(Color.BLACK);
-		rect.translateYProperty().bind(rect.heightProperty().divide(2));
+		
+		botprop(0);
 		return rect;
 	}
 
-	private void init() {
-		value.setTranslateY(-15);
+
+	/**
+	 * Set the Y-coordinate of the bottom left of the bar.
+	 * 
+	 * @param y
+	 *            The y coordinate at the bottom of the bar.
+	 */
+	public void setBotY(double y) {
+		layoutYProperty().unbind();
+		botprop(y);
+	}
+	
+	private void botprop(double y){
+		DoubleBinding neg_half_height = rect.heightProperty().divide(2).multiply(-1); //- height/2
+		this.layoutYProperty().bind(neg_half_height.add(y));
 	}
 }

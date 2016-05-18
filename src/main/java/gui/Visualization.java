@@ -18,6 +18,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import model.Model;
 
 /**
@@ -67,6 +68,7 @@ public class Visualization extends StackPane {
 		animated_nodes.maxWidth(Double.MAX_VALUE);
 		animated_nodes.maxHeight(Double.MAX_VALUE);
 		animate = true;
+
 		// Add stacked canvases
 		this.getChildren().addAll(HINT_PANE, managers, animated_nodes);
 	}

@@ -16,6 +16,20 @@ public class GridRender extends ARender {
 	private final Order mo;
 	private int[] size;
 
+	/**
+	 * Creates a new GridRender.
+	 * 
+	 * @param struct
+	 *            The structure to render.
+	 * @param width
+	 *            The width of the elements in this Render.
+	 * @param height
+	 *            The height of the elements in this Render.
+	 * @param hspace
+	 *            The horizontal space between elements in this Render.
+	 * @param vspace
+	 *            The vertical space between elements in this Render.
+	 */
 	public GridRender(DataStructure struct, Order mo, double width, double height, double hspace, double vspace) {
 		super(struct, width, height, hspace, vspace);
 		this.mo = mo;

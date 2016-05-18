@@ -280,7 +280,7 @@ public abstract class VisualElementFactory {
 		if(orig.points == null){
 			//Unbound
 			if(orig.element == null){
-				clone = shape(orig.elemShape, Double.parseDouble(orig.value.getText()), orig.getShape().getFill(),
+				clone = shape(orig.elemShape, Double.parseDouble(orig.valueLabel.getText()), orig.getShape().getFill(),
 						orig.width, orig.height);
 			//Bound
 			} else {
@@ -291,7 +291,7 @@ public abstract class VisualElementFactory {
 		} else {
 			//Unbound
 			if(orig.element == null){
-				clone = polygon(Double.parseDouble(orig.value.getText()), orig.getShape().getFill(),
+				clone = polygon(Double.parseDouble(orig.valueLabel.getText()), orig.getShape().getFill(),
 						orig.width, orig.height, orig.points);
 			//Bound
 			} else {

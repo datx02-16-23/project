@@ -216,7 +216,7 @@ public abstract class ARender extends Pane {
 		ToolBar headerButtonBar = (ToolBar) fxmlLoader.getNamespace().get("buttons");
 		for (Node b : headerButtonBar.getItems()) {
 			if (((ButtonBase) b).getText().equals("Hide") == false) {
-				nonShowHideButtons.add((ButtonBase) b);
+				nonHideButtons.add((ButtonBase) b);
 			}
 		}
 		header = (Node) fxmlLoader.getNamespace().get("header");
@@ -318,11 +318,12 @@ public abstract class ARender extends Pane {
 	 *            The height of this Render.
 	 */
 	protected void setSize(double width, double height) {
-		content.setMinSize(width, height);
-		content.setPrefSize(width, height);
-		content.setMaxSize(width, height);
-
 		if (content.isVisible()) {
+			content.setMinSize(width, height);
+			content.setPrefSize(width, height);
+			content.setMaxSize(width, height);
+
+			// if (content.isVisible()) {
 			height = height + 35; // Space for header bar
 			root.setPrefSize(width, height);
 			root.setMaxSize(width, height);
@@ -394,6 +395,10 @@ public abstract class ARender extends Pane {
 			this.setScaleX(scale);
 			this.setScaleY(scale);
 		});
+
+//		this.setStyle("-fx-background-color: red;");
+//		content.setStyle("-fx-background-color: pink;");
+//		getParent().setStyle("-fx-background-color: orange;");
 		/*
 		 * Drag
 		 */
@@ -401,11 +406,11 @@ public abstract class ARender extends Pane {
 		this.setOnMousePressed(event -> {
 			transX = this.getTranslateX() - event.getSceneX();
 			transY = this.getTranslateY() - event.getSceneY();
-			this.getParent().setCursor(Cursor.CLOSED_HAND);
+			this.setCursor(Cursor.CLOSED_HAND);
 		});
 		// Restore cursor
 		this.setOnMouseReleased(event -> {
-			this.getParent().setCursor(null);
+			this.setCursor(null);
 		});
 		// Translate canvases
 		this.setOnMouseDragged(event -> {
@@ -882,8 +887,8 @@ public abstract class ARender extends Pane {
 
 	// Center on button when hiding or showing
 	private double conbwhs = 0;
-	// Hide other buttons
-	private final ArrayList<ButtonBase> nonShowHideButtons = new ArrayList<ButtonBase>();
+	// Used to hide other buttons when minimzing
+	private final ArrayList<ButtonBase> nonHideButtons = new ArrayList<ButtonBase>();
 
 	public void toggleHidden(Event e) {
 		ToggleButton tb = (ToggleButton) e.getSource();
@@ -898,15 +903,17 @@ public abstract class ARender extends Pane {
 	}
 
 	private void collapse() {
-		Region region = (Region) this.getParent();
+		// Make the render expand and collapse and NE corner.
 		conbwhs = content.getPrefWidth() - 150;
-		region.setTranslateX(region.getTranslateX() + conbwhs);
+		setTranslateX(getTranslateX() + conbwhs);
+
+		// Show only header
 		root.setPrefSize(150, 20);
 		root.setMaxSize(150, 20);
 		this.setPrefSize(150, 20);
 		this.setMaxSize(150, 20);
 		unbindHeader();
-		for (Node n : nonShowHideButtons) {
+		for (Node n : nonHideButtons) {
 			n.setVisible(false);
 		}
 		content.setVisible(false);
@@ -914,16 +921,14 @@ public abstract class ARender extends Pane {
 
 	private void expand() {
 		content.setVisible(true);
-		Region region = (Region) this.getParent();
-		region.setTranslateX(region.getTranslateX() - conbwhs);
+		setTranslateX(getTranslateX() - conbwhs);
 		bindHeader();
 		if (content.getBackground() == null) {
-			System.out.println("no bg");
 			calculateSize();
 		} else {
 			setSize(150, 115);
 		}
-		for (Node n : nonShowHideButtons) {
+		for (Node n : nonHideButtons) {
 			n.setVisible(true);
 		}
 	}

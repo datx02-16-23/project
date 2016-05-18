@@ -75,7 +75,7 @@ public class Main extends Application {
 		BorderPane operationPanelContainer = (BorderPane) namespace.get("operationPanelContainer");
 		operationPanelContainer.setCenter(operationPanel);
 		double leftDivider = (((GridPane) namespace.get("buttonsGrid")).getPrefWidth() + 14) / scene.getWidth();
-		sP.setDividerPositions(leftDivider / 5, 1 - leftDivider);
+		sP.setDividerPositions(leftDivider * 0.3, 1 - leftDivider);
 		// Add examples
 		Menu examples = (Menu) namespace.get("examplesMenu");
 		for (Algorithm algo : Examples.Algorithm.values()) {
@@ -162,10 +162,10 @@ public class Main extends Application {
 	 */
 	public class GUIConsole {
 
-		private static final String prepend_force = "<>\t";
-		private static final String prepend_err = ">\t";
-		private static final String prepend_info = "";
-		private static final String prepend_debug = "";
+		private static final String prepend_force = "\n<>\t";
+		private static final String prepend_err = "\n>\t";
+		private static final String prepend_info = "\n";
+		private static final String prepend_debug = "\n";
 		public boolean quiet = false;
 		public boolean info = true;
 		public boolean err = true;
@@ -188,7 +188,7 @@ public class Main extends Application {
 			if (quiet || !this.info) {
 				return;
 			}
-			print(prepend_info + info + "\n");
+			print(prepend_info + info);
 		}
 
 		/**
@@ -201,7 +201,7 @@ public class Main extends Application {
 			if (quiet || !this.err) {
 				return;
 			}
-			print(prepend_err + err + "\n");
+			print(prepend_err + err);
 		}
 
 		/**
@@ -212,7 +212,7 @@ public class Main extends Application {
 		 */
 		public void debug(String debug) {
 			if (quiet || !this.debug) {
-				print(prepend_debug + debug + "\n");
+				print(prepend_debug + debug);
 			}
 		}
 
@@ -223,7 +223,7 @@ public class Main extends Application {
 		 *            The line to print.
 		 */
 		public void force(String force) {
-			print(prepend_force + force + "\n");
+			print(prepend_force + force);
 		}
 
 		/**
@@ -251,7 +251,7 @@ public class Main extends Application {
 		public void setInfo(boolean value) {
 			info = value;
 			if (!quiet) {
-				print(prepend_info + "Information printouts " + (info ? "ENABLED." : "DISABLED.") + "\n");
+				print(prepend_info + "Information printouts " + (info ? "ENABLED." : "DISABLED."));
 			}
 		}
 
@@ -275,7 +275,7 @@ public class Main extends Application {
 		public void setDebug(boolean value) {
 			debug = value;
 			if (!quiet) {
-				print(prepend_debug + "Debug printouts " + (debug ? "ENABLED." : "DISABLED.") + "\n");
+				print(prepend_debug + "Debug printouts " + (debug ? "ENABLED." : "DISABLED."));
 			}
 		}
 
@@ -288,19 +288,18 @@ public class Main extends Application {
 		public void setError(boolean value) {
 			err = value;
 			if (!quiet) {
-				print(prepend_err + "Error printouts " + (err ? "ENABLED." : "DISABLED.") + "\n");
+				print(prepend_err + "Error printouts " + (err ? "ENABLED." : "DISABLED."));
 			}
 		}
 
 		private void init() {
 			StringBuilder sb = new StringBuilder();
-			sb.append("Welcome to " + Strings.PROJECT_NAME + ": " + Strings.PROJECT_SLOGAN + "\n");
-			sb.append("Version: " + Strings.VERSION_NUMBER + "\n\n");
-			sb.append("AUTHORS: ");
+			sb.append(Strings.PROJECT_NAME + " v" +Strings.VERSION_NUMBER);
+			sb.append("\nAUTHORS: ");
 			for (String s : Strings.DEVELOPER_NAMES) {
 				sb.append(s + " | ");
 			}
-			sb.replace(sb.length() - 2, sb.length(), "\n\n");
+			sb.replace(sb.length() - 2, sb.length(), "\n");
 			String initMessage = sb.toString();
 			Platform.runLater(new Runnable() {
 
