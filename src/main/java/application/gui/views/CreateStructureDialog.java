@@ -3,11 +3,10 @@ package application.gui.views;
 import java.io.IOException;
 
 import application.assets.Strings;
-import application.gui.GUI_Controller;
+import application.gui.Main_Controller;
 import application.gui.Main;
-import application.visualization.VisualType;
-import application.visualization.Visualization;
-import application.visualization.render2d.Render.RenderSVF;
+import application.visualization.render_FX.Render;
+import application.visualization.render_FX.Render.RenderSVF;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -19,7 +18,11 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import wrapper.datastructures.*;
+import wrapper.datastructures.Array;
+import wrapper.datastructures.DataStructure;
+import wrapper.datastructures.IndependentElement;
+import wrapper.datastructures.RawType;
+import wrapper.datastructures.VisualType;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class CreateStructureDialog {
@@ -42,7 +45,7 @@ public class CreateStructureDialog {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/CreateStructure.fxml"));
 		fxmlLoader.setController(this);
 		root = new Stage();
-		root.getIcons().add(new Image(GUI_Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
+		root.getIcons().add(new Image(Main_Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
 		root.initModality(Modality.APPLICATION_MODAL);
 		root.setTitle(Strings.PROJECT_NAME + ": Create Data Structure");
 		root.initOwner(this.parent);
@@ -149,7 +152,7 @@ public class CreateStructureDialog {
 			root.close();
 			return;
 		}
-		if (vt != struct.visual) {
+		if (vt != struct.resolveVisual()) {
 			// Visual type changed
 			if (vt.has_options) {
 				struct.visualOption = (Integer) visOption.getValue();
@@ -186,7 +189,7 @@ public class CreateStructureDialog {
 
 	private void setSpinner(VisualType vt) {
 		if (vt.has_options) {
-			RenderSVF rsvf = Visualization.getRender(vt).getOptionsSpinnerValueFactory();
+			RenderSVF rsvf = Render.RenderSVF.resolve(struct);
 			if (rsvf == null) {
 				visOption.setDisable(true); // Failed to fetch options.
 			} else {

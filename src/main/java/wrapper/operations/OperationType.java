@@ -1,6 +1,7 @@
 package wrapper.operations;
 
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 
 /**
  * The name of the operation.
@@ -13,14 +14,14 @@ public enum OperationType {
 	 */
 	public final boolean consolidable;
 
-	public final Color color;
+	public final Paint paint;
 
-	OperationType(boolean consolidable, Color color) {
+	OperationType(boolean consolidable, Paint paint) {
 		this.consolidable = consolidable;
-		this.color = color;
+		this.paint = paint;
 	}
 
-	OperationType(Color color) {
-		this(false, color);
+	OperationType(Paint paint) {
+		this(false, paint);
 	}
 }

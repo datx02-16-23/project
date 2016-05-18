@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 import application.assets.Strings;
-import application.gui.GUI_Controller;
+import application.gui.Main_Controller;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
@@ -31,7 +31,7 @@ public class IdentifierCollisionDialog {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/IdentifierCollisionDialog.fxml"));
 		fxmlLoader.setController(this);
 		root = new Stage();
-		root.getIcons().add(new Image(GUI_Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
+		root.getIcons().add(new Image(Main_Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
 		root.initModality(Modality.APPLICATION_MODAL);
 		root.setTitle(Strings.PROJECT_NAME + ": Identifier Collision");
 		root.initOwner(this.parent);

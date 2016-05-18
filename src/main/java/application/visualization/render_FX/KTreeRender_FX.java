@@ -3,22 +3,23 @@ package application.visualization.render_FX;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import application.visualization.render_FX.Render_FX.RenderSVF;
+import application.visualization.render_FX.elements.EllipseElement;
+import application.visualization.render_FX.elements.VisualElement;
+import javafx.geometry.Pos;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import wrapper.datastructures.Array.IndexedElement;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
 
-public class KTreeRender_FX extends Render_FX {
+public class KTreeRender_FX extends Render {
 
 	/**
 	 * Container for connector lines.
 	 */
 	protected final Pane visual_lines = new Pane();
 
-	private static final RenderSVF rsvf = new RenderSVF(2, 1337);
-	
 	protected final int K;
 	private final ArrayList<Integer> lowerLevelSums = new ArrayList<Integer>();
 	protected int totDepth, totBreadth, completedSize;
@@ -57,86 +58,70 @@ public class KTreeRender_FX extends Render_FX {
 	}
 
 	@Override
-	public void init() {
+	public boolean init() {
 
-		if (struct.getElements().isEmpty()) {
-			return; // Nothing to draw.
+		if (super.init() == false) {
+			return false; // Nothing to draw.
 		}
 
-		nodes.getChildren().clear();
-		visual_lines.getChildren().clear();
-		visualElementsMapping.clear();
-
-		content.setBackground(null);
-
-		// Create nodes
-		calculateSize();
-		VisualElement newVis = null;
-
-		int numElements = 0;
-		for (Element e : struct.getElements()) {
-			numElements++;
-			newVis = new EllipseElement(e, node_width, node_height);
-			IndexedElement ae = (IndexedElement) e;
-			newVis.setLayoutX(getX(ae));
-			newVis.setLayoutY(getY(ae));
-			newVis.setIndex(ae.getIndex());
-
-			connectToParent(ae, newVis);
-
-			nodes.getChildren().add(newVis);
-			visualElementsMapping.put(Arrays.toString(ae.getIndex()), newVis);
-			// visualElementsMapping.put(ae, ghost);
-		}
-		
-		createGhosts(numElements);
+		createGhosts(getNodes().getChildren().size());
+		return true;
 	}
 
 	/**
 	 * Connect a node to its parent.
-	 * @param ae The child node.
-	 * @param newVis The child node visual.
+	 * 
+	 * @param ae
+	 *            The child node.
+	 * @param childVis
+	 *            The child node visual.
 	 */
-	private void connectToParent(IndexedElement ae, VisualElement newVis) {
-		IndexedElement parent_clone = new IndexedElement(0, new int[] { (ae.getIndex()[0] - 1) / K });
+	@Override
+	protected void bellsAndWhistles(Element ae, VisualElement childVis) {
+		IndexedElement parent_clone = new IndexedElement(0,
+				new int[] { (((IndexedElement) ae).getIndex()[0] - 1) / K });
 
-		// VisualElement parentVis =
-		// visualElementsMapping.get(parent_clone);
-		EllipseElement parentVis = (EllipseElement) visualElementsMapping
-				.get(Arrays.toString(new int[] { (ae.getIndex()[0] - 1) / K }));
+		// VisualElement parentVis = visualElementsMapping.get(parent_clone);
+		VisualElement parentVis = visualElementsMapping
+				.get(Arrays.toString(new int[] { (((IndexedElement) ae).getIndex()[0] - 1) / K }));
+
+		double dx = node_width / 2;
+		double dy = node_height / 2;
 
 		// Connect child to parent
 		if (parentVis != null) {
 			Line line = new Line();
 
 			// Bind start to child..
-			line.startXProperty().bind(newVis.layoutXProperty());
-			line.startYProperty().bind(newVis.layoutYProperty());
+			line.startXProperty().bind(childVis.layoutXProperty());
+			line.startYProperty().bind(childVis.layoutYProperty());
 			// ..and end to parent.
 			line.endXProperty().bind(parentVis.layoutXProperty());
 			line.endYProperty().bind(parentVis.layoutYProperty());
 
-			line.setTranslateX(node_width / 2);
-			line.setTranslateY(node_height / 2);
+			line.setTranslateX(dx);
+			line.setTranslateY(dy);
 
 			visual_lines.getChildren().add(line);
 		}
 	}
-	
+
 	/**
 	 * Complete the tree using ghosts.
-	 * @param index The index to start from.
+	 * 
+	 * @param index
+	 *            The index to start from.
 	 */
-	private void createGhosts(int index){
-		EllipseElement ghostVis = null;
+	private void createGhosts(int index) {
+		VisualElement ghostVis = null;
 		for (; index < completedSize; index++) {
 			IndexedElement ghostElem = new IndexedElement(0, new int[] { index });
-			ghostVis = new EllipseElement(ghostElem, node_width, node_height);
+			ghostVis = createVisualElement(ghostElem);
 			ghostVis.setLayoutX(getX(ghostElem));
 			ghostVis.setLayoutY(getY(ghostElem));
 			ghostVis.setGhost(true);
-			connectToParent(ghostElem, ghostVis);
-			nodes.getChildren().add(ghostVis);
+			bellsAndWhistles(ghostElem, ghostVis);
+			getNodes().getChildren().add(ghostVis);
 		}
 	}
 
@@ -175,20 +160,17 @@ public class KTreeRender_FX extends Render_FX {
 	@Override
 	public double getY(Element e) {
 		int index = ((IndexedElement) e).getIndex()[0];
-		double y;
-		int depth;
-		if (index == 0) { // Root element
-			y = vspace;
-			depth = 0;
-		} else {
-			depth = getDepth(index);
-			y = getY(depth);
+		double y = 0;
+
+		if (index != 0) {
+			y = getY(getDepth(index)); // Should not be used for root.
 		}
+
 		return y;
 	}
 
 	private double getY(int depth) {
-		return depth * node_height * 2 + vspace; // Padding on top
+		return depth * (node_height + vspace);
 	}
 
 	private int getDepth(int index) {
@@ -258,12 +240,21 @@ public class KTreeRender_FX extends Render_FX {
 	public void calculateSize() {
 		calculateDepthAndBreadth();
 		width = totBreadth * (node_width + hspace) + hspace;
-		height = totDepth * (node_height + vspace) * 2 + node_height - vspace;
+		height = (totDepth + 1) * (node_height + vspace) + vspace * 2;
 		setSize(width, height);
 	}
-	
-	public RenderSVF getOptionsSpinnerValueFactory() {
-		return rsvf;
+
+	@Override
+	protected VisualElement createVisualElement(Element e) {
+		VisualElement ve = new EllipseElement(e, node_width, node_height);
+//		ve.setLabelPos(Pos.TOP_LEFT);
+		return ve;
 	}
 
+	@Override
+	protected VisualElement createVisualElement(double value, Color color) {
+		VisualElement ve = new EllipseElement(value, color, node_width, node_height);
+//		ve.setLabelPos(Pos.TOP_LEFT);
+		return ve;
+	}
 }

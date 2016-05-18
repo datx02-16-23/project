@@ -36,7 +36,7 @@ public abstract class Element {
 
 	private double numericValue = Double.NaN;
 	private String value;
-	private Color color;
+	private Paint paint;
 
 	public SimpleStringProperty valueProperty() {
 		return valueStringProperty;
@@ -94,12 +94,12 @@ public abstract class Element {
 	}
 
 	/**
-	 * Returns the colour with which to draw this Element.
+	 * Returns the paint with which to draw this Element.
 	 * 
-	 * @return The colour with which to draw this Element.
+	 * @return The paint with which to draw this Element.
 	 */
-	public final Color getColor() {
-		return color;
+	public final Paint getColor() {
+		return paint;
 	}
 
 	/**
@@ -108,8 +108,8 @@ public abstract class Element {
 	 * @param appliedOp The operation type which was applied.
 	 */
 	public final void count(Operation appliedOp) {
-		this.color = appliedOp.operation.color;
-		fillProperty.setValue(color);
+		this.paint = appliedOp.operation.paint;
+		fillProperty.setValue(paint);
 		oc.count(appliedOp);
 	}
 	
@@ -118,7 +118,7 @@ public abstract class Element {
 	 * @param c The color to use
 	 */
 	public void setColor(Color c){
-		this.color = c;
-		fillProperty.setValue(color);
+		this.paint = c;
+		fillProperty.setValue(paint);
 	}
 }

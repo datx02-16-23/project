@@ -2,15 +2,9 @@ package application.visualization;
 
 import java.util.HashMap;
 
-import application.gui.GUI_Controller;
+import application.gui.Main_Controller;
 import application.model.Model;
-import application.visualization.animation.Animation;
-import application.visualization.render2d.*;
-import application.visualization.render_FX.KTreeRender_FX;
-import application.visualization.render_FX.MatrixRender_FX;
-import application.visualization.render_FX.Render_FX;
-import application.visualization.render_FX.SingleElementRender_FX;
-import javafx.scene.canvas.Canvas;
+import application.visualization.render_FX.Render;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -27,166 +21,119 @@ import wrapper.operations.OP_Remove;
 import wrapper.operations.OP_Swap;
 
 /**
- * Handler class for visualisations and animations. The ANIMATED Canvas should
- * only be used for moving objects as it is cleared every iteration.
+ * Handler class for visualisations and animations.
  * 
  * @author Richard Sundqvist
  *
  */
 public class Visualization extends StackPane {
 
-	private static final HintPane hintPane = new HintPane();
-	private boolean animate;
-	private final Model model;
-	private static Visualization INSTANCE;
-	private final static Pane animated_nodes = new Pane();
-	private final Pane renders = new Pane();
-//	private final StackPane renders = new StackPane();
-	private final Overlay overlay;
-	private final HashMap<String, Render_FX> struct_render_mapping = new HashMap<String, Render_FX>();
-	public final Canvas ANIMATED = new Canvas();
+	// A FXML pane showing user instructions.
+	private static final HintPane HINT_PANE = new HintPane();
+	
+	/**
+	 * Pane for drawing of animated elements.
+	 */
+	private final Pane animated_nodes = new Pane();
 
 	/**
-	 * Returns the static instance of Visualization.
-	 * 
-	 * @return The static Visualization instance.
+	 * Animation time in milliseconds.
 	 */
-	public static Visualization instance() {
-		if (INSTANCE == null) {
-			INSTANCE = new Visualization();
-		}
-		return INSTANCE;
-	}
+	private long millis;
+	/**
+	 * Determines whether operations are animated on the animated_nodes canvas.
+	 */
+	private boolean animate;
+	/**
+	 * The model being visualized.
+	 */
+	private final Model model;
+	/**
+	 * A list of render managers for the data structures.
+	 */
+	private final Pane managers = new Pane();
+	/**
+	 * A mapping of renders and their managers.
+	 */
+	private final HashMap<String, RenderManager> struct_manager_mapping = new HashMap<String, RenderManager>();
 
 	/**
 	 * Create a new Visualization.
 	 */
 	public Visualization() {
 		this.model = Model.instance();
-		// test pane for animation TODO
+		// Shared animation space
 		animated_nodes.setMouseTransparent(true);
 		animated_nodes.maxWidth(Double.MAX_VALUE);
 		animated_nodes.maxHeight(Double.MAX_VALUE);
-		// Build Canvas
-		ANIMATED.setMouseTransparent(true);
-		ANIMATED.widthProperty().bind(this.widthProperty());
-		ANIMATED.heightProperty().bind(this.heightProperty());
-		ANIMATED.maxWidth(Double.MAX_VALUE);
-		ANIMATED.maxHeight(Double.MAX_VALUE);
 		animate = true;
 		// Add stacked canvases
-		this.getChildren().add(renders);
-		this.getChildren().add(ANIMATED);
-		this.getChildren().add(animated_nodes);
-		this.getChildren().add(hintPane);
-		overlay = new Overlay();
-		// this.getChildren().add(overlay.getNode());
+		this.getChildren().addAll(HINT_PANE, managers, animated_nodes);
 	}
 
+	/**
+	 * Clear the visualization.
+	 */
 	public void clear() {
-		struct_render_mapping.clear();
-		renders.getChildren().clear();
-		ANIMATED.getGraphicsContext2D().clearRect(0, 0, ANIMATED.getWidth(), ANIMATED.getHeight());
-		// overlay.clear();
-		hintPane.setVisible(true);
+		struct_manager_mapping.clear();
+		managers.getChildren().clear();
+		HINT_PANE.setVisible(true);
 	}
 
 	public void clearAndCreateVisuals() {
 		clear();
-		overlay.clear();
 		for (DataStructure struct : model.getStructures().values()) {
-			Render_FX render = resolveRender(struct);
-			renders.getChildren().add(render);
-			// overlay.addNode(new ArrayInfoPane((Array) struct));
-			struct_render_mapping.put(struct.identifier, render);
+			RenderManager manager = new RenderManager(struct, animated_nodes);
+			managers.getChildren().add(manager);
+			struct_manager_mapping.put(struct.identifier, manager);
 		}
 		// overlay.expandAll();
-		hintPane.setVisible(renders.getChildren().isEmpty());
+		HINT_PANE.setVisible(managers.getChildren().isEmpty());
 	}
 
 	/**
-	 * Determines the model to use for this DataStructure.
-	 * 
-	 * @param struct
-	 *            The DataStructure to assign a Render to.
-	 */
-	public static Render_FX resolveRender(DataStructure struct) {
-		Render_FX render = null;
-		VisualType visual = struct.resolveVisual();
-		switch (visual) {
-		case bar:
-			// render = new BarchartRender(struct, 40, 5, 5);
-//			render = new BarchartRender_OLD(struct);
-			break;
-		case box:
-//			render = new MatrixRender(struct, struct.visualOption, 40, 40, 0, 0);
-			render = new MatrixRender_FX(struct, MatrixRender_FX.Order.resolve(struct.visualOption), 40, 40, 0, 0);
-			break;
-		case tree:
-			render = new KTreeRender_FX(struct, struct.visualOption, 50, 40, 5, 5);
-			break;
-		case single:
-			render = new SingleElementRender_FX(struct, 90, 50);
-			break;
-		}
-		render.setAnimated(animated_nodes);
-		return render;
-	}
-
-	/**
-	 * TODO: remove this method
-	 * 
-	 * @param vt
-	 * @return
-	 */
-	public static Render getRender(VisualType vt) {
-		Render render = null;
-		switch (vt) {
-		case bar:
-			render = new BarchartRender(null, 40, 1, 5);
-			break;
-		case box:
-			render = new MatrixRender(null, -1, -1, -1, -1, -1);
-			break;
-		case tree:
-			render = new KTreeRender(null, -1, -1, -1, -1, -1);
-			break;
-		default:
-			break;
-		}
-		return render;
-	}
-
-	/**
-	 * Should be called whenever model is updated, does a complete rerender of
-	 * the structures.
+	 * Should be called whenever model is updated.
+	 * @param op An operation to animate.
 	 */
 	public void render(Operation op) {
-		if (op == null) {
-			return;
+		for (Object node : managers.getChildren()) {
+			((RenderManager) node).getRender().render();
 		}
-		Render_FX render;
-		for (Object node : renders.getChildren()) {
-			render = (Render_FX) node;
-			render.render();
-		}
-		if (animate) {
-			cleanAnimatedCanvas();
+		if (animate && op != null) {
 			animate(op);
 		}
 	}
 
 	/**
-	 * Set the animation time in millisections for <b>ALL</b> animations.
+	 * Set the animation time in milliseconds for all animations.
 	 * 
 	 * @param millis
 	 *            The new animation time in milliseconds.
 	 */
-	public static final void setAnimationTime(long millis) {
-		Animation.setAnimationTime(millis);
+	public final void setAnimationTime(long millis) {
+		this.millis = millis;
+	}
+	
+	/**
+	 * Toggles animation on and off.
+	 * 
+	 * @param value
+	 *            The new animation option.
+	 */
+	public void setAnimate(boolean value) {
+		animate = value;
 	}
 
+	/**
+	 * Animate an operation.
+	 * 
+	 * @param op
+	 *            The operation to animate.
+	 */
 	public void animate(Operation op) {
+		if (op == null) {
+			return;
+		}
 		switch (op.operation) {
 		case read:
 		case write:
@@ -215,14 +162,14 @@ public class Visualization extends StackPane {
 			return;
 		}
 		Element src_e = null, tar_e = null;
-		Render_FX src_render = null, tar_render = null;
+		Render src_render = null, tar_render = null;
 		/**
 		 * Source params
 		 */
 		for (DataStructure struct : model.getStructures().values()) {
 			src_e = struct.getElement(source);
 			if (src_e != null) {
-				src_render = this.struct_render_mapping.get(struct.identifier);
+				src_render = this.struct_manager_mapping.get(struct.identifier).getRender();
 				break;
 			}
 		}
@@ -232,7 +179,7 @@ public class Visualization extends StackPane {
 		for (DataStructure struct : model.getStructures().values()) {
 			tar_e = struct.getElement(target);
 			if (tar_e != null) {
-				tar_render = this.struct_render_mapping.get(struct.identifier);
+				tar_render = this.struct_manager_mapping.get(struct.identifier).getRender();
 				break;
 			}
 		}
@@ -241,14 +188,14 @@ public class Visualization extends StackPane {
 		 */
 		if (src_e != null && tar_e != null) {
 			// Render data transfer between two known structures
-			src_render.animateReadWrite(src_e, src_render, tar_e, tar_render);
-			tar_render.animateReadWrite(src_e, src_render, tar_e, tar_render);
+			src_render.animateReadWrite(src_e, src_render, tar_e, tar_render, millis);
+			tar_render.animateReadWrite(src_e, src_render, tar_e, tar_render, millis);
 		} else if (tar_e == null && src_render != null) {
 			// Render read without target
-			src_render.animateReadWrite(src_e, src_render, null, null);
+			src_render.animateReadWrite(src_e, src_render, null, null, millis);
 		} else if (src_e == null && tar_render != null) {
 			// Render write without source
-			tar_render.animateReadWrite(null, null, tar_e, tar_render);
+			tar_render.animateReadWrite(null, null, tar_e, tar_render, millis);
 		}
 	}
 
@@ -265,14 +212,14 @@ public class Visualization extends StackPane {
 			return;
 		}
 		Element v1_e = null, v2_e = null;
-		Render_FX v1_render = null, v2_render = null;
+		Render v1_render = null, v2_render = null;
 		/**
 		 * Var1 params
 		 */
 		for (DataStructure struct : model.getStructures().values()) {
 			v1_e = struct.getElement(var1);
 			if (v1_e != null) {
-				v1_render = this.struct_render_mapping.get(struct.identifier);
+				v1_render = this.struct_manager_mapping.get(struct.identifier).getRender();
 				break;
 			}
 		}
@@ -282,7 +229,7 @@ public class Visualization extends StackPane {
 		for (DataStructure struct : model.getStructures().values()) {
 			v2_e = struct.getElement(var2);
 			if (v2_e != null) {
-				v2_render = this.struct_render_mapping.get(struct.identifier);
+				v2_render = this.struct_manager_mapping.get(struct.identifier).getRender();
 				break;
 			}
 		}
@@ -290,23 +237,9 @@ public class Visualization extends StackPane {
 		 * Start animations
 		 */
 
-		v1_render.animateSwap(v1_e, v1_render, v2_e, v2_render);
-		v2_render.animateSwap(v2_e, v2_render, v1_e, v1_render);
+		v1_render.animateSwap(v1_e, v1_render, v2_e, v2_render, millis);
+		v2_render.animateSwap(v2_e, v2_render, v1_e, v1_render, millis);
 	} // End animate swap
-
-	public void cleanAnimatedCanvas() {
-		ANIMATED.getGraphicsContext2D().clearRect(-5000, -5000, 10000, 10000);
-	}
-
-	/**
-	 * Toggles animation on and off.
-	 * 
-	 * @param value
-	 *            The new animation option.
-	 */
-	public void setAnimate(boolean value) {
-		animate = value;
-	}
 
 	/**
 	 * Hint pane for the visualiser window.
@@ -317,7 +250,7 @@ public class Visualization extends StackPane {
 	private static class HintPane extends Pane {
 
 		public HintPane() {
-			Image image = new Image(GUI_Controller.class.getResourceAsStream("/assets/upload.png"));
+			Image image = new Image(Main_Controller.class.getResourceAsStream("/assets/upload.png"));
 			this.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT,
 					BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
 					new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false))));

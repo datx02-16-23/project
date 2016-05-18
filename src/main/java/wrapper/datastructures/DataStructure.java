@@ -1,14 +1,12 @@
 package wrapper.datastructures;
 
 import java.util.Map;
-
 import application.assets.Strings;
 import application.gui.Main;
-import application.visualization.VisualType;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import wrapper.AnnotatedVariable;
 import wrapper.Locator;
 import wrapper.Operation;
@@ -54,20 +52,21 @@ public abstract class DataStructure extends AnnotatedVariable {
 	 */
 	private transient boolean active = true;
 	/**
-	 * The current background color for elements with no preference.
+	 * The current background paint for elements with no preference.
 	 */
-	protected transient Color backgroundColor;
+	protected transient Paint backgroundColor;
 	/**
-	 * The preferred background color for elements with no preference.
+	 * The preferred background paint for elements with no preference.
 	 */
 	protected transient final Color baseColor;
 	/**
 	 * Counter for operations performed on the structure.
 	 */
 	protected transient final OperationCounter oc = new OperationCounter();
-	
+
 	/**
 	 * Returns the OperationCounter for this structure.
+	 * 
 	 * @return An OperationCounter.
 	 */
 	public OperationCounter getCounter() {
@@ -166,7 +165,10 @@ public abstract class DataStructure extends AnnotatedVariable {
 	/**
 	 * Resolves the VisualType for this DataStructure. Will check {@code visual}
 	 * , {@code abstractType}, and {@code rawType}, in that order. This method
-	 * never may not null.
+	 * never may not null. <br>
+	 * <br>
+	 * <b>NOTE:</b> Implementations should call setVisual() to notify listeners
+	 * of any changes.
 	 * 
 	 * @return The Visual to use for this DataStructure.
 	 */
@@ -287,7 +289,7 @@ public abstract class DataStructure extends AnnotatedVariable {
 		active = !active;
 		repaintAll = true;
 		if (active == false) {
-			backgroundColor = OperationType.remove.color;
+			backgroundColor = OperationType.remove.paint;
 		} else {
 			backgroundColor = baseColor;
 		}
@@ -321,7 +323,51 @@ public abstract class DataStructure extends AnnotatedVariable {
 	 * @return A Color to use as background.
 	 * 
 	 */
-	public Color getDefaultElementBackground() {
+	public Paint getDefaultElementBackground() {
 		return backgroundColor;
 	}
+
+	/**
+	 * Set the VisualType.
+	 * 
+	 * @param vt
+	 *            The new VisualType.
+	 */
+	public void setVisual(VisualType vt) {
+		if (vt != visual) {
+			visual = vt;
+			if (listener != null) {
+				listener.visualChanged(vt);
+			}
+		}
+	}
+
+	private VisualListener listener;
+
+	/**
+	 * Interface for listening to changes in the VisualType.
+	 * 
+	 * @author Richard Sundqvist
+	 *
+	 */
+	public static interface VisualListener {
+		/**
+		 * Called when the VisualType of the DataStructure changes.
+		 * 
+		 * @param newVisual
+		 *            The new VisualType.
+		 */
+		public void visualChanged(VisualType newVisual);
+	}
+
+	/**
+	 * Set a listener to be notified when the visual type changes.
+	 * 
+	 * @param listener
+	 *            A VisualListener.
+	 */
+	public void setListener(VisualListener listener) {
+		this.listener = listener;
+	}
+
 }

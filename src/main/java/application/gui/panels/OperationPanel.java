@@ -3,7 +3,7 @@ package application.gui.panels;
 import java.io.IOException;
 import java.util.Map;
 
-import application.gui.GUI_Controller;
+import application.gui.Main_Controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -19,7 +19,7 @@ import wrapper.Operation;
 
 public class OperationPanel extends Pane {
 
-	private final GUI_Controller controller;
+	private final Main_Controller controller;
 	private final TextField currOpTextField;
 	private final Label totNrOfOpLabel;
 	private final ProgressBar opProgress;
@@ -29,7 +29,7 @@ public class OperationPanel extends Pane {
 	private final FocusModel<Operation> focusModel;
 
 	@SuppressWarnings("unchecked")
-	public OperationPanel(GUI_Controller controller) {
+	public OperationPanel(Main_Controller controller) {
 		this.controller = controller;
 		// Load content
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/OperationListPanel.fxml"));

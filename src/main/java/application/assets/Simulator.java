@@ -8,7 +8,6 @@ import java.util.Map;
 
 import com.google.gson.GsonBuilder;
 
-import application.visualization.VisualType;
 import interpreter.Interpreter;
 import io.CommunicatorListener;
 import io.JGroupCommunicator;

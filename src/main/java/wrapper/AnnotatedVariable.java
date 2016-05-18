@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import application.assets.Strings;
-import application.visualization.VisualType;
 import wrapper.datastructures.RawType;
+import wrapper.datastructures.VisualType;
 
 /**
  * The declaration for an annotated (observed) variable in source.
@@ -36,7 +36,8 @@ public class AnnotatedVariable implements Serializable {
 	public RawType.AbstractType abstractType;
 	/**
 	 * The preferred graphical representation for this variable, such as
-	 * BarChart.
+	 * BarChart. <br><br>
+	 * <b>Note</b>: setting this variable using the setVisual() is recommended as it may be observed.
 	 */
 	public VisualType visual;
 	/**

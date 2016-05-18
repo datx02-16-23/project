@@ -1,5 +1,7 @@
 package application.gui;
 
+
+
 import application.assets.Strings;
 import application.assets.examples.Examples;
 import application.assets.examples.Examples.Algorithm;
@@ -40,7 +42,7 @@ public class Main extends Application {
 	 * Indicates whether the program is being run for the first time.
 	 */
 	public static boolean firstRun;
-	private GUI_Controller controller;
+	private Main_Controller controller;
 	private LogStreamManager lsm;
 
 	@Override
@@ -48,10 +50,10 @@ public class Main extends Application {
 		lsm = new LogStreamManager(Strings.PROJECT_NAME + "_GUI");
 		primaryStage.setTitle(Strings.PROJECT_NAME);
 		// Create a Group view for the AV.
-		Visualization visualization = Visualization.instance();
+		Visualization visualization = new Visualization();
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/VisualizerView.fxml"));
 		SourcePanel sourceViewer = new SourcePanel();
-		controller = new GUI_Controller(primaryStage, lsm, sourceViewer);
+		controller = new Main_Controller(primaryStage, lsm, sourceViewer, visualization);
 		OperationPanel operationPanel = controller.getOperationPanel();
 		fxmlLoader.setController(controller);
 		// Load and get the root layout.

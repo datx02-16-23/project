@@ -3,12 +3,10 @@ package wrapper.datastructures;
 import java.util.Map;
 
 import application.assets.Strings;
-import application.visualization.VisualType;
 import wrapper.Locator;
 import wrapper.Operation;
 import wrapper.operations.OP_ReadWrite;
 import wrapper.operations.OP_Swap;
-import wrapper.operations.OperationType;
 
 /**
  * An independent variable holding a single element. May for example be used as
@@ -79,6 +77,7 @@ public class IndependentElement extends Array {
 	@Override
 	public void clear() {
 		elements.clear();
+		oc.reset();
 	}
 
 	@Override
@@ -123,6 +122,7 @@ public class IndependentElement extends Array {
 
 	@Override
 	public VisualType resolveVisual() {
+		setVisual(VisualType.single);
 		return VisualType.single;
 	}
 

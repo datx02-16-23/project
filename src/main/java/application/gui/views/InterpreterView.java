@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import application.assets.Strings;
-import application.gui.GUI_Controller;
+import application.gui.Main_Controller;
 import application.gui.Main;
 import interpreter.Interpreter;
 import javafx.beans.InvalidationListener;
@@ -54,7 +54,7 @@ public class InterpreterView implements InvalidationListener {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/InterpreterView.fxml"));
 		fxmlLoader.setController(this);
 		root = new Stage();
-		root.getIcons().add(new Image(GUI_Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
+		root.getIcons().add(new Image(Main_Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
 		root.initModality(Modality.APPLICATION_MODAL);
 		root.setTitle(Strings.PROJECT_NAME + ": Interpreter");
 		root.initOwner(this.parent);

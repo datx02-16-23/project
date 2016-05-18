@@ -6,9 +6,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import application.gui.GUI_Controller;
 import application.gui.Main;
-import application.visualization.animation.Animation;
+import application.gui.Main_Controller;
+import application.visualization.render_FX.MatrixRender_FX.Order;
+import application.visualization.render_FX.elements.VisualElement;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.Transition;
@@ -18,6 +19,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.ToggleButton;
@@ -43,7 +45,7 @@ import wrapper.datastructures.Element;
 import wrapper.operations.OP_Remove;
 import wrapper.operations.OperationCounter;
 
-public abstract class Render_FX extends Pane {
+public abstract class Render extends Pane {
 
 	/*
 	 * Shared stuff.
@@ -58,11 +60,18 @@ public abstract class Render_FX extends Pane {
 	 * Default node width.
 	 */
 	public static final double DEFAULT_NODE_WIDTH = 60;
-
 	/**
 	 * Default node height.
 	 */
 	public static final double DEFAULT_NODE_HEIGHT = 40;
+	/**
+	 * Default horizontal space between nodes.
+	 */
+	public static final double DEFAULT_NODE_HSPACE = 0;
+	/**
+	 * Default vertical space between nodes.
+	 */
+	public static final double DEFAULT_NODE_VSPACE = 0;
 
 	/**
 	 * The DataStructure this render represents.
@@ -103,18 +112,19 @@ public abstract class Render_FX extends Pane {
 	protected final HashMap<String, VisualElement> visualElementsMapping = new HashMap<String, VisualElement>();
 
 	/**
-	 * The visual element nodes.
+	 * Pane for rendering of visual element nodes.
 	 */
-	protected final Pane nodes = new Pane();
+	private final Pane nodes = new Pane();
 	/**
-	 * Content pane.
+	 * The content pane for the render. By default, a Pane for {@link #nodes}
+	 * will be added, but renders can add their own as well.
 	 */
 	protected Pane content;
 
 	/**
 	 * The pane used when drawing animated elements.
 	 */
-	protected Pane animated_nodes;
+	protected Pane animation_pane;
 	/**
 	 * The root for the FXML Render.
 	 */
@@ -125,13 +135,17 @@ public abstract class Render_FX extends Pane {
 	private Label name;
 
 	/**
-	 * Set the Pane used for drawing animated elements.
+	 * Default constructor. Will use default values: <br>
+	 * Element width: {@link #DEFAULT_NODE_HSPACE}<br>
+	 * Element height: {@link #DEFAULT_NODE_HEIGHT}<br>
+	 * Element horizontal space: {@link #DEFAULT_NODE_HSPACE}<br>
+	 * Element vertical space: {@link #DEFAULT_NODE_VSPACE}<br>
 	 * 
-	 * @param animated_nodes
-	 *            A Pane for animation.
+	 * @param struct
+	 *            The DataStructure this Render will draw.
 	 */
-	public void setAnimated(Pane animated_nodes) {
-		this.animated_nodes = animated_nodes;
+	public Render(DataStructure struct) {
+		this(struct, DEFAULT_NODE_WIDTH, DEFAULT_NODE_HEIGHT, DEFAULT_NODE_HSPACE, DEFAULT_NODE_VSPACE);
 	}
 
 	/**
@@ -148,7 +162,7 @@ public abstract class Render_FX extends Pane {
 	 * @param vspace
 	 *            The vertical space between elements in this Render.
 	 */
-	public Render_FX(DataStructure struct, double width, double height, double hspace, double vspace) {
+	public Render(DataStructure struct, double width, double height, double hspace, double vspace) {
 		this.struct = struct;
 
 		this.node_width = width;
@@ -178,17 +192,23 @@ public abstract class Render_FX extends Pane {
 
 		// Content pane
 		content = (Pane) fxmlLoader.getNamespace().get("content");
-		content.getChildren().add(this.nodes);
+		content.getChildren().add(this.getNodes());
 		content.setBackground(getStructBackground(struct));
 		setSize(150, 150);
 
 		// Name labels
 		name = (Label) fxmlLoader.getNamespace().get("name");
 		name.setText(struct.toString());
-		Label name_mo = (Label) fxmlLoader.getNamespace().get("name_mo"); //Visible only on mouseover
+		Label name_mo = (Label) fxmlLoader.getNamespace().get("name_mo"); // Visible
+																			// only
+																			// on
+																			// mouseover
 		name_mo.textProperty().bind(name.textProperty());
 
-		Node header = (Node) fxmlLoader.getNamespace().get("header"); //Visible only on mouseover
+		Node header = (Node) fxmlLoader.getNamespace().get("header"); // Visible
+																		// only
+																		// on
+																		// mouseover
 		header.visibleProperty().bind(name.visibleProperty().not());
 
 		getChildren().add(root);
@@ -220,29 +240,31 @@ public abstract class Render_FX extends Pane {
 	 *            The target element.
 	 * @param tar_rndr
 	 *            The render for the target element.
+	 * @param millis
+	 *            The time in milliseconds the animation should last.
 	 */
-	public void animateReadWrite(Element src, Render_FX src_rndr, Element tar, Render_FX tar_rndr) {
+	public void animateReadWrite(Element src, Render src_rndr, Element tar, Render tar_rndr, long millis) {
 		/*
 		 * Target is unknown. READ: this -> [x]
 		 */
 		if (tar == null) {
 			src_rndr.fade_option = "fade_out";
 			src_rndr.animate(src, src_rndr.absX(src), src_rndr.absY(src), // From
-					src_rndr.absX(src) - node_width * 0.5, src_rndr.absY(src) - node_height * 1.5); // To
+					src_rndr.absX(src) - node_width * 0.5, src_rndr.absY(src) - node_height * 1.5, millis); // To
 			/*
 			 * Source is unknown. WRITE: [x] -> this
 			 */
 		} else if (src == null) {
 			tar_rndr.fade_option = "fade_in";
 			tar_rndr.animate(tar, tar_rndr.absX(tar) + node_width * 0.5, tar_rndr.absY(tar) + node_height * 1.5, // From
-					tar_rndr.absX(tar), tar_rndr.absY(tar)); // To
+					tar_rndr.absX(tar), tar_rndr.absY(tar), millis); // To
 			/*
 			 * Source and target are known.
 			 */
 		} else { // if (src != null && tar != null)
 			tar_rndr.fade_option = "off";
 			tar_rndr.animate(tar, src_rndr.absX(src), src_rndr.absY(src), // From
-					tar_rndr.absX(tar), tar_rndr.absY(tar)); // To
+					tar_rndr.absX(tar), tar_rndr.absY(tar), millis); // To
 		}
 	}
 
@@ -257,10 +279,13 @@ public abstract class Render_FX extends Pane {
 	 *            The second element.
 	 * @param var2_rndr
 	 *            The render for the second element.
+	 * @param millis
+	 *            The time in milliseconds the animation should last.
 	 */
-	public void animateSwap(Element var1, Render_FX var1_rndr, Element var2, Render_FX var2_rndr) {
+	public void animateSwap(Element var1, Render var1_rndr, Element var2, Render var2_rndr, long millis) {
 		var1_rndr.fade_option = "swap";
-		var1_rndr.animate(var2, var1_rndr.absX(var1), var1_rndr.absY(var1), var2_rndr.absX(var2), var2_rndr.absY(var2));
+		var1_rndr.animate(var2, var1_rndr.absX(var1), var1_rndr.absY(var1), var2_rndr.absX(var2), var2_rndr.absY(var2),
+				millis);
 	}
 
 	/**
@@ -282,14 +307,12 @@ public abstract class Render_FX extends Pane {
 
 		this.setPrefSize(width, height);
 		this.setMaxSize(width, height);
-		// this.setWidth(width);
-		// this.setHeight(height);
 	}
 
 	/**
-	 * Order the Render_FXto draw the elements of the Data Structure it carries.
-	 * The default implementation of this method only does one thing: <br>
-	 * <br>
+	 * Order the Render_FX to draw the elements of the Data Structure it
+	 * carries. <br>
+	 * The default implementation only calls:
 	 * 
 	 * <b>{@code struct.elementsDrawn(Color.WHITE);}</b>
 	 */
@@ -330,12 +353,15 @@ public abstract class Render_FX extends Pane {
 
 	/**
 	 * Create listeners to drag and zoom.
+	 * 
+	 * @param transformationParent
+	 *            The parent to apply transformation to.
 	 */
-	private void initDragAndZoom(Node node) {
+	public void initDragAndZoom(Parent transformationParent) {
 		/*
 		 * Zoom
 		 */
-		node.setOnScroll(event -> {
+		transformationParent.setOnScroll(event -> {
 			sign = event.getDeltaY() > 0 ? 1 : -1;
 			scale = scale + sign * 0.1;
 			if (scale < 0.1) {
@@ -352,28 +378,28 @@ public abstract class Render_FX extends Pane {
 		 * Drag
 		 */
 		// Record a delta distance for the drag and drop operation.
-		node.setOnMousePressed(event -> {
+		transformationParent.setOnMousePressed(event -> {
 			transX = this.getTranslateX() - event.getSceneX();
 			transY = this.getTranslateY() - event.getSceneY();
 			this.getParent().setCursor(Cursor.CLOSED_HAND);
 		});
 		// Restore cursor
-		node.setOnMouseReleased(event -> {
+		transformationParent.setOnMouseReleased(event -> {
 			this.getParent().setCursor(null);
 		});
 		// Translate canvases
-		node.setOnMouseDragged(event -> {
+		transformationParent.setOnMouseDragged(event -> {
 			this.setTranslateX(event.getSceneX() + transX);
 			this.setTranslateY(event.getSceneY() + transY);
 		});
 		// Set cursor
-		node.setOnMouseEntered(event -> {
-//			this.setCursor(Cursor.OPEN_HAND);
+		transformationParent.setOnMouseEntered(event -> {
+			// this.setCursor(Cursor.OPEN_HAND);
 			name.setVisible(false);
 			this.setBorder(BORDER_MOUSEOVER);
 		});
-		node.setOnMouseExited(event -> {
-//			this.setCursor(null);
+		transformationParent.setOnMouseExited(event -> {
+			// this.setCursor(null);
 			name.setVisible(true);
 			this.setBorder(null);
 		});
@@ -403,19 +429,27 @@ public abstract class Render_FX extends Pane {
 	 *            End point x-coordinate.
 	 * @param end_y
 	 *            End point y-coordinate.
+	 * @param millis
+	 *            The time in milliseconds the animation should last.
 	 */
-	public void animate(Element e, double start_x, double start_y, double end_x, double end_y) {
+	public void animate(Element e, double start_x, double start_y, double end_x, double end_y, long millis) {
 		ParallelTransition trans = new ParallelTransition();
 
 		// VisualElement real = visualElementsMapping.get(e);
 		int[] i = ((IndexedElement) e).getIndex();
 		Arrays.copyOf(i, i.length);
-		VisualElement real = visualElementsMapping.get(Arrays.toString(i));
+
+		final VisualElement real = visualElementsMapping.get(Arrays.toString(i));
+		if (real == null) {
+			System.out.println("real = null");
+			return;
+		}
 
 		VisualElement animated = real.clone();
+
 		animated.unbind();
 
-		animated_nodes.getChildren().add(animated);
+		animation_pane.getChildren().add(animated);
 
 		final boolean useGhost;
 
@@ -426,12 +460,12 @@ public abstract class Render_FX extends Pane {
 		switch (fade_option) {
 		case "fade_in":
 			useGhost = true;
-			trans.getChildren().add(fadeIn());
+			trans.getChildren().add(fadeIn(millis));
 			break;
 
 		case "fade_out":
 			useGhost = false;
-			trans.getChildren().add(fadeOut());
+			trans.getChildren().add(fadeOut(millis));
 			break;
 
 		case "swap":
@@ -445,9 +479,9 @@ public abstract class Render_FX extends Pane {
 		/*
 		 * Move
 		 */
-		TranslateTransition tt = new TranslateTransition(Duration.millis(Animation.ANIMATION_TIME));
+		TranslateTransition tt = new TranslateTransition(Duration.millis(millis));
 		tt.setOnFinished(event -> {
-			animated_nodes.getChildren().remove(animated);
+			animation_pane.getChildren().remove(animated);
 			if (useGhost) {
 				real.setGhost(false);
 			}
@@ -493,19 +527,80 @@ public abstract class Render_FX extends Pane {
 	}
 
 	/**
-	 * Force the Render to initialise all elements.
+	 * Force the Render to initialise all elements. This method will attempt
+	 * create elements and add them to the standard pane. It will clear the
+	 * children of all children in {@link #content} before beginning.
+	 * {@link #bellsAndWhistles} will be called on every element.
+	 * 
+	 * 
+	 * @return True if there was anything to draw.
 	 */
-	public abstract void init();
+	public boolean init() {
+		if (struct.getElements().isEmpty()) {
+			return false; // Nothing to draw.
+		}
+		struct.repaintAll = false;
+
+		/*
+		 * Clear the nodes from all content Panes.
+		 */
+		for (Node n : content.getChildren()) {
+			((Pane) n).getChildren().clear();
+		}
+
+		visualElementsMapping.clear();
+		content.setBackground(null);
+		calculateSize();
+
+		// Create nodes
+		VisualElement newVis;
+
+		for (Element e : struct.getElements()) {
+			newVis = createVisualElement(e);
+			newVis.setLayoutX(getX(e));
+			newVis.setLayoutY(getY(e));
+			newVis.setIndex(((IndexedElement) e).getIndex());
+
+			nodes.getChildren().add(newVis);
+			visualElementsMapping.put(Arrays.toString(((IndexedElement) e).getIndex()), newVis);
+
+			bellsAndWhistles(e, newVis);
+		}
+
+		return true;
+	}
 
 	/**
-	 * Returns the SpinnerValueFactory for this Render, or null if there are no
-	 * options. The default implementation of this method returns null.
+	 * Create a bound node element in whatever style the Render prefers to use.
 	 * 
-	 * @return A list of options for this Render, or null if there are none.
+	 * @param e
+	 *            The element to bind.
+	 * @return A new bound VisualElement.
 	 */
-	public RenderSVF getOptionsSpinnerValueFactory() {
-		return null;
-	}
+	protected abstract VisualElement createVisualElement(Element e);
+
+	/**
+	 * Create an unbound node element in whatever style the Render prefers to
+	 * use.
+	 * 
+	 * @param value
+	 *            The value of the element.
+	 * @param color
+	 *            The colour of the element.
+	 * @return A new unbound VisualElement.
+	 */
+	protected abstract VisualElement createVisualElement(double value, Color color);
+
+	/**
+	 * Decorator method used to attach bells and whistles to the current
+	 * element. {@link #init} will called this method on every element.
+	 * 
+	 * @param e
+	 *            The element to attach a whistle to.
+	 * @param ve
+	 *            The VisualElement to attach a bell to.
+	 */
+	protected abstract void bellsAndWhistles(Element e, VisualElement ve);
 
 	/**
 	 * SpinnerValueFactory for Render_FXimplementations.
@@ -609,7 +704,7 @@ public abstract class Render_FX extends Pane {
 		 * @author Richard Sundqvist
 		 *
 		 */
-		private class Converter extends StringConverter<Integer> {
+		public static class Converter extends StringConverter<Integer> {
 
 			private final HashMap<Integer, String> conversion;
 			private final boolean explicit;
@@ -652,6 +747,38 @@ public abstract class Render_FX extends Pane {
 				}
 			}
 		}
+
+		public static RenderSVF resolve(DataStructure struct) {
+			RenderSVF svf = null;
+
+			switch (struct.resolveVisual()) {
+			case bar:
+				svf = null;
+				break;
+
+			case box:
+				ArrayList<Integer> values = new ArrayList<Integer>();
+				values.add(Order.ROW_MAJOR.optionNbr);
+				values.add(Order.COLUMN_MAJOR.optionNbr);
+				ArrayList<String> userValues = new ArrayList<String>();
+				userValues.add(Order.ROW_MAJOR.name);
+				userValues.add(Order.COLUMN_MAJOR.name);
+				svf = new RenderSVF(values, userValues);
+				break;
+			case single:
+				svf = null;
+				break;
+
+			case tree:
+				svf = new RenderSVF(2, 1337);
+				break;
+
+			default:
+				break;
+
+			}
+			return svf;
+		}
 	}
 
 	/*
@@ -659,19 +786,19 @@ public abstract class Render_FX extends Pane {
 	 */
 	private static Background createArrayBg() {
 		return new Background(new BackgroundImage(
-				new Image(GUI_Controller.class.getResourceAsStream("/assets/array.png")), BackgroundRepeat.NO_REPEAT,
+				new Image(Main_Controller.class.getResourceAsStream("/assets/array.png")), BackgroundRepeat.NO_REPEAT,
 				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
 	}
 
 	private static Background createOrphanBg() {
 		return new Background(new BackgroundImage(
-				new Image(GUI_Controller.class.getResourceAsStream("/assets/orphan2.png")), BackgroundRepeat.NO_REPEAT,
+				new Image(Main_Controller.class.getResourceAsStream("/assets/orphan2.png")), BackgroundRepeat.NO_REPEAT,
 				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
 	}
 
 	private static Background createTreeBg() {
 		return new Background(new BackgroundImage(
-				new Image(GUI_Controller.class.getResourceAsStream("/assets/tree.png")), BackgroundRepeat.NO_REPEAT,
+				new Image(Main_Controller.class.getResourceAsStream("/assets/tree.png")), BackgroundRepeat.NO_REPEAT,
 				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
 	}
 
@@ -697,28 +824,29 @@ public abstract class Render_FX extends Pane {
 		}
 	}
 
-	public static final Transition fadeIn() {
-		FadeTransition ft = new FadeTransition(Duration.millis(Animation.ANIMATION_TIME));
+	public static final Transition fadeIn(long millis) {
+		FadeTransition ft = new FadeTransition(Duration.millis(millis));
 
 		ft.setFromValue(1.0);
 		ft.setToValue(0);
 		return ft;
 	}
 
-	public static final Transition fadeOut() {
-		FadeTransition ft = new FadeTransition(Duration.millis(Animation.ANIMATION_TIME));
+	public static final Transition fadeOut(long millis) {
+		FadeTransition ft = new FadeTransition(Duration.millis(millis));
 		ft.setFromValue(1.0);
 		ft.setToValue(0);
 		return ft;
 	}
 
-	// TODO
 	public void showStats() {
 		OperationCounter oc = struct.getCounter();
 		Main.console.info("Statistics for \"" + struct + "\":");
 		Main.console.info("\tReads: " + oc.getReads());
 		Main.console.info("\tWrites: " + oc.getWrites());
 		Main.console.info("\tSwaps: " + oc.getSwap());
+
+		// TODO: Live update pop up in addition to the printout.
 	}
 
 	// TODO
@@ -735,5 +863,24 @@ public abstract class Render_FX extends Pane {
 		} else {
 			tb.setText("Collapse");
 		}
+	}
+
+	/**
+	 * Returns the Pane used to draw element nodes.
+	 * 
+	 * @return The Pane used to draw element nodes.
+	 */
+	public Pane getNodes() {
+		return nodes;
+	}
+
+	/**
+	 * Set the Pane used for drawing animated elements.
+	 * 
+	 * @param animation_pane
+	 *            A Pane for animation.
+	 */
+	public void setAnimationPane(Pane animation_pane) {
+		this.animation_pane = animation_pane;
 	}
 }

@@ -133,4 +133,15 @@ public class OperationCounter {
 	public int getMessage(){
 		return message.get();
 	}
+
+	/**
+	 * Reset the counter.
+	 */
+	public void reset() {
+		read.set(0);
+		write.set(0);
+		swap.set(0);
+		remove.set(0);
+		message.set(0);
+	}
 }

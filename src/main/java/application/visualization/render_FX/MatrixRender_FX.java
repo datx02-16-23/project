@@ -1,18 +1,16 @@
 package application.visualization.render_FX;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import application.gui.Main;
+import application.visualization.render_FX.elements.RectangleElement;
+import application.visualization.render_FX.elements.VisualElement;
+import javafx.scene.paint.Color;
 import wrapper.datastructures.Array;
 import wrapper.datastructures.Array.IndexedElement;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
 
-public class MatrixRender_FX extends Render_FX {
-
-	private static final RenderSVF RSVF = createOptionsSpinner();
-	public static final double DEFAULT_SIZE = 40;
+public class MatrixRender_FX extends Render {
+	
 	private final Order mo;
 	private int[] size;
 
@@ -36,22 +34,13 @@ public class MatrixRender_FX extends Render_FX {
 		}
 		super.render();
 	}
-	
+
 	@Override
-	public void init(){
+	public boolean init() {
 
-		if (struct.getElements().isEmpty()) {
-			return; // Nothing to draw.
+		if (super.init() == false) {
+			return false; // Nothing to draw.
 		}
-
-		nodes.getChildren().clear();
-		visualElementsMapping.clear();
-
-		content.setBackground(null);
-
-		// Create nodes
-		VisualElement newVis;
-		calculateSize();
 
 		/*
 		 * Max 2 dimensions.
@@ -62,16 +51,7 @@ public class MatrixRender_FX extends Render_FX {
 			Main.console.force("WARNING: Structure " + struct + " has declared " + dimensions
 					+ " dimensions. MatrixRender supports only one or two dimensions.");
 		}
-
-		for (Element e : struct.getElements()) {
-			newVis = new RectangleElement(e, node_width, node_height);
-			newVis.setLayoutX(getX(e));
-			newVis.setLayoutY(getY(e));
-			newVis.setIndex(((IndexedElement) e).getIndex());
-
-			nodes.getChildren().add(newVis);
-			visualElementsMapping.put(Arrays.toString(((IndexedElement) e).getIndex()), newVis);
-		}
+		return true;
 	}
 
 	@Override
@@ -113,8 +93,8 @@ public class MatrixRender_FX extends Render_FX {
 	@Override
 	public void calculateSize() {
 		Array array = (Array) struct;
-		size = array.getCapacity() == null ? new int[] {struct.getElements().size(), 1} : array.getCapacity();
-		
+		size = array.getCapacity() == null ? new int[] { struct.getElements().size(), 1 } : array.getCapacity();
+
 		if (mo == Order.ROW_MAJOR) {
 			width = vspace + (vspace + node_width) * size[0];
 			if (size.length == 2) {
@@ -165,19 +145,19 @@ public class MatrixRender_FX extends Render_FX {
 		}
 	}
 
-	private static RenderSVF createOptionsSpinner() {
-		ArrayList<Integer> values = new ArrayList<Integer>();
-		values.add(Order.ROW_MAJOR.optionNbr);
-		values.add(Order.COLUMN_MAJOR.optionNbr);
-		ArrayList<String> userValues = new ArrayList<String>();
-		userValues.add(Order.ROW_MAJOR.name);
-		userValues.add(Order.COLUMN_MAJOR.name);
-		RenderSVF rsvf = new RenderSVF(values, userValues);
-		return rsvf;
-	}
-	
-	public RenderSVF getOptionsSpinnerValueFactory() {
-		return RSVF;
+	@Override
+	protected VisualElement createVisualElement(Element e) {
+		return new RectangleElement(e, node_height, node_height);
 	}
 
+	@Override
+	protected VisualElement createVisualElement(double value, Color color) {
+		return new RectangleElement(value, color, node_width, node_height);
+	}
+
+	@Override
+	protected void bellsAndWhistles(Element e, VisualElement ve) {
+		// TODO Auto-generated method stub
+		
+	}
 }

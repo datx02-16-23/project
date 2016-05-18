@@ -5,7 +5,8 @@ import java.util.Map;
 
 import application.assets.Strings;
 import application.gui.Main;
-import application.visualization.VisualType;
+import javafx.beans.InvalidationListener;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.paint.Color;
 import wrapper.Locator;
 import wrapper.datastructures.RawType.AbstractType;
@@ -114,6 +115,7 @@ public class Array extends DataStructure {
 		clearElementLists();
 		min = Integer.MAX_VALUE;
 		max = Integer.MIN_VALUE;
+		oc.reset();
 	}
 
 	protected void executeSwap(OP_Swap op) {
@@ -399,13 +401,12 @@ public class Array extends DataStructure {
 			return visual;
 		} else if (abstractType != null) {
 			if (abstractType == AbstractType.tree) {
-				return VisualType.tree;
-			} else {
-				throw new IllegalArgumentException("");
+				visual =  VisualType.tree;
 			}
 		} else {
-			return VisualType.box;
+			visual = VisualType.box;
 		}
+		setVisual(visual);
+		return visual;
 	}
-
 }

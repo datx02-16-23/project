@@ -1,13 +1,41 @@
 package application.gui;
 
-import application.assets.*;
+
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import application.assets.DefaultProperties;
+import application.assets.Strings;
 import application.assets.examples.Examples;
 import application.assets.examples.Examples.Algorithm;
-import application.gui.panels.*;
-import application.gui.views.*;
+import application.gui.panels.OperationPanel;
+import application.gui.panels.SourcePanel;
+import application.gui.views.ConnectedView;
+import application.gui.views.CreateStructureDialog;
+import application.gui.views.ExamplesDialog;
+import application.gui.views.IdentifierCollisionDialog;
+import application.gui.views.InterpreterView;
+import application.gui.views.VisualDialog;
 import application.model.Model;
 import application.visualization.Visualization;
-import io.*;
+import io.CommunicatorListener;
+import io.JGroupCommunicator;
+import io.LogStreamManager;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -16,7 +44,13 @@ import javafx.collections.ObservableMap;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -25,7 +59,6 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -39,23 +72,11 @@ import wrapper.Locator;
 import wrapper.Operation;
 import wrapper.datastructures.DataStructure;
 import wrapper.operations.Key;
-import java.io.*;
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 
 /**
  * This is the Controller of MVC for the visualizer GUI.
  */
-public class GUI_Controller implements CommunicatorListener {
+public class Main_Controller implements CommunicatorListener {
 
 	private Visualization visualization;
 	private Stage window;
@@ -86,9 +107,9 @@ public class GUI_Controller implements CommunicatorListener {
 	private Button backwardButton, forwardButton, playPauseButton;
 	private Button restartButton, clearButton, speedButton;
 
-	public GUI_Controller(Stage window, LogStreamManager lsm, SourcePanel sourceViewer) {
-		this.visualization = Visualization.instance();
-		Visualization.setAnimationTime(stepDelay);
+	public Main_Controller(Stage window, LogStreamManager lsm, SourcePanel sourceViewer, Visualization visualization) {
+		this.visualization = visualization;
+		visualization.setAnimationTime(stepDelay);
 		this.window = window;
 		model = Model.instance();
 		this.lsm = lsm;
@@ -207,7 +228,6 @@ public class GUI_Controller implements CommunicatorListener {
 		stopAutoPlay();
 		model.reset();
 		updatePanels();
-		visualization.clearAndCreateVisuals();
 		setButtons();
 	}
 
@@ -244,7 +264,6 @@ public class GUI_Controller implements CommunicatorListener {
 	public void stepBackwardButtonClicked() {
 		stopAutoPlay();
 		if (model.stepBackward()) {
-			visualization.clearAndCreateVisuals();
 			visualization.render(model.getLastOp());
 			setButtons();
 			updatePanels();
@@ -262,7 +281,7 @@ public class GUI_Controller implements CommunicatorListener {
 		stepDelaySpeedupFactor = stepDelaySpeedupFactor * 2 % 255;
 		speedButton.setText(stepDelaySpeedupFactor + "x");
 		stepDelay = stepDelayBase / stepDelaySpeedupFactor;
-		Visualization.setAnimationTime(stepDelay);
+		visualization.setAnimationTime(stepDelay);
 		if (isPlaying) {
 			startAutoPlay();
 		}
@@ -332,7 +351,6 @@ public class GUI_Controller implements CommunicatorListener {
 	 */
 	public void goToStep(int index) {
 		model.goToStep(index);
-		visualization.clearAndCreateVisuals();
 		visualization.render(model.getLastOp());
 		operationPanel.update(model.getIndex(), false);
 	}
@@ -360,7 +378,7 @@ public class GUI_Controller implements CommunicatorListener {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/SettingsView.fxml"));
 		fxmlLoader.setController(this);
 		settingsView = new Stage();
-		settingsView.getIcons().add(new Image(GUI_Controller.class.getResourceAsStream("/assets/icon_settings.png")));
+		settingsView.getIcons().add(new Image(Main_Controller.class.getResourceAsStream("/assets/icon_settings.png")));
 		settingsView.initModality(Modality.APPLICATION_MODAL);
 		settingsView.setTitle(Strings.PROJECT_NAME + ": Settings and Preferences");
 		settingsView.initOwner(this.window);
@@ -573,10 +591,10 @@ public class GUI_Controller implements CommunicatorListener {
 
 	public void openVisualDialog(DataStructure struct) {
 		if (visualDialog.show(struct)) {
-			visualization.clearAndCreateVisuals();
-			int step = model.getIndex();
-			model.reset();
-			goToStep(step);
+//			visualization.clearAndCreateVisuals();
+//			int step = model.getIndex();
+//			model.reset();
+//			goToStep(step);
 		}
 	}
 
@@ -911,7 +929,7 @@ public class GUI_Controller implements CommunicatorListener {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/HelpPython.fxml"));
 		fxmlLoader.setController(this);
 		Stage root = new Stage();
-		root.getIcons().add(new Image(GUI_Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
+		root.getIcons().add(new Image(Main_Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
 		root.initModality(Modality.NONE);
 		root.setTitle(Strings.PROJECT_NAME + ": Java Help");
 		root.initOwner(window);
@@ -937,7 +955,7 @@ public class GUI_Controller implements CommunicatorListener {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/HelpJava.fxml"));
 		fxmlLoader.setController(this);
 		Stage root = new Stage();
-		root.getIcons().add(new Image(GUI_Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
+		root.getIcons().add(new Image(Main_Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
 		root.initModality(Modality.NONE);
 		root.setTitle(Strings.PROJECT_NAME + ": Java Help");
 		root.initOwner(window);

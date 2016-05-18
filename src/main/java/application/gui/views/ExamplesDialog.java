@@ -3,7 +3,7 @@ package application.gui.views;
 import java.io.IOException;
 import java.util.Arrays;
 import application.assets.Strings;
-import application.gui.GUI_Controller;
+import application.gui.Main_Controller;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -31,7 +31,7 @@ public class ExamplesDialog {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ExamplesDialog.fxml"));
 		fxmlLoader.setController(this);
 		root = new Stage();
-		root.getIcons().add(new Image(GUI_Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
+		root.getIcons().add(new Image(Main_Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
 		root.initModality(Modality.APPLICATION_MODAL);
 		root.setTitle(Strings.PROJECT_NAME + ": Example");
 		root.initOwner(this.parent);

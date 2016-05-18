@@ -1,12 +1,12 @@
 package application.visualization.render_FX;
 
-import java.util.Arrays;
-
-import wrapper.datastructures.Array.IndexedElement;
+import application.visualization.render_FX.elements.SingleElement;
+import application.visualization.render_FX.elements.VisualElement;
+import javafx.scene.paint.Color;
 import wrapper.datastructures.DataStructure;
 import wrapper.datastructures.Element;
 
-public class SingleElementRender_FX extends Render_FX {
+public class SingleElementRender_FX extends Render {
 
 	/**
 	 * Create a new SingleElementRender.
@@ -31,26 +31,11 @@ public class SingleElementRender_FX extends Render_FX {
 		super.render();
 	}
 
-	public void init() {
-
-		visualElementsMapping.clear();
-		nodes.getChildren().clear();
-
-		if (struct.getElements().isEmpty()) {
-			return; // Nothing to draw.
+	public boolean init() {
+		if (super.init() == false) {
+			return false;
 		}
-
-		content.setBackground(null);
-		calculateSize();
-
-		//Will probably look like crap with more than one element :D!
-		for (Element e : struct.getElements()) {
-			SingleElement elem = new SingleElement(e, node_width, node_height);
-			nodes.getChildren().add(elem);
-
-			// visualElementsMapping.put(e, elem);
-			visualElementsMapping.put(Arrays.toString(((IndexedElement) e).getIndex()), elem);
-		}
+		return true;
 	}
 
 	@Override
@@ -84,4 +69,22 @@ public class SingleElementRender_FX extends Render_FX {
 		return 0; // Always 0.
 	}
 
+	@Override
+	protected VisualElement createVisualElement(Element e) {
+		SingleElement se = new SingleElement(e, node_height, node_height);
+		se.setIndex(null);
+		return se;
+	}
+
+	@Override
+	protected VisualElement createVisualElement(double value, Color color) {
+		SingleElement se = new SingleElement(value, color, node_width, node_height);
+		se.setIndex(null);
+		return se;
+	}
+
+	@Override
+	protected void bellsAndWhistles(Element e, VisualElement ve) {
+
+	}
 }

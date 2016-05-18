@@ -1,4 +1,4 @@
-package application.visualization;
+package wrapper.datastructures;
 
 public enum VisualType {
 	bar("Bar Chart", "bar"), box("Boxes", "box", true), tree("KTree", "tree", true), single("Single Element", "single");
