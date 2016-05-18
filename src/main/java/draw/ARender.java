@@ -182,6 +182,7 @@ public abstract class ARender extends Pane {
 
 		// Add stacked canvases
 		loadBase();
+		initDragAndZoom();
 
 		this.setMinSize(150, 20);
 		this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -222,7 +223,6 @@ public abstract class ARender extends Pane {
 		bindHeader();
 
 		getChildren().add(root);
-		initDragAndZoom(this);
 	}
 
 	// Make header visible only on mousever.
@@ -322,12 +322,14 @@ public abstract class ARender extends Pane {
 		content.setPrefSize(width, height);
 		content.setMaxSize(width, height);
 
-		height = height + 35; // Space for header bar
-		root.setPrefSize(width, height);
-		root.setMaxSize(width, height);
+		if (content.isVisible()) {
+			height = height + 35; // Space for header bar
+			root.setPrefSize(width, height);
+			root.setMaxSize(width, height);
 
-		this.setPrefSize(width, height);
-		this.setMaxSize(width, height);
+			this.setPrefSize(width, height);
+			this.setMaxSize(width, height);
+		}
 	}
 
 	/**
@@ -372,14 +374,14 @@ public abstract class ARender extends Pane {
 	/**
 	 * Create listeners to drag and zoom.
 	 * 
-	 * @param transformationParent
+	 * @param tParent
 	 *            The parent to apply transformation to.
 	 */
-	public void initDragAndZoom(Parent transformationParent) {
+	private void initDragAndZoom() {
 		/*
 		 * Zoom
 		 */
-		transformationParent.setOnScroll(event -> {
+		this.setOnScroll(event -> {
 			sign = event.getDeltaY() > 0 ? 1 : -1;
 			scale = scale + sign * 0.1;
 			if (scale < 0.1) {
@@ -396,29 +398,29 @@ public abstract class ARender extends Pane {
 		 * Drag
 		 */
 		// Record a delta distance for the drag and drop operation.
-		transformationParent.setOnMousePressed(event -> {
+		this.setOnMousePressed(event -> {
 			transX = this.getTranslateX() - event.getSceneX();
 			transY = this.getTranslateY() - event.getSceneY();
 			this.getParent().setCursor(Cursor.CLOSED_HAND);
 		});
 		// Restore cursor
-		transformationParent.setOnMouseReleased(event -> {
+		this.setOnMouseReleased(event -> {
 			this.getParent().setCursor(null);
 		});
 		// Translate canvases
-		transformationParent.setOnMouseDragged(event -> {
+		this.setOnMouseDragged(event -> {
 			this.setTranslateX(event.getSceneX() + transX);
 			this.setTranslateY(event.getSceneY() + transY);
 		});
 		// Set cursor
-		transformationParent.setOnMouseEntered(event -> {
+		this.setOnMouseEntered(event -> {
 			// this.setCursor(Cursor.OPEN_HAND);
 			if (header.visibleProperty().isBound()) {
 				name.setVisible(false);
 			}
 			this.setBorder(BORDER_MOUSEOVER);
 		});
-		transformationParent.setOnMouseExited(event -> {
+		this.setOnMouseExited(event -> {
 			// this.setCursor(null);
 			if (header.visibleProperty().isBound()) {
 				name.setVisible(true);
@@ -455,6 +457,9 @@ public abstract class ARender extends Pane {
 	 *            The time in milliseconds the animation should last.
 	 */
 	public void animate(Element e, double start_x, double start_y, double end_x, double end_y, long millis) {
+		if (content.isVisible() == false) {
+			return;
+		}
 		ParallelTransition trans = new ParallelTransition();
 
 		// VisualElement real = visualElementsMapping.get(e);
@@ -533,7 +538,7 @@ public abstract class ARender extends Pane {
 	 */
 	public double absX(Element e) {
 		double bx = this.getTranslateX() + this.getLayoutX() + content.getLayoutX();
-		return this.getX(e) + bx;
+		return getX(e) + bx;
 	}
 
 	/**
@@ -901,25 +906,26 @@ public abstract class ARender extends Pane {
 		this.setPrefSize(150, 20);
 		this.setMaxSize(150, 20);
 		unbindHeader();
-		for(Node n : nonShowHideButtons){
+		for (Node n : nonShowHideButtons) {
 			n.setVisible(false);
 		}
 		content.setVisible(false);
 	}
 
 	private void expand() {
+		content.setVisible(true);
 		Region region = (Region) this.getParent();
 		region.setTranslateX(region.getTranslateX() - conbwhs);
 		bindHeader();
 		if (content.getBackground() == null) {
+			System.out.println("no bg");
 			calculateSize();
 		} else {
-			this.setSize(150, 115);
+			setSize(150, 115);
 		}
-		for(Node n : nonShowHideButtons){
+		for (Node n : nonShowHideButtons) {
 			n.setVisible(true);
 		}
-		content.setVisible(true);
 	}
 
 	/**

@@ -224,10 +224,9 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 	 *            An element owned by this BarcharRender.
 	 * @return The absolute y-coordinates of e (always at the x-axis).
 	 */
-	@Override
+	@Override	
 	public double absY(Element e) {
 		double by = this.getTranslateY() + this.getLayoutY() + content.getLayoutY();
-//		return by;
 		return barMax + by;
 	}
 	
