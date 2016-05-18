@@ -87,7 +87,7 @@ class ExpressionTransformer(NodeTransformer):
 	SUPPORTED_NODES = [TRANSFORMER_SUBSCRIPT,TRANSFORMER_NAME]
 
 	def is_generated_expression(self,node):
-		if isinstance(node,Tuple):
+		if isinstance(node,Tuple) and len(node.elts) > 0:
 			return node.elts[0] in Expression.DEFINED_NAMES
 		else:
 			return False
