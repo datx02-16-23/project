@@ -24,10 +24,10 @@ import assets.Strings;
 import contract.AnnotatedVariable;
 import contract.Header;
 import contract.Operation;
-import contract.Wrapper;
-import contract.datastructures.DataStructure;
-import contract.datastructures.DataStructureParser;
-import contract.operations.OperationParser;
+import contract.datastructure.DataStructure;
+import contract.datastructure.DataStructureParser;
+import contract.operation.OperationParser;
+import contract.CRoot;
 import gui.Main;
 import io.Communicator.CommunicatorMessage;
 
@@ -50,7 +50,7 @@ public class LogStreamManager implements CommunicatorListener {
 	private final Communicator communicator;
 	private CommunicatorListener listener;
 	// Wrapper fields
-	private Wrapper wrapper;
+	private CRoot wrapper;
 	private Map<String, DataStructure> dataStructures;
 	private List<Operation> operations;
 	private Map<String, List<String>> sources;
@@ -166,7 +166,7 @@ public class LogStreamManager implements CommunicatorListener {
 	 */
 	public boolean readLog(File logFile) {
 		try {
-			wrapper = gson.fromJson(new JsonReader(new FileReader(logFile)), Wrapper.class);
+			wrapper = gson.fromJson(new JsonReader(new FileReader(logFile)), CRoot.class);
 			return unwrap(wrapper);
 		} catch (JsonIOException e) {
 			Main.console.err("JSON IO error: " + e);
@@ -228,7 +228,7 @@ public class LogStreamManager implements CommunicatorListener {
 		HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
 		annotatedVariables.putAll(dataStructures);
 		Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables, sources);
-		printLog(targetPath, new Wrapper(header, operations), autoName);
+		printLog(targetPath, new CRoot(header, operations), autoName);
 	}
 
 	/**
@@ -241,7 +241,7 @@ public class LogStreamManager implements CommunicatorListener {
 		HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
 		annotatedVariables.putAll(dataStructures);
 		Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables, null);
-		return stream(new Wrapper(header, operations));
+		return stream(new CRoot(header, operations));
 	}
 
 	/**
@@ -269,7 +269,7 @@ public class LogStreamManager implements CommunicatorListener {
 	 *            The Wrapper to stream.
 	 * @return True if successful, false otherwise.
 	 */
-	public boolean stream(Wrapper wrapper) {
+	public boolean stream(CRoot wrapper) {
 		return communicator.sendWrapper(wrapper);
 	}
 
@@ -284,7 +284,7 @@ public class LogStreamManager implements CommunicatorListener {
 	public boolean stream(Operation operation) {
 		ArrayList<Operation> operations = new ArrayList<Operation>();
 		operations.add(operation);
-		return stream(new Wrapper(null, operations));
+		return stream(new CRoot(null, operations));
 	}
 
 	/**
@@ -308,7 +308,7 @@ public class LogStreamManager implements CommunicatorListener {
 	 * @return True if successful, false otherwise.
 	 */
 	public boolean streamOperations(List<Operation> operations) {
-		return stream(new Wrapper(null, operations));
+		return stream(new CRoot(null, operations));
 	}
 
 	/**
@@ -323,7 +323,7 @@ public class LogStreamManager implements CommunicatorListener {
 		HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
 		annotatedVariables.put(annotatedVariable.identifier, annotatedVariable);
 		Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables, null);
-		return stream(new Wrapper(header, null));
+		return stream(new CRoot(header, null));
 	}
 
 	/**
@@ -334,9 +334,9 @@ public class LogStreamManager implements CommunicatorListener {
 	 *            The Wrappers to stream.
 	 * @return True if ALL wrappers successfully sent, false otherwise.
 	 */
-	public boolean streamWrappers(List<Wrapper> wrappers) {
+	public boolean streamWrappers(List<CRoot> wrappers) {
 		boolean allSuccessful = true;
-		for (Wrapper w : wrappers) {
+		for (CRoot w : wrappers) {
 			allSuccessful = allSuccessful && communicator.sendWrapper(w);
 		}
 		return allSuccessful;
@@ -346,10 +346,10 @@ public class LogStreamManager implements CommunicatorListener {
 		HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
 		annotatedVariables.putAll(dataStructures);
 		Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables, null);
-		printSimpleLog(targetPath + "simple.log", new Wrapper(header, operations));
+		printSimpleLog(targetPath + "simple.log", new CRoot(header, operations));
 	}
 
-	public void printSimpleLog(String targetPath, Wrapper wrapper) {
+	public void printSimpleLog(String targetPath, CRoot wrapper) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(
 				"This is a simplified version of the log. It sacrifices completeness for readability and cannot be processed by "
@@ -382,7 +382,7 @@ public class LogStreamManager implements CommunicatorListener {
 	 * @param autoName
 	 *            if {@code true}, a name will be automatically generated.
 	 */
-	public void printLog(String targetPath, Wrapper wrapper, boolean autoName) {
+	public void printLog(String targetPath, CRoot wrapper, boolean autoName) {
 		Gson GSON;
 		DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd_HHmmss");
 		Calendar cal = Calendar.getInstance();
@@ -415,7 +415,7 @@ public class LogStreamManager implements CommunicatorListener {
 	 *            The wrapper to unwrap.
 	 * @return True if the wrapper was successfully unwrapped. False otherwise.
 	 */
-	public boolean unwrap(Wrapper wrapper) {
+	public boolean unwrap(CRoot wrapper) {
 		if (wrapper.header != null) {
 			if (wrapper.header.annotatedVariables != null) {
 				for (AnnotatedVariable av : wrapper.header.annotatedVariables.values()) {
@@ -445,7 +445,7 @@ public class LogStreamManager implements CommunicatorListener {
 	 *         otherwise.
 	 */
 	public boolean unwrap(String json) {
-		Wrapper w = gson.fromJson(json, Wrapper.class);
+		CRoot w = gson.fromJson(json, CRoot.class);
 		return unwrap(w);
 	}
 
@@ -456,8 +456,8 @@ public class LogStreamManager implements CommunicatorListener {
 		}
 		// Handle Wrapper messagess
 		if (messageType == CommunicatorMessage.WRAPPER) {
-			List<Wrapper> wrappers = communicator.getAllQueuedMessages();
-			for (Wrapper w : wrappers) {
+			List<CRoot> wrappers = communicator.getAllQueuedMessages();
+			for (CRoot w : wrappers) {
 				if (unwrap(w) == false) {
 					return;
 				}

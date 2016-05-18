@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import contract.Operation;
-import contract.operations.Consolidable;
-import contract.operations.OP_ReadWrite;
-import contract.operations.OP_Swap;
-import contract.operations.OperationType;
+import contract.operation.Consolidable;
+import contract.operation.OP_ReadWrite;
+import contract.operation.OP_Swap;
+import contract.operation.OperationType;
 
 /**
 	 * A Consolidator attempts to consolidate low level (read/write) operations

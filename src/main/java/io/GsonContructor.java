@@ -11,10 +11,10 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 
 import contract.AnnotatedVariable;
-import contract.datastructures.RawType;
-import contract.datastructures.VisualType;
-import contract.datastructures.RawType.AbstractType;
-import contract.operations.Key;
+import contract.datastructure.RawType;
+import contract.datastructure.VisualType;
+import contract.datastructure.RawType.AbstractType;
+import contract.operation.Key;
 
 public abstract class GsonContructor {
 

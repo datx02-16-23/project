@@ -3,7 +3,7 @@ package io;
 import java.io.Serializable;
 import java.util.List;
 
-import contract.Wrapper;
+import contract.CRoot;
 
 public interface Communicator {
 	/**
@@ -12,14 +12,14 @@ public interface Communicator {
 	 * 
 	 * @return The first received Wrapper in queue.
 	 */
-	public Wrapper popQueuedMessage();
+	public CRoot popQueuedMessage();
 
 	/**
 	 * Returns the all received Wrappers in queue.
 	 * 
 	 * @return The all received Wrappers in queue.
 	 */
-	public List<Wrapper> getAllQueuedMessages();
+	public List<CRoot> getAllQueuedMessages();
 
 	/**
 	 * /** Send the given Wrapper to all everyone listening on the current
@@ -29,7 +29,7 @@ public interface Communicator {
 	 *            The Wrapper to send.
 	 * @return True if message was sent, false otherwise.
 	 */
-	public boolean sendWrapper(Wrapper outgoing);
+	public boolean sendWrapper(CRoot outgoing);
 
 	/**
 	 * Send all Wrappers to everyone listening on the current channel.
@@ -38,7 +38,7 @@ public interface Communicator {
 	 *            The list of Wrappers to send.
 	 * @return True if all wrappers were successfully sent.
 	 */
-	public boolean sendWrappers(List<Wrapper> outgoing);
+	public boolean sendWrappers(List<CRoot> outgoing);
 
 	/**
 	 * Close any communications that can cause leaks.

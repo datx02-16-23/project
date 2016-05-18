@@ -5,8 +5,8 @@ import java.util.Map;
 
 import contract.Locator;
 import contract.Operation;
-import contract.datastructures.DataStructure;
-import contract.operations.*;
+import contract.datastructure.DataStructure;
+import contract.operation.*;
 import gui.Main;
 
 public class Step {

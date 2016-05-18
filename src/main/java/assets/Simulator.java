@@ -9,8 +9,8 @@ import java.util.Map;
 import com.google.gson.GsonBuilder;
 
 import contract.*;
-import contract.datastructures.*;
-import contract.operations.*;
+import contract.datastructure.*;
+import contract.operation.*;
 import interpreter.Interpreter;
 import io.CommunicatorListener;
 import io.JGroupCommunicator;
@@ -546,12 +546,12 @@ public class Simulator extends Application {
 			build();
 		}
 
-		private Wrapper initWrapper;
+		private CRoot initWrapper;
 		private List<Operation> ops;
 		private List<Operation> inits;
 
 		private void build() {
-			initWrapper = new Wrapper(new Header(1337, buildStructs(), buildSources()), null);
+			initWrapper = new CRoot(new Header(1337, buildStructs(), buildSources()), null);
 			ops = buildOps();
 		}
 
@@ -671,7 +671,7 @@ public class Simulator extends Application {
 		public void transmitOperation(Operation op) {
 			ArrayList<Operation> operationList = new ArrayList<Operation>();
 			operationList.add(op);
-			Wrapper message = new Wrapper(null, operationList);
+			CRoot message = new CRoot(null, operationList);
 			Platform.runLater(new Runnable() {
 
 				@Override
@@ -741,7 +741,7 @@ public class Simulator extends Application {
 		}
 
 		// Receiver stuff
-		public boolean transmit(Wrapper wrapper) {
+		public boolean transmit(CRoot wrapper) {
 			try {
 				LSM.stream(wrapper);
 			} catch (Exception e) {

@@ -3,11 +3,10 @@ package gui;
 
 
 import assets.Strings;
-import assets.examples.Examples;
-import assets.examples.Examples.Algorithm;
-import draw.Visualization;
-import gui.panels.OperationPanel;
-import gui.panels.SourcePanel;
+import assets.example.Examples;
+import assets.example.Examples.Algorithm;
+import gui.panel.OperationPanel;
+import gui.panel.SourcePanel;
 import io.LogStreamManager;
 import javafx.application.Application;
 import javafx.application.Platform;

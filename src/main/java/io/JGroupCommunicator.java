@@ -12,7 +12,7 @@ import org.jgroups.ReceiverAdapter;
 import com.google.gson.Gson;
 
 import assets.Strings;
-import contract.Wrapper;
+import contract.CRoot;
 import gui.Main;
 
 /**
@@ -42,7 +42,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
 	private int senderId;
 	private short senderMode;
 	private String channel;
-	private final List<Wrapper> incomingQueue;
+	private final List<CRoot> incomingQueue;
 	private final CommunicatorListener listener;
 	private final Gson gson;
 	private JChannel jChannel;
@@ -100,7 +100,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
 		this.suppressIncoming = suppressIncoming;
 		setNativeSenderMode();
 		gson = new Gson();
-		incomingQueue = new ArrayList<Wrapper>();
+		incomingQueue = new ArrayList<CRoot>();
 		allTransmitters = new HashMap<Integer, String>();
 		try {
 			jChannel = new JChannel("udp.xml");
@@ -187,14 +187,14 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
 			if (suppressIncoming) {
 				return;
 			}
-			addAndFireEvent((Wrapper) message.payload);
+			addAndFireEvent((CRoot) message.payload);
 			break;
 		case CommunicatorMessage.JSON:
 			if (suppressIncoming) {
 				return;
 			}
 			try {
-				addAndFireEvent(gson.fromJson((String) message.payload, Wrapper.class));
+				addAndFireEvent(gson.fromJson((String) message.payload, CRoot.class));
 			} catch (Exception e) {
 				Main.console.err("JSON String malformed: " + message.payload);
 			}
@@ -303,7 +303,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
 	 * @return The first received Wrapper in queue.
 	 */
 	@Override
-	public Wrapper popQueuedMessage() {
+	public CRoot popQueuedMessage() {
 		return incomingQueue.remove(0);
 	}
 
@@ -313,8 +313,8 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
 	 * @return The all received Wrappers in queue.
 	 */
 	@Override
-	public List<Wrapper> getAllQueuedMessages() {
-		ArrayList<Wrapper> allQueuedMessages = new ArrayList<Wrapper>();
+	public List<CRoot> getAllQueuedMessages() {
+		ArrayList<CRoot> allQueuedMessages = new ArrayList<CRoot>();
 		if (incomingQueue.isEmpty() == false) {
 			allQueuedMessages.addAll(incomingQueue);
 			incomingQueue.clear();
@@ -329,7 +329,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
 	 *            The Wrapper to send.
 	 */
 	@Override
-	public boolean sendWrapper(Wrapper outgoing) {
+	public boolean sendWrapper(CRoot outgoing) {
 		Message outMessage = new Message();
 		if (senderMode == SENDER_MODE_NATIVE) {
 			outMessage.setObject(new CommunicatorMessage(outgoing, this.senderId, CommunicatorMessage.WRAPPER));
@@ -372,9 +372,9 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
 	}
 
 	@Override
-	public boolean sendWrappers(List<Wrapper> outgoing) {
+	public boolean sendWrappers(List<CRoot> outgoing) {
 		boolean allSuccessful = true;
-		for (Wrapper w : outgoing) {
+		for (CRoot w : outgoing) {
 			allSuccessful = allSuccessful && sendWrapper(w);
 		}
 		return allSuccessful;
@@ -395,7 +395,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
 	 * @param w
 	 *            The wrapper to add the the incoming queue.
 	 */
-	private void addAndFireEvent(Wrapper w) {
+	private void addAndFireEvent(CRoot w) {
 		incomingQueue.add(w);
 		listener.messageReceived(CommunicatorMessage.WRAPPER);
 	}

@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 import assets.Strings;
-import contract.operations.Key;
-import contract.operations.OperationType;
+import contract.operation.Key;
+import contract.operation.OperationType;
 
 /**
  * Abstract wrapper class containing the necessary data to recreate a given

@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import contract.Operation;
-import contract.operations.*;
+import contract.operation.*;
 import gui.Main;
 
 /**

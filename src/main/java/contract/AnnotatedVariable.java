@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import assets.Strings;
-import contract.datastructures.RawType;
-import contract.datastructures.VisualType;
+import contract.datastructure.RawType;
+import contract.datastructure.VisualType;
 
 /**
  * The declaration for an annotated (observed) variable in source.
