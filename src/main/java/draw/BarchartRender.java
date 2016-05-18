@@ -1,11 +1,11 @@
-package render;
+package draw;
 
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
+import draw.element.VisualElement;
 import javafx.scene.paint.Color;
-import render.element.VisualElement;
 
-public class BarchartRender extends AbsRender {
+public class BarchartRender extends _Render {
 
 	public BarchartRender(DataStructure struct, double width, double height, double hspace, double vspace) {
 		super(struct, width, height, hspace, vspace);
@@ -45,8 +45,7 @@ public class BarchartRender extends AbsRender {
 
 	@Override
 	protected void bellsAndWhistles(Element e, VisualElement ve) {
-		// TODO Auto-generated method stub
-		
+		System.out.println("bar: baw shape = " + ve.getShape());
 	}
 
 }

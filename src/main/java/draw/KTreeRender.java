@@ -1,4 +1,4 @@
-package render;
+package draw;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,15 +6,15 @@ import java.util.Arrays;
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
 import contract.datastructure.Array.IndexedElement;
+import draw.element.ElemShape;
+import draw.element._VisualElementFactory;
+import draw.element.VisualElement;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import render.element.ElementShape;
-import render.element.VisElemFact;
-import render.element.VisualElement;
 
-public class KTreeRender extends AbsRender {
+public class KTreeRender extends _Render {
 
 	/**
 	 * Container for connector lines.
@@ -79,6 +79,8 @@ public class KTreeRender extends AbsRender {
 	 */
 	@Override
 	protected void bellsAndWhistles(Element ae, VisualElement childVis) {
+		System.out.println("ktree: baw shape = " + childVis.getShape());
+		
 		IndexedElement parent_clone = new IndexedElement(0,
 				new int[] { (((IndexedElement) ae).getIndex()[0] - 1) / K });
 
@@ -248,7 +250,7 @@ public class KTreeRender extends AbsRender {
 
 	@Override
 	protected VisualElement createVisualElement(Element e) {
-		VisualElement ve = VisElemFact.create(ElementShape.ELLIPSE, e, node_width, node_height);
+		VisualElement ve = _VisualElementFactory.shape(ElemShape.ELLIPSE, e, node_width, node_height);
 		ve.setInfoPos(Pos.TOP_LEFT);
 		ve.setInfoArray(((IndexedElement) e).getIndex());
 		return ve;
@@ -256,7 +258,7 @@ public class KTreeRender extends AbsRender {
 
 	@Override
 	protected VisualElement createVisualElement(double value, Color color) {
-		VisualElement ve = VisElemFact.create(ElementShape.ELLIPSE, value, color, node_width, node_height);
+		VisualElement ve = _VisualElementFactory.shape(ElemShape.ELLIPSE, value, color, node_width, node_height);
 		ve.setInfoPos(null);
 		return ve;
 	}

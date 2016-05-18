@@ -1,12 +1,12 @@
-package render;
+package draw;
 
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
+import draw.element.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import render.element.*;
 
-public class SingleElementRender extends AbsRender {
+public class SingleElementRender extends _Render {
 
 	/**
 	 * Create a new SingleElementRender.
@@ -74,21 +74,26 @@ public class SingleElementRender extends AbsRender {
 
 	@Override
 	protected VisualElement createVisualElement(Element e) {
-		VisualElement re = VisElemFact.create(ElementShape.RECTANGLE, e, node_width, node_height);
+//		VisualElement re = VisElemFact.create(ElementShape.RECTANGLE, e, node_width, node_height);
+		VisualElement re = _VisualElementFactory.shape(ElemShape.ELLIPSE, e, node_width, node_height);
 		re.setInfoPos(null);
 		return re;
 	}
 
 	@Override
 	protected VisualElement createVisualElement(double value, Color color) {
-		VisualElement re = VisElemFact.create(ElementShape.RECTANGLE, value, color, node_width, node_height);
+		VisualElement re = _VisualElementFactory.shape(ElemShape.ELLIPSE, value, color, node_width, node_height);
+//		VisualElement re = VisElemFact.create(ElementShape.RECTANGLE, value, color, node_width, node_height);
 		re.setInfoPos(null);
 		return re;
 	}
 
 	@Override
 	protected void bellsAndWhistles(Element e, VisualElement ve) {
-		System.out.println("bellsAndWhistles shape = " + ve.getShape());
+		System.out.println("single: bells shape = " + ve.getShape());
+		if(ve.getShape() == null){
+			return;
+		}
 		((Rectangle) ve.getShape()).setArcWidth(node_width/4);
 		((Rectangle) ve.getShape()).setArcHeight(node_height/4);
 	}

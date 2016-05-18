@@ -1,4 +1,4 @@
-package render;
+package draw;
 
 import java.util.HashMap;
 
@@ -14,7 +14,7 @@ import javafx.scene.layout.Pane;
  * @author Richard Sundqvist
  *
  */
-public class RenderManager extends BorderPane implements VisualListener {
+public class _Manager extends BorderPane implements VisualListener {
 	/**
 	 * The data structure this thingy is responsible for.
 	 */
@@ -26,14 +26,14 @@ public class RenderManager extends BorderPane implements VisualListener {
 	private final Pane animation_pane;
 
 	/**
-	 * Mapping of visualizations for the structure.
+	 * Mapping of renders for the structure.
 	 */
-	private final HashMap<VisualType, AbsRender> renders = new HashMap<VisualType, AbsRender>();
+	private final HashMap<VisualType, _Render> renders = new HashMap<VisualType, _Render>();
 
 	/**
 	 * The current render for the structure.
 	 */
-	private AbsRender render;
+	private _Render render;
 
 	// Used to maintain settings when changing renders.
 	private double scaleX = 1;
@@ -42,7 +42,7 @@ public class RenderManager extends BorderPane implements VisualListener {
 	private double translateY = 0;
 	private double layoutX = 0;
 	private double layoutY = 0;
-	private AbsRender oldRender;
+	private _Render oldRender;
 
 	/**
 	 * Create a new thingy.
@@ -53,10 +53,10 @@ public class RenderManager extends BorderPane implements VisualListener {
 	 *            The Pane used for drawing animations. Will use own canvas if
 	 *            null.
 	 */
-	public RenderManager(DataStructure struct, Pane animation_pane) {
+	public _Manager(DataStructure struct, Pane animation_pane) {
 		this.struct = struct;
 		this.animation_pane = animation_pane;
-		this.setPickOnBounds(false);
+		this.setPickOnBounds(false); //Mouse fix.
 		
 		setRender(struct.visual);
 	}
@@ -111,14 +111,14 @@ public class RenderManager extends BorderPane implements VisualListener {
 	 * @param struct
 	 *            The DataStructure to create a Render for.
 	 */
-	public AbsRender resolveRender(DataStructure struct) {
+	public _Render resolveRender(DataStructure struct) {
 		VisualType visual = struct.resolveVisual();
 		switch (visual) {
 		case bar:
 			// TODO
 			break;
 		case box:
-			render = new GridRender(struct, GridRender.Order.resolve(struct.visualOption), 40, 40, 0, 0);
+			render = new GridRender(struct, GridRender.Order.resolve(struct.visualOption), 40, 40, 3, 3);
 			break;
 		case tree:
 			render = new KTreeRender(struct, struct.visualOption, 40, 40, 5, 5);
@@ -141,7 +141,7 @@ public class RenderManager extends BorderPane implements VisualListener {
 	 * 
 	 * @return The current Render for the structure.
 	 */
-	public AbsRender getRender() {
+	public _Render getRender() {
 		return render;
 	}
 	

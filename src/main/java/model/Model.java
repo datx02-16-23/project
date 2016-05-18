@@ -10,7 +10,7 @@ import contract.datastructure.DataStructure;
 
 public class Model {
 
-	private static Model INSTANCE;
+	private static final Model INSTANCE = new Model();
 	private Step step = new Step();
 	private final List<Operation> operations = new ArrayList<Operation>();
 	private int index;
@@ -22,13 +22,7 @@ public class Model {
 	 * @return The Model instance.
 	 */
 	public static Model instance() {
-		if (INSTANCE == null) {
-			INSTANCE = new Model();
-		}
 		return INSTANCE;
-	}
-
-	private Model() {
 	}
 
 	public void reset() {
@@ -80,6 +74,7 @@ public class Model {
 	 *         otherwise.
 	 */
 	public boolean stepForward() {
+		System.out.println("\t " + (index + 1));
 		if (tryStepForward()) {
 			step.applyOperation(operations.get(index));
 			index += 1;
@@ -181,8 +176,9 @@ public class Model {
 	}
 
 	/**
-	 * Returns the DataStructure map held by this Model. <b>SHOULD NOT BE USED
-	 * TO ADD OR REMOVE STRUCTURES FROM THE MODEL!</b>
+	 * Returns the DataStructure map held by this Model.<br>
+	 * <br>
+	 * <b>Should not be used to add or remove structures!</b>
 	 * 
 	 * @return The DataStructure map held by this Model.
 	 */
@@ -191,8 +187,9 @@ public class Model {
 	}
 
 	/**
-	 * Returns the Operation list held by this Model. <b>SHOULD NOT BE USED TO
-	 * ADD OR REMOVE OPERATIONS FROM THE MODEL!</b>
+	 * Returns the Operation list held by this Model.<br>
+	 * <br>
+	 * <b>Should not be used to add or removed operations!</b>
 	 * 
 	 * @return The Operation list held by this Model.
 	 */

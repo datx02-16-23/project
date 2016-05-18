@@ -1,4 +1,4 @@
-package render.element;
+package draw.element;
 
 import contract.datastructure.Element;
 import javafx.scene.paint.Color;
@@ -41,20 +41,20 @@ public class EllipseElement extends VisualElement {
 	@Override
 	public Shape createShape() {
 		Ellipse ellipse = new Ellipse();
-		ellipse.setRadiusX(node_width / 2);
-		ellipse.setRadiusY(node_height / 2);
+		ellipse.setRadiusX(width / 2);
+		ellipse.setRadiusY(height / 2);
 		ellipse.setStroke(Color.BLACK);
 		return ellipse;
 	}
 
-	public EllipseElement clone() {
-		EllipseElement clone;
-		if (element == null) {
-			clone = new EllipseElement(Double.parseDouble(value.getText()), shape.getFill(), node_width, node_height);
-		} else {
-			clone = new EllipseElement(element, node_width, node_height);
-
-		}
-		return clone;
-	}
+//	public EllipseElement clone() {
+//		EllipseElement clone;
+//		if (element == null) {
+//			clone = new EllipseElement(Double.parseDouble(value.getText()), shape.getFill(), node_width, node_height);
+//		} else {
+//			clone = new EllipseElement(element, node_width, node_height);
+//
+//		}
+//		return clone;
+//	}
 }

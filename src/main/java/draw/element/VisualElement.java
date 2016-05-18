@@ -1,4 +1,4 @@
-package render.element;
+package draw.element;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -6,6 +6,7 @@ import java.util.Arrays;
 import contract.datastructure.Element;
 import contract.operation.OperationCounter;
 import gui.Main;
+import javafx.animation.RotateTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -16,8 +17,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
+import javafx.util.Duration;
 
 /**
  * A visualisation element. Elements which use the
@@ -29,9 +30,14 @@ import javafx.scene.shape.Shape;
  * @author Richard Sundqvist
  *
  */
-public class VisualElement extends Pane {
+public abstract class VisualElement extends Pane {
 
-	private static final String url = "/visualization/FXMLElement.fxml";
+	private static final String url = "/render/FXMLElement.fxml";
+	
+	/**
+	 * Enum indicating the shape of this polygon. Used by the factory.
+	 */
+	public ElemShape elemShape;
 
 	/**
 	 * Current info label position.
@@ -56,12 +62,12 @@ public class VisualElement extends Pane {
 	/**
 	 * Width and height of the nodes.
 	 */
-	protected double node_width, node_height;
+	protected double width, height;
 
 	/**
 	 * Points used by Polygons.
 	 */
-	private final double[] points;
+	protected final double[] points;
 
 	/**
 	 * Create a static, unbound VisualElement.
@@ -149,23 +155,16 @@ public class VisualElement extends Pane {
 	}
 
 	/**
-	 * Create a shape to use as the holder of the element value. The default
-	 * implementation will create a trapezoid using the {@link VisElemFact#trapezoid}
-	 * method.
+	 * Create a shape to use as the holder of the element value. Must never return null.
 	 * 
 	 * @return A Shape to display the element in.
 	 */
-	public Shape createShape() {
-		Polygon p = new Polygon(points != null ? points : VisElemFact.trapezoid(node_width, node_height));
-		p.setStroke(Color.BLACK);
-		return p;
-	}
+	public abstract Shape createShape();
 
 	private void init(double node_width, double node_height) {
 
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(url));
 		fxmlLoader.setController(this);
-		// fxmlLoader.setController(this);
 
 		try {
 			root = (GridPane) fxmlLoader.load();
@@ -173,17 +172,14 @@ public class VisualElement extends Pane {
 			e.printStackTrace();
 			System.exit(-1);
 		}
-		this.node_height = node_height;
-		this.node_width = node_width;
+		this.height = node_height;
+		this.width = node_width;
 
 		Pane shapePane = (Pane) fxmlLoader.getNamespace().get("shape");
 		shapePane.setCursor(Cursor.HAND);
-		System.out.println("create shape");
 		shape = createShape();
-		System.out.println("shape created");
 		shape.setPickOnBounds(true);
 		shapePane.setPickOnBounds(true);
-		shape.setPickOnBounds(true);
 		shapePane.getChildren().add(shape);
 
 		value = (Label) fxmlLoader.getNamespace().get("value");
@@ -215,6 +211,7 @@ public class VisualElement extends Pane {
 	 * Listener for the onMouseClicked event.
 	 */
 	public void onMouseClicked() {
+		showClicked();
 		OperationCounter oc = element.getCounter();
 		Main.console.info("Statistics for \"" + element + "\":");
 		Main.console.info("\tReads: " + oc.getReads());
@@ -223,11 +220,20 @@ public class VisualElement extends Pane {
 	}
 
 	/**
+	 * Indicate to the user that the element has been clicked.
+	 */
+	private void showClicked() {
+	     RotateTransition rt = new RotateTransition(Duration.millis(600), shape);
+	     rt.setByAngle(360);
+	     rt.play();
+	}
+
+	/**
 	 * Listener for the onMouseEntered event.
 	 */
 	public void onMouseEntered() {
-		root.setScaleX(1.25);
-		root.setScaleY(1.25);
+		root.setScaleX(1.20);
+		root.setScaleY(1.20);
 		this.toFront();
 	}
 
@@ -333,25 +339,25 @@ public class VisualElement extends Pane {
 
 		switch (pos.getHpos()) {
 		case LEFT:
-			tx = -(node_width / 2 + textW);
+			tx = -(width / 2 + textW);
 			break;
 		case CENTER:
 			//tx already 0.
 			break;
 		case RIGHT:
-			tx = node_width / 2 + textW;
+			tx = width / 2 + textW;
 			break;
 		}
 
 		switch (pos.getVpos()) {
 		case BOTTOM:
-			ty = node_height / 2 + textH;
+			ty = height / 2 + textH;
 			break;
 		case CENTER:
 			//ty already 0.
 			break;
 		case TOP:
-			ty = -(node_height / 2 + textH);
+			ty = -(height / 2 + textH);
 			break;
 		}
 
@@ -360,23 +366,6 @@ public class VisualElement extends Pane {
 	}
 
 	public VisualElement clone() {
-		VisualElement clone = null;
-		if (points != null) {
-			if (element == null) {
-				clone = new VisualElement(Double.parseDouble(value.getText()), shape.getFill(), node_width, node_height,
-						points);
-			} else {
-				clone = new VisualElement(element, node_width, node_height, points);
-			}
-		} else {
-			if (element == null) {
-				clone = new VisualElement(Double.parseDouble(value.getText()), shape.getFill(), node_width,
-						node_height);
-			} else {
-				clone = new VisualElement(element, node_width, node_height);
-			}
-		}
-
-		return clone;
+		return _VisualElementFactory.clone(this);
 	}
 }

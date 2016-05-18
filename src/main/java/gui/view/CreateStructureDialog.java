@@ -8,6 +8,8 @@ import contract.datastructure.DataStructure;
 import contract.datastructure.IndependentElement;
 import contract.datastructure.RawType;
 import contract.datastructure.VisualType;
+import draw._Render;
+import draw._Render.RenderSVF;
 import gui.Main;
 import gui.Controller;
 import javafx.collections.FXCollections;
@@ -21,8 +23,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import render.AbsRender;
-import render.AbsRender.RenderSVF;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class CreateStructureDialog {
@@ -189,7 +189,7 @@ public class CreateStructureDialog {
 
 	private void setSpinner(VisualType vt) {
 		if (vt.has_options) {
-			RenderSVF rsvf = AbsRender.RenderSVF.resolve(struct);
+			RenderSVF rsvf = _Render.RenderSVF.resolve(struct);
 			if (rsvf == null) {
 				visOption.setDisable(true); // Failed to fetch options.
 			} else {

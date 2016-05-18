@@ -1,7 +1,8 @@
-package render.element;
+package draw.element;
 
 import contract.datastructure.Element;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Shape;
 
 public class PolygonElement extends VisualElement {
@@ -42,7 +43,7 @@ public class PolygonElement extends VisualElement {
 	}
 
 	@Override
-	public Shape createShape() {
-		return super.createShape();
+	public Shape createShape(){
+		return new Polygon(_VisualElementFactory.scalePolygon(width, height, points));
 	}
 }

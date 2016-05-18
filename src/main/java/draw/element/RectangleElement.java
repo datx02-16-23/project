@@ -1,4 +1,4 @@
-package render.element;
+package draw.element;
 
 import contract.datastructure.Element;
 import javafx.scene.paint.Color;
@@ -41,20 +41,20 @@ public class RectangleElement extends VisualElement {
 	@Override
 	public Shape createShape() {
 		Rectangle rectangle = new Rectangle();
-		rectangle.setWidth(node_width);
-		rectangle.setHeight(node_height);
+		rectangle.setWidth(width);
+		rectangle.setHeight(height);
 		rectangle.setStroke(Color.BLACK);
 		return rectangle;
 	}
 	
-	public RectangleElement clone() {
-		RectangleElement clone;
-		if (element == null) {
-			clone = new RectangleElement(Double.parseDouble(value.getText()), shape.getFill(), node_width, node_height);
-		} else {
-			clone = new RectangleElement(element, node_width, node_height);
-
-		}
-		return clone;
-	}
+//	public RectangleElement clone() {
+//		RectangleElement clone;
+//		if (element == null) {
+//			clone = new RectangleElement(Double.parseDouble(value.getText()), shape.getFill(), node_width, node_height);
+//		} else {
+//			clone = new RectangleElement(element, node_width, node_height);
+//
+//		}
+//		return clone;
+//	}
 }

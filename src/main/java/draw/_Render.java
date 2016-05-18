@@ -1,4 +1,4 @@
-package render;
+package draw;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,6 +11,8 @@ import contract.datastructure.Element;
 import contract.datastructure.Array.IndexedElement;
 import contract.operation.OP_Remove;
 import contract.operation.OperationCounter;
+import draw.GridRender.Order;
+import draw.element.VisualElement;
 import gui.Main;
 import gui.Controller;
 import javafx.animation.FadeTransition;
@@ -42,10 +44,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
-import render.GridRender.Order;
-import render.element.VisualElement;
 
-public abstract class AbsRender extends Pane {
+public abstract class _Render extends Pane {
 
 	/*
 	 * Shared stuff.
@@ -54,7 +54,7 @@ public abstract class AbsRender extends Pane {
 	private static final Background ORPHAN_BACKGROUND = createOrphanBg();
 	private static final Background TREE_BACKGROUND = createTreeBg();
 	private static final Border BORDER_MOUSEOVER = getMOBorder();
-	private static final String url = "/visualization/RenderBase.fxml";
+	private static final String url = "/render/RenderBase.fxml";
 
 	/**
 	 * Default node width.
@@ -144,7 +144,7 @@ public abstract class AbsRender extends Pane {
 	 * @param struct
 	 *            The DataStructure this Render will draw.
 	 */
-	public AbsRender(DataStructure struct) {
+	public _Render(DataStructure struct) {
 		this(struct, DEFAULT_NODE_WIDTH, DEFAULT_NODE_HEIGHT, DEFAULT_NODE_HSPACE, DEFAULT_NODE_VSPACE);
 	}
 
@@ -162,7 +162,7 @@ public abstract class AbsRender extends Pane {
 	 * @param vspace
 	 *            The vertical space between elements in this Render.
 	 */
-	public AbsRender(DataStructure struct, double width, double height, double hspace, double vspace) {
+	public _Render(DataStructure struct, double width, double height, double hspace, double vspace) {
 		this.struct = struct;
 
 		this.node_width = width;
@@ -243,7 +243,7 @@ public abstract class AbsRender extends Pane {
 	 * @param millis
 	 *            The time in milliseconds the animation should last.
 	 */
-	public void animateReadWrite(Element src, AbsRender src_rndr, Element tar, AbsRender tar_rndr, long millis) {
+	public void animateReadWrite(Element src, _Render src_rndr, Element tar, _Render tar_rndr, long millis) {
 		/*
 		 * Target is unknown. READ: this -> [x]
 		 */
@@ -282,7 +282,7 @@ public abstract class AbsRender extends Pane {
 	 * @param millis
 	 *            The time in milliseconds the animation should last.
 	 */
-	public void animateSwap(Element var1, AbsRender var1_rndr, Element var2, AbsRender var2_rndr, long millis) {
+	public void animateSwap(Element var1, _Render var1_rndr, Element var2, _Render var2_rndr, long millis) {
 		var1_rndr.fade_option = "swap";
 		var1_rndr.animate(var2, var1_rndr.absX(var1), var1_rndr.absY(var1), var2_rndr.absX(var2), var2_rndr.absY(var2),
 				millis);
