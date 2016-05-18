@@ -248,16 +248,16 @@ public abstract class _Render extends Pane {
 		 * Target is unknown. READ: this -> [x]
 		 */
 		if (tar == null) {
-			src_rndr.fade_option = "fade_out";
-			src_rndr.animate(src, src_rndr.absX(src), src_rndr.absY(src), // From
-					src_rndr.absX(src) - node_width * 0.5, src_rndr.absY(src) - node_height * 1.5, millis); // To
+			fade_option = "fade_out";
+			animate(src, absX(src), absY(src), // From
+					absX(src) - node_width * 0.5, absY(src) - node_height * 1.5, millis); // To
 			/*
 			 * Source is unknown. WRITE: [x] -> this
 			 */
 		} else if (src == null) {
-			tar_rndr.fade_option = "fade_in";
-			tar_rndr.animate(tar, tar_rndr.absX(tar) + node_width * 0.5, tar_rndr.absY(tar) + node_height * 1.5, // From
-					tar_rndr.absX(tar), tar_rndr.absY(tar), millis); // To
+			fade_option = "fade_in";
+			animate(tar, absX(tar) + node_width * 0.5, absY(tar) + node_height * 1.5, // From
+					absX(tar), absY(tar), millis); // To
 			/*
 			 * Source and target are known.
 			 */
@@ -339,12 +339,9 @@ public abstract class _Render extends Pane {
 	public abstract double getY(Element e);
 
 	/**
-	 * Order the Render_FX to calculate it's size. The default implementation of
-	 * this method does nothing.
+	 * Order the render to calculate it's size.
 	 */
-	public void calculateSize() {
-		// Do nothing.
-	}
+	public abstract void calculateSize();
 
 	// Drag and Zoom
 	private double transX, transY;
@@ -441,7 +438,7 @@ public abstract class _Render extends Pane {
 
 		final VisualElement real = visualElementsMapping.get(Arrays.toString(i));
 		if (real == null) {
-			System.out.println("real = null");
+			System.err.println("Failed to resolve visual for: " + struct);
 			return;
 		}
 
@@ -784,9 +781,9 @@ public abstract class _Render extends Pane {
 	 * Boring crap.
 	 */
 	private static Background createArrayBg() {
-		return new Background(new BackgroundImage(
-				new Image(Controller.class.getResourceAsStream("/assets/array.png")), BackgroundRepeat.NO_REPEAT,
-				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
+		return new Background(new BackgroundImage(new Image(Controller.class.getResourceAsStream("/assets/array.png")),
+				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+				BackgroundSize.DEFAULT));
 	}
 
 	private static Background createOrphanBg() {
@@ -796,9 +793,9 @@ public abstract class _Render extends Pane {
 	}
 
 	private static Background createTreeBg() {
-		return new Background(new BackgroundImage(
-				new Image(Controller.class.getResourceAsStream("/assets/tree.png")), BackgroundRepeat.NO_REPEAT,
-				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
+		return new Background(new BackgroundImage(new Image(Controller.class.getResourceAsStream("/assets/tree.png")),
+				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+				BackgroundSize.DEFAULT));
 	}
 
 	private static Border getMOBorder() {

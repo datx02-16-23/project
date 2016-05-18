@@ -44,6 +44,6 @@ public class PolygonElement extends VisualElement {
 
 	@Override
 	public Shape createShape(){
-		return new Polygon(_VisualElementFactory.scalePolygon(width, height, points));
+		return new Polygon(VisualElementFactory.scalePolygon(width, height, points));
 	}
 }

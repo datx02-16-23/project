@@ -5,7 +5,7 @@ import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
 import contract.datastructure.Array.IndexedElement;
 import draw.element.ElemShape;
-import draw.element._VisualElementFactory;
+import draw.element.VisualElementFactory;
 import draw.element.VisualElement;
 import gui.Main;
 import javafx.geometry.Pos;
@@ -141,7 +141,7 @@ public class GridRender extends _Render {
 
 	@Override
 	protected VisualElement createVisualElement(Element e) {
-		VisualElement re = _VisualElementFactory.shape(ElemShape.RECTANGLE, e, node_width, node_height);
+		VisualElement re = VisualElementFactory.shape(ElemShape.RECTANGLE, e, node_width, node_height);
 		re.setInfoPos(Pos.BOTTOM_CENTER);
 		re.setInfoArray(((IndexedElement) e).getIndex());
 		return re;
@@ -149,7 +149,7 @@ public class GridRender extends _Render {
 
 	@Override
 	protected VisualElement createVisualElement(double value, Color color) {
-		VisualElement re = _VisualElementFactory.shape(ElemShape.RECTANGLE, value, color, node_width, node_height);
+		VisualElement re = VisualElementFactory.shape(ElemShape.RECTANGLE, value, color, node_width, node_height);
 		re.setInfoPos(null);
 		return re;
 	}

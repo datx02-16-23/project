@@ -74,14 +74,15 @@ public class Model {
 	 *         otherwise.
 	 */
 	public boolean stepForward() {
-		double[] test = {1, 2, 3, 5, 6, 7, 24, 26};
-		ArrayList<Double> test2 = new ArrayList<Double>();
-		for(double d : test){
-			test2.add(d-1);
-		}
-		if(test2.contains(new Double(index))){ 
-			System.out.println("\nop: " + operations.get(index));
-		}
+		//Dont remove yet!
+//		double[] test = {1, 2, 3, 5, 6, 7, 24, 26};
+//		ArrayList<Double> test2 = new ArrayList<Double>();
+//		for(double d : test){
+//			test2.add(d-1);
+//		}
+//		if(test2.contains(new Double(index))){ 
+//			System.out.println("\nop: " + operations.get(index));
+//		}
 		if (tryStepForward()) {
 			step.applyOperation(operations.get(index));
 			index += 1;

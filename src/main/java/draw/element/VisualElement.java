@@ -18,6 +18,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
@@ -61,14 +62,18 @@ public abstract class VisualElement extends Pane {
 	private GridPane root;
 
 	/**
-	 * Width and height of the nodes.
+	 * Width of the node.
 	 */
-	protected double width, height;
+	public double width;
+	/**
+	 * Height of the node.
+	 */
+	public double height;
 
 	/**
 	 * Points used by Polygons.
 	 */
-	protected final double[] points;
+	public final double[] points;
 
 	/**
 	 * Create a static, unbound VisualElement.
@@ -188,7 +193,6 @@ public abstract class VisualElement extends Pane {
 		info.setMouseTransparent(true);
 		info.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
 		root.getChildren().add(info);
-
 		getChildren().add(root);
 	}
 
@@ -221,19 +225,19 @@ public abstract class VisualElement extends Pane {
 		Main.console.info("\tWrites: " + oc.getWrites());
 		Main.console.info("\tSwaps: " + oc.getSwap());
 	}
-	
+
 	/**
 	 * Indicate to the user that the element has been clicked.
 	 */
 	private void showSelected() {
-		//Rotate.
+		// Rotate.
 		shape.setRotate(0);
 		shape.setStrokeWidth(5);
 		int sign = Math.random() < 0.2 ? -1 : 1;
 		RotateTransition rt = new RotateTransition(Duration.millis(900), shape);
 		rt.setByAngle(360 * sign);
 
-		//Change border, cannot see clicked on circular elements otherwise.
+		// Change border, cannot see clicked on circular elements otherwise.
 		StrokeTransition ft = new StrokeTransition(Duration.millis(900), shape, Color.BLACK, Color.SKYBLUE);
 		ft.setOnFinished(event -> {
 			shape.setStrokeWidth(1);
@@ -260,7 +264,7 @@ public abstract class VisualElement extends Pane {
 	public void onMouseExited() {
 		root.setScaleX(1);
 		root.setScaleY(1);
-		shape.setStrokeWidth(1);	
+		shape.setStrokeWidth(1);
 	}
 
 	/**
@@ -390,6 +394,6 @@ public abstract class VisualElement extends Pane {
 	}
 
 	public VisualElement clone() {
-		return _VisualElementFactory.clone(this);
+		return VisualElementFactory.clone(this);
 	}
 }

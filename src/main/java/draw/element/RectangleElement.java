@@ -46,15 +46,4 @@ public class RectangleElement extends VisualElement {
 		rectangle.setStroke(Color.BLACK);
 		return rectangle;
 	}
-	
-//	public RectangleElement clone() {
-//		RectangleElement clone;
-//		if (element == null) {
-//			clone = new RectangleElement(Double.parseDouble(value.getText()), shape.getFill(), node_width, node_height);
-//		} else {
-//			clone = new RectangleElement(element, node_width, node_height);
-//
-//		}
-//		return clone;
-//	}
 }

@@ -9,8 +9,9 @@ import javafx.scene.paint.Paint;
  * @author Richard Sundqvist
  *
  */
-public abstract class _VisualElementFactory {
-	private _VisualElementFactory() {
+public abstract class VisualElementFactory {
+
+	private VisualElementFactory() {
 	} // Not to be instantiated.
 
 	/**
@@ -18,39 +19,45 @@ public abstract class _VisualElementFactory {
 	 * 
 	 * @param shape
 	 *            The shape of the element.
-	 * @param primary
+	 * @param e
+	 *            The element to bind to.
+	 * @param pri
 	 *            Primary size value, usually width.
-	 * @param secondary
+	 * @param sec
 	 *            Secondary size value, usually height. Sometimes ignored for
 	 *            shapes like circles.
 	 * @return The element to bind.
 	 */
-	public static VisualElement shape(ElemShape shape, Element e, double primary, double secondary) {
+	public static VisualElement shape(ElemShape shape, Element e, double pri, double sec) {
 		VisualElement vis = null;
 
 		switch (shape) {
 		case CIRCLE:
-			vis = new EllipseElement(e, primary, primary);
+			vis = new EllipseElement(e, pri, pri);
 			break;
 		case ELLIPSE:
-			vis = new EllipseElement(e, primary, secondary);
+			vis = new EllipseElement(e, pri, sec);
 			break;
 		case RECTANGLE:
-			vis = new RectangleElement(e, primary, secondary);
+			vis = new RectangleElement(e, pri, sec);
 			break;
 		case SQUARE:
-			vis = new RectangleElement(e, primary, primary);
+			vis = new RectangleElement(e, pri, pri);
 			break;
 		case TRAPEZOID:
-			vis = new PolygonElement(e, primary, secondary, trapezoid(primary, secondary));
+			vis = new PolygonElement(e, pri, sec, trapezoid(pri, sec));
 			break;
 		case TRIANGLE:
-			vis = new PolygonElement(e, primary, secondary, triangle(primary, secondary));
+			vis = new PolygonElement(e, pri, sec, triangle(pri, sec));
+			break;
+		case BAR_ELEMENT:
+			vis = new BarchartElement(e, pri, sec);
 			break;
 		default:
 			break;
 
 		}
+
 		vis.elemShape = shape;
 		return vis;
 	}
@@ -65,34 +72,37 @@ public abstract class _VisualElementFactory {
 	 *            The value of the element.
 	 * @param paint
 	 *            The paint to use
-	 * @param primary
+	 * @param pri
 	 *            Primary size value, usually width.
-	 * @param secondary
+	 * @param sec
 	 *            Secondary size value, usually height. Sometimes ignored for
 	 *            shapes like circles.
 	 * @return A VisualElement.
 	 */
-	public static VisualElement shape(ElemShape shape, double value, Paint paint, double primary, double secondary) {
+	public static VisualElement shape(ElemShape shape, double value, Paint paint, double pri, double sec) {
 		VisualElement vis = null;
 
 		switch (shape) {
 		case CIRCLE:
-			vis = new EllipseElement(value, paint, primary, primary);
+			vis = new EllipseElement(value, paint, pri, pri);
 			break;
 		case ELLIPSE:
-			vis = new EllipseElement(value, paint, primary, secondary);
+			vis = new EllipseElement(value, paint, pri, sec);
 			break;
 		case RECTANGLE:
-			vis = new RectangleElement(value, paint, primary, secondary);
+			vis = new RectangleElement(value, paint, pri, sec);
 			break;
 		case SQUARE:
-			vis = new RectangleElement(value, paint, primary, primary);
+			vis = new RectangleElement(value, paint, pri, pri);
 			break;
 		case TRAPEZOID:
-			vis = new PolygonElement(value, paint, primary, secondary, trapezoid(primary, secondary));
+			vis = new PolygonElement(value, paint, pri, sec, trapezoid(pri, sec));
 			break;
 		case TRIANGLE:
-			vis = new PolygonElement(value, paint, primary, secondary, triangle(primary, secondary));
+			vis = new PolygonElement(value, paint, pri, sec, triangle(pri, sec));
+			break;
+		case BAR_ELEMENT:
+			vis = new BarchartElement(value, paint, pri, sec);
 			break;
 		default:
 			break;
@@ -106,15 +116,17 @@ public abstract class _VisualElementFactory {
 	 * 
 	 * @param shape
 	 *            The shape of the element.
-	 * @param primary
+	 * @param e
+	 *            The element to bind to.
+	 * @param pri
 	 *            Primary size value, usually width.
-	 * @param secondary
+	 * @param sec
 	 *            Secondary size value, usually height. Sometimes ignored for
 	 *            shapes like circles.
 	 * @return A {@link PolygonElement}.
 	 */
-	public static VisualElement polygon(Element e, double primary, double secondary, double[] points) {
-		VisualElement vis = new PolygonElement(e, primary, secondary, points);
+	public static PolygonElement polygon(Element e, double pri, double sec, double[] points) {
+		PolygonElement vis = new PolygonElement(e, pri, sec, points);
 		vis.elemShape = ElemShape.POLYGON;
 		return vis;
 	}
@@ -129,15 +141,15 @@ public abstract class _VisualElementFactory {
 	 *            The value of the element.
 	 * @param paint
 	 *            The paint to use
-	 * @param primary
+	 * @param pri
 	 *            Primary size value, usually width.
-	 * @param secondary
+	 * @param sec
 	 *            Secondary size value, usually height. Sometimes ignored for
 	 *            shapes like circles.
 	 * @return A {@link PolygonElement}.
 	 */
-	public static VisualElement polygon(double value, Paint paint, double primary, double secondary, double[] points) {
-		VisualElement vis = new PolygonElement(value, paint, primary, secondary, points);
+	public static PolygonElement polygon(double value, Paint paint, double pri, double sec, double[] points) {
+		PolygonElement vis = new PolygonElement(value, paint, pri, sec, points);
 		vis.elemShape = ElemShape.POLYGON;
 		return vis;
 	}
@@ -250,10 +262,11 @@ public abstract class _VisualElementFactory {
 	 * @author Richard Sundqvist
 	 *
 	 */
-	public static class VisualElementSettings {
+	private static class VisualElementSettings {
 		public ElemShape shape;
 		public double width;
 		public double height;
+		public double[] points;
 	}
 
 	/**
@@ -262,26 +275,30 @@ public abstract class _VisualElementFactory {
 	 * @return A clone of the original element.
 	 */
 	public static VisualElement clone(VisualElement orig) {
-		VisualElement vis;
+		VisualElement clone;
 		//Shape
 		if(orig.points == null){
 			//Unbound
 			if(orig.element == null){
-				vis = shape(orig.elemShape, Double.parseDouble(orig.value.getText()), orig.getShape().getFill(), orig.width, orig.height);
+				clone = shape(orig.elemShape, Double.parseDouble(orig.value.getText()), orig.getShape().getFill(),
+						orig.width, orig.height);
 			//Bound
 			} else {
-				vis = shape(orig.elemShape, orig.element, orig.width, orig.height);
+				clone = shape(orig.elemShape, orig.element,
+						orig.width, orig.height);
 			}
 		//Polygon
 		} else {
 			//Unbound
 			if(orig.element == null){
-				vis = polygon(Double.parseDouble(orig.value.getText()), orig.getShape().getFill(), orig.width, orig.height, orig.points);
+				clone = polygon(Double.parseDouble(orig.value.getText()), orig.getShape().getFill(),
+						orig.width, orig.height, orig.points);
 			//Bound
 			} else {
-				vis = polygon(orig.element, orig.width, orig.height, orig.points);
+				clone = polygon(orig.element,
+						orig.width, orig.height, orig.points);
 			}
 		}
-		return vis;
+		return clone;
 	}
 }

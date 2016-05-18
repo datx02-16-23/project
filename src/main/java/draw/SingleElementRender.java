@@ -74,16 +74,13 @@ public class SingleElementRender extends _Render {
 
 	@Override
 	protected VisualElement createVisualElement(Element e) {
-//		VisualElement re = VisElemFact.create(ElementShape.RECTANGLE, e, node_width, node_height);
-		VisualElement re = _VisualElementFactory.shape(ElemShape.ELLIPSE, e, node_width, node_height);
-		re.setInfoPos(null);
+		VisualElement re = VisualElementFactory.shape(ElemShape.RECTANGLE, e, node_width, node_height);
 		return re;
 	}
 
 	@Override
 	protected VisualElement createVisualElement(double value, Color color) {
-		VisualElement re = _VisualElementFactory.shape(ElemShape.ELLIPSE, value, color, node_width, node_height);
-//		VisualElement re = VisElemFact.create(ElementShape.RECTANGLE, value, color, node_width, node_height);
+		VisualElement re = VisualElementFactory.shape(ElemShape.RECTANGLE, value, color, node_width, node_height);
 		re.setInfoPos(null);
 		return re;
 	}

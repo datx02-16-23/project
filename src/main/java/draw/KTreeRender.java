@@ -7,7 +7,7 @@ import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
 import contract.datastructure.Array.IndexedElement;
 import draw.element.ElemShape;
-import draw.element._VisualElementFactory;
+import draw.element.VisualElementFactory;
 import draw.element.VisualElement;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Pane;
@@ -250,7 +250,7 @@ public class KTreeRender extends _Render {
 
 	@Override
 	protected VisualElement createVisualElement(Element e) {
-		VisualElement ve = _VisualElementFactory.shape(ElemShape.ELLIPSE, e, node_width, node_height);
+		VisualElement ve = VisualElementFactory.shape(ElemShape.ELLIPSE, e, node_width, node_height);
 		ve.setInfoPos(Pos.TOP_LEFT);
 		ve.setInfoArray(((IndexedElement) e).getIndex());
 		return ve;
@@ -258,7 +258,7 @@ public class KTreeRender extends _Render {
 
 	@Override
 	protected VisualElement createVisualElement(double value, Color color) {
-		VisualElement ve = _VisualElementFactory.shape(ElemShape.ELLIPSE, value, color, node_width, node_height);
+		VisualElement ve = VisualElementFactory.shape(ElemShape.ELLIPSE, value, color, node_width, node_height);
 		ve.setInfoPos(null);
 		return ve;
 	}

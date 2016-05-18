@@ -27,6 +27,8 @@ public class Array extends DataStructure {
 	private transient int[] capacity;
 	private transient double min = Integer.MAX_VALUE;
 	private transient double max = Integer.MIN_VALUE;
+	
+	private BoundaryChangeListener listener;
 
 	/**
 	 * Construct a new Array with the given parameters.
@@ -64,6 +66,14 @@ public class Array extends DataStructure {
 	protected Array(String identifier, RawType rawType, AbstractType abstractType, VisualType visual,
 			Map<String, Object> attributes) {
 		super(identifier, rawType, abstractType, visual, attributes, Color.WHITE);
+	}
+	
+	/**
+	 * Set the listener for this Array.
+	 * @param listener A BoundaryChangeListener.
+	 */
+	public void setListener(BoundaryChangeListener listener){
+		this.listener = listener;
 	}
 
 	/**
@@ -281,9 +291,15 @@ public class Array extends DataStructure {
 		}
 		if (newElement.getNumericValue() < min) {
 			min = newElement.getNumericValue();
+			if(listener != null){
+				listener.minChanged(min, Math.abs(min) + Math.abs(max));
+			}
 		}
-		if (newElement.getNumericValue() > max) {
+		if (newElement.getNumericValue() > 		max) {
 			max = newElement.getNumericValue();
+			if(listener != null){
+				listener.maxChanged(max, Math.abs(min) + Math.abs(max));
+			}
 		}
 		elements.add(newElement);
 		return old;
@@ -408,5 +424,25 @@ public class Array extends DataStructure {
 		}
 		setVisual(visual);
 		return visual;
+	}
+	
+	/**
+	 * Interface for listening to changes in min and max values.
+	 * @author Richard Sundqvist
+	 *
+	 */
+	public interface BoundaryChangeListener{
+		/**
+		 * Called when the max value of the Array changes.
+		 * @param newMin The new maximum.
+		 * @param diff The difference between min and max.
+		 */
+		public void maxChanged(double newMin, double diff);
+		/**
+		 * Called when the max value of the Array changes.
+		 * @param newMin The new minimum.
+		 * @param diff The difference between min and max.
+		 */
+		public void minChanged(double newMin, double diff);
 	}
 }
