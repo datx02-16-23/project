@@ -30,7 +30,7 @@ public class Visualization extends StackPane {
 
 	// A FXML pane showing user instructions.
 	private static final HintPane HINT_PANE = new HintPane();
-	
+
 	/**
 	 * Pane for drawing of animated elements.
 	 */
@@ -93,7 +93,9 @@ public class Visualization extends StackPane {
 
 	/**
 	 * Should be called whenever model is updated.
-	 * @param op An operation to animate.
+	 * 
+	 * @param op
+	 *            An operation to animate.
 	 */
 	public void render(Operation op) {
 		for (Object rm : managers.getChildren()) {
@@ -105,15 +107,27 @@ public class Visualization extends StackPane {
 	}
 
 	/**
-	 * Set the animation time in milliseconds for all animations.
+	 * Force Render initialisation.
+	 */
+	public void init() {
+		for (Object rm : managers.getChildren()) {
+			((_Manager) rm).getRender().init();
+		}
+
+	}
+
+	/**
+	 * Set the animation time in milliseconds for all animations. Actual
+	 * animation time will be {@code millis * 0.85} to allow rest time after the
+	 * animation.
 	 * 
 	 * @param millis
 	 *            The new animation time in milliseconds.
 	 */
 	public final void setAnimationTime(long millis) {
-		this.millis = millis;
+		this.millis = (long) (millis * 0.85);
 	}
-	
+
 	/**
 	 * Toggles animation on and off.
 	 * 

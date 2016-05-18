@@ -98,11 +98,11 @@ public abstract class _Render extends Pane {
 	/**
 	 * The width of the render.
 	 */
-	protected double width;
+	protected double totWidth;
 	/**
 	 * The height of the render.
 	 */
-	protected double height;
+	protected double totHeight;
 
 	/**
 	 * A mapping of actual Elements to VisualElements.
@@ -114,7 +114,7 @@ public abstract class _Render extends Pane {
 	/**
 	 * Pane for rendering of visual element nodes.
 	 */
-	private final Pane nodes = new Pane();
+	protected final Pane nodes = new Pane();
 	/**
 	 * The content pane for the render. By default, a Pane for {@link #nodes}
 	 * will be added, but renders can add their own as well.
@@ -192,7 +192,7 @@ public abstract class _Render extends Pane {
 
 		// Content pane
 		content = (Pane) fxmlLoader.getNamespace().get("content");
-		content.getChildren().add(this.getNodes());
+		content.getChildren().add(nodes);
 		content.setBackground(getStructBackground(struct));
 		setSize(150, 150);
 

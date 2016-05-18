@@ -20,8 +20,8 @@ public class SingleElementRender extends _Render {
 	 */
 	public SingleElementRender(DataStructure struct, double width, double height) {
 		super(struct, width, height, 0, 0);
-		this.width = 150;
-		this.height = 150;
+		this.totWidth = 150;
+		this.totHeight = 150;
 	}
 
 	@Override
@@ -43,9 +43,9 @@ public class SingleElementRender extends _Render {
 
 	@Override
 	public void calculateSize() {
-		this.width = 150;
-		this.height = node_height;
-		setSize(width, height);
+		this.totWidth = 150;
+		this.totHeight = node_height;
+		setSize(totWidth, totHeight);
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class SingleElementRender extends _Render {
 	 */
 	@Override
 	public double getX(Element e) {
-		return width/2;
+		return totWidth/2;
 	}
 
 	/**

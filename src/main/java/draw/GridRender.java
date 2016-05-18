@@ -90,21 +90,21 @@ public class GridRender extends _Render {
 		size = array.getCapacity() == null ? new int[] { struct.getElements().size(), 1 } : array.getCapacity();
 
 		if (mo == Order.ROW_MAJOR) {
-			width = vspace + (vspace + node_width) * size[0];
+			totWidth = vspace + (vspace + node_width) * size[0];
 			if (size.length == 2) {
-				height = hspace + (hspace + node_height) * size[1];
+				totHeight = hspace + (hspace + node_height) * size[1];
 			} else {
-				height = hspace + (hspace + node_height) * 1;
+				totHeight = hspace + (hspace + node_height) * 1;
 			}
 		} else {
-			height = hspace + (hspace + node_height) * size[0];
+			totHeight = hspace + (hspace + node_height) * size[0];
 			if (size.length == 2) {
-				width = 2 + vspace + (vspace + node_width) * size[1];
+				totWidth = 2 + vspace + (vspace + node_width) * size[1];
 			} else {
-				width = 2 + vspace + (vspace + node_width) * 1;
+				totWidth = 2 + vspace + (vspace + node_width) * 1;
 			}
 		}
-		setSize(width, height);
+		setSize(totWidth, totHeight);
 	}
 
 	public static enum Order {

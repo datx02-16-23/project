@@ -74,7 +74,14 @@ public class Model {
 	 *         otherwise.
 	 */
 	public boolean stepForward() {
-		System.out.println("\t " + (index + 1));
+		double[] test = {1, 2, 3, 5, 6, 7, 24, 26};
+		ArrayList<Double> test2 = new ArrayList<Double>();
+		for(double d : test){
+			test2.add(d-1);
+		}
+		if(test2.contains(new Double(index))){ 
+			System.out.println("\nop: " + operations.get(index));
+		}
 		if (tryStepForward()) {
 			step.applyOperation(operations.get(index));
 			index += 1;
@@ -97,6 +104,7 @@ public class Model {
 			while (index < oldIndex) {
 				stepForward();
 			}
+			modelJumped();
 			return true;
 		}
 		return false;
@@ -112,6 +120,7 @@ public class Model {
 	public void goToStep(int toStepNo) {
 		if (toStepNo <= 0) {
 			reset();
+			modelJumped();
 			return;
 		} else if (toStepNo >= operations.size()) {
 			toStepNo = operations.size();
@@ -122,10 +131,21 @@ public class Model {
 			while (index < toStepNo) {
 				stepForward();
 			}
+			modelJumped();
 		} else if (toStepNo > index) {
 			goToEnd();
+			modelJumped();
 		}
-		// Do nothing if index == toStepNo
+		
+	}
+
+	/**
+	 * Called when the model jumps unnaturally.
+	 */
+	public void modelJumped() {
+		for(DataStructure ds : step.getStructures().values()){
+			ds.elementsDrawn(ds.getDefaultElementBackground());
+		}
 	}
 
 	/**

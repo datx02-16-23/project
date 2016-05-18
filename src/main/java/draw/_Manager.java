@@ -2,6 +2,7 @@ package draw;
 
 import java.util.HashMap;
 
+import contract.Operation;
 import contract.datastructure.DataStructure;
 import contract.datastructure.VisualType;
 import contract.datastructure.DataStructure.VisualListener;
@@ -115,7 +116,7 @@ public class _Manager extends BorderPane implements VisualListener {
 		VisualType visual = struct.resolveVisual();
 		switch (visual) {
 		case bar:
-			// TODO
+			render = new BarchartRender(struct, 40, 5, 10);
 			break;
 		case box:
 			render = new GridRender(struct, GridRender.Order.resolve(struct.visualOption), 40, 40, 3, 3);
@@ -134,6 +135,13 @@ public class _Manager extends BorderPane implements VisualListener {
 	@Override
 	public void visualChanged(VisualType newVisual) {
 		this.setRender(newVisual);
+	}
+	
+	/**
+	 * Force the current Render to initialise.
+	 */
+	public void init(){
+		render.init();
 	}
 
 	/**

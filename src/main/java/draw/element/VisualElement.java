@@ -7,6 +7,7 @@ import contract.datastructure.Element;
 import contract.operation.OperationCounter;
 import gui.Main;
 import javafx.animation.RotateTransition;
+import javafx.animation.StrokeTransition;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -33,7 +34,7 @@ import javafx.util.Duration;
 public abstract class VisualElement extends Pane {
 
 	private static final String url = "/render/FXMLElement.fxml";
-	
+
 	/**
 	 * Enum indicating the shape of this polygon. Used by the factory.
 	 */
@@ -155,7 +156,8 @@ public abstract class VisualElement extends Pane {
 	}
 
 	/**
-	 * Create a shape to use as the holder of the element value. Must never return null.
+	 * Create a shape to use as the holder of the element value. Must never
+	 * return null.
 	 * 
 	 * @return A Shape to display the element in.
 	 */
@@ -198,12 +200,13 @@ public abstract class VisualElement extends Pane {
 	public Element getElement() {
 		return element;
 	}
-	
+
 	/**
 	 * Returns the shape containing the element.
+	 * 
 	 * @return The shape containing the element.
 	 */
-	public Shape getElementShape(){
+	public Shape getElementShape() {
 		return shape;
 	}
 
@@ -211,21 +214,35 @@ public abstract class VisualElement extends Pane {
 	 * Listener for the onMouseClicked event.
 	 */
 	public void onMouseClicked() {
-		showClicked();
+		showSelected();
 		OperationCounter oc = element.getCounter();
 		Main.console.info("Statistics for \"" + element + "\":");
 		Main.console.info("\tReads: " + oc.getReads());
 		Main.console.info("\tWrites: " + oc.getWrites());
 		Main.console.info("\tSwaps: " + oc.getSwap());
 	}
-
+	
 	/**
 	 * Indicate to the user that the element has been clicked.
 	 */
-	private void showClicked() {
-	     RotateTransition rt = new RotateTransition(Duration.millis(600), shape);
-	     rt.setByAngle(360);
-	     rt.play();
+	private void showSelected() {
+		//Rotate.
+		shape.setRotate(0);
+		shape.setStrokeWidth(5);
+		int sign = Math.random() < 0.2 ? -1 : 1;
+		RotateTransition rt = new RotateTransition(Duration.millis(900), shape);
+		rt.setByAngle(360 * sign);
+
+		//Change border, cannot see clicked on circular elements otherwise.
+		StrokeTransition ft = new StrokeTransition(Duration.millis(900), shape, Color.BLACK, Color.SKYBLUE);
+		ft.setOnFinished(event -> {
+			shape.setStrokeWidth(1);
+			shape.setStroke(Color.BLACK);
+		});
+		ft.setAutoReverse(true);
+
+		ft.play();
+		rt.play();
 	}
 
 	/**
@@ -243,6 +260,7 @@ public abstract class VisualElement extends Pane {
 	public void onMouseExited() {
 		root.setScaleX(1);
 		root.setScaleY(1);
+		shape.setStrokeWidth(1);	
 	}
 
 	/**
@@ -280,7 +298,9 @@ public abstract class VisualElement extends Pane {
 
 	/**
 	 * Show an array using the info label.
-	 * @param array The array to show.
+	 * 
+	 * @param array
+	 *            The array to show.
 	 */
 	public void setInfoArray(int[] array) {
 		setInfoText(Arrays.toString(array));
@@ -289,15 +309,19 @@ public abstract class VisualElement extends Pane {
 	/**
 	 * Enables and disables visibility for the info label.
 	 * 
-	 * @param visible The new visibility setting.
+	 * @param visible
+	 *            The new visibility setting.
 	 */
 	public void setInfoVisible(boolean visible) {
-		info.setVisible(visible);	
+		info.setVisible(visible);
 	}
 
 	/**
-	 * Set text for the label. Will render at {@link Pos#BOTTOM_CENTER} if no position is specified.
-	 * @param text The text to render.
+	 * Set text for the label. Will render at {@link Pos#BOTTOM_CENTER} if no
+	 * position is specified.
+	 * 
+	 * @param text
+	 *            The text to render.
 	 */
 	public void setInfoText(String text) {
 		info.setText(text);
@@ -322,8 +346,8 @@ public abstract class VisualElement extends Pane {
 			setInfoVisible(true);
 		}
 		String text = info.getText();
-		
-		if(text.length() == 0){
+
+		if (text.length() == 0) {
 			return;
 		}
 
@@ -342,7 +366,7 @@ public abstract class VisualElement extends Pane {
 			tx = -(width / 2 + textW);
 			break;
 		case CENTER:
-			//tx already 0.
+			// tx already 0.
 			break;
 		case RIGHT:
 			tx = width / 2 + textW;
@@ -354,7 +378,7 @@ public abstract class VisualElement extends Pane {
 			ty = height / 2 + textH;
 			break;
 		case CENTER:
-			//ty already 0.
+			// ty already 0.
 			break;
 		case TOP:
 			ty = -(height / 2 + textH);

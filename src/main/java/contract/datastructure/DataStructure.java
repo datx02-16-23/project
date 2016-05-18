@@ -222,17 +222,17 @@ public abstract class DataStructure extends AnnotatedVariable {
 	 * {@code getModifiedElements()} <b>and</b> {@code getResetElements} have
 	 * been drawn.
 	 * 
-	 * @param color
+	 * @param paint
 	 *            The color to use for this element after reset. Null default to
 	 *            white.
 	 */
-	public void elementsDrawn(Color color) {
-		color = color == null ? Color.WHITE : color;
+	public void elementsDrawn(Paint paint) {
+		paint = paint == null ? Color.WHITE : paint;
 
 		// TODO
 		for (Element e : getResetElements()) {
 			if (getModifiedElements().contains(e) == false) {
-				e.setColor(color);
+				e.setColor(paint);
 			}
 		}
 		// resetElements.clear();

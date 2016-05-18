@@ -263,6 +263,7 @@ public class Controller implements CommunicatorListener {
 	public void stepBackwardButtonClicked() {
 		stopAutoPlay();
 		if (model.stepBackward()) {
+			visualization.init();
 			visualization.render(model.getLastOp());
 			setButtons();
 			updatePanels();
@@ -350,6 +351,7 @@ public class Controller implements CommunicatorListener {
 	 */
 	public void goToStep(int index) {
 		model.goToStep(index);
+		visualization.init();
 		visualization.render(model.getLastOp());
 		operationPanel.update(model.getIndex(), false);
 	}
@@ -590,10 +592,7 @@ public class Controller implements CommunicatorListener {
 
 	public void openVisualDialog(DataStructure struct) {
 		if (visualDialog.show(struct)) {
-//			visualization.clearAndCreateVisuals();
-//			int step = model.getIndex();
-//			model.reset();
-//			goToStep(step);
+			visualization.init();
 		}
 	}
 

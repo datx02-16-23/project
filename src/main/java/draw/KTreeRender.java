@@ -65,7 +65,7 @@ public class KTreeRender extends _Render {
 			return false; // Nothing to draw.
 		}
 
-		createGhosts(getNodes().getChildren().size());
+		createGhosts(nodes.getChildren().size());
 		return true;
 	}
 
@@ -125,7 +125,7 @@ public class KTreeRender extends _Render {
 			ghostVis.setGhost(true);
 			bellsAndWhistles(ghostElem, ghostVis);
 			ghostVis.setInfoPos(Pos.CENTER	);
-			getNodes().getChildren().add(ghostVis);
+			nodes.getChildren().add(ghostVis);
 		}
 	}
 
@@ -243,9 +243,9 @@ public class KTreeRender extends _Render {
 	@Override
 	public void calculateSize() {
 		calculateDepthAndBreadth();
-		width = totBreadth * (node_width + hspace) + hspace;
-		height = (totDepth + 1) * (node_height + vspace) + vspace * 2;
-		setSize(width, height);
+		totWidth = totBreadth * (node_width + hspace) + hspace;
+		totHeight = (totDepth + 1) * (node_height + vspace) + vspace * 2;
+		setSize(totWidth, totHeight);
 	}
 
 	@Override

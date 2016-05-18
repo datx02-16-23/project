@@ -98,7 +98,7 @@ public abstract class Element {
 	 * 
 	 * @return The paint with which to draw this Element.
 	 */
-	public final Paint getColor() {
+	public final Paint getPaint() {
 		return paint;
 	}
 
@@ -114,10 +114,10 @@ public abstract class Element {
 	}
 	
 	/**
-	 * Set the color for this element.
-	 * @param c The color to use
+	 * Set the Paint for this element.
+	 * @param c The paint to use
 	 */
-	public void setColor(Color c){
+	public void setColor(Paint c){
 		this.paint = c;
 		fillProperty.setValue(paint);
 	}
