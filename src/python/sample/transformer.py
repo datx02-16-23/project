@@ -217,11 +217,7 @@ class PassTransformer(OperationTransformer):
 
 	def visit_FunctionDef(self,node):
 		self.function_defs.append(node.name)
-		node.decorator_list.append(Call(
-			func=Name(id=self.name),
-			args=self.extract_params(node.args),
-			keywords=[]
-		))
+		node.decorator_list.append(self.create_call(self.extract_params(node.args),node))
 		self.function_bodies.append(node.body)
 		return node
 
