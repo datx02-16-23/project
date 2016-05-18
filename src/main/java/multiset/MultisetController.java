@@ -10,6 +10,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -30,10 +32,12 @@ public class MultisetController {
 	private iModel model;
 	private iView view;
 	private final Stage window;
+	private final Scene previousScene;
 	private final Timeline timeline;
 
 	public MultisetController(Stage window) {
 		this.window = window;
+		this.previousScene = window.getScene();
 		fxmlLoader = new FXMLLoader(getClass().getResource("/MultisetView.fxml"));
 		fxmlLoader.setController(this);
 		VBox p = null;
@@ -57,8 +61,12 @@ public class MultisetController {
 		timeline.setCycleCount(Animation.INDEFINITE);
 	}
 
+	/**
+	 * Called when the "Back" button is pressed.
+	 */
 	public void goBackPressed() {
-
+		timeline.stop();
+		window.setScene(previousScene);
 	}
 
 	/**
@@ -71,6 +79,16 @@ public class MultisetController {
 		model = new Model(ballCanvas.getWidth(), ballCanvas.getHeight(), filter, 2, 20);
 		view = new View(model, ballCanvas);
 		timeline.play();
+	}
+
+	/**
+	 * Called from textfields
+	 */
+	public void keyListener(KeyEvent event){
+		if(event.getCode() == KeyCode.ENTER) {
+			run(); // Run animation
+			event.consume(); // "You shall not pass"
+		}
 	}
 
 	/**
