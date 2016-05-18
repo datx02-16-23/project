@@ -124,9 +124,16 @@ def link(*params):
     def wrap(func):
         def call(*args):
             for param,arg in zip(params,args):
-                if get_variable(arg) in annotated_variables and param not in annotated_variables:
-                    annotated_variables.append(get_variable(param))
-                write(arg,param,1,1)
+                v_arg = get_variable(arg)
+                v_param = get_variable(param)
+                if v_param != v_arg:
+                    if v_arg in annotated_variables and v_param not in annotated_variables:
+                        annotated_variables.append(v_param)
+                    linenos = params[-2:]
+                    operation = get_operation(JSON_OPERATION_TYPE_PASS,get_value(arg),*linenos)
+                    operation[BODY][SOURCE] = to_json(arg)
+                    operation[BODY][TARGET] = to_json(param)
+                    put(operation)
             return func(*tuple(get_value(arg) for arg in args))
         return call
     return wrap

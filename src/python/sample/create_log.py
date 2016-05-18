@@ -88,8 +88,10 @@ class LogPostProcessor(object):
 
 	def _fix_occurrences(self):
 		aliases = {}
+		buf = []
 		for operation in self.output:
-			if (operation[JSON_OPERATION_TYPE] == WRITE and is_init(operation)):
+			if (operation[JSON_OPERATION_TYPE] == PASS):
+				buf.append(operation)
 				target = operation[BODY][TARGET][IDENTIFIER]
 				if (SOURCE in operation[BODY] and
 					operation[BODY][SOURCE][IDENTIFIER] in self.names and
@@ -98,3 +100,5 @@ class LogPostProcessor(object):
 					aliases[target] = operation[BODY][SOURCE][IDENTIFIER]
 					# self.names.append(target)
 			alias(operation,aliases)
+		for operation in buf:
+			self.output.remove(operation)
