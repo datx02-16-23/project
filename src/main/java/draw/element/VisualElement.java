@@ -115,7 +115,7 @@ public abstract class VisualElement extends Pane {
 		init(node_width, node_height);
 
 		// Automatic updating of value
-		valueLabel.textProperty().bind(element.valueProperty());
+		valueLabel.textProperty().bind(element.valueStringProperty());
 		shape.fillProperty().bind(element.fillProperty());
 	}
 
@@ -156,7 +156,7 @@ public abstract class VisualElement extends Pane {
 		init(node_width, node_height);
 
 		// Automatic updating of value
-		valueLabel.textProperty().bind(element.valueProperty());
+		valueLabel.textProperty().bind(element.valueStringProperty());
 		shape.fillProperty().bind(element.fillProperty());
 	}
 
@@ -190,6 +190,7 @@ public abstract class VisualElement extends Pane {
 		shapePane.getChildren().add(shape);
 
 		valueLabel = (Label) fxmlLoader.getNamespace().get("value");
+		
 		infoLabel.setMouseTransparent(true);
 		infoLabel.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
 		root.getChildren().add(infoLabel);

@@ -111,7 +111,6 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 		for (Element e : struct.getElements()) {
 			newVis =  createVisualElement(e);
 			newVis.setLayoutX(getX(e));
-			System.out.println("getX(e) = " + getX(e));
 
 			nodes.getChildren().add(newVis);
 			visualElementsMapping.put(Arrays.toString(((IndexedElement) e).getIndex()), newVis);
@@ -186,7 +185,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 
 	private void notches() {
 		double x = padding / 2;
-		int i = 0;
+		int i = 1;
 		for (double y = barMax; y >= padding; y = y - unitHeight) {
 			// Notch
 			Line line = new Line(padding - 3, y, padding + 3, y);
@@ -226,6 +225,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 
 	@Override
 	protected void bellsAndWhistles(Element e, VisualElement ve) {
+		((BarchartElement) ve).updateUnitHeight(unitHeight);
 	}
 
 	private void createIndexLabel(Element e) {

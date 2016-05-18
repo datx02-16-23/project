@@ -20,7 +20,7 @@ public abstract class Element {
 	 * Properties
 	 */
 	private final SimpleStringProperty valueStringProperty = new SimpleStringProperty();
-	private final SimpleDoubleProperty valueDoubleProperty = new SimpleDoubleProperty(); //TODO
+	private final SimpleDoubleProperty valueDoubleProperty = new SimpleDoubleProperty();
 	
 	private final SimpleObjectProperty<Paint> fillProperty = new SimpleObjectProperty<Paint>();
 	
@@ -38,12 +38,16 @@ public abstract class Element {
 	private String value;
 	private Paint paint;
 
-	public SimpleStringProperty valueProperty() {
+	public SimpleStringProperty valueStringProperty() {
 		return valueStringProperty;
 	}
 
 	public SimpleObjectProperty<Paint> fillProperty() {
 		return fillProperty;
+	}
+	
+	public SimpleDoubleProperty numValueProperty() {
+		return valueDoubleProperty;
 	}
 
 	/**
@@ -64,6 +68,7 @@ public abstract class Element {
 	public final void setNumValue(double newValue) {
 		if (numericValue != newValue) {
 			numericValue = newValue;
+			valueDoubleProperty.set(newValue);
 			valueStringProperty.setValue(numericValue + "");
 		}
 	}
