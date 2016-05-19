@@ -368,7 +368,7 @@ public abstract class ARender extends Pane {
 	}
 
 	/**
-	 * Returns the absolute x-coordinate of an element.
+	 * Returns the absolute x-coordinate of an element. Returns -1 if the calculation fails.
 	 * 
 	 * @param e
 	 *            An element to resolve coordinates for.
@@ -377,7 +377,7 @@ public abstract class ARender extends Pane {
 	public abstract double getX(Element e);
 
 	/**
-	 * Returns the absolute y-coordinate of an element.
+	 * Returns the absolute y-coordinate of an element. Returns -1 if the calculation fails.
 	 * 
 	 * @param e
 	 *            An element to resolve coordinates for.
@@ -984,5 +984,18 @@ public abstract class ARender extends Pane {
 		xposLabel.setText("XPos: " + (int) (getTranslateX() + 0.5));
 		yposLabel.setText("| YPos: " + (int) (getTranslateY() + 0.5));
 		scaleLabel.setText("| Scale: " + df.format(scale));
+	}
+	
+	/**
+	 * Makes the header red when something goes wrong.
+	 */
+	public void renderFailure(){
+		header.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
+		content.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
+		Main.console.err("Render Failure in " + this.toString() + ".");
+	}
+	
+	public String toString(){
+		return this.getClass().getSimpleName() + " ("  + this.struct + ")";
 	}
 }

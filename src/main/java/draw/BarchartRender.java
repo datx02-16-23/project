@@ -60,7 +60,13 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 
 	@Override
 	public double getX(Element e) {
-		return getX(((IndexedElement) e).getIndex()[0]);
+		int[] index = ((IndexedElement) e).getIndex();
+		if(index == null || index.length == 0){
+			System.err.println("Invalid index for element " + e + " in \"" + struct  + "\".");
+			renderFailure();
+			return -1;
+		}
+		return getX(index[0]);
 	}
 
 	public double getX(int index) {

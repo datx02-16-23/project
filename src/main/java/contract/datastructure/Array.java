@@ -408,8 +408,8 @@ public class Array extends DataStructure {
 		// TODO
 		@Override
 		public String toString() {
-			return hashCode() + "";
-			// return Arrays.toString(index) + " = " + getNumericValue();
+//			return hashCode() + "";
+			 return Arrays.toString(index) + " = " + getNumericValue();
 		}
 	}
 
