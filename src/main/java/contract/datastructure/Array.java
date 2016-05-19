@@ -27,7 +27,7 @@ public class Array extends DataStructure {
 	private transient int[] capacity;
 	private transient double min = Integer.MAX_VALUE;
 	private transient double max = Integer.MIN_VALUE;
-	
+
 	private BoundaryChangeListener listener;
 
 	/**
@@ -67,12 +67,14 @@ public class Array extends DataStructure {
 			Map<String, Object> attributes) {
 		super(identifier, rawType, abstractType, visual, attributes, Color.WHITE);
 	}
-	
+
 	/**
 	 * Set the listener for this Array.
-	 * @param listener A BoundaryChangeListener.
+	 * 
+	 * @param listener
+	 *            A BoundaryChangeListener.
 	 */
-	public void setListener(BoundaryChangeListener listener){
+	public void setListener(BoundaryChangeListener listener) {
 		this.listener = listener;
 	}
 
@@ -291,13 +293,13 @@ public class Array extends DataStructure {
 		}
 		if (newElement.getNumericValue() < min) {
 			min = newElement.getNumericValue();
-			if(listener != null){
+			if (listener != null) {
 				listener.minChanged(min, Math.abs(min) + Math.abs(max));
 			}
 		}
-		if (newElement.getNumericValue() > 		max) {
+		if (newElement.getNumericValue() > max) {
 			max = newElement.getNumericValue();
-			if(listener != null){
+			if (listener != null) {
 				listener.maxChanged(max, Math.abs(min) + Math.abs(max));
 			}
 		}
@@ -352,7 +354,7 @@ public class Array extends DataStructure {
 		private final int primes[] = { 607, 613, 617, 619, 631, 641, 643, 647, 653, 659, 661, 673, 677, 683, 691, 701,
 				709, 719, 727, 733 };
 
-		//TODO
+		// TODO
 		@Override
 		public int hashCode() {
 			if (index == null) {
@@ -403,45 +405,68 @@ public class Array extends DataStructure {
 			return this.getNumericValue() == rhs.getNumericValue() && Arrays.equals(this.index, rhs.index);
 		}
 
-		//TODO
+		// TODO
 		@Override
 		public String toString() {
-			return hashCode()+"";
-//			return Arrays.toString(index) + " = " + getNumericValue();
+			return hashCode() + "";
+			// return Arrays.toString(index) + " = " + getNumericValue();
 		}
 	}
 
+	/**
+	 * Resolves the VisualType for this DataStructure. Will check {@code visual}
+	 * , {@code abstractType}, and {@code rawType}, in that order. <br>
+	 * <br>
+	 * Single-dimension Arrays default to {@link VisualType#bar} , higher
+	 * dimension Arrays default to {@link VisualType#box}. This method will
+	 * always return a type.
+	 * 
+	 * @return The Visual to use for this Array.
+	 */
 	@Override
 	public VisualType resolveVisual() {
 		if (visual != null) {
 			return visual;
 		} else if (abstractType != null) {
 			if (abstractType == AbstractType.tree) {
-				visual =  VisualType.tree;
+				visual = VisualType.tree;
 			}
 		} else {
-			visual = VisualType.box;
+			int[] capacity = this.getCapacity();
+			if (capacity == null || capacity.length <= 1) {
+				visual = VisualType.bar;
+			} else {
+				visual = VisualType.box;
+			}
 		}
 		setVisual(visual);
 		return visual;
 	}
-	
+
 	/**
 	 * Interface for listening to changes in min and max values.
+	 * 
 	 * @author Richard Sundqvist
 	 *
 	 */
-	public interface BoundaryChangeListener{
+	public interface BoundaryChangeListener {
 		/**
 		 * Called when the max value of the Array changes.
-		 * @param newMin The new maximum.
-		 * @param diff The difference between min and max.
+		 * 
+		 * @param newMin
+		 *            The new maximum.
+		 * @param diff
+		 *            The difference between min and max.
 		 */
 		public void maxChanged(double newMin, double diff);
+
 		/**
 		 * Called when the max value of the Array changes.
-		 * @param newMin The new minimum.
-		 * @param diff The difference between min and max.
+		 * 
+		 * @param newMin
+		 *            The new minimum.
+		 * @param diff
+		 *            The difference between min and max.
 		 */
 		public void minChanged(double newMin, double diff);
 	}
