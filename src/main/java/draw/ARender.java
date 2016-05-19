@@ -55,6 +55,16 @@ import javafx.util.StringConverter;
 
 public abstract class ARender extends Pane {
 
+	/**
+	 * The value for renders which prefer a fixed width.
+	 */
+	public static final int DEFAULT_RENDER_WIDTH = 400;
+	
+	/**
+	 * The value for renders which prefer a fixed height.
+	 */
+	public static final int DEFAULT_RENDER_HEIGHT = 250;
+	
 	/*
 	 * Shared stuff.
 	 */
@@ -408,8 +418,7 @@ public abstract class ARender extends Pane {
 			}
 			setScaleX(scale);
 			setScaleY(scale);
-			DecimalFormat df = new DecimalFormat("#0.00");
-			scaleLabel.setText("| Scale: " + df.format(scale));
+			updateInfoLabels();
 		});
 
 		// this.setStyle("-fx-background-color: red;");
@@ -432,8 +441,7 @@ public abstract class ARender extends Pane {
 		setOnMouseDragged(event -> {
 			setTranslateX(event.getSceneX() + transX);
 			setTranslateY(event.getSceneY() + transY);
-			xposLabel.setText("XPos: " + (int) (getTranslateX() + 0.5));
-			yposLabel.setText("| YPos: " + (int) (getTranslateY() + 0.5));
+			updateInfoLabels();
 		});
 		// Set cursor
 		setOnMouseEntered(event -> {
@@ -968,5 +976,15 @@ public abstract class ARender extends Pane {
 	 */
 	public void setAnimationPane(Pane animation_pane) {
 		this.animation_pane = animation_pane;
+	}
+	
+	/**
+	 * Update info labels in the header.
+	 */
+	public void updateInfoLabels(){
+		DecimalFormat df = new DecimalFormat("#0.00");
+		xposLabel.setText("XPos: " + (int) (getTranslateX() + 0.5));
+		yposLabel.setText("| YPos: " + (int) (getTranslateY() + 0.5));
+		scaleLabel.setText("| Scale: " + df.format(scale));
 	}
 }

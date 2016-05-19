@@ -236,6 +236,9 @@
                      <padding>
                         <Insets top="1.0" />
                      </padding>
+                     <font>
+                        <Font size="8.0" />
+                     </font>
                   </TextArea>
                   <VBox maxHeight="1.7976931348623157E308" maxWidth="120.0" minHeight="0.0" minWidth="120.0" prefWidth="120.0" HBox.hgrow="NEVER">
                      <children>

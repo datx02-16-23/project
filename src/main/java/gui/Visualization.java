@@ -10,7 +10,9 @@ import contract.operation.OP_Remove;
 import contract.operation.OP_Swap;
 import draw.ARenderManager;
 import draw.ARender;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
@@ -90,7 +92,66 @@ public class Visualization extends StackPane {
 			struct_manager_mapping.put(struct.identifier, manager);
 		}
 		// overlay.expandAll();
+		placeVisuals();
 		HINT_PANE.setVisible(managers.getChildren().isEmpty());
+	}
+
+	/**
+	 * Attempt to place visuals with minimal overlap
+	 */
+	public void placeVisuals() {
+		ARenderManager arm;
+		int padding = 10;
+		double transX = 0;
+		double transY = 0;
+
+		int northWest = 0;
+		int southWest = 0;
+		int northEast = 0;
+		int southEast = 0;
+
+		for (Node node : managers.getChildren()) {
+			arm = (ARenderManager) node;
+
+			switch (arm.getStructure().visual) {
+			case single:
+				System.out.println("single");
+				transY = southEast * 200 + padding;
+				transX = getWidth() - 150 - padding;
+				southEast++;
+				break;
+			case bar:
+				System.out.println("bar");
+				transX = padding;
+				transY = getHeight() - (padding + ARender.DEFAULT_RENDER_HEIGHT) * southWest - padding;
+				southWest++;
+				break;
+			default:
+				System.out.println("default");
+				transX = padding;
+				transY = (padding + ARender.DEFAULT_RENDER_HEIGHT) * northWest + padding;
+				northWest++;
+				break;
+
+			}
+
+			double maxw = this.getWidth() - 100;
+			if (transX < 0 || transX > maxw) {
+				System.err.println("Automatic placing failed: transX = " + transX + " (max = " + maxw
+						+ "). Using default placement for \"" + arm.getStructure() + "\".");
+				transX = padding;
+			}
+			double maxh = this.getHeight() - 100;
+			if (transX < 0 || transY > maxh) {
+				System.err.println("Automatic placing failed: transY = " + transY + " (max = " + maxh
+						+ "). Using default placement for \"" + arm.getStructure() + "\".");
+				transY = padding;
+			}
+
+			arm.getRender().setTranslateX(transX);
+			arm.getRender().setTranslateX(transY);
+			arm.getRender().updateInfoLabels();
+		}
 	}
 
 	/**

@@ -12,14 +12,11 @@ import draw.element.BarchartElement;
 import draw.element.ElemShape;
 import draw.element.VisualElement;
 import draw.element.VisualElementFactory;
-import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Path;
 import javafx.scene.shape.Polyline;
 
 public class BarchartRender extends ARender implements BoundaryChangeListener {

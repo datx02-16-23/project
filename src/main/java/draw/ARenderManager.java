@@ -115,7 +115,7 @@ public class ARenderManager extends BorderPane implements VisualListener {
 		VisualType visual = struct.resolveVisual();
 		switch (visual) {
 		case bar:
-			render = new BarchartRender(struct, 40, 300, 30, 10);
+			render = new BarchartRender(struct, 40, ARender.DEFAULT_RENDER_HEIGHT, 30, 10);
 			break;
 		case box:
 			render = new GridRender(struct, GridRender.Order.resolve(struct.visualOption), 40, 40, 3, 3);
@@ -154,5 +154,13 @@ public class ARenderManager extends BorderPane implements VisualListener {
 	
 	public String toString(){
 		return struct.identifier + ": " + renders.values();
+	}
+	
+	/**
+	 * The data structure this thingy is responsible for.
+	 * @return A DataStructure.
+	 */
+	public DataStructure getStructure(){
+		return struct;
 	}
 }
