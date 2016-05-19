@@ -39,6 +39,7 @@ public class OperationPanel extends Pane {
 			root = (VBox) fxmlLoader.load();
 		} catch (IOException e) {
 			System.err.println(e);
+			System.exit(-1);
 		}
 		// Content size
 		root.prefHeightProperty().bind(this.heightProperty());

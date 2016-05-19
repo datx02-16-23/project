@@ -35,6 +35,11 @@ public class Visualization extends StackPane {
 	private static final HintPane HINT_PANE = new HintPane();
 
 	/**
+	 * Suggested minimum render distance from the edges of the parent.
+	 */
+	public static final double PADDING = 10;
+
+	/**
 	 * Pane for drawing of animated elements.
 	 */
 	private final Pane animated_nodes = new Pane();
@@ -48,7 +53,7 @@ public class Visualization extends StackPane {
 	 */
 	private boolean animate;
 	/**
-	 * The model being visualized.
+	 * The model being visualised.
 	 */
 	private final Model model;
 	/**
@@ -97,74 +102,6 @@ public class Visualization extends StackPane {
 	}
 
 	/**
-	 * Attempt to place visuals with minimal overlap
-	 */
-	public void placeVisuals() {
-		ARenderManager arm;
-		int padding = 10;
-		double transX = 0;
-		double transY = 0;
-
-		int northWest = 0;
-		int southWest = 0;
-		int northEast = 0;
-		int southEast = 0;
-
-		for (Node node : managers.getChildren()) {
-			arm = (ARenderManager) node;
-
-			switch (arm.getStructure().visual) {
-			case single:
-				System.out.println("single");
-				transY = southEast * 200 + padding;
-				transX = getWidth() - 150 - padding;
-				southEast++;
-				break;
-			case bar:
-				System.out.println("bar");
-				transX = padding;
-				transY = getHeight() - (padding + ARender.DEFAULT_RENDER_HEIGHT) * (southWest + 1) - padding*3;
-				southWest++;
-				break;
-			default:
-				System.out.println("default");
-				transX = padding;
-				transY = (padding + ARender.DEFAULT_RENDER_HEIGHT) * northWest + padding;
-				northWest++;
-				break;
-
-			}
-
-			double maxw = this.getWidth() - 100;
-			double maxh = this.getHeight() - 100;
-
-			// Check Y ok.
-			if (transX < 0 || transX > maxw) {
-				System.err.println("Automatic placing failed: transX = " + transX + " (max = " + maxw
-						+ "). Using default placement for \"" + arm.getStructure() + "\".");
-				transX = padding;
-				transY = padding;
-			}
-			// Check X ok.
-			if (transX < 0 || transY > maxh) {
-				System.err.println("Automatic placing failed: transY = " + transY + " (max = " + maxh
-						+ "). Using default placement for \"" + arm.getStructure() + "\".");
-				transY = padding;
-				transX = padding;
-				transY = padding;
-			}
-
-			System.out.println(transX);
-			System.out.println(transY);
-			arm.getRender().setTranslateX(transX);
-			arm.getRender().setTranslateY(transY);
-//			arm.getRender().setLayoutX(transX);
-//			arm.getRender().setLayoutY(transY);
-			arm.getRender().updateInfoLabels();
-		}
-	}
-
-	/**
 	 * Should be called whenever model is updated.
 	 * 
 	 * @param op
@@ -191,14 +128,14 @@ public class Visualization extends StackPane {
 
 	/**
 	 * Set the animation time in milliseconds for all animations. Actual
-	 * animation time will be {@code millis * 0.85} to allow rest time after the
+	 * animation time will be {@code millis * 0.6} to allow rest time after the
 	 * animation.
 	 * 
 	 * @param millis
 	 *            The new animation time in milliseconds.
 	 */
 	public final void setAnimationTime(long millis) {
-		this.millis = (long) (millis * 0.85);
+		this.millis = (long) (millis * 0.60000);
 	}
 
 	/**
@@ -329,6 +266,173 @@ public class Visualization extends StackPane {
 	} // End animate swap
 
 	/**
+	 * Attempt to place visuals with minimal overlap.
+	 */
+	public void placeVisuals() {
+		ARenderManager arm;
+		int padding = 10;
+		double xPos = 0;
+		double yPos = 0;
+
+		// Most renders
+		int northWest = 0;
+		int nWRow = 0;
+
+		// Barcharts
+		int southWest = 0;
+		int sWRow = 0;
+
+		// Single elements
+		int northEast = 0;
+		int nERow = 0;
+
+		// Not used at the moment.
+		int southEast = 0;
+
+		for (Node node : managers.getChildren()) {
+			arm = (ARenderManager) node;
+
+			switch (arm.getStructure().visual) {
+			case single:
+				yPos = northEast * 150 + padding;
+				xPos = getWidth() - 150 * (nERow + 1) - padding;
+				if (checkXPos(xPos) == false && nERow == 0) {
+					northEast = 0;
+					nERow++;
+					xPos = getWidth() - 150 * (nERow) - padding;
+				}
+				northEast++;
+				break;
+			case bar:
+				xPos = padding + this.getWidth() * sWRow;
+				yPos = getHeight() - (padding + ARender.DEFAULT_RENDER_HEIGHT) * (southWest + 1) - padding * 3;
+				if (checkYPos(yPos) == false && sWRow == 0) {
+					sWRow++;
+				}
+				southWest++;
+				break;
+			default:
+				xPos = padding + this.getWidth() * nWRow;
+				yPos = (padding + ARender.DEFAULT_RENDER_HEIGHT) * northWest + padding;
+				if (checkYPos(yPos) == false && nWRow == 0) {
+					nWRow++;
+				}
+				northWest++;
+				break;
+
+			}
+
+			// Make sure users can see the render.
+			if (checkPositions(xPos, yPos) == false) {
+				// Do not remove this printout //RS
+				System.err.println("Using default placement for \"" + arm.getStructure() + "\".");
+				yPos = padding;
+				xPos = padding;
+			}
+
+			arm.getRender().setTranslateX(xPos);
+			arm.getRender().setTranslateY(yPos);
+			// arm.getRender().setLayoutX(transX);
+			// arm.getRender().setLayoutY(transY);
+			arm.getRender().updateInfoLabels();
+		}
+	}
+
+	private boolean checkPositions(double xPos, double yPos) {
+		boolean result = true;
+
+		if (checkXPos(xPos) == false) {
+			// Do not remove this printout //RS
+			System.err.println("Bad X-Coordinate: " + xPos + " not in " + xRange() + ".");
+			result = false;
+		}
+		if (checkYPos(yPos) == false) {
+			// Do not remove this printout //RS
+			System.err.println("Bad Y-Coordinate: " + yPos + " not in " + yRange() + ".");
+			result = false;
+		}
+
+		return result;
+	}
+
+	/**
+	 * Check to see if an X-Coordinate is in the acceptable range.
+	 * 
+	 * @param xPos
+	 *            An x-coordinate.
+	 * @return True if the coordinate good, false otherwise.
+	 */
+	public boolean checkXPos(double xPos) {
+		return !(xPos < getXMin() || xPos > getXMax());
+	}
+
+	/**
+	 * Returns the maximum acceptable X-Coordinate.
+	 * 
+	 * @return The maximum acceptable X-Coordinate.
+	 */
+	public double getXMax() {
+		return this.getWidth() - 100;
+	}
+
+	/**
+	 * Returns the minimum acceptable X-Coordinate.
+	 * 
+	 * @return The minimum acceptable X-Coordinate.
+	 */
+	public double getXMin() {
+		return PADDING;
+	}
+
+	/**
+	 * Check to see if an Y-Coordinate is in the acceptable range.
+	 * 
+	 * @param yPos
+	 *            An y-coordinate.
+	 * @return True if the coordinate good, false otherwise.
+	 */
+
+	public boolean checkYPos(double yPos) {
+		return !(yPos < getYMin() || yPos > getYMax());
+	}
+
+	/**
+	 * Returns the maximum acceptable Y-Coordinate.
+	 * 
+	 * @return The maximum acceptable Y-Coordinate.
+	 */
+	public double getYMax() {
+		return this.getHeight() - 100;
+	}
+
+	/**
+	 * Returns the minimum acceptable Y-Coordinate.
+	 * 
+	 * @return The minimum acceptable Y-Coordinate.
+	 */
+	public double getYMin() {
+		return PADDING;
+	}
+
+	/**
+	 * Returns a String representing the range of acceptable X-Coordinates
+	 * 
+	 * @return A String representing the range
+	 */
+	public String xRange() {
+		return "[" + getXMin() + ", " + getXMax() + "]";
+	}
+
+	/**
+	 * Returns a String representing the range of acceptable Y-Coordinates
+	 * 
+	 * @return A String representing the range
+	 */
+	public String yRange() {
+		return "[" + getYMin() + ", " + getYMax() + "]";
+	}
+
+	/**
 	 * Hint pane for the visualiser window.
 	 * 
 	 * @author Richard Sundqvist
@@ -343,5 +447,13 @@ public class Visualization extends StackPane {
 					new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false))));
 			this.setVisible(true);
 		}
+	}
+
+	/**
+	 * Create a render which shows live updating statistics for the model.
+	 */
+	public void showLiveStats() {
+		// TODO Auto-generated method stub
+		System.err.println("showLiveStats() not implemnted yet");
 	}
 }

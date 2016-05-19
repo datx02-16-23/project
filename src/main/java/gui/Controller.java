@@ -52,6 +52,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
@@ -580,16 +581,31 @@ public class Controller implements CommunicatorListener {
 	}
 
 	private void loadVisualMenu() {
+		MenuItem reset = new MenuItem("Reset Positions");
+		reset.setOnAction(event -> {
+			visualization.placeVisuals();
+		});
+		visualMenu.getItems().add(reset);
+		
+		MenuItem live = new MenuItem("Show Live Stats");
+		live.setOnAction(event -> {
+			visualization.showLiveStats();
+		});
+		visualMenu.getItems().add(live);
+		
+		visualMenu.getItems().add(new SeparatorMenuItem());
+		
+		MenuItem struct_mi ;
 		for (DataStructure struct : model.getStructures().values()) {
-			MenuItem mi = new MenuItem();
-			mi.setText(struct.identifier + ": " + struct.rawType.toString().toUpperCase());
-			mi.setOnAction(event -> {
+			struct_mi = new MenuItem();
+			struct_mi.setText(struct.identifier + ": " + struct.rawType.toString().toUpperCase());
+			struct_mi.setOnAction(event -> {
 				openVisualDialog(struct);
 			});
-			visualMenu.getItems().add(mi);
+			visualMenu.getItems().add(struct_mi);
 		}
 	}
-
+	
 	public void openVisualDialog(DataStructure struct) {
 		if (visualDialog.show(struct)) {
 			visualization.init();

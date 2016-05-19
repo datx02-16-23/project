@@ -74,24 +74,21 @@ public class SingleElementRender extends ARender {
 
 	@Override
 	protected VisualElement createVisualElement(Element e) {
-		VisualElement re = VisualElementFactory.shape(ElemShape.RECTANGLE, e, node_width, node_height);
+		VisualElement re = VisualElementFactory.shape(ElemShape.SINGLE, e, node_width, node_height);
 		return re;
 	}
 
 	@Override
 	protected VisualElement createVisualElement(double value, Color color) {
-		VisualElement re = VisualElementFactory.shape(ElemShape.RECTANGLE, value, color, node_width, node_height);
+		VisualElement re = VisualElementFactory.shape(ElemShape.SINGLE, value, color, node_width, node_height);
 		re.setInfoPos(null);
 		return re;
 	}
+	
+	
 
 	@Override
 	protected void bellsAndWhistles(Element e, VisualElement ve) {
-		System.out.println("single: bells shape = " + ve.getShape());
-		if(ve.getShape() == null){
-			return;
-		}
-		((Rectangle) ve.getShape()).setArcWidth(node_width/4);
-		((Rectangle) ve.getShape()).setArcHeight(node_height/4);
+		System.out.println("single: bells shape = " + ve.getShape());	
 	}
 }
