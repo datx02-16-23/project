@@ -21,9 +21,9 @@ public enum RawType {
 	/**
 	 * The permitted AbstractTypes for this RawType.
 	 */
-	public final AbstractType[] absTypes;
-	public final String pretty;
-	public final String json;
+	public transient final AbstractType[] absTypes;
+	public transient final String pretty;
+	public transient final String json;
 
 	private RawType(String pretty, String json, AbstractType... absType) {
 		this.pretty = pretty;
@@ -61,8 +61,8 @@ public enum RawType {
 	public enum AbstractType {
 		tree("Tree", "tree"); // A tree with n children and one parent.
 
-		public final String pretty;
-		public final String json;
+		public transient final String pretty;
+		public transient final String json;
 
 		private AbstractType(String pretty, String json) {
 			this.pretty = pretty;

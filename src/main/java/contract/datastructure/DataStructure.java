@@ -343,7 +343,7 @@ public abstract class DataStructure extends AnnotatedVariable {
 		}
 	}
 
-	private VisualListener listener;
+	private transient VisualListener listener;
 
 	/**
 	 * Interface for listening to changes in the VisualType.

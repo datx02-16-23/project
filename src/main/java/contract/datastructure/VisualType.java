@@ -3,9 +3,9 @@ package contract.datastructure;
 public enum VisualType {
 	bar("Bar Chart", "bar"), box("Boxes", "box", true), tree("KTree", "tree", true), single("Single Element", "single");
 
-	public final String pretty;
-	public final String json;
-	public final boolean has_options;
+	public transient final String pretty;
+	public transient final String json;
+	public transient final boolean has_options;
 
 	private VisualType(String pretty, String json, boolean has_options) {
 		this.pretty = pretty;
