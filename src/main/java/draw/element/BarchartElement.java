@@ -2,6 +2,8 @@ package draw.element;
 
 import contract.datastructure.Element;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.DoubleProperty;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -46,12 +48,7 @@ public class BarchartElement extends RectangleElement {
 	 */
 	public BarchartElement(Element element, double node_width, double node_height) {
 		super(element, node_width, node_height);
-		valueLabel.setTranslateY(-15);
-		valueLabel.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
-		//Restore to computed size.
-		valueLabel.setMaxSize(-1, -1);
-		valueLabel.setPrefSize(-1, -1);
-		valueLabel.setMinSize(-1, -1);
+		valueLabel.setTranslateY(-15); //Raise slightly does it doesn't cover the x-axis.
 	}
 
 	/**
@@ -64,8 +61,7 @@ public class BarchartElement extends RectangleElement {
 		this.height = unitHeight;
 		
 		Rectangle rect = ((Rectangle) shape);
-		rect.heightProperty().bind((element.numValueProperty().multiply(unitHeight)));
-		System.out.println("unit height update");
+		rect.heightProperty().bind((element.numValueProperty().multiply(unitHeight)).subtract(10));
 	}
 
 	@Override

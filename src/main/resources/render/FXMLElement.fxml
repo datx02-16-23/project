@@ -22,7 +22,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </StackPane>
-            <Label fx:id="value" alignment="CENTER" contentDisplay="TOP" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" mouseTransparent="true" text="VALUE" textAlignment="CENTER" />
+            <Label fx:id="value" alignment="CENTER" contentDisplay="TOP" focusTraversable="false" mouseTransparent="true" style="-fx-background-color: rgba(255, 255, 255, 0.8);" text="VALUE" textAlignment="CENTER" />
          </children>
       </StackPane>
    </children>
