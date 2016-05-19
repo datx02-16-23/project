@@ -1,5 +1,7 @@
 package draw;
 
+import java.util.Arrays;
+
 import contract.datastructure.Array;
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
@@ -100,8 +102,8 @@ public class GridRender extends ARender {
 
 	@Override
 	public void calculateSize() {
-		Array array = (Array) struct;
-		size = array.getCapacity() == null ? new int[] { struct.getElements().size(), 1 } : array.getCapacity();
+
+		ensureDimension();
 
 		if (mo == Order.ROW_MAJOR) {
 			totWidth = vspace + (vspace + node_width) * size[0];
@@ -119,6 +121,24 @@ public class GridRender extends ARender {
 			}
 		}
 		setSize(totWidth, totHeight);
+	}
+
+	private void ensureDimension() {
+		int[] backup = new int[] { struct.getElements().size(), 1 };
+		Array array = (Array) struct;
+
+		size = array.getCapacity();
+
+		if (size == null || size.length == 0) {
+			size = backup;
+			//Do not remove this printout //RS
+			System.err.println("Size was null or empty for \"" + struct + "\"!");
+		} else if (size.length == 1) {
+			int[] newSize = { size[0], 1 };
+			size = newSize;
+			// Add 2nd dimension for size calculations.
+		}
+		// Else assume size is ok.
 	}
 
 	public static enum Order {
