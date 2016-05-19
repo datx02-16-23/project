@@ -22,7 +22,7 @@ import javafx.scene.shape.Polyline;
 public class BarchartRender extends ARender implements BoundaryChangeListener {
 
 	// Using instead of default render field names for clarity.
-	private double renderHeight, padding, barWidth, barMax, unitHeight;
+	private double renderHeight, padding, barWidth, barMax, unitSize;
 	private final Array array;
 
 	private Pane axes = new Pane();
@@ -36,33 +36,33 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 	 *            The structure to render.
 	 * @param barWidth
 	 *            Width of the bars.
-	 * @param renderHeight
-	 *            Height of the Render unit.
-	 * @param unitHeight
+	 * @param totHeight
+	 *            Height of the Render itself.
+	 * @param unitSize
 	 *            The height of the bars per unit.
 	 * @param hspace
 	 *            Space between bars.
 	 */
-	public BarchartRender(DataStructure struct, double barWidth, double renderHeight, double unitHeight,
-			double hspace) {
-		super(struct, barWidth, renderHeight, hspace, barWidth / 2);
+	public BarchartRender(DataStructure struct, double barWidth, double totHeight, double unitSize, double hspace) {
+		super(struct, barWidth, totHeight, hspace, -1);
 
 		// Convenient names
 		this.array = (Array) struct;
 		this.barWidth = barWidth;
-		this.renderHeight = renderHeight;
+		this.renderHeight = totHeight;
 		this.padding = barWidth / 2;
-		this.unitHeight = unitHeight;
-		content.getChildren().add(axes);
+		this.unitSize = unitSize;
+
+		// Axes
 		axes.setMouseTransparent(true);
-		// axes.toBack();
+		content.getChildren().add(axes);
 	}
 
 	@Override
 	public double getX(Element e) {
 		int[] index = ((IndexedElement) e).getIndex();
-		if(index == null || index.length == 0){
-			System.err.println("Invalid index for element " + e + " in \"" + struct  + "\".");
+		if (index == null || index.length == 0) {
+			System.err.println("Invalid index for element " + e + " in \"" + struct + "\".");
 			renderFailure();
 			return -1;
 		}
@@ -75,11 +75,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 
 	@Override
 	public double getY(Element e) {
-		return totHeight - getY(e.getNumericValue());
-	}
-
-	public double getY(double value) {
-		return value * this.node_height + padding;
+		return this.barMax;
 	}
 
 	public void render() {
@@ -112,7 +108,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 		BarchartElement newVis;
 
 		for (Element e : struct.getElements()) {
-			newVis =  createVisualElement(e);
+			newVis = createVisualElement(e);
 			newVis.setLayoutX(getX(e));
 
 			nodes.getChildren().add(newVis);
@@ -123,10 +119,10 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 		renderAxes();
 		return true;
 	}
-	
+
 	private void fixChildren() {
 		for (Node node : nodes.getChildren()) {
-			((BarchartElement) node).setBotY(barMax);
+			((BarchartElement) node).setBotY(barMax - 5);
 		}
 	}
 
@@ -167,7 +163,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 		axes.getChildren().add(yArrow);
 
 		Label yLabel = new Label("Index");
-		yLabel.setLayoutX(totWidth-padding);
+		yLabel.setLayoutX(totWidth - padding);
 		yLabel.setLayoutY(renderHeight - padding * 0.8);
 		axes.getChildren().add(yLabel);
 
@@ -189,7 +185,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 	private void notches() {
 		double x = padding / 2;
 		int i = 1;
-		for (double y = barMax; y >= padding; y = y - unitHeight) {
+		for (double y = barMax; y >= padding; y = y - unitSize) {
 			// Notch
 			Line line = new Line(padding - 3, y, padding + 3, y);
 			axes.getChildren().add(line);
@@ -207,7 +203,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 
 	@Override
 	public void calculateSize() {
-		totWidth = array.getElements().size() * (barWidth + hspace) + padding * 2;
+		totWidth = array.getElements().size() * (barWidth + hspace) + padding * 3;
 		barMax = renderHeight - padding * 2;
 		setSize(totWidth, renderHeight);
 	}
@@ -215,20 +211,19 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 	@Override
 	protected BarchartElement createVisualElement(Element e) {
 		BarchartElement ve = (BarchartElement) VisualElementFactory.shape(ElemShape.BAR_ELEMENT, e, barWidth,
-				unitHeight * e.getNumericValue());
+				unitSize * e.getNumericValue());
 		return ve;
 	}
 
 	@Override
 	protected VisualElement createVisualElement(double value, Color color) {
-		VisualElement ve = VisualElementFactory.shape(ElemShape.BAR_ELEMENT, value, color, barWidth,
-				unitHeight * value);
+		VisualElement ve = VisualElementFactory.shape(ElemShape.BAR_ELEMENT, value, color, barWidth, unitSize * value);
 		return ve;
 	}
 
 	@Override
 	protected void bellsAndWhistles(Element e, VisualElement ve) {
-		((BarchartElement) ve).updateUnitHeight(unitHeight);
+		((BarchartElement) ve).updateUnitHeight(unitSize);
 	}
 
 	private void createIndexLabel(Element e) {
@@ -277,7 +272,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 	}
 
 	private double barHeight(BarchartElement be) {
-		double height = Math.abs(be.getElement().getNumericValue()) * unitHeight;
+		double height = Math.abs(be.getElement().getNumericValue()) * unitSize;
 
 		height = height > this.barMax ? barMax : height;
 
