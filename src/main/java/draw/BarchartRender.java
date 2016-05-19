@@ -122,7 +122,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 
 	private void fixChildren() {
 		for (Node node : nodes.getChildren()) {
-			((BarchartElement) node).setBotY(barMax - 5);
+			((BarchartElement) node).setBotY(barMax - 10);
 		}
 	}
 
@@ -138,11 +138,12 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 		xAxis.setStrokeWidth(2);
 		axes.getChildren().add(xAxis);
 
-		Polyline xArrow = new Polyline(0, 15, 5, 0, 10, 15);
+		Polyline xArrow = new Polyline(0, 0, 15, 5, 0, 10);
+		xArrow.setLayoutX(totWidth - 10);
+		xArrow.setLayoutY(renderHeight - padding - 5);
 		xArrow.setStrokeWidth(2);
-		xArrow.setLayoutX(padding / 2 + 5);
 		axes.getChildren().add(xArrow);
-
+		
 		Label xLabel = new Label("Value");
 		xLabel.setLayoutX(padding * 1.5);
 		xLabel.setLayoutY(-5);
@@ -156,12 +157,12 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 		axes.getChildren().add(yAxis);
 		notches();
 
-		Polyline yArrow = new Polyline(0, 0, 15, 5, 0, 10);
-		yArrow.setLayoutX(totWidth - 15);
-		yArrow.setLayoutY(renderHeight - padding - 5);
+		Polyline yArrow = new Polyline(0, 15, 5, 0, 10, 15);
 		yArrow.setStrokeWidth(2);
+		yArrow.setLayoutX(padding - 5);
+		yArrow.setLayoutY(-5);
 		axes.getChildren().add(yArrow);
-
+		
 		Label yLabel = new Label("Index");
 		yLabel.setLayoutX(totWidth - padding);
 		yLabel.setLayoutY(renderHeight - padding * 0.8);
@@ -262,23 +263,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 	@Override
 	public double absY(Element e) {
 		double by = this.getTranslateY() + this.getLayoutY() + content.getLayoutY();
-		return barMax + by;
-	}
-
-	private double getElementHeight(Element e) {
-		String key = Arrays.toString(((IndexedElement) e).getIndex());
-		BarchartElement bce = (BarchartElement) visualElementsMapping.get(key);
-		return barHeight(bce);
-	}
-
-	private double barHeight(BarchartElement be) {
-		double height = Math.abs(be.getElement().getNumericValue()) * unitSize;
-
-		height = height > this.barMax ? barMax : height;
-
-		// TODO: Fit?
-
-		return height;
+		return barMax - 10 + by;
 	}
 
 	/*
