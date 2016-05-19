@@ -163,10 +163,8 @@ public abstract class VisualElement extends Pane {
 	/**
 	 * Create a shape to use as the holder of the element value. Must never
 	 * return null.
-	 * 
-	 * @return A Shape to display the element in.
 	 */
-	public abstract Shape createShape();
+	public abstract void createShape();
 
 	private void init(double node_width, double node_height) {
 
@@ -184,7 +182,7 @@ public abstract class VisualElement extends Pane {
 
 		Pane shapePane = (Pane) fxmlLoader.getNamespace().get("shape");
 		shapePane.setCursor(Cursor.HAND);
-		shape = createShape();
+		createShape();
 		shape.setPickOnBounds(true);
 		shapePane.setPickOnBounds(true);
 		shapePane.getChildren().add(shape);

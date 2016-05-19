@@ -6,7 +6,8 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 
-public class RectangleElement extends VisualElement {
+public class SingleElement extends RectangleElement{
+	
 
 	/**
 	 * Create a static, unbound RectangleElement.
@@ -20,7 +21,7 @@ public class RectangleElement extends VisualElement {
 	 * @param node_height
 	 *            The height of the node.
 	 */
-	public RectangleElement(double value, Paint paint, double node_width, double node_height) {
+	public SingleElement(double value, Paint paint, double node_width, double node_height) {
 		super(value, paint, node_width, node_height);
 	}
 
@@ -34,16 +35,16 @@ public class RectangleElement extends VisualElement {
 	 * @param node_height
 	 *            The height of the node.
 	 */
-	public RectangleElement(Element element, double node_width, double node_height) {
+	public SingleElement(Element element, double node_width, double node_height) {
 		super(element, node_width, node_height);
 	}
 
 	@Override
 	public void createShape() {
-		Rectangle rect = new Rectangle();
-		rect.setWidth(width);
-		rect.setHeight(height);
-		rect.setStroke(Color.BLACK);
-		shape = rect;
+		super.createShape();
+		Rectangle rect = (Rectangle) shape;
+		rect.setArcWidth(width/3);
+		rect.setArcHeight(height/3);
 	}
+
 }

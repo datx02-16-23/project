@@ -41,6 +41,9 @@ public abstract class VisualElementFactory {
 		case RECTANGLE:
 			vis = new RectangleElement(e, pri, sec);
 			break;
+		case SINGLE:
+			vis = new SingleElement(e, pri, sec);
+			break;
 		case SQUARE:
 			vis = new RectangleElement(e, pri, pri);
 			break;
@@ -91,6 +94,9 @@ public abstract class VisualElementFactory {
 			break;
 		case RECTANGLE:
 			vis = new RectangleElement(value, paint, pri, sec);
+			break;
+		case SINGLE:
+			vis = new SingleElement(value, paint, pri, sec);
 			break;
 		case SQUARE:
 			vis = new RectangleElement(value, paint, pri, pri);
@@ -181,9 +187,11 @@ public abstract class VisualElementFactory {
 			y = points[yInd];
 
 			if (x < 0 || x > 1) {
+				//Do not remove this printout //RS
 				System.err.println("Bad x-coordinate at index " + xInd + ": " + x);
 			}
 			if (y < 0 || y > 1) {
+				//Do not remove this printout //RS
 				System.err.println("Bad y-coordinate at index " + yInd + ": " + y);
 			}
 

@@ -39,12 +39,12 @@ public class EllipseElement extends VisualElement {
 	}
 
 	@Override
-	public Shape createShape() {
+	public void createShape() {
 		Ellipse ellipse = new Ellipse();
 		ellipse.setRadiusX(width / 2);
 		ellipse.setRadiusY(height / 2);
 		ellipse.setStroke(Color.BLACK);
-		return ellipse;
+		this.shape = ellipse;
 	}
 
 //	public EllipseElement clone() {

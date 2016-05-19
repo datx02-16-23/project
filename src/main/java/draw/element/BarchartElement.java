@@ -65,14 +65,14 @@ public class BarchartElement extends RectangleElement {
 	}
 
 	@Override
-	public Shape createShape() {
+	public void createShape() {
 		rect = new Rectangle();
 		rect.setWidth(width);
 		rect.setHeight(height);
 		rect.setStroke(Color.BLACK);
 		
-		botprop(0);
-		return rect;
+		fixPositioning(0);
+		shape =  rect;
 	}
 
 
@@ -84,10 +84,10 @@ public class BarchartElement extends RectangleElement {
 	 */
 	public void setBotY(double y) {
 		layoutYProperty().unbind();
-		botprop(y);
+		fixPositioning(y);
 	}
 	
-	private void botprop(double y){
+	private void fixPositioning(double y){
 		DoubleBinding neg_half_height = rect.heightProperty().divide(2).multiply(-1); //- height/2
 		this.layoutYProperty().bind(neg_half_height.add(y));
 	}
