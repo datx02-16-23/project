@@ -33,7 +33,7 @@ public class ARenderManager extends BorderPane implements VisualListener {
 	/**
 	 * The current render for the structure.
 	 */
-	private ARender render;
+	private ARender curRender;
 
 	// Used to maintain settings when changing renders.
 	private double scaleX = 1;
@@ -42,20 +42,19 @@ public class ARenderManager extends BorderPane implements VisualListener {
 	private double translateY = 0;
 	private double layoutX = 0;
 	private double layoutY = 0;
-	private ARender oldRender;
+	private ARender prevRender;
 
 	/**
 	 * Create a new thingy.
 	 * 
 	 * @param struct
 	 *            The data structure being visualized.
-	 * @param animation_pane
-	 *            The Pane used for drawing animations. Will use own canvas if
-	 *            null.
+	 * @param animation_container
+	 *            Container for animation.
 	 */
-	public ARenderManager(DataStructure struct, Pane animation_pane) {
+	public ARenderManager(DataStructure struct, Pane animation_container) {
 		this.struct = struct;
-		this.animation_pane = animation_pane;
+		this.animation_pane = animation_container;
 		this.setPickOnBounds(false); //Mouse fix.
 		
 		setRender(struct.visual);
@@ -68,43 +67,43 @@ public class ARenderManager extends BorderPane implements VisualListener {
 	 *            The type to use.
 	 */
 	public void setRender(VisualType type) {
-		render = renders.get(type);
+		curRender = renders.get(type);
 
-		if (render == null) { // Create new render for the structure.
-			render = resolveRender(struct);
-			renders.put(struct.resolveVisual(), render);
+		if (curRender == null) { // Create new render for the structure.
+			curRender = resolveRender(struct);
+			renders.put(struct.resolveVisual(), curRender);
 		}
 
 		struct.setListener(this);
 
-		copyTransform();
-		setCenter(render);
+		initRender();
+		setCenter(curRender);
 		if(type == VisualType.single){
-			this.toFront(); //Single element renders are small
+			this.toFront(); //Single element renders are small.
 		}
 	}
 
-	private void copyTransform() {
-		if (oldRender != null) {
-			scaleX = oldRender.getScaleX();
-			scaleY = oldRender.getScaleY();
-			translateX = oldRender.getTranslateX();
-			translateY = oldRender.getTranslateY();
-			layoutX = oldRender.getLayoutX();
-			layoutY = oldRender.getLayoutY();
+	private void initRender() {
+		if (prevRender != null) {
+			scaleX = prevRender.getScaleX();
+			scaleY = prevRender.getScaleY();
+			translateX = prevRender.getTranslateX();
+			translateY = prevRender.getTranslateY();
+			layoutX = prevRender.getLayoutX();
+			layoutY = prevRender.getLayoutY();
 
-			render.setScaleX(scaleX);
-			render.setScaleX(scaleY);
-			render.setTranslateX(translateX);
-			render.setTranslateY(translateY);
-			render.setLayoutX(layoutX);
-			render.setLayoutY(layoutY);
-
+			curRender.setScaleX(scaleX);
+			curRender.setScaleX(scaleY);
+			curRender.setTranslateX(translateX);
+			curRender.setTranslateY(translateY);
+			curRender.setLayoutX(layoutX);
+			curRender.setLayoutY(layoutY);
 		}
 		
-		render.init();
-		render.updateInfoLabels();
-		oldRender = render;
+		curRender.init();
+		curRender.updateInfoLabels();
+		animation_pane.getChildren().add(curRender.getAnimationPane());
+		prevRender = curRender;
 	}
 
 	/**
@@ -117,20 +116,20 @@ public class ARenderManager extends BorderPane implements VisualListener {
 		VisualType visual = struct.resolveVisual();
 		switch (visual) {
 		case bar:
-			render = new BarchartRender(struct, 30, ARender.DEFAULT_RENDER_HEIGHT, 10, 10);
+			curRender = new BarchartRender(struct, 30, ARender.DEFAULT_RENDER_HEIGHT, 10, 10);
 			break;
 		case box:
-			render = new GridRender(struct, GridRender.Order.resolve(struct.visualOption), 40, 40, 3, 3);
+			curRender = new GridRender(struct, GridRender.Order.resolve(struct.visualOption), 40, 40, 3, 3);
 			break;
 		case tree:
-			render = new KTreeRender(struct, struct.visualOption, 40, 40, 5, 5);
+			curRender = new KTreeRender(struct, struct.visualOption, 40, 40, 5, 5);
 			break;
 		case single:
-			render = new SingleElementRender(struct, 80, 40);
+			curRender = new SingleElementRender(struct, 80, 40);
 			break;
 		}
-		render.setAnimationPane(animation_pane == null ? render.getNodes() : animation_pane);
-		return render;
+//		render.setAnimationPane(animation_pane == null ? render.getNodes() : animation_pane);
+		return curRender;
 	}
 
 	@Override
@@ -142,7 +141,7 @@ public class ARenderManager extends BorderPane implements VisualListener {
 	 * Force the current Render to initialise.
 	 */
 	public void init(){
-		render.init();
+		curRender.init();
 	}
 
 	/**
@@ -151,7 +150,7 @@ public class ARenderManager extends BorderPane implements VisualListener {
 	 * @return The current Render for the structure.
 	 */
 	public ARender getRender() {
-		return render;
+		return curRender;
 	}
 	
 	public String toString(){

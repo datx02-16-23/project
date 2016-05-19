@@ -59,12 +59,12 @@ public abstract class ARender extends Pane {
 	 * The value for renders which prefer a fixed width.
 	 */
 	public static final int DEFAULT_RENDER_WIDTH = 400;
-	
+
 	/**
 	 * The value for renders which prefer a fixed height.
 	 */
 	public static final int DEFAULT_RENDER_HEIGHT = 250;
-	
+
 	/*
 	 * Shared stuff.
 	 */
@@ -142,7 +142,7 @@ public abstract class ARender extends Pane {
 	/**
 	 * The pane used when drawing animated elements.
 	 */
-	protected Pane animation_pane;
+	protected final Pane animation_pane;
 	/**
 	 * The root for the FXML Render.
 	 */
@@ -195,6 +195,8 @@ public abstract class ARender extends Pane {
 		this.node_height = height;
 		this.hspace = hspace;
 		this.vspace = vspace;
+		
+		this.animation_pane = new Pane();
 
 		// Add stacked canvases
 		loadBase();
@@ -368,7 +370,8 @@ public abstract class ARender extends Pane {
 	}
 
 	/**
-	 * Returns the absolute x-coordinate of an element. Returns -1 if the calculation fails.
+	 * Returns the absolute x-coordinate of an element. Returns -1 if the
+	 * calculation fails.
 	 * 
 	 * @param e
 	 *            An element to resolve coordinates for.
@@ -377,7 +380,8 @@ public abstract class ARender extends Pane {
 	public abstract double getX(Element e);
 
 	/**
-	 * Returns the absolute y-coordinate of an element. Returns -1 if the calculation fails.
+	 * Returns the absolute y-coordinate of an element. Returns -1 if the
+	 * calculation fails.
 	 * 
 	 * @param e
 	 *            An element to resolve coordinates for.
@@ -407,7 +411,7 @@ public abstract class ARender extends Pane {
 		 */
 		setOnScroll(event -> {
 			sign = event.getDeltaY() > 0 ? 1 : -1;
-			
+
 			scale = scale + sign * 0.100000000;
 			if (scale < 0.1) {
 				scale = 0.1;
@@ -420,7 +424,7 @@ public abstract class ARender extends Pane {
 			setScaleY(scale);
 			updateInfoLabels();
 		});
-		
+
 		/*
 		 * Drag
 		 */
@@ -496,7 +500,7 @@ public abstract class ARender extends Pane {
 
 		final VisualElement real = visualElementsMapping.get(Arrays.toString(i));
 		if (real == null) {
-			//Do not remove this printout //RS
+			// Do not remove this printout //RS
 			System.err.println("Animation failed: Failed resolve element for: " + struct);
 			return;
 		}
@@ -504,6 +508,12 @@ public abstract class ARender extends Pane {
 		VisualElement animated = real.clone();
 
 		animated.unbind();
+
+//		animated.setScaleX(this.getScaleX());
+//		animated.setScaleY(this.getScaleY());
+		
+		animation_pane.setScaleX(this.getScaleX());
+		animation_pane.setScaleY(this.getScaleY());
 
 		animation_pane.getChildren().add(animated);
 
@@ -566,7 +576,7 @@ public abstract class ARender extends Pane {
 	 * @return The absolute x-coordinates of e.
 	 */
 	public double absX(Element e) {
-		double bx = this.getTranslateX() + this.getLayoutX() + content.getLayoutX();
+		double bx = this.getTranslateX() + this.getLayoutX();
 		return getX(e) + bx;
 	}
 
@@ -967,35 +977,35 @@ public abstract class ARender extends Pane {
 	}
 
 	/**
-	 * Set the Pane used for drawing animated elements.
+	 * Returns the Pane used for drawing animated elements.
 	 * 
 	 * @param animation_pane
-	 *            A Pane for animation.
+	 *            The used Pane for animation.
 	 */
-	public void setAnimationPane(Pane animation_pane) {
-		this.animation_pane = animation_pane;
+	public Pane getAnimationPane() {
+		return this.animation_pane;
 	}
-	
+
 	/**
 	 * Update info labels in the header.
 	 */
-	public void updateInfoLabels(){
+	public void updateInfoLabels() {
 		DecimalFormat df = new DecimalFormat("#0.00");
 		xposLabel.setText("XPos: " + (int) (getTranslateX() + 0.5));
 		yposLabel.setText("| YPos: " + (int) (getTranslateY() + 0.5));
 		scaleLabel.setText("| Scale: " + df.format(scale));
 	}
-	
+
 	/**
 	 * Makes the header red when something goes wrong.
 	 */
-	public void renderFailure(){
+	public void renderFailure() {
 		header.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
 		content.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
 		Main.console.err("Render Failure in " + this.toString() + ".");
 	}
-	
-	public String toString(){
-		return this.getClass().getSimpleName() + " ("  + this.struct + ")";
+
+	public String toString() {
+		return this.getClass().getSimpleName() + " (" + this.struct + ")";
 	}
 }

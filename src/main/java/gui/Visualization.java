@@ -42,7 +42,7 @@ public class Visualization extends StackPane {
 	/**
 	 * Pane for drawing of animated elements.
 	 */
-	private final Pane animated_nodes = new Pane();
+	private final Pane animated = new Pane();
 
 	/**
 	 * Animation time in milliseconds.
@@ -71,13 +71,13 @@ public class Visualization extends StackPane {
 	public Visualization() {
 		this.model = Model.instance();
 		// Shared animation space
-		animated_nodes.setMouseTransparent(true);
-		animated_nodes.maxWidth(Double.MAX_VALUE);
-		animated_nodes.maxHeight(Double.MAX_VALUE);
+		animated.setMouseTransparent(true);
+		animated.maxWidth(Double.MAX_VALUE);
+		animated.maxHeight(Double.MAX_VALUE);
 		animate = true;
 
 		// Add stacked canvases
-		this.getChildren().addAll(HINT_PANE, managers, animated_nodes);
+		this.getChildren().addAll(HINT_PANE, managers, animated);
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class Visualization extends StackPane {
 	public void clearAndCreateVisuals() {
 		clear();
 		for (DataStructure struct : model.getStructures().values()) {
-			ARenderManager manager = new ARenderManager(struct, animated_nodes);
+			ARenderManager manager = new ARenderManager(struct, animated);
 			managers.getChildren().add(manager);
 			struct_manager_mapping.put(struct.identifier, manager);
 		}
@@ -135,6 +135,7 @@ public class Visualization extends StackPane {
 	 *            The new animation time in milliseconds.
 	 */
 	public final void setAnimationTime(long millis) {
+//		millis = 10000; //TODO
 		this.millis = (long) (millis * 0.60000);
 	}
 
