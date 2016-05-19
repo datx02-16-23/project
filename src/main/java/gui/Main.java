@@ -8,6 +8,7 @@ import assets.example.Examples.Algorithm;
 import gui.panel.OperationPanel;
 import gui.panel.SourcePanel;
 import io.LogStreamManager;
+import javafx.animation.FillTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -21,8 +22,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javafx.scene.control.TextArea;
 
 import java.io.IOException;
@@ -202,6 +205,15 @@ public class Main extends Application {
 				return;
 			}
 			print(prepend_err + err);
+			blinkRed();
+		}
+		
+		/**
+		 * Make the console blink a red to draw attention;
+		 */
+		public void blinkRed(){
+			consoleTextArea.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
+//			consoleTextArea.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
 		}
 
 		/**
