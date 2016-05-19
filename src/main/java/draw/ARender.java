@@ -351,7 +351,7 @@ public abstract class ARender extends Pane {
 			content.setMaxSize(width, height);
 
 			// if (content.isVisible()) {
-			height = height + 35; // Space for header bar
+			height = height + 10; // Space for header bar
 			root.setPrefSize(width, height);
 			root.setMaxSize(width, height);
 
@@ -966,7 +966,7 @@ public abstract class ARender extends Pane {
 		if (content.getBackground() == null) {
 			calculateSize();
 		} else {
-			setSize(150, 115);
+			setSize(150, 90);
 		}
 		for (Node n : nonHideButtons) {
 			n.setVisible(true);
