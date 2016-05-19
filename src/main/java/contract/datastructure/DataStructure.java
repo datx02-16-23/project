@@ -202,19 +202,21 @@ public abstract class DataStructure extends AnnotatedVariable {
 	 * been drawn.
 	 * 
 	 * @param paint
-	 *            The color to use for this element after reset. Null default to
-	 *            white.
+	 *            The color to use for this element after reset. Null defaults
+	 *            to white.
 	 */
 	public void elementsDrawn(Paint paint) {
 		paint = paint == null ? Color.WHITE : paint;
 
-		// TODO
-		for (Element e : getResetElements()) {
-			if (getModifiedElements().contains(e) == false) {
-				e.setColor(paint);
-			}
+		//Do not reset elements which were modified again.
+		resetElements.removeAll(modifiedElements);
+		// Inactive elements should not have their colour reset.
+		resetElements.removeAll(inactiveElements);
+
+		for (Element e : resetElements) {
+			e.setColor(paint);
 		}
-		// resetElements.clear();
+
 		resetElements.setAll(modifiedElements);
 		modifiedElements.clear();
 	}
@@ -231,7 +233,7 @@ public abstract class DataStructure extends AnnotatedVariable {
 	/**
 	 * Mark an element as inactive. If this method is called with an active
 	 * element as target, the element will be reactivated. If the target of the
-	 * Remove operation has an identifier equaling the identifier of this
+	 * Remove operation has an identifier equalling the identifier of this
 	 * DataStructure but no index, the entire structure will become inactive.
 	 * 
 	 * @param op
@@ -257,7 +259,7 @@ public abstract class DataStructure extends AnnotatedVariable {
 				resetElements.add(e); // Reactive element
 			} else {
 				inactiveElements.add(e);
-				e.count(op);
+				e.execute(op);
 			}
 		}
 	}
@@ -287,7 +289,22 @@ public abstract class DataStructure extends AnnotatedVariable {
 	 * Set the entire structure active or inactive
 	 */
 	public void toggleActive() {
-		// TODO Auto-generated method stub
+		active = !active;
+		/*
+		 * Reactive the structure.
+		 */
+		if (active) {
+			// TODO Maybe not neccessary to do anything on active
+			/*
+			 * Deactiveate the structure.
+			 */
+		} else {
+			OP_Remove remove = new OP_Remove();
+			for (Element e : elements) {
+				e.execute(remove);
+			}
+		}
+		repaintAll = true;
 	}
 
 	/**

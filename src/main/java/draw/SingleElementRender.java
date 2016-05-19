@@ -43,7 +43,7 @@ public class SingleElementRender extends ARender {
 	@Override
 	public void calculateSize() {
 		this.totWidth = 150;
-		this.totHeight = node_height;
+		this.totHeight = nodeHeight;
 		setSize(totWidth, totHeight);
 	}
 
@@ -73,13 +73,13 @@ public class SingleElementRender extends ARender {
 
 	@Override
 	protected VisualElement createVisualElement(Element e) {
-		VisualElement re = VisualElementFactory.shape(ElemShape.SINGLE, e, node_width, node_height);
+		VisualElement re = VisualElementFactory.shape(ElemShape.SINGLE, e, nodeWidth, nodeHeight);
 		return re;
 	}
 
 	@Override
 	protected VisualElement createVisualElement(double value, Color color) {
-		VisualElement re = VisualElementFactory.shape(ElemShape.SINGLE, value, color, node_width, node_height);
+		VisualElement re = VisualElementFactory.shape(ElemShape.SINGLE, value, color, nodeWidth, nodeHeight);
 		re.setInfoPos(null);
 		return re;
 	}

@@ -26,7 +26,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 	private Pane axes = new Pane();
 	// private final CategoryAxis xAxis = new CategoryAxis();
 	// private final NumberAxis yAxis = new NumberAxis();
-	private double right_wall_x;
+	private double rightWallX;
 
 	/**
 	 * Create a new BarchartRender.
@@ -53,7 +53,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 
 		// Axes
 		axes.setMouseTransparent(true);
-		content.getChildren().add(axes);
+		contentPane.getChildren().add(axes);
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 	}
 
 	public double getX(int index) {
-		return (barWidth + hspace) * index + hspace + padding;
+		return (barWidth + hSpace) * index + hSpace + padding;
 	}
 
 	@Override
@@ -94,12 +94,12 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 		/*
 		 * Clear the nodes from all content Panes.
 		 */
-		for (Node n : content.getChildren()) {
+		for (Node n : contentPane.getChildren()) {
 			((Pane) n).getChildren().clear();
 		}
 
 		visualMap.clear();
-		content.setBackground(null);
+		contentPane.setBackground(null);
 		calculateSize();
 
 		// Create nodes
@@ -109,7 +109,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 			newVis = createVisualElement(e);
 			newVis.setLayoutX(getX(e));
 
-			nodes.getChildren().add(newVis);
+			defaultNodePane.getChildren().add(newVis);
 			visualMap.put(Arrays.toString(((IndexedElement) e).getIndex()), newVis);
 			bellsAndWhistles(e, newVis);
 		}
@@ -119,7 +119,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 	}
 
 	private void positionBars() {
-		for (Node node : nodes.getChildren()) {
+		for (Node node : defaultNodePane.getChildren()) {
 			((BarchartElement) node).setBotY(xAxisY - padding - 10); // TODO fix
 		}
 	}
@@ -132,7 +132,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 		/*
 		 * X-Axis
 		 */
-		Line xAxis = new Line(0, xAxisY, right_wall_x + 5, xAxisY);
+		Line xAxis = new Line(0, xAxisY, rightWallX + 5, xAxisY);
 		xAxis.setStrokeWidth(2);
 		axes.getChildren().add(xAxis);
 
@@ -165,7 +165,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 		axes.getChildren().add(yArrow);
 
 		Label yLabel = new Label("Index");
-		yLabel.setLayoutX(right_wall_x);
+		yLabel.setLayoutX(rightWallX);
 		yLabel.setLayoutY(xAxisY + 2);
 		axes.getChildren().add(yLabel);
 
@@ -178,12 +178,12 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 	 */
 	public void drawDeveloperGuides() {
 
-		Line roof = new Line(padding, padding, right_wall_x, padding);
+		Line roof = new Line(padding, padding, rightWallX, padding);
 		roof.setStroke(Color.HOTPINK);
 		roof.setStrokeWidth(2);
 		roof.getStrokeDashArray().addAll(20.0);
 
-		Line floor = new Line(padding, xAxisY, right_wall_x, xAxisY);
+		Line floor = new Line(padding, xAxisY, rightWallX, xAxisY);
 		floor.setStrokeWidth(2);
 		floor.setStroke(Color.HOTPINK);
 		floor.getStrokeDashArray().addAll(20.0);
@@ -201,7 +201,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 		Pane guides = new Pane();
 		guides.getChildren().addAll(roof, floor, left, right);
 		guides.setOpacity(0.9);
-		content.getChildren().add(guides);
+		contentPane.getChildren().add(guides);
 	}
 
 	private void notches() {
@@ -225,9 +225,9 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 
 	@Override
 	public void calculateSize() {
-		totWidth = struct.getElements().size() * (barWidth + hspace) + padding * 3;
+		totWidth = struct.getElements().size() * (barWidth + hSpace) + padding * 3;
 		xAxisY = renderHeight - padding;
-		right_wall_x = totWidth - padding;
+		rightWallX = totWidth - padding;
 		setSize(totWidth, renderHeight);
 	}
 
@@ -283,7 +283,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 	 */
 	@Override
 	public double absY(Element e) {
-		double by = this.getTranslateY() + this.getLayoutY() + content.getLayoutY();
+		double by = this.getTranslateY() + this.getLayoutY() + contentPane.getLayoutY();
 		return xAxisY + by;
 	}
 

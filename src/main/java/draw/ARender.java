@@ -38,20 +38,20 @@ public abstract class ARender extends Pane {
 	/**
 	 * Width of individual elements bounding boxes.
 	 */
-	protected final double node_width;
+	protected final double nodeWidth;
 	/**
 	 * Height of individual elements bounding boxes.
 	 */
-	protected final double node_height;
+	protected final double nodeHeight;
 
 	/**
 	 * Horizontal space between elements.
 	 */
-	protected final double hspace;
+	protected final double hSpace;
 	/**
 	 * Vertical space between elements.
 	 */
-	protected final double vspace;
+	protected final double vSpace;
 	/**
 	 * The width of the render.
 	 */
@@ -69,19 +69,19 @@ public abstract class ARender extends Pane {
 	protected final HashMap<String, VisualElement> visualMap = new HashMap<String, VisualElement>();
 
 	/**
-	 * Pane for rendering of visual element nodes.
+	 * Pane for rendering of visual element nodes. Added to {@link contentPane} automatically.
 	 */
-	protected final Pane nodes = new Pane();
+	protected final Pane defaultNodePane = new Pane();
 	/**
-	 * The content pane for the render. By default, a Pane for {@link #nodes}
-	 * will be added, but renders can add their own as well.
+	 * The content pane for the render. By default, a Pane for nodes ({@link #defaultNodePane})
+	 * will be added, but renders can add their own panes to {@code contentPane} if need be.
 	 */
-	protected Pane content;
+	protected Pane contentPane;
 
 	/**
 	 * The pane used when drawing animated elements.
 	 */
-	protected final Pane anim;
+	protected final Pane animPane;
 	/**
 	 * The root for the FXML Render.
 	 */
@@ -118,24 +118,24 @@ public abstract class ARender extends Pane {
 	 * 
 	 * @param struct
 	 *            The structure to render.
-	 * @param width
+	 * @param nodeWidth
 	 *            The width of the elements in this Render.
-	 * @param height
+	 * @param nodeHeight
 	 *            The height of the elements in this Render.
-	 * @param hspace
+	 * @param hSpace
 	 *            The horizontal space between elements in this Render.
-	 * @param vspace
+	 * @param vSpace
 	 *            The vertical space between elements in this Render.
 	 */
-	public ARender(DataStructure struct, double width, double height, double hspace, double vspace) {
+	public ARender(DataStructure struct, double nodeWidth, double nodeHeight, double hSpace, double vSpace) {
 		this.struct = struct;
 
-		this.node_width = width;
-		this.node_height = height;
-		this.hspace = hspace;
-		this.vspace = vspace;
+		this.nodeWidth = nodeWidth;
+		this.nodeHeight = nodeHeight;
+		this.hSpace = hSpace;
+		this.vSpace = vSpace;
 
-		this.anim = new Pane();
+		this.animPane = new Pane();
 
 		// Add stacked canvases
 		loadBase();
@@ -159,9 +159,9 @@ public abstract class ARender extends Pane {
 		root.setMinSize(150, 20);
 
 		// Content pane
-		content = (Pane) fxmlLoader.getNamespace().get("content");
-		content.getChildren().add(nodes);
-		content.setBackground(getStructBackground(struct));
+		contentPane = (Pane) fxmlLoader.getNamespace().get("content");
+		contentPane.getChildren().add(defaultNodePane);
+		contentPane.setBackground(getStructBackground(struct));
 		setSize(150, 125); // Size of background images
 
 		// Name labels
@@ -219,17 +219,17 @@ public abstract class ARender extends Pane {
 	 * 
 	 * @param src
 	 *            The source element.
-	 * @param src_rndr
+	 * @param srcRender
 	 *            The render for the source element.
 	 * @param tar
 	 *            The target element.
-	 * @param tar_rndr
+	 * @param tarRender
 	 *            The render for the target element.
 	 * @param millis
 	 *            The time in milliseconds the animation should last.
 	 */
 	//@formatter:off
-	public void animateReadWrite(Element src, ARender src_rndr, Element tar, ARender tar_rndr, long millis) {
+	public void animateReadWrite(Element src, ARender srcRender, Element tar, ARender tarRender, long millis) {
 		/*
 		 * Target is unknown. READ: this -> [x]
 		 */
@@ -238,7 +238,7 @@ public abstract class ARender extends Pane {
 					// From
 					absX(src), absY(src), 
 					 // To
-					absX(src), absY(src) - node_height * 2,
+					absX(src), absY(src) - nodeHeight * 2,
 					millis, this,
 					AnimationOption.FADE_OUT, AnimationOption.SHRINK);
 			/*
@@ -247,7 +247,7 @@ public abstract class ARender extends Pane {
 		} else if (src == null) {
 			RenderAnimation.animate(tar,
 					 // From
-					absX(tar), absY(tar) - node_height * 2,
+					absX(tar), absY(tar) - nodeHeight * 2,
 					 // To
 					absX(tar), absY(tar),
 					millis, this,
@@ -257,8 +257,8 @@ public abstract class ARender extends Pane {
 			 */
 		} else { // if (src != null && tar != null)
 			RenderAnimation.animate(tar,
-					src_rndr.absX(src), src_rndr.absY(src), // From
-					tar_rndr.absX(tar), tar_rndr.absY(tar), // To
+					srcRender.absX(src), srcRender.absY(src), // From
+					tarRender.absX(tar), tarRender.absY(tar), // To
 					millis, this);
 		}
 	}
@@ -269,22 +269,22 @@ public abstract class ARender extends Pane {
 	 * 
 	 * @param var1
 	 *            The first element.
-	 * @param var1_rndr
+	 * @param render1
 	 *            The render for the first element.
 	 * @param var2
 	 *            The second element.
-	 * @param var2_rndr
+	 * @param render2
 	 *            The render for the second element.
 	 * @param millis
 	 *            The time in milliseconds the animation should last.
 	 */
 	// formatter:off
-	public void animateSwap(Element var1, ARender var1_rndr, Element var2, ARender var2_rndr, long millis) {
+	public void animateSwap(Element var1, ARender render1, Element var2, ARender render2, long millis) {
 		RenderAnimation.animate(var2,
 				// From
-				var1_rndr.absX(var1), var1_rndr.absY(var1),
+				render1.absX(var1), render1.absY(var1),
 				// To
-				var2_rndr.absX(var2), var2_rndr.absY(var2),
+				render2.absX(var2), render2.absY(var2),
 				millis, this,
 				AnimationOption.USE_GHOST);
 	}
@@ -299,10 +299,10 @@ public abstract class ARender extends Pane {
 	 *            The height of this Render.
 	 */
 	protected void setSize(double width, double height) {
-		if (content.isVisible()) {
-			content.setMinSize(width, height);
-			content.setPrefSize(width, height);
-			content.setMaxSize(width, height);
+		if (contentPane.isVisible()) {
+			contentPane.setMinSize(width, height);
+			contentPane.setPrefSize(width, height);
+			contentPane.setMaxSize(width, height);
 
 			// if (content.isVisible()) {
 			height = height + 45; // Space for header bar
@@ -446,14 +446,14 @@ public abstract class ARender extends Pane {
 	 * @return The absolute y-coordinates of e.
 	 */
 	public double absY(Element e) {
-		double by = this.getTranslateY() + this.getLayoutY() + content.getLayoutY();
+		double by = this.getTranslateY() + this.getLayoutY() + contentPane.getLayoutY();
 		return this.getY(e) + by;
 	}
 
 	/**
 	 * Force the Render to initialise all elements. This method will attempt
 	 * create elements and add them to the standard pane. It will clear the
-	 * children of all children in {@link #content} before beginning.
+	 * children of all children in {@link #contentPane} before beginning.
 	 * {@link #bellsAndWhistles} will be called on every element.
 	 * 
 	 * 
@@ -468,12 +468,12 @@ public abstract class ARender extends Pane {
 		/*
 		 * Clear the nodes from all content Panes.
 		 */
-		for (Node n : content.getChildren()) {
+		for (Node n : contentPane.getChildren()) {
 			((Pane) n).getChildren().clear();
 		}
 
 		visualMap.clear();
-		content.setBackground(null);
+		contentPane.setBackground(null);
 		calculateSize();
 
 		// Create nodes
@@ -484,7 +484,7 @@ public abstract class ARender extends Pane {
 			newVis.setLayoutX(getX(e));
 			newVis.setLayoutY(getY(e));
 
-			nodes.getChildren().add(newVis);
+			defaultNodePane.getChildren().add(newVis);
 			visualMap.put(Arrays.toString(((IndexedElement) e).getIndex()), newVis);
 
 			bellsAndWhistles(e, newVis);
@@ -576,7 +576,7 @@ public abstract class ARender extends Pane {
 
 	private void collapse() {
 		// Make the render expand and collapse and NE corner.
-		conbwhs = content.getPrefWidth() - 150;
+		conbwhs = contentPane.getPrefWidth() - 150;
 		setTranslateX(getTranslateX() + conbwhs);
 
 		// Show only header
@@ -588,16 +588,16 @@ public abstract class ARender extends Pane {
 		for (Node n : optionalHeaderContent) {
 			n.setVisible(false);
 		}
-		content.setVisible(false);
+		contentPane.setVisible(false);
 	}
 
 	private void expand() {
-		content.setVisible(true);
+		contentPane.setVisible(true);
 		setTranslateX(getTranslateX() - conbwhs);
 		bindHeader();
 		calculateSize(); // Size recalculation is disabled while hidden.
 
-		if (content.getBackground() == null) {
+		if (contentPane.getBackground() == null) {
 			calculateSize();
 		} else {
 			setSize(150, 90);
@@ -613,17 +613,17 @@ public abstract class ARender extends Pane {
 	 * @return The Pane used to draw element nodes.
 	 */
 	public Pane getNodes() {
-		return nodes;
+		return defaultNodePane;
 	}
 
 	/**
 	 * Returns the Pane used for drawing animated elements.
 	 * 
-	 * @param anim
+	 * @param animPane
 	 *            The used Pane for animation.
 	 */
 	public Pane getAnimationPane() {
-		return this.anim;
+		return this.animPane;
 	}
 
 	/**
@@ -649,7 +649,7 @@ public abstract class ARender extends Pane {
 			mp3.play();
 
 			header.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
-			content.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
+			contentPane.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
 			Main.console.err("Render Failure in " + this.toString() + ".");
 		}
 	}

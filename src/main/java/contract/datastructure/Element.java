@@ -109,12 +109,12 @@ public abstract class Element {
 	/**
 	 * Indicate to the element that it it has been involved in an operation.
 	 * 
-	 * @param appliedOp The operation type which was applied.
+	 * @param op The operation type which was applied.
 	 */
-	public final void count(Operation appliedOp) {
-		this.paint = appliedOp.operation.paint;
+	public final void execute(Operation op) {
+		this.paint = op.operation.paint;
 		fillProperty.setValue(paint);
-		oc.count(appliedOp);
+		oc.count(op);
 	}
 	
 	/**

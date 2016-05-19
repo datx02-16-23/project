@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
  *
  */
 public class GridRender extends ARender {
-	private final Order major_order;
+	private final Order majorOrder;
 	private int[] dims;
 
 	/**
@@ -36,7 +36,7 @@ public class GridRender extends ARender {
 	 */
 	public GridRender(DataStructure struct, Order major_order, double width, double height, double hspace, double vspace) {
 		super(struct, width, height, hspace, vspace);
-		this.major_order = major_order;
+		this.majorOrder = major_order;
 	}
 
 	public void render() {
@@ -69,8 +69,8 @@ public class GridRender extends ARender {
 	@Override
 	public double getX(Element e) {
 		int[] index = ((IndexedElement) e).getIndex();
-		double x = hspace;
-		if (major_order == Order.ROW_MAJOR) {
+		double x = hSpace;
+		if (majorOrder == Order.ROW_MAJOR) {
 			x = getX(index[0]);
 		} else {
 			if (index.length == 2) {
@@ -81,14 +81,14 @@ public class GridRender extends ARender {
 	}
 
 	private double getX(int column) {
-		return hspace + (hspace + node_width) * column;
+		return hSpace + (hSpace + nodeWidth) * column;
 	}
 
 	@Override
 	public double getY(Element e) {
 		int[] index = ((IndexedElement) e).getIndex();
-		double y = vspace;
-		if (major_order == Order.ROW_MAJOR) {
+		double y = vSpace;
+		if (majorOrder == Order.ROW_MAJOR) {
 			if (index.length == 2) {
 				y = getY(index[1]);
 			}
@@ -99,7 +99,7 @@ public class GridRender extends ARender {
 	}
 
 	private double getY(int row) {
-		return vspace + (vspace + node_height) * row;
+		return vSpace + (vSpace + nodeHeight) * row;
 	}
 
 	@Override
@@ -110,16 +110,16 @@ public class GridRender extends ARender {
 		/*
 		 * Row Major
 		 */
-		if (major_order == Order.ROW_MAJOR) {
-			totWidth = vspace + (vspace + node_width) * dims[0];
-			totHeight = hspace + (hspace + node_height) * dims[1];
+		if (majorOrder == Order.ROW_MAJOR) {
+			totWidth = vSpace + (vSpace + nodeWidth) * dims[0];
+			totHeight = hSpace + (hSpace + nodeHeight) * dims[1];
 			
 			/*
 			 * Column Major
 			 */
 		} else {
-			totHeight = hspace + (hspace + node_height) * dims[0];
-			totWidth = 2 + vspace + (vspace + node_width) * dims[1];
+			totHeight = hSpace + (hSpace + nodeHeight) * dims[0];
+			totWidth = 2 + vSpace + (vSpace + nodeWidth) * dims[1];
 		}
 		setSize(totWidth, totHeight);
 	}
@@ -176,7 +176,7 @@ public class GridRender extends ARender {
 
 	@Override
 	protected VisualElement createVisualElement(Element e) {
-		VisualElement re = VisualElementFactory.shape(ElemShape.RECTANGLE, e, node_width, node_height);
+		VisualElement re = VisualElementFactory.shape(ElemShape.RECTANGLE, e, nodeWidth, nodeHeight);
 		re.setInfoPos(Pos.BOTTOM_CENTER);
 		re.setInfoArray(((IndexedElement) e).getIndex());
 		return re;
@@ -184,7 +184,7 @@ public class GridRender extends ARender {
 
 	@Override
 	protected VisualElement createVisualElement(double value, Color color) {
-		VisualElement re = VisualElementFactory.shape(ElemShape.RECTANGLE, value, color, node_width, node_height);
+		VisualElement re = VisualElementFactory.shape(ElemShape.RECTANGLE, value, color, nodeWidth, nodeHeight);
 		re.setInfoPos(null);
 		return re;
 	}

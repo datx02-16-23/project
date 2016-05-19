@@ -101,7 +101,7 @@ public class Array extends DataStructure {
 		for (; linearIndex < init_values.length; linearIndex++) {
 			IndexedElement ae = new IndexedElement(init_values[linearIndex],
 					getIndexInNDimensions(linearIndex, capacity));
-			ae.count(init);
+			ae.execute(init);
 			putElement(ae);
 		}
 		// Initialize elements without given values to 0.
@@ -112,7 +112,7 @@ public class Array extends DataStructure {
 		for (linearIndex++; linearIndex < linearTotal; linearIndex++) {
 			IndexedElement ae = new IndexedElement(0.0, getIndexInNDimensions(linearIndex, capacity));
 			modifiedElements.add(ae);
-			ae.count(init);
+			ae.execute(init);
 			putElement(ae);
 		}
 		modifiedElements.addAll(elements);
@@ -133,7 +133,7 @@ public class Array extends DataStructure {
 		IndexedElement var1Element = this.getElement(var1);
 		if (var1Element != null) {
 			var1Element.setNumValue(op.getValue()[0]);
-			var1Element.count(op);
+			var1Element.execute(op);
 			modifiedElements.add(var1Element);
 			inactiveElements.remove(var1Element);
 			oc.count(op);
@@ -141,7 +141,7 @@ public class Array extends DataStructure {
 		IndexedElement var2Element = this.getElement(var2);
 		if (var2Element != null) {
 			var2Element.setNumValue(op.getValue()[1]);
-			var2Element.count(op);
+			var2Element.execute(op);
 			modifiedElements.add(var2Element);
 			inactiveElements.remove(var2Element);
 			oc.count(op);
@@ -161,7 +161,7 @@ public class Array extends DataStructure {
 		if (targetElement != null) {
 			if (value != null) {
 				targetElement.setNumValue(op.getValue()[0]);
-				targetElement.count(op);
+				targetElement.execute(op);
 				modifiedElements.add(targetElement);
 				inactiveElements.remove(targetElement);
 			} else {
@@ -170,18 +170,18 @@ public class Array extends DataStructure {
 		}
 		// Manage read
 		else if (sourceElement != null) {
-			sourceElement.count(op);
+			sourceElement.execute(op);
 			modifiedElements.add(sourceElement);
 			inactiveElements.remove(sourceElement);
 		} else if (op.getSource() != null && op.getSource().identifier.equals(super.identifier)) {
 			IndexedElement ae = new IndexedElement(0,
 					op.getSource().index != null ? op.getSource().index : new int[] { elements.size() });
-			ae.count(op);
+			ae.execute(op);
 			putElement(ae);
 		} else if (op.getTarget() != null && op.getTarget().identifier.equals(super.identifier)) {
 			IndexedElement ae = new IndexedElement(0,
 					op.getTarget().index != null ? op.getTarget().index : new int[] { elements.size() });
-			ae.count(op);
+			ae.execute(op);
 			putElement(ae);
 		}
 	}

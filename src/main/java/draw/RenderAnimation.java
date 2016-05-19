@@ -66,7 +66,7 @@ public abstract class RenderAnimation {
 		animated.setScaleX(render.getScaleX());
 		animated.setScaleY(render.getScaleY());
 
-		render.anim.getChildren().add(animated);
+		render.animPane.getChildren().add(animated);
 
 		final boolean finalUseGhost;
 		boolean ghost = false;
@@ -103,7 +103,7 @@ public abstract class RenderAnimation {
 		 */
 		TranslateTransition tt = new TranslateTransition(Duration.millis(millis));
 		tt.setOnFinished(event -> {
-			render.anim.getChildren().remove(animated);
+			render.animPane.getChildren().remove(animated);
 			if (finalUseGhost) {
 				real.setGhost(false);
 			}

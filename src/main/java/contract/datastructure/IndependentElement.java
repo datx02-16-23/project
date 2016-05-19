@@ -90,12 +90,12 @@ public class IndependentElement extends Array {
 		Element e = elements.get(0);
 		if (op.getVar1().identifier.equals(this.identifier)) {
 			e.setNumValue(op.getValue()[0]);
-			e.count(op);
+			e.execute(op);
 			oc.count(op);
 			return;
 		} else if (op.getVar2().identifier.equals(this.identifier)) {
 			e.setNumValue(op.getValue()[1]);
-			e.count(op);
+			e.execute(op);
 			oc.count(op);
 			return;
 		}
@@ -110,12 +110,12 @@ public class IndependentElement extends Array {
 		if (op.getTarget() != null && op.getTarget().identifier.equals(this.identifier)) {
 			e.setNumValue(op.getValue()[0]);
 			modifiedElements.add(e);
-			e.count(op);
+			e.execute(op);
 			oc.count(op);
 			return;
 		} else if (op.getSource() != null && op.getSource().identifier.equals(this.identifier)) {
 			modifiedElements.add(e);
-			e.count(op);
+			e.execute(op);
 			oc.count(op);
 		}
 	}
