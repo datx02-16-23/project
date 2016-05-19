@@ -5,7 +5,6 @@ import contract.operation.OperationCounter;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 /**

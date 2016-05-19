@@ -271,10 +271,10 @@ public abstract class VisualElementFactory {
 	 *
 	 */
 	private static class VisualElementSettings {
-		public ElemShape shape;
-		public double width;
-		public double height;
-		public double[] points;
+//		public ElemShape shape;
+//		public double width;
+//		public double height;
+//		public double[] points;
 	}
 
 	/**

@@ -4,7 +4,6 @@ import contract.datastructure.DataStructure;
 
 import java.util.Arrays;
 
-import contract.datastructure.Array;
 import contract.datastructure.Array.BoundaryChangeListener;
 import contract.datastructure.Array.IndexedElement;
 import contract.datastructure.Element;

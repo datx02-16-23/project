@@ -18,7 +18,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
@@ -339,6 +338,7 @@ public abstract class VisualElement extends Pane {
 	 * @param pos
 	 *            The new position for the info label.
 	 */
+	@SuppressWarnings("incomplete-switch")
 	public void setInfoPos(Pos pos) {
 		this.infoPos = pos;
 

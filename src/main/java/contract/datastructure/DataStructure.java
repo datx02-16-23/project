@@ -10,7 +10,6 @@ import contract.operation.OP_ReadWrite;
 import contract.operation.OP_Remove;
 import contract.operation.OP_Swap;
 import contract.operation.OperationCounter;
-import contract.operation.OperationType;
 import gui.Main;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -53,14 +52,6 @@ public abstract class DataStructure extends AnnotatedVariable {
 	 */
 	private transient boolean active = true;
 	/**
-	 * The current background paint for elements with no preference.
-	 */
-	protected transient Paint backgroundColor;
-	/**
-	 * The preferred background paint for elements with no preference.
-	 */
-	protected transient final Color baseColor;
-	/**
 	 * Counter for operations performed on the structure.
 	 */
 	protected transient final OperationCounter oc = new OperationCounter();
@@ -80,21 +71,9 @@ public abstract class DataStructure extends AnnotatedVariable {
 	public transient int visualOption = 2;
 	public transient boolean repaintAll = false;
 
-	/**
-	 * Create a new DataStructure.
-	 * 
-	 * @param identifier
-	 * @param rawType
-	 * @param abstractType
-	 * @param visual
-	 * @param attributes
-	 * @param baseColor
-	 */
 	public DataStructure(String identifier, RawType rawType, RawType.AbstractType abstractType, VisualType visual,
-			Map<String, Object> attributes, Color baseColor) {
+			Map<String, Object> attributes) {
 		super(identifier, rawType, abstractType, visual, attributes);
-		this.baseColor = baseColor;
-		this.backgroundColor = baseColor;
 	}
 
 	/**
@@ -284,19 +263,6 @@ public abstract class DataStructure extends AnnotatedVariable {
 	}
 
 	/**
-	 * Toggle the active setting of this DataStructure.
-	 */
-	protected void toggleActive() {
-		active = !active;
-		repaintAll = true;
-		if (active == false) {
-			backgroundColor = OperationType.remove.paint;
-		} else {
-			backgroundColor = baseColor;
-		}
-	}
-
-	/**
 	 * Returns True if this structure is active. False otherwise.
 	 * 
 	 * @return True if this structure is active.
@@ -318,14 +284,10 @@ public abstract class DataStructure extends AnnotatedVariable {
 	}
 
 	/**
-	 * Returns the background Color to use for elements unaffected by recent
-	 * operations.
-	 * 
-	 * @return A Color to use as background.
-	 * 
+	 * Set the entire structure active or inactive
 	 */
-	public Paint getDefaultElementBackground() {
-		return backgroundColor;
+	public void toggleActive() {
+		// TODO Auto-generated method stub
 	}
 
 	/**

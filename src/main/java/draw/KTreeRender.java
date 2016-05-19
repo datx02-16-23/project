@@ -1,9 +1,8 @@
 package draw;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
+import assets.DasToolkit;
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
 import contract.datastructure.Array.IndexedElement;
@@ -15,27 +14,35 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
+/**
+ * A Render for Arrays with abstract type Tree. Can draw any K-ary tree for K >=
+ * 2, where K is the number of children a node has (at most). All nodes except
+ * root have one parent. All the elements of the supplied DataStruture must have
+ * an index[] of length 1. No checking of index length is performed. Behaviour
+ * is undefined for K < 2 and index.length != 1. Implementation based on
+ * {@link https://en.wikipedia.org/wiki/K-ary_tree}.
+ * 
+ * @author Richard Sundqvist
+ *
+ */
 public class KTreeRender extends ARender {
 
 	/**
-	 * Memoization for number of nodes.
-	 */
-	private static final HashMap<Integer, ArrayList<Integer>> lowerLevelSums = new HashMap<Integer, ArrayList<Integer>>();
-	/**
 	 * Container for connector lines.
 	 */
-	protected final Pane visual_lines = new Pane();
+	private final Pane visual_lines = new Pane();
 
 	/**
 	 * Number of children per node.
 	 */
-	protected final int K;
+	private final int K;
 	/**
-	 * //TODO How to write javadoc for each without splitting them up? Number of
-	 * levels (excluding root); number of elements at the bottom; total capacity
-	 * for a tree with this depth.
+	 * //TODO How to write javadoc for each without splitting them up?<br>
+	 * Number of levels (excluding root); <br>
+	 * number of elements at the bottom;<br>
+	 * total capacity for a tree with this depth.
 	 */
-	protected int totDepth, totBreadth, completedSize;
+	private int totDepth, totBreadth, completedSize;
 
 	/**
 	 * Create a new KTreeRender with K children and one parent. Will set K = 2
@@ -56,7 +63,13 @@ public class KTreeRender extends ARender {
 	 */
 	public KTreeRender(DataStructure struct, int K, double width, double height, double hspace, double vspace) {
 		super(struct, width, height, hspace, vspace);
+		System.out.println("-----------");
+		System.out.println("-----------");
+		System.out.println("K arg = " + K);
 		this.K = K < 2 ? 2 : K;
+		System.out.println("this.K = " + this.K);
+		System.out.println("-----------");
+		System.out.println("-----------");
 		content.getChildren().add(visual_lines);
 		visual_lines.toBack();
 	}
@@ -146,7 +159,7 @@ public class KTreeRender extends ARender {
 		double x;
 		int breadth, depth;
 		if (index == 0) { // Root element
-			double p = K_pow(totDepth, K) / 2;
+			double p = DasToolkit.pow(totDepth, K) / 2;
 			x = hspace + (hspace + node_width) * (p) - ((K + 1) % 2) * (node_width + hspace) / 2;
 		} else {
 			depth = getDepth(index);
@@ -158,7 +171,7 @@ public class KTreeRender extends ARender {
 
 	private double getX(int breadth, int depth) {
 		// Stepsize at this depth. Farther from root smaller steps
-		double L = (double) K_pow(totDepth, K) / (double) K_pow(depth, K);
+		double L = (double) DasToolkit.pow(totDepth, K) / (double) DasToolkit.pow(depth, K);
 		// Apply indentation for every row except the last
 		double indentation = 0;
 		if (depth < totDepth) {
@@ -191,58 +204,14 @@ public class KTreeRender extends ARender {
 	private int getDepth(int index) {
 		int depth = 1;
 		// Calculate depth and breadth
-		while (lowerLevelSum(depth, K) <= index) {
+		while (DasToolkit.lowerLevelSum(depth, K) <= index) {
 			depth++;
 		}
 		return depth - 1;
 	}
 
 	private int getBreadth(int index, int depth) {
-		return index - lowerLevelSum(depth, K);
-	}
-
-	/**
-	 * Memoized function. Calculates the total number of elements below a given
-	 * depth and saves it to higherLevelSums. Once this method returns, total
-	 * number of elements on any given depth up to {@code targetDepth} can be
-	 * fetched from {@code higherLevelSums}.
-	 * 
-	 * @param targetDepth
-	 *            The greatest depth to calculate for.
-	 * @return The total number of elements above {@code targetDepth} for a
-	 *         K-ary tree.
-	 */
-	private static int lowerLevelSum(int targetDepth, int K) {
-		System.out.println("lowerLevelSums = " + lowerLevelSums);
-		
-		if(lowerLevelSums.containsKey(K) == false){
-			lowerLevelSums.put(K, new ArrayList<Integer>(new Integer(0)));
-			System.out.println("put");
-		} else {
-			System.out.println("already exists");
-		}
-		
-		while (lowerLevelSums.get(K).size() <= targetDepth) {
-			int sum = lowerLevelSums.get(K).get(lowerLevelSums.get(K).size() - 1) + K_pow(lowerLevelSums.get(K).size() - 1, K);
-			lowerLevelSums.get(K).add(sum);
-		}
-		return lowerLevelSums.get(K).get(targetDepth);
-	}
-
-	/**
-	 * Returns the number nodes at depth d (K^d). Really just a simplified pow
-	 * function for ints.
-	 * 
-	 * @param d
-	 *            the depth to calculate #nodes for.
-	 * @return The number of nodes at depth d.
-	 */
-	private static int K_pow(int d, int K) {
-		int p = 1;
-		for (int i = 0; i < d; i++) {
-			p = p * K;
-		}
-		return p;
+		return index - DasToolkit.lowerLevelSum(depth, K);
 	}
 
 	/**
@@ -252,12 +221,15 @@ public class KTreeRender extends ARender {
 		double structSize = struct.getElements().size();
 		totDepth = 0;
 		// Calculate the minimum depth which can hold all elements of the array.
-		while (lowerLevelSum(totDepth, K) < structSize) {
+		System.out.println("K = " + K);
+		while (DasToolkit.lowerLevelSum(totDepth, K) < structSize) {
 			totDepth++;
 		}
 		totDepth--;
-		this.completedSize = lowerLevelSums.get(K).get(totDepth + 1);
-		totBreadth = K_pow(totDepth, K);
+		// completedSize = lowerLevelSums.get(Double.toString(K) +
+		// lolwut).get(totDepth + 1);
+		completedSize = DasToolkit.lowerLevelSum(totDepth + 1, K);
+		totBreadth = DasToolkit.pow(totDepth, K);
 	}
 
 	@Override

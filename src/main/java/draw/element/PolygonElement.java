@@ -3,7 +3,6 @@ package draw.element;
 import contract.datastructure.Element;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Shape;
 
 public class PolygonElement extends VisualElement {
 

@@ -105,7 +105,6 @@ public class Model {
 			while (index < oldIndex) {
 				stepForward();
 			}
-			modelJumped();
 			return true;
 		}
 		return false;
@@ -121,7 +120,6 @@ public class Model {
 	public void goToStep(int toStepNo) {
 		if (toStepNo <= 0) {
 			reset();
-			modelJumped();
 			return;
 		} else if (toStepNo >= operations.size()) {
 			toStepNo = operations.size();
@@ -132,23 +130,12 @@ public class Model {
 			while (index < toStepNo) {
 				stepForward();
 			}
-			modelJumped();
 		} else if (toStepNo > index) {
 			goToEnd();
-			modelJumped();
 		}
 		
 	}
-
-	/**
-	 * Called when the model jumps unnaturally.
-	 */
-	public void modelJumped() {
-		for(DataStructure ds : step.getStructures().values()){
-			ds.elementsDrawn(ds.getDefaultElementBackground());
-		}
-	}
-
+	
 	/**
 	 * Set the structures and operations used by this Model.
 	 * 

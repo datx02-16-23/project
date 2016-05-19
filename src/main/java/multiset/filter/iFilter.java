@@ -1,9 +1,8 @@
 package multiset.filter;
 
-import multiset.model.iValueContainer;
-
-import java.util.List;
 import java.util.Set;
+
+import multiset.model.iValueContainer;
 
 /**
  * Created by cb on 26/04/16.

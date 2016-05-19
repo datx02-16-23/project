@@ -8,9 +8,6 @@ import contract.Locator;
 import contract.datastructure.RawType.AbstractType;
 import contract.operation.*;
 import gui.Main;
-import javafx.beans.InvalidationListener;
-import javafx.beans.value.ChangeListener;
-import javafx.scene.paint.Color;
 
 /**
  * A representation of the Array data structure, using doubles as values.
@@ -44,7 +41,7 @@ public class Array extends DataStructure {
 	 */
 	public Array(String identifier, RawType.AbstractType abstractType, VisualType visual,
 			Map<String, Object> attributes) {
-		super(identifier, RawType.array, abstractType, visual, attributes, Color.WHITE);
+		super(identifier, RawType.array, abstractType, visual, attributes);
 		capacity = getCapacity();
 	}
 
@@ -65,7 +62,7 @@ public class Array extends DataStructure {
 	 */
 	protected Array(String identifier, RawType rawType, AbstractType abstractType, VisualType visual,
 			Map<String, Object> attributes) {
-		super(identifier, rawType, abstractType, visual, attributes, Color.WHITE);
+		super(identifier, rawType, abstractType, visual, attributes);
 	}
 
 	/**

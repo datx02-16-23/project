@@ -7,7 +7,6 @@ import contract.datastructure.DataStructure;
 import contract.datastructure.VisualType;
 import draw.RenderSVF;
 import gui.Controller;
-import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;

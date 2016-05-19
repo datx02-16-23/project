@@ -4,7 +4,6 @@ import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
 import draw.element.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 
 public class SingleElementRender extends ARender {
 

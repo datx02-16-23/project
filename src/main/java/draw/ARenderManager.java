@@ -119,6 +119,7 @@ public class ARenderManager extends BorderPane implements VisualListener {
 		case bar:
 			curRender = new BarchartRender(struct, 30, DasConstants.DEFAULT_RENDER_HEIGHT, 10, 10);
 			break;
+		case grid:
 		case box:
 			curRender = new GridRender(struct, GridRender.Order.resolve(struct.visualOption), 40, 40, 3, 3);
 			break;

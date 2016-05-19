@@ -4,7 +4,6 @@ import contract.datastructure.Element;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 
 public class RectangleElement extends VisualElement {
 

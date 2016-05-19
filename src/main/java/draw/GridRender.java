@@ -11,8 +11,13 @@ import gui.Main;
 import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
 
+/**
+ * Renders drawing data structures with their elements in a grid.
+ * @author Richard Sundqvist.
+ *
+ */
 public class GridRender extends ARender {
-	private final Order mo;
+	private final Order major_order;
 	private int[] dims;
 
 	/**
@@ -29,9 +34,9 @@ public class GridRender extends ARender {
 	 * @param vspace
 	 *            The vertical space between elements in this Render.
 	 */
-	public GridRender(DataStructure struct, Order mo, double width, double height, double hspace, double vspace) {
+	public GridRender(DataStructure struct, Order major_order, double width, double height, double hspace, double vspace) {
 		super(struct, width, height, hspace, vspace);
-		this.mo = mo;
+		this.major_order = major_order;
 	}
 
 	public void render() {
@@ -65,7 +70,7 @@ public class GridRender extends ARender {
 	public double getX(Element e) {
 		int[] index = ((IndexedElement) e).getIndex();
 		double x = hspace;
-		if (mo == Order.ROW_MAJOR) {
+		if (major_order == Order.ROW_MAJOR) {
 			x = getX(index[0]);
 		} else {
 			if (index.length == 2) {
@@ -83,7 +88,7 @@ public class GridRender extends ARender {
 	public double getY(Element e) {
 		int[] index = ((IndexedElement) e).getIndex();
 		double y = vspace;
-		if (mo == Order.ROW_MAJOR) {
+		if (major_order == Order.ROW_MAJOR) {
 			if (index.length == 2) {
 				y = getY(index[1]);
 			}
@@ -105,7 +110,7 @@ public class GridRender extends ARender {
 		/*
 		 * Row Major
 		 */
-		if (mo == Order.ROW_MAJOR) {
+		if (major_order == Order.ROW_MAJOR) {
 			totWidth = vspace + (vspace + node_width) * dims[0];
 			totHeight = hspace + (hspace + node_height) * dims[1];
 			
