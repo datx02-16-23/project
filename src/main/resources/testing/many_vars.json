@@ -1,0 +1,8950 @@
+{
+  "header": {
+    "version": 0,
+    "annotatedVariables": {
+      "a": {
+        "identifier": "a",
+        "rawType": "array",
+        "visual": "box",
+        "attributes": {}
+      },
+      "Main:res": {
+        "identifier": "Main:res",
+        "rawType": "independentElement",
+        "visual": "single",
+        "attributes": {}
+      },
+      "twodimlist": {
+        "identifier": "twodimlist",
+        "rawType": "array",
+        "visual": "box",
+        "attributes": {
+          "size": [
+            3.0,
+            3.0
+          ]
+        }
+      },
+      "Main:Main:a": {
+        "identifier": "Main:Main:a",
+        "rawType": "independentElement",
+        "visual": "single",
+        "attributes": {}
+      },
+      "Main:tmp": {
+        "identifier": "Main:tmp",
+        "rawType": "independentElement",
+        "visual": "single",
+        "attributes": {}
+      },
+      "Main:array": {
+        "identifier": "Main:array",
+        "rawType": "array",
+        "visual": "bar",
+        "attributes": {
+          "size": [
+            10.0
+          ]
+        }
+      },
+      "BubbleSort:temp": {
+        "identifier": "BubbleSort:temp",
+        "rawType": "independentElement",
+        "visual": "single",
+        "attributes": {}
+      },
+      "Main:b": {
+        "identifier": "Main:b",
+        "rawType": "independentElement",
+        "visual": "single",
+        "attributes": {}
+      },
+      "Main:a": {
+        "identifier": "Main:a",
+        "rawType": "array",
+        "visual": "bar",
+        "attributes": {
+          "size": []
+        }
+      },
+      "undefined": {
+        "identifier": "undefined",
+        "rawType": "independentElement",
+        "visual": "single",
+        "attributes": {}
+      }
+    },
+    "sources": {
+      "main.py": [
+        "twodimlist \u003d [[1,2,3],[4,5,6]]",
+        "",
+        "for i in range(0,len(twodimlist)):",
+        "\tfor j in range(0,len(twodimlist[i])):",
+        "\t\ttwodimlist[i][j] \u003d i + j"
+      ],
+      "BubbleSortVisual": [
+        "/*",
+        " * To change this license header, choose License Headers in Project Properties.",
+        " * To change this template file, choose Tools | Templates",
+        " * and open the template in the editor.",
+        " */",
+        "package com.dennisjonsson.visualization.test;",
+        "",
+        "import com.dennisjonsson.annotation.VisualClass;",
+        "import com.dennisjonsson.annotation.Visualize;",
+        "import com.dennisjonsson.annotation.markup.AbstractType;",
+        "",
+        "@VisualClass",
+        "public class BubbleSort {",
+        "",
+        "    public static void sort(@Visualize(abstractType \u003d \u0027array\u0027) int intArray[]) {",
+        "        int n \u003d intArray.length;",
+        "        int temp \u003d 0;",
+        "        for (int i \u003d 0; i \u003c n; i++) {",
+        "            for (int j \u003d 1; j \u003c (n - i); j++) {",
+        "                if (intArray[j - 1] \u003e intArray[j]) {",
+        "                    //swap the elements!",
+        "                    temp \u003d intArray[j - 1];",
+        "                    intArray[j - 1] \u003d intArray[j];",
+        "                    intArray[j] \u003d temp;",
+        "                }",
+        "            }",
+        "        }",
+        "    }",
+        "}"
+      ],
+      "MainVisual": [
+        "package edu.datx.scenario1;",
+        "",
+        "import com.dennisjonsson.annotation.SourcePath;",
+        "import com.dennisjonsson.annotation.VisualClass;",
+        "import com.dennisjonsson.annotation.Visualize;",
+        "",
+        "@SourcePath(path \u003d \u0027C:/Users/dennis/Documents/NetBeansProjects/Usertest1\u0027)",
+        "@VisualClass",
+        "public class Main {",
+        "",
+        "    @Visualize(abstractType \u003d \u0027array\u0027)",
+        "    public static int[] a \u003d new int[] { 9, 5, 1, 4, 6, 8, 5, 2, 1, 4 };",
+        "",
+        "    public static void main(String[] args) {",
+        "        int[] res \u003d mysterySort(a);",
+        "        a \u003d res;",
+        "    }",
+        "",
+        "    public static int[] mysterySort(@Visualize(abstractType \u003d \u0027array\u0027) int[] array) {",
+        "        int k \u003d 0;",
+        "        for (int i \u003d 0; i \u003c array.length / 2; i++) {",
+        "            boolean scrappy \u003d false;",
+        "            for (int j \u003d i; j \u003c array.length - i - 1; j++) {",
+        "                if (array[j] \u003c array[j + 1]) {",
+        "                    int b \u003d array[j];",
+        "                    array[j] \u003d array[j + 1];",
+        "                    array[j + 1] \u003d b;",
+        "                    scrappy \u003d true;",
+        "                }",
+        "            }",
+        "            k \u003d i + 2;",
+        "            for (int j \u003d array.length - 2 - i; j \u003e i; j--) {",
+        "                if (array[j] \u003e array[j - 1]) {",
+        "                    int tmp \u003d array[j];",
+        "                    array[j] \u003d array[j - 1];",
+        "                    array[j - 1] \u003d tmp;",
+        "                    scrappy \u003d true;",
+        "                }",
+        "            }",
+        "            k--;",
+        "            if (!scrappy)",
+        "                break;",
+        "        }",
+        "        return array;",
+        "    }",
+        "}"
+      ],
+      "BblSortVisual": [
+        "package com.dennisjonsson.visualization.test.app;",
+        "",
+        "import com.dennisjonsson.annotation.Print;",
+        "import com.dennisjonsson.annotation.VisualClass;",
+        "import com.dennisjonsson.visualization.test.BubbleSort;",
+        "",
+        "@VisualClass",
+        "public class BblSort {",
+        "",
+        "    public static void main(String[] args) {",
+        "        int[] array \u003d new int[] { 4, 3, 5, 6, 7, 1, 9, 4, 6, 8, 0, 1, 2, 5, 6, 5 };",
+        "        BubbleSort.sort(array);",
+        "        print();",
+        "    }",
+        "",
+        "    @Print(path \u003d \u0027\u0027)",
+        "    public static void print() {",
+        "    }",
+        "}"
+      ]
+    }
+  },
+  "body": [
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:a"
+        },
+        "value": [
+          9.0,
+          5.0,
+          1.0,
+          4.0,
+          6.0,
+          8.0,
+          5.0,
+          2.0,
+          1.0,
+          4.0
+        ]
+      },
+      "source": "MainVisual",
+      "beginLine": 13,
+      "endLine": 13,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array"
+        },
+        "value": [
+          9.0,
+          5.0,
+          1.0,
+          4.0,
+          6.0,
+          8.0,
+          5.0,
+          2.0,
+          1.0,
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:Main:a"
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 16,
+      "endLine": 16,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          9.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            0
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:b"
+        },
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 26,
+      "endLine": 26,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            2
+          ]
+        },
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 27,
+      "endLine": 27,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        },
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:b"
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 28,
+      "endLine": 28,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:b"
+        },
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 26,
+      "endLine": 26,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        },
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 27,
+      "endLine": 27,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        },
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:b"
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 28,
+      "endLine": 28,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:b"
+        },
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 26,
+      "endLine": 26,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        },
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 27,
+      "endLine": 27,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            5
+          ]
+        },
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:b"
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 28,
+      "endLine": 28,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:b"
+        },
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 26,
+      "endLine": 26,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            5
+          ]
+        },
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 27,
+      "endLine": 27,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            6
+          ]
+        },
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:b"
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 28,
+      "endLine": 28,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:b"
+        },
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 26,
+      "endLine": 26,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            6
+          ]
+        },
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 27,
+      "endLine": 27,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            7
+          ]
+        },
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:b"
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 28,
+      "endLine": 28,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            9
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:b"
+        },
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 26,
+      "endLine": 26,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            8
+          ]
+        },
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            9
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 27,
+      "endLine": 27,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            9
+          ]
+        },
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:b"
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 28,
+      "endLine": 28,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:tmp"
+        },
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 35,
+      "endLine": 35,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            8
+          ]
+        },
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 36,
+      "endLine": 36,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            7
+          ]
+        },
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:tmp"
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 37,
+      "endLine": 37,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:tmp"
+        },
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 35,
+      "endLine": 35,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            7
+          ]
+        },
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 36,
+      "endLine": 36,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            6
+          ]
+        },
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:tmp"
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 37,
+      "endLine": 37,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:tmp"
+        },
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 35,
+      "endLine": 35,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        },
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 36,
+      "endLine": 36,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        },
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "Main:tmp"
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 37,
+      "endLine": 37,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:tmp"
+        },
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 35,
+      "endLine": 35,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        },
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 36,
+      "endLine": 36,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            2
+          ]
+        },
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "Main:tmp"
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 37,
+      "endLine": 37,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:tmp"
+        },
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 35,
+      "endLine": 35,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            2
+          ]
+        },
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 36,
+      "endLine": 36,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            1
+          ]
+        },
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "Main:tmp"
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 37,
+      "endLine": 37,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          9.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            0
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:b"
+        },
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 26,
+      "endLine": 26,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        },
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 27,
+      "endLine": 27,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        },
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:b"
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 28,
+      "endLine": 28,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:b"
+        },
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 26,
+      "endLine": 26,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        },
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 27,
+      "endLine": 27,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            5
+          ]
+        },
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:b"
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 28,
+      "endLine": 28,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:tmp"
+        },
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 35,
+      "endLine": 35,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        },
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 36,
+      "endLine": 36,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:array",
+          "index": [
+            2
+          ]
+        },
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "Main:tmp"
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 37,
+      "endLine": 37,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 25,
+      "endLine": 25,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "Main:array",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 34,
+      "endLine": 34,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "Main:a"
+        },
+        "value": [
+          9.0,
+          8.0,
+          6.0,
+          5.0,
+          5.0,
+          4.0,
+          4.0,
+          2.0,
+          1.0,
+          1.0
+        ],
+        "source": {
+          "identifier": "Main:res"
+        }
+      },
+      "source": "MainVisual",
+      "beginLine": 17,
+      "endLine": 17,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "a"
+        },
+        "value": [
+          4.0,
+          3.0,
+          5.0,
+          6.0,
+          7.0,
+          1.0,
+          9.0,
+          4.0,
+          6.0,
+          8.0,
+          0.0,
+          1.0,
+          2.0,
+          5.0,
+          6.0,
+          5.0
+        ]
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 0,
+      "endLine": 0,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "BubbleSort:temp"
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "BubbleSort:temp"
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "target": {
+          "identifier": "BubbleSort:temp"
+        },
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            0
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 26,
+      "endLine": 26,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "a",
+          "index": [
+            0
+          ]
+        },
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 27,
+      "endLine": 27,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        },
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "BubbleSort:temp"
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 28,
+      "endLine": 28,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          7.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          7.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        },
+        "value": [
+          1.0,
+          7.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          7.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          9.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          9.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        },
+        "value": [
+          4.0,
+          9.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          9.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "target": {
+          "identifier": "BubbleSort:temp"
+        },
+        "value": [
+          9.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 26,
+      "endLine": 26,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        },
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 27,
+      "endLine": 27,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        },
+        "value": [
+          9.0
+        ],
+        "source": {
+          "identifier": "BubbleSort:temp"
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 28,
+      "endLine": 28,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          9.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        },
+        "value": [
+          8.0,
+          9.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          9.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          0.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            10
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            10
+          ]
+        },
+        "value": [
+          0.0,
+          9.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          9.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            10
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            11
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            11
+          ]
+        },
+        "value": [
+          1.0,
+          9.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            10
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          9.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            11
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            12
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            12
+          ]
+        },
+        "value": [
+          2.0,
+          9.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            11
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          9.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            12
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            13
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            13
+          ]
+        },
+        "value": [
+          5.0,
+          9.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            12
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          9.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            13
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            14
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            14
+          ]
+        },
+        "value": [
+          6.0,
+          9.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            13
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          9.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            14
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            15
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            15
+          ]
+        },
+        "value": [
+          5.0,
+          9.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            14
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            0
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        },
+        "value": [
+          1.0,
+          6.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          7.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          7.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        },
+        "value": [
+          4.0,
+          7.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          7.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        },
+        "value": [
+          6.0,
+          7.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          7.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          0.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        },
+        "value": [
+          0.0,
+          8.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            10
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            10
+          ]
+        },
+        "value": [
+          1.0,
+          8.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            10
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            11
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            11
+          ]
+        },
+        "value": [
+          2.0,
+          8.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            10
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            11
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            12
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            12
+          ]
+        },
+        "value": [
+          5.0,
+          8.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            11
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            12
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            13
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            13
+          ]
+        },
+        "value": [
+          6.0,
+          8.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            12
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          8.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            13
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            14
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            14
+          ]
+        },
+        "value": [
+          5.0,
+          8.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            13
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            0
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        },
+        "value": [
+          1.0,
+          5.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        },
+        "value": [
+          4.0,
+          6.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          7.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          7.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          0.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        },
+        "value": [
+          0.0,
+          7.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          7.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        },
+        "value": [
+          1.0,
+          7.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          7.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            10
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            10
+          ]
+        },
+        "value": [
+          2.0,
+          7.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          7.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            10
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            11
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            11
+          ]
+        },
+        "value": [
+          5.0,
+          7.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            10
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          7.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            11
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            12
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            12
+          ]
+        },
+        "value": [
+          6.0,
+          7.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            11
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          7.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            12
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            13
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            13
+          ]
+        },
+        "value": [
+          5.0,
+          7.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            12
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            0
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        },
+        "value": [
+          1.0,
+          4.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        },
+        "value": [
+          4.0,
+          5.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          0.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        },
+        "value": [
+          0.0,
+          6.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        },
+        "value": [
+          1.0,
+          6.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        },
+        "value": [
+          2.0,
+          6.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            10
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            10
+          ]
+        },
+        "value": [
+          5.0,
+          6.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            10
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            11
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            11
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            12
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            12
+          ]
+        },
+        "value": [
+          5.0,
+          6.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            11
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            0
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        },
+        "value": [
+          1.0,
+          3.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            0
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          0.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        },
+        "value": [
+          0.0,
+          6.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        },
+        "value": [
+          1.0,
+          6.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        },
+        "value": [
+          2.0,
+          6.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        },
+        "value": [
+          5.0,
+          6.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            10
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            10
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            11
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            11
+          ]
+        },
+        "value": [
+          5.0,
+          6.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            10
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            0
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          0.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        },
+        "value": [
+          0.0,
+          5.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        },
+        "value": [
+          1.0,
+          5.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        },
+        "value": [
+          2.0,
+          5.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          6.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            10
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            10
+          ]
+        },
+        "value": [
+          5.0,
+          6.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            0
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          0.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        },
+        "value": [
+          0.0,
+          4.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        },
+        "value": [
+          1.0,
+          4.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        },
+        "value": [
+          2.0,
+          4.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            9
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            0
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          0.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        },
+        "value": [
+          0.0,
+          4.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        },
+        "value": [
+          1.0,
+          4.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        },
+        "value": [
+          2.0,
+          4.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            8
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            0
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          0.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        },
+        "value": [
+          0.0,
+          3.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        },
+        "value": [
+          1.0,
+          3.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        },
+        "value": [
+          2.0,
+          3.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          5.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            7
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            0
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          0.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "swap",
+      "operationBody": {
+        "var2": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        },
+        "value": [
+          0.0,
+          1.0
+        ],
+        "var1": {
+          "identifier": "a",
+          "index": [
+            0
+          ]
+        }
+      },
+      "beginLine": -1,
+      "endLine": -1,
+      "beginColumn": -1,
+      "endColumn": -1
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            6
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          0.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            0
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          4.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            5
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          0.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            0
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            4
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          0.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            0
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            3
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          0.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            0
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            2
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          0.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            0
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "read",
+      "operationBody": {
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "a",
+          "index": [
+            1
+          ]
+        }
+      },
+      "source": "BubbleSortVisual",
+      "beginLine": 24,
+      "endLine": 24,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "twodimlist"
+        },
+        "value": [
+          1.0,
+          2.0,
+          3.0,
+          4.0,
+          5.0,
+          6.0,
+          7.0,
+          8.0,
+          9.0
+        ],
+        "source": {
+          "identifier": "undefined"
+        }
+      },
+      "source": "main.py",
+      "beginLine": 0,
+      "endLine": 0,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "twodimlist",
+          "index": [
+            0,
+            0
+          ]
+        },
+        "value": [
+          0.0
+        ],
+        "source": {
+          "identifier": "undefined"
+        }
+      },
+      "source": "main.py",
+      "beginLine": 4,
+      "endLine": 4,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "twodimlist",
+          "index": [
+            0,
+            1
+          ]
+        },
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "undefined"
+        }
+      },
+      "source": "main.py",
+      "beginLine": 4,
+      "endLine": 4,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "twodimlist",
+          "index": [
+            0,
+            2
+          ]
+        },
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "undefined"
+        }
+      },
+      "source": "main.py",
+      "beginLine": 4,
+      "endLine": 4,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "twodimlist",
+          "index": [
+            1,
+            0
+          ]
+        },
+        "value": [
+          1.0
+        ],
+        "source": {
+          "identifier": "undefined"
+        }
+      },
+      "source": "main.py",
+      "beginLine": 4,
+      "endLine": 4,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "twodimlist",
+          "index": [
+            1,
+            1
+          ]
+        },
+        "value": [
+          2.0
+        ],
+        "source": {
+          "identifier": "undefined"
+        }
+      },
+      "source": "main.py",
+      "beginLine": 4,
+      "endLine": 4,
+      "beginColumn": 0,
+      "endColumn": 0
+    },
+    {
+      "operation": "write",
+      "operationBody": {
+        "target": {
+          "identifier": "twodimlist",
+          "index": [
+            1,
+            2
+          ]
+        },
+        "value": [
+          3.0
+        ],
+        "source": {
+          "identifier": "undefined"
+        }
+      },
+      "source": "main.py",
+      "beginLine": 4,
+      "endLine": 4,
+      "beginColumn": 0,
+      "endColumn": 0
+    }
+  ]
+}
