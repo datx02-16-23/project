@@ -278,7 +278,7 @@ public abstract class VisualElementFactory {
 	}
 
 	/**
-	 * Clone a visual element.
+	 * Attempt to a visual element. Should not be used unless there is no other alternative.
 	 * @param orig The original element.
 	 * @return A clone of the original element.
 	 */

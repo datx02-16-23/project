@@ -18,6 +18,8 @@ import javafx.scene.shape.Shape;
 public class BarchartElement extends RectangleElement {
 	
 	private Rectangle rect;
+	
+	private double unitHeight;
 
 	/**
 	 * Create a static, unbound RectangleElement.
@@ -58,7 +60,7 @@ public class BarchartElement extends RectangleElement {
 	 *            The new height.
 	 */
 	public void updateUnitHeight(double unitHeight) {
-		this.height = unitHeight;
+		this.unitHeight = unitHeight;
 		
 		Rectangle rect = ((Rectangle) shape);
 		rect.heightProperty().bind((element.numValueProperty().multiply(unitHeight)).subtract(10));
@@ -90,5 +92,13 @@ public class BarchartElement extends RectangleElement {
 	private void fixPositioning(double y){
 		DoubleBinding neg_half_height = rect.heightProperty().divide(2).multiply(-1); //- height/2
 		this.layoutYProperty().bind(neg_half_height.add(y));
+	}
+	
+	public BarchartElement clone(){
+		BarchartElement clone = (BarchartElement) VisualElementFactory.clone(this);
+		
+		clone.updateUnitHeight(unitHeight);
+		
+		return clone;
 	}
 }
