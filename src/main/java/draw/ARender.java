@@ -1,6 +1,8 @@
 package draw;
 
 import java.io.IOException;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -143,6 +145,10 @@ public abstract class ARender extends Pane {
 	 * Header bar.
 	 */
 	private Node header;
+	/**
+	 * Info labels.
+	 */
+	private Label xposLabel, yposLabel, scaleLabel;
 
 	/**
 	 * Default constructor. Will use default values: <br>
@@ -214,13 +220,20 @@ public abstract class ARender extends Pane {
 		name_mo.textProperty().bind(name.textProperty());
 
 		ToolBar headerButtonBar = (ToolBar) fxmlLoader.getNamespace().get("buttons");
-		for (Node b : headerButtonBar.getItems()) {
-			if (((ButtonBase) b).getText().equals("Hide") == false) {
-				nonHideButtons.add((ButtonBase) b);
+		for (Node node : headerButtonBar.getItems()) {
+			if (node instanceof ToggleButton == false) {
+				nonHideButtons.add(node);
 			}
 		}
 		header = (Node) fxmlLoader.getNamespace().get("header");
 		bindHeader();
+
+		// Info labels
+		name = (Label) fxmlLoader.getNamespace().get("name");
+		name.setText(struct.toString());
+		xposLabel = (Label) fxmlLoader.getNamespace().get("xpos");
+		yposLabel = (Label) fxmlLoader.getNamespace().get("ypos");
+		scaleLabel = (Label) fxmlLoader.getNamespace().get("scale");
 
 		getChildren().add(root);
 	}
@@ -382,55 +395,60 @@ public abstract class ARender extends Pane {
 		/*
 		 * Zoom
 		 */
-		this.setOnScroll(event -> {
+		setOnScroll(event -> {
 			sign = event.getDeltaY() > 0 ? 1 : -1;
-			scale = scale + sign * 0.1;
+			
+			scale = scale + sign * 0.100000000;
 			if (scale < 0.1) {
 				scale = 0.1;
 				return;
-			} else if (scale > 2) {
-				scale = 2;
+			} else if (scale > 4) {
+				scale = 4;
 				return;
 			}
-			this.setScaleX(scale);
-			this.setScaleY(scale);
+			setScaleX(scale);
+			setScaleY(scale);
+			DecimalFormat df = new DecimalFormat("#0.00");
+			scaleLabel.setText("| Scale: " + df.format(scale));
 		});
 
-//		this.setStyle("-fx-background-color: red;");
-//		content.setStyle("-fx-background-color: pink;");
-//		getParent().setStyle("-fx-background-color: orange;");
+		// this.setStyle("-fx-background-color: red;");
+		// content.setStyle("-fx-background-color: pink;");
+		// getParent().setStyle("-fx-background-color: orange;");
 		/*
 		 * Drag
 		 */
 		// Record a delta distance for the drag and drop operation.
-		this.setOnMousePressed(event -> {
-			transX = this.getTranslateX() - event.getSceneX();
-			transY = this.getTranslateY() - event.getSceneY();
-			this.setCursor(Cursor.CLOSED_HAND);
+		setOnMousePressed(event -> {
+			transX = getTranslateX() - event.getSceneX();
+			transY = getTranslateY() - event.getSceneY();
+			setCursor(Cursor.CLOSED_HAND);
 		});
 		// Restore cursor
-		this.setOnMouseReleased(event -> {
-			this.setCursor(null);
+		setOnMouseReleased(event -> {
+			setCursor(null);
 		});
 		// Translate canvases
-		this.setOnMouseDragged(event -> {
-			this.setTranslateX(event.getSceneX() + transX);
-			this.setTranslateY(event.getSceneY() + transY);
+		setOnMouseDragged(event -> {
+			setTranslateX(event.getSceneX() + transX);
+			setTranslateY(event.getSceneY() + transY);
+			xposLabel.setText("XPos: " + (int) (getTranslateX() + 0.5));
+			yposLabel.setText("| YPos: " + (int) (getTranslateY() + 0.5));
 		});
 		// Set cursor
-		this.setOnMouseEntered(event -> {
+		setOnMouseEntered(event -> {
 			// this.setCursor(Cursor.OPEN_HAND);
 			if (header.visibleProperty().isBound()) {
 				name.setVisible(false);
 			}
-			this.setBorder(BORDER_MOUSEOVER);
+			setBorder(BORDER_MOUSEOVER);
 		});
-		this.setOnMouseExited(event -> {
+		setOnMouseExited(event -> {
 			// this.setCursor(null);
 			if (header.visibleProperty().isBound()) {
 				name.setVisible(true);
 			}
-			this.setBorder(null);
+			setBorder(null);
 		});
 	}
 
@@ -888,7 +906,7 @@ public abstract class ARender extends Pane {
 	// Center on button when hiding or showing
 	private double conbwhs = 0;
 	// Used to hide other buttons when minimzing
-	private final ArrayList<ButtonBase> nonHideButtons = new ArrayList<ButtonBase>();
+	private final ArrayList<Node> nonHideButtons = new ArrayList<Node>();
 
 	public void toggleHidden(Event e) {
 		ToggleButton tb = (ToggleButton) e.getSource();
