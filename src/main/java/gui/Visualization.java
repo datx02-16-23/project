@@ -297,7 +297,8 @@ public class Visualization extends StackPane {
 			case single:
 				yPos = northEast * 120 + padding;
 				xPos = getWidth() - (150 + padding) * (nERow + 1);
-				if (!(checkXPos(xPos) || checkYPos(yPos))) {
+				if (!(checkXPos(xPos) && checkYPos(yPos))) {
+					System.out.println("retry");
 					northEast = 0;
 					nERow++;
 					yPos = northEast * 120 + padding;
@@ -308,7 +309,7 @@ public class Visualization extends StackPane {
 			case bar:
 				xPos = padding + this.getWidth() * sWRow;
 				yPos = getHeight() - (padding + ARender.DEFAULT_RENDER_HEIGHT) * (southWest + 1) - padding * 3;
-				if (!(checkXPos(xPos) || checkYPos(yPos))) {
+				if (!(checkXPos(xPos) && checkYPos(yPos))) {
 					sWRow++; //TODO
 				}
 				southWest++;
@@ -316,7 +317,7 @@ public class Visualization extends StackPane {
 			default:
 				xPos = padding + this.getWidth() * nWRow;
 				yPos = (padding + ARender.DEFAULT_RENDER_HEIGHT) * northWest + padding;
-				if (!(checkXPos(xPos) || checkYPos(yPos))) {
+				if (!(checkXPos(xPos) & checkYPos(yPos))) {
 					nWRow++; //TODO
 				}
 				northWest++;
