@@ -295,8 +295,8 @@ public class Visualization extends StackPane {
 
 			switch (arm.getStructure().visual) {
 			case single:
-				yPos = northEast * 150 + padding;
-				xPos = getWidth() - 150 * (nERow + 1) - padding;
+				yPos = northEast * 120 + padding;
+				xPos = getWidth() - (150 + padding) * (nERow + 1);
 				if (checkXPos(xPos) == false && nERow == 0) {
 					northEast = 0;
 					nERow++;

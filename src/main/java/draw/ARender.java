@@ -204,9 +204,9 @@ public abstract class ARender extends Pane {
 		loadBase();
 		initDragAndZoom();
 
-		this.setMinSize(150, 20);
-		this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-		this.setPrefSize(150, 170);
+//		this.setMinSize(150, 20);
+//		this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+		expand();
 	}
 
 	private void loadBase() {
@@ -225,7 +225,7 @@ public abstract class ARender extends Pane {
 		content = (Pane) fxmlLoader.getNamespace().get("content");
 		content.getChildren().add(nodes);
 		content.setBackground(getStructBackground(struct));
-		setSize(150, 150);
+		setSize(150, 125); //Size of background images
 
 		// Name labels
 		name = (Label) fxmlLoader.getNamespace().get("name");
@@ -351,7 +351,7 @@ public abstract class ARender extends Pane {
 			content.setMaxSize(width, height);
 
 			// if (content.isVisible()) {
-			height = height + 10; // Space for header bar
+			height = height + 15; // Space for header bar
 			root.setPrefSize(width, height);
 			root.setMaxSize(width, height);
 

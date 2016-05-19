@@ -28,7 +28,7 @@ public class Array extends DataStructure {
 	private transient double min = Integer.MAX_VALUE;
 	private transient double max = Integer.MIN_VALUE;
 
-	private BoundaryChangeListener listener;
+	private transient BoundaryChangeListener listener;
 
 	/**
 	 * Construct a new Array with the given parameters.
