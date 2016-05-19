@@ -63,13 +63,7 @@ public class KTreeRender extends ARender {
 	 */
 	public KTreeRender(DataStructure struct, int K, double width, double height, double hspace, double vspace) {
 		super(struct, width, height, hspace, vspace);
-		System.out.println("-----------");
-		System.out.println("-----------");
-		System.out.println("K arg = " + K);
 		this.K = K < 2 ? 2 : K;
-		System.out.println("this.K = " + this.K);
-		System.out.println("-----------");
-		System.out.println("-----------");
 		content.getChildren().add(visual_lines);
 		visual_lines.toBack();
 	}
@@ -159,7 +153,7 @@ public class KTreeRender extends ARender {
 		double x;
 		int breadth, depth;
 		if (index == 0) { // Root element
-			double p = DasToolkit.pow(totDepth, K) / 2;
+			double p = DasToolkit.pow(K, totDepth) / 2;
 			x = hspace + (hspace + node_width) * (p) - ((K + 1) % 2) * (node_width + hspace) / 2;
 		} else {
 			depth = getDepth(index);
@@ -171,7 +165,7 @@ public class KTreeRender extends ARender {
 
 	private double getX(int breadth, int depth) {
 		// Stepsize at this depth. Farther from root smaller steps
-		double L = (double) DasToolkit.pow(totDepth, K) / (double) DasToolkit.pow(depth, K);
+		double L = (double) DasToolkit.pow(K, totDepth) / (double) DasToolkit.pow(K, depth);
 		// Apply indentation for every row except the last
 		double indentation = 0;
 		if (depth < totDepth) {
@@ -221,7 +215,6 @@ public class KTreeRender extends ARender {
 		double structSize = struct.getElements().size();
 		totDepth = 0;
 		// Calculate the minimum depth which can hold all elements of the array.
-		System.out.println("K = " + K);
 		while (DasToolkit.lowerLevelSum(totDepth, K) < structSize) {
 			totDepth++;
 		}
@@ -229,7 +222,7 @@ public class KTreeRender extends ARender {
 		// completedSize = lowerLevelSums.get(Double.toString(K) +
 		// lolwut).get(totDepth + 1);
 		completedSize = DasToolkit.lowerLevelSum(totDepth + 1, K);
-		totBreadth = DasToolkit.pow(totDepth, K);
+		totBreadth = DasToolkit.pow(K, totDepth);
 	}
 
 	@Override

@@ -103,6 +103,7 @@ public class ARenderManager extends BorderPane implements VisualListener {
 		
 		curRender.init();
 		curRender.updateInfoLabels();
+		animation_pane.getChildren().remove(curRender.getAnimationPane());
 		animation_pane.getChildren().add(curRender.getAnimationPane());
 		prevRender = curRender;
 	}

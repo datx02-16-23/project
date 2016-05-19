@@ -75,7 +75,7 @@ public abstract class DasToolkit {
 	public static final HashMap<Integer, ArrayList<Integer>> lowerLevelSums = new HashMap<Integer, ArrayList<Integer>>();
 
 	/**
-	 * Memoized function. Calculates the total number of elements below a given
+	 * Memoized function. Calculates the total number of elements above a given
 	 * depth and saves it to higherLevelSums.
 	 * 
 	 * @param targetDepth
@@ -86,14 +86,13 @@ public abstract class DasToolkit {
 	 *         K-ary tree.
 	 */
 	public static int lowerLevelSum(int targetDepth, int K) {
-		if(K < 2){
-			throw new IllegalArgumentException("Cannot calculate for K lower than 2!!");
+		if (K < 2) {
+			return 0;
 		}
 		ArrayList<Integer> sums = DasToolkit.lowerLevelSums.get(K);
 
 		if (sums == null) {
 			// Start a new list.
-			System.out.println("NEW LIST: " + K);
 			sums = new ArrayList<Integer>();
 			sums.add(new Integer(0));
 			DasToolkit.lowerLevelSums.put(K, sums);
@@ -102,13 +101,13 @@ public abstract class DasToolkit {
 		int cDepth = sums.size();
 		for (; cDepth <= targetDepth; cDepth++) {
 			int prev = sums.get(cDepth - 1);
-			int curr = DasToolkit.pow(cDepth + 1 , K);
-			System.out.println("curr = " + curr);
-			
-			sums.add(new Integer(prev + curr));
+			int cur = pow(K, cDepth - 1);
+			System.out.println("prev = " + prev);
+			System.out.println("cur =" + cur);
+			System.out.println("sum = " + (prev + cur));
+			System.out.println();
+			sums.add(new Integer(prev + cur));
 		}
-		System.out.println(K + " sums = " + sums);
-		System.out.println("---------");
 		return sums.get(targetDepth);
 	}
 
@@ -122,8 +121,14 @@ public abstract class DasToolkit {
 	 * @return base^x
 	 */
 	public static int pow(int b, int e) {
+		if (e == 0) {
+			return 1;
+		} else if (b == 1) {
+			return 1;
+		}
+
 		int p = 1;
-		for (int i = 0; i < e; i++) {
+		for (int i = 1; i <= e; i++) {
 			p = p * b;
 		}
 		return p;
