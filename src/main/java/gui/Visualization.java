@@ -300,7 +300,7 @@ public class Visualization extends StackPane {
 				if (checkXPos(xPos) == false && nERow == 0) {
 					northEast = 0;
 					nERow++;
-					xPos = getWidth() - 150 * (nERow) - padding;
+					xPos = getWidth() - 150 * (nERow + 1) - padding;
 				}
 				northEast++;
 				break;

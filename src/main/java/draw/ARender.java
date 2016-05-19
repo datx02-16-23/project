@@ -1,7 +1,7 @@
 package draw;
 
 import java.io.IOException;
-import java.math.RoundingMode;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,12 +26,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonBase;
 import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToolBar;
@@ -48,7 +43,8 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
@@ -65,13 +61,19 @@ public abstract class ARender extends Pane {
 	 */
 	public static final int DEFAULT_RENDER_HEIGHT = 250;
 
-	/*
-	 * Shared stuff.
+	/**
+	 * Background before initialisation
 	 */
 	private static final Background ARRAY_BACKGROUND = createArrayBg();
 	private static final Background ORPHAN_BACKGROUND = createOrphanBg();
 	private static final Background TREE_BACKGROUND = createTreeBg();
+	/**
+	 * Highlight border.
+	 */
 	private static final Border BORDER_MOUSEOVER = getMOBorder();
+	/**
+	 * FXML file URL.
+	 */
 	private static final String url = "/render/RenderBase.fxml";
 
 	/**
@@ -195,7 +197,7 @@ public abstract class ARender extends Pane {
 		this.node_height = height;
 		this.hspace = hspace;
 		this.vspace = vspace;
-		
+
 		this.animation_pane = new Pane();
 
 		// Add stacked canvases
@@ -509,11 +511,11 @@ public abstract class ARender extends Pane {
 
 		animated.unbind();
 
-//		animated.setScaleX(this.getScaleX());
-//		animated.setScaleY(this.getScaleY());
-		
-		animation_pane.setScaleX(this.getScaleX());
-		animation_pane.setScaleY(this.getScaleY());
+		animated.setScaleX(this.getScaleX());
+		animated.setScaleY(this.getScaleY());
+
+		// animation_pane.setScaleX(this.getScaleX());
+		// animation_pane.setScaleY(this.getScaleY());
 
 		animation_pane.getChildren().add(animated);
 
@@ -850,26 +852,30 @@ public abstract class ARender extends Pane {
 	 * Boring crap.
 	 */
 	private static Background createArrayBg() {
-		return new Background(new BackgroundImage(new Image(Controller.class.getResourceAsStream("/assets/array.png")),
-				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-				BackgroundSize.DEFAULT));
+		Image image = new Image(ARender.class.getResourceAsStream("/assets/array.png"));
+		BackgroundImage bgi = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+				BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+		return new Background(bgi);
+
 	}
 
 	private static Background createOrphanBg() {
-		return new Background(new BackgroundImage(
-				new Image(Controller.class.getResourceAsStream("/assets/orphan2.png")), BackgroundRepeat.NO_REPEAT,
-				BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT));
+		Image image = new Image(ARender.class.getResourceAsStream("/assets/orphan.png"));
+		BackgroundImage bgi = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+				BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+		return new Background(bgi);
 	}
 
 	private static Background createTreeBg() {
-		return new Background(new BackgroundImage(new Image(Controller.class.getResourceAsStream("/assets/tree.png")),
-				BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-				BackgroundSize.DEFAULT));
+		Image image = new Image(ARender.class.getResourceAsStream("/assets/tree.png"));
+		BackgroundImage bgi = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+				BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+		return new Background(bgi);
 	}
 
 	private static Border getMOBorder() {
-		return new Border(new BorderStroke(Color.web("#123456"), BorderStrokeStyle.SOLID, new CornerRadii(5),
-				new BorderWidths(3), new Insets(-5)));
+		return new Border(new BorderStroke(Color.web("#123456"), BorderStrokeStyle.SOLID, new CornerRadii(3),
+				new BorderWidths(3), new Insets(-3)));
 	}
 
 	private static Background getStructBackground(DataStructure struct) {
@@ -996,13 +1002,23 @@ public abstract class ARender extends Pane {
 		scaleLabel.setText("| Scale: " + df.format(scale));
 	}
 
+	private boolean playFailureSound = true;
+
 	/**
 	 * Makes the header red when something goes wrong.
 	 */
 	public void renderFailure() {
-		header.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
-		content.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
-		Main.console.err("Render Failure in " + this.toString() + ".");
+		if (playFailureSound) {
+			playFailureSound = false;
+			URL resource = getClass().getResource("/assets/sad_trombone.mp3");
+			Media media = new Media(resource.toString());
+			MediaPlayer mp3 = new MediaPlayer(media);
+			mp3.play();
+
+			header.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
+			content.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
+			Main.console.err("Render Failure in " + this.toString() + ".");
+		}
 	}
 
 	public String toString() {
