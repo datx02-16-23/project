@@ -123,7 +123,7 @@ public class Visualization extends StackPane {
 			case bar:
 				System.out.println("bar");
 				transX = padding;
-				transY = getHeight() - (padding + ARender.DEFAULT_RENDER_HEIGHT) * southWest - padding;
+				transY = getHeight() - (padding + ARender.DEFAULT_RENDER_HEIGHT) * (southWest + 1) - padding*3;
 				southWest++;
 				break;
 			default:
@@ -136,20 +136,30 @@ public class Visualization extends StackPane {
 			}
 
 			double maxw = this.getWidth() - 100;
+			double maxh = this.getHeight() - 100;
+
+			// Check Y ok.
 			if (transX < 0 || transX > maxw) {
 				System.err.println("Automatic placing failed: transX = " + transX + " (max = " + maxw
 						+ "). Using default placement for \"" + arm.getStructure() + "\".");
 				transX = padding;
+				transY = padding;
 			}
-			double maxh = this.getHeight() - 100;
+			// Check X ok.
 			if (transX < 0 || transY > maxh) {
 				System.err.println("Automatic placing failed: transY = " + transY + " (max = " + maxh
 						+ "). Using default placement for \"" + arm.getStructure() + "\".");
 				transY = padding;
+				transX = padding;
+				transY = padding;
 			}
 
+			System.out.println(transX);
+			System.out.println(transY);
 			arm.getRender().setTranslateX(transX);
-			arm.getRender().setTranslateX(transY);
+			arm.getRender().setTranslateY(transY);
+//			arm.getRender().setLayoutX(transX);
+//			arm.getRender().setLayoutY(transY);
 			arm.getRender().updateInfoLabels();
 		}
 	}

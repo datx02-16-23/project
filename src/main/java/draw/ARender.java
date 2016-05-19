@@ -420,10 +420,7 @@ public abstract class ARender extends Pane {
 			setScaleY(scale);
 			updateInfoLabels();
 		});
-
-		// this.setStyle("-fx-background-color: red;");
-		// content.setStyle("-fx-background-color: pink;");
-		// getParent().setStyle("-fx-background-color: orange;");
+		
 		/*
 		 * Drag
 		 */
@@ -981,10 +978,23 @@ public abstract class ARender extends Pane {
 	/**
 	 * Update info labels in the header.
 	 */
+	int i = 0;
 	public void updateInfoLabels(){
 		DecimalFormat df = new DecimalFormat("#0.00");
 		xposLabel.setText("XPos: " + (int) (getTranslateX() + 0.5));
 		yposLabel.setText("| YPos: " + (int) (getTranslateY() + 0.5));
 		scaleLabel.setText("| Scale: " + df.format(scale));
+
+		if(i % 20 == 0){
+			System.out.println("struct = " + struct);
+			System.out.println("getTranslateX() = " + getTranslateX());
+			System.out.println("getTranslateY() = " + getTranslateY());
+
+			System.out.println("getLayoutX() = " + getLayoutX());
+			System.out.println("getLayoutY() = " + getLayoutY());
+			
+			System.out.println();
+		}
+		i++;
 	}
 }

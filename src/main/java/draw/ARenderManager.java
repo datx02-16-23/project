@@ -100,9 +100,11 @@ public class ARenderManager extends BorderPane implements VisualListener {
 			render.setLayoutX(layoutX);
 			render.setLayoutY(layoutY);
 
-			oldRender = render;
-			render.init();
 		}
+		
+		render.init();
+		render.updateInfoLabels();
+		oldRender = render;
 	}
 
 	/**

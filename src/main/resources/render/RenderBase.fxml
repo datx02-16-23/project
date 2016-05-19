@@ -79,8 +79,8 @@
                            </padding>
                         </Button>
                         <Label fx:id="scale" text="| Scale: 1.0" textFill="WHITE" />
-                        <Label text="| YPos: 0.0" textFill="WHITE" fx:id="xpos" />
-                        <Label fx:id="ypos" text="XPos: 0.0" textFill="WHITE" />
+                        <Label fx:id="ypos" text="| YPos: 0.0" textFill="WHITE" />
+                        <Label text="XPos: 0.0" textFill="WHITE" fx:id="xpos" />
                      </items>
                      <StackPane.margin>
                         <Insets right="-2.0" />
