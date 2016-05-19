@@ -11,12 +11,10 @@ import java.util.List;
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
 import contract.datastructure.Array.IndexedElement;
-import contract.operation.OP_Remove;
 import contract.operation.OperationCounter;
 import draw.GridRender.Order;
 import draw.element.VisualElement;
 import gui.Main;
-import gui.Controller;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.Transition;
@@ -127,9 +125,9 @@ public abstract class ARender extends Pane {
 	/**
 	 * A mapping of actual Elements to VisualElements.
 	 */
-	// protected final HashMap<Element, VisualElement> visualElementsMapping =
+	// protected final HashMap<Element, VisualElement> visualMap =
 	// new HashMap<Element, VisualElement>();
-	protected final HashMap<String, VisualElement> visualElementsMapping = new HashMap<String, VisualElement>();
+	protected final HashMap<String, VisualElement> visualMap = new HashMap<String, VisualElement>();
 
 	/**
 	 * Pane for rendering of visual element nodes.
@@ -236,7 +234,7 @@ public abstract class ARender extends Pane {
 		ToolBar headerButtonBar = (ToolBar) fxmlLoader.getNamespace().get("buttons");
 		for (Node node : headerButtonBar.getItems()) {
 			if (node instanceof ToggleButton == false) {
-				nonHideButtons.add(node);
+				optionalHeaderContent.add(node);
 			}
 		}
 		header = (Node) fxmlLoader.getNamespace().get("header");
@@ -268,13 +266,13 @@ public abstract class ARender extends Pane {
 	 */
 
 	/**
-	 * Default animation for a Remove operation. Does nothing.
+	 * Default animation for a Remove operation.
 	 * 
 	 * @param remove
 	 *            The operation to animate.
 	 */
-	public void animateRemove(OP_Remove remove) {
-		// Do nothing.
+	public void animateRemove(Element tar) {
+		
 	}
 
 	/**
@@ -351,7 +349,7 @@ public abstract class ARender extends Pane {
 			content.setMaxSize(width, height);
 
 			// if (content.isVisible()) {
-			height = height + 15; // Space for header bar
+			height = height + 45; // Space for header bar
 			root.setPrefSize(width, height);
 			root.setMaxSize(width, height);
 
@@ -500,7 +498,7 @@ public abstract class ARender extends Pane {
 		int[] i = ((IndexedElement) e).getIndex();
 		Arrays.copyOf(i, i.length);
 
-		final VisualElement real = visualElementsMapping.get(Arrays.toString(i));
+		final VisualElement real = visualMap.get(Arrays.toString(i));
 		if (real == null) {
 			// Do not remove this printout //RS
 			System.err.println("Animation failed: Failed resolve element for: " + struct);
@@ -616,7 +614,7 @@ public abstract class ARender extends Pane {
 			((Pane) n).getChildren().clear();
 		}
 
-		visualElementsMapping.clear();
+		visualMap.clear();
 		content.setBackground(null);
 		calculateSize();
 
@@ -629,7 +627,7 @@ public abstract class ARender extends Pane {
 			newVis.setLayoutY(getY(e));
 
 			nodes.getChildren().add(newVis);
-			visualElementsMapping.put(Arrays.toString(((IndexedElement) e).getIndex()), newVis);
+			visualMap.put(Arrays.toString(((IndexedElement) e).getIndex()), newVis);
 
 			bellsAndWhistles(e, newVis);
 		}
@@ -895,7 +893,7 @@ public abstract class ARender extends Pane {
 		}
 	}
 
-	public static final Transition fadeIn(long millis) {
+	private static final Transition fadeIn(long millis) {
 		FadeTransition ft = new FadeTransition(Duration.millis(millis));
 
 		ft.setFromValue(1.0);
@@ -903,7 +901,7 @@ public abstract class ARender extends Pane {
 		return ft;
 	}
 
-	public static final Transition fadeOut(long millis) {
+	private static final Transition fadeOut(long millis) {
 		FadeTransition ft = new FadeTransition(Duration.millis(millis));
 		ft.setFromValue(1.0);
 		ft.setToValue(0);
@@ -925,10 +923,10 @@ public abstract class ARender extends Pane {
 		System.out.println("options");
 	}
 
-	// Center on button when hiding or showing
+	// Center on button when hiding or showing.
 	private double conbwhs = 0;
-	// Used to hide other buttons when minimzing
-	private final ArrayList<Node> nonHideButtons = new ArrayList<Node>();
+	// Used to hide other buttons when minimising.
+	private final ArrayList<Node> optionalHeaderContent = new ArrayList<Node>();
 
 	public void toggleHidden(Event e) {
 		ToggleButton tb = (ToggleButton) e.getSource();
@@ -953,7 +951,7 @@ public abstract class ARender extends Pane {
 		this.setPrefSize(150, 20);
 		this.setMaxSize(150, 20);
 		unbindHeader();
-		for (Node n : nonHideButtons) {
+		for (Node n : optionalHeaderContent) {
 			n.setVisible(false);
 		}
 		content.setVisible(false);
@@ -963,12 +961,14 @@ public abstract class ARender extends Pane {
 		content.setVisible(true);
 		setTranslateX(getTranslateX() - conbwhs);
 		bindHeader();
+		calculateSize(); //Size recalculation is disabled while hidden.
+		
 		if (content.getBackground() == null) {
 			calculateSize();
 		} else {
 			setSize(150, 90);
 		}
-		for (Node n : nonHideButtons) {
+		for (Node n : optionalHeaderContent) {
 			n.setVisible(true);
 		}
 	}
@@ -1019,6 +1019,14 @@ public abstract class ARender extends Pane {
 			content.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
 			Main.console.err("Render Failure in " + this.toString() + ".");
 		}
+	}
+	
+	/**
+	 * Returns the visual map for this Render.
+	 * @return The visual map for this Render.
+	 */
+	public HashMap<String, VisualElement> getVisualMap(){
+		return visualMap;
 	}
 
 	public String toString() {

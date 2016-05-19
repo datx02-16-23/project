@@ -23,7 +23,6 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 
 	// Using instead of default render field names for clarity.
 	private double renderHeight, padding, barWidth, xAxisY, unitSize;
-	private final Array array;
 
 	private Pane axes = new Pane();
 	// private final CategoryAxis xAxis = new CategoryAxis();
@@ -48,7 +47,6 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 		super(struct, barWidth, totHeight, hspace, -1);
 
 		// Convenient names
-		this.array = (Array) struct;
 		this.barWidth = barWidth;
 		this.renderHeight = totHeight;
 		this.padding = barWidth / 2;
@@ -101,7 +99,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 			((Pane) n).getChildren().clear();
 		}
 
-		visualElementsMapping.clear();
+		visualMap.clear();
 		content.setBackground(null);
 		calculateSize();
 
@@ -113,7 +111,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 			newVis.setLayoutX(getX(e));
 
 			nodes.getChildren().add(newVis);
-			visualElementsMapping.put(Arrays.toString(((IndexedElement) e).getIndex()), newVis);
+			visualMap.put(Arrays.toString(((IndexedElement) e).getIndex()), newVis);
 			bellsAndWhistles(e, newVis);
 		}
 		positionBars();
@@ -228,7 +226,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 
 	@Override
 	public void calculateSize() {
-		totWidth = array.getElements().size() * (barWidth + hspace) + padding * 3;
+		totWidth = struct.getElements().size() * (barWidth + hspace) + padding * 3;
 		xAxisY = renderHeight - padding;
 		right_wall_x = totWidth - padding;
 		setSize(totWidth, renderHeight);

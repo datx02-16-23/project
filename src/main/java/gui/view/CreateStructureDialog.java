@@ -82,7 +82,11 @@ public class CreateStructureDialog {
 		 * Visual options
 		 */
 		visType = (ChoiceBox) fxmlLoader.getNamespace().get("visType");
-		visType.setItems(FXCollections.observableArrayList(VisualType.values()));
+		for(VisualType vt : VisualType.values()){
+			if(vt.has_clones == false){
+				visType.getItems().add(vt);
+			}
+		}
 		visType.setOnAction(event -> {
 			chooseVisual();
 		});
@@ -152,7 +156,7 @@ public class CreateStructureDialog {
 			root.close();
 			return;
 		}
-		if (vt != struct.resolveVisual()) {
+		if (struct != null && vt != struct.resolveVisual()) {
 			// Visual type changed
 			if (vt.has_options) {
 				struct.visualOption = (Integer) visOption.getValue();

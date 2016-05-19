@@ -1,22 +1,19 @@
 package draw;
 
-import java.util.Arrays;
-
 import contract.datastructure.Array;
+import contract.datastructure.Array.IndexedElement;
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
-import contract.datastructure.Array.IndexedElement;
 import draw.element.ElemShape;
-import draw.element.VisualElementFactory;
 import draw.element.VisualElement;
+import draw.element.VisualElementFactory;
 import gui.Main;
 import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
 
 public class GridRender extends ARender {
-
 	private final Order mo;
-	private int[] size;
+	private int[] dims;
 
 	/**
 	 * Creates a new GridRender.
@@ -103,42 +100,41 @@ public class GridRender extends ARender {
 	@Override
 	public void calculateSize() {
 
-		ensureDimension();
+		ensureDimensionsSet();
 
+		/*
+		 * Row Major
+		 */
 		if (mo == Order.ROW_MAJOR) {
-			totWidth = vspace + (vspace + node_width) * size[0];
-			if (size.length == 2) {
-				totHeight = hspace + (hspace + node_height) * size[1];
-			} else {
-				totHeight = hspace + (hspace + node_height) * 1;
-			}
+			totWidth = vspace + (vspace + node_width) * dims[0];
+			totHeight = hspace + (hspace + node_height) * dims[1];
+			
+			/*
+			 * Column Major
+			 */
 		} else {
-			totHeight = hspace + (hspace + node_height) * size[0];
-			if (size.length == 2) {
-				totWidth = 2 + vspace + (vspace + node_width) * size[1];
-			} else {
-				totWidth = 2 + vspace + (vspace + node_width) * 1;
-			}
+			totHeight = hspace + (hspace + node_height) * dims[0];
+			totWidth = 2 + vspace + (vspace + node_width) * dims[1];
 		}
 		setSize(totWidth, totHeight);
 	}
 
-	private void ensureDimension() {
+	private void ensureDimensionsSet() {
 		int[] backup = new int[] { struct.getElements().size(), 1 };
 		Array array = (Array) struct;
 
-		size = array.getCapacity();
+		dims = array.getCapacity();
 
-		if (size == null || size.length == 0) {
-			size = backup;
-			//Do not remove this printout //RS
+		if (dims == null || dims.length == 0) {
+			dims = backup;
+			// Do not remove this printout //RS
 			System.err.println("Size was null or empty for \"" + struct + "\"!");
-		} else if (size.length == 1) {
-			int[] newSize = { size[0], 1 };
-			size = newSize;
-			// Add 2nd dimension for size calculations.
+		} else if (dims.length == 1) {
+			int[] newSize = { dims[0], 1 };
+			dims = newSize; // Add 2nd which is used in size calculation.
 		}
-		// Else assume size is ok.
+
+		// Else assume dims are okay.
 	}
 
 	public static enum Order {

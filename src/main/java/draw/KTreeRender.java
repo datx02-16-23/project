@@ -2,6 +2,7 @@ package draw;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
@@ -17,12 +18,23 @@ import javafx.scene.shape.Line;
 public class KTreeRender extends ARender {
 
 	/**
+	 * Memoization for number of nodes.
+	 */
+	private static final HashMap<Integer, ArrayList<Integer>> lowerLevelSums = new HashMap<Integer, ArrayList<Integer>>();
+	/**
 	 * Container for connector lines.
 	 */
 	protected final Pane visual_lines = new Pane();
 
+	/**
+	 * Number of children per node.
+	 */
 	protected final int K;
-	private final ArrayList<Integer> lowerLevelSums = new ArrayList<Integer>();
+	/**
+	 * //TODO How to write javadoc for each without splitting them up? Number of
+	 * levels (excluding root); number of elements at the bottom; total capacity
+	 * for a tree with this depth.
+	 */
 	protected int totDepth, totBreadth, completedSize;
 
 	/**
@@ -45,7 +57,6 @@ public class KTreeRender extends ARender {
 	public KTreeRender(DataStructure struct, int K, double width, double height, double hspace, double vspace) {
 		super(struct, width, height, hspace, vspace);
 		this.K = K < 2 ? 2 : K;
-		lowerLevelSums.add(new Integer(0));
 		content.getChildren().add(visual_lines);
 		visual_lines.toBack();
 	}
@@ -80,12 +91,12 @@ public class KTreeRender extends ARender {
 	@Override
 	protected void bellsAndWhistles(Element ae, VisualElement childVis) {
 		System.out.println("ktree: baw shape = " + childVis.getShape());
-		
+
 		IndexedElement parent_clone = new IndexedElement(0,
 				new int[] { (((IndexedElement) ae).getIndex()[0] - 1) / K });
 
 		// VisualElement parentVis = visualElementsMapping.get(parent_clone);
-		VisualElement parentVis = visualElementsMapping
+		VisualElement parentVis = visualMap
 				.get(Arrays.toString(new int[] { (((IndexedElement) ae).getIndex()[0] - 1) / K }));
 
 		double dx = node_width / 2;
@@ -124,7 +135,7 @@ public class KTreeRender extends ARender {
 			ghostVis.setLayoutY(getY(ghostElem));
 			ghostVis.setGhost(true);
 			bellsAndWhistles(ghostElem, ghostVis);
-			ghostVis.setInfoPos(Pos.CENTER	);
+			ghostVis.setInfoPos(Pos.CENTER);
 			nodes.getChildren().add(ghostVis);
 		}
 	}
@@ -135,7 +146,7 @@ public class KTreeRender extends ARender {
 		double x;
 		int breadth, depth;
 		if (index == 0) { // Root element
-			double p = K_pow(totDepth) / 2;
+			double p = K_pow(totDepth, K) / 2;
 			x = hspace + (hspace + node_width) * (p) - ((K + 1) % 2) * (node_width + hspace) / 2;
 		} else {
 			depth = getDepth(index);
@@ -147,7 +158,7 @@ public class KTreeRender extends ARender {
 
 	private double getX(int breadth, int depth) {
 		// Stepsize at this depth. Farther from root smaller steps
-		double L = (double) K_pow(totDepth) / (double) K_pow(depth);
+		double L = (double) K_pow(totDepth, K) / (double) K_pow(depth, K);
 		// Apply indentation for every row except the last
 		double indentation = 0;
 		if (depth < totDepth) {
@@ -180,14 +191,14 @@ public class KTreeRender extends ARender {
 	private int getDepth(int index) {
 		int depth = 1;
 		// Calculate depth and breadth
-		while (lowerLevelSum(depth) <= index) {
+		while (lowerLevelSum(depth, K) <= index) {
 			depth++;
 		}
 		return depth - 1;
 	}
 
 	private int getBreadth(int index, int depth) {
-		return index - lowerLevelSum(depth);
+		return index - lowerLevelSum(depth, K);
 	}
 
 	/**
@@ -201,12 +212,21 @@ public class KTreeRender extends ARender {
 	 * @return The total number of elements above {@code targetDepth} for a
 	 *         K-ary tree.
 	 */
-	private int lowerLevelSum(int targetDepth) {
-		while (lowerLevelSums.size() <= targetDepth) {
-			int sum = lowerLevelSums.get(lowerLevelSums.size() - 1) + K_pow(lowerLevelSums.size() - 1);
-			lowerLevelSums.add(sum);
+	private static int lowerLevelSum(int targetDepth, int K) {
+		System.out.println("lowerLevelSums = " + lowerLevelSums);
+		
+		if(lowerLevelSums.containsKey(K) == false){
+			lowerLevelSums.put(K, new ArrayList<Integer>(new Integer(0)));
+			System.out.println("put");
+		} else {
+			System.out.println("already exists");
 		}
-		return lowerLevelSums.get(targetDepth);
+		
+		while (lowerLevelSums.get(K).size() <= targetDepth) {
+			int sum = lowerLevelSums.get(K).get(lowerLevelSums.get(K).size() - 1) + K_pow(lowerLevelSums.get(K).size() - 1, K);
+			lowerLevelSums.get(K).add(sum);
+		}
+		return lowerLevelSums.get(K).get(targetDepth);
 	}
 
 	/**
@@ -217,7 +237,7 @@ public class KTreeRender extends ARender {
 	 *            the depth to calculate #nodes for.
 	 * @return The number of nodes at depth d.
 	 */
-	private int K_pow(int d) {
+	private static int K_pow(int d, int K) {
 		int p = 1;
 		for (int i = 0; i < d; i++) {
 			p = p * K;
@@ -232,12 +252,12 @@ public class KTreeRender extends ARender {
 		double structSize = struct.getElements().size();
 		totDepth = 0;
 		// Calculate the minimum depth which can hold all elements of the array.
-		while (lowerLevelSum(totDepth) < structSize) {
+		while (lowerLevelSum(totDepth, K) < structSize) {
 			totDepth++;
 		}
 		totDepth--;
-		this.completedSize = lowerLevelSums.get(totDepth + 1);
-		totBreadth = K_pow(totDepth);
+		this.completedSize = lowerLevelSums.get(K).get(totDepth + 1);
+		totBreadth = K_pow(totDepth, K);
 	}
 
 	@Override

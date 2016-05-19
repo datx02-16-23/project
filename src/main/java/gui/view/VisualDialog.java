@@ -50,7 +50,11 @@ public class VisualDialog {
 		});
 		fxmlLoader.getNamespace();
 		choice = (ChoiceBox) fxmlLoader.getNamespace().get("choice");
-		choice.setItems(FXCollections.observableArrayList(VisualType.values()));
+		for(VisualType vt : VisualType.values()){
+			if(vt.has_clones == false){
+				choice.getItems().add(vt);
+			}
+		}
 		choice.setOnAction(event -> {
 			chooseVisual();
 		});
@@ -110,8 +114,7 @@ public class VisualDialog {
 	public boolean show(DataStructure struct) {
 		this.struct = struct;
 		name.setText(struct.toString());
-		VisualType visual = struct.resolveVisual();
-		choice.getSelectionModel().select(visual);
+		choice.getSelectionModel().select(struct.resolveVisual());
 		setSpinner(struct.resolveVisual());
 		root.showAndWait();
 		return changed;

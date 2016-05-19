@@ -135,7 +135,6 @@ public class Visualization extends StackPane {
 	 *            The new animation time in milliseconds.
 	 */
 	public final void setAnimationTime(long millis) {
-//		millis = 10000; //TODO
 		this.millis = (long) (millis * 0.60000);
 	}
 
@@ -177,7 +176,20 @@ public class Visualization extends StackPane {
 	}
 
 	private void animateRemove(OP_Remove remove) {
-
+		Locator tar = remove.getTarget();
+		Element e;
+		
+		/**
+		 * Var1 params
+		 */
+		for (DataStructure struct : model.getStructures().values()) {
+			e = struct.getElement(tar);
+			if (e != null) {
+				ARender render = this.struct_manager_mapping.get(struct.identifier).getRender();
+				render.animateRemove(e);
+				return;
+			}
+		}
 	}
 
 	public void animateReadWrite(OP_ReadWrite rw) {
@@ -267,58 +279,56 @@ public class Visualization extends StackPane {
 	} // End animate swap
 
 	/**
-	 * Attempt to place visuals with minimal overlap.
+	 * Attempt to place visuals with minimal overlap. Will return {@code false}
+	 * if placement failed. Note that {@code true} does not guarantee that there
+	 * is no overlap between renders.
+	 * 
+	 * @return False if placement failed.
 	 */
-	public void placeVisuals() {
+	public boolean placeVisuals() {
+		boolean successful = true;
+
 		ARenderManager arm;
-		int padding = 10;
+		int margin = 10;
 		double xPos = 0;
 		double yPos = 0;
 
-		// Most renders
-		int northWest = 0;
-		int nWRow = 0;
-
-		// Barcharts
-		int southWest = 0;
-		int sWRow = 0;
-
-		// Single elements
-		int northEast = 0;
-		int nERow = 0;
-
-		// Not used at the moment.
-		int southEast = 0;
+		//@formatter:off
+		int northWest = 0; int nWExpand = 0; // Default.
+		int southWest = 0; int sWExpand = 0; // Bar Chart.
+		int northEast = 0; int nEExpand = 0; // Single elements.
+		int southEast = 0; int sEExpand = 0; // Not used at the moment.
+		//@formatter:on
 
 		for (Node node : managers.getChildren()) {
 			arm = (ARenderManager) node;
 
 			switch (arm.getStructure().visual) {
 			case single:
-				yPos = northEast * 120 + padding;
-				xPos = getWidth() - (150 + padding) * (nERow + 1);
+				yPos = northEast * 120 + margin;
+				xPos = getWidth() - (150 + margin) * (nEExpand + 1);
 				if (!(checkXPos(xPos) && checkYPos(yPos))) {
 					System.out.println("retry");
 					northEast = 0;
-					nERow++;
-					yPos = northEast * 120 + padding;
-					xPos = getWidth() - 150 * (nERow + 1) - padding;
+					nEExpand++;
+					yPos = northEast * 120 + margin;
+					xPos = getWidth() - 150 * (nEExpand + 1) - margin;
 				}
 				northEast++;
 				break;
 			case bar:
-				xPos = padding + this.getWidth() * sWRow;
-				yPos = getHeight() - (padding + ARender.DEFAULT_RENDER_HEIGHT) * (southWest + 1) - padding * 3;
+				xPos = margin + this.getWidth() * sWExpand;
+				yPos = getHeight() - (margin + ARender.DEFAULT_RENDER_HEIGHT) * (southWest + 1) - margin * 3;
 				if (!(checkXPos(xPos) && checkYPos(yPos))) {
-					sWRow++; //TODO
+					sWExpand++; // TODO
 				}
 				southWest++;
 				break;
 			default:
-				xPos = padding + this.getWidth() * nWRow;
-				yPos = (padding + ARender.DEFAULT_RENDER_HEIGHT) * northWest + padding;
+				xPos = margin + this.getWidth() * nWExpand;
+				yPos = (margin + ARender.DEFAULT_RENDER_HEIGHT) * northWest + margin;
 				if (!(checkXPos(xPos) & checkYPos(yPos))) {
-					nWRow++; //TODO
+					nWExpand++; // TODO
 				}
 				northWest++;
 				break;
@@ -329,8 +339,9 @@ public class Visualization extends StackPane {
 			if (checkPositions(xPos, yPos) == false) {
 				// Do not remove this printout //RS
 				System.err.println("Using default placement for \"" + arm.getStructure() + "\".");
-				yPos = padding;
-				xPos = padding;
+				yPos = margin;
+				xPos = margin;
+				successful = false;
 			}
 
 			arm.getRender().setTranslateX(xPos);
@@ -339,6 +350,8 @@ public class Visualization extends StackPane {
 			// arm.getRender().setLayoutY(transY);
 			arm.getRender().updateInfoLabels();
 		}
+
+		return successful;
 	}
 
 	private boolean checkPositions(double xPos, double yPos) {

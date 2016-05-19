@@ -1,16 +1,46 @@
 package contract.datastructure;
 
 public enum VisualType {
-	bar("Bar Chart", "bar"), box("Boxes", "box", true), tree("KTree", "tree", true), single("Single Element", "single");
+	/*
+	 * Chart type.
+	 */
+	bar("Bar Chart", "bar"),
+	/*
+	 * Graph type.
+	 */
+	tree("KTree", "tree", true),
+	/*
+	 * Grid type.
+	 */
+	grid("Grid", "grid", true),
+	box(grid, "box"),
+	/*
+	 * Single element render.
+	 */
+	single("Single Element", "single");
 
 	public transient final String pretty;
 	public transient final String json;
 	public transient final boolean has_options;
+	public transient final boolean has_clones;
 
 	private VisualType(String pretty, String json, boolean has_options) {
 		this.pretty = pretty;
 		this.json = json;
 		this.has_options = has_options;
+		has_clones = false;
+	}
+	
+	/**
+	 * Constructor for enums which dont have their own render.
+	 * @param original The original VisualType.
+	 * @param json The json string for this VisualType.
+	 */
+	private VisualType(VisualType original, String json){
+		this.pretty = original.pretty;
+		this.json = original.json;
+		this.has_options = original.has_options;
+		has_clones = true;
 	}
 
 	private VisualType(String pretty, String json) {
