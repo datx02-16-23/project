@@ -117,7 +117,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 			bellsAndWhistles(e, newVis);
 		}
 		positionBars();
-		renderAxes();
+		drawAxes();
 		return true;
 	}
 
@@ -130,12 +130,12 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 	/**
 	 * Render the axes.
 	 */
-	private void renderAxes() {
+	private void drawAxes() {
 		// if (axes.getChildren().isEmpty()) {
 		/*
 		 * X-Axis
 		 */
-		Line xAxis = new Line(0, xAxisY, right_wall_x / 2, xAxisY);
+		Line xAxis = new Line(0, xAxisY, right_wall_x + 5, xAxisY);
 		xAxis.setStrokeWidth(2);
 		axes.getChildren().add(xAxis);
 
@@ -147,7 +147,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 
 		Label xLabel = new Label("Value");
 		xLabel.setLayoutX(padding * 1.5);
-		xLabel.setLayoutY(-5);
+		xLabel.setLayoutY(-7);
 		axes.getChildren().add(xLabel);
 
 		/*
@@ -169,17 +169,17 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 
 		Label yLabel = new Label("Index");
 		yLabel.setLayoutX(right_wall_x);
-		yLabel.setLayoutY(xAxisY * 0.8);
+		yLabel.setLayoutY(xAxisY + 2);
 		axes.getChildren().add(yLabel);
 
-		showDeveloperGuides();
+		// showDeveloperGuides();
 	}
 
 	/**
 	 * Draw developer guides where the bar roof, x-axis, y-axis and rightmost
 	 * limit should be.
 	 */
-	public void showDeveloperGuides() {
+	public void drawDeveloperGuides() {
 
 		Line roof = new Line(padding, padding, right_wall_x, padding);
 		roof.setStroke(Color.HOTPINK);

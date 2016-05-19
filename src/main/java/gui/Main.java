@@ -209,36 +209,6 @@ public class Main extends Application {
 				return;
 			}
 			print(prepend_err + err);
-			blinkRed();
-		}
-
-		/**
-		 * Make the console blink a red to draw attention;
-		 */
-		private boolean isRed = false;
-
-		public void blinkRed() {
-			// consoleTextArea.setStyle("-fx-background-color: rgba(255, 0, 0,
-			// 0.5);");
-			consoleTextArea.setStyle("-fx-background-color: red;");
-			isRed = true;
-			
-			Timeline tl = new Timeline();
-			tl.setCycleCount(7);
-			KeyFrame blink = new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
-				public void handle(ActionEvent event) {
-					if (isRed) {
-						consoleTextArea.setStyle("-fx-background-color: transparent;");
-					} else {
-						consoleTextArea.setStyle("-fx-background-color: red;");
-					}
-
-					isRed = !isRed;
-				}
-			});
-
-			tl.getKeyFrames().add(blink);
-			tl.play();
 		}
 
 		/**
@@ -343,7 +313,6 @@ public class Main extends Application {
 				@Override
 				public void run() {
 					consoleTextArea.setText(initMessage);
-					blinkRed();
 				}
 			});
 		}
