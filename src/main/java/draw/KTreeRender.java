@@ -149,6 +149,9 @@ public class KTreeRender extends ARender {
 
 	@Override
 	public double getX(Element e) {
+		if(e == null || e instanceof IndexedElement == false){
+			return -1;
+		}
 		int index = ((IndexedElement) e).getIndex()[0];
 		double x;
 		int breadth, depth;
@@ -181,6 +184,9 @@ public class KTreeRender extends ARender {
 
 	@Override
 	public double getY(Element e) {
+		if(e == null || e instanceof IndexedElement == false){
+			return -1;
+		}
 		int index = ((IndexedElement) e).getIndex()[0];
 		double y = 0;
 

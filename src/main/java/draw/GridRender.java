@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 
 /**
  * Renders drawing data structures with their elements in a grid.
+ * 
  * @author Richard Sundqvist.
  *
  */
@@ -34,7 +35,8 @@ public class GridRender extends ARender {
 	 * @param vspace
 	 *            The vertical space between elements in this Render.
 	 */
-	public GridRender(DataStructure struct, Order major_order, double width, double height, double hspace, double vspace) {
+	public GridRender(DataStructure struct, Order major_order, double width, double height, double hspace,
+			double vspace) {
 		super(struct, width, height, hspace, vspace);
 		this.majorOrder = major_order;
 	}
@@ -68,6 +70,9 @@ public class GridRender extends ARender {
 
 	@Override
 	public double getX(Element e) {
+		if (e == null || e instanceof IndexedElement == false) {
+			return -1;
+		}
 		int[] index = ((IndexedElement) e).getIndex();
 		double x = hSpace;
 		if (majorOrder == Order.ROW_MAJOR) {
@@ -86,6 +91,10 @@ public class GridRender extends ARender {
 
 	@Override
 	public double getY(Element e) {
+		if (e == null || e instanceof IndexedElement == false) {
+			return -1;
+		}
+
 		int[] index = ((IndexedElement) e).getIndex();
 		double y = vSpace;
 		if (majorOrder == Order.ROW_MAJOR) {
@@ -113,7 +122,7 @@ public class GridRender extends ARender {
 		if (majorOrder == Order.ROW_MAJOR) {
 			totWidth = vSpace + (vSpace + nodeWidth) * dims[0];
 			totHeight = hSpace + (hSpace + nodeHeight) * dims[1];
-			
+
 			/*
 			 * Column Major
 			 */

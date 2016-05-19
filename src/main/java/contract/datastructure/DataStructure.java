@@ -10,6 +10,7 @@ import contract.operation.OP_ReadWrite;
 import contract.operation.OP_Remove;
 import contract.operation.OP_Swap;
 import contract.operation.OperationCounter;
+import contract.operation.OperationCounter.OperationCounterHaver;
 import gui.Main;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,7 +23,7 @@ import javafx.scene.paint.Paint;
  * @author Richard Sundqvist
  *
  */
-public abstract class DataStructure extends AnnotatedVariable {
+public abstract class DataStructure extends AnnotatedVariable implements OperationCounterHaver {
 
 	/**
 	 * Version number for this class.
@@ -56,11 +57,7 @@ public abstract class DataStructure extends AnnotatedVariable {
 	 */
 	protected transient final OperationCounter oc = new OperationCounter();
 
-	/**
-	 * Returns the OperationCounter for this structure.
-	 * 
-	 * @return An OperationCounter.
-	 */
+	@Override
 	public OperationCounter getCounter() {
 		return oc;
 	}
@@ -208,7 +205,7 @@ public abstract class DataStructure extends AnnotatedVariable {
 	public void elementsDrawn(Paint paint) {
 		paint = paint == null ? Color.WHITE : paint;
 
-		//Do not reset elements which were modified again.
+		// Do not reset elements which were modified again.
 		resetElements.removeAll(modifiedElements);
 		// Inactive elements should not have their colour reset.
 		resetElements.removeAll(inactiveElements);
@@ -260,6 +257,7 @@ public abstract class DataStructure extends AnnotatedVariable {
 			} else {
 				inactiveElements.add(e);
 				e.execute(op);
+				e.setValue(Double.NaN);
 			}
 		}
 	}
@@ -290,15 +288,12 @@ public abstract class DataStructure extends AnnotatedVariable {
 	 */
 	public void toggleActive() {
 		active = !active;
-		/*
-		 * Reactive the structure.
-		 */
-		if (active) {
-			// TODO Maybe not neccessary to do anything on active
-			/*
-			 * Deactiveate the structure.
-			 */
-		} else {
+
+		if (active) { // Reactive the structure.
+			for (Element e : elements) {
+				e.restoreValue();
+			}
+		} else { // Deactiveate the structure.
 			OP_Remove remove = new OP_Remove();
 			for (Element e : elements) {
 				e.execute(remove);

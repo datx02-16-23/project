@@ -178,7 +178,7 @@ public class Visualization extends StackPane {
 			e = struct.getElement(tar);
 			if (e != null) {
 				ARender render = this.managerMap.get(struct.identifier).getRender();
-				render.animateRemove(e);
+				render.animateRemove(e, millis);
 				return;
 			}
 		}

@@ -60,7 +60,7 @@ public class BarchartElement extends RectangleElement {
 		this.unitHeight = unitHeight;
 		
 		Rectangle rect = ((Rectangle) shape);
-		rect.heightProperty().bind((element.numValueProperty().multiply(unitHeight)).subtract(10));
+		rect.heightProperty().bind((element.numProperty.multiply(unitHeight)).subtract(10));
 	}
 
 	@Override

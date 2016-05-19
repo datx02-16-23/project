@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import contract.datastructure.Element;
 import contract.operation.OperationCounter;
+import contract.operation.OperationCounter.OperationCounterHaver;
 import gui.Main;
 import javafx.animation.RotateTransition;
 import javafx.animation.StrokeTransition;
@@ -114,8 +115,8 @@ public abstract class VisualElement extends Pane {
 		init(node_width, node_height);
 
 		// Automatic updating of value
-		valueLabel.textProperty().bind(element.valueStringProperty());
-		shape.fillProperty().bind(element.fillProperty());
+		valueLabel.textProperty().bind(element.stringProperty);
+		shape.fillProperty().bind(element.fillProperty);
 	}
 
 	/**
@@ -155,8 +156,8 @@ public abstract class VisualElement extends Pane {
 		init(node_width, node_height);
 
 		// Automatic updating of value
-		valueLabel.textProperty().bind(element.valueStringProperty());
-		shape.fillProperty().bind(element.fillProperty());
+		valueLabel.textProperty().bind(element.stringProperty);
+		shape.fillProperty().bind(element.fillProperty);
 	}
 
 	/**
@@ -179,6 +180,7 @@ public abstract class VisualElement extends Pane {
 		this.height = node_height;
 		this.width = node_width;
 
+		// Container for the value
 		Pane shapePane = (Pane) fxmlLoader.getNamespace().get("shape");
 		shapePane.setCursor(Cursor.HAND);
 		createShape();
@@ -187,7 +189,8 @@ public abstract class VisualElement extends Pane {
 		shapePane.getChildren().add(shape);
 
 		valueLabel = (Label) fxmlLoader.getNamespace().get("value");
-		
+		//Double.NaN is used to indicate an element is inactive.
+
 		infoLabel.setMouseTransparent(true);
 		infoLabel.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
 		root.getChildren().add(infoLabel);
@@ -217,11 +220,8 @@ public abstract class VisualElement extends Pane {
 	 */
 	public void onMouseClicked() {
 		showSelected();
-		OperationCounter oc = element.getCounter();
 		Main.console.info("Statistics for \"" + element + "\":");
-		Main.console.info("\tReads: " + oc.getReads());
-		Main.console.info("\tWrites: " + oc.getWrites());
-		Main.console.info("\tSwaps: " + oc.getSwap());
+		OperationCounterHaver.printStats(element);
 	}
 
 	/**
@@ -284,7 +284,7 @@ public abstract class VisualElement extends Pane {
 			valueLabel.setVisible(false);
 		} else {
 			this.setMouseTransparent(ghost);
-			shape.fillProperty().bind(element.fillProperty());
+			shape.fillProperty().bind(element.fillProperty);
 			shape.getStrokeDashArray().clear();
 			valueLabel.setVisible(true);
 		}

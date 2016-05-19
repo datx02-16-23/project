@@ -132,7 +132,7 @@ public class Array extends DataStructure {
 		Locator var2 = op.getVar2();
 		IndexedElement var1Element = this.getElement(var1);
 		if (var1Element != null) {
-			var1Element.setNumValue(op.getValue()[0]);
+			var1Element.setValue(op.getValue()[0]);
 			var1Element.execute(op);
 			modifiedElements.add(var1Element);
 			inactiveElements.remove(var1Element);
@@ -140,7 +140,7 @@ public class Array extends DataStructure {
 		}
 		IndexedElement var2Element = this.getElement(var2);
 		if (var2Element != null) {
-			var2Element.setNumValue(op.getValue()[1]);
+			var2Element.setValue(op.getValue()[1]);
 			var2Element.execute(op);
 			modifiedElements.add(var2Element);
 			inactiveElements.remove(var2Element);
@@ -160,7 +160,7 @@ public class Array extends DataStructure {
 		double[] value = op.getValue();
 		if (targetElement != null) {
 			if (value != null) {
-				targetElement.setNumValue(op.getValue()[0]);
+				targetElement.setValue(op.getValue()[0]);
 				targetElement.execute(op);
 				modifiedElements.add(targetElement);
 				inactiveElements.remove(targetElement);
@@ -281,21 +281,21 @@ public class Array extends DataStructure {
 		IndexedElement old = null;
 		old = getElement(newElement.index);
 		if (old != null) {
-			if (newElement.getNumericValue() == old.getNumericValue()) {
+			if (newElement.numValue() == old.numValue()) {
 				return null;
 			}
 			int replacedElementIndex = elements.indexOf(old);
 			elements.remove(old);
 			elements.add(replacedElementIndex, newElement);
 		}
-		if (newElement.getNumericValue() < min) {
-			min = newElement.getNumericValue();
+		if (newElement.numValue() < min) {
+			min = newElement.numValue();
 			if (listener != null) {
 				listener.minChanged(min, Math.abs(min) + Math.abs(max));
 			}
 		}
-		if (newElement.getNumericValue() > max) {
-			max = newElement.getNumericValue();
+		if (newElement.numValue() > max) {
+			max = newElement.numValue();
 			if (listener != null) {
 				listener.maxChanged(max, Math.abs(min) + Math.abs(max));
 			}
@@ -344,7 +344,7 @@ public class Array extends DataStructure {
 		 *            The index for this ArrayElement.
 		 */
 		public IndexedElement(double value, int[] index) {
-			setNumValue(value);
+			setValue(value);
 			setIndex(index);
 		}
 
@@ -399,14 +399,14 @@ public class Array extends DataStructure {
 				return false;
 			}
 			IndexedElement rhs = (IndexedElement) obj;
-			return this.getNumericValue() == rhs.getNumericValue() && Arrays.equals(this.index, rhs.index);
+			return this.numValue() == rhs.numValue() && Arrays.equals(this.index, rhs.index);
 		}
 
 		// TODO
 		@Override
 		public String toString() {
 //			return hashCode() + "";
-			 return Arrays.toString(index) + " = " + getNumericValue();
+			 return Arrays.toString(index) + " = " + numValue();
 		}
 	}
 

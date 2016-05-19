@@ -67,7 +67,7 @@
                               <Insets bottom="-2.0" top="-2.0" />
                            </padding>
                         </Button>
-                      <Button maxHeight="15.0" maxWidth="25.0" minHeight="15.0" mnemonicParsing="false" onAction="#showStats" prefHeight="15.0" prefWidth="25.0" text="Stats" translateX="-8.0">
+                      <Button maxHeight="15.0" maxWidth="25.0" minHeight="15.0" mnemonicParsing="false" onAction="#printStats" prefHeight="15.0" prefWidth="25.0" text="Stats" translateX="-8.0">
                            <font>
                               <Font size="8.0" />
                            </font>

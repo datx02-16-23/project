@@ -1,6 +1,7 @@
 package contract.operation;
 
 import contract.Operation;
+import gui.Main;
 import javafx.beans.property.SimpleIntegerProperty;
 
 /**
@@ -10,7 +11,7 @@ import javafx.beans.property.SimpleIntegerProperty;
  *
  */
 public class OperationCounter {
-	
+
 	private final SimpleIntegerProperty read = new SimpleIntegerProperty(0);
 	private final SimpleIntegerProperty write = new SimpleIntegerProperty(0);
 	private final SimpleIntegerProperty swap = new SimpleIntegerProperty(0);
@@ -53,6 +54,7 @@ public class OperationCounter {
 
 	/**
 	 * Returns the Messages property.
+	 * 
 	 * @return the Messages property.
 	 */
 	public SimpleIntegerProperty messagesProperty() {
@@ -61,18 +63,22 @@ public class OperationCounter {
 
 	/**
 	 * Count an operation. Calls {@code countOperation(OperationType type)}.
-	 * @param op The operation to count.
+	 * 
+	 * @param op
+	 *            The operation to count.
 	 */
-	public void count(Operation op){
+	public void count(Operation op) {
 		countOperation(op.operation);
 	}
-	
+
 	/**
 	 * Count an operation type.
-	 * @param type The count to count.
+	 * 
+	 * @param type
+	 *            The count to count.
 	 */
-	public void countOperation(OperationType type){
-		switch(type){
+	public void countOperation(OperationType type) {
+		switch (type) {
 		case message:
 			message.setValue(message.getValue() + 1);
 			break;
@@ -90,47 +96,52 @@ public class OperationCounter {
 			break;
 		default:
 			break;
-		
+
 		}
 	}
-	
+
 	/**
 	 * Returns the number of Read operations.
+	 * 
 	 * @return The number of Read operations.
 	 */
-	public int getReads(){
+	public int getReads() {
 		return read.get();
 	}
-	
+
 	/**
 	 * Returns the number of Writes operations.
+	 * 
 	 * @return The number of Writes operations.
 	 */
-	public int getWrites(){
+	public int getWrites() {
 		return write.get();
 	}
-	
+
 	/**
 	 * Returns the number of Swap operations.
+	 * 
 	 * @return The number of Swap operations.
 	 */
-	public int getSwap(){
+	public int getSwap() {
 		return swap.get();
 	}
-	
+
 	/**
 	 * Returns the number of Remove operations.
+	 * 
 	 * @return The number of Remove operations.
 	 */
-	public int getRemove(){
+	public int getRemove() {
 		return remove.get();
 	}
-	
+
 	/**
 	 * Returns the number of Message operations.
+	 * 
 	 * @return The number of Message operations.
 	 */
-	public int getMessage(){
+	public int getMessage() {
 		return message.get();
 	}
 
@@ -143,5 +154,40 @@ public class OperationCounter {
 		swap.set(0);
 		remove.set(0);
 		message.set(0);
+	}
+	
+	/**
+	 * Print the recorded statistics using the {@link #GUIConsole}.
+	 */
+	public void printStats(){
+		Main.console.info("Read: " + read.intValue());
+		Main.console.info("Write: " + write.intValue());
+		Main.console.info("Swap: " + swap.intValue());
+		Main.console.info("Remave: " + remove.intValue());
+		Main.console.info("Message: " + message.intValue());
+	}
+	
+	/**
+	 * Interface for classes which count the {@link #Operation}'s performed on
+	 * it.
+	 * 
+	 * @author Richard Sundqvist
+	 *
+	 */
+	public interface OperationCounterHaver {
+		/**
+		 * Returns the OperationCounter for this OperationCounterHaver.
+		 * 
+		 * @return An OperationCounter
+		 */
+		public OperationCounter getCounter();
+		
+		/**
+		 * Print stats for a OperationCounterHaver using the {@link #printStats()} method.
+		 * @param och The OperationCounterHaver whose counter should be used.
+		 */
+		public static void printStats(OperationCounterHaver och){
+			och.getCounter().printStats();
+		}
 	}
 }

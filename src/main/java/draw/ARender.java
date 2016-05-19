@@ -12,6 +12,7 @@ import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
 import contract.datastructure.Array.IndexedElement;
 import contract.operation.OperationCounter;
+import contract.operation.OperationCounter.OperationCounterHaver;
 import draw.RenderAnimation.AnimationOption;
 import draw.element.VisualElement;
 import gui.Main;
@@ -69,12 +70,14 @@ public abstract class ARender extends Pane {
 	protected final HashMap<String, VisualElement> visualMap = new HashMap<String, VisualElement>();
 
 	/**
-	 * Pane for rendering of visual element nodes. Added to {@link contentPane} automatically.
+	 * Pane for rendering of visual element nodes. Added to {@link contentPane}
+	 * automatically.
 	 */
 	protected final Pane defaultNodePane = new Pane();
 	/**
-	 * The content pane for the render. By default, a Pane for nodes ({@link #defaultNodePane})
-	 * will be added, but renders can add their own panes to {@code contentPane} if need be.
+	 * The content pane for the render. By default, a Pane for nodes (
+	 * {@link #defaultNodePane}) will be added, but renders can add their own
+	 * panes to {@code contentPane} if need be.
 	 */
 	protected Pane contentPane;
 
@@ -110,7 +113,8 @@ public abstract class ARender extends Pane {
 	 *            The DataStructure this Render will draw.
 	 */
 	public ARender(DataStructure struct) {
-		this(struct, DasConstants.DEFAULT_ELEMENT_WIDTH, DasConstants.DEFAULT_ELEMENT_HEIGHT, DasConstants.DEFAULT_ELEMENT_HSPACE, DasConstants.DEFAULT_ELEMENT_VSPACE);
+		this(struct, DasConstants.DEFAULT_ELEMENT_WIDTH, DasConstants.DEFAULT_ELEMENT_HEIGHT,
+				DasConstants.DEFAULT_ELEMENT_HSPACE, DasConstants.DEFAULT_ELEMENT_VSPACE);
 	}
 
 	/**
@@ -209,10 +213,20 @@ public abstract class ARender extends Pane {
 	 * 
 	 * @param remove
 	 *            The operation to animate.
+	 * @param millis
+	 *            The time in milliseconds the animation should last.
 	 */
-	public void animateRemove(Element tar) {
-		System.out.println("animateRemove not implemented");
+	//@formatter:off
+	public void animateRemove(Element tar, long millis) {
+		double x = absX(tar);
+		double y = absY(tar);
+
+		RenderAnimation.animate(tar,
+				x, y, x, y,
+				millis * 4, this,	
+				AnimationOption.FADE_OUT, AnimationOption.SHRINK, AnimationOption.USE_GHOST);
 	}
+	//@formatter:on
 
 	/**
 	 * Default animations for a read or write.
@@ -230,36 +244,40 @@ public abstract class ARender extends Pane {
 	 */
 	//@formatter:off
 	public void animateReadWrite(Element src, ARender srcRender, Element tar, ARender tarRender, long millis) {
-		/*
-		 * Target is unknown. READ: this -> [x]
-		 */
-		if (tar == null) {
+		boolean hasSource = srcRender != null;
+		boolean hasTarget = tarRender != null;
+		double x1 = -1; double y1 = -1;
+		double x2 = -1; double y2 = -1;
+		
+		if(hasSource){
+			x1 = srcRender.absX(src);
+			y1 = srcRender.absY(src);
+		}
+		
+		if(hasTarget){
+			x2 = tarRender.absX(tar);
+			y2 = tarRender.absY(tar);
+		}
+		
+		if(hasSource && hasTarget){
+			RenderAnimation.animate(tar,
+					x1, y1, 
+					x2, y2,
+					millis, this);
+		} else if (hasSource) {
+			//Source only
 			RenderAnimation.animate(src,
-					// From
-					absX(src), absY(src), 
-					 // To
-					absX(src), absY(src) - nodeHeight * 2,
+					x1, y1, 
+					x2, y2 - nodeHeight * 2,
 					millis, this,
 					AnimationOption.FADE_OUT, AnimationOption.SHRINK);
-			/*
-			 * Source is unknown. WRITE: [x] -> this
-			 */
-		} else if (src == null) {
+		} else {
+			//Target only
 			RenderAnimation.animate(tar,
-					 // From
-					absX(tar), absY(tar) - nodeHeight * 2,
-					 // To
-					absX(tar), absY(tar),
+					x1, y1 - nodeHeight * 2,
+					x2, y2,
 					millis, this,
 					AnimationOption.FADE_IN, AnimationOption.GROW);
-			/*
-			 * Source and target are known.
-			 */
-		} else { // if (src != null && tar != null)
-			RenderAnimation.animate(tar,
-					srcRender.absX(src), srcRender.absY(src), // From
-					tarRender.absX(tar), tarRender.absY(tar), // To
-					millis, this);
 		}
 	}
 	//@formatter:off
@@ -281,9 +299,7 @@ public abstract class ARender extends Pane {
 	// formatter:off
 	public void animateSwap(Element var1, ARender render1, Element var2, ARender render2, long millis) {
 		RenderAnimation.animate(var2,
-				// From
 				render1.absX(var1), render1.absY(var1),
-				// To
 				render2.absX(var2), render2.absY(var2),
 				millis, this,
 				AnimationOption.USE_GHOST);
@@ -427,7 +443,7 @@ public abstract class ARender extends Pane {
 	}
 
 	/**
-	 * Returns the absolute x-coordinate for the element e.
+	 * Returns the absolute x-coordinate for the element e. Returns -1 if the calculation fails.
 	 * 
 	 * @param e
 	 *            An element owned by this Render.
@@ -439,7 +455,7 @@ public abstract class ARender extends Pane {
 	}
 
 	/**
-	 * Returns the absolute y-coordinate for the element e.
+	 * Returns the absolute y-coordinate for the element e. Returns -1 if the calculation fails.
 	 * 
 	 * @param e
 	 *            An element owned by this Render.
@@ -541,15 +557,13 @@ public abstract class ARender extends Pane {
 			return null;
 		}
 	}
-
-	public void showStats() {
-		OperationCounter oc = struct.getCounter();
+	
+	/**
+	 * Print statistics for the structure this render carries.
+	 */
+	public void printStats() {
 		Main.console.info("Statistics for \"" + struct + "\":");
-		Main.console.info("\tReads: " + oc.getReads());
-		Main.console.info("\tWrites: " + oc.getWrites());
-		Main.console.info("\tSwaps: " + oc.getSwap());
-
-		// TODO: Live update pop up in addition to the printout.
+		OperationCounterHaver.printStats(struct);
 	}
 
 	public void showOptions() {

@@ -234,7 +234,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 	@Override
 	protected BarchartElement createVisualElement(Element e) {
 		BarchartElement ve = (BarchartElement) VisualElementFactory.shape(ElemShape.BAR_ELEMENT, e, barWidth,
-				unitSize * e.getNumericValue());
+				unitSize * e.numValue());
 		return ve;
 	}
 
