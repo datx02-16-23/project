@@ -1,6 +1,8 @@
 package assets;
 
 import draw.ARender;
+import gui.Visualization;
+import gui.Visualization.HintPane;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
@@ -17,22 +19,26 @@ import javafx.scene.paint.Color;
 
 /**
  * Utility class to reduce clutter.
+ * 
  * @author Richard Sundqvist
  *
  */
 public abstract class DasToolkit {
+	// A FXML pane showing user instructions.
+	public static final Visualization.HintPane HINT_PANE = new Visualization.HintPane();
+
 	private DasToolkit() {
-	} // Not to be instansiated.
+	} // Not to be instantiated.
 
 	/*
-	 * Boring crap.
+	 * Render stuff
 	 */
 	public static Background createArrayBg() {
 		Image image = new Image(ARender.class.getResourceAsStream("/assets/array.png"));
 		BackgroundImage bgi = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
 				BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
 		return new Background(bgi);
-	
+
 	}
 
 	public static Background createTreeBg() {

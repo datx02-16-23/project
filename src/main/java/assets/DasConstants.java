@@ -11,7 +11,7 @@ import javafx.scene.layout.Border;
  */
 public abstract class DasConstants {
 	private DasConstants() {
-	} // Not to be instansiated.
+	} // Not to be instantiated.
 
 	/*
 	 * Misc strings and stuff
@@ -44,6 +44,11 @@ public abstract class DasConstants {
 	public static final double DEFAULT_ELEMENT_HEIGHT = 40;
 	public static final double DEFAULT_ELEMENT_HSPACE = 0;
 	public static final double DEFAULT_ELEMENT_VSPACE = 0;
+
+	/**
+	 * Suggested minimum margin for renders.
+	 */
+	public static final double RENDER_PADDING = 10;
 
 	// More render constants
 	public static final Background ARRAY_BACKGROUND = DasToolkit.createArrayBg();

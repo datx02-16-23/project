@@ -3,6 +3,7 @@ package gui;
 import java.util.HashMap;
 
 import assets.DasConstants;
+import assets.DasToolkit;
 import contract.Locator;
 import contract.Operation;
 import contract.datastructure.*;
@@ -13,7 +14,6 @@ import draw.ARenderManager;
 import draw.ARender;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
@@ -21,7 +21,6 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import model.Model;
 
 /**
@@ -31,14 +30,6 @@ import model.Model;
  *
  */
 public class Visualization extends StackPane {
-
-	// A FXML pane showing user instructions.
-	private static final HintPane HINT_PANE = new HintPane();
-
-	/**
-	 * Suggested minimum render distance from the edges of the parent.
-	 */
-	public static final double PADDING = 10;
 
 	/**
 	 * Pane for drawing of animated elements.
@@ -64,7 +55,7 @@ public class Visualization extends StackPane {
 	/**
 	 * A mapping of renders and their managers.
 	 */
-	private final HashMap<String, ARenderManager> struct_manager_mapping = new HashMap<String, ARenderManager>();
+	private final HashMap<String, ARenderManager> managerMap = new HashMap<String, ARenderManager>();
 
 	/**
 	 * Create a new Visualization.
@@ -78,16 +69,16 @@ public class Visualization extends StackPane {
 		animate = true;
 
 		// Add stacked canvases
-		this.getChildren().addAll(HINT_PANE, managers, animated);
+		this.getChildren().addAll(DasToolkit.HINT_PANE, managers, animated);
 	}
 
 	/**
 	 * Clear the visualization.
 	 */
 	public void clear() {
-		struct_manager_mapping.clear();
+		managerMap.clear();
 		managers.getChildren().clear();
-		HINT_PANE.setVisible(true);
+		DasToolkit.HINT_PANE.setVisible(true);
 	}
 
 	public void clearAndCreateVisuals() {
@@ -95,11 +86,11 @@ public class Visualization extends StackPane {
 		for (DataStructure struct : model.getStructures().values()) {
 			ARenderManager manager = new ARenderManager(struct, animated);
 			managers.getChildren().add(manager);
-			struct_manager_mapping.put(struct.identifier, manager);
+			managerMap.put(struct.identifier, manager);
 		}
 		// overlay.expandAll();
 		placeVisuals();
-		HINT_PANE.setVisible(managers.getChildren().isEmpty());
+		DasToolkit.HINT_PANE.setVisible(managers.getChildren().isEmpty());
 	}
 
 	/**
@@ -186,7 +177,7 @@ public class Visualization extends StackPane {
 		for (DataStructure struct : model.getStructures().values()) {
 			e = struct.getElement(tar);
 			if (e != null) {
-				ARender render = this.struct_manager_mapping.get(struct.identifier).getRender();
+				ARender render = this.managerMap.get(struct.identifier).getRender();
 				render.animateRemove(e);
 				return;
 			}
@@ -207,7 +198,7 @@ public class Visualization extends StackPane {
 		for (DataStructure struct : model.getStructures().values()) {
 			src_e = struct.getElement(source);
 			if (src_e != null) {
-				src_render = this.struct_manager_mapping.get(struct.identifier).getRender();
+				src_render = this.managerMap.get(struct.identifier).getRender();
 				break;
 			}
 		}
@@ -217,7 +208,7 @@ public class Visualization extends StackPane {
 		for (DataStructure struct : model.getStructures().values()) {
 			tar_e = struct.getElement(target);
 			if (tar_e != null) {
-				tar_render = this.struct_manager_mapping.get(struct.identifier).getRender();
+				tar_render = this.managerMap.get(struct.identifier).getRender();
 				break;
 			}
 		}
@@ -257,7 +248,7 @@ public class Visualization extends StackPane {
 		for (DataStructure struct : model.getStructures().values()) {
 			v1_e = struct.getElement(var1);
 			if (v1_e != null) {
-				v1_render = this.struct_manager_mapping.get(struct.identifier).getRender();
+				v1_render = this.managerMap.get(struct.identifier).getRender();
 				break;
 			}
 		}
@@ -267,7 +258,7 @@ public class Visualization extends StackPane {
 		for (DataStructure struct : model.getStructures().values()) {
 			v2_e = struct.getElement(var2);
 			if (v2_e != null) {
-				v2_render = this.struct_manager_mapping.get(struct.identifier).getRender();
+				v2_render = this.managerMap.get(struct.identifier).getRender();
 				break;
 			}
 		}
@@ -398,7 +389,7 @@ public class Visualization extends StackPane {
 	 * @return The minimum acceptable X-Coordinate.
 	 */
 	public double getXMin() {
-		return PADDING;
+		return DasConstants.RENDER_PADDING;
 	}
 
 	/**
@@ -428,7 +419,7 @@ public class Visualization extends StackPane {
 	 * @return The minimum acceptable Y-Coordinate.
 	 */
 	public double getYMin() {
-		return PADDING;
+		return DasConstants.RENDER_PADDING;
 	}
 
 	/**
@@ -455,7 +446,7 @@ public class Visualization extends StackPane {
 	 * @author Richard Sundqvist
 	 *
 	 */
-	private static class HintPane extends Pane {
+	public static class HintPane extends Pane {
 
 		public HintPane() {
 			Image image = new Image(Controller.class.getResourceAsStream("/assets/upload.png"));

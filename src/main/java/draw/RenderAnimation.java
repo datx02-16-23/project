@@ -66,7 +66,7 @@ public abstract class RenderAnimation {
 		animated.setScaleX(render.getScaleX());
 		animated.setScaleY(render.getScaleY());
 
-		render.animation_pane.getChildren().add(animated);
+		render.anim.getChildren().add(animated);
 
 		final boolean finalUseGhost;
 		boolean ghost = false;
@@ -78,6 +78,7 @@ public abstract class RenderAnimation {
 				break;
 			case FADE_OUT:
 				transition.getChildren().add(fadeOut(millis));
+				break;
 			case SHRINK:
 				transition.getChildren().add(shrink(millis));
 				break;
@@ -102,7 +103,7 @@ public abstract class RenderAnimation {
 		 */
 		TranslateTransition tt = new TranslateTransition(Duration.millis(millis));
 		tt.setOnFinished(event -> {
-			render.animation_pane.getChildren().remove(animated);
+			render.anim.getChildren().remove(animated);
 			if (finalUseGhost) {
 				real.setGhost(false);
 			}
@@ -141,8 +142,8 @@ public abstract class RenderAnimation {
 	private static final Transition fadeIn(long millis) {
 		FadeTransition ft = new FadeTransition(Duration.millis(millis));
 
-		ft.setFromValue(1.0);
-		ft.setToValue(0);
+		ft.setFromValue(0);
+		ft.setToValue(1.0);
 		return ft;
 	}
 
@@ -165,15 +166,15 @@ public abstract class RenderAnimation {
 		 */
 		FADE_IN,
 		/**
-		 * Make the element to fade in.
+		 * Make the element to fade out.
 		 */
 		FADE_OUT,
 		/**
-		 * Make the element to fade in.
+		 * Make the element spin.
 		 */
 		SPIN,
 		/**
-		 * Make the element to fade in.
+		 * Turn the element into a ghost until animation is complete.
 		 */
 		USE_GHOST,
 		/**

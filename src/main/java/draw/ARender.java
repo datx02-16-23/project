@@ -81,7 +81,7 @@ public abstract class ARender extends Pane {
 	/**
 	 * The pane used when drawing animated elements.
 	 */
-	protected final Pane animation_pane;
+	protected final Pane anim;
 	/**
 	 * The root for the FXML Render.
 	 */
@@ -135,7 +135,7 @@ public abstract class ARender extends Pane {
 		this.hspace = hspace;
 		this.vspace = vspace;
 
-		this.animation_pane = new Pane();
+		this.anim = new Pane();
 
 		// Add stacked canvases
 		loadBase();
@@ -235,19 +235,23 @@ public abstract class ARender extends Pane {
 		 */
 		if (tar == null) {
 			RenderAnimation.animate(src,
-					absX(src), absY(src), // From
-					absX(src) - node_width * 0.5, absY(src) - node_height * 1.5, // To
+					// From
+					absX(src), absY(src), 
+					 // To
+					absX(src), absY(src) - node_height * 2,
 					millis, this,
-					AnimationOption.FADE_OUT);
+					AnimationOption.FADE_OUT, AnimationOption.SHRINK);
 			/*
 			 * Source is unknown. WRITE: [x] -> this
 			 */
 		} else if (src == null) {
 			RenderAnimation.animate(tar,
-					absX(tar) + node_width * 0.5, absY(tar) + node_height * 1.5, // From
-					absX(tar), absY(tar), // To
+					 // From
+					absX(tar), absY(tar) - node_height * 2,
+					 // To
+					absX(tar), absY(tar),
 					millis, this,
-					AnimationOption.FADE_IN);
+					AnimationOption.FADE_IN, AnimationOption.GROW);
 			/*
 			 * Source and target are known.
 			 */
@@ -277,7 +281,9 @@ public abstract class ARender extends Pane {
 	// formatter:off
 	public void animateSwap(Element var1, ARender var1_rndr, Element var2, ARender var2_rndr, long millis) {
 		RenderAnimation.animate(var2,
+				// From
 				var1_rndr.absX(var1), var1_rndr.absY(var1),
+				// To
 				var2_rndr.absX(var2), var2_rndr.absY(var2),
 				millis, this,
 				AnimationOption.USE_GHOST);
@@ -613,11 +619,11 @@ public abstract class ARender extends Pane {
 	/**
 	 * Returns the Pane used for drawing animated elements.
 	 * 
-	 * @param animation_pane
+	 * @param anim
 	 *            The used Pane for animation.
 	 */
 	public Pane getAnimationPane() {
-		return this.animation_pane;
+		return this.anim;
 	}
 
 	/**
