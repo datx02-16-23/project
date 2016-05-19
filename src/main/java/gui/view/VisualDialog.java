@@ -2,11 +2,10 @@ package gui.view;
 
 import java.io.IOException;
 
-import assets.Strings;
+import assets.DasConstants;
 import contract.datastructure.DataStructure;
 import contract.datastructure.VisualType;
-import draw.ARender;
-import draw.ARender.RenderSVF;
+import draw.RenderSVF;
 import gui.Controller;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
@@ -36,7 +35,7 @@ public class VisualDialog {
 		root = new Stage();
 		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
 		root.initModality(Modality.APPLICATION_MODAL);
-		root.setTitle(Strings.PROJECT_NAME + ": Choose Visualisation");
+		root.setTitle(DasConstants.PROJECT_NAME + ": Choose Visualisation");
 		root.initOwner(this.parent);
 		GridPane p = null;
 		try {
@@ -122,7 +121,7 @@ public class VisualDialog {
 
 	private void setSpinner(VisualType vt) {
 		if (vt.has_options) {
-			RenderSVF rsvf = ARender.RenderSVF.resolve(struct);
+			RenderSVF rsvf = RenderSVF.resolve(struct);
 			if (rsvf == null) {
 				options.setDisable(true); // Failed to fetch options.
 			} else {

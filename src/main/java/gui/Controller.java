@@ -19,8 +19,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import assets.DasConstants;
 import assets.DefaultProperties;
-import assets.Strings;
 import assets.example.Examples;
 import assets.example.Examples.Algorithm;
 import contract.Locator;
@@ -303,7 +303,7 @@ public class Controller implements CommunicatorListener {
 
 	public void aboutProgram() {
 		Main.console.info("Placeholder: A project by ");
-		for (String name : Strings.DEVELOPER_NAMES) {
+		for (String name : DasConstants.DEVELOPER_NAMES) {
 			Main.console.info(name + ", ");
 		}
 	}
@@ -382,7 +382,7 @@ public class Controller implements CommunicatorListener {
 		settingsView = new Stage();
 		settingsView.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_settings.png")));
 		settingsView.initModality(Modality.APPLICATION_MODAL);
-		settingsView.setTitle(Strings.PROJECT_NAME + ": Settings and Preferences");
+		settingsView.setTitle(DasConstants.PROJECT_NAME + ": Settings and Preferences");
 		settingsView.initOwner(this.window);
 		GridPane p = null;
 		try {
@@ -793,7 +793,7 @@ public class Controller implements CommunicatorListener {
 	}
 
 	public Properties tryLoadProperties() {
-		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(Strings.PROPERTIES_FILE_NAME);
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream(DasConstants.PROPERTIES_FILE_NAME);
 		if (inputStream == null) {
 			Main.console.err("Failed to open properties file.");
 			propertiesFailed(null);
@@ -825,9 +825,9 @@ public class Controller implements CommunicatorListener {
 		properties.setProperty("playbackStepDelay", "" + stepDelayBase);
 		properties.setProperty("autoPlayOnIncomingStream", "" + stream_always_show_last_op);
 		try {
-			URL url = getClass().getClassLoader().getResource(Strings.PROPERTIES_FILE_NAME);
+			URL url = getClass().getClassLoader().getResource(DasConstants.PROPERTIES_FILE_NAME);
 			OutputStream outputStream = new FileOutputStream(new File(url.toURI()));
-			properties.store(outputStream, Strings.PROJECT_NAME + " user preferences.");
+			properties.store(outputStream, DasConstants.PROJECT_NAME + " user preferences.");
 		} catch (Exception e) {
 			propertiesFailed(e);
 		}
@@ -945,7 +945,7 @@ public class Controller implements CommunicatorListener {
 		Stage root = new Stage();
 		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
 		root.initModality(Modality.NONE);
-		root.setTitle(Strings.PROJECT_NAME + ": Java Help");
+		root.setTitle(DasConstants.PROJECT_NAME + ": Java Help");
 		root.initOwner(window);
 		BorderPane p = null;
 		try {
@@ -971,7 +971,7 @@ public class Controller implements CommunicatorListener {
 		Stage root = new Stage();
 		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
 		root.initModality(Modality.NONE);
-		root.setTitle(Strings.PROJECT_NAME + ": Java Help");
+		root.setTitle(DasConstants.PROJECT_NAME + ": Java Help");
 		root.initOwner(window);
 		BorderPane p = null;
 		try {

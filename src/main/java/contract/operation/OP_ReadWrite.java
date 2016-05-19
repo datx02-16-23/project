@@ -3,7 +3,7 @@ package contract.operation;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import assets.Strings;
+import assets.DasConstants;
 import contract.Locator;
 import contract.Operation;
 
@@ -19,7 +19,7 @@ public abstract class OP_ReadWrite extends Operation {
 	/**
 	 * Version number for this class.
 	 */
-	private static final long serialVersionUID = Strings.VERSION_NUMBER;
+	private static final long serialVersionUID = DasConstants.VERSION_NUMBER;
 
 	/**
 	 * Create a new ReadWrite operation. Note that you must set the target,

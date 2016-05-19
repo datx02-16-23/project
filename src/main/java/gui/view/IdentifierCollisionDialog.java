@@ -3,7 +3,7 @@ package gui.view;
 import java.io.IOException;
 import java.util.Collection;
 
-import assets.Strings;
+import assets.DasConstants;
 import contract.datastructure.DataStructure;
 import gui.Controller;
 import javafx.fxml.FXMLLoader;
@@ -33,7 +33,7 @@ public class IdentifierCollisionDialog {
 		root = new Stage();
 		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
 		root.initModality(Modality.APPLICATION_MODAL);
-		root.setTitle(Strings.PROJECT_NAME + ": Identifier Collision");
+		root.setTitle(DasConstants.PROJECT_NAME + ": Identifier Collision");
 		root.initOwner(this.parent);
 		GridPane p = null;
 		try {

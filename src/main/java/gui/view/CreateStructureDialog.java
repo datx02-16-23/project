@@ -2,14 +2,13 @@ package gui.view;
 
 import java.io.IOException;
 
-import assets.Strings;
+import assets.DasConstants;
 import contract.datastructure.Array;
 import contract.datastructure.DataStructure;
 import contract.datastructure.IndependentElement;
 import contract.datastructure.RawType;
 import contract.datastructure.VisualType;
-import draw.ARender;
-import draw.ARender.RenderSVF;
+import draw.RenderSVF;
 import gui.Main;
 import gui.Controller;
 import javafx.collections.FXCollections;
@@ -47,7 +46,7 @@ public class CreateStructureDialog {
 		root = new Stage();
 		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
 		root.initModality(Modality.APPLICATION_MODAL);
-		root.setTitle(Strings.PROJECT_NAME + ": Create Data Structure");
+		root.setTitle(DasConstants.PROJECT_NAME + ": Create Data Structure");
 		root.initOwner(this.parent);
 		GridPane p = null;
 		try {
@@ -193,7 +192,7 @@ public class CreateStructureDialog {
 
 	private void setSpinner(VisualType vt) {
 		if (vt.has_options) {
-			RenderSVF rsvf = ARender.RenderSVF.resolve(struct);
+			RenderSVF rsvf = RenderSVF.resolve(struct);
 			if (rsvf == null) {
 				visOption.setDisable(true); // Failed to fetch options.
 			} else {

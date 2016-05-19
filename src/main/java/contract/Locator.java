@@ -3,7 +3,7 @@ package contract;
 import java.io.Serializable;
 import java.util.Arrays;
 
-import assets.Strings;
+import assets.DasConstants;
 
 /**
  * A variable used by the {@code Operation} class.
@@ -13,7 +13,7 @@ public class Locator implements Serializable {
 	/**
 	 * Version number for this class.
 	 */
-	private static final long serialVersionUID = Strings.VERSION_NUMBER;
+	private static final long serialVersionUID = DasConstants.VERSION_NUMBER;
 	/**
 	 * The identifier for this Locator. Will generally match one of the
 	 * identifiers used as keys in the {@code annotatedVariables} HashMap of the

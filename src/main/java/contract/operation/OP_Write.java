@@ -1,6 +1,6 @@
 package contract.operation;
 
-import assets.Strings;
+import assets.DasConstants;
 import contract.Locator;
 
 /**
@@ -11,7 +11,7 @@ public class OP_Write extends OP_ReadWrite {
 	/**
 	 * Version number for this class.
 	 */
-	private static final long serialVersionUID = Strings.VERSION_NUMBER;
+	private static final long serialVersionUID = DasConstants.VERSION_NUMBER;
 	private static final OperationType OPERATION = OperationType.write;
 
 	/**

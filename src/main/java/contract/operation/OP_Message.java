@@ -2,7 +2,7 @@ package contract.operation;
 
 import java.util.HashMap;
 
-import assets.Strings;
+import assets.DasConstants;
 import contract.Operation;
 
 /**
@@ -13,7 +13,7 @@ public class OP_Message extends Operation {
 	/**
 	 * Version number for this class.
 	 */
-	private static final long serialVersionUID = Strings.VERSION_NUMBER;
+	private static final long serialVersionUID = DasConstants.VERSION_NUMBER;
 	private static final OperationType OPERATION = OperationType.message;
 
 	/**

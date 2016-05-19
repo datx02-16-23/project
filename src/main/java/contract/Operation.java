@@ -3,7 +3,7 @@ package contract;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import assets.Strings;
+import assets.DasConstants;
 import contract.operation.Key;
 import contract.operation.OperationType;
 
@@ -16,7 +16,7 @@ public class Operation implements Serializable {
 	/**
 	 * Version number for this class.
 	 */
-	private static final long serialVersionUID = Strings.VERSION_NUMBER;
+	private static final long serialVersionUID = DasConstants.VERSION_NUMBER;
 	/**
 	 * The literal name of the operation, such as "init" (initialize) or "read".
 	 */

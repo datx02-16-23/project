@@ -40,11 +40,10 @@ public abstract class RenderAnimation {
 	 *            The time in milliseconds the animation should last.
 	 */
 	//@formatter:off
-	public static void linearAnimate(Element e,
+	public static void animate(Element e,
 			double x1, double y1,
 			double x2, double y2,
-			long millis,
-			ARender render,
+			long millis, ARender render,
 			AnimationOption... options) {
 	//@formatter:on	
 

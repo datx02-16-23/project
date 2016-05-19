@@ -2,7 +2,7 @@ package contract.datastructure;
 
 import java.util.Map;
 
-import assets.Strings;
+import assets.DasConstants;
 import contract.AnnotatedVariable;
 import contract.Locator;
 import contract.Operation;
@@ -28,7 +28,7 @@ public abstract class DataStructure extends AnnotatedVariable {
 	/**
 	 * Version number for this class.
 	 */
-	private static final long serialVersionUID = Strings.VERSION_NUMBER;
+	private static final long serialVersionUID = DasConstants.VERSION_NUMBER;
 	/**
 	 * The elements held by this DataStructure.
 	 */

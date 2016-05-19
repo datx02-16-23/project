@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import assets.Strings;
+import assets.DasConstants;
 import contract.datastructure.RawType;
 import contract.datastructure.VisualType;
 
@@ -16,7 +16,7 @@ public class AnnotatedVariable implements Serializable {
 	/**
 	 * Version number for this class.
 	 */
-	private static final long serialVersionUID = Strings.VERSION_NUMBER;
+	private static final long serialVersionUID = DasConstants.VERSION_NUMBER;
 	/**
 	 * The identifier for this variable. For example, the indentifier for the
 	 * variable created by the line "{@code int myVar = 1337;}" would be

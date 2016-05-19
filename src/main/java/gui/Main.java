@@ -1,6 +1,6 @@
 package gui;
 
-import assets.Strings;
+import assets.DasConstants;
 import assets.example.Examples;
 import assets.example.Examples.Algorithm;
 import gui.panel.OperationPanel;
@@ -53,8 +53,8 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		lsm = new LogStreamManager(Strings.PROJECT_NAME + "_GUI");
-		primaryStage.setTitle(Strings.PROJECT_NAME);
+		lsm = new LogStreamManager(DasConstants.PROJECT_NAME + "_GUI");
+		primaryStage.setTitle(DasConstants.PROJECT_NAME);
 		// Create a Group view for the AV.
 		Visualization visualization = new Visualization();
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/VisualizerView.fxml"));
@@ -301,9 +301,9 @@ public class Main extends Application {
 
 		private void init() {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Strings.PROJECT_NAME + " v" + Strings.VERSION_NUMBER);
+			sb.append(DasConstants.PROJECT_NAME + " v" + DasConstants.VERSION_NUMBER);
 			sb.append("\nAUTHORS: ");
-			for (String s : Strings.DEVELOPER_NAMES) {
+			for (String s : DasConstants.DEVELOPER_NAMES) {
 				sb.append(s + " | ");
 			}
 			sb.replace(sb.length() - 2, sb.length(), "\n");

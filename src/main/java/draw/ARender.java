@@ -6,91 +6,30 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
+import assets.DasConstants;
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
 import contract.datastructure.Array.IndexedElement;
 import contract.operation.OperationCounter;
-import draw.GridRender.Order;
+import draw.RenderAnimation.AnimationOption;
 import draw.element.VisualElement;
 import gui.Main;
-import javafx.animation.FadeTransition;
-import javafx.animation.ParallelTransition;
-import javafx.animation.Transition;
-import javafx.animation.TranslateTransition;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToolBar;
-import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
-import javafx.util.StringConverter;
 
 public abstract class ARender extends Pane {
-
-	/**
-	 * The value for renders which prefer a fixed width.
-	 */
-	public static final int DEFAULT_RENDER_WIDTH = 400;
-
-	/**
-	 * The value for renders which prefer a fixed height.
-	 */
-	public static final int DEFAULT_RENDER_HEIGHT = 250;
-
-	/**
-	 * Background before initialisation
-	 */
-	private static final Background ARRAY_BACKGROUND = createArrayBg();
-	private static final Background ORPHAN_BACKGROUND = createOrphanBg();
-	private static final Background TREE_BACKGROUND = createTreeBg();
-	/**
-	 * Highlight border.
-	 */
-	private static final Border BORDER_MOUSEOVER = getMOBorder();
-	/**
-	 * FXML file URL.
-	 */
-	private static final String url = "/render/RenderBase.fxml";
-
-	/**
-	 * Default node width.
-	 */
-	public static final double DEFAULT_NODE_WIDTH = 60;
-	/**
-	 * Default node height.
-	 */
-	public static final double DEFAULT_NODE_HEIGHT = 40;
-	/**
-	 * Default horizontal space between nodes.
-	 */
-	public static final double DEFAULT_NODE_HSPACE = 0;
-	/**
-	 * Default vertical space between nodes.
-	 */
-	public static final double DEFAULT_NODE_VSPACE = 0;
-
 	/**
 	 * The DataStructure this render represents.
 	 */
@@ -162,16 +101,16 @@ public abstract class ARender extends Pane {
 
 	/**
 	 * Default constructor. Will use default values: <br>
-	 * Element width: {@link #DEFAULT_NODE_HSPACE}<br>
-	 * Element height: {@link #DEFAULT_NODE_HEIGHT}<br>
-	 * Element horizontal space: {@link #DEFAULT_NODE_HSPACE}<br>
-	 * Element vertical space: {@link #DEFAULT_NODE_VSPACE}<br>
+	 * Element width: {@link DasConstants#DEFAULT_ELEMENT_HSPACE}<br>
+	 * Element height: {@link DasConstants#DEFAULT_ELEMENT_HEIGHT}<br>
+	 * Element horizontal space: {@link DasConstants#DEFAULT_ELEMENT_HSPACE}<br>
+	 * Element vertical space: {@link DasConstants#DEFAULT_ELEMENT_VSPACE}<br>
 	 * 
 	 * @param struct
 	 *            The DataStructure this Render will draw.
 	 */
 	public ARender(DataStructure struct) {
-		this(struct, DEFAULT_NODE_WIDTH, DEFAULT_NODE_HEIGHT, DEFAULT_NODE_HSPACE, DEFAULT_NODE_VSPACE);
+		this(struct, DasConstants.DEFAULT_ELEMENT_WIDTH, DasConstants.DEFAULT_ELEMENT_HEIGHT, DasConstants.DEFAULT_ELEMENT_HSPACE, DasConstants.DEFAULT_ELEMENT_VSPACE);
 	}
 
 	/**
@@ -202,13 +141,13 @@ public abstract class ARender extends Pane {
 		loadBase();
 		initDragAndZoom();
 
-//		this.setMinSize(150, 20);
-//		this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+		// this.setMinSize(150, 20);
+		// this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 		expand();
 	}
 
 	private void loadBase() {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(url));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(DasConstants.RENDER_FXML_URL));
 		fxmlLoader.setController(this);
 
 		try {
@@ -223,7 +162,7 @@ public abstract class ARender extends Pane {
 		content = (Pane) fxmlLoader.getNamespace().get("content");
 		content.getChildren().add(nodes);
 		content.setBackground(getStructBackground(struct));
-		setSize(150, 125); //Size of background images
+		setSize(150, 125); // Size of background images
 
 		// Name labels
 		name = (Label) fxmlLoader.getNamespace().get("name");
@@ -272,7 +211,7 @@ public abstract class ARender extends Pane {
 	 *            The operation to animate.
 	 */
 	public void animateRemove(Element tar) {
-		
+		System.out.println("animateRemove not implemented");
 	}
 
 	/**
@@ -289,30 +228,37 @@ public abstract class ARender extends Pane {
 	 * @param millis
 	 *            The time in milliseconds the animation should last.
 	 */
+	//@formatter:off
 	public void animateReadWrite(Element src, ARender src_rndr, Element tar, ARender tar_rndr, long millis) {
 		/*
 		 * Target is unknown. READ: this -> [x]
 		 */
 		if (tar == null) {
-			fade_option = "fade_out";
-			animate(src, absX(src), absY(src), // From
-					absX(src) - node_width * 0.5, absY(src) - node_height * 1.5, millis); // To
+			RenderAnimation.animate(src,
+					absX(src), absY(src), // From
+					absX(src) - node_width * 0.5, absY(src) - node_height * 1.5, // To
+					millis, this,
+					AnimationOption.FADE_OUT);
 			/*
 			 * Source is unknown. WRITE: [x] -> this
 			 */
 		} else if (src == null) {
-			fade_option = "fade_in";
-			animate(tar, absX(tar) + node_width * 0.5, absY(tar) + node_height * 1.5, // From
-					absX(tar), absY(tar), millis); // To
+			RenderAnimation.animate(tar,
+					absX(tar) + node_width * 0.5, absY(tar) + node_height * 1.5, // From
+					absX(tar), absY(tar), // To
+					millis, this,
+					AnimationOption.FADE_IN);
 			/*
 			 * Source and target are known.
 			 */
 		} else { // if (src != null && tar != null)
-			tar_rndr.fade_option = "off";
-			tar_rndr.animate(tar, src_rndr.absX(src), src_rndr.absY(src), // From
-					tar_rndr.absX(tar), tar_rndr.absY(tar), millis); // To
+			RenderAnimation.animate(tar,
+					src_rndr.absX(src), src_rndr.absY(src), // From
+					tar_rndr.absX(tar), tar_rndr.absY(tar), // To
+					millis, this);
 		}
 	}
+	//@formatter:off
 
 	/**
 	 * Default animation of a swap between two elements.
@@ -328,11 +274,15 @@ public abstract class ARender extends Pane {
 	 * @param millis
 	 *            The time in milliseconds the animation should last.
 	 */
+	// formatter:off
 	public void animateSwap(Element var1, ARender var1_rndr, Element var2, ARender var2_rndr, long millis) {
-		var1_rndr.fade_option = "swap";
-		var1_rndr.animate(var2, var1_rndr.absX(var1), var1_rndr.absY(var1), var2_rndr.absX(var2), var2_rndr.absY(var2),
-				millis);
+		RenderAnimation.animate(var2,
+				var1_rndr.absX(var1), var1_rndr.absY(var1),
+				var2_rndr.absX(var2), var2_rndr.absY(var2),
+				millis, this,
+				AnimationOption.USE_GHOST);
 	}
+	// formatter:on
 
 	/**
 	 * Calls, setPrefSize, setMaxSize, setWidth and setHeight.
@@ -450,7 +400,7 @@ public abstract class ARender extends Pane {
 			if (header.visibleProperty().isBound()) {
 				name.setVisible(false);
 			}
-			setBorder(BORDER_MOUSEOVER);
+			setBorder(DasConstants.BORDER_MOUSEOVER);
 		});
 		setOnMouseExited(event -> {
 			// this.setCursor(null);
@@ -468,104 +418,6 @@ public abstract class ARender extends Pane {
 	 */
 	public DataStructure getDataStructure() {
 		return struct;
-	}
-
-	String fade_option = "bla";
-
-	/**
-	 * Start an animation of an element to a point.
-	 * 
-	 * @param e
-	 *            The element to animate.
-	 * @param start_x
-	 *            Start point x-coordinate.
-	 * @param start_y
-	 *            Start point y-coordinate.
-	 * @param end_x
-	 *            End point x-coordinate.
-	 * @param end_y
-	 *            End point y-coordinate.
-	 * @param millis
-	 *            The time in milliseconds the animation should last.
-	 */
-	public void animate(Element e, double start_x, double start_y, double end_x, double end_y, long millis) {
-		if (content.isVisible() == false) {
-			return;
-		}
-		ParallelTransition trans = new ParallelTransition();
-
-		// VisualElement real = visualElementsMapping.get(e);
-		int[] i = ((IndexedElement) e).getIndex();
-		Arrays.copyOf(i, i.length);
-
-		final VisualElement real = visualMap.get(Arrays.toString(i));
-		if (real == null) {
-			// Do not remove this printout //RS
-			System.err.println("Animation failed: Failed resolve element for: " + struct);
-			return;
-		}
-
-		VisualElement animated = real.clone();
-
-		animated.unbind();
-
-		animated.setScaleX(this.getScaleX());
-		animated.setScaleY(this.getScaleY());
-
-		// animation_pane.setScaleX(this.getScaleX());
-		// animation_pane.setScaleY(this.getScaleY());
-
-		animation_pane.getChildren().add(animated);
-
-		final boolean useGhost;
-
-		/*
-		 * Fade
-		 */
-
-		switch (fade_option) {
-		case "fade_in":
-			useGhost = true;
-			trans.getChildren().add(fadeIn(millis));
-			break;
-
-		case "fade_out":
-			useGhost = false;
-			trans.getChildren().add(fadeOut(millis));
-			break;
-
-		case "swap":
-			useGhost = true;
-			break;
-		default:
-			useGhost = false;
-			break;
-		}
-
-		/*
-		 * Move
-		 */
-		TranslateTransition tt = new TranslateTransition(Duration.millis(millis));
-		tt.setOnFinished(event -> {
-			animation_pane.getChildren().remove(animated);
-			if (useGhost) {
-				real.setGhost(false);
-			}
-		});
-
-		tt.setFromX(start_x);
-		tt.setFromY(start_y);
-		tt.setToX(end_x);
-		tt.setToY(end_y);
-
-		trans.getChildren().add(tt);
-
-		/*
-		 * Showtime!!
-		 */
-		trans.setNode(animated);
-		real.setGhost(useGhost);
-		trans.play();
 	}
 
 	/**
@@ -667,215 +519,6 @@ public abstract class ARender extends Pane {
 	 */
 	protected abstract void bellsAndWhistles(Element e, VisualElement ve);
 
-	/**
-	 * SpinnerValueFactory for Render_FXimplementations.
-	 * 
-	 * @author Richard Sundqvist
-	 *
-	 */
-	public static class RenderSVF extends SpinnerValueFactory<Integer> {
-
-		// Mode variable
-		private final boolean explicit;
-		/**
-		 * Used to cycle through explicit values.
-		 */
-		private final ArrayList<Integer> values = new ArrayList<>();
-		/**
-		 * Used to cycle through ranges.
-		 */
-		private final int min;
-		private final int max;
-		/**
-		 * The current spinner value.
-		 */
-		private int current;
-
-		/**
-		 * Creates a new RenderSVF with the specified min and max value.
-		 * Increments will occur in steps of one. Rollover is applied, so
-		 * {@code max + 1 = min} and vice versa.
-		 * 
-		 * @param min
-		 *            The minimum value.
-		 * @param max
-		 *            The maximum value.
-		 */
-		public RenderSVF(int min, int max) {
-			this.min = min;
-			this.max = max;
-			current = min;
-			setConverter(new Converter());
-			for (int i = min; i <= max; i++) {
-				values.add(new Integer(i));
-			}
-			setValue(current);
-			explicit = false;
-		}
-
-		/**
-		 * Creates a new RenderSVF with the specified values and userValues. The
-		 * user values is what will be shown to the user when going through the
-		 * options of the spinner.
-		 * 
-		 * @param values
-		 *            The keys for this RenderSpinner.
-		 * @param userValues
-		 *            Their display values.
-		 */
-		public RenderSVF(List<Integer> values, List<String> userValues) {
-			min = -1;
-			max = -1;
-			setConverter(new Converter(values, userValues));
-			for (int i = 0; i < values.size(); i++) {
-				this.values.add(values.get(i));
-			}
-			current = values.get(0);
-			setValue(current);
-			explicit = true;
-		}
-
-		@Override
-		public void decrement(int steps) {
-			if (explicit) {
-				current = current - steps < 0 ? values.size() - 1 : current - steps;
-			} else {
-				current = current - steps < min ? max : current - steps;
-			}
-			setValue(current);
-		}
-
-		@Override
-		public void increment(int steps) {
-			if (explicit) {
-				current = current + steps > values.size() - 1 ? 0 : current + steps;
-			} else {
-				current = current + steps > max ? min : current + steps;
-			}
-			setValue(current);
-		}
-
-		public String toString() {
-			if (explicit) {
-				return "Explicit. Values =  " + values;
-			} else {
-				return "Non-explict. Range = [" + min + ", " + max + "]";
-			}
-		}
-
-		/**
-		 * Converter for the SpinnerSVF class.
-		 * 
-		 * @author Richard Sundqvist
-		 *
-		 */
-		public static class Converter extends StringConverter<Integer> {
-
-			private final HashMap<Integer, String> conversion;
-			private final boolean explicit;
-
-			public Converter(List<Integer> values, List<String> userValues) {
-				conversion = new HashMap<Integer, String>();
-				for (int i = 0; i < values.size(); i++) {
-					conversion.put(values.get(i), userValues.get(i));
-				}
-				explicit = true;
-			}
-
-			public Converter() {
-				conversion = null;
-				explicit = false;
-			}
-
-			@Override
-			public String toString(Integer integer) {
-				if (explicit) {
-					return conversion.get(integer);
-				} else {
-					return integer.toString();
-				}
-			}
-
-			@Override
-			public Integer fromString(String string) {
-				if (explicit) {
-					Integer ans = null;
-					for (Integer i : conversion.keySet()) {
-						if (conversion.get(i).equals(string)) {
-							ans = i;
-							break;
-						}
-					}
-					return ans;
-				} else {
-					return Integer.parseInt(string);
-				}
-			}
-		}
-
-		public static RenderSVF resolve(DataStructure struct) {
-			RenderSVF svf = null;
-
-			switch (struct.resolveVisual()) {
-			case bar:
-				svf = null;
-				break;
-
-			case box:
-				ArrayList<Integer> values = new ArrayList<Integer>();
-				values.add(Order.ROW_MAJOR.optionNbr);
-				values.add(Order.COLUMN_MAJOR.optionNbr);
-				ArrayList<String> userValues = new ArrayList<String>();
-				userValues.add(Order.ROW_MAJOR.name);
-				userValues.add(Order.COLUMN_MAJOR.name);
-				svf = new RenderSVF(values, userValues);
-				break;
-			case single:
-				svf = null;
-				break;
-
-			case tree:
-				svf = new RenderSVF(2, 1337);
-				break;
-
-			default:
-				break;
-
-			}
-			return svf;
-		}
-	}
-
-	/*
-	 * Boring crap.
-	 */
-	private static Background createArrayBg() {
-		Image image = new Image(ARender.class.getResourceAsStream("/assets/array.png"));
-		BackgroundImage bgi = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-				BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
-		return new Background(bgi);
-
-	}
-
-	private static Background createOrphanBg() {
-		Image image = new Image(ARender.class.getResourceAsStream("/assets/orphan.png"));
-		BackgroundImage bgi = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-				BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
-		return new Background(bgi);
-	}
-
-	private static Background createTreeBg() {
-		Image image = new Image(ARender.class.getResourceAsStream("/assets/tree.png"));
-		BackgroundImage bgi = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
-				BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
-		return new Background(bgi);
-	}
-
-	private static Border getMOBorder() {
-		return new Border(new BorderStroke(Color.web("#123456"), BorderStrokeStyle.SOLID, new CornerRadii(3),
-				new BorderWidths(3), new Insets(-3)));
-	}
-
 	private static Background getStructBackground(DataStructure struct) {
 		if (struct == null) {
 			return null;
@@ -883,29 +526,14 @@ public abstract class ARender extends Pane {
 
 		switch (struct.rawType) {
 		case array:
-			return ARRAY_BACKGROUND;
+			return DasConstants.ARRAY_BACKGROUND;
 		case tree:
-			return TREE_BACKGROUND;
+			return DasConstants.TREE_BACKGROUND;
 		case independentElement:
-			return ORPHAN_BACKGROUND;
+			return DasConstants.ORPHAN_BACKGROUND;
 		default:
 			return null;
 		}
-	}
-
-	private static final Transition fadeIn(long millis) {
-		FadeTransition ft = new FadeTransition(Duration.millis(millis));
-
-		ft.setFromValue(1.0);
-		ft.setToValue(0);
-		return ft;
-	}
-
-	private static final Transition fadeOut(long millis) {
-		FadeTransition ft = new FadeTransition(Duration.millis(millis));
-		ft.setFromValue(1.0);
-		ft.setToValue(0);
-		return ft;
 	}
 
 	public void showStats() {
@@ -918,8 +546,8 @@ public abstract class ARender extends Pane {
 		// TODO: Live update pop up in addition to the printout.
 	}
 
-	// TODO
 	public void showOptions() {
+		//TODO implement options
 		System.out.println("options");
 	}
 
@@ -961,8 +589,8 @@ public abstract class ARender extends Pane {
 		content.setVisible(true);
 		setTranslateX(getTranslateX() - conbwhs);
 		bindHeader();
-		calculateSize(); //Size recalculation is disabled while hidden.
-		
+		calculateSize(); // Size recalculation is disabled while hidden.
+
 		if (content.getBackground() == null) {
 			calculateSize();
 		} else {
@@ -1003,7 +631,6 @@ public abstract class ARender extends Pane {
 	}
 
 	private boolean playFailureSound = true;
-
 	/**
 	 * Makes the header red when something goes wrong.
 	 */
@@ -1020,12 +647,13 @@ public abstract class ARender extends Pane {
 			Main.console.err("Render Failure in " + this.toString() + ".");
 		}
 	}
-	
+
 	/**
 	 * Returns the visual map for this Render.
+	 * 
 	 * @return The visual map for this Render.
 	 */
-	public HashMap<String, VisualElement> getVisualMap(){
+	public HashMap<String, VisualElement> getVisualMap() {
 		return visualMap;
 	}
 

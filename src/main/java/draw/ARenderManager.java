@@ -2,6 +2,7 @@ package draw;
 
 import java.util.HashMap;
 
+import assets.DasConstants;
 import contract.datastructure.DataStructure;
 import contract.datastructure.VisualType;
 import contract.datastructure.DataStructure.VisualListener;
@@ -116,7 +117,7 @@ public class ARenderManager extends BorderPane implements VisualListener {
 		VisualType visual = struct.resolveVisual();
 		switch (visual) {
 		case bar:
-			curRender = new BarchartRender(struct, 30, ARender.DEFAULT_RENDER_HEIGHT, 10, 10);
+			curRender = new BarchartRender(struct, 30, DasConstants.DEFAULT_RENDER_HEIGHT, 10, 10);
 			break;
 		case box:
 			curRender = new GridRender(struct, GridRender.Order.resolve(struct.visualOption), 40, 40, 3, 3);

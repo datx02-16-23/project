@@ -11,7 +11,7 @@ import org.jgroups.ReceiverAdapter;
 
 import com.google.gson.Gson;
 
-import assets.Strings;
+import assets.DasConstants;
 import contract.CRoot;
 import gui.Main;
 
@@ -56,7 +56,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
 	 *            The listener for this JGroupCommunicator.
 	 */
 	public JGroupCommunicator(String hierarchy, CommunicatorListener listener) {
-		this(hierarchy, (int) (Math.random() * Integer.MAX_VALUE), Strings.DEFAULT_CHANNEL, listener, false);
+		this(hierarchy, (int) (Math.random() * Integer.MAX_VALUE), DasConstants.DEFAULT_CHANNEL, listener, false);
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
 	 *            If true, most incoming messages will be ignored.
 	 */
 	public JGroupCommunicator(String hierarchy, CommunicatorListener listener, boolean suppressIncoming) {
-		this(hierarchy, (int) (Math.random() * Integer.MAX_VALUE), Strings.DEFAULT_CHANNEL, listener, suppressIncoming);
+		this(hierarchy, (int) (Math.random() * Integer.MAX_VALUE), DasConstants.DEFAULT_CHANNEL, listener, suppressIncoming);
 	}
 
 	/**

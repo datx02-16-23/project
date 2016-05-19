@@ -3,7 +3,7 @@ package contract.operation;
 import java.util.HashMap;
 import java.util.List;
 
-import assets.Strings;
+import assets.DasConstants;
 import contract.Locator;
 import contract.Operation;
 
@@ -16,7 +16,7 @@ public class OP_Swap extends Operation implements Consolidable {
 	/**
 	 * Version number for this class.
 	 */
-	private static final long serialVersionUID = Strings.VERSION_NUMBER;
+	private static final long serialVersionUID = DasConstants.VERSION_NUMBER;
 
 	/**
 	 * Create a new Swap operation. Note that you must set var1, var2, and

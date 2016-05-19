@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import assets.Strings;
+import assets.DasConstants;
 
 /**
  * Header item for the {@code Wrapper} class.
@@ -15,7 +15,7 @@ public class Header implements Serializable {
 	/**
 	 * Version number for this class.
 	 */
-	private static final long serialVersionUID = Strings.VERSION_NUMBER;
+	private static final long serialVersionUID = DasConstants.VERSION_NUMBER;
 	/**
 	 * Default value for the {@code version} field.
 	 */
