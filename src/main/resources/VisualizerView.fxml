@@ -232,7 +232,7 @@
             </VBox>
             <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0">
                <children>
-                  <TextArea fx:id="console" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="50.0" prefWidth="600.0" text="Project name&#10;version&#10;&#10;authors" HBox.hgrow="ALWAYS">
+                  <TextArea fx:id="console" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="50.0" prefWidth="600.0" text="Console" wrapText="true" HBox.hgrow="ALWAYS">
                      <padding>
                         <Insets top="1.0" />
                      </padding>

@@ -1,16 +1,20 @@
 package gui;
 
-
-
 import assets.Strings;
 import assets.example.Examples;
 import assets.example.Examples.Algorithm;
 import gui.panel.OperationPanel;
 import gui.panel.SourcePanel;
 import io.LogStreamManager;
+import javafx.animation.Animation;
 import javafx.animation.FillTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -207,13 +211,34 @@ public class Main extends Application {
 			print(prepend_err + err);
 			blinkRed();
 		}
-		
+
 		/**
 		 * Make the console blink a red to draw attention;
 		 */
-		public void blinkRed(){
-			consoleTextArea.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
-//			consoleTextArea.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
+		private boolean isRed = false;
+
+		public void blinkRed() {
+			// consoleTextArea.setStyle("-fx-background-color: rgba(255, 0, 0,
+			// 0.5);");
+			consoleTextArea.setStyle("-fx-background-color: red;");
+			isRed = true;
+			
+			Timeline tl = new Timeline();
+			tl.setCycleCount(7);
+			KeyFrame blink = new KeyFrame(Duration.millis(500), new EventHandler<ActionEvent>() {
+				public void handle(ActionEvent event) {
+					if (isRed) {
+						consoleTextArea.setStyle("-fx-background-color: transparent;");
+					} else {
+						consoleTextArea.setStyle("-fx-background-color: red;");
+					}
+
+					isRed = !isRed;
+				}
+			});
+
+			tl.getKeyFrames().add(blink);
+			tl.play();
 		}
 
 		/**
@@ -306,7 +331,7 @@ public class Main extends Application {
 
 		private void init() {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Strings.PROJECT_NAME + " v" +Strings.VERSION_NUMBER);
+			sb.append(Strings.PROJECT_NAME + " v" + Strings.VERSION_NUMBER);
 			sb.append("\nAUTHORS: ");
 			for (String s : Strings.DEVELOPER_NAMES) {
 				sb.append(s + " | ");
@@ -318,6 +343,7 @@ public class Main extends Application {
 				@Override
 				public void run() {
 					consoleTextArea.setText(initMessage);
+					blinkRed();
 				}
 			});
 		}
