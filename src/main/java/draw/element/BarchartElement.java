@@ -92,7 +92,7 @@ public class BarchartElement extends RectangleElement {
 	}
 	
 	public BarchartElement clone(){
-		BarchartElement clone = (BarchartElement) VisualElementFactory.clone(this);
+		BarchartElement clone = (BarchartElement) ElementFactory.clone(this);
 		
 		clone.updateUnitHeight(unitHeight);
 		

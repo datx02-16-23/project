@@ -9,9 +9,9 @@ import javafx.scene.paint.Paint;
  * @author Richard Sundqvist
  *
  */
-public abstract class VisualElementFactory {
+public abstract class ElementFactory {
 
-	private VisualElementFactory() {
+	private ElementFactory() {
 	} // Not to be instantiated.
 
 	/**
@@ -28,7 +28,7 @@ public abstract class VisualElementFactory {
 	 *            shapes like circles.
 	 * @return The element to bind.
 	 */
-	public static VisualElement shape(ElementStyle shape, Element e, double pri, double sec) {
+	public static VisualElement shape(ElementShape shape, Element e, double pri, double sec) {
 		VisualElement vis = null;
 
 		switch (shape) {
@@ -56,9 +56,11 @@ public abstract class VisualElementFactory {
 		case BAR_ELEMENT:
 			vis = new BarchartElement(e, pri, sec);
 			break;
-		default:
-			break;
-
+		case RANDOM:
+			return shape(ElementShape.random(), e, pri, sec);
+		case POLYGON: //Pick a polygon at random if no points are provided.
+			return shape(ElementShape.randomPolygon(), e, pri, sec);
+			
 		}
 
 		vis.elemShape = shape;
@@ -82,7 +84,7 @@ public abstract class VisualElementFactory {
 	 *            shapes like circles.
 	 * @return A VisualElement.
 	 */
-	public static VisualElement shape(ElementStyle shape, double value, Paint paint, double pri, double sec) {
+	public static VisualElement shape(ElementShape shape, double value, Paint paint, double pri, double sec) {
 		VisualElement vis = null;
 
 		switch (shape) {
@@ -110,8 +112,10 @@ public abstract class VisualElementFactory {
 		case BAR_ELEMENT:
 			vis = new BarchartElement(value, paint, pri, sec);
 			break;
-		default:
-			break;
+		case POLYGON:
+			return shape(ElementShape.randomPolygon(), value, paint, pri, sec);
+		case RANDOM:
+			return shape(ElementShape.random(), value, paint, pri, sec);
 		}
 		vis.elemShape = shape;
 		return vis;
@@ -133,7 +137,7 @@ public abstract class VisualElementFactory {
 	 */
 	public static PolygonElement polygon(Element e, double pri, double sec, double[] points) {
 		PolygonElement vis = new PolygonElement(e, pri, sec, points);
-		vis.elemShape = ElementStyle.POLYGON;
+		vis.elemShape = ElementShape.POLYGON;
 		return vis;
 	}
 
@@ -156,7 +160,7 @@ public abstract class VisualElementFactory {
 	 */
 	public static PolygonElement polygon(double value, Paint paint, double pri, double sec, double[] points) {
 		PolygonElement vis = new PolygonElement(value, paint, pri, sec, points);
-		vis.elemShape = ElementStyle.POLYGON;
+		vis.elemShape = ElementShape.POLYGON;
 		return vis;
 	}
 
@@ -187,11 +191,11 @@ public abstract class VisualElementFactory {
 			y = points[yInd];
 
 			if (x < 0 || x > 1) {
-				//Do not remove this printout //RS
+				// Do not remove this printout //RS
 				System.err.println("Bad x-coordinate at index " + xInd + ": " + x);
 			}
 			if (y < 0 || y > 1) {
-				//Do not remove this printout //RS
+				// Do not remove this printout //RS
 				System.err.println("Bad y-coordinate at index " + yInd + ": " + y);
 			}
 

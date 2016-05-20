@@ -39,7 +39,7 @@ public abstract class VisualElement extends Pane {
 	/**
 	 * Enum indicating the shape of this polygon. Used by the factory.
 	 */
-	public ElementStyle elemShape;
+	public ElementShape elemShape;
 
 	/**
 	 * Current info label position.
@@ -393,6 +393,6 @@ public abstract class VisualElement extends Pane {
 	}
 
 	public VisualElement clone() {
-		return VisualElementFactory.clone(this);
+		return ElementFactory.clone(this);
 	}
 }

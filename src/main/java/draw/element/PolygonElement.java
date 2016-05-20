@@ -43,6 +43,6 @@ public class PolygonElement extends VisualElement {
 
 	@Override
 	public void createShape(){
-		shape =  new Polygon(VisualElementFactory.scalePolygon(width, height, points));
+		shape =  new Polygon(ElementFactory.scalePolygon(width, height, points));
 	}
 }

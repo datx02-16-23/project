@@ -90,6 +90,7 @@ public class HelpView {
 			box.setWidth(DasConstants.DEFAULT_ELEMENT_WIDTH);
 			box.setHeight(DasConstants.DEFAULT_ELEMENT_HEIGHT);
 			box.setDepth((DasConstants.DEFAULT_ELEMENT_WIDTH + DasConstants.DEFAULT_ELEMENT_HEIGHT) / 2);
+			box.setOpacity(0.3);
 			box.setOnMouseClicked(event -> {
 				about(ot);
 				boxClicked(box);

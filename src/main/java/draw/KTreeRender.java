@@ -6,8 +6,8 @@ import assets.DasToolkit;
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
 import contract.datastructure.Array.IndexedElement;
-import draw.element.ElementStyle;
-import draw.element.VisualElementFactory;
+import draw.element.ElementShape;
+import draw.element.ElementFactory;
 import draw.element.VisualElement;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Pane;
@@ -27,8 +27,7 @@ import javafx.scene.shape.Line;
  */
 public class KTreeRender extends ARender {
 
-	public static final ElementStyle DEFAULT_ELEMENT_STYLE = ElementStyle.SINGLE;
-	public static ElementStyle elementStyle = DEFAULT_ELEMENT_STYLE;
+	public static final ElementShape DEFAULT_ELEMENT_STYLE = ElementShape.SINGLE;
 
 	/**
 	 * Container for connector lines.
@@ -243,7 +242,8 @@ public class KTreeRender extends ARender {
 
 	@Override
 	protected VisualElement createVisualElement(Element e) {
-		VisualElement ve = VisualElementFactory.shape(elementStyle, e, nodeWidth, nodeHeight);
+		elementStyle = elementStyle == null ? DEFAULT_ELEMENT_STYLE : elementStyle;
+		VisualElement ve = ElementFactory.shape(elementStyle, e, nodeWidth, nodeHeight);
 		ve.setInfoPos(Pos.TOP_LEFT);
 		ve.setInfoArray(((IndexedElement) e).getIndex());
 		return ve;
@@ -251,7 +251,8 @@ public class KTreeRender extends ARender {
 
 	@Override
 	protected VisualElement createVisualElement(double value, Color color) {
-		VisualElement ve = VisualElementFactory.shape(elementStyle, value, color, nodeWidth, nodeHeight);
+		elementStyle = elementStyle == null ? DEFAULT_ELEMENT_STYLE : elementStyle;
+		VisualElement ve = ElementFactory.shape(elementStyle, value, color, nodeWidth, nodeHeight);
 		ve.setInfoPos(null);
 		return ve;
 	}

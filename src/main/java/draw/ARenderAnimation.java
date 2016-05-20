@@ -18,9 +18,9 @@ import javafx.util.Duration;
  * @author Richard Sundqvist
  *
  */
-public abstract class RenderAnimation {
+public abstract class ARenderAnimation {
 
-	private RenderAnimation() {
+	private ARenderAnimation() {
 	}// Not to be instantiated.
 
 	/**

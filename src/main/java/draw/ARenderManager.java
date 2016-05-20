@@ -5,7 +5,7 @@ import java.util.HashMap;
 import assets.DasConstants;
 import contract.datastructure.DataStructure;
 import contract.datastructure.VisualType;
-import draw.element.ElementStyle;
+import draw.element.ElementShape;
 import contract.datastructure.DataStructure.VisualListener;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -127,7 +127,6 @@ public class ARenderManager extends BorderPane implements VisualListener {
 			break;
 		case grid:
 		case box:
-			((GridRender) curRender).elementStyle = ElementStyle.POLYGON;
 			curRender = new GridRender(struct, GridRender.Order.resolve(struct.visualOption),
 					DasConstants.DEFAULT_ELEMENT_SIZE, DasConstants.DEFAULT_ELEMENT_SIZE, 3, 3);
 			break;
@@ -138,8 +137,8 @@ public class ARenderManager extends BorderPane implements VisualListener {
 			curRender = new SingleElementRender(struct, DasConstants.DEFAULT_ELEMENT_WIDTH, DasConstants.DEFAULT_RENDER_HEIGHT);
 			break;
 		}
-		// render.setAnimationPane(animation_pane == null ? render.getNodes() :
-		// animation_pane);
+		
+		curRender.setElementStyle(ElementShape.RANDOM);
 		return curRender;
 	}
 

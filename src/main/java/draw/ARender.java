@@ -13,8 +13,8 @@ import contract.datastructure.Element;
 import contract.datastructure.Array.IndexedElement;
 import contract.operation.OperationCounter;
 import contract.operation.OperationCounter.OperationCounterHaver;
-import draw.RenderAnimation.AnimationOption;
-import draw.element.ElementStyle;
+import draw.ARenderAnimation.AnimationOption;
+import draw.element.ElementShape;
 import draw.element.VisualElement;
 import gui.Main;
 import javafx.event.Event;
@@ -32,6 +32,8 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 
 public abstract class ARender extends Pane {
+	
+	
 	/**
 	 * The DataStructure this render represents.
 	 */
@@ -102,6 +104,10 @@ public abstract class ARender extends Pane {
 	 * Info labels.
 	 */
 	private Label xposLabel, yposLabel, scaleLabel;
+	/**
+	 * The element style to use.
+	 */
+	protected ElementShape elementStyle;
 
 	/**
 	 * Default constructor. Will use default values: <br>
@@ -222,7 +228,7 @@ public abstract class ARender extends Pane {
 		double x = absX(tar);
 		double y = absY(tar);
 
-		RenderAnimation.animate(tar,
+		ARenderAnimation.animate(tar,
 				x, y, x, y,
 				millis * 4, this,	
 				AnimationOption.FADE_OUT, AnimationOption.SHRINK, AnimationOption.USE_GHOST);
@@ -261,22 +267,22 @@ public abstract class ARender extends Pane {
 		}
 		
 		if(hasSource && hasTarget){
-			RenderAnimation.animate(tar,
+			ARenderAnimation.animate(tar,
 					x1, y1, 
 					x2, y2,
 					millis, this);
 		} else if (hasSource) {
 			//Source only
-			RenderAnimation.animate(src,
+			ARenderAnimation.animate(src,
 					x1, y1, 
-					x2, y2 - nodeHeight * 2,
+					x1, y1 - nodeHeight * 2,
 					millis, this,
 					AnimationOption.FADE_OUT, AnimationOption.SHRINK);
 		} else {
 			//Target only
-			RenderAnimation.animate(tar,
+			ARenderAnimation.animate(tar,
 					x1, y1 - nodeHeight * 2,
-					x2, y2,
+					x1, y1,
 					millis, this,
 					AnimationOption.FADE_IN, AnimationOption.GROW);
 		}
@@ -299,7 +305,7 @@ public abstract class ARender extends Pane {
 	 */
 	// formatter:off
 	public void animateSwap(Element var1, ARender render1, Element var2, ARender render2, long millis) {
-		RenderAnimation.animate(var2,
+		ARenderAnimation.animate(var2,
 				render1.absX(var1), render1.absY(var1),
 				render2.absX(var2), render2.absY(var2),
 				millis, this,
@@ -652,6 +658,7 @@ public abstract class ARender extends Pane {
 	}
 
 	private boolean playFailureSound = true;
+
 	/**
 	 * Makes the header red when something goes wrong.
 	 */
@@ -680,5 +687,16 @@ public abstract class ARender extends Pane {
 
 	public String toString() {
 		return this.getClass().getSimpleName() + " (" + this.struct + ")";
+	}
+	
+	/**
+	 * Set the currently used element style.
+	 * @param newStyle The new Style to use.
+	 */
+	public void setElementStyle(ElementShape newStyle) {
+		if(newStyle != this.elementStyle){
+			this.elementStyle = newStyle;
+			init();
+		}
 	}
 }

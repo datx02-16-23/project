@@ -7,8 +7,7 @@ import javafx.scene.paint.Color;
 
 public class SingleElementRender extends ARender {
 	
-	public static final ElementStyle DEFAULT_ELEMENT_STYLE = ElementStyle.SINGLE;
-	public static ElementStyle elementStyle = DEFAULT_ELEMENT_STYLE;
+	public static final ElementShape DEFAULT_ELEMENT_STYLE = ElementShape.SINGLE;
 
 	/**
 	 * Create a new SingleElementRender.
@@ -76,13 +75,13 @@ public class SingleElementRender extends ARender {
 
 	@Override
 	protected VisualElement createVisualElement(Element e) {
-		VisualElement re = VisualElementFactory.shape(elementStyle, e, nodeWidth, nodeHeight);
+		VisualElement re = ElementFactory.shape(DEFAULT_ELEMENT_STYLE, e, nodeWidth, nodeHeight);
 		return re;
 	}
 
 	@Override
 	protected VisualElement createVisualElement(double value, Color color) {
-		VisualElement re = VisualElementFactory.shape(elementStyle, value, color, nodeWidth, nodeHeight);
+		VisualElement re = ElementFactory.shape(DEFAULT_ELEMENT_STYLE, value, color, nodeWidth, nodeHeight);
 		re.setInfoPos(null);
 		return re;
 	}
