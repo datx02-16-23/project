@@ -1,6 +1,5 @@
 package draw;
 
-import assets.Const;
 import contract.datastructure.DataStructure;
 
 public abstract class ARenderFactory {

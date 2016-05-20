@@ -5,7 +5,6 @@ import java.util.HashMap;
 import assets.Const;
 import contract.datastructure.DataStructure;
 import contract.datastructure.VisualType;
-import draw.element.ElementShape;
 import contract.datastructure.DataStructure.VisualListener;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;

@@ -13,9 +13,9 @@ import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
 
 /**
- * Renders drawing data structures with their elements in a grid.
+ * Render drawing data structures with their elements in a grid.
  * 
- * @author Richard Sundqvist.
+ * @author Richard Sundqvist
  *
  */
 public class GridRender extends ARender {

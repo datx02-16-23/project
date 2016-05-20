@@ -49,14 +49,14 @@ public abstract class ARenderAnimation {
 			AnimationOption... options) {
 	//@formatter:on	
 
-		//Fetch the element to animate
+		// Fetch the element to animate
 		// VisualElement orig = visualElementsMapping.get(e);
 		int[] i = ((IndexedElement) e).getIndex();
 		Arrays.copyOf(i, i.length);
 		final AVElement orig = render.visualMap.get(Arrays.toString(i));
 		if (Debug.KEY_EVENTS) {
 			if (orig == null) {
-				System.err.println("ARender.animte() failure: Could not resolve element for using:"  + render);
+				System.err.println("ARender.animte() failure: Could not resolve element for using:" + render);
 				return;
 			}
 		}
@@ -70,9 +70,9 @@ public abstract class ARenderAnimation {
 		tt.setFromY(y1);
 		tt.setToX(x2);
 		tt.setToY(y2);
-		
+
 		transition.getChildren().add(tt);
-		
+
 		/*
 		 * Showtime!!
 		 */
@@ -122,28 +122,30 @@ public abstract class ARenderAnimation {
 		 *            {@link #USE_GHOST}.
 		 * @param render
 		 *            The render whose animation pane should be used.
-		 * @param millis The animation time in milliseconds.
+		 * @param millis
+		 *            The animation time in milliseconds.
 		 * @param options
 		 *            A list of options.
-		 * @return 
+		 * @return
 		 */
-		public static ParallelTransition getTransiton(AVElement orig, ARender render, long millis, AnimationOption... options) {
-			
+		public static ParallelTransition getTransiton(AVElement orig, ARender render, long millis,
+				AnimationOption... options) {
+
 			final AVElement animated = orig.clone();
-			
-			//Make sure the animated element doesn't update with the model.
+
+			// Make sure the animated element doesn't update with the model.
 			animated.unbind();
 			animated.setScaleX(render.getScaleX());
 			animated.setScaleY(render.getScaleY());
-			
+
 			render.animPane.getChildren().add(animated);
-			
+
 			/**
 			 * Create transition and add optional transitions.
 			 */
 			ParallelTransition parent = new ParallelTransition(animated);
-			
-			boolean setOriginalGhost = false;
+
+			boolean originalGhostDuringAnimation = false;
 
 			for (AnimationOption opt : options) {
 				switch (opt) {
@@ -163,25 +165,27 @@ public abstract class ARenderAnimation {
 					// TODO: Implement SPIN
 					break;
 				case USE_GHOST:
-					setOriginalGhost = true;
+					originalGhostDuringAnimation = true;
 					break;
 				default:
 					break;
 				}
 			}
-			final boolean finalGhost = setOriginalGhost; // Must have final value for setOnFinished().
-			orig.setGhost(finalGhost);
 			
+			// Must have final value for setOnFinished().
+			final boolean finalGhost = originalGhostDuringAnimation;
+			orig.setGhost(finalGhost);
+
 			parent.setOnFinished(event -> {
 				if (finalGhost) {
 					orig.setGhost(false);
-					render.animPane.getChildren().remove(animated);
 				}
+				render.animPane.getChildren().remove(animated);
 			});
-			
+
 			return parent;
 		}
-		
+
 		public static Animation grow(long millis) {
 			ScaleTransition st = new ScaleTransition(Duration.millis(millis));
 			st.setFromX(0);
