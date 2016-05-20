@@ -11,11 +11,39 @@ import contract.datastructure.DataStructure;
 
 public class Model {
 
-	private static final Model INSTANCE = new Model();
-	private Step step = new Step();
-	private final List<Operation> operations = new ArrayList<Operation>();
+	private static final Model INSTANCE = new Model("INSTANCE");
+
+	/**
+	 * List of low level operations. <br>
+	 * <b>Atomic operations:</br>
+	 * {@link OperationType#read}<br>
+	 * {@link OperationType#write}<br>
+	 * {@link OperationType#message}<br>
+	 */
+	private final List<Operation> atomicOperations;
+	
+	/**
+	 * List of operations which may include height level, non-atomic operations.
+	 * <br>
+	 * <b>Atomic operations:</br>
+	 * {@link OperationType#read}<br>
+	 * {@link OperationType#write}<br>
+	 * {@link OperationType#message}<br>
+	 */
+	private final List<Operation> allOperations;
+	/**
+	 * The name of the model.
+	 */
+	public final String name;
+	private boolean inInitialState;
+	/**
+	 * Used to execute operations.
+	 */
+	private Step step;
+	/**
+	 * Current operation index.
+	 */
 	private int index;
-	private boolean hardClear = true;
 
 	/**
 	 * Returns the Model instance.
@@ -24,6 +52,29 @@ public class Model {
 	 */
 	public static Model instance() {
 		return INSTANCE;
+	}
+
+	/**
+	 * Constructs a new Model.
+	 * 
+	 * @param name
+	 *            The name of the model.
+	 */
+	public Model(String name) {
+		this.name = name;
+
+		atomicOperations = new ArrayList<Operation>();
+		allOperations = new ArrayList<Operation>();
+		step = new Step();
+		index = 0;
+		inInitialState = true;
+	}
+
+	/**
+	 * Constructs a new Model with a random int value as name.
+	 */
+	public Model() {
+		this("" + (int) (Math.random() * Integer.MAX_VALUE));
 	}
 
 	public void reset() {
@@ -37,7 +88,7 @@ public class Model {
 	public void clear() {
 		index = 0;
 		step.reset();
-		operations.clear();
+		atomicOperations.clear();
 	}
 
 	/**
@@ -46,8 +97,8 @@ public class Model {
 	public void hardClear() {
 		index = 0;
 		step = new Step();
-		operations.clear();
-		hardClear = true;
+		atomicOperations.clear();
+		inInitialState = true;
 	}
 
 	/**
@@ -56,7 +107,7 @@ public class Model {
 	 * @return True if the model can step forward. False otherwise.
 	 */
 	public boolean tryStepForward() {
-		return operations != null && index < operations.size();
+		return atomicOperations != null && index < atomicOperations.size();
 	}
 
 	/**
@@ -75,18 +126,9 @@ public class Model {
 	 *         otherwise.
 	 */
 	public boolean stepForward() {
-		//Dont remove yet!
-//		double[] test = {1, 2, 3, 5, 6, 7, 24, 26};
-//		ArrayList<Double> test2 = new ArrayList<Double>();
-//		for(double d : test){
-//			test2.add(d-1);
-//		}
-//		if(test2.contains(new Double(index))){ 
-//			System.out.println("\nop: " + operations.get(index));
-//		}
 		if (tryStepForward()) {
-			step.applyOperation(operations.get(index));
-			if(Debug.OUT){
+			step.applyOperation(atomicOperations.get(index));
+			if (Debug.OUT) {
 				System.out.print("Model.stepForward(): index = " + index + " -> ");
 			}
 			index += 1;
@@ -125,8 +167,8 @@ public class Model {
 		if (toStepNo <= 0) {
 			reset();
 			return;
-		} else if (toStepNo >= operations.size()) {
-			toStepNo = operations.size();
+		} else if (toStepNo >= atomicOperations.size()) {
+			toStepNo = atomicOperations.size();
 		}
 		// Begin
 		if (toStepNo < index) {
@@ -137,9 +179,9 @@ public class Model {
 		} else if (toStepNo > index) {
 			goToEnd();
 		}
-		
+
 	}
-	
+
 	/**
 	 * Set the structures and operations used by this Model.
 	 * 
@@ -154,8 +196,8 @@ public class Model {
 		}
 		structs.values().forEach(DataStructure::clear);
 		step = new Step(new HashMap<String, DataStructure>(structs));
-		operations.clear();
-		operations.addAll(ops);
+		atomicOperations.clear();
+		atomicOperations.addAll(ops);
 		index = 0;
 	}
 
@@ -206,7 +248,7 @@ public class Model {
 	 * @return The Operation list held by this Model.
 	 */
 	public List<Operation> getOperations() {
-		return operations;
+		return atomicOperations;
 	}
 
 	/**
@@ -217,8 +259,8 @@ public class Model {
 	 *            The new list of operations to use.
 	 */
 	public void setOperations(List<Operation> newOperations) {
-		operations.clear();
-		operations.addAll(newOperations);
+		atomicOperations.clear();
+		atomicOperations.addAll(newOperations);
 		index = 0;
 	}
 
@@ -229,7 +271,7 @@ public class Model {
 	 * @return True if this Model is in its initial state.
 	 */
 	public boolean isHardCleared() {
-		hardClear = step.getStructures().isEmpty() && operations.isEmpty();
-		return hardClear;
+		inInitialState = step.getStructures().isEmpty() && atomicOperations.isEmpty();
+		return inInitialState;
 	}
 }

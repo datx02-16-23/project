@@ -1,7 +1,6 @@
 package contract.operation;
 
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 
 /**
  * The name of the operation.

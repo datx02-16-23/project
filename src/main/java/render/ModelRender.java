@@ -29,7 +29,7 @@ import model.Model;
  * @author Richard Sundqvist
  *
  */
-public class _ModelRender extends StackPane {
+public class ModelRender extends StackPane {
 
 	/**
 	 * Pane for drawing of animated elements.
@@ -61,7 +61,7 @@ public class _ModelRender extends StackPane {
 	 * Create a new ModelRender.
 	 * @param model The Model to render.
 	 */
-	public _ModelRender(Model model) {
+	public ModelRender(Model model) {
 		this.model = model;
 		
 		// Shared animation space

@@ -22,7 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import model.Model;
-import render._ModelRender;
+import render.ModelRender;
 import javafx.scene.control.TextArea;
 
 import java.io.IOException;
@@ -50,7 +50,7 @@ public class Main extends Application {
 		lsm = new LogStreamManager(Const.PROGRAM_NAME + "_GUI");
 		primaryStage.setTitle(Const.PROGRAM_NAME);
 		// Create a Group view for the AV.
-		_ModelRender modelRender = new _ModelRender(Model.instance());
+		ModelRender modelRender = new ModelRender(Model.instance());
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Root.fxml"));
 		SourcePanel sourceViewer = new SourcePanel();
 		controller = new Controller(primaryStage, lsm, sourceViewer, modelRender);

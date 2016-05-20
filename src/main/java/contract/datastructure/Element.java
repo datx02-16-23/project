@@ -31,8 +31,10 @@ public abstract class Element implements OperationCounterHaver {
 	 * {@link #execute(Operation)} method is called.
 	 */
 	public final SimpleObjectProperty<Paint> fillProperty = new SimpleObjectProperty<Paint>();
-
-	public final OperationCounter oc = new OperationCounter();
+	/**
+	 * Counter for operations performed on the element.
+	 */
+	protected final OperationCounter oc = new OperationCounter();
 
 	/*
 	 * Value and fill

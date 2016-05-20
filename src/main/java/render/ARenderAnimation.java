@@ -57,6 +57,7 @@ public abstract class ARenderAnimation {
 		if (Debug.ERR) {
 			if (orig == null) {
 				System.err.println("ARender.animte() failure: Could not resolve element for using:" + render);
+				java.awt.Toolkit.getDefaultToolkit().beep();
 				return;
 			}
 		}

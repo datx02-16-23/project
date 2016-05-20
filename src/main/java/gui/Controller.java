@@ -1,7 +1,5 @@
 package gui;
 
-
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -48,20 +46,21 @@ import javafx.stage.*;
 import javafx.util.Duration;
 import model.Model;
 import multiset.MultisetController;
-import render._ModelRender;
+import render.ModelRender;
 
 /**
  * GUI controller class.
  */
 public class Controller implements CommunicatorListener {
 
-	private _ModelRender visualization;
+	private ModelRender modelRender;
 	private Stage window;
 	private final LogStreamManager lsm;
 	private final Model model;
 	// Controls
 	private Menu visualMenu;
 	private MenuButton streamBehaviourMenuButton;
+	//Stream behaviour
 	private boolean stream_always_show_last_op = true;
 	private boolean stream_start_autoplay = false;
 	// Autoplay
@@ -85,8 +84,8 @@ public class Controller implements CommunicatorListener {
 	private Button backwardButton, forwardButton, playPauseButton;
 	private Button restartButton, clearButton, speedButton;
 
-	public Controller(Stage window, LogStreamManager lsm, SourcePanel sourceViewer, _ModelRender visualization) {
-		this.visualization = visualization;
+	public Controller(Stage window, LogStreamManager lsm, SourcePanel sourceViewer, ModelRender visualization) {
+		this.modelRender = visualization;
 		visualization.setAnimationTime(stepDelay);
 		this.window = window;
 		model = Model.instance();
@@ -156,7 +155,7 @@ public class Controller implements CommunicatorListener {
 		visualMenu.getItems().clear();
 		visualMenu.setDisable(true);
 		model.hardClear();
-		visualization.clear();
+		modelRender.clear();
 		sourceViewer.clear();
 		operationPanel.clear();
 		setButtons();
@@ -225,16 +224,13 @@ public class Controller implements CommunicatorListener {
 	 * @return True if the model could progress. False otherwise.
 	 */
 	private boolean stepModelForward() {
-		if (model.stepForward()) {
-			visualization.render(model.getLastOp());
-			updatePanels();
-			setButtons();
-			return true;
-		} else {
-			visualization.render(model.getLastOp());
-			setButtons();
-			return false;
-		}
+		boolean result = model.stepForward();
+
+		modelRender.render(model.getLastOp());
+		updatePanels();
+		setButtons();
+
+		return result;
 	}
 
 	/**
@@ -243,8 +239,8 @@ public class Controller implements CommunicatorListener {
 	public void stepBackwardButtonClicked() {
 		stopAutoPlay();
 		if (model.stepBackward()) {
-			visualization.init();
-			visualization.render(model.getLastOp());
+			modelRender.init();
+			modelRender.render(model.getLastOp());
 			setButtons();
 			updatePanels();
 		}
@@ -261,7 +257,7 @@ public class Controller implements CommunicatorListener {
 		stepDelaySpeedupFactor = stepDelaySpeedupFactor * 2 % 255;
 		speedButton.setText(stepDelaySpeedupFactor + "x");
 		stepDelay = stepDelayBase / stepDelaySpeedupFactor;
-		visualization.setAnimationTime(stepDelay);
+		modelRender.setAnimationTime(stepDelay);
 		if (isPlaying) {
 			startAutoPlay();
 		}
@@ -291,7 +287,7 @@ public class Controller implements CommunicatorListener {
 		stopAutoPlay();
 		if (interpreterView.show(model.getOperations())) {
 			model.reset();
-			visualization.clearAndCreateVisuals();
+			modelRender.clearAndCreateVisuals();
 			operationPanel.getItems().setAll(model.getOperations());
 			updatePanels();
 		}
@@ -300,7 +296,7 @@ public class Controller implements CommunicatorListener {
 	public void interpretOperationHistory() {
 		interpreterView.fast(model.getOperations());
 		updatePanels();
-		visualization.clearAndCreateVisuals();
+		modelRender.clearAndCreateVisuals();
 		operationPanel.getItems().setAll(lsm.getOperations());
 	}
 
@@ -336,8 +332,8 @@ public class Controller implements CommunicatorListener {
 			return;
 		}
 		model.goToStep(index);
-		visualization.init();
-		visualization.render(model.getLastOp());
+		modelRender.init();
+		modelRender.render(model.getLastOp());
 		operationPanel.update(model.getIndex(), false);
 	}
 
@@ -455,8 +451,8 @@ public class Controller implements CommunicatorListener {
 		model.getOperations().addAll(lsm.getOperations());
 		checkOperationIdentifiers(model.getOperations(), model.getStructures());
 		sourceViewer.addSources(lsm.getSources());
-		visualization.clearAndCreateVisuals();
-		visualization.render(model.getLastOp());
+		modelRender.clearAndCreateVisuals();
+		modelRender.render(model.getLastOp());
 		// Update operation list
 		operationPanel.getItems().addAll(lsm.getOperations());
 		loadVisualMenu();
@@ -567,19 +563,19 @@ public class Controller implements CommunicatorListener {
 	private void loadVisualMenu() {
 		MenuItem reset = new MenuItem("Reset Positions");
 		reset.setOnAction(event -> {
-			visualization.placeVisuals();
+			modelRender.placeVisuals();
 		});
 		visualMenu.getItems().add(reset);
-		
+
 		MenuItem live = new MenuItem("Show Live Stats");
 		live.setOnAction(event -> {
-			visualization.showLiveStats();
+			modelRender.showLiveStats();
 		});
 		visualMenu.getItems().add(live);
-		
+
 		visualMenu.getItems().add(new SeparatorMenuItem());
-		
-		MenuItem struct_mi ;
+
+		MenuItem struct_mi;
 		for (DataStructure struct : model.getStructures().values()) {
 			struct_mi = new MenuItem();
 			struct_mi.setText(struct.identifier + ": " + struct.rawType.toString().toUpperCase());
@@ -589,10 +585,10 @@ public class Controller implements CommunicatorListener {
 			visualMenu.getItems().add(struct_mi);
 		}
 	}
-	
+
 	public void openVisualDialog(DataStructure struct) {
 		if (visualDialog.show(struct)) {
-			visualization.init();
+			modelRender.init();
 		}
 	}
 
@@ -610,18 +606,17 @@ public class Controller implements CommunicatorListener {
 
 			@Override
 			public void run() {
+				loadFromLSM();
+				lsm.clearData();
+
 				if (stream_always_show_last_op) {
 					model.goToEnd();
+					stepForwardButtonClicked();
 				} else if (stream_start_autoplay) {
 					startAutoPlay();
 				}
-				loadFromLSM();
-				lsm.clearData();
-				if (stream_always_show_last_op) {
-					stepForwardButtonClicked();
-				} else {
-					updatePanels();
-				}
+
+				updatePanels();
 			}
 		});
 	}
@@ -930,12 +925,12 @@ public class Controller implements CommunicatorListener {
 	 * Set enable/disable on buttons.
 	 */
 	public void setButtons() {
-		//TODO: Use a property in Model instead.
+		// TODO: Use a property in Model instead.
 		// Model clear?
 		if (model.isHardCleared()) {
 			playPauseButton.setDisable(true);
 			forwardButton.setDisable(true);
-//			backwardButton.setDisable(true);
+			// backwardButton.setDisable(true);
 			restartButton.setDisable(true);
 			clearButton.setDisable(true);
 			return;
@@ -944,7 +939,7 @@ public class Controller implements CommunicatorListener {
 		playPauseButton.setDisable(forward);
 		forwardButton.setDisable(forward);
 		boolean backward = !model.tryStepBackward();
-//		backwardButton.setDisable(backward);
+		// backwardButton.setDisable(backward);
 		restartButton.setDisable(backward);
 		clearButton.setDisable(false);
 	}
