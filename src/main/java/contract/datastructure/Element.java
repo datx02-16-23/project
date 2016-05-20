@@ -129,7 +129,7 @@ public abstract class Element implements OperationCounterHaver {
 	 *            The operation type which was applied.
 	 */
 	public final void execute(Operation op) {
-		this.paint = op.operation.paint;
+		this.paint = op.operation.color;
 		fillProperty.setValue(paint);
 		oc.count(op);
 		if (op.operation == OperationType.remove) {

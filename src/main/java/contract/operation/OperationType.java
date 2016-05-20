@@ -7,21 +7,21 @@ import javafx.scene.paint.Paint;
  * The name of the operation.
  */
 public enum OperationType {
-	message(null), read(Color.GREEN), write(Color.RED), swap(true, Color.CORNFLOWERBLUE), remove(Color.HOTPINK);
+	read(Color.GREEN), write(Color.RED), swap(true, Color.CORNFLOWERBLUE), remove(Color.HOTPINK), message(Color.AQUA);
 
 	/**
 	 * True for operations which implement the Consolidable interface.
 	 */
 	public final boolean consolidable;
 
-	public final Paint paint;
+	public final Color color;
 
-	OperationType(boolean consolidable, Paint paint) {
+	OperationType(boolean consolidable, Color color) {
 		this.consolidable = consolidable;
-		this.paint = paint;
+		this.color = color;
 	}
 
-	OperationType(Paint paint) {
-		this(false, paint);
+	OperationType(Color color) {
+		this(false, color);
 	}
 }

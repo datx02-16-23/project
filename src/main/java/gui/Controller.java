@@ -27,11 +27,13 @@ import contract.Locator;
 import contract.Operation;
 import contract.datastructure.DataStructure;
 import contract.operation.Key;
+import contract.operation.OperationType;
 import gui.panel.OperationPanel;
 import gui.panel.SourcePanel;
 import gui.view.ConnectedView;
 import gui.view.CreateStructureDialog;
 import gui.view.ExamplesDialog;
+import gui.view.HelpView;
 import gui.view.IdentifierCollisionDialog;
 import gui.view.InterpreterView;
 import gui.view.VisualDialog;
@@ -40,6 +42,7 @@ import io.JGroupCommunicator;
 import io.LogStreamManager;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
+import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.ObservableMap;
@@ -65,6 +68,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Box;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -103,6 +108,7 @@ public class Controller implements CommunicatorListener {
 	private final VisualDialog visualDialog;
 	private final CreateStructureDialog createStructureDialog;
 	private final IdentifierCollisionDialog icd;
+	private HelpView helpView;
 	// Buttons
 	private Button backwardButton, forwardButton, playPauseButton;
 	private Button restartButton, clearButton, speedButton;
@@ -122,6 +128,7 @@ public class Controller implements CommunicatorListener {
 		this.createStructureDialog = new CreateStructureDialog(window);
 		this.connectedView = new ConnectedView(window, (JGroupCommunicator) lsm.getCommunicator());
 		this.icd = new IdentifierCollisionDialog(window);
+		this.helpView = new HelpView(window);
 		initSettingsPane();
 		interpreterView = new InterpreterView(window);
 		loadProperties();
@@ -938,56 +945,8 @@ public class Controller implements CommunicatorListener {
 		}
 	}
 
-	public void helpPython() {
-		WebView wv;
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/HelpPython.fxml"));
-		fxmlLoader.setController(this);
-		Stage root = new Stage();
-		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
-		root.initModality(Modality.NONE);
-		root.setTitle(DasConstants.PROJECT_NAME + ": Java Help");
-		root.initOwner(window);
-		BorderPane p = null;
-		try {
-			p = fxmlLoader.load();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		root.setOnCloseRequest(event -> {
-			event.consume(); // Better to do this now than missing it later.
-			root.close();
-		});
-		Scene dialogScene = new Scene(p, window.getWidth(), window.getHeight());
-		wv = (WebView) p.getChildren().get(0);
-		wv.getEngine().load("https://www.google.se/");
-		root.setScene(dialogScene);
-		root.show();
-	}
-
-	public void helpJava() {
-		WebView wv;
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/HelpJava.fxml"));
-		fxmlLoader.setController(this);
-		Stage root = new Stage();
-		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
-		root.initModality(Modality.NONE);
-		root.setTitle(DasConstants.PROJECT_NAME + ": Java Help");
-		root.initOwner(window);
-		BorderPane p = null;
-		try {
-			p = fxmlLoader.load();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		root.setOnCloseRequest(event -> {
-			event.consume(); // Better to do this now than missing it later.
-			root.close();
-		});
-		Scene dialogScene = new Scene(p, window.getWidth(), window.getHeight());
-		wv = (WebView) p.getChildren().get(0);
-		wv.getEngine().load("https://docs.google.com/document/d/1W1MdmZLjabvS3eSahuWZayL1TGBceh2JC3JVVjaEntg/pub");
-		root.setScene(dialogScene);
-		root.show();
+	public void showHelp() {
+		helpView.show();
 	}
 
 	/**

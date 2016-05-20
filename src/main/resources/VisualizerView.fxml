@@ -97,15 +97,14 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="_Help">
                            <items>
-                              <MenuItem mnemonicParsing="false" onAction="#aboutProgram" text="About" />
+                              <MenuItem mnemonicParsing="false" onAction="#showHelp" text="Help" />
                               <MenuItem mnemonicParsing="false" onAction="#showSettings" text="Settings">
                                  <accelerator>
                                     <KeyCodeCombination alt="UP" code="F10" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                                  </accelerator>
                               </MenuItem>
-                              <MenuItem mnemonicParsing="false" onAction="#connectedToChannel" text="Connected Entities" />
-                              <MenuItem mnemonicParsing="false" onAction="#helpPython" text="Python" />
-                              <MenuItem mnemonicParsing="false" onAction="#helpJava" text="Java" />
+                              <MenuItem mnemonicParsing="false" onAction="#connectedToChannel" text="Streaming" />
+                              <MenuItem mnemonicParsing="false" onAction="#aboutProgram" text="About" />
                            </items>
                         </Menu>
                      </menus>
