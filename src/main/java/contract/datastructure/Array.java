@@ -22,10 +22,8 @@ public class Array extends DataStructure {
 	 */
 	private static final long serialVersionUID = Const.VERSION_NUMBER;
 	private transient int[] capacity;
-	private transient double min = Integer.MAX_VALUE;
-	private transient double max = Integer.MIN_VALUE;
 
-	private transient BoundaryChangeListener listener;
+//	private transient BoundaryChangeListener listener;
 
 	/**
 	 * Construct a new Array with the given parameters.
@@ -65,15 +63,15 @@ public class Array extends DataStructure {
 		super(identifier, rawType, abstractType, visual, attributes);
 	}
 
-	/**
-	 * Set the listener for this Array.
-	 * 
-	 * @param listener
-	 *            A BoundaryChangeListener.
-	 */
-	public void setListener(BoundaryChangeListener listener) {
-		this.listener = listener;
-	}
+//	/**
+//	 * Set the listener for this Array.
+//	 * 
+//	 * @param listener
+//	 *            A BoundaryChangeListener.
+//	 */
+//	public void setListener(BoundaryChangeListener listener) {
+//		this.listener = listener;
+//	}
 
 	/**
 	 * Returns the declared capacity of this Array.
@@ -123,8 +121,6 @@ public class Array extends DataStructure {
 	public void clear() {
 		elements.clear();
 		clearElementLists();
-		min = Integer.MAX_VALUE;
-		max = Integer.MIN_VALUE;
 		oc.reset();
 	}
 
@@ -213,7 +209,7 @@ public class Array extends DataStructure {
 				putElement(newElement);
 				
 				newElement.execute(op);
-				repaintAll = true;
+				repaintAll = true;	
 			}
 		}
 	}
@@ -320,40 +316,11 @@ public class Array extends DataStructure {
 			elements.remove(old);
 			elements.add(replacedElementIndex, newElement);
 		}
-		if (newElement.numValue() < min) {
-			min = newElement.numValue();
-			if (listener != null) {
-				listener.minChanged(min, Math.abs(min) + Math.abs(max));
-			}
-		}
-		if (newElement.numValue() > max) {
-			max = newElement.numValue();
-			if (listener != null) {
-				listener.maxChanged(max, Math.abs(min) + Math.abs(max));
-			}
-		}
+		
 		elements.add(newElement);
 		return old;
 	}
-
-	/**
-	 * Returns the value of the largest element held by this Array.
-	 * 
-	 * @return The value of the largest element held by this Array.
-	 */
-	public double getMax() {
-		return max;
-	}
-
-	/**
-	 * Returns the value of the smallest element held by this Array.
-	 * 
-	 * @return The value of the smallest element held by this Array.
-	 */
-	public double getMin() {
-		return min;
-	}
-
+	
 	/**
 	 * An indexed element belonging to an Array.
 	 * 
@@ -469,31 +436,31 @@ public class Array extends DataStructure {
 		return visual;
 	}
 
-	/**
-	 * Interface for listening to changes in min and max values.
-	 * 
-	 * @author Richard Sundqvist
-	 *
-	 */
-	public interface BoundaryChangeListener {
-		/**
-		 * Called when the max value of the Array changes.
-		 * 
-		 * @param newMin
-		 *            The new maximum.
-		 * @param diff
-		 *            The difference between min and max.
-		 */
-		public void maxChanged(double newMin, double diff);
-
-		/**
-		 * Called when the max value of the Array changes.
-		 * 
-		 * @param newMin
-		 *            The new minimum.
-		 * @param diff
-		 *            The difference between min and max.
-		 */
-		public void minChanged(double newMin, double diff);
-	}
+//	/**
+//	 * Interface for listening to changes in min and max values.
+//	 * 
+//	 * @author Richard Sundqvist
+//	 *
+//	 */
+//	public interface BoundaryChangeListener {
+//		/**
+//		 * Called when the max value of the Array changes.
+//		 * 
+//		 * @param newMin
+//		 *            The new maximum.
+//		 * @param diff
+//		 *            The difference between min and max.
+//		 */
+//		public void maxChanged(double newMin, double diff);
+//
+//		/**
+//		 * Called when the max value of the Array changes.
+//		 * 
+//		 * @param newMin
+//		 *            The new minimum.
+//		 * @param diff
+//		 *            The difference between min and max.
+//		 */
+//		public void minChanged(double newMin, double diff);
+//	}
 }

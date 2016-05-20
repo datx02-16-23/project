@@ -5,7 +5,6 @@ import contract.datastructure.DataStructure;
 import java.util.Arrays;
 
 import assets.Debug;
-import contract.datastructure.Array.BoundaryChangeListener;
 import contract.datastructure.Array.IndexedElement;
 import contract.datastructure.Element;
 import render.element.BarchartElement;
@@ -20,7 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polyline;
 
-public class BarchartRender extends ARender implements BoundaryChangeListener {
+public class BarchartRender extends ARender {
 
 	public static final ElementShape ELEMENT_STYLE = ElementShape.BAR_ELEMENT;
 
@@ -268,16 +267,6 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 		axes.getChildren().add(info);
 	}
 
-	@Override
-	public void maxChanged(double newMin, double diff) {
-		positionBars();
-	}
-
-	@Override
-	public void minChanged(double newMin, double diff) {
-		positionBars();
-	}
-
 	/**
 	 * Have to override since elements are translated to position them in the
 	 * bar.
@@ -291,13 +280,4 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 		double by = this.getTranslateY() + this.getLayoutY() + contentPane.getLayoutY();
 		return xAxisY + by;
 	}
-
-	/*
-	 * 
-	 * 
-	 * Animation overrider
-	 * 
-	 * 
-	 */
-
 }
