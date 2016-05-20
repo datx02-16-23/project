@@ -50,7 +50,7 @@ public class HelpView {
 
 		stage.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon.png")));
 		stage.initModality(Modality.NONE);
-		stage.setTitle(Const.PROJECT_NAME + ": Help");
+		stage.setTitle(Const.PROGRAM_NAME + ": Help");
 		stage.initOwner(owner);
 		try {
 			root = fxmlLoader.load();

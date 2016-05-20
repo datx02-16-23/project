@@ -46,7 +46,7 @@ public class CreateStructureDialog {
 		root = new Stage();
 		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
 		root.initModality(Modality.APPLICATION_MODAL);
-		root.setTitle(Const.PROJECT_NAME + ": Create Data Structure");
+		root.setTitle(Const.PROGRAM_NAME + ": Create Data Structure");
 		root.initOwner(this.parent);
 		GridPane p = null;
 		try {

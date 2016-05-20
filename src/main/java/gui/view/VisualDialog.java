@@ -34,7 +34,7 @@ public class VisualDialog {
 		root = new Stage();
 		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
 		root.initModality(Modality.APPLICATION_MODAL);
-		root.setTitle(Const.PROJECT_NAME + ": Choose Visualisation");
+		root.setTitle(Const.PROGRAM_NAME + ": Choose Visualisation");
 		root.initOwner(this.parent);
 		GridPane p = null;
 		try {

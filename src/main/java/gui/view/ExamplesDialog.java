@@ -34,7 +34,7 @@ public class ExamplesDialog {
 		root = new Stage();
 		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
 		root.initModality(Modality.APPLICATION_MODAL);
-		root.setTitle(Const.PROJECT_NAME + ": Example");
+		root.setTitle(Const.PROGRAM_NAME + ": Example");
 		root.initOwner(this.parent);
 		GridPane p = null;
 		try {

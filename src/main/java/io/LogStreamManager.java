@@ -353,7 +353,7 @@ public class LogStreamManager implements CommunicatorListener {
 		StringBuilder sb = new StringBuilder();
 		sb.append(
 				"This is a simplified version of the log. It sacrifices completeness for readability and cannot be processed by "
-						+ Const.PROJECT_NAME + ".\n\n");
+						+ Const.PROGRAM_NAME + ".\n\n");
 		Collection<AnnotatedVariable> c = wrapper.header.annotatedVariables.values();
 		sb.append("Header: " + c.size() + " declared variables.\n");
 		int i = 0;

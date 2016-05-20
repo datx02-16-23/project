@@ -45,8 +45,8 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		lsm = new LogStreamManager(Const.PROJECT_NAME + "_GUI");
-		primaryStage.setTitle(Const.PROJECT_NAME);
+		lsm = new LogStreamManager(Const.PROGRAM_NAME + "_GUI");
+		primaryStage.setTitle(Const.PROGRAM_NAME);
 		// Create a Group view for the AV.
 		_ModelRender visualization = new _ModelRender();
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Root.fxml"));
@@ -293,7 +293,7 @@ public class Main extends Application {
 
 		private void init() {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Const.PROJECT_NAME + " v" + Const.VERSION_NUMBER);
+			sb.append(Const.PROGRAM_NAME + " v" + Const.VERSION_NUMBER);
 			sb.append("\nAUTHORS: ");
 			for (String s : Const.DEVELOPER_NAMES) {
 				sb.append(s + " | ");

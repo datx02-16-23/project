@@ -363,7 +363,7 @@ public class Controller implements CommunicatorListener {
 		settingsView = new Stage();
 		settingsView.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_settings.png")));
 		settingsView.initModality(Modality.APPLICATION_MODAL);
-		settingsView.setTitle(Const.PROJECT_NAME + ": Settings and Preferences");
+		settingsView.setTitle(Const.PROGRAM_NAME + ": Settings and Preferences");
 		settingsView.initOwner(this.window);
 		GridPane p = null;
 		try {
@@ -808,7 +808,7 @@ public class Controller implements CommunicatorListener {
 		try {
 			URL url = getClass().getClassLoader().getResource(Const.PROPERTIES_FILE_NAME);
 			OutputStream outputStream = new FileOutputStream(new File(url.toURI()));
-			properties.store(outputStream, Const.PROJECT_NAME + " user preferences.");
+			properties.store(outputStream, Const.PROGRAM_NAME + " user preferences.");
 		} catch (Exception e) {
 			propertiesFailed(e);
 		}
