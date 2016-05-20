@@ -180,7 +180,7 @@ public class Visualization extends StackPane {
 			if (e != null) {
 				ARender render = this.managerMap.get(struct.identifier).getRender();
 				render.animateRemove(e, millis);
-				if(Debug.PRINT_ERR){
+				if(Debug.KEY_EVENTS){
 					System.err.println("\nVisualization.animateRemove():");					
 				}
 				return;
@@ -217,10 +217,10 @@ public class Visualization extends StackPane {
 			}
 		}
 
-		if(Debug.PRINT_ERR){
+		if(Debug.KEY_EVENTS){
 			System.err.println("\nVisualization.animateReadWrite():");
-			System.err.println("Has target: " + (tar_e == null ? "null" : tar_render.getDataStructure()));
-			System.err.println("Has source: " + (src_e != null));			
+			System.err.println("Has target: " + (tar_e == null ? "false" : tar_render.getDataStructure()));
+			System.err.println("Has source: " + (src_e == null ? "false" : src_render.getDataStructure()));			
 		}
 		
 		/**
@@ -277,7 +277,7 @@ public class Visualization extends StackPane {
 		 * Start animations
 		 */
 
-		if(Debug.PRINT_ERR){
+		if(Debug.KEY_EVENTS){
 			System.err.println("\nVisualization.animateSwap():");			
 		}
 		
@@ -345,7 +345,7 @@ public class Visualization extends StackPane {
 			// Make sure users can see the render.
 			if (checkPositions(xPos, yPos) == false) {
 				// Do not remove this printout //RS
-				if(Debug.PRINT_ERR){
+				if(Debug.KEY_EVENTS){
 					System.err.println("Using default placement for \"" + arm.getStructure() + "\".");					
 				}
 				yPos = margin;

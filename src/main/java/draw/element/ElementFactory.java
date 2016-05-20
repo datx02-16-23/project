@@ -200,7 +200,7 @@ public abstract class ElementFactory {
 			x = points[xInd];
 			y = points[yInd];
 
-			if (Debug.PRINT_ERR) {
+			if (Debug.KEY_EVENTS) {
 				if (x < 0 || x > 1) {
 					System.err.println("Bad x-coordinate at index " + xInd + ": " + x);
 				}

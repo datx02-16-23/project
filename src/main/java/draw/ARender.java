@@ -226,6 +226,10 @@ public abstract class ARender extends Pane {
 	 */
 	//@formatter:off
 	public void animateRemove(Element tar, long millis) {
+		if(Debug.KEY_EVENTS){
+			System.err.println("ARender.animateRemove(): " + struct  + " is animating.");			
+		}
+		
 		double x = absX(tar);
 		double y = absY(tar);
 
@@ -267,8 +271,8 @@ public abstract class ARender extends Pane {
 			y2 = tarRender.absY(tar);
 		}
 		
-		if(Debug.PRINT_ERR){
-			System.err.println(struct  + " is animating.");			
+		if(Debug.KEY_EVENTS){
+			System.err.println("ARender.animateReadWrite(): " + struct  + " is animating.");			
 		}
 		
 		if(hasSource && hasTarget){
@@ -310,6 +314,10 @@ public abstract class ARender extends Pane {
 	 */
 	// formatter:off
 	public void animateSwap(Element var1, ARender render1, Element var2, ARender render2, long millis) {
+		if(Debug.KEY_EVENTS){
+			System.err.println("ARender.animateSwap(): " + struct  + " is animating.");			
+		}
+		
 		ARenderAnimation.animate(var2,
 				render1.absX(var1), render1.absY(var1),
 				render2.absX(var2), render2.absY(var2),

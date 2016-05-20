@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import assets.Debug;
 import contract.Operation;
 import contract.datastructure.DataStructure;
 
@@ -85,6 +86,9 @@ public class Model {
 //		}
 		if (tryStepForward()) {
 			step.applyOperation(operations.get(index));
+			if(Debug.VERBOSE){
+				System.out.print("Model.stepForward(): index = " + index + " -> ");
+			}
 			index += 1;
 			return true;
 		}

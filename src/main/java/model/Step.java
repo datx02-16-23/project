@@ -3,6 +3,7 @@ package model;
 import java.util.HashMap;
 import java.util.Map;
 
+import assets.Debug;
 import contract.Locator;
 import contract.Operation;
 import contract.datastructure.DataStructure;
@@ -116,6 +117,11 @@ public class Step {
 			ans = STATUS_OPTYPE_UNKNOWN;
 			break;
 		}
+
+		if(Debug.VERBOSE){
+			System.out.print("Step.applyOperation(): " + op + "\n");
+		}
+		
 		lastOp = op;
 		return ans;
 	}

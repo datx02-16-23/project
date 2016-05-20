@@ -57,9 +57,9 @@ public abstract class ARenderAnimation {
 
 		final VisualElement real = render.visualMap.get(Arrays.toString(i));
 		
-		if(Debug.PRINT_ERR){
+		if(Debug.KEY_EVENTS){
 			if (real == null) {
-				System.err.println("Animation failed: Failed resolve element for: " + render.struct);
+				System.err.println("->\tARender.animte() failure: Could not resolve element for: " + render.struct);
 				return;
 			}			
 		}
