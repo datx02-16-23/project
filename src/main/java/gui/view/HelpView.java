@@ -1,6 +1,5 @@
 package gui.view;
 
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -14,15 +13,12 @@ import javafx.animation.ScaleTransition;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point3D;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -36,8 +32,9 @@ import javafx.util.Duration;
 
 public class HelpView {
 
-	private final Stage root = new Stage();
+	private final Stage stage = new Stage();
 	private final Window owner;
+	private BorderPane root;
 
 	/**
 	 * Create a new HelpView.
@@ -51,32 +48,31 @@ public class HelpView {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/HelpView.fxml"));
 		fxmlLoader.setController(this);
 
-		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon.png")));
-		root.initModality(Modality.NONE);
-		root.setTitle(DasConstants.PROJECT_NAME + ": Help");
-		root.initOwner(owner);
-		BorderPane p = null;
+		stage.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon.png")));
+		stage.initModality(Modality.NONE);
+		stage.setTitle(DasConstants.PROJECT_NAME + ": Help");
+		stage.initOwner(owner);
 		try {
-			p = fxmlLoader.load();
+			root = fxmlLoader.load();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		root.setOnCloseRequest(event -> {
+		stage.setOnCloseRequest(event -> {
 			event.consume(); // Better to do this now than missing it later.
 			stopBoxRotation();
 			;
-			root.close();
+			stage.close();
 		});
 
 		createCubes(fxmlLoader);
 
-		Scene dialogScene = new Scene(p, owner.getWidth() * 0.75, owner.getHeight() * 0.75);
-		root.setScene(dialogScene);
+		Scene dialogScene = new Scene(root, owner.getWidth() * 0.75, owner.getHeight() * 0.75);
+		stage.setScene(dialogScene);
 	}
 
 	public void show() {
 		startBoxRotation();
-		root.show();
+		stage.show();
 	}
 
 	private void createCubes(FXMLLoader fxmlLoader) {
@@ -137,9 +133,9 @@ public class HelpView {
 			rt.play();
 
 			ScaleTransition st = new ScaleTransition(Duration.millis(3 * 500 / 2), box);
-			st.setByX(2);
-			st.setByY(2);
-			st.setByZ(2);
+			st.setByX(1.15);
+			st.setByY(1.15);
+			st.setByZ(1.15);
 			st.setAutoReverse(true);
 			st.setCycleCount(2);
 			st.play();
@@ -158,7 +154,8 @@ public class HelpView {
 			Main.console.err("Operation info not implemented yet.");
 			playsound = false;
 		}
-
+		
+		root.setCenter(new Label(ot.name()));
 	}
 	
 	private final ArrayList<RotateTransition> rotTransitions = new ArrayList<RotateTransition>();
@@ -175,15 +172,15 @@ public class HelpView {
 	}
 	
 	public void aboutArray(){
-		
+		root.setCenter(new Label("Arrays r gud"));
 	}
 	
 	public void aboutOrphan(){
-		
+		root.setCenter(new Label("orphans r gudder"));
 	}
 	
 	public void aboutTree(){
-		
+		root.setCenter(new Label("tress r guddest"));
 	}
 	
 	public void onMouseClicked(Event me){
