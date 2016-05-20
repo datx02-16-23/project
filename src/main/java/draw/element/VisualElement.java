@@ -228,23 +228,28 @@ public abstract class VisualElement extends Pane {
 	 * Indicate to the user that the element has been clicked.
 	 */
 	private void showSelected() {
+				
 		// Rotate.
 		shape.setRotate(0);
-		shape.setStrokeWidth(5);
-		int sign = Math.random() < 0.2 ? -1 : 1;
-		RotateTransition rt = new RotateTransition(Duration.millis(900), shape);
-		rt.setByAngle(360 * sign);
+		RotateTransition rotate = new RotateTransition(Duration.millis(150), shape);
+		rotate.setFromAngle(-5);
+		rotate.setToAngle(5);
+		rotate.setCycleCount(6);
+		rotate.setAutoReverse(true);
+		rotate.setOnFinished(event -> {
+			shape.setRotate(0);
+		});
+		rotate.play();
 
-		// Change border, cannot see clicked on circular elements otherwise.
-		StrokeTransition ft = new StrokeTransition(Duration.millis(900), shape, Color.BLACK, Color.SKYBLUE);
-		ft.setOnFinished(event -> {
+		// Border - cannot see rotation on circular elements :).
+		shape.setStrokeWidth(5);
+		StrokeTransition stroke = new StrokeTransition(Duration.millis(900), shape, Color.BLACK, Color.SKYBLUE);
+		stroke.setOnFinished(event -> {
 			shape.setStrokeWidth(1);
 			shape.setStroke(Color.BLACK);
 		});
-		ft.setAutoReverse(true);
-
-		ft.play();
-		rt.play();
+		stroke.setAutoReverse(true);
+		stroke.play();
 	}
 
 	/**
