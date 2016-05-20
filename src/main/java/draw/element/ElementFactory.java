@@ -1,5 +1,7 @@
 package draw.element;
 
+import java.util.Arrays;
+
 import contract.datastructure.Element;
 import javafx.scene.paint.Paint;
 
@@ -10,6 +12,9 @@ import javafx.scene.paint.Paint;
  *
  */
 public abstract class ElementFactory {
+
+	public static final double[] TRAPEZOID_POINTS = { 0.75, 0, 0.25, 0, 0, 1, 1, 1 };
+	 public static final double[] TRIANGLE_POINTS = { 0.5, 0, 1, 1, 0, 1 };
 
 	private ElementFactory() {
 	} // Not to be instantiated.
@@ -48,19 +53,19 @@ public abstract class ElementFactory {
 			vis = new RectangleElement(e, pri, pri);
 			break;
 		case TRAPEZOID:
-			vis = new PolygonElement(e, pri, sec, trapezoid(pri, sec));
+			vis = new PolygonElement(e, pri, sec, scalePolygon(pri, sec, TRAPEZOID_POINTS));
 			break;
 		case TRIANGLE:
-			vis = new PolygonElement(e, pri, sec, triangle(pri, sec));
+			vis = new PolygonElement(e, pri, sec, scalePolygon(pri, sec, TRIANGLE_POINTS));
 			break;
 		case BAR_ELEMENT:
 			vis = new BarchartElement(e, pri, sec);
 			break;
 		case RANDOM:
 			return shape(ElementShape.random(), e, pri, sec);
-		case POLYGON: //Pick a polygon at random if no points are provided.
+		case POLYGON: // Pick a polygon at random if no points are provided.
 			return shape(ElementShape.randomPolygon(), e, pri, sec);
-			
+
 		}
 
 		vis.elemShape = shape;
@@ -104,10 +109,10 @@ public abstract class ElementFactory {
 			vis = new RectangleElement(value, paint, pri, pri);
 			break;
 		case TRAPEZOID:
-			vis = new PolygonElement(value, paint, pri, sec, trapezoid(pri, sec));
+			vis = new PolygonElement(value, paint, pri, sec, scalePolygon(pri, sec, TRAPEZOID_POINTS));
 			break;
 		case TRIANGLE:
-			vis = new PolygonElement(value, paint, pri, sec, triangle(pri, sec));
+			vis = new PolygonElement(value, paint, pri, sec, scalePolygon(pri, sec, TRIANGLE_POINTS));
 			break;
 		case BAR_ELEMENT:
 			vis = new BarchartElement(value, paint, pri, sec);
@@ -170,7 +175,9 @@ public abstract class ElementFactory {
 	/**
 	 * Creates the points for a relative polygon. Values in {@code points} are
 	 * scaled using the width and height arguments. All values in {@code points}
-	 * should lie in [0, 1].
+	 * should lie in [0, 1].<br>
+	 * 
+	 * The original list is not changed.
 	 * 
 	 * @param w
 	 *            The width of the polgyon.
@@ -180,11 +187,13 @@ public abstract class ElementFactory {
 	 *            Relative points for the polygon.
 	 * @return A polygon scaled to {code w} and {code h}.
 	 */
-	public static double[] scalePolygon(double w, double h, double[] points) {
+	private static double[] scalePolygon(double w, double h, double[] points) {
 		double x, y;
 		int xInd, yInd;
 
-		for (int i = 1; i < points.length; i++) {
+		double[] scaled = new double[points.length];
+
+		for (int i = 1; i < points.length; i = i + 2) {
 			xInd = i - 1;
 			yInd = i;
 			x = points[xInd];
@@ -193,65 +202,28 @@ public abstract class ElementFactory {
 			if (x < 0 || x > 1) {
 				// Do not remove this printout //RS
 				System.err.println("Bad x-coordinate at index " + xInd + ": " + x);
+				try {
+					throw new Exception();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			if (y < 0 || y > 1) {
 				// Do not remove this printout //RS
 				System.err.println("Bad y-coordinate at index " + yInd + ": " + y);
 			}
 
-			points[xInd] = x * w;
-			points[yInd] = y * h;
+			scaled[xInd] = x * w;
+			scaled[yInd] = y * h;
 		}
-		addOne(points);
-		return points;
+		// addOne(points);
+		return scaled;
 	}
 
-	/**
-	 * Create triangle points.
-	 * 
-	 * @param w
-	 *            The width of the polygon.
-	 * @param h
-	 *            The width of the polygon.
-	 * @return The points for a triangle polygon.
-	 */
-	//@formatter:off
-	public static double[] triangle(double w, double h) {
-		double[] points = { //Points (x, y)
-							w * 0.5, 0,
-							w, h,
-							0, h
-						  };
-		addOne(points);
-		return points;
-	}
-	//@formatter:on
-
-	/**
-	 * Create trapezoid points.
-	 * 
-	 * @param w
-	 *            The width of the polygon.
-	 * @param h
-	 *            The width of the plygon.
-	 * @return The points for a trapezoid polygon.
-	 */
-	//@formatter:off
-	public static double[] trapezoid(double w, double h) {
-		double[] points = { //Points (x, y)
-							w * 0.75, 0,
-							w * 0.25, 0,
-							0, h,
-							w, h
-			  			  };
-		addOne(points);
-		return points;
-	}
-	//@formatter:off
-	
-	private static void addOne(double[] points){
+	public static void addOne(double[] points) {
 		for (double outer : points) {
-			if (outer == 0){
+			if (outer == 0) {
 				for (double inner : points) {
 					inner = inner + 1;
 				}
@@ -259,7 +231,7 @@ public abstract class ElementFactory {
 			}
 		}
 	}
-			
+
 	/*
 	 * 
 	 * 
@@ -275,40 +247,41 @@ public abstract class ElementFactory {
 	 *
 	 */
 	private static class VisualElementSettings {
-//		public ElemShape shape;
-//		public double width;
-//		public double height;
-//		public double[] points;
+		// public ElemShape shape;
+		// public double width;
+		// public double height;
+		// public double[] points;
 	}
 
 	/**
-	 * Attempt to a visual element. Should not be used unless there is no other alternative.
-	 * @param orig The original element.
+	 * Attempt to a visual element. Should not be used unless there is no other
+	 * alternative.
+	 * 
+	 * @param orig
+	 *            The original element.
 	 * @return A clone of the original element.
 	 */
 	public static VisualElement clone(VisualElement orig) {
 		VisualElement clone;
-		//Shape
-		if(orig.points == null){
-			//Unbound
-			if(orig.element == null){
+		// Shape
+		if (orig.points == null) {
+			// Unbound
+			if (orig.element == null) {
 				clone = shape(orig.elemShape, Double.parseDouble(orig.valueLabel.getText()), orig.getShape().getFill(),
 						orig.width, orig.height);
-			//Bound
+				// Bound
 			} else {
-				clone = shape(orig.elemShape, orig.element,
-						orig.width, orig.height);
+				clone = shape(orig.elemShape, orig.element, orig.width, orig.height);
 			}
-		//Polygon
+			// Polygon
 		} else {
-			//Unbound
-			if(orig.element == null){
-				clone = polygon(Double.parseDouble(orig.valueLabel.getText()), orig.getShape().getFill(),
-						orig.width, orig.height, orig.points);
-			//Bound
+			// Unbound
+			if (orig.element == null) {
+				clone = polygon(Double.parseDouble(orig.valueLabel.getText()), orig.getShape().getFill(), orig.width,
+						orig.height, orig.points);
+				// Bound
 			} else {
-				clone = polygon(orig.element,
-						orig.width, orig.height, orig.points);
+				clone = polygon(orig.element, orig.width, orig.height, orig.points);
 			}
 		}
 		return clone;

@@ -111,17 +111,17 @@ public abstract class ARender extends Pane {
 
 	/**
 	 * Default constructor. Will use default values: <br>
-	 * Element width: {@link DasConstants#DEFAULT_ELEMENT_HSPACE}<br>
-	 * Element height: {@link DasConstants#DEFAULT_ELEMENT_HEIGHT}<br>
-	 * Element horizontal space: {@link DasConstants#DEFAULT_ELEMENT_HSPACE}<br>
-	 * Element vertical space: {@link DasConstants#DEFAULT_ELEMENT_VSPACE}<br>
+	 * Element width: {@link DasConstants#ELEMENT_HSPACE}<br>
+	 * Element height: {@link DasConstants#ELEMENT_HEIGHT}<br>
+	 * Element horizontal space: {@link DasConstants#ELEMENT_HSPACE}<br>
+	 * Element vertical space: {@link DasConstants#ELEMENT_VSPACE}<br>
 	 * 
 	 * @param struct
 	 *            The DataStructure this Render will draw.
 	 */
 	public ARender(DataStructure struct) {
-		this(struct, DasConstants.DEFAULT_ELEMENT_WIDTH, DasConstants.DEFAULT_ELEMENT_HEIGHT,
-				DasConstants.DEFAULT_ELEMENT_HSPACE, DasConstants.DEFAULT_ELEMENT_VSPACE);
+		this(struct, DasConstants.ELEMENT_WIDTH, DasConstants.ELEMENT_HEIGHT,
+				DasConstants.ELEMENT_HSPACE, DasConstants.ELEMENT_VSPACE);
 	}
 
 	/**

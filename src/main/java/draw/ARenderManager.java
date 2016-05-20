@@ -122,19 +122,19 @@ public class ARenderManager extends BorderPane implements VisualListener {
 	public ARender resolveRender(DataStructure struct) {
 		switch (struct.visual) {
 		case bar:
-			curRender = new BarchartRender(struct, DasConstants.DEFAULT_ELEMENT_WIDTH,
-					DasConstants.DEFAULT_RENDER_HEIGHT, 10, 10);
+			curRender = new BarchartRender(struct, DasConstants.ELEMENT_WIDTH,
+					DasConstants.RENDER_HEIGHT, 10, 10);
 			break;
 		case grid:
 		case box:
 			curRender = new GridRender(struct, GridRender.Order.resolve(struct.visualOption),
-					DasConstants.DEFAULT_ELEMENT_SIZE, DasConstants.DEFAULT_ELEMENT_SIZE, 3, 3);
+					DasConstants.ELEMENT_SIZE, DasConstants.ELEMENT_SIZE, 3, 3);
 			break;
 		case tree:
-			curRender = new KTreeRender(struct, struct.visualOption, DasConstants.DEFAULT_ELEMENT_SIZE, DasConstants.DEFAULT_ELEMENT_SIZE, 5, 5);
+			curRender = new KTreeRender(struct, struct.visualOption, DasConstants.ELEMENT_SIZE, DasConstants.ELEMENT_SIZE, 5, 5);
 			break;
 		case single:
-			curRender = new SingleElementRender(struct, DasConstants.DEFAULT_ELEMENT_WIDTH, DasConstants.DEFAULT_RENDER_HEIGHT);
+			curRender = new SingleElementRender(struct, DasConstants.ELEMENT_WIDTH, DasConstants.ELEMENT_HEIGHT);
 			break;
 		}
 		

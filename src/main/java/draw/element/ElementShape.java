@@ -7,16 +7,16 @@ package draw.element;
  *
  */
 public enum ElementShape {
-	ELLIPSE, CIRCLE, RECTANGLE, BAR_ELEMENT, SQUARE, TRAPEZOID(true, true), TRIANGLE(true, true),
+	ELLIPSE, CIRCLE, RECTANGLE, BAR_ELEMENT(false), SQUARE, TRAPEZOID(true), TRIANGLE(true),
 	/**
 	 * Used for cloning. Will randomly pick {@link #TRAPEZOID} or
 	 * {@link #TRIANGLE} if no points are provided.
 	 */
-	POLYGON(false, false),
+	POLYGON(false),
 	/**
 	 * A random style.
 	 */
-	RANDOM(false, false), SINGLE;
+	RANDOM(false), SINGLE(false);
 
 	/**
 	 * 	Shapes may be selected when picking polygons at random, if true.
@@ -32,8 +32,8 @@ public enum ElementShape {
 		random = true;
 	}
 
-	private ElementShape(boolean randomPolygon, boolean random) {
-		this.randomPolygon = randomPolygon;
+	private ElementShape(boolean random) {
+		this.randomPolygon = random;
 		this.random = random;
 	}
 
@@ -45,11 +45,11 @@ public enum ElementShape {
 	 */
 	public static ElementShape random() {
 		ElementShape random = null;
-
 		do {
-			random = values()[(int) Math.random() * values().length];
-		} while (random == null || random.random == false);
+			random = values()[(int) (Math.random() * values().length)];
+		} while (random.random == false);
 
+		System.out.println("Random Shape: " + random);
 		return random;
 	}
 

@@ -310,7 +310,7 @@ public class Visualization extends StackPane {
 				break;
 			case bar:
 				xPos = margin + this.getWidth() * sWExpand;
-				yPos = getHeight() - (margin + DasConstants.DEFAULT_RENDER_HEIGHT) * (southWest + 1) - margin * 3;
+				yPos = getHeight() - (margin + DasConstants.RENDER_HEIGHT) * (southWest + 1) - margin * 3;
 				if (!(checkXPos(xPos) && checkYPos(yPos))) {
 					sWExpand++; // TODO
 				}
@@ -318,7 +318,7 @@ public class Visualization extends StackPane {
 				break;
 			default:
 				xPos = margin + this.getWidth() * nWExpand;
-				yPos = (margin + DasConstants.DEFAULT_RENDER_HEIGHT) * northWest + margin;
+				yPos = (margin + DasConstants.RENDER_HEIGHT) * northWest + margin;
 				if (!(checkXPos(xPos) & checkYPos(yPos))) {
 					nWExpand++; // TODO
 				}

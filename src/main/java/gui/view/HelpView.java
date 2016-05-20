@@ -87,9 +87,9 @@ public class HelpView {
 			// Create box
 			final Box box = new Box();
 			box.setMaterial(new PhongMaterial((Color) ot.color));
-			box.setWidth(DasConstants.DEFAULT_ELEMENT_WIDTH);
-			box.setHeight(DasConstants.DEFAULT_ELEMENT_HEIGHT);
-			box.setDepth((DasConstants.DEFAULT_ELEMENT_WIDTH + DasConstants.DEFAULT_ELEMENT_HEIGHT) / 2);
+			box.setWidth(DasConstants.ELEMENT_WIDTH);
+			box.setHeight(DasConstants.ELEMENT_HEIGHT);
+			box.setDepth((DasConstants.ELEMENT_WIDTH + DasConstants.ELEMENT_HEIGHT) / 2);
 			box.setOpacity(0.3);
 			box.setOnMouseClicked(event -> {
 				about(ot);
@@ -122,6 +122,7 @@ public class HelpView {
 			// Add to panels
 			labels.add(label, column, 0);
 			((BorderPane) boxes.getChildren().get(column)).setCenter(box);
+			((BorderPane) boxes.getChildren().get(column)).setOpacity(0.6);
 			column++;
 		}
 	}

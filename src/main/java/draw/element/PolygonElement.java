@@ -42,7 +42,8 @@ public class PolygonElement extends VisualElement {
 	}
 
 	@Override
-	public void createShape(){
-		shape =  new Polygon(ElementFactory.scalePolygon(width, height, points));
+	public void createShape() {
+		shape = new Polygon(points);
+		shape.setStrokeWidth(10);
 	}
 }
