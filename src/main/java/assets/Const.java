@@ -39,7 +39,8 @@ public abstract class Const {
 	/**
 	 * Suggested value for renders which prefer a fixed height.
 	 */
-	public static final int RENDER_HEIGHT = 250;
+//	public static final int RENDER_HEIGHT = 250;
+	public static final int RENDER_HEIGHT = 440;
 
 	// More suggested values
 	public static final double ELEMENT_SIZE = 40;

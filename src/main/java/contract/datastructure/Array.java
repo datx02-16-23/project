@@ -104,7 +104,8 @@ public class Array extends DataStructure {
 			ae.execute(init);
 			putElement(ae);
 		}
-		// Initialize elements without given values to 0.
+		
+		// Initialise elements without given values to 0.
 		int linearTotal = 1;
 		for (int i = 0; i < capacity.length; i++) {
 			linearTotal = linearTotal * capacity[i];
@@ -149,40 +150,69 @@ public class Array extends DataStructure {
 	}
 
 	protected void executeRW(OP_ReadWrite op) {
-		if (op.operation == OperationType.write && (op.getValue().length > 1)) {
+		double[] value = op.getValue();
+		if (value == null || value.length < 1) {
+			Main.console.err("Bad value in operation: " + op);
+			return;
+		}
+
+		if (value.length > 1) {
 			init((OP_Write) op);
 			return;
 		}
-		oc.count(op);
-		// Manage write
-		IndexedElement targetElement = this.getElement(op.getTarget());
-		IndexedElement sourceElement = this.getElement(op.getSource());
-		double[] value = op.getValue();
-		if (targetElement != null) {
-			if (value != null) {
-				targetElement.setValue(op.getValue()[0]);
-				targetElement.execute(op);
+
+		oc.count(op); // Count the operation.
+
+		Locator target = op.getTarget();
+		Locator source = op.getSource();
+
+		/*
+		 * Write operation targeting this Array.
+		 */
+		if (target.identifier.equals(this.identifier)) {
+			IndexedElement targetElement = getElement(target);
+
+			if (targetElement != null) {
+				// Element was found
 				modifiedElements.add(targetElement);
 				inactiveElements.remove(targetElement);
+				
+				targetElement.setValue(value[0]);
+				targetElement.execute(op);
+				
 			} else {
-				Main.console.err("WARNING: Null value in: " + op);
+				// Create the element
+				IndexedElement newElement = new IndexedElement(value[0],
+						target.index == null ? new int[] { this.elements.size() } : target.index);
+				modifiedElements.add(newElement);
+				putElement(newElement);
+				
+				newElement.execute(op);
 			}
-		}
-		// Manage read
-		else if (sourceElement != null) {
-			sourceElement.execute(op);
-			modifiedElements.add(sourceElement);
-			inactiveElements.remove(sourceElement);
-		} else if (op.getSource() != null && op.getSource().identifier.equals(super.identifier)) {
-			IndexedElement ae = new IndexedElement(0,
-					op.getSource().index != null ? op.getSource().index : new int[] { elements.size() });
-			ae.execute(op);
-			putElement(ae);
-		} else if (op.getTarget() != null && op.getTarget().identifier.equals(super.identifier)) {
-			IndexedElement ae = new IndexedElement(0,
-					op.getTarget().index != null ? op.getTarget().index : new int[] { elements.size() });
-			ae.execute(op);
-			putElement(ae);
+		} else //Should be called again if the source also targets this Array!!
+
+		/*
+		 * Read operation targeting this Array.
+		 */
+		if (source.identifier.equals(this.identifier)) {
+			IndexedElement sourceElement = getElement(source);
+
+			// Element was found
+			if (sourceElement != null) {
+				modifiedElements.add(sourceElement);
+				inactiveElements.remove(sourceElement);
+				
+				sourceElement.setValue(value[0]);
+				sourceElement.execute(op);
+			} else {
+				//Create the element
+				IndexedElement newElement = new IndexedElement(value[0],
+						source.index == null ? new int[] { this.elements.size() } : source.index);
+				modifiedElements.add(newElement);
+				putElement(newElement);
+				
+				newElement.execute(op);
+			}
 		}
 	}
 
@@ -322,11 +352,8 @@ public class Array extends DataStructure {
 		return min;
 	}
 
-	/*
-	 * Internal class for holding elements
-	 */
 	/**
-	 * An indexed element. they belong to.
+	 * An indexed element belonging to an Array.
 	 * 
 	 * @author Richard Sundqvist
 	 *
@@ -405,8 +432,8 @@ public class Array extends DataStructure {
 		// TODO
 		@Override
 		public String toString() {
-//			return hashCode() + "";
-			 return Arrays.toString(index) + " = " + numValue();
+			// return hashCode() + "";
+			return Arrays.toString(index) + " = " + numValue();
 		}
 	}
 

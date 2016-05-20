@@ -9,7 +9,7 @@ public final class Debug {
 	/**
 	 * {@link System#err} is used to print basic debug information.
 	 */
-	public static final boolean ERR = true;
+	public static final boolean ERR = false;
 	/**
 	 * {@link System#out} is used to print verbose debug information.
 	 */

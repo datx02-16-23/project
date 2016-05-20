@@ -231,10 +231,10 @@ public class ModelRender extends StackPane {
 		if (src_e != null && tar_e != null) {
 			// Render data transfer between two known structures
 			tar_render.animateReadWrite(src_e, src_render, tar_e, tar_render, millis);
-		} else if (tar_e == null && src_render != null) {
+		} else if (tar_e == null && src_e != null) {
 			// Render read without target
 			src_render.animateReadWrite(src_e, src_render, null, null, millis);
-		} else if (src_e == null && tar_render != null) {
+		} else if (src_e == null && tar_e != null) {
 			// Render write without source
 			tar_render.animateReadWrite(null, null, tar_e, tar_render, millis);
 		}

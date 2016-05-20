@@ -60,7 +60,6 @@ public class Step {
 	 */
 	public short applyOperation(Operation op) {
 		short ans = STATUS_OK;
-		String identifier;
 		Locator locator;
 		DataStructure struct;
 		switch (op.operation) {
@@ -85,10 +84,9 @@ public class Step {
 			}
 			locator = ((Locator) op.operationBody.get(Key.target));
 			if (locator != null) {
-				identifier = locator.identifier;
-				struct = structs.get(identifier);
+				struct = structs.get(locator.identifier);
 				if (struct == null) {
-					Main.console.err("WARNING: Undeclared variable \"" + identifier + "\" in " + op);
+					Main.console.err("WARNING: Undeclared variable \"" + locator.identifier + "\" in " + op);
 					ans = STATUS_VARIABLE_UNKNOWN;
 				} else {
 					struct.applyOperation(op);
@@ -96,17 +94,18 @@ public class Step {
 			}
 			break;
 		case swap:
-			// No checking here - swap should always have a var1 and var2.
-			identifier = ((Locator) op.operationBody.get(Key.var1)).identifier;
-			structs.get(identifier).applyOperation(op);
-			identifier = ((Locator) op.operationBody.get(Key.var2)).identifier;
-			structs.get(identifier).applyOperation(op);
+			System.out.println("swap = " + op);
+			locator = (Locator) op.operationBody.get(Key.var1);
+			structs.get(locator.identifier).applyOperation(op);
+
+			locator = (Locator) op.operationBody.get(Key.var2);
+			structs.get(locator.identifier).applyOperation(op);
 			break;
 		case remove:
-			identifier = ((Locator) op.operationBody.get(Key.target)).identifier;
-			struct = structs.get(identifier);
+			locator = (Locator) op.operationBody.get(Key.target);
+			struct = structs.get(locator.identifier);
 			if (struct == null) {
-				Main.console.err("WARNING: Undeclared variable \"" + identifier + "\" in " + op);
+				Main.console.err("WARNING: Undeclared variable \"" + locator.identifier + "\" in " + op);
 				ans = STATUS_VARIABLE_UNKNOWN;
 			} else {
 				struct.applyOperation(op);
@@ -118,10 +117,10 @@ public class Step {
 			break;
 		}
 
-		if(Debug.OUT){
+		if (Debug.OUT) {
 			System.out.print("Step.applyOperation(): " + op + "\n");
 		}
-		
+
 		lastOp = op;
 		return ans;
 	}

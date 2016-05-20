@@ -163,8 +163,8 @@ public class OperationCounter {
 		Main.console.info("Read: " + read.intValue());
 		Main.console.info("Write: " + write.intValue());
 		Main.console.info("Swap: " + swap.intValue());
-		Main.console.info("Remave: " + remove.intValue());
-		Main.console.info("Message: " + message.intValue());
+//		Main.console.info("Remove: " + remove.intValue());
+//		Main.console.info("Message: " + message.intValue());
 	}
 	
 	/**

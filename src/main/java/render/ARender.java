@@ -256,8 +256,8 @@ public abstract class ARender extends Pane {
 	 */
 	//@formatter:off
 	public void animateReadWrite(Element src, ARender srcRender, Element tar, ARender tarRender, long millis) {
-		boolean hasSource = srcRender != null;
-		boolean hasTarget = tarRender != null;
+		boolean hasSource = src != null;
+		boolean hasTarget = tar != null;
 		double x1 = -1; double y1 = -1;
 		double x2 = -1; double y2 = -1;
 		
