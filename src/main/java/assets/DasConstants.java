@@ -42,8 +42,8 @@ public abstract class DasConstants {
 
 	// More suggested values
 	public static final double ELEMENT_SIZE = 40;
-	public static final double ELEMENT_WIDTH = 60;
-	public static final double ELEMENT_HEIGHT = 40;
+	public static final double ELEMENT_WIDTH = ELEMENT_SIZE;
+	public static final double ELEMENT_HEIGHT = ELEMENT_SIZE;
 	public static final double ELEMENT_HSPACE = 0;
 	public static final double ELEMENT_VSPACE = 0;
 

@@ -275,13 +275,13 @@ public abstract class ARender extends Pane {
 			//Source only
 			ARenderAnimation.animate(src,
 					x1, y1, 
-					x1, y1 - nodeHeight * 2,
+					x1, y1 - DasConstants.ELEMENT_HEIGHT * 2,
 					millis, this,
 					AnimationOption.FADE_OUT, AnimationOption.SHRINK);
 		} else {
 			//Target only
 			ARenderAnimation.animate(tar,
-					x1, y1 - nodeHeight * 2,
+					x1, y1 - DasConstants.ELEMENT_HEIGHT * 2,
 					x1, y1,
 					millis, this,
 					AnimationOption.FADE_IN, AnimationOption.GROW);

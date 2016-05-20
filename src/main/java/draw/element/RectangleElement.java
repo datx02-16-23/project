@@ -41,6 +41,8 @@ public class RectangleElement extends VisualElement {
 	public void createShape() {
 		Rectangle rect = new Rectangle();
 		rect.setStroke(Color.BLACK);
+		rect.setWidth(width);
+		rect.setHeight(height);
 		shape = rect;
 	}
 }

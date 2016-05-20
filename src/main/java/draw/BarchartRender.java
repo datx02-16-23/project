@@ -20,7 +20,7 @@ import javafx.scene.shape.Polyline;
 
 public class BarchartRender extends ARender implements BoundaryChangeListener {
 
-	public static final ElementShape DEFAULT_ELEMENT_STYLE = ElementShape.BAR_ELEMENT;
+	public static final ElementShape ELEMENT_STYLE = ElementShape.BAR_ELEMENT;
 
 	// Using instead of default render field names for clarity.
 	private double renderHeight, padding, barWidth, xAxisY, unitSize;
@@ -75,7 +75,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 
 	@Override
 	public double getY(Element e) {
-		return this.xAxisY;
+		return xAxisY; //TODO -padding is wrong
 	}
 
 	public void render() {
@@ -122,7 +122,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 
 	private void positionBars() {
 		for (Node node : defaultNodePane.getChildren()) {
-			((BarchartElement) node).setBotY(xAxisY - padding - 10); // TODO fix
+			((BarchartElement) node).setBotY(xAxisY); // TODO fix
 		}
 	}
 
@@ -235,14 +235,14 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 
 	@Override
 	protected BarchartElement createVisualElement(Element e) {
-		BarchartElement ve = (BarchartElement) ElementFactory.shape(DEFAULT_ELEMENT_STYLE, e, barWidth,
+		BarchartElement ve = (BarchartElement) ElementFactory.shape(ELEMENT_STYLE, e, barWidth,
 				unitSize * e.numValue());
 		return ve;
 	}
 
 	@Override
 	protected VisualElement createVisualElement(double value, Color color) {
-		VisualElement ve = ElementFactory.shape(DEFAULT_ELEMENT_STYLE, value, color, barWidth, unitSize * value);
+		VisualElement ve = ElementFactory.shape(ELEMENT_STYLE, value, color, barWidth, unitSize * value);
 		return ve;
 	}
 

@@ -123,7 +123,7 @@ public class ARenderManager extends BorderPane implements VisualListener {
 		switch (struct.visual) {
 		case bar:
 			curRender = new BarchartRender(struct, DasConstants.ELEMENT_WIDTH,
-					DasConstants.RENDER_HEIGHT, 10, 10);
+					DasConstants.RENDER_HEIGHT, 20, 10);
 			break;
 		case grid:
 		case box:
@@ -138,6 +138,7 @@ public class ARenderManager extends BorderPane implements VisualListener {
 			break;
 		}
 		
+//		curRender.setElementStyle(ElementShape.TRIANGLE);
 		return curRender;
 	}
 
