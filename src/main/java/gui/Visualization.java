@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import assets.DasConstants;
 import assets.DasToolkit;
+import assets.Debug;
 import contract.Locator;
 import contract.Operation;
 import contract.datastructure.*;
@@ -179,6 +180,9 @@ public class Visualization extends StackPane {
 			if (e != null) {
 				ARender render = this.managerMap.get(struct.identifier).getRender();
 				render.animateRemove(e, millis);
+				if(Debug.PRINT_ERR){
+					System.err.println("\nVisualization.animateRemove():");					
+				}
 				return;
 			}
 		}
@@ -193,25 +197,32 @@ public class Visualization extends StackPane {
 		Element src_e = null, tar_e = null;
 		ARender src_render = null, tar_render = null;
 		/**
-		 * Source params
+		 * Source paraeters
 		 */
 		for (DataStructure struct : model.getStructures().values()) {
 			src_e = struct.getElement(source);
 			if (src_e != null) {
 				src_render = this.managerMap.get(struct.identifier).getRender();
-				break;
+				break; //Source found
 			}
 		}
 		/**
-		 * Target params
+		 * Target paraeters
 		 */
 		for (DataStructure struct : model.getStructures().values()) {
 			tar_e = struct.getElement(target);
 			if (tar_e != null) {
 				tar_render = this.managerMap.get(struct.identifier).getRender();
-				break;
+				break; //Target found
 			}
 		}
+
+		if(Debug.PRINT_ERR){
+			System.err.println("\nVisualization.animateReadWrite():");
+			System.err.println("Has target: " + (tar_e == null ? "null" : tar_render.getDataStructure()));
+			System.err.println("Has source: " + (src_e != null));			
+		}
+		
 		/**
 		 * Start animations
 		 */
@@ -266,6 +277,10 @@ public class Visualization extends StackPane {
 		 * Start animations
 		 */
 
+		if(Debug.PRINT_ERR){
+			System.err.println("\nVisualization.animateSwap():");			
+		}
+		
 		v1_render.animateSwap(v1_e, v1_render, v2_e, v2_render, millis);
 		v2_render.animateSwap(v2_e, v2_render, v1_e, v1_render, millis);
 	} // End animate swap
@@ -330,7 +345,9 @@ public class Visualization extends StackPane {
 			// Make sure users can see the render.
 			if (checkPositions(xPos, yPos) == false) {
 				// Do not remove this printout //RS
-				System.err.println("Using default placement for \"" + arm.getStructure() + "\".");
+				if(Debug.PRINT_ERR){
+					System.err.println("Using default placement for \"" + arm.getStructure() + "\".");					
+				}
 				yPos = margin;
 				xPos = margin;
 				successful = false;
@@ -350,13 +367,15 @@ public class Visualization extends StackPane {
 		boolean result = true;
 
 		if (checkXPos(xPos) == false) {
-			// Do not remove this printout //RS
-			System.err.println("Bad X-Coordinate: " + xPos + " not in " + xRange() + ".");
+			if(Debug.VERBOSE){
+				System.err.println("Bad X-Coordinate: " + xPos + " not in " + xRange() + ".");				
+			}
 			result = false;
 		}
 		if (checkYPos(yPos) == false) {
-			// Do not remove this printout //RS
-			System.err.println("Bad Y-Coordinate: " + yPos + " not in " + yRange() + ".");
+			if(Debug.VERBOSE){
+				System.err.println("Bad Y-Coordinate: " + yPos + " not in " + yRange() + ".");				
+			}
 			result = false;
 		}
 
@@ -461,7 +480,6 @@ public class Visualization extends StackPane {
 	 * Create a render which shows live updating statistics for the model.
 	 */
 	public void showLiveStats() {
-		// TODO Auto-generated method stub
-		System.err.println("showLiveStats() not implemnted yet");
+		System.out.println("Visualization.showLiveStats() not implemnted yet");
 	}
 }

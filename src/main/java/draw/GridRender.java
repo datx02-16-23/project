@@ -1,5 +1,6 @@
 package draw;
 
+import assets.Debug;
 import contract.datastructure.Array;
 import contract.datastructure.Array.IndexedElement;
 import contract.datastructure.DataStructure;
@@ -144,8 +145,9 @@ public class GridRender extends ARender {
 
 		if (dims == null || dims.length == 0) {
 			dims = backup;
-			// Do not remove this printout //RS
-			System.err.println("Size was null or empty for \"" + struct + "\"!");
+			if(Debug.PRINT_ERR){
+				System.err.println("Size was null or empty for \"" + struct + "\"!");				
+			}
 		} else if (dims.length == 1) {
 			int[] newSize = { dims[0], 1 };
 			dims = newSize; // Add 2nd which is used in size calculation.

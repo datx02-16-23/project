@@ -4,12 +4,14 @@ import contract.datastructure.DataStructure;
 
 import java.util.Arrays;
 
+import assets.Debug;
 import contract.datastructure.Array.BoundaryChangeListener;
 import contract.datastructure.Array.IndexedElement;
 import contract.datastructure.Element;
 import draw.element.BarchartElement;
 import draw.element.ElementShape;
 import draw.element.VisualElement;
+import gui.Main;
 import draw.element.ElementFactory;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -63,6 +65,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 		int[] index = ((IndexedElement) e).getIndex();
 		if (index == null || index.length == 0) {
 			System.err.println("Invalid index for element " + e + " in \"" + struct + "\".");
+			Main.console.err("Invalid index for element " + e + " in \"" + struct + "\".");
 			renderFailure();
 			return -1;
 		}
@@ -75,7 +78,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 
 	@Override
 	public double getY(Element e) {
-		return xAxisY; //TODO -padding is wrong
+		return xAxisY; // TODO -padding is wrong
 	}
 
 	public void render() {

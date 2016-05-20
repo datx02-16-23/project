@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import assets.DasConstants;
+import assets.Debug;
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
 import contract.datastructure.Array.IndexedElement;
@@ -264,6 +265,10 @@ public abstract class ARender extends Pane {
 		if(hasTarget){
 			x2 = tarRender.absX(tar);
 			y2 = tarRender.absY(tar);
+		}
+		
+		if(Debug.PRINT_ERR){
+			System.err.println(struct  + " is animating.");			
 		}
 		
 		if(hasSource && hasTarget){

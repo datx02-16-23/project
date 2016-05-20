@@ -1,6 +1,8 @@
 package draw;
 
 import java.util.Arrays;
+
+import assets.Debug;
 import contract.datastructure.Element;
 import contract.datastructure.Array.IndexedElement;
 import draw.element.VisualElement;
@@ -54,11 +56,12 @@ public abstract class ARenderAnimation {
 		Arrays.copyOf(i, i.length);
 
 		final VisualElement real = render.visualMap.get(Arrays.toString(i));
-		if (real == null) {
-			// Do not remove this printout //RS
-			// TODO render.visualMap.get(Arrays.toString(i)) may return null
-			System.err.println("Animation failed: Failed resolve element for: " + render.struct);
-			return;
+		
+		if(Debug.PRINT_ERR){
+			if (real == null) {
+				System.err.println("Animation failed: Failed resolve element for: " + render.struct);
+				return;
+			}			
 		}
 
 		VisualElement animated = real.clone();

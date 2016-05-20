@@ -2,6 +2,7 @@ package draw.element;
 
 import java.util.Arrays;
 
+import assets.Debug;
 import contract.datastructure.Element;
 import javafx.scene.paint.Paint;
 
@@ -14,7 +15,7 @@ import javafx.scene.paint.Paint;
 public abstract class ElementFactory {
 
 	public static final double[] TRAPEZOID_POINTS = { 0.75, 0, 0.25, 0, 0, 1, 1, 1 };
-	 public static final double[] TRIANGLE_POINTS = { 0.5, 0, 1, 1, 0, 1 };
+	public static final double[] TRIANGLE_POINTS = { 0.5, 0, 1, 1, 0, 1 };
 
 	private ElementFactory() {
 	} // Not to be instantiated.
@@ -199,19 +200,13 @@ public abstract class ElementFactory {
 			x = points[xInd];
 			y = points[yInd];
 
-			if (x < 0 || x > 1) {
-				// Do not remove this printout //RS
-				System.err.println("Bad x-coordinate at index " + xInd + ": " + x);
-				try {
-					throw new Exception();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			if (Debug.PRINT_ERR) {
+				if (x < 0 || x > 1) {
+					System.err.println("Bad x-coordinate at index " + xInd + ": " + x);
 				}
-			}
-			if (y < 0 || y > 1) {
-				// Do not remove this printout //RS
-				System.err.println("Bad y-coordinate at index " + yInd + ": " + y);
+				if (y < 0 || y > 1) {
+					System.err.println("Bad y-coordinate at index " + yInd + ": " + y);
+				}
 			}
 
 			scaled[xInd] = x * w;
