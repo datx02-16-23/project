@@ -1,6 +1,7 @@
 package draw.element;
 
 import contract.datastructure.Element;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 
@@ -44,6 +45,6 @@ public class PolygonElement extends VisualElement {
 	@Override
 	public void createShape() {
 		shape = new Polygon(points);
-		shape.setStrokeWidth(10);
+		shape.setStroke(Color.BLACK);
 	}
 }

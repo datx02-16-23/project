@@ -138,7 +138,6 @@ public class ARenderManager extends BorderPane implements VisualListener {
 			break;
 		}
 		
-		curRender.setElementStyle(ElementShape.RANDOM);
 		return curRender;
 	}
 

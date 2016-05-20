@@ -40,8 +40,6 @@ public class RectangleElement extends VisualElement {
 	@Override
 	public void createShape() {
 		Rectangle rect = new Rectangle();
-		rect.setWidth(width);
-		rect.setHeight(height);
 		rect.setStroke(Color.BLACK);
 		shape = rect;
 	}
