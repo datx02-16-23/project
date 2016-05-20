@@ -1,4 +1,4 @@
-package draw;
+package render;
 
 import contract.datastructure.DataStructure;
 
@@ -8,11 +8,11 @@ import assets.Debug;
 import contract.datastructure.Array.BoundaryChangeListener;
 import contract.datastructure.Array.IndexedElement;
 import contract.datastructure.Element;
-import draw.element.BarchartElement;
-import draw.element.ElementShape;
-import draw.element.AVElement;
+import render.element.BarchartElement;
+import render.element.ElementShape;
+import render.element.AVElement;
 import gui.Main;
-import draw.element.AVElementFactory;
+import render.element.AVElementFactory;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
@@ -92,7 +92,7 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 	@Override
 	public boolean init() {
 		if (struct.getElements().isEmpty()) {
-			return false; // Nothing to draw.
+			return false; // Nothing to render.
 		}
 		struct.repaintAll = false;
 

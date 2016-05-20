@@ -1,11 +1,10 @@
-package draw;
+package render;
 
 import java.util.Arrays;
 
 import assets.Debug;
 import contract.datastructure.Element;
 import contract.datastructure.Array.IndexedElement;
-import draw.element.AVElement;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
@@ -13,6 +12,7 @@ import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
 import javafx.util.Duration;
+import render.element.AVElement;
 
 /**
  * Utility class for animating operations. Cannot be instantiated.

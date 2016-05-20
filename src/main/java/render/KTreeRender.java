@@ -1,4 +1,4 @@
-package draw;
+package render;
 
 import java.util.Arrays;
 
@@ -6,9 +6,9 @@ import assets.Tools;
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
 import contract.datastructure.Array.IndexedElement;
-import draw.element.ElementShape;
-import draw.element.AVElementFactory;
-import draw.element.AVElement;
+import render.element.ElementShape;
+import render.element.AVElementFactory;
+import render.element.AVElement;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -82,7 +82,7 @@ public class KTreeRender extends ARender {
 	public boolean init() {
 
 		if (super.init() == false) {
-			return false; // Nothing to draw.
+			return false; // Nothing to render.
 		}
 
 		createGhosts(defaultNodePane.getChildren().size());

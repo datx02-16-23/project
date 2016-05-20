@@ -1,4 +1,4 @@
-package gui;
+package render;
 
 import java.util.HashMap;
 
@@ -11,8 +11,7 @@ import contract.datastructure.*;
 import contract.operation.OP_ReadWrite;
 import contract.operation.OP_Remove;
 import contract.operation.OP_Swap;
-import draw.ARenderManager;
-import draw.ARender;
+import gui.Controller;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
@@ -25,12 +24,12 @@ import javafx.scene.layout.StackPane;
 import model.Model;
 
 /**
- * Handler class for visualisations and animations.
+ * Handler class for rendering a model.
  * 
  * @author Richard Sundqvist
  *
  */
-public class Visualization extends StackPane {
+public class _ModelRender extends StackPane {
 
 	/**
 	 * Pane for drawing of animated elements.
@@ -61,7 +60,7 @@ public class Visualization extends StackPane {
 	/**
 	 * Create a new Visualization.
 	 */
-	public Visualization() {
+	public _ModelRender() {
 		this.model = Model.instance();
 		// Shared animation space
 		animationPane.setMouseTransparent(true);

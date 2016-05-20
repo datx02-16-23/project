@@ -3,8 +3,6 @@ package assets;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import draw.ARender;
-import gui.Visualization;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
@@ -18,6 +16,8 @@ import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
+import render.ARender;
+import render._ModelRender;
 
 /**
  * Utility class to reduce clutter.
@@ -31,7 +31,7 @@ public abstract class Tools {
 	} // Not to be instantiated.
 
 	// A FXML pane showing user instructions.
-	public static final Visualization.HintPane HINT_PANE = new Visualization.HintPane();
+	public static final _ModelRender.HintPane HINT_PANE = new _ModelRender.HintPane();
 
 	/*
 	 * Render base stuff

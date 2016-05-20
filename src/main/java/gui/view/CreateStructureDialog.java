@@ -8,7 +8,6 @@ import contract.datastructure.DataStructure;
 import contract.datastructure.IndependentElement;
 import contract.datastructure.RawType;
 import contract.datastructure.VisualType;
-import draw.RenderSVF;
 import gui.Main;
 import gui.Controller;
 import javafx.collections.FXCollections;
@@ -22,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import render.RenderSVF;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class CreateStructureDialog {

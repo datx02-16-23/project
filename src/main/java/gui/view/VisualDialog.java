@@ -5,7 +5,6 @@ import java.io.IOException;
 import assets.Const;
 import contract.datastructure.DataStructure;
 import contract.datastructure.VisualType;
-import draw.RenderSVF;
 import gui.Controller;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,6 +15,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import render.RenderSVF;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class VisualDialog {

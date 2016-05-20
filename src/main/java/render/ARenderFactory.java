@@ -1,4 +1,4 @@
-package draw;
+package render;
 
 import contract.datastructure.DataStructure;
 

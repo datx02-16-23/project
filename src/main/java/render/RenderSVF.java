@@ -1,13 +1,13 @@
-package draw;
+package render;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import contract.datastructure.DataStructure;
-import draw.GridRender.Order;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.util.StringConverter;
+import render.GridRender.Order;
 
 /**
  * SpinnerValueFactory for Render implementations.

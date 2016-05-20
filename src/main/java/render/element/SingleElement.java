@@ -1,4 +1,4 @@
-package draw.element;
+package render.element;
 
 import contract.datastructure.Element;
 import javafx.scene.paint.Paint;

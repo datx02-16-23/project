@@ -1,4 +1,4 @@
-package draw.element;
+package render.element;
 
 import java.io.IOException;
 import java.util.Arrays;

@@ -1,4 +1,4 @@
-package draw;
+package render;
 
 import java.util.HashMap;
 

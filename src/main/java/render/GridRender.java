@@ -1,13 +1,13 @@
-package draw;
+package render;
 
 import assets.Debug;
 import contract.datastructure.Array;
 import contract.datastructure.Array.IndexedElement;
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
-import draw.element.ElementShape;
-import draw.element.AVElement;
-import draw.element.AVElementFactory;
+import render.element.ElementShape;
+import render.element.AVElement;
+import render.element.AVElementFactory;
 import gui.Main;
 import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
@@ -57,7 +57,7 @@ public class GridRender extends ARender {
 	public boolean init() {
 
 		if (super.init() == false) {
-			return false; // Nothing to draw.
+			return false; // Nothing to render.
 		}
 
 		/*

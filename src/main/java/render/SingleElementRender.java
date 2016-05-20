@@ -1,8 +1,8 @@
-package draw;
+package render;
 
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
-import draw.element.*;
+import render.element.*;
 import javafx.scene.paint.Color;
 
 public class SingleElementRender extends ARender {

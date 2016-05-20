@@ -1,4 +1,4 @@
-package draw.element;
+package render.element;
 
 import assets.Const;
 import contract.datastructure.Element;

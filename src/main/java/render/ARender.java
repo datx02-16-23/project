@@ -1,4 +1,4 @@
-package draw;
+package render;
 
 import java.io.IOException;
 import java.net.URL;
@@ -14,9 +14,6 @@ import contract.datastructure.Element;
 import contract.datastructure.Array.IndexedElement;
 import contract.operation.OperationCounter;
 import contract.operation.OperationCounter.OperationCounterHaver;
-import draw.ARenderAnimation.AnimationOption;
-import draw.element.ElementShape;
-import draw.element.AVElement;
 import gui.Main;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
@@ -31,6 +28,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import render.ARenderAnimation.AnimationOption;
+import render.element.AVElement;
+import render.element.ElementShape;
 
 public abstract class ARender extends Pane {
 	

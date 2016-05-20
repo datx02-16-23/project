@@ -21,6 +21,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import render._ModelRender;
 import javafx.scene.control.TextArea;
 
 import java.io.IOException;
@@ -47,7 +48,7 @@ public class Main extends Application {
 		lsm = new LogStreamManager(Const.PROJECT_NAME + "_GUI");
 		primaryStage.setTitle(Const.PROJECT_NAME);
 		// Create a Group view for the AV.
-		Visualization visualization = new Visualization();
+		_ModelRender visualization = new _ModelRender();
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Root.fxml"));
 		SourcePanel sourceViewer = new SourcePanel();
 		controller = new Controller(primaryStage, lsm, sourceViewer, visualization);
