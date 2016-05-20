@@ -329,6 +329,8 @@ public class Controller implements CommunicatorListener {
 	 *            The index to jump to.
 	 */
 	public void goToStep(int index) {
+		Main.console.force("goToStep() is buggy and has been disabled.");
+		System.err.println("goToStep() is buggy and has been disabled.");
 		model.goToStep(index);
 		visualization.init();
 		visualization.render(model.getLastOp());

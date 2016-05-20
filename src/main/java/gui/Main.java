@@ -48,7 +48,7 @@ public class Main extends Application {
 		primaryStage.setTitle(DasConstants.PROJECT_NAME);
 		// Create a Group view for the AV.
 		Visualization visualization = new Visualization();
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/VisualizerView.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Root.fxml"));
 		SourcePanel sourceViewer = new SourcePanel();
 		controller = new Controller(primaryStage, lsm, sourceViewer, visualization);
 		OperationPanel operationPanel = controller.getOperationPanel();
