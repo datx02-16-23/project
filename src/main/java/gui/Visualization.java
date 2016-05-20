@@ -35,7 +35,7 @@ public class Visualization extends StackPane {
 	/**
 	 * Pane for drawing of animated elements.
 	 */
-	private final Pane animated = new Pane();
+	private final Pane animationPane = new Pane();
 
 	/**
 	 * Animation time in milliseconds.
@@ -44,7 +44,7 @@ public class Visualization extends StackPane {
 	/**
 	 * Determines whether operations are animated on the animated_nodes canvas.
 	 */
-	private boolean animate;
+	private boolean useAnimation;
 	/**
 	 * The model being visualised.
 	 */
@@ -52,7 +52,7 @@ public class Visualization extends StackPane {
 	/**
 	 * A list of render managers for the data structures.
 	 */
-	private final Pane managers = new Pane();
+	private final Pane managerPane = new Pane();
 	/**
 	 * A mapping of renders and their managers.
 	 */
@@ -64,13 +64,13 @@ public class Visualization extends StackPane {
 	public Visualization() {
 		this.model = Model.instance();
 		// Shared animation space
-		animated.setMouseTransparent(true);
-		animated.maxWidth(Double.MAX_VALUE);
-		animated.maxHeight(Double.MAX_VALUE);
-		animate = true;
+		animationPane.setMouseTransparent(true);
+		animationPane.maxWidth(Double.MAX_VALUE);
+		animationPane.maxHeight(Double.MAX_VALUE);
+		useAnimation = true;
 
 		// Add stacked canvases
-		this.getChildren().addAll(DasToolkit.HINT_PANE, managers, animated);
+		this.getChildren().addAll(DasToolkit.HINT_PANE, managerPane, animationPane);
 	}
 
 	/**
@@ -78,20 +78,21 @@ public class Visualization extends StackPane {
 	 */
 	public void clear() {
 		managerMap.clear();
-		managers.getChildren().clear();
+		managerPane.getChildren().clear();
+		animationPane.getChildren().clear();
 		DasToolkit.HINT_PANE.setVisible(true);
 	}
 
 	public void clearAndCreateVisuals() {
 		clear();
 		for (DataStructure struct : model.getStructures().values()) {
-			ARenderManager manager = new ARenderManager(struct, animated);
-			managers.getChildren().add(manager);
+			ARenderManager manager = new ARenderManager(struct, animationPane);
+			managerPane.getChildren().add(manager);
 			managerMap.put(struct.identifier, manager);
 		}
 		// overlay.expandAll();
 		placeVisuals();
-		DasToolkit.HINT_PANE.setVisible(managers.getChildren().isEmpty());
+		DasToolkit.HINT_PANE.setVisible(managerPane.getChildren().isEmpty());
 	}
 
 	/**
@@ -101,10 +102,10 @@ public class Visualization extends StackPane {
 	 *            An operation to animate.
 	 */
 	public void render(Operation op) {
-		for (Object rm : managers.getChildren()) {
+		for (Object rm : managerPane.getChildren()) {
 			((ARenderManager) rm).getRender().render();
 		}
-		if (animate && op != null) {
+		if (useAnimation && op != null) {
 			animate(op);
 		}
 	}
@@ -113,7 +114,7 @@ public class Visualization extends StackPane {
 	 * Force Render initialisation.
 	 */
 	public void init() {
-		for (Object rm : managers.getChildren()) {
+		for (Object rm : managerPane.getChildren()) {
 			((ARenderManager) rm).getRender().init();
 		}
 
@@ -138,7 +139,7 @@ public class Visualization extends StackPane {
 	 *            The new animation option.
 	 */
 	public void setAnimate(boolean value) {
-		animate = value;
+		useAnimation = value;
 	}
 
 	/**
@@ -283,7 +284,7 @@ public class Visualization extends StackPane {
 		
 		v1_render.animateSwap(v1_e, v1_render, v2_e, v2_render, millis);
 		v2_render.animateSwap(v2_e, v2_render, v1_e, v1_render, millis);
-	} // End animate swap
+	}
 
 	/**
 	 * Attempt to place visuals with minimal overlap. Will return {@code false}
@@ -307,7 +308,7 @@ public class Visualization extends StackPane {
 		int southEast = 0; int sEExpand = 0; // Not used at the moment.
 		//@formatter:on
 
-		for (Node node : managers.getChildren()) {
+		for (Node node : managerPane.getChildren()) {
 			arm = (ARenderManager) node;
 
 			switch (arm.getStructure().visual) {

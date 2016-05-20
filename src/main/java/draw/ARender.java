@@ -88,7 +88,7 @@ public abstract class ARender extends Pane {
 	/**
 	 * The pane used when drawing animated elements.
 	 */
-	protected final Pane animPane;
+	public final Pane animPane;
 	/**
 	 * The root for the FXML Render.
 	 */
@@ -233,7 +233,7 @@ public abstract class ARender extends Pane {
 		double x = absX(tar);
 		double y = absY(tar);
 
-		ARenderAnimation.animate(tar,
+		ARenderAnimation.animateLine(tar,
 				x, y, x, y,
 				millis * 4, this,	
 				AnimationOption.FADE_OUT, AnimationOption.SHRINK, AnimationOption.USE_GHOST);
@@ -276,20 +276,20 @@ public abstract class ARender extends Pane {
 		}
 		
 		if(hasSource && hasTarget){
-			ARenderAnimation.animate(tar,
+			ARenderAnimation.animateLine(tar,
 					x1, y1, 
 					x2, y2,
 					millis, this);
 		} else if (hasSource) {
 			//Source only
-			ARenderAnimation.animate(src,
+			ARenderAnimation.animateLine(src,
 					x1, y1, 
 					x1, y1 - DasConstants.ELEMENT_HEIGHT * 2,
 					millis, this,
 					AnimationOption.FADE_OUT, AnimationOption.SHRINK);
 		} else {
 			//Target only
-			ARenderAnimation.animate(tar,
+			ARenderAnimation.animateLine(tar,
 					x1, y1 - DasConstants.ELEMENT_HEIGHT * 2,
 					x1, y1,
 					millis, this,
@@ -318,7 +318,7 @@ public abstract class ARender extends Pane {
 			System.err.println("ARender.animateSwap(): " + struct  + " is animating.");			
 		}
 		
-		ARenderAnimation.animate(var2,
+		ARenderAnimation.animateLine(var2,
 				render1.absX(var1), render1.absY(var1),
 				render2.absX(var2), render2.absY(var2),
 				millis, this,

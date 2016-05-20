@@ -926,11 +926,12 @@ public class Controller implements CommunicatorListener {
 	 * Set enable/disable on buttons.
 	 */
 	public void setButtons() {
+		//TODO: Use a property in Model instead.
 		// Model clear?
 		if (model.isHardCleared()) {
 			playPauseButton.setDisable(true);
 			forwardButton.setDisable(true);
-			backwardButton.setDisable(true);
+//			backwardButton.setDisable(true);
 			restartButton.setDisable(true);
 			clearButton.setDisable(true);
 			return;
@@ -939,7 +940,7 @@ public class Controller implements CommunicatorListener {
 		playPauseButton.setDisable(forward);
 		forwardButton.setDisable(forward);
 		boolean backward = !model.tryStepBackward();
-		backwardButton.setDisable(backward);
+//		backwardButton.setDisable(backward);
 		restartButton.setDisable(backward);
 		clearButton.setDisable(false);
 	}
