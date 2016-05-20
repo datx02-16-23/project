@@ -219,14 +219,18 @@ public class KTreeRender extends ARender {
 	 * Calculate the depth and breath of the tree.
 	 */
 	int i = 0;
+
 	private void calculateDepthAndBreadth() {
-		if(K < 2){
-			return; //Prevent infinite recursion.
+		if (K < 2) {
+			return;
+			// Fixed infinite recursion case caused by
+			// superconstructor call before K could be validated by local
+			// constructor.
 		}
-		
+
 		double structSize = struct.getElements().size();
 		totDepth = 0;
-		
+
 		// Calculate the minimum depth which can hold all elements of the array.
 		while (DasToolkit.lowerLevelSum(totDepth, K) < structSize) {
 			System.out.println("times called lls: " + (i++));
