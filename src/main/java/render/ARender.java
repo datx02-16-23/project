@@ -226,7 +226,7 @@ public abstract class ARender extends Pane {
 	 */
 	//@formatter:off
 	public void animateRemove(Element tar, long millis) {
-		if(Debug.KEY_EVENTS){
+		if(Debug.ERR){
 			System.err.println("ARender.animateRemove(): " + struct  + " is animating.");			
 		}
 		
@@ -271,7 +271,7 @@ public abstract class ARender extends Pane {
 			y2 = tarRender.absY(tar);
 		}
 		
-		if(Debug.KEY_EVENTS){
+		if(Debug.ERR){
 			System.err.println("ARender.animateReadWrite(): " + struct  + " is animating.");			
 		}
 		
@@ -314,7 +314,7 @@ public abstract class ARender extends Pane {
 	 */
 	// formatter:off
 	public void animateSwap(Element var1, ARender render1, Element var2, ARender render2, long millis) {
-		if(Debug.KEY_EVENTS){
+		if(Debug.ERR){
 			System.err.println("ARender.animateSwap(): " + struct  + " is animating.");			
 		}
 		

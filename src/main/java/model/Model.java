@@ -86,7 +86,7 @@ public class Model {
 //		}
 		if (tryStepForward()) {
 			step.applyOperation(operations.get(index));
-			if(Debug.VERBOSE){
+			if(Debug.OUT){
 				System.out.print("Model.stepForward(): index = " + index + " -> ");
 			}
 			index += 1;

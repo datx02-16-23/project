@@ -118,7 +118,7 @@ public class Step {
 			break;
 		}
 
-		if(Debug.VERBOSE){
+		if(Debug.OUT){
 			System.out.print("Step.applyOperation(): " + op + "\n");
 		}
 		

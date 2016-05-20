@@ -8,6 +8,7 @@ import assets.Const;
 import contract.operation.OperationType;
 import gui.Controller;
 import gui.Main;
+import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.event.Event;
@@ -73,6 +74,8 @@ public class HelpView {
 	public void show() {
 		startBoxRotation();
 		stage.show();
+		stage.setWidth(owner.getWidth() * 0.75);
+		stage.setHeight(owner.getHeight() * 0.75);
 	}
 
 	private void createCubes(FXMLLoader fxmlLoader) {
@@ -89,8 +92,7 @@ public class HelpView {
 			box.setMaterial(new PhongMaterial((Color) ot.color));
 			box.setWidth(Const.ELEMENT_WIDTH);
 			box.setHeight(Const.ELEMENT_HEIGHT);
-			box.setDepth((Const.ELEMENT_WIDTH + Const.ELEMENT_HEIGHT) / 2);
-			box.setOpacity(0.3);
+			box.setDepth(Const.ELEMENT_WIDTH + Const.ELEMENT_HEIGHT);
 			box.setOnMouseClicked(event -> {
 				about(ot);
 				boxClicked(box);
@@ -122,22 +124,16 @@ public class HelpView {
 			// Add to panels
 			labels.add(label, column, 0);
 			((BorderPane) boxes.getChildren().get(column)).setCenter(box);
-			((BorderPane) boxes.getChildren().get(column)).setOpacity(0.6);
 			column++;
 		}
 	}
 
 	private void boxClicked(final Box box) {
 		if (box.getScaleX() == 1) {
-			RotateTransition rt = new RotateTransition(Duration.millis(500), box);
-			rt.setByAngle(360);
-			rt.setCycleCount(3);
-			rt.play();
-
-			ScaleTransition st = new ScaleTransition(Duration.millis(3 * 500 / 2), box);
-			st.setByX(1.15);
-			st.setByY(1.15);
-			st.setByZ(1.15);
+			ScaleTransition st = new ScaleTransition(Duration.millis(1500), box);
+			st.setByX(-Math.random());
+			st.setByY(-Math.random());
+			st.setByZ(-Math.random());
 			st.setAutoReverse(true);
 			st.setCycleCount(2);
 			st.play();

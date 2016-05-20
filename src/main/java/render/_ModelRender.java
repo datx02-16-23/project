@@ -45,7 +45,7 @@ public class _ModelRender extends StackPane {
 	 */
 	private boolean useAnimation;
 	/**
-	 * The model being visualised.
+	 * The model to visualise.
 	 */
 	private final Model model;
 	/**
@@ -58,10 +58,12 @@ public class _ModelRender extends StackPane {
 	private final HashMap<String, ARenderManager> managerMap = new HashMap<String, ARenderManager>();
 
 	/**
-	 * Create a new Visualization.
+	 * Create a new ModelRender.
+	 * @param model The Model to render.
 	 */
-	public _ModelRender() {
-		this.model = Model.instance();
+	public _ModelRender(Model model) {
+		this.model = model;
+		
 		// Shared animation space
 		animationPane.setMouseTransparent(true);
 		animationPane.maxWidth(Double.MAX_VALUE);
@@ -180,7 +182,7 @@ public class _ModelRender extends StackPane {
 			if (e != null) {
 				ARender render = this.managerMap.get(struct.identifier).getRender();
 				render.animateRemove(e, millis);
-				if(Debug.KEY_EVENTS){
+				if(Debug.ERR){
 					System.err.println("\nVisualization.animateRemove():");					
 				}
 				return;
@@ -217,7 +219,7 @@ public class _ModelRender extends StackPane {
 			}
 		}
 
-		if(Debug.KEY_EVENTS){
+		if(Debug.ERR){
 			System.err.println("\nVisualization.animateReadWrite():");
 			System.err.println("Has target: " + (tar_e == null ? "false" : tar_render.getDataStructure()));
 			System.err.println("Has source: " + (src_e == null ? "false" : src_render.getDataStructure()));			
@@ -228,7 +230,6 @@ public class _ModelRender extends StackPane {
 		 */
 		if (src_e != null && tar_e != null) {
 			// Render data transfer between two known structures
-			src_render.animateReadWrite(src_e, src_render, tar_e, tar_render, millis);
 			tar_render.animateReadWrite(src_e, src_render, tar_e, tar_render, millis);
 		} else if (tar_e == null && src_render != null) {
 			// Render read without target
@@ -277,7 +278,7 @@ public class _ModelRender extends StackPane {
 		 * Start animations
 		 */
 
-		if(Debug.KEY_EVENTS){
+		if(Debug.ERR){
 			System.err.println("\nVisualization.animateSwap():");			
 		}
 		
@@ -345,7 +346,7 @@ public class _ModelRender extends StackPane {
 			// Make sure users can see the render.
 			if (checkPositions(xPos, yPos) == false) {
 				// Do not remove this printout //RS
-				if(Debug.KEY_EVENTS){
+				if(Debug.ERR){
 					System.err.println("Using default placement for \"" + arm.getStructure() + "\".");					
 				}
 				yPos = margin;
@@ -367,13 +368,13 @@ public class _ModelRender extends StackPane {
 		boolean result = true;
 
 		if (checkXPos(xPos) == false) {
-			if(Debug.VERBOSE){
+			if(Debug.OUT){
 				System.err.println("Bad X-Coordinate: " + xPos + " not in " + xRange() + ".");				
 			}
 			result = false;
 		}
 		if (checkYPos(yPos) == false) {
-			if(Debug.VERBOSE){
+			if(Debug.OUT){
 				System.err.println("Bad Y-Coordinate: " + yPos + " not in " + yRange() + ".");				
 			}
 			result = false;

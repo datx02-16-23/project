@@ -54,7 +54,7 @@ public abstract class ARenderAnimation {
 		int[] i = ((IndexedElement) e).getIndex();
 		Arrays.copyOf(i, i.length);
 		final AVElement orig = render.visualMap.get(Arrays.toString(i));
-		if (Debug.KEY_EVENTS) {
+		if (Debug.ERR) {
 			if (orig == null) {
 				System.err.println("ARender.animte() failure: Could not resolve element for using:" + render);
 				return;

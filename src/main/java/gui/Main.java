@@ -21,6 +21,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import model.Model;
 import render._ModelRender;
 import javafx.scene.control.TextArea;
 
@@ -40,6 +41,7 @@ public class Main extends Application {
 	 * Indicates whether the program is being run for the first time.
 	 */
 	public static boolean firstRun;
+	
 	private Controller controller;
 	private LogStreamManager lsm;
 
@@ -48,10 +50,10 @@ public class Main extends Application {
 		lsm = new LogStreamManager(Const.PROGRAM_NAME + "_GUI");
 		primaryStage.setTitle(Const.PROGRAM_NAME);
 		// Create a Group view for the AV.
-		_ModelRender visualization = new _ModelRender();
+		_ModelRender modelRender = new _ModelRender(Model.instance());
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Root.fxml"));
 		SourcePanel sourceViewer = new SourcePanel();
-		controller = new Controller(primaryStage, lsm, sourceViewer, visualization);
+		controller = new Controller(primaryStage, lsm, sourceViewer, modelRender);
 		OperationPanel operationPanel = controller.getOperationPanel();
 		fxmlLoader.setController(controller);
 		// Load and get the root layout.
@@ -93,7 +95,7 @@ public class Main extends Application {
 		AnchorPane.setRightAnchor(sourceViewer, 0.0);
 		// Add AV
 		GridPane visualizationPane = (GridPane) namespace.get("visualizationPane");
-		visualizationPane.add(visualization, 0, 0);
+		visualizationPane.add(modelRender, 0, 0);
 		// Load needed components of from main view in Controller.
 		controller.loadMainViewFxID(fxmlLoader);
 		// Load main window
