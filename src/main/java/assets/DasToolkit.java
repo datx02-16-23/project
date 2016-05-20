@@ -86,9 +86,6 @@ public abstract class DasToolkit {
 	 *         K-ary tree.
 	 */
 	public static int lowerLevelSum(int targetDepth, int K) {
-		if (K < 2) {
-			return 0;
-		}
 		ArrayList<Integer> sums = DasToolkit.lowerLevelSums.get(K);
 
 		if (sums == null) {
@@ -102,12 +99,9 @@ public abstract class DasToolkit {
 		for (; cDepth <= targetDepth; cDepth++) {
 			int prev = sums.get(cDepth - 1);
 			int cur = pow(K, cDepth - 1);
-			System.out.println("prev = " + prev);
-			System.out.println("cur =" + cur);
-			System.out.println("sum = " + (prev + cur));
-			System.out.println();
 			sums.add(new Integer(prev + cur));
 		}
+		
 		return sums.get(targetDepth);
 	}
 
