@@ -169,7 +169,7 @@ public class Array extends DataStructure {
 		/*
 		 * Write operation targeting this Array.
 		 */
-		if (target.identifier.equals(this.identifier)) {
+		if (target != null && target.identifier.equals(this.identifier)) {
 			IndexedElement targetElement = getElement(target);
 
 			if (targetElement != null) {
@@ -188,13 +188,14 @@ public class Array extends DataStructure {
 				putElement(newElement);
 				
 				newElement.execute(op);
+				repaintAll = true;
 			}
 		} else //Should be called again if the source also targets this Array!!
 
 		/*
 		 * Read operation targeting this Array.
 		 */
-		if (source.identifier.equals(this.identifier)) {
+		if (source != null && source.identifier.equals(this.identifier)) {
 			IndexedElement sourceElement = getElement(source);
 
 			// Element was found
@@ -212,6 +213,7 @@ public class Array extends DataStructure {
 				putElement(newElement);
 				
 				newElement.execute(op);
+				repaintAll = true;
 			}
 		}
 	}

@@ -115,19 +115,16 @@ public abstract class ARenderAnimation {
 		/**
 		 * Add transitions for the given options to the parent transition.
 		 * 
-		 * @param parent
-		 *            The parent transition.
 		 * @param orig
-		 *            The original element. Will be set to a ghost while the
-		 *            animation is in progress if {@code options} contains
-		 *            {@link #USE_GHOST}.
+		 *            The original element. <b>Must not be null.</b>
 		 * @param render
-		 *            The render whose animation pane should be used.
+		 *            The render which should do the animation. <b>Must not be
+		 *            null.</b>
 		 * @param millis
 		 *            The animation time in milliseconds.
 		 * @param options
 		 *            A list of options.
-		 * @return
+		 * @return A ParallelTransition with child transitions specified by {@code options}.
 		 */
 		public static ParallelTransition getTransiton(AVElement orig, ARender render, long millis,
 				AnimationOption... options) {
@@ -172,7 +169,7 @@ public abstract class ARenderAnimation {
 					break;
 				}
 			}
-			
+
 			// Must have final value for setOnFinished().
 			final boolean finalGhost = originalGhostDuringAnimation;
 			orig.setGhost(finalGhost);

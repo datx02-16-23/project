@@ -282,6 +282,7 @@ public abstract class ARender extends Pane {
 					millis, this);
 		} else if (hasSource) {
 			//Source only
+			System.out.println("src = " + src);
 			ARenderAnimation.animateLine(src,
 					x1, y1, 
 					x1, y1 - Const.ELEMENT_HEIGHT * 2,
