@@ -41,7 +41,7 @@ public class CreateStructureDialog {
 
 	public CreateStructureDialog(Stage parent) {
 		this.parent = parent;
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/CreateStructure.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/dialog/CreateStructureDialog.fxml"));
 		fxmlLoader.setController(this);
 		root = new Stage();
 		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));

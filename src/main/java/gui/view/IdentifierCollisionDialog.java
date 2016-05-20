@@ -28,7 +28,7 @@ public class IdentifierCollisionDialog {
 
 	public IdentifierCollisionDialog(Stage parent) {
 		this.parent = parent;
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/IdentifierCollisionDialog.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/dialog/IdentifierCollisionDialog.fxml"));
 		fxmlLoader.setController(this);
 		root = new Stage();
 		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));

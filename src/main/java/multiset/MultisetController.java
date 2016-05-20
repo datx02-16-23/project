@@ -38,7 +38,7 @@ public class MultisetController {
 	public MultisetController(Stage window) {
 		this.window = window;
 		this.previousScene = window.getScene();
-		fxmlLoader = new FXMLLoader(getClass().getResource("/MultisetView.fxml"));
+		fxmlLoader = new FXMLLoader(getClass().getResource("/view/MultisetView.fxml"));
 		fxmlLoader.setController(this);
 		VBox p = null;
 		try {

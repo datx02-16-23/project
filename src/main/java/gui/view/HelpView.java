@@ -46,7 +46,7 @@ public class HelpView {
 	}
 
 	private void init() {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/HelpView.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/HelpView.fxml"));
 		fxmlLoader.setController(this);
 
 		stage.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon.png")));

@@ -32,7 +32,7 @@ public class OperationPanel extends Pane {
 	public OperationPanel(Controller controller) {
 		this.controller = controller;
 		// Load content
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/OperationListPanel.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/panel/OperationListPanel.fxml"));
 		fxmlLoader.setController(controller);
 		VBox root = null;
 		try {

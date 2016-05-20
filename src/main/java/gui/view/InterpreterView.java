@@ -51,7 +51,7 @@ public class InterpreterView implements InvalidationListener {
 	public InterpreterView(Stage parent) {
 		this.parent = parent;
 		interpreter = new Interpreter();
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/InterpreterView.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/InterpreterView.fxml"));
 		fxmlLoader.setController(this);
 		root = new Stage();
 		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));

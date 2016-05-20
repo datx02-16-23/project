@@ -24,7 +24,7 @@ public class ConnectedView {
 	public ConnectedView(Stage parent, JGroupCommunicator jgc) {
 		this.parent = parent;
 		this.jgc = jgc;
-		FXMLLoader connectedLoader = new FXMLLoader(getClass().getResource("/ConnectedView.fxml"));
+		FXMLLoader connectedLoader = new FXMLLoader(getClass().getResource("/view/ConnectedView.fxml"));
 		root = new Stage();
 		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_connected.png")));
 		root.initModality(Modality.APPLICATION_MODAL);

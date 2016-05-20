@@ -29,7 +29,7 @@ public class VisualDialog {
 
 	public VisualDialog(Stage parent) {
 		this.parent = parent;
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/DataStructureDialog.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/dialog/DataStructureDialog.fxml"));
 		fxmlLoader.setController(this);
 		root = new Stage();
 		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));

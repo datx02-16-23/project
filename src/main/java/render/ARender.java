@@ -159,7 +159,7 @@ public abstract class ARender extends Pane {
 	}
 
 	private void loadBase() {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(Const.RENDER_FXML_URL));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/render/RenderBase.fxml"));
 		fxmlLoader.setController(this);
 
 		try {

@@ -58,5 +58,4 @@ public abstract class Const {
 	public static final Background ORPHAN_BACKGROUND = Tools.createOrphanBg();
 	public static final Background TREE_BACKGROUND = Tools.createTreeBg();
 	public static final Border BORDER_MOUSEOVER = Tools.getMOBorder();
-	public static final String RENDER_FXML_URL = "/render/RenderBase.fxml";
 }
