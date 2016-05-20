@@ -40,6 +40,7 @@ public abstract class DasConstants {
 	 */
 	public static final int DEFAULT_RENDER_HEIGHT = 250;
 
+	public static final double DEFAULT_ELEMENT_SIZE = 40;
 	public static final double DEFAULT_ELEMENT_WIDTH = 60;
 	public static final double DEFAULT_ELEMENT_HEIGHT = 40;
 	public static final double DEFAULT_ELEMENT_HSPACE = 0;

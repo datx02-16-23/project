@@ -81,15 +81,15 @@ public class HelpView {
 
 		GridPane boxes = (GridPane) fxmlLoader.getNamespace().get("box");
 		GridPane labels = (GridPane) fxmlLoader.getNamespace().get("box_label");
-		
+
 		int column = 0;
 		for (OperationType ot : OperationType.values()) {
 			// Create box
 			final Box box = new Box();
 			box.setMaterial(new PhongMaterial((Color) ot.color));
-			box.setWidth(80);
-			box.setHeight(40);
-			box.setDepth(20);
+			box.setWidth(DasConstants.DEFAULT_ELEMENT_WIDTH);
+			box.setHeight(DasConstants.DEFAULT_ELEMENT_HEIGHT);
+			box.setDepth((DasConstants.DEFAULT_ELEMENT_WIDTH + DasConstants.DEFAULT_ELEMENT_HEIGHT) / 2);
 			box.setOnMouseClicked(event -> {
 				about(ot);
 				boxClicked(box);
@@ -154,11 +154,12 @@ public class HelpView {
 			Main.console.err("Operation info not implemented yet.");
 			playsound = false;
 		}
-		
+
 		root.setCenter(new Label(ot.name()));
 	}
-	
+
 	private final ArrayList<RotateTransition> rotTransitions = new ArrayList<RotateTransition>();
+
 	private void stopBoxRotation() {
 		for (RotateTransition rt : rotTransitions) {
 			rt.stop();
@@ -170,28 +171,28 @@ public class HelpView {
 			rt.play();
 		}
 	}
-	
-	public void aboutArray(){
+
+	public void aboutArray() {
 		root.setCenter(new Label("Arrays r gud"));
 	}
-	
-	public void aboutOrphan(){
+
+	public void aboutOrphan() {
 		root.setCenter(new Label("orphans r gudder"));
 	}
-	
-	public void aboutTree(){
+
+	public void aboutTree() {
 		root.setCenter(new Label("tress r guddest"));
 	}
-	
-	public void onMouseClicked(Event me){
-		
+
+	public void onMouseClicked(Event me) {
+
 	}
-	
-	public void onMouseEntered(Event me){
+
+	public void onMouseEntered(Event me) {
 		((Pane) me.getSource()).setBorder(DasConstants.BORDER_MOUSEOVER);
 	}
-	
-	public void onMouseExited(Event me){
+
+	public void onMouseExited(Event me) {
 		((Pane) me.getSource()).setBorder(null);
 	}
 }

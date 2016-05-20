@@ -28,7 +28,7 @@ public abstract class VisualElementFactory {
 	 *            shapes like circles.
 	 * @return The element to bind.
 	 */
-	public static VisualElement shape(ElemShape shape, Element e, double pri, double sec) {
+	public static VisualElement shape(ElementStyle shape, Element e, double pri, double sec) {
 		VisualElement vis = null;
 
 		switch (shape) {
@@ -82,7 +82,7 @@ public abstract class VisualElementFactory {
 	 *            shapes like circles.
 	 * @return A VisualElement.
 	 */
-	public static VisualElement shape(ElemShape shape, double value, Paint paint, double pri, double sec) {
+	public static VisualElement shape(ElementStyle shape, double value, Paint paint, double pri, double sec) {
 		VisualElement vis = null;
 
 		switch (shape) {
@@ -133,7 +133,7 @@ public abstract class VisualElementFactory {
 	 */
 	public static PolygonElement polygon(Element e, double pri, double sec, double[] points) {
 		PolygonElement vis = new PolygonElement(e, pri, sec, points);
-		vis.elemShape = ElemShape.POLYGON;
+		vis.elemShape = ElementStyle.POLYGON;
 		return vis;
 	}
 
@@ -156,7 +156,7 @@ public abstract class VisualElementFactory {
 	 */
 	public static PolygonElement polygon(double value, Paint paint, double pri, double sec, double[] points) {
 		PolygonElement vis = new PolygonElement(value, paint, pri, sec, points);
-		vis.elemShape = ElemShape.POLYGON;
+		vis.elemShape = ElementStyle.POLYGON;
 		return vis;
 	}
 

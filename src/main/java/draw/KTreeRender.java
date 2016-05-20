@@ -6,7 +6,7 @@ import assets.DasToolkit;
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
 import contract.datastructure.Array.IndexedElement;
-import draw.element.ElemShape;
+import draw.element.ElementStyle;
 import draw.element.VisualElementFactory;
 import draw.element.VisualElement;
 import javafx.geometry.Pos;
@@ -26,6 +26,9 @@ import javafx.scene.shape.Line;
  *
  */
 public class KTreeRender extends ARender {
+
+	public static final ElementStyle DEFAULT_ELEMENT_STYLE = ElementStyle.SINGLE;
+	public static ElementStyle elementStyle = DEFAULT_ELEMENT_STYLE;
 
 	/**
 	 * Container for connector lines.
@@ -99,8 +102,7 @@ public class KTreeRender extends ARender {
 	protected void bellsAndWhistles(Element ae, VisualElement childVis) {
 		System.out.println("ktree: baw shape = " + childVis.getShape());
 
-		IndexedElement parentClone = new IndexedElement(0,
-				new int[] { (((IndexedElement) ae).getIndex()[0] - 1) / K });
+		IndexedElement parentClone = new IndexedElement(0, new int[] { (((IndexedElement) ae).getIndex()[0] - 1) / K });
 
 		// VisualElement parentVis = visualElementsMapping.get(parent_clone);
 		VisualElement parentVis = visualMap
@@ -149,7 +151,7 @@ public class KTreeRender extends ARender {
 
 	@Override
 	public double getX(Element e) {
-		if(e == null || e instanceof IndexedElement == false){
+		if (e == null || e instanceof IndexedElement == false) {
 			return -1;
 		}
 		int index = ((IndexedElement) e).getIndex()[0];
@@ -184,7 +186,7 @@ public class KTreeRender extends ARender {
 
 	@Override
 	public double getY(Element e) {
-		if(e == null || e instanceof IndexedElement == false){
+		if (e == null || e instanceof IndexedElement == false) {
 			return -1;
 		}
 		int index = ((IndexedElement) e).getIndex()[0];
@@ -241,7 +243,7 @@ public class KTreeRender extends ARender {
 
 	@Override
 	protected VisualElement createVisualElement(Element e) {
-		VisualElement ve = VisualElementFactory.shape(ElemShape.ELLIPSE, e, nodeWidth, nodeHeight);
+		VisualElement ve = VisualElementFactory.shape(elementStyle, e, nodeWidth, nodeHeight);
 		ve.setInfoPos(Pos.TOP_LEFT);
 		ve.setInfoArray(((IndexedElement) e).getIndex());
 		return ve;
@@ -249,7 +251,7 @@ public class KTreeRender extends ARender {
 
 	@Override
 	protected VisualElement createVisualElement(double value, Color color) {
-		VisualElement ve = VisualElementFactory.shape(ElemShape.ELLIPSE, value, color, nodeWidth, nodeHeight);
+		VisualElement ve = VisualElementFactory.shape(elementStyle, value, color, nodeWidth, nodeHeight);
 		ve.setInfoPos(null);
 		return ve;
 	}

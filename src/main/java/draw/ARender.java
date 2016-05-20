@@ -14,6 +14,7 @@ import contract.datastructure.Array.IndexedElement;
 import contract.operation.OperationCounter;
 import contract.operation.OperationCounter.OperationCounterHaver;
 import draw.RenderAnimation.AnimationOption;
+import draw.element.ElementStyle;
 import draw.element.VisualElement;
 import gui.Main;
 import javafx.event.Event;

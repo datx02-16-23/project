@@ -39,7 +39,7 @@ public abstract class VisualElement extends Pane {
 	/**
 	 * Enum indicating the shape of this polygon. Used by the factory.
 	 */
-	public ElemShape elemShape;
+	public ElementStyle elemShape;
 
 	/**
 	 * Current info label position.

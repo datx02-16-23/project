@@ -5,6 +5,7 @@ import java.util.HashMap;
 import assets.DasConstants;
 import contract.datastructure.DataStructure;
 import contract.datastructure.VisualType;
+import draw.element.ElementStyle;
 import contract.datastructure.DataStructure.VisualListener;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -121,17 +122,20 @@ public class ARenderManager extends BorderPane implements VisualListener {
 	public ARender resolveRender(DataStructure struct) {
 		switch (struct.visual) {
 		case bar:
-			curRender = new BarchartRender(struct, 30, DasConstants.DEFAULT_RENDER_HEIGHT, 10, 10);
+			curRender = new BarchartRender(struct, DasConstants.DEFAULT_ELEMENT_WIDTH,
+					DasConstants.DEFAULT_RENDER_HEIGHT, 10, 10);
 			break;
 		case grid:
 		case box:
-			curRender = new GridRender(struct, GridRender.Order.resolve(struct.visualOption), 40, 40, 3, 3);
+			((GridRender) curRender).elementStyle = ElementStyle.POLYGON;
+			curRender = new GridRender(struct, GridRender.Order.resolve(struct.visualOption),
+					DasConstants.DEFAULT_ELEMENT_SIZE, DasConstants.DEFAULT_ELEMENT_SIZE, 3, 3);
 			break;
 		case tree:
-			curRender = new KTreeRender(struct, struct.visualOption, 40, 40, 5, 5);
+			curRender = new KTreeRender(struct, struct.visualOption, DasConstants.DEFAULT_ELEMENT_SIZE, DasConstants.DEFAULT_ELEMENT_SIZE, 5, 5);
 			break;
 		case single:
-			curRender = new SingleElementRender(struct, 80, 40);
+			curRender = new SingleElementRender(struct, DasConstants.DEFAULT_ELEMENT_WIDTH, DasConstants.DEFAULT_RENDER_HEIGHT);
 			break;
 		}
 		// render.setAnimationPane(animation_pane == null ? render.getNodes() :

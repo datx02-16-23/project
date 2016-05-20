@@ -7,6 +7,6 @@ package draw.element;
 	 * @author Richard Sundqvist
 	 *
 	 */
-	public enum ElemShape {
+	public enum ElementStyle {
 		ELLIPSE, CIRCLE, RECTANGLE, BAR_ELEMENT, SQUARE, TRAPEZOID, TRIANGLE, POLYGON, SINGLE;
 	}

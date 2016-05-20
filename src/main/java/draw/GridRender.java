@@ -4,7 +4,7 @@ import contract.datastructure.Array;
 import contract.datastructure.Array.IndexedElement;
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
-import draw.element.ElemShape;
+import draw.element.ElementStyle;
 import draw.element.VisualElement;
 import draw.element.VisualElementFactory;
 import gui.Main;
@@ -18,6 +18,10 @@ import javafx.scene.paint.Color;
  *
  */
 public class GridRender extends ARender {
+	
+	public static final ElementStyle DEFAULT_ELEMENT_STYLE = ElementStyle.SINGLE;
+	public static ElementStyle elementStyle = DEFAULT_ELEMENT_STYLE;
+	
 	private final Order majorOrder;
 	private int[] dims;
 
@@ -185,7 +189,7 @@ public class GridRender extends ARender {
 
 	@Override
 	protected VisualElement createVisualElement(Element e) {
-		VisualElement re = VisualElementFactory.shape(ElemShape.RECTANGLE, e, nodeWidth, nodeHeight);
+		VisualElement re = VisualElementFactory.shape(elementStyle, e, nodeWidth, nodeHeight);
 		re.setInfoPos(Pos.BOTTOM_CENTER);
 		re.setInfoArray(((IndexedElement) e).getIndex());
 		return re;
@@ -193,7 +197,7 @@ public class GridRender extends ARender {
 
 	@Override
 	protected VisualElement createVisualElement(double value, Color color) {
-		VisualElement re = VisualElementFactory.shape(ElemShape.RECTANGLE, value, color, nodeWidth, nodeHeight);
+		VisualElement re = VisualElementFactory.shape(elementStyle, value, color, nodeWidth, nodeHeight);
 		re.setInfoPos(null);
 		return re;
 	}

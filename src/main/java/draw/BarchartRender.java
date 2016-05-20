@@ -8,7 +8,7 @@ import contract.datastructure.Array.BoundaryChangeListener;
 import contract.datastructure.Array.IndexedElement;
 import contract.datastructure.Element;
 import draw.element.BarchartElement;
-import draw.element.ElemShape;
+import draw.element.ElementStyle;
 import draw.element.VisualElement;
 import draw.element.VisualElementFactory;
 import javafx.scene.Node;
@@ -233,14 +233,14 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 
 	@Override
 	protected BarchartElement createVisualElement(Element e) {
-		BarchartElement ve = (BarchartElement) VisualElementFactory.shape(ElemShape.BAR_ELEMENT, e, barWidth,
+		BarchartElement ve = (BarchartElement) VisualElementFactory.shape(ElementStyle.BAR_ELEMENT, e, barWidth,
 				unitSize * e.numValue());
 		return ve;
 	}
 
 	@Override
 	protected VisualElement createVisualElement(double value, Color color) {
-		VisualElement ve = VisualElementFactory.shape(ElemShape.BAR_ELEMENT, value, color, barWidth, unitSize * value);
+		VisualElement ve = VisualElementFactory.shape(ElementStyle.BAR_ELEMENT, value, color, barWidth, unitSize * value);
 		return ve;
 	}
 
