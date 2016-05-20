@@ -20,7 +20,7 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
-import assets.DasConstants;
+import assets.Const;
 import contract.AnnotatedVariable;
 import contract.Header;
 import contract.Operation;
@@ -353,7 +353,7 @@ public class LogStreamManager implements CommunicatorListener {
 		StringBuilder sb = new StringBuilder();
 		sb.append(
 				"This is a simplified version of the log. It sacrifices completeness for readability and cannot be processed by "
-						+ DasConstants.PROJECT_NAME + ".\n\n");
+						+ Const.PROJECT_NAME + ".\n\n");
 		Collection<AnnotatedVariable> c = wrapper.header.annotatedVariables.values();
 		sb.append("Header: " + c.size() + " declared variables.\n");
 		int i = 0;

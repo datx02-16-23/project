@@ -1,7 +1,5 @@
 package draw.element;
 
-import java.util.Arrays;
-
 import assets.Debug;
 import contract.datastructure.Element;
 import javafx.scene.paint.Paint;
@@ -12,12 +10,12 @@ import javafx.scene.paint.Paint;
  * @author Richard Sundqvist
  *
  */
-public abstract class ElementFactory {
+public abstract class AVElementFactory {
 
 	public static final double[] TRAPEZOID_POINTS = { 0.75, 0, 0.25, 0, 0, 1, 1, 1 };
 	public static final double[] TRIANGLE_POINTS = { 0.5, 0, 1, 1, 0, 1 };
 
-	private ElementFactory() {
+	private AVElementFactory() {
 	} // Not to be instantiated.
 
 	/**
@@ -34,8 +32,8 @@ public abstract class ElementFactory {
 	 *            shapes like circles.
 	 * @return The element to bind.
 	 */
-	public static VisualElement shape(ElementShape shape, Element e, double pri, double sec) {
-		VisualElement vis = null;
+	public static AVElement shape(ElementShape shape, Element e, double pri, double sec) {
+		AVElement vis = null;
 
 		switch (shape) {
 		case CIRCLE:
@@ -90,8 +88,8 @@ public abstract class ElementFactory {
 	 *            shapes like circles.
 	 * @return A VisualElement.
 	 */
-	public static VisualElement shape(ElementShape shape, double value, Paint paint, double pri, double sec) {
-		VisualElement vis = null;
+	public static AVElement shape(ElementShape shape, double value, Paint paint, double pri, double sec) {
+		AVElement vis = null;
 
 		switch (shape) {
 		case CIRCLE:
@@ -256,8 +254,8 @@ public abstract class ElementFactory {
 	 *            The original element.
 	 * @return A clone of the original element.
 	 */
-	public static VisualElement clone(VisualElement orig) {
-		VisualElement clone;
+	public static AVElement clone(AVElement orig) {
+		AVElement clone;
 		// Shape
 		if (orig.points == null) {
 			// Unbound

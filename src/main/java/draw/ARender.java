@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import assets.DasConstants;
+import assets.Const;
 import assets.Debug;
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
@@ -16,7 +16,7 @@ import contract.operation.OperationCounter;
 import contract.operation.OperationCounter.OperationCounterHaver;
 import draw.ARenderAnimation.AnimationOption;
 import draw.element.ElementShape;
-import draw.element.VisualElement;
+import draw.element.AVElement;
 import gui.Main;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
@@ -71,7 +71,7 @@ public abstract class ARender extends Pane {
 	 */
 	// protected final HashMap<Element, VisualElement> visualMap =
 	// new HashMap<Element, VisualElement>();
-	protected final HashMap<String, VisualElement> visualMap = new HashMap<String, VisualElement>();
+	protected final HashMap<String, AVElement> visualMap = new HashMap<String, AVElement>();
 
 	/**
 	 * Pane for rendering of visual element nodes. Added to {@link contentPane}
@@ -112,17 +112,17 @@ public abstract class ARender extends Pane {
 
 	/**
 	 * Default constructor. Will use default values: <br>
-	 * Element width: {@link DasConstants#ELEMENT_HSPACE}<br>
-	 * Element height: {@link DasConstants#ELEMENT_HEIGHT}<br>
-	 * Element horizontal space: {@link DasConstants#ELEMENT_HSPACE}<br>
-	 * Element vertical space: {@link DasConstants#ELEMENT_VSPACE}<br>
+	 * Element width: {@link Const#ELEMENT_HSPACE}<br>
+	 * Element height: {@link Const#ELEMENT_HEIGHT}<br>
+	 * Element horizontal space: {@link Const#ELEMENT_HSPACE}<br>
+	 * Element vertical space: {@link Const#ELEMENT_VSPACE}<br>
 	 * 
 	 * @param struct
 	 *            The DataStructure this Render will draw.
 	 */
 	public ARender(DataStructure struct) {
-		this(struct, DasConstants.ELEMENT_WIDTH, DasConstants.ELEMENT_HEIGHT,
-				DasConstants.ELEMENT_HSPACE, DasConstants.ELEMENT_VSPACE);
+		this(struct, Const.ELEMENT_WIDTH, Const.ELEMENT_HEIGHT,
+				Const.ELEMENT_HSPACE, Const.ELEMENT_VSPACE);
 	}
 
 	/**
@@ -159,7 +159,7 @@ public abstract class ARender extends Pane {
 	}
 
 	private void loadBase() {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(DasConstants.RENDER_FXML_URL));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(Const.RENDER_FXML_URL));
 		fxmlLoader.setController(this);
 
 		try {
@@ -284,13 +284,13 @@ public abstract class ARender extends Pane {
 			//Source only
 			ARenderAnimation.animateLine(src,
 					x1, y1, 
-					x1, y1 - DasConstants.ELEMENT_HEIGHT * 2,
+					x1, y1 - Const.ELEMENT_HEIGHT * 2,
 					millis, this,
 					AnimationOption.FADE_OUT, AnimationOption.SHRINK);
 		} else {
 			//Target only
 			ARenderAnimation.animateLine(tar,
-					x1, y1 - DasConstants.ELEMENT_HEIGHT * 2,
+					x1, y1 - Const.ELEMENT_HEIGHT * 2,
 					x1, y1,
 					millis, this,
 					AnimationOption.FADE_IN, AnimationOption.GROW);
@@ -442,7 +442,7 @@ public abstract class ARender extends Pane {
 			if (header.visibleProperty().isBound()) {
 				name.setVisible(false);
 			}
-			setBorder(DasConstants.BORDER_MOUSEOVER);
+			setBorder(Const.BORDER_MOUSEOVER);
 		});
 		setOnMouseExited(event -> {
 			// this.setCursor(null);
@@ -513,7 +513,7 @@ public abstract class ARender extends Pane {
 		calculateSize();
 
 		// Create nodes
-		VisualElement newVis;
+		AVElement newVis;
 
 		for (Element e : struct.getElements()) {
 			newVis = createVisualElement(e);
@@ -536,7 +536,7 @@ public abstract class ARender extends Pane {
 	 *            The element to bind.
 	 * @return A new bound VisualElement.
 	 */
-	protected abstract VisualElement createVisualElement(Element e);
+	protected abstract AVElement createVisualElement(Element e);
 
 	/**
 	 * Create an unbound node element in whatever style the Render prefers to
@@ -548,7 +548,7 @@ public abstract class ARender extends Pane {
 	 *            The colour of the element.
 	 * @return A new unbound VisualElement.
 	 */
-	protected abstract VisualElement createVisualElement(double value, Color color);
+	protected abstract AVElement createVisualElement(double value, Color color);
 
 	/**
 	 * Decorator method used to attach bells and whistles to the current
@@ -559,7 +559,7 @@ public abstract class ARender extends Pane {
 	 * @param ve
 	 *            The VisualElement to attach a bell to.
 	 */
-	protected abstract void bellsAndWhistles(Element e, VisualElement ve);
+	protected abstract void bellsAndWhistles(Element e, AVElement ve);
 
 	private static Background getStructBackground(DataStructure struct) {
 		if (struct == null) {
@@ -568,11 +568,11 @@ public abstract class ARender extends Pane {
 
 		switch (struct.rawType) {
 		case array:
-			return DasConstants.ARRAY_BACKGROUND;
+			return Const.ARRAY_BACKGROUND;
 		case tree:
-			return DasConstants.TREE_BACKGROUND;
+			return Const.TREE_BACKGROUND;
 		case independentElement:
-			return DasConstants.ORPHAN_BACKGROUND;
+			return Const.ORPHAN_BACKGROUND;
 		default:
 			return null;
 		}
@@ -694,7 +694,7 @@ public abstract class ARender extends Pane {
 	 * 
 	 * @return The visual map for this Render.
 	 */
-	public HashMap<String, VisualElement> getVisualMap() {
+	public HashMap<String, AVElement> getVisualMap() {
 		return visualMap;
 	}
 

@@ -32,7 +32,7 @@ import javafx.util.Duration;
  * @author Richard Sundqvist
  *
  */
-public abstract class VisualElement extends Pane {
+public abstract class AVElement extends Pane {
 
 	private static final String url = "/render/FXMLElement.fxml";
 
@@ -88,7 +88,7 @@ public abstract class VisualElement extends Pane {
 	 *            The height of the node. * @param fxmlUrl Path to the FXML file
 	 *            containing the layout for the element.
 	 */
-	public VisualElement(double value, Paint style, double node_width, double node_height) {
+	public AVElement(double value, Paint style, double node_width, double node_height) {
 		this.element = null;
 		points = null;
 		init(node_width, node_height);
@@ -109,7 +109,7 @@ public abstract class VisualElement extends Pane {
 	 * @param fxmlUrl
 	 *            Path to the FXML file containing the layout for the element.
 	 */
-	public VisualElement(Element element, double node_width, double node_height) {
+	public AVElement(Element element, double node_width, double node_height) {
 		this.element = element;
 		points = null;
 		init(node_width, node_height);
@@ -131,7 +131,7 @@ public abstract class VisualElement extends Pane {
 	 * @param node_height
 	 *            The height of the node.
 	 */
-	public VisualElement(double value, Paint style, double node_width, double node_height, double[] points) {
+	public AVElement(double value, Paint style, double node_width, double node_height, double[] points) {
 		this.element = null;
 		this.points = points;
 		init(node_width, node_height);
@@ -150,7 +150,7 @@ public abstract class VisualElement extends Pane {
 	 * @param node_height
 	 *            The height of the node.
 	 */
-	public VisualElement(Element element, double node_width, double node_height, double[] points) {
+	public AVElement(Element element, double node_width, double node_height, double[] points) {
 		this.element = element;
 		this.points = points;
 		init(node_width, node_height);
@@ -397,7 +397,7 @@ public abstract class VisualElement extends Pane {
 		infoLabel.setTranslateY(ty);
 	}
 
-	public VisualElement clone() {
-		return ElementFactory.clone(this);
+	public AVElement clone() {
+		return AVElementFactory.clone(this);
 	}
 }

@@ -10,9 +10,9 @@ import contract.datastructure.Array.IndexedElement;
 import contract.datastructure.Element;
 import draw.element.BarchartElement;
 import draw.element.ElementShape;
-import draw.element.VisualElement;
+import draw.element.AVElement;
 import gui.Main;
-import draw.element.ElementFactory;
+import draw.element.AVElementFactory;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
@@ -238,19 +238,19 @@ public class BarchartRender extends ARender implements BoundaryChangeListener {
 
 	@Override
 	protected BarchartElement createVisualElement(Element e) {
-		BarchartElement ve = (BarchartElement) ElementFactory.shape(ELEMENT_STYLE, e, barWidth,
+		BarchartElement ve = (BarchartElement) AVElementFactory.shape(ELEMENT_STYLE, e, barWidth,
 				unitSize * e.numValue());
 		return ve;
 	}
 
 	@Override
-	protected VisualElement createVisualElement(double value, Color color) {
-		VisualElement ve = ElementFactory.shape(ELEMENT_STYLE, value, color, barWidth, unitSize * value);
+	protected AVElement createVisualElement(double value, Color color) {
+		AVElement ve = AVElementFactory.shape(ELEMENT_STYLE, value, color, barWidth, unitSize * value);
 		return ve;
 	}
 
 	@Override
-	protected void bellsAndWhistles(Element e, VisualElement ve) {
+	protected void bellsAndWhistles(Element e, AVElement ve) {
 		((BarchartElement) ve).updateUnitHeight(unitSize);
 	}
 

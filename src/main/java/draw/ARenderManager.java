@@ -2,7 +2,7 @@ package draw;
 
 import java.util.HashMap;
 
-import assets.DasConstants;
+import assets.Const;
 import contract.datastructure.DataStructure;
 import contract.datastructure.VisualType;
 import draw.element.ElementShape;
@@ -76,7 +76,11 @@ public class ARenderManager extends BorderPane implements VisualListener {
 		curRender = renders.get(type);
 
 		if (curRender == null) { // Create new render for the structure.
-			curRender = resolveRender(struct);
+			//@formatter:off
+			curRender = ARenderFactory.resolveRender(struct,
+					Const.ELEMENT_WIDTH, Const.ELEMENT_HEIGHT,
+					Const.RENDER_WIDTH, Const.RENDER_HEIGHT);
+			//@formatter:off
 			renders.put(struct.resolveVisual(), curRender);
 		}
 
@@ -111,35 +115,6 @@ public class ARenderManager extends BorderPane implements VisualListener {
 		animPane.getChildren().remove(curRender.getAnimationPane());
 		animPane.getChildren().add(curRender.getAnimationPane());
 		prevRender = curRender;
-	}
-
-	/**
-	 * Determines and creates a Render for use by this DataStructure.
-	 * 
-	 * @param struct
-	 *            The DataStructure to create a Render for.
-	 */
-	public ARender resolveRender(DataStructure struct) {
-		switch (struct.visual) {
-		case bar:
-			curRender = new BarchartRender(struct, DasConstants.ELEMENT_WIDTH,
-					DasConstants.RENDER_HEIGHT, 20, 10);
-			break;
-		case grid:
-		case box:
-			curRender = new GridRender(struct, GridRender.Order.resolve(struct.visualOption),
-					DasConstants.ELEMENT_SIZE, DasConstants.ELEMENT_SIZE, 3, 3);
-			break;
-		case tree:
-			curRender = new KTreeRender(struct, struct.visualOption, DasConstants.ELEMENT_SIZE, DasConstants.ELEMENT_SIZE, 5, 5);
-			break;
-		case single:
-			curRender = new SingleElementRender(struct, DasConstants.ELEMENT_WIDTH, DasConstants.ELEMENT_HEIGHT);
-			break;
-		}
-		
-//		curRender.setElementStyle(ElementShape.TRIANGLE);
-		return curRender;
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Ellipse;
 
-public class EllipseElement extends VisualElement {
+public class EllipseElement extends AVElement {
 
 	/**
 	 * Create a static, unbound EllipseElement.

@@ -2,7 +2,7 @@ package gui.view;
 
 import java.io.IOException;
 
-import assets.DasConstants;
+import assets.Const;
 import contract.datastructure.DataStructure;
 import contract.datastructure.VisualType;
 import draw.RenderSVF;
@@ -34,7 +34,7 @@ public class VisualDialog {
 		root = new Stage();
 		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
 		root.initModality(Modality.APPLICATION_MODAL);
-		root.setTitle(DasConstants.PROJECT_NAME + ": Choose Visualisation");
+		root.setTitle(Const.PROJECT_NAME + ": Choose Visualisation");
 		root.initOwner(this.parent);
 		GridPane p = null;
 		try {

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import assets.DasConstants;
+import assets.Const;
 import contract.operation.OperationType;
 import gui.Controller;
 import gui.Main;
@@ -50,7 +50,7 @@ public class HelpView {
 
 		stage.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon.png")));
 		stage.initModality(Modality.NONE);
-		stage.setTitle(DasConstants.PROJECT_NAME + ": Help");
+		stage.setTitle(Const.PROJECT_NAME + ": Help");
 		stage.initOwner(owner);
 		try {
 			root = fxmlLoader.load();
@@ -87,9 +87,9 @@ public class HelpView {
 			// Create box
 			final Box box = new Box();
 			box.setMaterial(new PhongMaterial((Color) ot.color));
-			box.setWidth(DasConstants.ELEMENT_WIDTH);
-			box.setHeight(DasConstants.ELEMENT_HEIGHT);
-			box.setDepth((DasConstants.ELEMENT_WIDTH + DasConstants.ELEMENT_HEIGHT) / 2);
+			box.setWidth(Const.ELEMENT_WIDTH);
+			box.setHeight(Const.ELEMENT_HEIGHT);
+			box.setDepth((Const.ELEMENT_WIDTH + Const.ELEMENT_HEIGHT) / 2);
 			box.setOpacity(0.3);
 			box.setOnMouseClicked(event -> {
 				about(ot);
@@ -191,7 +191,7 @@ public class HelpView {
 	}
 
 	public void onMouseEntered(Event me) {
-		((Pane) me.getSource()).setBorder(DasConstants.BORDER_MOUSEOVER);
+		((Pane) me.getSource()).setBorder(Const.BORDER_MOUSEOVER);
 	}
 
 	public void onMouseExited(Event me) {

@@ -6,8 +6,8 @@ import contract.datastructure.Array.IndexedElement;
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
 import draw.element.ElementShape;
-import draw.element.VisualElement;
-import draw.element.ElementFactory;
+import draw.element.AVElement;
+import draw.element.AVElementFactory;
 import gui.Main;
 import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
@@ -20,7 +20,7 @@ import javafx.scene.paint.Color;
  */
 public class GridRender extends ARender {
 	
-	public static final ElementShape DEFAULT_ELEMENT_STYLE = ElementShape.SINGLE;
+	public static final ElementShape DEFAULT_ELEMENT_STYLE = ElementShape.RECTANGLE;
 	
 	private final Order majorOrder;
 	private int[] dims;
@@ -189,26 +189,26 @@ public class GridRender extends ARender {
 	}
 
 	@Override
-	protected VisualElement createVisualElement(Element e) {
+	protected AVElement createVisualElement(Element e) {
 		elementStyle = elementStyle == null ? DEFAULT_ELEMENT_STYLE : elementStyle;
 		
-		VisualElement re = ElementFactory.shape(elementStyle, e, nodeWidth, nodeHeight);
+		AVElement re = AVElementFactory.shape(elementStyle, e, nodeWidth, nodeHeight);
 		re.setInfoPos(Pos.BOTTOM_CENTER);
 		re.setInfoArray(((IndexedElement) e).getIndex());
 		return re;
 	}
 
 	@Override
-	protected VisualElement createVisualElement(double value, Color color) {
+	protected AVElement createVisualElement(double value, Color color) {
 		elementStyle = elementStyle == null ? DEFAULT_ELEMENT_STYLE : elementStyle;
 		
-		VisualElement re = ElementFactory.shape(elementStyle, value, color, nodeWidth, nodeHeight);
+		AVElement re = AVElementFactory.shape(elementStyle, value, color, nodeWidth, nodeHeight);
 		re.setInfoPos(null);
 		return re;
 	}
 
 	@Override
-	protected void bellsAndWhistles(Element e, VisualElement ve) {
+	protected void bellsAndWhistles(Element e, AVElement ve) {
 		System.out.println("grid: baw shape = " + ve.getShape());
 	}
 }

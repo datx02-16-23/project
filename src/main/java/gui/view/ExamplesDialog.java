@@ -3,7 +3,7 @@ package gui.view;
 import java.io.IOException;
 import java.util.Arrays;
 
-import assets.DasConstants;
+import assets.Const;
 import gui.Controller;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -34,7 +34,7 @@ public class ExamplesDialog {
 		root = new Stage();
 		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
 		root.initModality(Modality.APPLICATION_MODAL);
-		root.setTitle(DasConstants.PROJECT_NAME + ": Example");
+		root.setTitle(Const.PROJECT_NAME + ": Example");
 		root.initOwner(this.parent);
 		GridPane p = null;
 		try {

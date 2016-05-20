@@ -2,8 +2,8 @@ package gui;
 
 import java.util.HashMap;
 
-import assets.DasConstants;
-import assets.DasToolkit;
+import assets.Const;
+import assets.Tools;
 import assets.Debug;
 import contract.Locator;
 import contract.Operation;
@@ -70,7 +70,7 @@ public class Visualization extends StackPane {
 		useAnimation = true;
 
 		// Add stacked canvases
-		this.getChildren().addAll(DasToolkit.HINT_PANE, managerPane, animationPane);
+		this.getChildren().addAll(Tools.HINT_PANE, managerPane, animationPane);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class Visualization extends StackPane {
 		managerMap.clear();
 		managerPane.getChildren().clear();
 		animationPane.getChildren().clear();
-		DasToolkit.HINT_PANE.setVisible(true);
+		Tools.HINT_PANE.setVisible(true);
 	}
 
 	public void clearAndCreateVisuals() {
@@ -92,7 +92,7 @@ public class Visualization extends StackPane {
 		}
 		// overlay.expandAll();
 		placeVisuals();
-		DasToolkit.HINT_PANE.setVisible(managerPane.getChildren().isEmpty());
+		Tools.HINT_PANE.setVisible(managerPane.getChildren().isEmpty());
 	}
 
 	/**
@@ -326,7 +326,7 @@ public class Visualization extends StackPane {
 				break;
 			case bar:
 				xPos = margin + this.getWidth() * sWExpand;
-				yPos = getHeight() - (margin + DasConstants.RENDER_HEIGHT) * (southWest + 1) - margin * 3;
+				yPos = getHeight() - (margin + Const.RENDER_HEIGHT) * (southWest + 1) - margin * 3;
 				if (!(checkXPos(xPos) && checkYPos(yPos))) {
 					sWExpand++; // TODO
 				}
@@ -334,7 +334,7 @@ public class Visualization extends StackPane {
 				break;
 			default:
 				xPos = margin + this.getWidth() * nWExpand;
-				yPos = (margin + DasConstants.RENDER_HEIGHT) * northWest + margin;
+				yPos = (margin + Const.RENDER_HEIGHT) * northWest + margin;
 				if (!(checkXPos(xPos) & checkYPos(yPos))) {
 					nWExpand++; // TODO
 				}
@@ -409,7 +409,7 @@ public class Visualization extends StackPane {
 	 * @return The minimum acceptable X-Coordinate.
 	 */
 	public double getXMin() {
-		return DasConstants.RENDER_PADDING;
+		return Const.RENDER_PADDING;
 	}
 
 	/**
@@ -439,7 +439,7 @@ public class Visualization extends StackPane {
 	 * @return The minimum acceptable Y-Coordinate.
 	 */
 	public double getYMin() {
-		return DasConstants.RENDER_PADDING;
+		return Const.RENDER_PADDING;
 	}
 
 	/**

@@ -3,7 +3,7 @@ package contract;
 import java.io.Serializable;
 import java.util.List;
 
-import assets.DasConstants;
+import assets.Const;
 
 /**
  * Wrapper class for GLO and HOG files on the JSON format.
@@ -13,7 +13,7 @@ public class CRoot implements Serializable {
 	/**
 	 * Version number for this class.
 	 */
-	private static final long serialVersionUID = DasConstants.VERSION_NUMBER;
+	private static final long serialVersionUID = Const.VERSION_NUMBER;
 	/**
 	 * Header data for the file. Contains version number and variable
 	 * declarations.

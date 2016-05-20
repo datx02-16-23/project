@@ -2,7 +2,7 @@ package gui.view;
 
 import java.io.IOException;
 
-import assets.DasConstants;
+import assets.Const;
 import contract.datastructure.Array;
 import contract.datastructure.DataStructure;
 import contract.datastructure.IndependentElement;
@@ -46,7 +46,7 @@ public class CreateStructureDialog {
 		root = new Stage();
 		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
 		root.initModality(Modality.APPLICATION_MODAL);
-		root.setTitle(DasConstants.PROJECT_NAME + ": Create Data Structure");
+		root.setTitle(Const.PROJECT_NAME + ": Create Data Structure");
 		root.initOwner(this.parent);
 		GridPane p = null;
 		try {

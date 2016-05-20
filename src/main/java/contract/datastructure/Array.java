@@ -3,7 +3,7 @@ package contract.datastructure;
 import java.util.Arrays;
 import java.util.Map;
 
-import assets.DasConstants;
+import assets.Const;
 import contract.Locator;
 import contract.datastructure.RawType.AbstractType;
 import contract.operation.*;
@@ -20,7 +20,7 @@ public class Array extends DataStructure {
 	/**
 	 * Version number for this class.
 	 */
-	private static final long serialVersionUID = DasConstants.VERSION_NUMBER;
+	private static final long serialVersionUID = Const.VERSION_NUMBER;
 	private transient int[] capacity;
 	private transient double min = Integer.MAX_VALUE;
 	private transient double max = Integer.MIN_VALUE;

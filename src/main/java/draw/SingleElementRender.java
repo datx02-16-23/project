@@ -74,14 +74,14 @@ public class SingleElementRender extends ARender {
 	}
 
 	@Override
-	protected VisualElement createVisualElement(Element e) {
-		VisualElement re = ElementFactory.shape(DEFAULT_ELEMENT_STYLE, e, nodeWidth, nodeHeight);
+	protected AVElement createVisualElement(Element e) {
+		AVElement re = AVElementFactory.shape(DEFAULT_ELEMENT_STYLE, e, nodeWidth, nodeHeight);
 		return re;
 	}
 
 	@Override
-	protected VisualElement createVisualElement(double value, Color color) {
-		VisualElement re = ElementFactory.shape(DEFAULT_ELEMENT_STYLE, value, color, nodeWidth, nodeHeight);
+	protected AVElement createVisualElement(double value, Color color) {
+		AVElement re = AVElementFactory.shape(DEFAULT_ELEMENT_STYLE, value, color, nodeWidth, nodeHeight);
 		re.setInfoPos(null);
 		return re;
 	}
@@ -89,7 +89,7 @@ public class SingleElementRender extends ARender {
 	
 
 	@Override
-	protected void bellsAndWhistles(Element e, VisualElement ve) {
+	protected void bellsAndWhistles(Element e, AVElement ve) {
 		System.out.println("single: bells shape = " + ve.getShape());	
 	}
 }

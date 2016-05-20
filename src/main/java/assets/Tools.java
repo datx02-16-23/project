@@ -25,9 +25,9 @@ import javafx.scene.paint.Color;
  * @author Richard Sundqvist
  *
  */
-public abstract class DasToolkit {
+public abstract class Tools {
 
-	private DasToolkit() {
+	private Tools() {
 	} // Not to be instantiated.
 
 	// A FXML pane showing user instructions.
@@ -86,13 +86,13 @@ public abstract class DasToolkit {
 	 *         K-ary tree.
 	 */
 	public static int lowerLevelSum(int targetDepth, int K) {
-		ArrayList<Integer> sums = DasToolkit.lowerLevelSums.get(K);
+		ArrayList<Integer> sums = Tools.lowerLevelSums.get(K);
 
 		if (sums == null) {
 			// Start a new list.
 			sums = new ArrayList<Integer>();
 			sums.add(new Integer(0));
-			DasToolkit.lowerLevelSums.put(K, sums);
+			Tools.lowerLevelSums.put(K, sums);
 		}
 
 		int cDepth = sums.size();

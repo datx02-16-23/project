@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import assets.DasConstants;
+import assets.Const;
 import contract.Operation;
 import contract.operation.OperationType;
 import gui.Main;
@@ -56,7 +56,7 @@ public class InterpreterView implements InvalidationListener {
 		root = new Stage();
 		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
 		root.initModality(Modality.APPLICATION_MODAL);
-		root.setTitle(DasConstants.PROJECT_NAME + ": Interpreter");
+		root.setTitle(Const.PROJECT_NAME + ": Interpreter");
 		root.initOwner(this.parent);
 		GridPane p = null;
 		try {

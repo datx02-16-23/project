@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Polygon;
 
-public class PolygonElement extends VisualElement {
+public class PolygonElement extends AVElement {
 
 	/**
 	 * Create a static, unbound RectangleElement.

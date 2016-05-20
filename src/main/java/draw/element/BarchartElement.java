@@ -1,6 +1,6 @@
 package draw.element;
 
-import assets.DasConstants;
+import assets.Const;
 import contract.datastructure.Element;
 import javafx.beans.binding.DoubleBinding;
 import javafx.scene.paint.Color;
@@ -89,11 +89,11 @@ public class BarchartElement extends RectangleElement {
 	
 	private void fixPositioning(double y){
 		DoubleBinding neg_half_height = rect.heightProperty().divide(2).multiply(-1); //- height/2
-		this.layoutYProperty().bind(neg_half_height.add(y).subtract(DasConstants.ELEMENT_HEIGHT/2)); //TODO fix
+		this.layoutYProperty().bind(neg_half_height.add(y).subtract(Const.ELEMENT_HEIGHT/2)); //TODO fix
 	}
 	
 	public BarchartElement clone(){
-		BarchartElement clone = (BarchartElement) ElementFactory.clone(this);
+		BarchartElement clone = (BarchartElement) AVElementFactory.clone(this);
 		
 		clone.updateUnitHeight(unitHeight);
 		

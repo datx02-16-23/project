@@ -2,13 +2,13 @@ package draw;
 
 import java.util.Arrays;
 
-import assets.DasToolkit;
+import assets.Tools;
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
 import contract.datastructure.Array.IndexedElement;
 import draw.element.ElementShape;
-import draw.element.ElementFactory;
-import draw.element.VisualElement;
+import draw.element.AVElementFactory;
+import draw.element.AVElement;
 import javafx.geometry.Pos;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -27,7 +27,7 @@ import javafx.scene.shape.Line;
  */
 public class KTreeRender extends ARender {
 
-	public static final ElementShape DEFAULT_ELEMENT_STYLE = ElementShape.SINGLE;
+	public static final ElementShape DEFAULT_ELEMENT_STYLE = ElementShape.CIRCLE;
 
 	/**
 	 * Container for connector lines.
@@ -98,13 +98,13 @@ public class KTreeRender extends ARender {
 	 *            The child node visual.
 	 */
 	@Override
-	protected void bellsAndWhistles(Element ae, VisualElement childVis) {
+	protected void bellsAndWhistles(Element ae, AVElement childVis) {
 		System.out.println("ktree: baw shape = " + childVis.getShape());
 
 		IndexedElement parentClone = new IndexedElement(0, new int[] { (((IndexedElement) ae).getIndex()[0] - 1) / K });
 
 		// VisualElement parentVis = visualElementsMapping.get(parent_clone);
-		VisualElement parentVis = visualMap
+		AVElement parentVis = visualMap
 				.get(Arrays.toString(new int[] { (((IndexedElement) ae).getIndex()[0] - 1) / K }));
 
 		double dx = nodeWidth / 2;
@@ -135,7 +135,7 @@ public class KTreeRender extends ARender {
 	 *            The index to start from.
 	 */
 	private void createGhosts(int index) {
-		VisualElement ghostVis = null;
+		AVElement ghostVis = null;
 		for (; index < completedSize; index++) {
 			IndexedElement ghostElem = new IndexedElement(0, new int[] { index });
 			ghostVis = createVisualElement(ghostElem);
@@ -157,7 +157,7 @@ public class KTreeRender extends ARender {
 		double x;
 		int breadth, depth;
 		if (index == 0) { // Root element
-			double p = DasToolkit.pow(K, totDepth) / 2;
+			double p = Tools.pow(K, totDepth) / 2;
 			x = hSpace + (hSpace + nodeWidth) * (p) - ((K + 1) % 2) * (nodeWidth + hSpace) / 2;
 		} else {
 			depth = getDepth(index);
@@ -169,7 +169,7 @@ public class KTreeRender extends ARender {
 
 	private double getX(int breadth, int depth) {
 		// Stepsize at this depth. Farther from root smaller steps
-		double L = (double) DasToolkit.pow(K, totDepth) / (double) DasToolkit.pow(K, depth);
+		double L = (double) Tools.pow(K, totDepth) / (double) Tools.pow(K, depth);
 		// Apply indentation for every row except the last
 		double indentation = 0;
 		if (depth < totDepth) {
@@ -205,14 +205,14 @@ public class KTreeRender extends ARender {
 	private int getDepth(int index) {
 		int depth = 1;
 		// Calculate depth and breadth
-		while (DasToolkit.lowerLevelSum(depth, K) <= index) {
+		while (Tools.lowerLevelSum(depth, K) <= index) {
 			depth++;
 		}
 		return depth - 1;
 	}
 
 	private int getBreadth(int index, int depth) {
-		return index - DasToolkit.lowerLevelSum(depth, K);
+		return index - Tools.lowerLevelSum(depth, K);
 	}
 
 	/**
@@ -232,18 +232,18 @@ public class KTreeRender extends ARender {
 		totDepth = 0;
 
 		// Calculate the minimum depth which can hold all elements of the array.
-		while (DasToolkit.lowerLevelSum(totDepth, K) < structSize) {
+		while (Tools.lowerLevelSum(totDepth, K) < structSize) {
 			System.out.println("times called lls: " + (i++));
 			System.out.println("totDepth, K = " + totDepth + ", " + K);
-			System.out.println("lls = " + DasToolkit.lowerLevelSum(totDepth, K));
+			System.out.println("lls = " + Tools.lowerLevelSum(totDepth, K));
 			System.out.println();
 			totDepth++;
 		}
 		totDepth--;
 		// completedSize = lowerLevelSums.get(Double.toString(K) +
 		// lolwut).get(totDepth + 1);
-		completedSize = DasToolkit.lowerLevelSum(totDepth + 1, K);
-		totBreadth = DasToolkit.pow(K, totDepth);
+		completedSize = Tools.lowerLevelSum(totDepth + 1, K);
+		totBreadth = Tools.pow(K, totDepth);
 	}
 
 	@Override
@@ -255,18 +255,18 @@ public class KTreeRender extends ARender {
 	}
 
 	@Override
-	protected VisualElement createVisualElement(Element e) {
+	protected AVElement createVisualElement(Element e) {
 		elementStyle = elementStyle == null ? DEFAULT_ELEMENT_STYLE : elementStyle;
-		VisualElement ve = ElementFactory.shape(elementStyle, e, nodeWidth, nodeHeight);
+		AVElement ve = AVElementFactory.shape(elementStyle, e, nodeWidth, nodeHeight);
 		ve.setInfoPos(Pos.TOP_LEFT);
 		ve.setInfoArray(((IndexedElement) e).getIndex());
 		return ve;
 	}
 
 	@Override
-	protected VisualElement createVisualElement(double value, Color color) {
+	protected AVElement createVisualElement(double value, Color color) {
 		elementStyle = elementStyle == null ? DEFAULT_ELEMENT_STYLE : elementStyle;
-		VisualElement ve = ElementFactory.shape(elementStyle, value, color, nodeWidth, nodeHeight);
+		AVElement ve = AVElementFactory.shape(elementStyle, value, color, nodeWidth, nodeHeight);
 		ve.setInfoPos(null);
 		return ve;
 	}

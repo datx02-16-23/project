@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
-public class RectangleElement extends VisualElement {
+public class RectangleElement extends AVElement {
 
 	/**
 	 * Create a static, unbound RectangleElement.

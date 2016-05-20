@@ -2,7 +2,7 @@ package contract.datastructure;
 
 import java.util.Map;
 
-import assets.DasConstants;
+import assets.Const;
 import contract.Locator;
 import contract.Operation;
 import contract.operation.OP_ReadWrite;
@@ -20,7 +20,7 @@ public class IndependentElement extends Array {
 	/**
 	 * Version number for this class.
 	 */
-	private static final long serialVersionUID = DasConstants.VERSION_NUMBER;
+	private static final long serialVersionUID = Const.VERSION_NUMBER;
 
 	/**
 	 * Create a new IndependentElement.

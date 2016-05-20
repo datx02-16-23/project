@@ -5,7 +5,7 @@ import java.util.Arrays;
 import assets.Debug;
 import contract.datastructure.Element;
 import contract.datastructure.Array.IndexedElement;
-import draw.element.VisualElement;
+import draw.element.AVElement;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
@@ -53,7 +53,7 @@ public abstract class ARenderAnimation {
 		// VisualElement orig = visualElementsMapping.get(e);
 		int[] i = ((IndexedElement) e).getIndex();
 		Arrays.copyOf(i, i.length);
-		final VisualElement orig = render.visualMap.get(Arrays.toString(i));
+		final AVElement orig = render.visualMap.get(Arrays.toString(i));
 		if (Debug.KEY_EVENTS) {
 			if (orig == null) {
 				System.err.println("ARender.animte() failure: Could not resolve element for using:"  + render);
@@ -127,9 +127,9 @@ public abstract class ARenderAnimation {
 		 *            A list of options.
 		 * @return 
 		 */
-		public static ParallelTransition getTransiton(VisualElement orig, ARender render, long millis, AnimationOption... options) {
+		public static ParallelTransition getTransiton(AVElement orig, ARender render, long millis, AnimationOption... options) {
 			
-			final VisualElement animated = orig.clone();
+			final AVElement animated = orig.clone();
 			
 			//Make sure the animated element doesn't update with the model.
 			animated.unbind();

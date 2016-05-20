@@ -1,11 +1,11 @@
 package contract.operation;
 
-import assets.DasConstants;
+import assets.Const;
 import contract.Locator;
 
 public class OP_Remove extends OP_ReadWrite {
 
-	private static final long serialVersionUID = DasConstants.VERSION_NUMBER;
+	private static final long serialVersionUID = Const.VERSION_NUMBER;
 
 	/**
 	 * Create an empty Remove operation.

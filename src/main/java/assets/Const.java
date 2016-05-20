@@ -9,8 +9,8 @@ import javafx.scene.layout.Border;
  * @author Richard Sundqvist
  *
  */
-public abstract class DasConstants {
-	private DasConstants() {
+public abstract class Const {
+	private Const() {
 	} // Not to be instantiated.
 
 	/*
@@ -53,9 +53,9 @@ public abstract class DasConstants {
 	public static final double RENDER_PADDING = 10;
 
 	// More render constants
-	public static final Background ARRAY_BACKGROUND = DasToolkit.createArrayBg();
-	public static final Background ORPHAN_BACKGROUND = DasToolkit.createOrphanBg();
-	public static final Background TREE_BACKGROUND = DasToolkit.createTreeBg();
-	public static final Border BORDER_MOUSEOVER = DasToolkit.getMOBorder();
+	public static final Background ARRAY_BACKGROUND = Tools.createArrayBg();
+	public static final Background ORPHAN_BACKGROUND = Tools.createOrphanBg();
+	public static final Background TREE_BACKGROUND = Tools.createTreeBg();
+	public static final Border BORDER_MOUSEOVER = Tools.getMOBorder();
 	public static final String RENDER_FXML_URL = "/render/RenderBase.fxml";
 }
