@@ -1,6 +1,7 @@
 package multiset;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
 import javafx.animation.Animation;
@@ -18,6 +19,7 @@ import javafx.util.Duration;
 import multiset.filter.Filter;
 import multiset.filter.iFilter;
 import multiset.model.Model;
+import multiset.model.RangePatterns;
 import multiset.model.iModel;
 import multiset.view.View;
 import multiset.view.iView;
@@ -71,13 +73,17 @@ public class MultisetController {
 
 	/**
 	 * Called when the "Go!" button is pressed.
+	 * (or enter is pressed...)
 	 */
 	public void run() {
 		timeline.stop();
 		Canvas ballCanvas = (Canvas) fxmlLoader.getNamespace().get("ballCanvas");
+
 		iFilter filter = new Filter(input.getText(), output.getText(), cond.getText());
-		model = new Model(ballCanvas.getWidth(), ballCanvas.getHeight(), filter, 2, 20);
+		ArrayList list = new RangePatterns( range.getText() ).getList();
+		model = new Model(ballCanvas.getWidth(), ballCanvas.getHeight(), filter, list);
 		view = new View(model, ballCanvas);
+
 		timeline.play();
 	}
 
@@ -87,7 +93,7 @@ public class MultisetController {
 	public void keyListener(KeyEvent event){
 		if(event.getCode() == KeyCode.ENTER) {
 			run(); // Run animation
-			event.consume(); // "You shall not pass"
+			event.consume(); // "You shall not pass! (for safety reasons)"
 		}
 	}
 
@@ -98,10 +104,10 @@ public class MultisetController {
 	 *            The namespace of the FXML loader.
 	 */
 	private void loadNamespaceItems(Map<String, Object> namespace) {
-		range = (TextField) namespace.get("range");
-		cond = (TextField) namespace.get("cond");
 		input = (TextField) namespace.get("input");
 		output = (TextField) namespace.get("output");
+		cond = (TextField) namespace.get("cond");
+		range = (TextField) namespace.get("range");
 	}
 
 }
