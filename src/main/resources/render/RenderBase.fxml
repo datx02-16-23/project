@@ -26,23 +26,29 @@
       <Pane fx:id="content" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" />
       <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
          <children>
-            <Label fx:id="name" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" text="Name">
+            <Label fx:id="name" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" text="Name" underline="true">
                <padding>
                   <Insets left="4.0" />
                </padding>
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
             </Label>
             <StackPane fx:id="header" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: rgba(18, 52, 86, 0.7);">
                <children>
-                  <Label fx:id="name_mo" maxHeight="25.0" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="0.0" prefHeight="25.0" prefWidth="1000.0" text="Name (mouseover)" textFill="WHITE">
+                  <Label fx:id="name_mo" maxHeight="25.0" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="0.0" prefHeight="25.0" prefWidth="1000.0" text="Name (mouseover)" textFill="WHITE" underline="true">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                      <padding>
                         <Insets left="4.0" />
-                     </padding></Label>
+                     </padding>
+                     <font>
+                        <Font name="System Bold Italic" size="15.0" />
+                     </font></Label>
                   <ToolBar fx:id="buttons" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" nodeOrientation="RIGHT_TO_LEFT" style="-fx-background-color: transparent;" StackPane.alignment="CENTER">
                      <items>
                         <ToggleButton maxHeight="15.0" maxWidth="25.0" minHeight="15.0" minWidth="25.0" mnemonicParsing="false" onAction="#toggleHidden" prefHeight="15.0" prefWidth="25.0" text="Hide" translateX="-2.0">

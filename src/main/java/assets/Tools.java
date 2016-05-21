@@ -101,7 +101,7 @@ public abstract class Tools {
 			int cur = pow(K, cDepth - 1);
 			sums.add(new Integer(prev + cur));
 		}
-		
+
 		return sums.get(targetDepth);
 	}
 
@@ -126,5 +126,18 @@ public abstract class Tools {
 			p = p * b;
 		}
 		return p;
+	}
+
+	/**
+	 * Tries to simplify the variable name. For example,
+	 * {@code "package.subpackage.class:var"} becomes {@code "var"}.
+	 * 
+	 * @param orig
+	 *            A string to simplify.
+	 * @return A simplified variable name (hopefully).
+	 */
+	public static String stripQualifiers(String orig) {
+		String a[] = orig.split("\\p{Punct}");
+		return a[a.length - 1];
 	}
 }

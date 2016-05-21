@@ -3,6 +3,7 @@ package contract.datastructure;
 import java.util.Map;
 
 import assets.Const;
+import assets.Tools;
 import contract.AnnotatedVariable;
 import contract.Locator;
 import contract.Operation;
@@ -58,8 +59,10 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 	public OperationCounter getCounter() {
 		return oc;
 	}
+
 	/**
-	 * Indicates that major changes have occurred, justifying a re-initialisation.
+	 * Indicates that major changes have occurred, justifying a
+	 * re-initialisation.
 	 */
 	public transient boolean repaintAll = false;
 
@@ -127,10 +130,12 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(super.identifier + ": " + super.rawType);
-		if (super.abstractType != null) {
-			sb.append(" (" + super.abstractType + ")");
-		}
+		sb.append("\"" + Tools.stripQualifiers(this.identifier) + "\": " + this.rawType + "[");
+		
+		sb.append(this.abstractType + ", ");
+		sb.append(this.visual);
+		sb.append("]");
+		
 		return sb.toString();
 	}
 
