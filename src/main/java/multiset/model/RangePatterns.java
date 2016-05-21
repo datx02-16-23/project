@@ -3,7 +3,7 @@ package multiset.model;
 import java.util.ArrayList;
 
 /**
- * Created by GreatSmith on 21/05/2016.
+ * Created by Smith on 21/05/2016.
  */
 public class RangePatterns {
 

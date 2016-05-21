@@ -22,6 +22,9 @@
          <center>
             <Canvas fx:id="ballCanvas" height="600.0" width="600.0" />
          </center>
+         <right>
+            <ListView fx:id="collisionHistory" maxWidth="150.0" minWidth="100.0" prefWidth="120.0" BorderPane.alignment="CENTER" />
+         </right>
       </BorderPane>
       <HBox maxHeight="104.0" maxWidth="1.7976931348623157E308" minHeight="104.0" minWidth="0.0" prefHeight="104.0" prefWidth="300.0" style="-fx-background-color: #FFFFFF;">
          <children>
