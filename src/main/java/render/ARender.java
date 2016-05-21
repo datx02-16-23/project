@@ -337,10 +337,15 @@ public abstract class ARender extends Pane {
 		if(Debug.ERR){
 			System.err.println("ARender.animateSwap(): " + struct  + " is animating.");			
 		}
+		System.out.println("\nv1 : " + var1 + ", " + render1 + "\nv2 : " + var2 + ", " + render2);
 		
 		ARenderAnimation.linear(var2,
-				render1.absX(var1), render1.absY(var1),
-				render2.absX(var2), render2.absY(var2),
+				//TODO
+//				render1.absX(var1), render2.absY(var2),
+//				render2.absX(var2), render1.absY(var1),
+				
+				render1.absX(var2), render2.absY(var2),
+				render2.absX(var1), render1.absY(var1),
 				millis, this,
 				AnimationOption.USE_GHOST).play();
 	}
@@ -731,5 +736,12 @@ public abstract class ARender extends Pane {
 			this.elementStyle = newStyle;
 			init();
 		}
+	}
+	
+	/**
+	 * Parse preferences from the {@code DataStructure#visualOptions};
+	 */
+	public void load(String optionsString){
+		//TODO
 	}
 }

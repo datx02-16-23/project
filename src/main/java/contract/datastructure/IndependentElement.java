@@ -129,13 +129,21 @@ public class IndependentElement extends Array {
 
 	@Override
 	public IndexedElement getElement(Locator locator) {
+		System.out.println("\n\n");
 		if (locator == null) {
+			System.out.println("locator is null");
 			return null;
 		}
-		if (locator.identifier.equals(super.identifier) && !elements.isEmpty()) {
+
+		System.out.println("elems = " + elements);
+		System.out.println("loc.id = \"" + locator.identifier + "\"");
+		System.out.println("this.id = \"" + this.identifier + "\"");
+		System.out.println("locator.identifier.equals(this.identifier) = " + (locator.identifier.equals(this.identifier)));
+
+
+		if (locator.identifier.equals(this.identifier) && !elements.isEmpty()) {
 			return (IndexedElement) elements.get(0);
 		} else {
-			System.out.println("locator.identifier wrong");
 			return null;
 		}
 	}

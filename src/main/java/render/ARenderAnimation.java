@@ -61,7 +61,8 @@ public abstract class ARenderAnimation {
 		final AVElement orig = render.visualMap.get(Arrays.toString(i));
 		if (Debug.ERR) {
 			if (orig == null) {
-				System.err.println("ARender.animte() failure: Could not resolve element for using:" + render);
+				System.err.println(
+						"ARenderAnimation.linear() failure: Could not resolve element " + e + " using: " + render);
 				java.awt.Toolkit.getDefaultToolkit().beep();
 				return new ParallelTransition();
 			}
@@ -114,7 +115,8 @@ public abstract class ARenderAnimation {
 		final AVElement orig = render.visualMap.get(Arrays.toString(i));
 		if (Debug.ERR) {
 			if (orig == null) {
-				System.err.println("ARender.animte() failure: Could not resolve element for using:" + render);
+				System.err.println(
+						"ARenderAnimation.stationary() failure: Could not resolve element  " + e + "  using: " + render);
 				java.awt.Toolkit.getDefaultToolkit().beep();
 				return new ParallelTransition();
 			}
@@ -178,9 +180,9 @@ public abstract class ARenderAnimation {
 		 */
 		public static ParallelTransition buildTransition(AVElement orig, ARender render, long millis,
 				AnimationOption... options) {
-			
+
 			final AVElement animated = orig.clone();
-			if(animated == null){
+			if (animated == null) {
 				System.err.println("Error in ARenderAnimation.ParallelTransition(): orig.clone() == null");
 				return new ParallelTransition();
 			}
