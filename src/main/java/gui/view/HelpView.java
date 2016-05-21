@@ -8,7 +8,6 @@ import assets.Const;
 import contract.operation.OperationType;
 import gui.Controller;
 import gui.Main;
-import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.event.Event;

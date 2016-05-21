@@ -122,20 +122,20 @@ public abstract class OperationParser {
 		return op_message;
 	}
 
-	private static double[] parseMultiValue(Operation op) {
-		Object object = op.operationBody.get(Key.value);
-		if (object == null) {
-			return null;
-		}
-		if (object instanceof double[]) {
-			return (double[]) object;
-		}
-		@SuppressWarnings("unchecked")
-		ArrayList<Object> nested = (ArrayList<Object>) object;
-		ArrayList<Double> simple = new ArrayList<Double>();
-		unwrapNestedList(nested, simple);
-		return ensureDoubleArray(simple);
-	}
+//	private static double[] parseMultiValue(Operation op) {
+//		Object object = op.operationBody.get(Key.value);
+//		if (object == null) {
+//			return null;
+//		}
+//		if (object instanceof double[]) {
+//			return (double[]) object;
+//		}
+//		@SuppressWarnings("unchecked")
+//		ArrayList<Object> nested = (ArrayList<Object>) object;
+//		ArrayList<Double> simple = new ArrayList<Double>();
+//		unwrapNestedList(nested, simple);
+//		return ensureDoubleArray(simple);
+//	}
 
 	/**
 	 * Naive implementation to flatten a multi-dimensional list into a single
@@ -146,22 +146,22 @@ public abstract class OperationParser {
 	 * @param ack
 	 *            The result.
 	 */
-	@SuppressWarnings("unchecked")
-	private static <T> void unwrapNestedList(ArrayList<Object> list, ArrayList<T> ack) {
-		if (list.isEmpty()) {
-			return;
-		}
-		Object firstElement = list.get(0);
-		if (firstElement instanceof ArrayList) {
-			for (Object subList : list) {
-				unwrapNestedList((ArrayList<Object>) subList, ack);
-			}
-		} else {
-			for (Object o : list) {
-				ack.add((T) o);
-			}
-		}
-	}
+//	@SuppressWarnings("unchecked")
+//	private static <T> void unwrapNestedList(ArrayList<Object> list, ArrayList<T> ack) {
+//		if (list.isEmpty()) {
+//			return;
+//		}
+//		Object firstElement = list.get(0);
+//		if (firstElement instanceof ArrayList) {
+//			for (Object subList : list) {
+//				unwrapNestedList((ArrayList<Object>) subList, ack);
+//			}
+//		} else {
+//			for (Object o : list) {
+//				ack.add((T) o);
+//			}
+//		}
+//	}
 
 	private static double[] parseValue(Operation op) {
 		return ensureDoubleArray(op.operationBody.get(Key.value));

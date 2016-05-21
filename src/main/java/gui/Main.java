@@ -19,6 +19,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import model.Model;
@@ -75,7 +76,8 @@ public class Main extends Application {
 		SplitPane sP = (SplitPane) namespace.get("splitPane");
 		BorderPane operationPanelContainer = (BorderPane) namespace.get("operationPanelContainer");
 		operationPanelContainer.setCenter(operationPanel);
-		double leftDivider = (((GridPane) namespace.get("buttonsGrid")).getPrefWidth() + 14) / scene.getWidth();
+//		double leftDivider = (((GridPane) namespace.get("buttonsGrid")).getPrefWidth() + 14) / scene.getWidth();
+		double leftDivider = 0;
 		sP.setDividerPositions(leftDivider * 0.3, 1 - leftDivider);
 		// Add examples
 		Menu examples = (Menu) namespace.get("examplesMenu");
@@ -295,7 +297,7 @@ public class Main extends Application {
 
 		private void init() {
 			StringBuilder sb = new StringBuilder();
-			sb.append(Const.PROGRAM_NAME + " v" + Const.VERSION_NUMBER);
+			sb.append(Const.PROGRAM_NAME + " version " + Const.VERSION_NUMBER);
 			sb.append("\nAUTHORS: ");
 			for (String s : Const.DEVELOPER_NAMES) {
 				sb.append(s + " | ");

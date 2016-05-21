@@ -234,19 +234,6 @@ public abstract class AVElementFactory {
 	 */
 
 	/**
-	 * Settings class for use by JSON.
-	 * 
-	 * @author Richard Sundqvist
-	 *
-	 */
-	private static class VisualElementSettings {
-		// public ElemShape shape;
-		// public double width;
-		// public double height;
-		// public double[] points;
-	}
-
-	/**
 	 * Attempt to a visual element. Should not be used unless there is no other
 	 * alternative.
 	 * 

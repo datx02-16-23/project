@@ -8,11 +8,11 @@ public enum VisualType {
 	/*
 	 * Graph type.
 	 */
-	tree("KTree", "tree", true),
+	tree("KTree", "tree"),
 	/*
 	 * Grid type.
 	 */
-	grid("Grid", "grid", true),
+	grid("Grid", "grid"),
 	box(grid, "box"),
 	/*
 	 * Single element render.
@@ -21,13 +21,11 @@ public enum VisualType {
 
 	public transient final String pretty;
 	public transient final String json;
-	public transient final boolean has_options;
 	public transient final boolean has_clones;
 
-	private VisualType(String pretty, String json, boolean has_options) {
+	private VisualType(String pretty, String json) {
 		this.pretty = pretty;
 		this.json = json;
-		this.has_options = has_options;
 		has_clones = false;
 	}
 	
@@ -39,12 +37,7 @@ public enum VisualType {
 	private VisualType(VisualType original, String json){
 		this.pretty = original.pretty;
 		this.json = original.json;
-		this.has_options = original.has_options;
 		has_clones = true;
-	}
-
-	private VisualType(String pretty, String json) {
-		this(pretty, json, false);
 	}
 
 	/**

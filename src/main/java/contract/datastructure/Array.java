@@ -122,6 +122,7 @@ public class Array extends DataStructure {
 		elements.clear();
 		clearElementLists();
 		oc.reset();
+		repaintAll = true;
 	}
 
 	protected void executeSwap(OP_Swap op) {

@@ -16,20 +16,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.Spinner;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import render.RenderSVF;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class CreateStructureDialog {
 
 	private final Stage parent, root;
-	private final ChoiceBox visType, rawType, absType;
-	private final ObservableList<RawType.AbstractType> absTypeItems;
-	private final Spinner visOption;
+	private final ChoiceBox rawType;
 	private final Label name;
 	// Volatile
 	private RawType raw;
@@ -37,7 +33,6 @@ public class CreateStructureDialog {
 	private VisualType vis;
 	private DataStructure struct;
 	private String identifier;
-	private boolean changed;
 
 	public CreateStructureDialog(Stage parent) {
 		this.parent = parent;
@@ -69,28 +64,6 @@ public class CreateStructureDialog {
 			chooseRawType();
 		});
 		/*
-		 * Abstract Type
-		 */
-		absType = (ChoiceBox) fxmlLoader.getNamespace().get("absType");
-		absTypeItems = FXCollections.observableArrayList();
-		absType.setItems(absTypeItems);
-		absType.setOnAction(event -> {
-			chooseAbsType();
-		});
-		/*
-		 * Visual options
-		 */
-		visType = (ChoiceBox) fxmlLoader.getNamespace().get("visType");
-		for(VisualType vt : VisualType.values()){
-			if(vt.has_clones == false){
-				visType.getItems().add(vt);
-			}
-		}
-		visType.setOnAction(event -> {
-			chooseVisual();
-		});
-		visOption = (Spinner) fxmlLoader.getNamespace().get("visOption");
-		/*
 		 * Build.
 		 */
 		name = (Label) fxmlLoader.getNamespace().get("name");
@@ -101,33 +74,13 @@ public class CreateStructureDialog {
 
 	private void chooseRawType() {
 		raw = (RawType) rawType.getSelectionModel().getSelectedItem();
-		if (raw.absTypes.length > 0) {
-			absTypeItems.setAll(raw.absTypes);
-			absTypeItems.add(null);
-			absType.setDisable(false);
-		} else {
-			abs = null;
-			absTypeItems.clear();
-			absType.setDisable(true);
-		}
-	}
-
-	private void chooseAbsType() {
-		abs = (RawType.AbstractType) absType.getSelectionModel().getSelectedItem();
-	}
-
-	private void chooseVisual() {
-		VisualType vt = (VisualType) visType.getSelectionModel().getSelectedItem();
-		setSpinner(vt);
 	}
 
 	public void closeButton() {
-		changed = false;
 		root.close();
 	}
 
 	public void okButton() {
-		resolveVisual();
 		createStruct();
 		root.close();
 	}
@@ -148,33 +101,6 @@ public class CreateStructureDialog {
 		}
 	}
 
-	private void resolveVisual() {
-		VisualType vt = (VisualType) visType.getSelectionModel().getSelectedItem();
-		if (vt == null) {
-			changed = false;
-			root.close();
-			return;
-		}
-		if (struct != null && vt != struct.resolveVisual()) {
-			// Visual type changed
-			if (vt.has_options) {
-				struct.visualOption = (Integer) visOption.getValue();
-			}
-			vis = vt;
-			changed = true;
-		} else {
-			// Visual type has not changed
-			if (vt.has_options) {
-				changed = struct.visualOption != (Integer) visOption.getValue();
-				if (changed) {
-					struct.visualOption = (Integer) visOption.getValue();
-				}
-			} else {
-				changed = false;
-			}
-		}
-	}
-
 	/**
 	 * Show the DataStructure creation dialog.
 	 * 
@@ -190,21 +116,7 @@ public class CreateStructureDialog {
 		return struct;
 	}
 
-	private void setSpinner(VisualType vt) {
-		if (vt.has_options) {
-			RenderSVF rsvf = RenderSVF.resolve(struct);
-			if (rsvf == null) {
-				visOption.setDisable(true); // Failed to fetch options.
-			} else {
-				visOption.setDisable(false);
-				visOption.setValueFactory(rsvf);
-			}
-		} else {
-			visOption.setDisable(true);
-		}
-	}
-
-	public void ignoreStructure() {
+	public void allOrphan() {
 		// TODO: implement
 	}
 }

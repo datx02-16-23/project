@@ -15,7 +15,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import render.RenderSVF;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class VisualDialog {
@@ -65,7 +64,6 @@ public class VisualDialog {
 
 	private void chooseVisual() {
 		VisualType vt = (VisualType) choice.getSelectionModel().getSelectedItem();
-		setSpinner(vt);
 	}
 
 	public void closeButton() {
@@ -82,22 +80,9 @@ public class VisualDialog {
 		}
 		if (vt != struct.resolveVisual()) {
 			// Visual type changed
-			if (vt.has_options) {
-				struct.visualOption = (Integer) options.getValue();
-			}
 			struct.setVisual(vt);
 			changed = true;
 			root.close();
-		} else {
-			// Visual type has not changed
-			if (vt.has_options) {
-				changed = struct.visualOption != (Integer) options.getValue();
-				if (changed) {
-					struct.visualOption = (Integer) options.getValue();
-				}
-			} else {
-				changed = false;
-			}
 		}
 		root.close();
 	}
@@ -113,22 +98,7 @@ public class VisualDialog {
 		this.struct = struct;
 		name.setText(struct.toString());
 		choice.getSelectionModel().select(struct.resolveVisual());
-		setSpinner(struct.resolveVisual());
 		root.showAndWait();
 		return changed;
-	}
-
-	private void setSpinner(VisualType vt) {
-		if (vt.has_options) {
-			RenderSVF rsvf = RenderSVF.resolve(struct);
-			if (rsvf == null) {
-				options.setDisable(true); // Failed to fetch options.
-			} else {
-				options.setDisable(false);
-				options.setValueFactory(rsvf);
-			}
-		} else {
-			options.setDisable(true);
-		}
 	}
 }

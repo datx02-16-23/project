@@ -1,20 +1,6 @@
 package io;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.gson.*;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
-import com.google.gson.stream.JsonWriter;
-
-import contract.AnnotatedVariable;
-import contract.datastructure.RawType;
-import contract.datastructure.VisualType;
-import contract.datastructure.RawType.AbstractType;
-import contract.operation.Key;
 
 public abstract class GsonContructor {
 
@@ -47,64 +33,64 @@ public abstract class GsonContructor {
 		return gsonBuilder.create();
 	}
 
-	private static class AnnotatedVariableAdapter extends TypeAdapter<AnnotatedVariable> {
-
-		@Override
-		public void write(JsonWriter out, AnnotatedVariable value) throws IOException {
-			out.beginObject();
-			out.endObject();
-		}
-
-		@Override
-		public AnnotatedVariable read(JsonReader in) throws IOException {
-			String identifier = null, rawType = null, abstractType = null, visual = null;
-			Map<String, Object> attributes = null;
-			in.beginObject();
-			while (in.hasNext()) {
-				String name = in.nextName();
-				switch (name) {
-				case "identifier":
-					identifier = in.nextString();
-					break;
-				case "rawType":
-					rawType = in.nextString();
-					break;
-				case "abstractType":
-					abstractType = in.nextString();
-					break;
-				case "visual":
-					visual = in.nextString();
-					break;
-				case "attributes":
-					attributes = new HashMap<String, Object>();
-					populateAttributes(attributes, in);
-					break;
-				}
-			}
-			in.endObject();
-			AnnotatedVariable av = new AnnotatedVariable(identifier, RawType.fromString(rawType),
-					AbstractType.fromString(abstractType), VisualType.fromString(visual), attributes);
-			return av;
-		}
-
-		private void populateAttributes(Map<String, Object> attributes, JsonReader in) throws IOException {
-			ArrayList<Integer> size = new ArrayList<Integer>();
-			in.beginObject();
-			if (in.peek() == JsonToken.END_OBJECT) {
-				return;
-			}
-			in.nextName(); // Assume nextName() is "size".
-			in.beginArray();
-			outer: while (true) {
-				if (in.peek() == JsonToken.NUMBER) {
-					size.add(in.nextInt());
-				} else {
-					break outer;
-				}
-			}
-			in.endArray();
-			in.endObject();
-			attributes.put(Key.size.name(), (Object) size);
-		}
-	}
+//	private static class AnnotatedVariableAdapter extends TypeAdapter<AnnotatedVariable> {
+//
+//		@Override
+//		public void write(JsonWriter out, AnnotatedVariable value) throws IOException {
+//			out.beginObject();
+//			out.endObject();
+//		}
+//
+//		@Override
+//		public AnnotatedVariable read(JsonReader in) throws IOException {
+//			String identifier = null, rawType = null, abstractType = null, visual = null;
+//			Map<String, Object> attributes = null;
+//			in.beginObject();
+//			while (in.hasNext()) {
+//				String name = in.nextName();
+//				switch (name) {
+//				case "identifier":
+//					identifier = in.nextString();
+//					break;
+//				case "rawType":
+//					rawType = in.nextString();
+//					break;
+//				case "abstractType":
+//					abstractType = in.nextString();
+//					break;
+//				case "visual":
+//					visual = in.nextString();
+//					break;
+//				case "attributes":
+//					attributes = new HashMap<String, Object>();
+//					populateAttributes(attributes, in);
+//					break;
+//				}
+//			}
+//			in.endObject();
+//			AnnotatedVariable av = new AnnotatedVariable(identifier, RawType.fromString(rawType),
+//					AbstractType.fromString(abstractType), VisualType.fromString(visual), attributes);
+//			return av;
+//		}
+//
+//		private void populateAttributes(Map<String, Object> attributes, JsonReader in) throws IOException {
+//			ArrayList<Integer> size = new ArrayList<Integer>();
+//			in.beginObject();
+//			if (in.peek() == JsonToken.END_OBJECT) {
+//				return;
+//			}
+//			in.nextName(); // Assume nextName() is "size".
+//			in.beginArray();
+//			outer: while (true) {
+//				if (in.peek() == JsonToken.NUMBER) {
+//					size.add(in.nextInt());
+//				} else {
+//					break outer;
+//				}
+//			}
+//			in.endArray();
+//			in.endObject();
+//			attributes.put(Key.size.name(), (Object) size);
+//		}
+//	}
 }

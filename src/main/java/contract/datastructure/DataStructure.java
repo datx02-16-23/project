@@ -58,11 +58,9 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 	public OperationCounter getCounter() {
 		return oc;
 	}
-
 	/**
-	 * Number of children in KTree, row/vs column major etc.
+	 * Indicates that major changes have occurred, justifying a re-initialisation.
 	 */
-	public transient int visualOption = 2;
 	public transient boolean repaintAll = false;
 
 	public DataStructure(String identifier, RawType rawType, RawType.AbstractType abstractType, VisualType visual,

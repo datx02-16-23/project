@@ -12,9 +12,6 @@ import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
-import javafx.geometry.Point3D;
-import javafx.scene.Node;
-import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import render.element.AVElement;
 
@@ -181,8 +178,12 @@ public abstract class ARenderAnimation {
 		 */
 		public static ParallelTransition buildTransition(AVElement orig, ARender render, long millis,
 				AnimationOption... options) {
-
+			
 			final AVElement animated = orig.clone();
+			if(animated == null){
+				System.err.println("Error in ARenderAnimation.ParallelTransition(): orig.clone() == null");
+				return new ParallelTransition();
+			}
 
 			// Make sure the animated element doesn't update with the model.
 			animated.unbind();

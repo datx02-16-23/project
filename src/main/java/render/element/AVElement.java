@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import contract.datastructure.Element;
-import contract.operation.OperationCounter;
 import contract.operation.OperationCounter.OperationCounterHaver;
 import gui.Main;
 import javafx.animation.RotateTransition;

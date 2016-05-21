@@ -4,7 +4,6 @@ import contract.datastructure.DataStructure;
 
 import java.util.Arrays;
 
-import assets.Debug;
 import contract.datastructure.Array.IndexedElement;
 import contract.datastructure.Element;
 import render.element.BarchartElement;
@@ -14,8 +13,6 @@ import render.element.AVElement;
 import gui.Main;
 import render.element.AVElementFactory;
 import javafx.animation.ParallelTransition;
-import javafx.animation.RotateTransition;
-import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -23,7 +20,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polyline;
-import javafx.util.Duration;
 
 public class BarchartRender extends ARender {
 

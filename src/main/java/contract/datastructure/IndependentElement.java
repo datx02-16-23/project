@@ -78,6 +78,7 @@ public class IndependentElement extends Array {
 	public void clear() {
 		elements.clear();
 		oc.reset();
+		repaintAll = true;
 	}
 
 	@Override

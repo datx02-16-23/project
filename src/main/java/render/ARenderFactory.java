@@ -40,12 +40,11 @@ public abstract class ARenderFactory {
 			break;
 		case grid:
 		case box:
-			curRender = new GridRender(struct, GridRender.Order.resolve(struct.visualOption), elemWidth,
+			curRender = new GridRender(struct, GridRender.Order.COLUMN_MAJOR, elemWidth,
 					elemHeight, 3, 3);
 			break;
 		case tree:
-			curRender = new KTreeRender(struct, struct.visualOption, elemWidth,
-					elemHeight, 5, 5);
+			curRender = new KTreeRender(struct, 2, elemWidth, elemHeight, 5, 5);
 			break;
 		case single:
 			curRender = new SingleElementRender(struct, elemWidth, elemHeight);
