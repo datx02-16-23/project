@@ -226,12 +226,9 @@ public abstract class ARenderAnimation {
 			// Must have final value for setOnFinished().
 			final boolean finalGhost = originalGhostDuringAnimation;
 			orig.setGhost(finalGhost);
-			System.out.println("setGhost: " + finalGhost);
 
 			parent.setOnFinished(event -> {
-				System.out.println("done!");
 				if (finalGhost) {
-					System.out.println("restore ghost");
 					orig.setGhost(false);
 				}
 				render.animPane.getChildren().remove(animated);
