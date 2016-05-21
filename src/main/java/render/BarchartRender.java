@@ -82,7 +82,7 @@ public class BarchartRender extends ARender {
 
 	@Override
 	public double getY(Element e) {
-		return xAxisY;
+		return xAxisY + 100; //TODO
 	}
 
 	public void render() {
@@ -129,7 +129,7 @@ public class BarchartRender extends ARender {
 
 	private void positionBars() {
 		for (Node node : defaultNodePane.getChildren()) {
-			((BarchartElement) node).setBotY(xAxisY); // TODO fix
+			((BarchartElement) node).setBotY(xAxisY + 5); // TODO fix
 		}
 	}
 
@@ -317,8 +317,7 @@ public class BarchartRender extends ARender {
 		orig.setGhost(true);
 
 		ParallelTransition up = ARenderAnimation.linear(src, x1, y1, x2, y2, millis / 3, this);
-		ParallelTransition down = ARenderAnimation.linear(src, x2, y2, x1, y1, millis / 3, this,
-				AnimationOption.GHOST);
+		ParallelTransition down = ARenderAnimation.linear(src, x2, y2, x1, y1, millis / 3, this, AnimationOption.GHOST);
 
 		SequentialTransition st = new SequentialTransition();
 		st.getChildren().addAll(up, down);

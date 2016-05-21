@@ -131,9 +131,7 @@ public class IndependentElement extends Array {
 
 	@Override
 	public IndexedElement getElement(Locator locator) {
-		System.out.println("\n\n");
 		if (locator == null) {
-			System.out.println("locator is null");
 			return null;
 		}
 		

@@ -40,7 +40,7 @@ public abstract class ARenderFactory {
 			break;
 		case grid:
 		case box:
-			curRender = new GridRender(struct, GridRender.Order.COLUMN_MAJOR, elemWidth,
+			curRender = new GridRender(struct, GridRender.Order.ROW_MAJOR, elemWidth,
 					elemHeight, 3, 3);
 			break;
 		case tree:
