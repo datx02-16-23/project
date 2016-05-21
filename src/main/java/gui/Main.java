@@ -76,9 +76,8 @@ public class Main extends Application {
 		SplitPane sP = (SplitPane) namespace.get("splitPane");
 		BorderPane operationPanelContainer = (BorderPane) namespace.get("operationPanelContainer");
 		operationPanelContainer.setCenter(operationPanel);
-//		double leftDivider = (((GridPane) namespace.get("buttonsGrid")).getPrefWidth() + 14) / scene.getWidth();
-		double leftDivider = 0;
-		sP.setDividerPositions(leftDivider * 0.3, 1 - leftDivider);
+		double leftDivider = (((GridPane) namespace.get("buttonsGrid")).getPrefWidth() + 14) / scene.getWidth();
+		sP.setDividerPositions(0, 1 - leftDivider);
 		// Add examples
 		Menu examples = (Menu) namespace.get("examplesMenu");
 		for (Algorithm algo : Examples.Algorithm.values()) {

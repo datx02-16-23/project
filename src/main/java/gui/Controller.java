@@ -570,6 +570,7 @@ public class Controller implements CommunicatorListener {
 		live.setOnAction(event -> {
 			modelRender.showLiveStats();
 		});
+		live.setDisable(true);
 		visualMenu.getItems().add(live);
 
 		visualMenu.getItems().add(new SeparatorMenuItem());
