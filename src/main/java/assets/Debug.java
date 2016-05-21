@@ -8,9 +8,6 @@ import java.util.regex.Pattern;
  *
  */
 public final class Debug {
-	/*
-	 * For testing shit
-	 */
 	public static void main(String[] args){
 //		String str = "package.subpackage:class:subclass:subsubclass;watisthis.OK NOW WE STOP";
 		String str = "OK NOW WE STOP";
@@ -25,7 +22,7 @@ public final class Debug {
 	/**
 	 * {@link System#err} is used to print basic debug information.
 	 */
-	public static final boolean ERR = true;
+	public static final boolean ERR = false;
 	/**
 	 * {@link System#out} is used to print verbose debug information.
 	 */

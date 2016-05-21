@@ -29,7 +29,7 @@ public abstract class Element implements OperationCounterHaver {
 	public final SimpleDoubleProperty numProperty = new SimpleDoubleProperty();
 	/**
 	 * Fill property for this element. Updated when the
-	 * {@link #execute(Operation)} method is called.
+	 * {@link #count(Operation)} method is called.
 	 */
 	public final SimpleObjectProperty<Paint> fillProperty = new SimpleObjectProperty<Paint>();
 	/**
@@ -139,11 +139,10 @@ public abstract class Element implements OperationCounterHaver {
 	 * @param op
 	 *            The operation type which was applied.
 	 */
-	public final void execute(Operation op) {
-		this.paint = op.operation.color;
-		fillProperty.setValue(paint);
-		oc.count(op);
-		if (op.operation == OperationType.remove) {
+	public final void count(OperationType ot) {
+		oc.count(ot);
+		setColor(ot.color);
+		if (ot == OperationType.remove) {
 			setValue(Double.NaN);
 		}
 	}

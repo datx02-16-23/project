@@ -8,6 +8,7 @@ import contract.Locator;
 import contract.Operation;
 import contract.operation.OP_ReadWrite;
 import contract.operation.OP_Swap;
+import contract.operation.OperationType;
 
 /**
  * An independent variable holding a single element. May for example be used as
@@ -92,13 +93,13 @@ public class IndependentElement extends Array {
 		Element e = elements.get(0);
 		if (op.getVar1().identifier.equals(this.identifier)) {
 			e.setValue(op.getValue()[0]);
-			e.execute(op);
-			oc.count(op);
+			e.count(OperationType.swap);
+			oc.count(OperationType.swap);
 			return;
 		} else if (op.getVar2().identifier.equals(this.identifier)) {
 			e.setValue(op.getValue()[1]);
-			e.execute(op);
-			oc.count(op);
+			e.count(OperationType.swap);
+			oc.count(OperationType.swap);
 			return;
 		}
 	}
@@ -112,13 +113,13 @@ public class IndependentElement extends Array {
 		if (op.getTarget() != null && op.getTarget().identifier.equals(this.identifier)) {
 			e.setValue(op.getValue()[0]);
 			modifiedElements.add(e);
-			e.execute(op);
-			oc.count(op);
+			e.count(OperationType.write);
+			oc.count(OperationType.write);
 			return;
 		} else if (op.getSource() != null && op.getSource().identifier.equals(this.identifier)) {
 			modifiedElements.add(e);
-			e.execute(op);
-			oc.count(op);
+			e.count(OperationType.read);
+			oc.count(OperationType.read);
 		}
 	}
 

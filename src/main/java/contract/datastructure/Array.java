@@ -99,7 +99,7 @@ public class Array extends DataStructure {
 		for (; linearIndex < init_values.length; linearIndex++) {
 			IndexedElement ae = new IndexedElement(init_values[linearIndex],
 					getIndexInNDimensions(linearIndex, capacity));
-			ae.execute(init);
+			ae.count(OperationType.write);
 			putElement(ae);
 		}
 		
@@ -111,7 +111,7 @@ public class Array extends DataStructure {
 		for (linearIndex++; linearIndex < linearTotal; linearIndex++) {
 			IndexedElement ae = new IndexedElement(0.0, getIndexInNDimensions(linearIndex, capacity));
 			modifiedElements.add(ae);
-			ae.execute(init);
+			ae.count(OperationType.write);
 			putElement(ae);
 		}
 		modifiedElements.addAll(elements);
@@ -131,18 +131,18 @@ public class Array extends DataStructure {
 		IndexedElement var1Element = this.getElement(var1);
 		if (var1Element != null) {
 			var1Element.setValue(op.getValue()[0]);
-			var1Element.execute(op);
+			var1Element.count(OperationType.swap);
 			modifiedElements.add(var1Element);
 			inactiveElements.remove(var1Element);
-			oc.count(op);
+			oc.count(OperationType.swap);
 		}
 		IndexedElement var2Element = this.getElement(var2);
 		if (var2Element != null) {
 			var2Element.setValue(op.getValue()[1]);
-			var2Element.execute(op);
+			var2Element.count(OperationType.swap);
 			modifiedElements.add(var2Element);
 			inactiveElements.remove(var2Element);
-			oc.count(op);
+			oc.count(OperationType.swap);
 		}
 	}
 
@@ -158,7 +158,7 @@ public class Array extends DataStructure {
 			return;
 		}
 
-		oc.count(op); // Count the operation.
+		oc.count(op.operation); // Update structure count
 
 		Locator target = op.getTarget();
 		Locator source = op.getSource();
@@ -175,7 +175,7 @@ public class Array extends DataStructure {
 				inactiveElements.remove(targetElement);
 				
 				targetElement.setValue(value[0]);
-				targetElement.execute(op);
+				targetElement.count(OperationType.write);
 				
 			} else {
 				// Create the element
@@ -184,10 +184,10 @@ public class Array extends DataStructure {
 				modifiedElements.add(newElement);
 				putElement(newElement);
 				
-				newElement.execute(op);
+				newElement.count(OperationType.write);
 				repaintAll = true;
 			}
-		} else //Should be called again if the source also targets this Array!!
+		}
 
 		/*
 		 * Read operation targeting this Array.
@@ -201,7 +201,7 @@ public class Array extends DataStructure {
 				inactiveElements.remove(sourceElement);
 				
 				sourceElement.setValue(value[0]);
-				sourceElement.execute(op);
+				sourceElement.count(OperationType.read);
 			} else {
 				//Create the element
 				IndexedElement newElement = new IndexedElement(value[0],
@@ -209,7 +209,7 @@ public class Array extends DataStructure {
 				modifiedElements.add(newElement);
 				putElement(newElement);
 				
-				newElement.execute(op);
+				newElement.count(OperationType.read);
 				repaintAll = true;	
 			}
 		}

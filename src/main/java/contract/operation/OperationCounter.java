@@ -67,8 +67,8 @@ public class OperationCounter {
 	 * @param op
 	 *            The operation to count.
 	 */
-	public void count(Operation op) {
-		countOperation(op.operation);
+	public void count(OperationType op) {
+		countOperation(op);
 	}
 
 	/**

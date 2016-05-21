@@ -256,8 +256,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 				resetElements.add(e); // Reactive element
 			} else {
 				inactiveElements.add(e);
-				e.execute(op);
-				e.setValue(Double.NaN);
+				e.count(OperationType.remove);
 			}
 		}
 	}
@@ -294,9 +293,8 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 				e.restoreValue();
 			}
 		} else { // Deactiveate the structure.
-			OP_ToggleScope remove = new OP_ToggleScope();
 			for (Element e : elements) {
-				e.execute(remove);
+				e.count(OperationType.remove);
 			}
 		}
 		repaintAll = true;
