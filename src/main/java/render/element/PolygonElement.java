@@ -47,4 +47,10 @@ public class PolygonElement extends AVElement {
 		shape = new Polygon(points);
 		shape.setStroke(Color.BLACK);
 	}
+
+	@Override
+	public void adjustSize(double value) {
+		// TODO Auto-generated method stub
+		
+	}
 }

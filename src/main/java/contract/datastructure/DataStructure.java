@@ -130,7 +130,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("\"" + Tools.stripQualifiers(this.identifier) + "\": " + this.rawType + "[");
+		sb.append("\"" + Tools.stripQualifiers(this.identifier) + "\": " + this.rawType + " [");
 		
 		sb.append(this.abstractType + ", ");
 		sb.append(this.visual);

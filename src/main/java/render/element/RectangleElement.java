@@ -45,4 +45,10 @@ public class RectangleElement extends AVElement {
 		rect.setHeight(height);
 		shape = rect;
 	}
+
+	@Override
+	public void adjustSize(double value) {
+		// TODO Auto-generated method stub
+
+	}
 }

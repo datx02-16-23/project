@@ -46,6 +46,12 @@ public class EllipseElement extends AVElement {
 		this.shape = ellipse;
 	}
 
+	@Override
+	public void adjustSize(double value) {
+		// TODO Auto-generated method stub
+		
+	}
+
 //	public EllipseElement clone() {
 //		EllipseElement clone;
 //		if (element == null) {

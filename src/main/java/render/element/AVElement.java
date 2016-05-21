@@ -57,7 +57,6 @@ public abstract class AVElement extends Pane {
 	 * FXML elements.
 	 */
 	protected Shape shape;
-	
 
 	protected Label valueLabel;
 	private GridPane root;
@@ -190,7 +189,7 @@ public abstract class AVElement extends Pane {
 		shapePane.getChildren().add(shape);
 
 		valueLabel = (Label) fxmlLoader.getNamespace().get("value");
-		//Double.NaN is used to indicate an element is inactive.
+		// Double.NaN is used to indicate an element is inactive.
 
 		infoLabel.setMouseTransparent(true);
 		infoLabel.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
@@ -229,7 +228,7 @@ public abstract class AVElement extends Pane {
 	 * Indicate to the user that the element has been clicked.
 	 */
 	private void showSelected() {
-				
+
 		// Rotate.
 		shape.setRotate(0);
 		RotateTransition rotate = new RotateTransition(Duration.millis(150), shape);
@@ -398,7 +397,38 @@ public abstract class AVElement extends Pane {
 		infoLabel.setTranslateY(ty);
 	}
 
+	/**
+	 * Set the value of this element, applying it to the <b>visual
+	 * representation only</b>. The model is not changed. Will call
+	 * {@link #adjustSize()} for elements which change based on numeric value.
+	 * 
+	 * @param value
+	 *            A double value to show.
+	 */
+	public void setValue(double value) {
+		valueLabel.setText(" " + value + " ");
+		adjustSize(value);
+	}
+
+	/**
+	 * Set the value of this element, applying it to the <b>visual
+	 * representation only</b>. The model is not changed.
+	 * 
+	 * @param value
+	 *            A String value to show.
+	 */
+	public void setValue(String value) {
+		this.valueLabel.setText(" " + value + " ");
+	}
+
 	public AVElement clone() {
 		return AVElementFactory.clone(this);
 	}
+
+	/**
+	 * Adjust the size of the Shape used to display the value of this AVElement.
+	 * Generally called on unbound elements during animation.
+	 * @param value The new numeric value
+	 */
+	public abstract void adjustSize(double value);
 }

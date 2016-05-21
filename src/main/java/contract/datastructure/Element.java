@@ -42,10 +42,14 @@ public abstract class Element implements OperationCounterHaver {
 	 */
 
 	/**
-	 * The previous numeric value for this element. {@link Double#NaN} indicates
-	 * that the element is inactive.
+	 * The numeric value for this element before the last call to
+	 * {@link #setValue(double)}. <br>
+	 * {@link Double#POSITIVE_INFINITY} indicates that the element is inactive.
+	 * <br>
+	 * {@link Double#NEGATIVE_INFINITY} indicates that the value has never been
+	 * set using {@link #setValue(double)}.
 	 */
-	private double previousNumValue = Double.NaN;
+	private double prevNumValue = Double.NEGATIVE_INFINITY;
 	/**
 	 * Numeric value for this element.
 	 */
@@ -94,7 +98,9 @@ public abstract class Element implements OperationCounterHaver {
 	 * @param newValue
 	 *            the new value for this Element.
 	 */
-	public void setValue(double newValue) {
+	public final void setValue(double newValue) {
+		prevNumValue = numValue;
+
 		if (numValue != newValue || newValue == Double.NaN) {
 			numValue = newValue;
 			numProperty.set(newValue);
@@ -111,7 +117,7 @@ public abstract class Element implements OperationCounterHaver {
 	 * Set the display value held by this Element.
 	 * 
 	 */
-	public void setValue(String newValue) {
+	public final void setValue(String newValue) {
 		if (stringValue.equals(newValue) == false) {
 			stringValue = newValue;
 			stringProperty.setValue(stringValue);
@@ -148,22 +154,39 @@ public abstract class Element implements OperationCounterHaver {
 	 * @param c
 	 *            The paint to use
 	 */
-	public void setColor(Paint c) {
+	public final void setColor(Paint c) {
 		this.paint = c;
 		fillProperty.setValue(paint);
 	}
 
 	/**
 	 * Restores the previous value for this Element by calling
-	 * {@link #setValue(double)} with the value returned by this method. Calling
-	 * {@link #numValue} immediately after calling this method will return the
-	 * value just returned by this method.
+	 * {@link #setValue(double)}, and returns the value to the caller. <br>
+	 * <br>
+	 * The previous value for this element before the last call to
+	 * {@link #setValue(double)}, which is generally invoked by the the model.
+	 * <br>
+	 * <br>
+	 * {@link Double#POSITIVE_INFINITY} indicates that the element is inactive.
+	 * <br>
+	 * {@link Double#NEGATIVE_INFINITY} indicates that the value has never been
+	 * set using {@link #setValue(double)}.
 	 * 
 	 * @return The previous value.
 	 */
-	public double restoreValue() {
-		this.setValue(previousNumValue);
-		return previousNumValue;
+	public final double restoreValue() {
+		this.setValue(prevNumValue);
+		return prevNumValue;
+	}
+
+	/**
+	 * Returns the last numeric value of this element, without restoring it as
+	 * done by {@link #restoreValue()}.
+	 * 
+	 * @return The previous value.
+	 */
+	public final double getPrevNumValue() {
+		return prevNumValue;
 	}
 
 	@Override

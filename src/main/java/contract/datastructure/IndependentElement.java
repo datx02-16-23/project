@@ -3,6 +3,7 @@ package contract.datastructure;
 import java.util.Map;
 
 import assets.Const;
+import assets.Tools;
 import contract.Locator;
 import contract.Operation;
 import contract.operation.OP_ReadWrite;
@@ -134,17 +135,18 @@ public class IndependentElement extends Array {
 			System.out.println("locator is null");
 			return null;
 		}
-
-		System.out.println("elems = " + elements);
-		System.out.println("loc.id = \"" + locator.identifier + "\"");
-		System.out.println("this.id = \"" + this.identifier + "\"");
-		System.out.println("locator.identifier.equals(this.identifier) = " + (locator.identifier.equals(this.identifier)));
-
-
+		
 		if (locator.identifier.equals(this.identifier) && !elements.isEmpty()) {
 			return (IndexedElement) elements.get(0);
 		} else {
 			return null;
 		}
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("\"" + Tools.stripQualifiers(this.identifier) + "\": " + this.rawType);
+		return sb.toString();
 	}
 }

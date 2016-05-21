@@ -43,11 +43,11 @@ public abstract class Const {
 	public static final int RENDER_HEIGHT = 440;
 
 	// More suggested values
-	public static final double ELEMENT_SIZE = 40;
+	public static final double ELEMENT_SIZE = 50;
 	public static final double ELEMENT_WIDTH = ELEMENT_SIZE;
 	public static final double ELEMENT_HEIGHT = ELEMENT_SIZE;
-	public static final double ELEMENT_HSPACE = 0;
-	public static final double ELEMENT_VSPACE = 0;
+	public static final double ELEMENT_HSPACE = 2;
+	public static final double ELEMENT_VSPACE = 2;
 
 	/**
 	 * Suggested minimum margin for renders.

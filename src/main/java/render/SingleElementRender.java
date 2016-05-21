@@ -3,6 +3,8 @@ package render;
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
 import render.element.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 
 public class SingleElementRender extends ARender {
@@ -23,6 +25,15 @@ public class SingleElementRender extends ARender {
 		super(struct, width, height, 0, 0);
 		this.totWidth = 150;
 		this.totHeight = 150;
+	}
+	
+
+	public void  afterParentLoadFXML(FXMLLoader fxmlLoader){
+		//Make it a little smaller.
+		String style = "-fx-font-size: 12; \n fx-font-weight: bold;";
+		Label name2 = (Label) fxmlLoader.getNamespace().get("name_mo");
+		name2.setStyle(style);
+		name.setStyle(style);
 	}
 
 	@Override

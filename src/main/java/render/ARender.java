@@ -94,19 +94,19 @@ public abstract class ARender extends Pane {
 	/**
 	 * The root for the FXML Render.
 	 */
-	private GridPane root;
+	protected GridPane root;
 	/**
 	 * Name label.
 	 */
-	private Label name;
+	protected Label name;
 	/**
 	 * Header bar.
 	 */
-	private Node header;
+	protected Node header;
 	/**
 	 * Info labels.
 	 */
-	private Label xposLabel, yposLabel, scaleLabel;
+	protected Label xposLabel, yposLabel, scaleLabel;
 	/**
 	 * The element style to use.
 	 */
@@ -151,15 +151,13 @@ public abstract class ARender extends Pane {
 		this.animPane = new Pane();
 
 		// Add stacked canvases
-		loadBase();
+		loadFXML();
 		initDragAndZoom();
 
-		// this.setMinSize(150, 20);
-		// this.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 		expand();
 	}
 
-	private void loadBase() {
+	private void loadFXML() {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/render/RenderBase.fxml"));
 		fxmlLoader.setController(this);
 
@@ -200,15 +198,29 @@ public abstract class ARender extends Pane {
 		scaleLabel = (Label) fxmlLoader.getNamespace().get("scale");
 
 		getChildren().add(root);
+		
+		afterParentLoadFXML(fxmlLoader);
+	}
+
+	/**
+	 * Clled after the parent class has finished with loading the fxml, in case
+	 * the child wants to change anything. The default implementation of this
+	 * method does nothing.
+	 * 
+	 * @param fxmlLoader
+	 *            The {@code FXMLLoader} used to load the render.
+	 */
+	protected void afterParentLoadFXML(FXMLLoader fxmlLoader) {
+		// Do nothing.
 	}
 
 	// Make header visible only on mousever.
-	private void bindHeader() {
+	protected void bindHeader() {
 		header.visibleProperty().bind(name.visibleProperty().not());
 	}
 
 	// Make header visible and enable manual setting of visiblity
-	private void unbindHeader() {
+	protected void unbindHeader() {
 		name.setVisible(false);
 		header.visibleProperty().unbind();
 	}
@@ -234,7 +246,7 @@ public abstract class ARender extends Pane {
 		ParallelTransition base = ARenderAnimation.stationary(tar,
 				this.absX(tar), this.absY(tar),
 				millis, this,
-				AnimationOption.USE_GHOST, AnimationOption.FLIP);
+				AnimationOption.GHOST, AnimationOption.FLIP);
 
 
 		base.getNode().setRotationAxis(new Point3D(0, 1, 0));
@@ -299,7 +311,7 @@ public abstract class ARender extends Pane {
 			ARenderAnimation.linear(tar,
 					x1, y1, 
 					x2, y2,
-					millis, this).play();;
+					millis, this, AnimationOption.GHOST).play();;
 		} else if (hasSource) {
 			//Source only
 			ARenderAnimation.linear(src,
@@ -347,7 +359,7 @@ public abstract class ARender extends Pane {
 				render1.absX(var2), render2.absY(var2),
 				render2.absX(var1), render1.absY(var1),
 				millis, this,
-				AnimationOption.USE_GHOST).play();
+				AnimationOption.GHOST).play();
 	}
 	// formatter:on
 
@@ -586,7 +598,7 @@ public abstract class ARender extends Pane {
 	 */
 	protected abstract void bellsAndWhistles(Element e, AVElement ve);
 
-	private static Background getStructBackground(DataStructure struct) {
+	protected static Background getStructBackground(DataStructure struct) {
 		if (struct == null) {
 			return null;
 		}
@@ -619,7 +631,7 @@ public abstract class ARender extends Pane {
 	// Center on button when hiding or showing.
 	private double conbwhs = 0;
 	// Used to hide other buttons when minimising.
-	private final ArrayList<Node> optionalHeaderContent = new ArrayList<Node>();
+	protected final ArrayList<Node> optionalHeaderContent = new ArrayList<Node>();
 
 	public void toggleHidden(Event e) {
 		ToggleButton tb = (ToggleButton) e.getSource();

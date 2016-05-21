@@ -36,7 +36,7 @@ public abstract class ARenderFactory {
 
 		switch (struct.visual) {
 		case bar:
-			curRender = new BarchartRender(struct, elemWidth, renderHeight, 20, 10);
+			curRender = new BarchartRender(struct, elemWidth, renderHeight, 20, elemWidth/4);
 			break;
 		case grid:
 		case box:
@@ -47,7 +47,7 @@ public abstract class ARenderFactory {
 			curRender = new KTreeRender(struct, 2, elemWidth, elemHeight, 5, 5);
 			break;
 		case single:
-			curRender = new SingleElementRender(struct, elemWidth, elemHeight);
+			curRender = new SingleElementRender(struct, elemWidth *2, elemHeight);
 			break;
 		}
 
