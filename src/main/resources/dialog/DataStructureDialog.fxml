@@ -18,7 +18,7 @@
   <children>
       <ImageView fitHeight="91.0" fitWidth="78.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@assets/icon_interpreter.png" />
+            <Image url="@../assets/icon_cogwheel.png" />
          </image></ImageView>
     <VBox maxHeight="+Infinity" maxWidth="+Infinity" minHeight="-Infinity" prefWidth="400.0" spacing="7.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
       <children>

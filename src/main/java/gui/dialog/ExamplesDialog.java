@@ -1,4 +1,4 @@
-package gui.view;
+package gui.dialog;
 
 import java.io.IOException;
 import java.util.Arrays;

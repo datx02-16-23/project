@@ -49,12 +49,12 @@
             <VBox maxHeight="1.7976931348623157E308" maxWidth="85.0" minWidth="85.0" prefHeight="300.0" prefWidth="85.0">
                <children>
                   <Pane maxWidth="85.0" minWidth="75.0" prefHeight="200.0" prefWidth="85.0" />
-                  <Button maxHeight="30.0" maxWidth="85.0" minHeight="30.0" minWidth="75.0" mnemonicParsing="false" onAction="#interpret" prefHeight="30.0" prefWidth="85.0" text="Interpret">
+                  <Button fx:id="interpretButton" maxHeight="30.0" maxWidth="85.0" minHeight="30.0" minWidth="75.0" mnemonicParsing="false" onAction="#interpret" prefHeight="30.0" prefWidth="85.0" text="Interpret">
                      <VBox.margin>
                         <Insets bottom="2.0" top="2.0" />
                      </VBox.margin>
                   </Button>
-                  <Button maxHeight="30.0" maxWidth="85.0" minHeight="30.0" minWidth="75.0" mnemonicParsing="false" onAction="#moveToBefore" prefHeight="30.0" prefWidth="85.0" text="&lt;--">
+                  <Button fx:id="moveToBeforeButton" maxHeight="30.0" maxWidth="85.0" minHeight="30.0" minWidth="75.0" mnemonicParsing="false" onAction="#moveToBefore" prefHeight="30.0" prefWidth="85.0" text="&lt;--">
                      <VBox.margin>
                         <Insets bottom="2.0" top="2.0" />
                      </VBox.margin>
@@ -102,6 +102,9 @@
                      <children>
                         <CheckBox mnemonicParsing="false" text="You're not supposed to see this.." />
                      </children>
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
                   </VBox>
                </children>
                <opaqueInsets>
@@ -113,7 +116,7 @@
       <HBox maxHeight="30.0" maxWidth="1.7976931348623157E308" minHeight="30.0" minWidth="0.0" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: #123456;" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
          <children>
             <HBox maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="0.0" HBox.hgrow="ALWAYS" />
-            <Button defaultButton="true" maxHeight="1.7976931348623157E308" maxWidth="120.0" minWidth="120.0" mnemonicParsing="false" onAction="#keepInterpreted" text="Keep" HBox.hgrow="ALWAYS">
+            <Button fx:id="keepButton" defaultButton="true" maxHeight="1.7976931348623157E308" maxWidth="120.0" minWidth="120.0" mnemonicParsing="false" onAction="#keepInterpreted" text="Keep" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                </HBox.margin>
@@ -121,7 +124,7 @@
                   <Insets bottom="2.0" />
                </padding>
             </Button>
-            <Button maxHeight="1.7976931348623157E308" maxWidth="120.0" minWidth="120.0" mnemonicParsing="false" onAction="#discardInterpreted" text="Discard" HBox.hgrow="ALWAYS">
+            <Button cancelButton="true" maxHeight="1.7976931348623157E308" maxWidth="120.0" minWidth="120.0" mnemonicParsing="false" onAction="#discardInterpreted" text="Discard" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
                </HBox.margin>

@@ -1,4 +1,4 @@
-package gui.view;
+package gui.dialog;
 
 import java.io.IOException;
 
@@ -10,7 +10,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.Spinner;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
@@ -22,6 +21,7 @@ public class VisualDialog {
 	private final Stage parent, root;
 	private final Label name;
 	private DataStructure struct;
+	private final ChoiceBox visualTypeChoiceBox;
 	private boolean changed;
 
 	public VisualDialog(Stage parent) {
@@ -43,7 +43,14 @@ public class VisualDialog {
 			event.consume(); // Better to do this now than missing it later.
 			closeButton();
 		});
-		
+
+		visualTypeChoiceBox = (ChoiceBox) fxmlLoader.getNamespace().get("choice");
+		for (VisualType vt : VisualType.values()) {
+			if (!vt.isClone) {
+				visualTypeChoiceBox.getItems().add(vt);
+			}
+		}
+
 		name = (Label) fxmlLoader.getNamespace().get("name");
 		Scene dialogScene = new Scene(p, p.getPrefWidth(), p.getPrefHeight());
 		root.setScene(dialogScene);
@@ -56,6 +63,7 @@ public class VisualDialog {
 	}
 
 	public void okButton() {
+		struct.setVisual((VisualType) visualTypeChoiceBox.getSelectionModel().getSelectedItem());
 		root.close();
 	}
 
@@ -70,6 +78,7 @@ public class VisualDialog {
 		this.struct = struct;
 		name.setText(struct.toString());
 		root.showAndWait();
+		visualTypeChoiceBox.getSelectionModel().select(struct.resolveVisual());
 		return changed;
 	}
 }

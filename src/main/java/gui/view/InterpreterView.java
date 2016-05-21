@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import javax.script.Bindings;
+
 import assets.Const;
 import contract.Operation;
 import contract.operation.OperationType;
@@ -13,10 +15,12 @@ import interpreter.Interpreter;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
@@ -46,6 +50,9 @@ public class InterpreterView implements InvalidationListener {
 	 * Items received from the caller of show ().
 	 */
 	private List<Operation> receivedItems;
+	private Button interpretButton;
+	private Button moveToBeforeButton;
+	private Button keepButton;
 
 	@SuppressWarnings("unchecked")
 	public InterpreterView(Stage parent) {
@@ -84,9 +91,17 @@ public class InterpreterView implements InvalidationListener {
 		afterItems = interpreterAfter.getItems();
 		beforeItems.addListener(this);
 		afterItems.addListener(this);
+		
 		// Counters
 		beforeCount = (TextField) namespace.get("beforeCount");
 		afterCount = (TextField) namespace.get("afterCount");
+		
+		//Button enabling
+		interpretButton = (Button) namespace.get("interpretButton");
+		moveToBeforeButton = (Button) namespace.get("moveToBeforeButton");
+		keepButton = (Button) namespace.get("keepButton");
+		keepButton.disableProperty().bind(moveToBeforeButton.disabledProperty());
+		
 		// Size and build
 		p.setPrefWidth(this.parent.getWidth() * 0.75);
 		p.setPrefHeight(this.parent.getHeight() * 0.75);
@@ -103,6 +118,8 @@ public class InterpreterView implements InvalidationListener {
 	 *         otherwise.
 	 */
 	public boolean show(List<Operation> ops) {
+		interpretButton.setDisable(ops.isEmpty());
+		moveToBeforeButton.setDisable(true);
 		receivedItems = ops;
 		beforeItems.setAll(receivedItems);
 		interpreterRoutineChooser.getSelectionModel().select(translateInterpreterRoutine());
@@ -219,6 +236,8 @@ public class InterpreterView implements InvalidationListener {
 	 * onAction for the "{@literal<}--" button.
 	 */
 	public void moveToBefore() {
+		moveToBeforeButton.setDisable(true);
+		interpretButton.setDisable(false);
 		if (afterItems.isEmpty() == false) {
 			beforeItems.setAll(afterItems);
 			afterItems.clear();
@@ -229,15 +248,17 @@ public class InterpreterView implements InvalidationListener {
 	 * onAction for the "Interpret" button.
 	 */
 	public void interpret() {
+		interpretButton.setDisable(true);
+		moveToBeforeButton.setDisable(false);
 		afterItems.clear();
 		afterItems.addAll(beforeItems);
 		int n = interpreter.consolidate(afterItems);
 		if (n < 1) {
 			Main.console.info("Interpretation did not return any new operations.");
 		} else {
-			Main.console.info("Interpretation returned " + n + " new operation(s)."
-					+ " List size reduced by " + (beforeItems.size() - afterItems.size())
-					+ ", going from " + beforeItems.size() + " to " + afterItems.size()+ ".");
+			Main.console.info("Interpretation returned " + n + " new operation(s)." + " List size reduced by "
+					+ (beforeItems.size() - afterItems.size()) + ", going from " + beforeItems.size() + " to "
+					+ afterItems.size() + ".");
 		}
 		afterCount.setText("" + afterItems.size());
 	}

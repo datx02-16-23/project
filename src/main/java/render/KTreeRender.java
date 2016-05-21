@@ -107,8 +107,8 @@ public class KTreeRender extends ARender {
 		AVElement parentVis = visualMap
 				.get(Arrays.toString(new int[] { (((IndexedElement) ae).getIndex()[0] - 1) / K }));
 
-		double dx = nodeWidth / 2;
-		double dy = nodeHeight / 2;
+		double dx = (nodeWidth - hSpace) / 2;
+		double dy = (nodeHeight - vSpace) / 2;
 
 		// Connect child to parent
 		if (parentVis != null) {
@@ -120,6 +120,8 @@ public class KTreeRender extends ARender {
 			// ..and end to parent.
 			line.endXProperty().bind(parentVis.layoutXProperty());
 			line.endYProperty().bind(parentVis.layoutYProperty());
+			
+			line.setOpacity(0.5);
 
 			line.setTranslateX(dx);
 			line.setTranslateY(dy);

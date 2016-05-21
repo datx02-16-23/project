@@ -21,12 +21,12 @@ public enum VisualType {
 
 	public transient final String pretty;
 	public transient final String json;
-	public transient final boolean has_clones;
+	public transient final boolean isClone;
 
 	private VisualType(String pretty, String json) {
 		this.pretty = pretty;
 		this.json = json;
-		has_clones = false;
+		this.isClone = false;
 	}
 	
 	/**
@@ -37,7 +37,7 @@ public enum VisualType {
 	private VisualType(VisualType original, String json){
 		this.pretty = original.pretty;
 		this.json = original.json;
-		has_clones = true;
+		isClone = true;
 	}
 
 	/**
