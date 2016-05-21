@@ -11,20 +11,15 @@ public class Model implements iModel {
 	private final List<Ball> balls = new ArrayList<>();
 	private final iFilter filter;
 
-	public Model(double width, double height, iFilter filter, int startRange, int stopRange) {
+	public Model(double width, double height, iFilter filter, ArrayList<Double> range) {
 		this.areaWidth = width;
 		this.areaHeight = height;
 		this.filter = filter;
-		List<Integer> values = new ArrayList<>();
 
-		for (int i = startRange; i < stopRange; i++) {
-			values.add(i);
-		}
-		Collections.shuffle(values);
-		ListIterator<Integer> valuesIterator = values.listIterator();
+		Collections.shuffle(range);
 
-		for (int i = startRange; i < stopRange; i++) {
-			balls.add(new Ball(Math.random() * 500 + 50, Math.random() * 500 + 50, valuesIterator.next()));
+		for (double value : range) {
+			balls.add(new Ball(Math.random() * 500 + 50, Math.random() * 500 + 50, value));
 		}
 	}
 
