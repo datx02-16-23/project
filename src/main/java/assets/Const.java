@@ -24,7 +24,7 @@ public abstract class Const {
 	// Credits
 	public static final String[] DEVELOPER_NAMES = { "Johan GERDIN", "Ivar \"Cannonbait\" JOSEFSSON", "Dennis JONSSON",
 			"Simon SMITH", "Richard \"Whisp\" SUNDQVIST" };
-	public static final long VERSION_NUMBER = -1;
+	public static final long VERSION_NUMBER = Long.MAX_VALUE;
 
 	/*
 	 * 

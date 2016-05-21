@@ -94,7 +94,6 @@ public class Step {
 			}
 			break;
 		case swap:
-			System.out.println("swap = " + op);
 			locator = (Locator) op.operationBody.get(Key.var1);
 			structs.get(locator.identifier).applyOperation(op);
 

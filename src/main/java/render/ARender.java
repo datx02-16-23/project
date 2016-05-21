@@ -15,8 +15,12 @@ import contract.datastructure.Array.IndexedElement;
 import contract.operation.OperationCounter;
 import contract.operation.OperationCounter.OperationCounterHaver;
 import gui.Main;
+import javafx.animation.FillTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.Transition;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point3D;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -28,13 +32,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import render.ARenderAnimation.AnimationOption;
 import render.element.AVElement;
 import render.element.ElementShape;
 
 public abstract class ARender extends Pane {
-	
-	
+
 	/**
 	 * The DataStructure this render represents.
 	 */
@@ -121,8 +125,7 @@ public abstract class ARender extends Pane {
 	 *            The DataStructure this Render will draw.
 	 */
 	public ARender(DataStructure struct) {
-		this(struct, Const.ELEMENT_WIDTH, Const.ELEMENT_HEIGHT,
-				Const.ELEMENT_HSPACE, Const.ELEMENT_VSPACE);
+		this(struct, Const.ELEMENT_WIDTH, Const.ELEMENT_HEIGHT, Const.ELEMENT_HSPACE, Const.ELEMENT_VSPACE);
 	}
 
 	/**
@@ -225,18 +228,37 @@ public abstract class ARender extends Pane {
 	 *            The time in milliseconds the animation should last.
 	 */
 	//@formatter:off
-	public void animateRemove(Element tar, long millis) {
+	public void animateToggleScope(Element tar, long millis) {
 		if(Debug.ERR){
 			System.err.println("ARender.animateRemove(): " + struct  + " is animating.");			
 		}
 		
-		double x = absX(tar);
-		double y = absY(tar);
+		ParallelTransition base = ARenderAnimation.stationary(tar,
+				this.absX(tar), this.absY(tar),
+				millis, this,
+				AnimationOption.USE_GHOST, AnimationOption.FLIP);
 
-		ARenderAnimation.animateLine(tar,
-				x, y, x, y,
-				millis * 4, this,	
-				AnimationOption.FADE_OUT, AnimationOption.SHRINK, AnimationOption.USE_GHOST);
+
+		base.getNode().setRotationAxis(new Point3D(0, 1, 0));
+		
+		Color from = tar.getNumValue() == Double.NaN ? Color.WHITE : Color.BLACK;
+		Color to = tar.getNumValue() != Double.NaN ? Color.WHITE : Color.BLACK;
+		
+	    FillTransition ft = new FillTransition(Duration.millis(millis), from, to);
+	    ft.setShape(((AVElement) base.getNode()).getElementShape());
+	    
+	    ft.setOnFinished(event -> {
+			int[] i = ((IndexedElement) tar).getIndex();
+			AVElement orig = visualMap.get(Arrays.toString(i));
+			
+			orig.setRotationAxis(new Point3D(0, 1, 0));
+			
+			boolean active = orig.getElement().getNumValue() == Double.NaN;
+			orig.setRotate(active ? 0 : 180);
+	    });
+	    
+		base.play();
+		ft.play();
 	}
 	//@formatter:on
 
@@ -276,25 +298,24 @@ public abstract class ARender extends Pane {
 		}
 		
 		if(hasSource && hasTarget){
-			ARenderAnimation.animateLine(tar,
+			ARenderAnimation.linear(tar,
 					x1, y1, 
 					x2, y2,
-					millis, this);
+					millis, this).play();;
 		} else if (hasSource) {
 			//Source only
-			System.out.println("src = " + src);
-			ARenderAnimation.animateLine(src,
+			ARenderAnimation.linear(src,
 					x1, y1, 
 					x1, y1 - Const.ELEMENT_HEIGHT * 2,
 					millis, this,
-					AnimationOption.FADE_OUT, AnimationOption.SHRINK);
+					AnimationOption.FADE_OUT, AnimationOption.SHRINK).play();
 		} else {
 			//Target only
-			ARenderAnimation.animateLine(tar,
+			ARenderAnimation.linear(tar,
 					x1, y1 - Const.ELEMENT_HEIGHT * 2,
 					x1, y1,
 					millis, this,
-					AnimationOption.FADE_IN, AnimationOption.GROW);
+					AnimationOption.FADE_IN, AnimationOption.GROW).play();
 		}
 	}
 	//@formatter:off
@@ -319,11 +340,11 @@ public abstract class ARender extends Pane {
 			System.err.println("ARender.animateSwap(): " + struct  + " is animating.");			
 		}
 		
-		ARenderAnimation.animateLine(var2,
+		ARenderAnimation.linear(var2,
 				render1.absX(var1), render1.absY(var1),
 				render2.absX(var2), render2.absY(var2),
 				millis, this,
-				AnimationOption.USE_GHOST);
+				AnimationOption.USE_GHOST).play();
 	}
 	// formatter:on
 
@@ -589,7 +610,7 @@ public abstract class ARender extends Pane {
 
 	public void showOptions() {
 		//TODO implement options
-		System.out.println("options");
+		Main.console.force("Not implemented.");
 	}
 
 	// Center on button when hiding or showing.

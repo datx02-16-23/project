@@ -88,8 +88,8 @@ public abstract class OperationParser {
 		return op_rw;
 	}
 
-	public static OP_Remove parseRemove(Operation op) {
-		OP_Remove op_remove = new OP_Remove();
+	public static OP_ToggleScope parseRemove(Operation op) {
+		OP_ToggleScope op_remove = new OP_ToggleScope();
 		op_remove.setTarget(unpackArrayVariable(op.operationBody.get(Key.target)));
 		copySourceInfo(op, op_remove);
 		return op_remove;

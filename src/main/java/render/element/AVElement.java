@@ -58,6 +58,8 @@ public abstract class AVElement extends Pane {
 	 * FXML elements.
 	 */
 	protected Shape shape;
+	
+
 	protected Label valueLabel;
 	private GridPane root;
 

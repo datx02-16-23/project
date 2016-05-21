@@ -6,10 +6,7 @@ import assets.Const;
 import contract.AnnotatedVariable;
 import contract.Locator;
 import contract.Operation;
-import contract.operation.OP_ReadWrite;
-import contract.operation.OP_Remove;
-import contract.operation.OP_Swap;
-import contract.operation.OperationCounter;
+import contract.operation.*;
 import contract.operation.OperationCounter.OperationCounterHaver;
 import gui.Main;
 import javafx.collections.FXCollections;
@@ -104,7 +101,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 			executeSwap((OP_Swap) op);
 			break;
 		case remove:
-			executeRemove((OP_Remove) op);
+			executeRemove((OP_ToggleScope) op);
 			return;
 		default:
 			Main.console.err("OperationType \"" + op.operation + "\" unknown.");
@@ -236,7 +233,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 	 * @param op
 	 *            A Remove operation.
 	 */
-	protected void executeRemove(OP_Remove op) {
+	protected void executeRemove(OP_ToggleScope op) {
 		Locator target = op.getTarget();
 
 		/*
@@ -294,7 +291,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 				e.restoreValue();
 			}
 		} else { // Deactiveate the structure.
-			OP_Remove remove = new OP_Remove();
+			OP_ToggleScope remove = new OP_ToggleScope();
 			for (Element e : elements) {
 				e.execute(remove);
 			}

@@ -99,7 +99,7 @@ public class KTreeRender extends ARender {
 	 */
 	@Override
 	protected void bellsAndWhistles(Element ae, AVElement childVis) {
-		System.out.println("ktree: baw shape = " + childVis.getShape());
+//		System.out.println("ktree: baw shape = " + childVis.getShape());
 
 		IndexedElement parentClone = new IndexedElement(0, new int[] { (((IndexedElement) ae).getIndex()[0] - 1) / K });
 
@@ -233,10 +233,6 @@ public class KTreeRender extends ARender {
 
 		// Calculate the minimum depth which can hold all elements of the array.
 		while (Tools.lowerLevelSum(totDepth, K) < structSize) {
-			System.out.println("times called lls: " + (i++));
-			System.out.println("totDepth, K = " + totDepth + ", " + K);
-			System.out.println("lls = " + Tools.lowerLevelSum(totDepth, K));
-			System.out.println();
 			totDepth++;
 		}
 		totDepth--;

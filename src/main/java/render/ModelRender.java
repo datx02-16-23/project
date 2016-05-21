@@ -7,11 +7,11 @@ import assets.Tools;
 import assets.Debug;
 import contract.Locator;
 import contract.Operation;
+import contract.operation.*;
 import contract.datastructure.*;
-import contract.operation.OP_ReadWrite;
-import contract.operation.OP_Remove;
 import contract.operation.OP_Swap;
 import gui.Controller;
+import gui.Main;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
@@ -159,7 +159,7 @@ public class ModelRender extends StackPane {
 			animateReadWrite((OP_ReadWrite) op);
 			break;
 		case remove:
-			animateRemove((OP_Remove) op);
+			animateToggleScope((OP_ToggleScope) op);
 			break;
 		case swap:
 			animateSwap((OP_Swap) op);
@@ -170,8 +170,8 @@ public class ModelRender extends StackPane {
 		}
 	}
 
-	private void animateRemove(OP_Remove remove) {
-		Locator tar = remove.getTarget();
+	private void animateToggleScope(OP_ToggleScope toggleScope) {
+		Locator tar = toggleScope.getTarget();
 		Element e;
 		
 		/**
@@ -181,7 +181,7 @@ public class ModelRender extends StackPane {
 			e = struct.getElement(tar);
 			if (e != null) {
 				ARender render = this.managerMap.get(struct.identifier).getRender();
-				render.animateRemove(e, millis);
+				render.animateToggleScope(e, millis);
 				if(Debug.ERR){
 					System.err.println("\nVisualization.animateRemove():");					
 				}
@@ -316,7 +316,6 @@ public class ModelRender extends StackPane {
 				yPos = northEast * 120 + margin;
 				xPos = getWidth() - (150 + margin) * (nEExpand + 1);
 				if (!(checkXPos(xPos) && checkYPos(yPos))) {
-					System.out.println("retry");
 					northEast = 0;
 					nEExpand++;
 					yPos = northEast * 120 + margin;
@@ -481,6 +480,6 @@ public class ModelRender extends StackPane {
 	 * Create a render which shows live updating statistics for the model.
 	 */
 	public void showLiveStats() {
-		System.out.println("Visualization.showLiveStats() not implemnted yet");
+		Main.console.force("Visualization.showLiveStats() not implemnted yet");
 	}
 }

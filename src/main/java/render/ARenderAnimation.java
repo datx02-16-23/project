@@ -8,9 +8,13 @@ import contract.datastructure.Array.IndexedElement;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
+import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
+import javafx.geometry.Point3D;
+import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import render.element.AVElement;
 
@@ -26,7 +30,10 @@ public abstract class ARenderAnimation {
 	}// Not to be instantiated.
 
 	/**
-	 * Start an animation of an element to a point.
+	 * Animate moving an element from <i>(x1, y1)</i> to <i>(x2, y2))</i>.
+	 * Calling
+	 * {@link ParallelTransition#setOnFinished(javafx.event.EventHandler)} on
+	 * the transition returned by this method may have unwanted side effects.
 	 * 
 	 * @param e
 	 *            The element to animate.
@@ -40,9 +47,10 @@ public abstract class ARenderAnimation {
 	 *            End point y-coordinate.
 	 * @param millis
 	 *            The time in milliseconds the animation should last.
+	 * @return A ParallelTransition with the requested transitions as children.
 	 */
 	//@formatter:off
-	public static void animateLine(Element e,
+	public static ParallelTransition linear(Element e,
 			double x1, double y1,
 			double x2, double y2,
 			long millis, ARender render,
@@ -58,10 +66,10 @@ public abstract class ARenderAnimation {
 			if (orig == null) {
 				System.err.println("ARender.animte() failure: Could not resolve element for using:" + render);
 				java.awt.Toolkit.getDefaultToolkit().beep();
-				return;
+				return new ParallelTransition();
 			}
 		}
-		ParallelTransition transition = AnimationOption.getTransiton(orig, render, millis, options);
+		ParallelTransition transition = AnimationOption.buildTransition(orig, render, millis, options);
 
 		/*
 		 * Add movement.
@@ -77,7 +85,51 @@ public abstract class ARenderAnimation {
 		/*
 		 * Showtime!!
 		 */
-		transition.play();
+		return transition;
+	}
+
+	/**
+	 * Animate an element without translation. Calling
+	 * {@link ParallelTransition#setOnFinished(javafx.event.EventHandler)} on
+	 * the transition returned by this method may have unwanted side effects.
+	 * 
+	 * @param e
+	 *            The element to animate.
+	 * @param x
+	 *            X-coordinate for the animation.
+	 * @param y
+	 *            Y-coordinate for the animation.
+	 * @param millis
+	 *            The time in milliseconds the animation should last.
+	 * @return A ParallelTransition with the requested transitions as children.
+	 */
+	//@formatter:off
+	public static ParallelTransition stationary(Element e,
+			double x, double y,
+			long millis, ARender render,
+			AnimationOption... options) {
+	//@formatter:on	
+
+		// Fetch the element to animate
+		// VisualElement orig = visualElementsMapping.get(e);
+		int[] i = ((IndexedElement) e).getIndex();
+		Arrays.copyOf(i, i.length);
+		final AVElement orig = render.visualMap.get(Arrays.toString(i));
+		if (Debug.ERR) {
+			if (orig == null) {
+				System.err.println("ARender.animte() failure: Could not resolve element for using:" + render);
+				java.awt.Toolkit.getDefaultToolkit().beep();
+				return new ParallelTransition();
+			}
+		}
+		ParallelTransition pt = AnimationOption.buildTransition(orig, render, millis, options);
+
+		TranslateTransition tt = new TranslateTransition(Duration.ZERO);
+		tt.setToX(x);
+		tt.setToY(y);
+		pt.getChildren().add(tt);
+
+		return pt;
 	}
 
 	/**
@@ -96,9 +148,9 @@ public abstract class ARenderAnimation {
 		 */
 		FADE_OUT,
 		/**
-		 * Make the element spin.
+		 * Make the element rotate 180 degrees on the Y-axis.
 		 */
-		SPIN,
+		FLIP,
 		/**
 		 * Turn the element into a ghost until animation is complete.
 		 */
@@ -124,9 +176,10 @@ public abstract class ARenderAnimation {
 		 *            The animation time in milliseconds.
 		 * @param options
 		 *            A list of options.
-		 * @return A ParallelTransition with child transitions specified by {@code options}.
+		 * @return A ParallelTransition with child transitions specified by
+		 *         {@code options}.
 		 */
-		public static ParallelTransition getTransiton(AVElement orig, ARender render, long millis,
+		public static ParallelTransition buildTransition(AVElement orig, ARender render, long millis,
 				AnimationOption... options) {
 
 			final AVElement animated = orig.clone();
@@ -159,8 +212,8 @@ public abstract class ARenderAnimation {
 				case GROW:
 					parent.getChildren().add(grow(millis));
 					break;
-				case SPIN:
-					// TODO: Implement SPIN
+				case FLIP:
+					parent.getChildren().add(flip(millis));
 					break;
 				case USE_GHOST:
 					originalGhostDuringAnimation = true;
@@ -173,15 +226,24 @@ public abstract class ARenderAnimation {
 			// Must have final value for setOnFinished().
 			final boolean finalGhost = originalGhostDuringAnimation;
 			orig.setGhost(finalGhost);
+			System.out.println("setGhost: " + finalGhost);
 
 			parent.setOnFinished(event -> {
+				System.out.println("done!");
 				if (finalGhost) {
+					System.out.println("restore ghost");
 					orig.setGhost(false);
 				}
 				render.animPane.getChildren().remove(animated);
 			});
 
 			return parent;
+		}
+
+		private static Animation flip(long millis) {
+			RotateTransition rt = new RotateTransition(Duration.millis(millis));
+			rt.setByAngle(180);
+			return rt;
 		}
 
 		public static Animation grow(long millis) {

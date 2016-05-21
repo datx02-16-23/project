@@ -55,7 +55,7 @@
                                              <graphic>
                                                 <ImageView fitHeight="125.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>
-                                                      <Image url="@assets/array.png" />
+                                                      <Image url="@../assets/array.png" />
                                                    </image>
                                                 </ImageView>
                                              </graphic>
@@ -68,7 +68,7 @@
                                              <graphic>
                                                 <ImageView fitHeight="125.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
                                                    <image>
-                                                      <Image url="@assets/orphan.png" />
+                                                      <Image url="@../assets/orphan.png" />
                                                    </image>
                                                 </ImageView>
                                              </graphic>
@@ -81,7 +81,7 @@
                                              <graphic>
                                                 <ImageView fitHeight="125.0" fitWidth="150.0" pickOnBounds="true">
                                                    <image>
-                                                      <Image url="@assets/tree.png" />
+                                                      <Image url="@../assets/tree.png" />
                                                    </image>
                                                    <viewport>
                                                       <Rectangle2D />

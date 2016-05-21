@@ -90,6 +90,6 @@ public class SingleElementRender extends ARender {
 
 	@Override
 	protected void bellsAndWhistles(Element e, AVElement ve) {
-		System.out.println("single: bells shape = " + ve.getShape());	
+//		System.out.println("single: bells shape = " + ve.getShape());	
 	}
 }

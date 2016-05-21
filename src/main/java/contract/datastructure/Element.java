@@ -7,6 +7,7 @@ import contract.operation.OperationType;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
 /**
@@ -73,7 +74,7 @@ public abstract class Element implements OperationCounterHaver {
 	 * 
 	 * @return The value held by this Element.
 	 */
-	public final double numValue() {
+	public final double getNumValue() {
 		return numValue;
 	}
 
@@ -83,7 +84,7 @@ public abstract class Element implements OperationCounterHaver {
 	 * 
 	 * @return The display value held by this Element
 	 */
-	public String stringValue() {
+	public String getStringValue() {
 		return stringValue;
 	}
 
@@ -99,7 +100,9 @@ public abstract class Element implements OperationCounterHaver {
 			numProperty.set(newValue);
 
 			if (newValue != Double.NaN) {
-				stringProperty.setValue(numValue + "");
+				stringProperty.setValue(" " + numValue + " ");
+			} else {
+				this.fillProperty.set(Color.BLACK);
 			}
 		}
 	}
@@ -150,8 +153,17 @@ public abstract class Element implements OperationCounterHaver {
 		fillProperty.setValue(paint);
 	}
 
-	public void restoreValue() {
+	/**
+	 * Restores the previous value for this Element by calling
+	 * {@link #setValue(double)} with the value returned by this method. Calling
+	 * {@link #numValue} immediately after calling this method will return the
+	 * value just returned by this method.
+	 * 
+	 * @return The previous value.
+	 */
+	public double restoreValue() {
 		this.setValue(previousNumValue);
+		return previousNumValue;
 	}
 
 	@Override

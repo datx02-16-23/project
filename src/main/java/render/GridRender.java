@@ -209,6 +209,6 @@ public class GridRender extends ARender {
 
 	@Override
 	protected void bellsAndWhistles(Element e, AVElement ve) {
-		System.out.println("grid: baw shape = " + ve.getShape());
+//		System.out.println("grid: baw shape = " + ve.getShape());
 	}
 }

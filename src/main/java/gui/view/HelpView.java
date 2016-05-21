@@ -123,7 +123,7 @@ public class HelpView {
 
 			// Add to panels
 			labels.add(label, column, 0);
-			((BorderPane) boxes.getChildren().get(column)).setCenter(box);
+//			((BorderPane) boxes.getChildren().get(column)).setCenter(box);
 			column++;
 		}
 	}

@@ -71,7 +71,7 @@ public class IndependentElement extends Array {
 		if (elements.isEmpty()) {
 			return 0;
 		}
-		return elements.get(0).numValue();
+		return elements.get(0).getNumValue();
 	}
 
 	@Override
@@ -129,11 +129,13 @@ public class IndependentElement extends Array {
 	@Override
 	public IndexedElement getElement(Locator locator) {
 		if (locator == null) {
+			System.out.println("locator == null");
 			return null;
 		}
-		if (locator.identifier.equals(super.identifier) && elements.isEmpty() == false) {
+		if (locator.identifier.equals(super.identifier) && !elements.isEmpty()) {
 			return (IndexedElement) elements.get(0);
 		} else {
+			System.out.println("locator.identifier wrong");
 			return null;
 		}
 	}

@@ -309,7 +309,7 @@ public class Array extends DataStructure {
 		IndexedElement old = null;
 		old = getElement(newElement.index);
 		if (old != null) {
-			if (newElement.numValue() == old.numValue()) {
+			if (newElement.getNumValue() == old.getNumValue()) {
 				return null;
 			}
 			int replacedElementIndex = elements.indexOf(old);
@@ -395,14 +395,14 @@ public class Array extends DataStructure {
 				return false;
 			}
 			IndexedElement rhs = (IndexedElement) obj;
-			return this.numValue() == rhs.numValue() && Arrays.equals(this.index, rhs.index);
+			return this.getNumValue() == rhs.getNumValue() && Arrays.equals(this.index, rhs.index);
 		}
 
 		// TODO
 		@Override
 		public String toString() {
 			// return hashCode() + "";
-			return Arrays.toString(index) + " = " + numValue();
+			return Arrays.toString(index) + " = " + getNumValue();
 		}
 	}
 

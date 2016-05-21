@@ -9,15 +9,20 @@ import contract.datastructure.Array.IndexedElement;
 import contract.datastructure.Element;
 import render.element.BarchartElement;
 import render.element.ElementShape;
+import render.ARenderAnimation.AnimationOption;
 import render.element.AVElement;
 import gui.Main;
 import render.element.AVElementFactory;
+import javafx.animation.ParallelTransition;
+import javafx.animation.RotateTransition;
+import javafx.animation.ScaleTransition;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polyline;
+import javafx.util.Duration;
 
 public class BarchartRender extends ARender {
 
@@ -61,6 +66,9 @@ public class BarchartRender extends ARender {
 
 	@Override
 	public double getX(Element e) {
+		if (e == null || e instanceof IndexedElement == false) {
+			return -1;
+		}
 		int[] index = ((IndexedElement) e).getIndex();
 		if (index == null || index.length == 0) {
 			System.err.println("Invalid index for element " + e + " in \"" + struct + "\".");
@@ -77,7 +85,7 @@ public class BarchartRender extends ARender {
 
 	@Override
 	public double getY(Element e) {
-		return xAxisY; // TODO -padding is wrong
+		return xAxisY;
 	}
 
 	public void render() {
@@ -141,7 +149,7 @@ public class BarchartRender extends ARender {
 		axes.getChildren().add(xAxis);
 
 		Polyline xArrow = new Polyline(0, 0, 15, 5, 0, 10);
-		xArrow.setLayoutX(totWidth - 10);
+		xArrow.setLayoutX(totWidth - 15);
 		xArrow.setLayoutY(xAxisY - 5);
 		xArrow.setStrokeWidth(2);
 		axes.getChildren().add(xArrow);
@@ -238,7 +246,7 @@ public class BarchartRender extends ARender {
 	@Override
 	protected BarchartElement createVisualElement(Element e) {
 		BarchartElement ve = (BarchartElement) AVElementFactory.shape(ELEMENT_STYLE, e, barWidth,
-				unitSize * e.numValue());
+				unitSize * e.getNumValue());
 		return ve;
 	}
 
@@ -280,4 +288,26 @@ public class BarchartRender extends ARender {
 		double by = this.getTranslateY() + this.getLayoutY() + contentPane.getLayoutY();
 		return xAxisY + by;
 	}
+
+//	/**
+//	 * Custom animation for read operations with only one locator.
+//	 * 
+//	 * @param src
+//	 *            The source element.
+//	 * @param srcRender
+//	 *            The render for the source element.
+//	 * @param tar
+//	 *            The target element.
+//	 * @param tarRender
+//	 *            The render for the target element.
+//	 * @param millis
+//	 *            The time in milliseconds the animation should last.
+//	 */
+//	//@formatter:off
+//	public void animateReadWrite(Element src, ARender srcRender, Element tar, ARender tarRender, long millis) {
+//		if(tar == null || src != null){
+//			super.animateReadWrite(src, srcRender, tar, tarRender, millis);
+//			return;
+//		}
+//	}
 }
