@@ -16,6 +16,7 @@ import render.element.AVElementFactory;
 import javafx.animation.ParallelTransition;
 import javafx.animation.RotateTransition;
 import javafx.animation.ScaleTransition;
+import javafx.animation.SequentialTransition;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
@@ -289,25 +290,42 @@ public class BarchartRender extends ARender {
 		return xAxisY + by;
 	}
 
-//	/**
-//	 * Custom animation for read operations with only one locator.
-//	 * 
-//	 * @param src
-//	 *            The source element.
-//	 * @param srcRender
-//	 *            The render for the source element.
-//	 * @param tar
-//	 *            The target element.
-//	 * @param tarRender
-//	 *            The render for the target element.
-//	 * @param millis
-//	 *            The time in milliseconds the animation should last.
-//	 */
-//	//@formatter:off
-//	public void animateReadWrite(Element src, ARender srcRender, Element tar, ARender tarRender, long millis) {
-//		if(tar == null || src != null){
-//			super.animateReadWrite(src, srcRender, tar, tarRender, millis);
-//			return;
-//		}
-//	}
+	/**
+	 * Custom animation for read operations with only one locator.
+	 * 
+	 * @param src
+	 *            The source element.
+	 * @param srcRender
+	 *            The render for the source element.
+	 * @param tar
+	 *            The target element.
+	 * @param tarRender
+	 *            The render for the target element.
+	 * @param millis
+	 *            The time in milliseconds the animation should last.
+	 */
+	public void animateReadWrite(Element src, ARender srcRender, Element tar, ARender tarRender, long millis) {
+		if (tar != null || src == null) {
+			super.animateReadWrite(src, srcRender, tar, tarRender, millis);
+			return;
+		}
+
+		double x1 = this.absX(src);
+		double y1 = this.absY(src);
+
+		double x2 = x1;
+		double y2 = y1 - barWidth / 2;
+		int[] i = ((IndexedElement) src).getIndex();
+		Arrays.copyOf(i, i.length);
+		final AVElement orig = visualMap.get(Arrays.toString(i));
+		orig.setGhost(true);
+
+		ParallelTransition up = ARenderAnimation.linear(src, x1, y1, x2, y2, millis / 3, this);
+		ParallelTransition down = ARenderAnimation.linear(src, x2, y2, x1, y1, millis / 3, this,
+				AnimationOption.USE_GHOST);
+
+		SequentialTransition st = new SequentialTransition();
+		st.getChildren().addAll(up, down);
+		st.play();
+	}
 }

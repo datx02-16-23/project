@@ -9,7 +9,8 @@ import contract.operation.*;
 import gui.Main;
 
 /**
- * Class for consolidating groups of low level operations (read/write).
+ * An Interpreter attempts to increase the abstraction level of operation logs
+ * be consolidating read and write operations into higher level operations.
  * 
  * @author Richard Sundqvist
  *
@@ -38,7 +39,7 @@ public class Interpreter {
 	 * Deconstruct high-level operations into read/write operations.
 	 */
 	public static final int DECONSTRUCT = 4;
-	private int consolidationSuccessful;
+	private int count;
 	private int highOrderRoutine;
 	private final LinkedList<Operation> before;
 	private LinkedList<Operation> after;
@@ -145,14 +146,14 @@ public class Interpreter {
 	 * @return The number operations creates.
 	 */
 	public int consolidate(List<Operation> listToConsolidate) {
-		consolidationSuccessful = 0;
+		count = 0;
 		if (highOrderRoutine == ABORT) {
 			for (Operation op : listToConsolidate) {
 				if (op.operation == OperationType.message) {
 					continue; // Acceptable non read/write operation found.
 				} else if (isReadOrWrite(op) == false) {
 					Main.console.info("ABORT: High level operation found: " + op);
-					return consolidationSuccessful;
+					return count;
 				}
 			}
 		}
@@ -166,7 +167,7 @@ public class Interpreter {
 		// Transfer result to operations
 		listToConsolidate.clear();
 		listToConsolidate.addAll(after);
-		return consolidationSuccessful;
+		return count;
 	}
 
 	/**
@@ -320,7 +321,7 @@ public class Interpreter {
 		Operation consolidatedOperation = consolidator.attemptConsolidate(workingSet);
 		if (consolidatedOperation != null) {
 			after.add(consolidatedOperation);
-			consolidationSuccessful++;
+			count++;
 			return true;
 		}
 		return false;
