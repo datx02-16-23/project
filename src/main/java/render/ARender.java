@@ -14,6 +14,7 @@ import contract.datastructure.Element;
 import contract.datastructure.Array.IndexedElement;
 import contract.operation.OperationCounter.OperationCounterHaver;
 import gui.Main;
+import gui.dialog.VisualDialog;
 import javafx.animation.FillTransition;
 import javafx.animation.ParallelTransition;
 import javafx.event.Event;
@@ -619,8 +620,8 @@ public abstract class ARender extends Pane {
 	}
 
 	public void showOptions() {
-		//TODO implement options
-		Main.console.force("Not implemented.");
+		VisualDialog vd = new VisualDialog(null);
+		vd.show(struct);
 	}
 
 	// Center on button when hiding or showing.

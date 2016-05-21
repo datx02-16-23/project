@@ -19,7 +19,6 @@ import javafx.util.Duration;
 import multiset.filter.Filter;
 import multiset.filter.iFilter;
 import multiset.model.Model;
-import multiset.model.RangePatterns;
 import multiset.model.iModel;
 import multiset.view.View;
 import multiset.view.iView;

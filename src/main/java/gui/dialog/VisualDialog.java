@@ -18,21 +18,20 @@ import javafx.stage.Stage;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class VisualDialog {
 
-	private final Stage parent, root;
+	private final Stage root;
 	private final Label name;
 	private DataStructure struct;
 	private final ChoiceBox visualTypeChoiceBox;
 	private boolean changed;
 
 	public VisualDialog(Stage parent) {
-		this.parent = parent;
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/dialog/DataStructureDialog.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/dialog/VisualDialog.fxml"));
 		fxmlLoader.setController(this);
 		root = new Stage();
 		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
 		root.initModality(Modality.APPLICATION_MODAL);
 		root.setTitle(Const.PROGRAM_NAME + ": Choose Visualisation");
-		root.initOwner(this.parent);
+		root.initOwner(parent);
 		GridPane p = null;
 		try {
 			p = fxmlLoader.load();
