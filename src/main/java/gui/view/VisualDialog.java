@@ -20,8 +20,6 @@ import javafx.stage.Stage;
 public class VisualDialog {
 
 	private final Stage parent, root;
-	private final ChoiceBox choice;
-	private final Spinner options;
 	private final Label name;
 	private DataStructure struct;
 	private boolean changed;
@@ -45,25 +43,11 @@ public class VisualDialog {
 			event.consume(); // Better to do this now than missing it later.
 			closeButton();
 		});
-		fxmlLoader.getNamespace();
-		choice = (ChoiceBox) fxmlLoader.getNamespace().get("choice");
-		for(VisualType vt : VisualType.values()){
-			if(vt.has_clones == false){
-				choice.getItems().add(vt);
-			}
-		}
-		choice.setOnAction(event -> {
-			chooseVisual();
-		});
-		options = (Spinner) fxmlLoader.getNamespace().get("children");
+		
 		name = (Label) fxmlLoader.getNamespace().get("name");
-		Scene dialogScene = new Scene(p, p.getPrefWidth() - 5, p.getPrefHeight());
+		Scene dialogScene = new Scene(p, p.getPrefWidth(), p.getPrefHeight());
 		root.setScene(dialogScene);
 		root.setResizable(false);
-	}
-
-	private void chooseVisual() {
-		VisualType vt = (VisualType) choice.getSelectionModel().getSelectedItem();
 	}
 
 	public void closeButton() {
@@ -72,18 +56,6 @@ public class VisualDialog {
 	}
 
 	public void okButton() {
-		VisualType vt = (VisualType) choice.getSelectionModel().getSelectedItem();
-		if (vt == null) {
-			changed = false;
-			root.close();
-			return;
-		}
-		if (vt != struct.resolveVisual()) {
-			// Visual type changed
-			struct.setVisual(vt);
-			changed = true;
-			root.close();
-		}
 		root.close();
 	}
 
@@ -97,7 +69,6 @@ public class VisualDialog {
 	public boolean show(DataStructure struct) {
 		this.struct = struct;
 		name.setText(struct.toString());
-		choice.getSelectionModel().select(struct.resolveVisual());
 		root.showAndWait();
 		return changed;
 	}
