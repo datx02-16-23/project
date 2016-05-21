@@ -63,6 +63,15 @@ public class BarchartElement extends RectangleElement {
 		Rectangle rect = ((Rectangle) shape);
 		rect.heightProperty().bind((element.numProperty.multiply(unitHeight)));
 	}
+	
+	/**
+	 * Adjust the height of the bar.
+	 */
+	public void adjustSize(double value){
+//		rect.heightProperty().unbind();
+//		rect.setHeight(unitHeight*value);
+//		fixPositioning(0);
+	}
 
 	@Override
 	public void createShape() {

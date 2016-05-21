@@ -318,7 +318,7 @@ public class BarchartRender extends ARender {
 
 		ParallelTransition up = ARenderAnimation.linear(src, x1, y1, x2, y2, millis / 3, this);
 		ParallelTransition down = ARenderAnimation.linear(src, x2, y2, x1, y1, millis / 3, this,
-				AnimationOption.USE_GHOST);
+				AnimationOption.GHOST);
 
 		SequentialTransition st = new SequentialTransition();
 		st.getChildren().addAll(up, down);

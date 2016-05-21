@@ -115,8 +115,8 @@ public abstract class ARenderAnimation {
 		final AVElement orig = render.visualMap.get(Arrays.toString(i));
 		if (Debug.ERR) {
 			if (orig == null) {
-				System.err.println(
-						"ARenderAnimation.stationary() failure: Could not resolve element  " + e + "  using: " + render);
+				System.err.println("ARenderAnimation.stationary() failure: Could not resolve element  " + e
+						+ "  using: " + render);
 				java.awt.Toolkit.getDefaultToolkit().beep();
 				return new ParallelTransition();
 			}
@@ -151,9 +151,10 @@ public abstract class ARenderAnimation {
 		 */
 		FLIP,
 		/**
-		 * Turn the element into a ghost until animation is complete.
+		 * Turn the element into a ghost until animation is complete. The ghost
+		 * will use the old value (and size, if applicable) until animation is complete.
 		 */
-		USE_GHOST,
+		GHOST,
 		/**
 		 * Make the element scale from 1.0 to 0.0.
 		 */
@@ -167,7 +168,8 @@ public abstract class ARenderAnimation {
 		 * Add transitions for the given options to the parent transition.
 		 * 
 		 * @param orig
-		 *            The original element. <b>Must not be null.</b>
+		 *            The original element. Will not change, but <b>must not be
+		 *            null.</b>
 		 * @param render
 		 *            The render which should do the animation. <b>Must not be
 		 *            null.</b>
@@ -181,25 +183,25 @@ public abstract class ARenderAnimation {
 		public static ParallelTransition buildTransition(AVElement orig, ARender render, long millis,
 				AnimationOption... options) {
 
-			final AVElement animated = orig.clone();
-			if (animated == null) {
+			final AVElement clone = orig.clone();
+			if (clone == null) {
 				System.err.println("Error in ARenderAnimation.ParallelTransition(): orig.clone() == null");
 				return new ParallelTransition();
 			}
 
 			// Make sure the animated element doesn't update with the model.
-			animated.unbind();
-			animated.setScaleX(render.getScaleX());
-			animated.setScaleY(render.getScaleY());
+			clone.unbind();
+			clone.setScaleX(render.getScaleX());
+			clone.setScaleY(render.getScaleY());
 
-			render.animPane.getChildren().add(animated);
+			render.animPane.getChildren().add(clone);
 
 			/**
 			 * Create transition and add optional transitions.
 			 */
-			ParallelTransition parent = new ParallelTransition(animated);
+			ParallelTransition parent = new ParallelTransition(clone);
 
-			boolean originalGhostDuringAnimation = false;
+			boolean useGhost = false;
 
 			for (AnimationOption opt : options) {
 				switch (opt) {
@@ -218,23 +220,37 @@ public abstract class ARenderAnimation {
 				case FLIP:
 					parent.getChildren().add(flip(millis));
 					break;
-				case USE_GHOST:
-					originalGhostDuringAnimation = true;
-					break;
-				default:
+				case GHOST:
+					useGhost = true;
 					break;
 				}
 			}
 
-			// Must have final value for setOnFinished().
-			final boolean finalGhost = originalGhostDuringAnimation;
-			orig.setGhost(finalGhost);
+			/*
+			 * Must have final value for setOnFinished().
+			 */
+
+			/*
+			 * Ghost stuff
+			 */
+			// @formatter: off
+//			useGhost = false;
+			final boolean finalGhost = useGhost;
+			
+			if (finalGhost) {
+				orig.setGhost(true);
+			}
+
+			/*
+			 * Almost done..
+			 */
 
 			parent.setOnFinished(event -> {
 				if (finalGhost) {
 					orig.setGhost(false);
 				}
-				render.animPane.getChildren().remove(animated);
+
+				render.animPane.getChildren().remove(clone);
 			});
 
 			return parent;
