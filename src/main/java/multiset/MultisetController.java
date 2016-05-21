@@ -4,12 +4,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
+import contract.Operation;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -22,6 +26,7 @@ import multiset.model.Model;
 import multiset.model.iModel;
 import multiset.view.View;
 import multiset.view.iView;
+import multiset.model.RangePatterns;
 
 /**
  * Created by Smith on 26/04/16.
@@ -30,11 +35,13 @@ public class MultisetController {
 
 	private final FXMLLoader fxmlLoader;
 	private TextField range, cond, input, output;
+	private ListView<String> history;
 	private iModel model;
 	private iView view;
 	private final Stage window;
 	private final Scene previousScene;
 	private final Timeline timeline;
+	private ObservableList<String> items;
 
 	public MultisetController(Stage window) {
 		this.window = window;
@@ -48,6 +55,7 @@ public class MultisetController {
 			e.printStackTrace();
 		}
 		loadNamespaceItems(fxmlLoader.getNamespace());
+
 		window.setScene(new Scene(p));
 		timeline = new Timeline();
 		setupTimeline();
@@ -80,7 +88,7 @@ public class MultisetController {
 
 		iFilter filter = new Filter(input.getText(), output.getText(), cond.getText());
 		ArrayList list = new RangePatterns( range.getText() ).getList();
-		model = new Model(ballCanvas.getWidth(), ballCanvas.getHeight(), filter, list);
+		model = new Model(ballCanvas.getWidth(), ballCanvas.getHeight(), filter, list, items);
 		view = new View(model, ballCanvas);
 
 		timeline.play();
@@ -107,6 +115,12 @@ public class MultisetController {
 		output = (TextField) namespace.get("output");
 		cond = (TextField) namespace.get("cond");
 		range = (TextField) namespace.get("range");
+
+		// List stuff
+		history = (ListView<String>) namespace.get("collisionHistory");
+		items = FXCollections.observableArrayList();
+		history.setItems(items);
+		items.add("History:");
 	}
 
 }

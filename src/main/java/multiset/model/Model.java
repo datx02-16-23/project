@@ -1,5 +1,6 @@
 package multiset.model;
 
+import javafx.collections.ObservableList;
 import multiset.filter.iFilter;
 
 import java.util.*;
@@ -10,11 +11,13 @@ public class Model implements iModel {
 	private final double areaHeight;
 	private final List<Ball> balls = new ArrayList<>();
 	private final iFilter filter;
+	private ObservableList<String> items;
 
-	public Model(double width, double height, iFilter filter, ArrayList<Double> range) {
+	public Model(double width, double height, iFilter filter, ArrayList<Double> range, ObservableList<String> items) {
 		this.areaWidth = width;
 		this.areaHeight = height;
 		this.filter = filter;
+		this.items = items;
 
 		Collections.shuffle(range);
 
@@ -32,7 +35,6 @@ public class Model implements iModel {
 	private void handleCollisions(double deltaT) {
 		ballCollisions(deltaT);
 		wallCollisions(deltaT);
-
 	}
 
 	private void ballCollisions(double deltaT) {
@@ -44,7 +46,19 @@ public class Model implements iModel {
 			for (Ball b : balls) {
 				if (a != b && a.collidesWith(b) && activeCollision(a, b)) {
 					ballCollision(a, b);
-					ballsToRemove.addAll(flagBalls(a, b));
+					Set<iValueContainer> flaggedBalls = flagBalls(a, b);
+					ballsToRemove.addAll(flaggedBalls);
+
+					// Assumes two balls and one outcome.
+					if (flaggedBalls.size() == 1) {
+						String outputText;
+						if (flaggedBalls.contains(a))
+							outputText = String.valueOf(b.getValue());
+						else {
+							outputText = String.valueOf(a.getValue());
+						}
+						items.add("" + a.getValue() + ", " + b.getValue() + " -> " + outputText);
+					}
 				}
 			}
 		}
