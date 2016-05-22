@@ -49,11 +49,11 @@ public abstract class ARender extends Pane implements MinMaxListener {
     /**
      * Width of individual elements bounding boxes.
      */
-    protected double nodeWidth;
+    private double nodeWidth;
     /**
      * Height of individual elements bounding boxes.
      */
-    protected double nodeHeight;
+    private double nodeHeight;
 
     /**
      * Horizontal space between elements.
@@ -147,8 +147,8 @@ public abstract class ARender extends Pane implements MinMaxListener {
     public ARender(DataStructure struct, double nodeWidth, double nodeHeight, double hSpace, double vSpace) {
 	this.struct = struct;
 
-	this.nodeWidth = nodeWidth;
-	this.nodeHeight = nodeHeight;
+	this.setNodeWidth(nodeWidth);
+	this.setNodeHeight(nodeHeight);
 	this.hSpace = hSpace;
 	this.vSpace = vSpace;
 
@@ -476,23 +476,23 @@ public abstract class ARender extends Pane implements MinMaxListener {
 
 	    switch (event.getCode()) {
 	    case UP:
-		this.nodeHeight = nodeHeight + Const.ELEMENT_HEIGHT_DELTA;
+		this.setNodeHeight(getNodeHeight() + Const.ELEMENT_HEIGHT_DELTA);
 		break;
 	    case DOWN:
-		this.nodeHeight = nodeHeight - Const.ELEMENT_HEIGHT_DELTA;
+		this.setNodeHeight(getNodeHeight() - Const.ELEMENT_HEIGHT_DELTA);
 		break;
 	    case LEFT:
-		this.nodeWidth = nodeWidth - Const.ELEMENT_WIDTH_DELTA;
+		this.setNodeWidth(getNodeWidth() - Const.ELEMENT_WIDTH_DELTA);
 		break;
 	    case RIGHT:
-		this.nodeWidth = nodeWidth + Const.ELEMENT_WIDTH_DELTA;
+		this.setNodeWidth(getNodeWidth() + Const.ELEMENT_WIDTH_DELTA);
 		break;
 	    default:
 		return;
 	    }
 
-	    nodeWidth = nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : nodeWidth;
-	    nodeHeight = nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : nodeHeight;
+	    setNodeWidth(getNodeWidth() < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : getNodeWidth());
+	    setNodeHeight(getNodeHeight() < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : getNodeHeight());
 
 	    Platform.runLater(new Runnable() {
 		@Override
@@ -513,14 +513,14 @@ public abstract class ARender extends Pane implements MinMaxListener {
 
 	    int sign = event.getDeltaY() < 0 ? -1 : 1;
 
-	    this.nodeWidth = nodeWidth + sign * Const.ELEMENT_WIDTH_DELTA;
-	    this.nodeHeight = nodeHeight + sign * Const.ELEMENT_HEIGHT_DELTA;
+	    this.setNodeWidth(getNodeWidth() + sign * Const.ELEMENT_WIDTH_DELTA);
+	    this.setNodeHeight(getNodeHeight() + sign * Const.ELEMENT_HEIGHT_DELTA);
 
 	    this.hSpace = hSpace + sign * Const.ELEMENT_HSPACE_DELTA;
 	    this.vSpace = vSpace + sign * Const.ELEMENT_VSPACE_DELTA;
 
-	    nodeWidth = nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : nodeWidth;
-	    nodeHeight = nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : nodeHeight;
+	    setNodeWidth(getNodeWidth() < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : getNodeWidth());
+	    setNodeHeight(getNodeHeight() < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : getNodeHeight());
 
 	    this.repaintAll();
 	});
@@ -620,8 +620,8 @@ public abstract class ARender extends Pane implements MinMaxListener {
      * @return True if there was anything to draw.
      */
     public boolean repaintAll() {
-	if (struct.getElements().isEmpty()) {
-	    return false; // Nothing to draw.
+	if (struct.getElements().isEmpty() || contentPane == null) {
+	    return false; // Nothing to draw/contentPane not yet loaded.
 	}
 	struct.repaintAll = false;
 
@@ -894,13 +894,32 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	double factor;
 
 	factor = (foo - 1) * ave.getElement().getNumValue() / span;
+	factor = factor > 1 ? 1 : factor; // For elements whose value are not set by the model.
 
-	relNodeWidth = nodeWidth / foo;
-	relNodeHeight = nodeHeight / foo;
+	relNodeWidth = getNodeWidth() / foo;
+	relNodeHeight = getNodeHeight() / foo;
 
 	relNodeWidth = relNodeWidth + relNodeWidth * factor;
 	relNodeHeight = relNodeHeight + relNodeHeight * factor;
 
 	ave.setSize(relNodeWidth, relNodeHeight);
+    }
+
+    public double getNodeHeight() {
+	return nodeHeight;
+    }
+
+    public boolean setNodeHeight(double nodeHeight) {
+	this.nodeHeight = nodeHeight;
+	return repaintAll();
+    }
+
+    public double getNodeWidth() {
+	return nodeWidth;
+    }
+
+    public boolean setNodeWidth(double nodeWidth) {
+	this.nodeWidth = nodeWidth;
+	return repaintAll();
     }
 }

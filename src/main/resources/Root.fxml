@@ -99,6 +99,7 @@
                            <items>
                               <CheckMenuItem fx:id="debugERR" mnemonicParsing="false" onAction="#debugERR" text="Debug.ERR" />
                               <CheckMenuItem fx:id="debugOUT" mnemonicParsing="false" onAction="#debugOUT" text="Debug.OUT" />
+                              <MenuItem mnemonicParsing="false" onAction="#markElementXY" text="Mark Elements XY" />
                            </items>
                         </Menu>
                      </menus>

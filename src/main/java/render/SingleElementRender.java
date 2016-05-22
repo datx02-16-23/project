@@ -58,7 +58,7 @@ public class SingleElementRender extends ARender {
     @Override
     public void calculateSize() {
 	this.totWidth = 150;
-	this.totHeight = nodeHeight;
+	this.totHeight = getNodeHeight();
 	setRestricedSize(totWidth, totHeight);
     }
 
@@ -71,7 +71,7 @@ public class SingleElementRender extends ARender {
      */
     @Override
     public double getX(Element e) {
-	return nodeWidth / 2;
+	return getNodeWidth() / 2;
     }
 
     /**
@@ -88,13 +88,13 @@ public class SingleElementRender extends ARender {
 
     @Override
     protected AVElement createVisualElement(Element e) {
-	AVElement re = AVElementFactory.shape(DEFAULT_ELEMENT_STYLE, e, nodeWidth, nodeHeight);
+	AVElement re = AVElementFactory.shape(DEFAULT_ELEMENT_STYLE, e, getNodeWidth(), getNodeHeight());
 	return re;
     }
 
     @Override
     protected AVElement createVisualElement(double value, Color color) {
-	AVElement re = AVElementFactory.shape(DEFAULT_ELEMENT_STYLE, value, color, nodeWidth, nodeHeight);
+	AVElement re = AVElementFactory.shape(DEFAULT_ELEMENT_STYLE, value, color, getNodeWidth(), getNodeHeight());
 	re.setInfoPos(null);
 	return re;
     }

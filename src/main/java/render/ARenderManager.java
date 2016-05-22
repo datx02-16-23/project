@@ -133,6 +133,9 @@ public class ARenderManager extends BorderPane implements VisualListener {
      * @return The current Render for the structure.
      */
     public ARender getRender() {
+	if(curRender == null){
+	    setRender(struct.resolveVisual());
+	}
 	return curRender;
     }
 

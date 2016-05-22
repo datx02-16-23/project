@@ -1,10 +1,12 @@
 package assets;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
+import contract.datastructure.Array.IndexedElement;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
@@ -22,6 +24,7 @@ import javafx.scene.shape.Circle;
 import render.ARender;
 import render.ARenderManager;
 import render.Visualization;
+import render.element.AVElement;
 
 /**
  * Utility class to reduce clutter.
@@ -169,5 +172,22 @@ public abstract class Tools {
 		r.getNodes().getChildren().add(new Circle(r.getX(e), r.getY(e), 5));
 	    }
 	}
+    }
+
+    
+    public static double getAdjustedX(ARender render, Element e) {
+	AVElement ave = render.getVisualMap().get(Arrays.toString(((IndexedElement) e).getIndex()));
+	if(ave != null){
+	    return (render.getNodeWidth() - ave.width)/2;
+	}
+	return 0;
+    }
+
+    public static double getAdjustedY(ARender render, Element e) {
+	AVElement ave = render.getVisualMap().get(Arrays.toString(((IndexedElement) e).getIndex()));
+	if(ave != null){
+	    return (render.getNodeHeight() - ave.height)/2;
+	}
+	return 0;
     }
 }

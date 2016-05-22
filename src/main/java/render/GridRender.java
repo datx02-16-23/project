@@ -1,6 +1,7 @@
 package render;
 
 import assets.Debug;
+import assets.Tools;
 import contract.datastructure.Array;
 import contract.datastructure.Array.IndexedElement;
 import contract.datastructure.DataStructure;
@@ -39,10 +40,11 @@ public class GridRender extends ARender {
 	 * @param vspace
 	 *            The vertical space between elements in this Render.
 	 */
-	public GridRender(DataStructure struct, Order major_order, double width, double height, double hspace,
+	public GridRender(DataStructure struct, Order majorOrder, double width, double height, double hspace,
 			double vspace) {
 		super(struct, width, height, hspace, vspace);
-		this.majorOrder = major_order;
+		this.majorOrder = majorOrder;
+		this.setRelativeNodeSize(true, 2);
 	}
 
 	public void render() {
@@ -86,11 +88,11 @@ public class GridRender extends ARender {
 				x = getY(index[1]);
 			}
 		}
-		return x;
+		return x + Tools.getAdjustedX(this, e);
 	}
 
 	private double getX(int column) {
-		return hSpace + (hSpace + nodeWidth) * column;
+		return hSpace + (hSpace + getNodeWidth()) * column;
 	}
 
 	@Override
@@ -108,11 +110,11 @@ public class GridRender extends ARender {
 		} else {
 			y = getX(index[0]);
 		}
-		return y;
+		return y + Tools.getAdjustedY(this, e);
 	}
 
 	private double getY(int row) {
-		return vSpace + (vSpace + nodeHeight) * row;
+		return vSpace + (vSpace + getNodeHeight()) * row;
 	}
 
 	@Override
@@ -124,15 +126,15 @@ public class GridRender extends ARender {
 		 * Row Major
 		 */
 		if (majorOrder == Order.ROW_MAJOR) {
-			totWidth = vSpace + (vSpace + nodeWidth) * dims[0];
-			totHeight = hSpace + (hSpace + nodeHeight) * dims[1];
+			totWidth = vSpace + (vSpace + getNodeWidth()) * dims[0];
+			totHeight = hSpace + (hSpace + getNodeHeight()) * dims[1];
 
 			/*
 			 * Column Major
 			 */
 		} else {
-			totHeight = hSpace + (hSpace + nodeHeight) * dims[0];
-			totWidth = 2 + vSpace + (vSpace + nodeWidth) * dims[1];
+			totHeight = hSpace + (hSpace + getNodeHeight()) * dims[0];
+			totWidth = 2 + vSpace + (vSpace + getNodeWidth()) * dims[1];
 		}
 		setRestricedSize(totWidth, totHeight);
 	}
@@ -192,7 +194,7 @@ public class GridRender extends ARender {
 	protected AVElement createVisualElement(Element e) {
 		elementStyle = elementStyle == null ? DEFAULT_ELEMENT_STYLE : elementStyle;
 		
-		AVElement re = AVElementFactory.shape(elementStyle, e, nodeWidth, nodeHeight);
+		AVElement re = AVElementFactory.shape(elementStyle, e, getNodeWidth(), getNodeHeight());
 		re.setInfoPos(Pos.BOTTOM_CENTER);
 		re.setInfoArray(((IndexedElement) e).getIndex());
 		return re;
@@ -202,7 +204,7 @@ public class GridRender extends ARender {
 	protected AVElement createVisualElement(double value, Color color) {
 		elementStyle = elementStyle == null ? DEFAULT_ELEMENT_STYLE : elementStyle;
 		
-		AVElement re = AVElementFactory.shape(elementStyle, value, color, nodeWidth, nodeHeight);
+		AVElement re = AVElementFactory.shape(elementStyle, value, color, getNodeWidth(), getNodeHeight());
 		re.setInfoPos(null);
 		return re;
 	}
