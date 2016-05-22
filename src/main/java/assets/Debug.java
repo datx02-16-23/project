@@ -6,7 +6,7 @@ package assets;
  */
 public final class Debug {
 	public static void main(String[] args){
-	    //TODO Add bugs.
+	    System.out.println(Double.MAX_VALUE == Double.MAX_VALUE);
 	}
 	
 	/**

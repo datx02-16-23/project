@@ -446,10 +446,12 @@ public class Array extends DataStructure {
     public VisualType resolveVisual() {
 	if (visual != null) {
 	    return visual;
+	    
 	} else if (abstractType != null) {
 	    if (abstractType == AbstractType.tree) {
 		visual = VisualType.tree;
 	    }
+	    
 	} else {
 	    int[] capacity = this.getCapacity();
 	    if (capacity == null || capacity.length <= 1) {

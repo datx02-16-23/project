@@ -291,13 +291,13 @@ public abstract class AVElement extends Pane {
 	    return; // Ghost status not changed.
 	}
 	if (ghost) {
-	    this.setMouseTransparent(ghost);
+	    setMouseTransparent(true);
 	    shape.fillProperty().unbind();
 	    shape.setFill(Color.TRANSPARENT);
 	    shape.getStrokeDashArray().addAll(5.0);
 	    valueLabel.setVisible(false);
 	} else {
-	    this.setMouseTransparent(ghost);
+	    setMouseTransparent(false);
 	    shape.fillProperty().bind(element.fillProperty);
 	    shape.getStrokeDashArray().clear();
 	    valueLabel.setVisible(true);

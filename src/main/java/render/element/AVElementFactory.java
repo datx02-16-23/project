@@ -264,6 +264,7 @@ public abstract class AVElementFactory {
 				clone = polygon(orig.element, orig.width, orig.height, orig.points);
 			}
 		}
+
 		return clone;
 	}
 }

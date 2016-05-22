@@ -353,7 +353,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	}
 
 	if (Debug.TRACING && !hasSource && !hasTarget) {
-	    System.err.println("bla");
+	    System.err.println("Failed to resolve target and source.");
 	}
     }
     // @formatter:off
@@ -835,7 +835,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
     public void setRelativeNodeSizes(boolean value, double foo) {
 	if (struct instanceof Array) {
 	    this.relativeNodeSize = value;
-	    if (relativeNodeSize) {
+	    if (relativeNodeSize || foo != 0 || foo != 1) {
 		this.foo = foo;
 		((Array) struct).setListener(this);
 	    }
@@ -849,14 +849,17 @@ public abstract class ARender extends Pane implements MinMaxListener {
      * TODO: Javadoc
      */
     private boolean relativeNodeSize = false;
-    private double foo = 3;
+    private double foo;
 
     public void setRelativeNodeSizes() {
 	if (!relativeNodeSize) {
 	    return;
 	}
 
-	double span = Math.abs(((Array) struct).getMax()) + Math.abs(((Array) struct).getMin());
+	double min = Math.abs(((Array) struct).getMin());
+	double max = Math.abs(((Array) struct).getMax());
+
+	double span = min + max;
 	if (span == 0) {
 	    return; // No point in making them all the same size again.
 	}
@@ -865,18 +868,12 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	double relNodeHeight;
 	double factor;
 
-	System.out.println("---------------------------------------");
-	System.out.println("span = " + span);
-
-	AVElement ae;
+	AVElement ave;
 	for (Node n : defaultNodePane.getChildren()) {
 	    if (n instanceof AVElement) {
-		ae = (AVElement) n;
+		ave = (AVElement) n;
 
-		factor = (foo - 1) * ae.getElement().getNumValue() / span;
-		System.out.println();
-		System.out.println("val = " + ae.getElement().getNumValue());
-		System.out.println("factor = " + factor);
+		factor = (foo - 1) * ave.getElement().getNumValue() / span;
 
 		relNodeWidth = nodeWidth / foo;
 		relNodeHeight = nodeHeight / foo;
@@ -884,8 +881,41 @@ public abstract class ARender extends Pane implements MinMaxListener {
 		relNodeWidth = relNodeWidth + relNodeWidth * factor;
 		relNodeHeight = relNodeHeight + relNodeHeight * factor;
 
-		ae.setSize(relNodeWidth, relNodeHeight);
+		ave.setSize(relNodeWidth, relNodeHeight);
 	    }
 	}
     }
+
+    public void setRelativeSize(AVElement ave) {
+	if (!relativeNodeSize) {
+	    return;
+	}
+
+	double min = Math.abs(((Array) struct).getMin());
+	double max = Math.abs(((Array) struct).getMax());
+
+	double span = min + max;
+	if (span == 0) {
+	    return; // No point in making them all the same size again.
+	}
+
+	double relNodeWidth;
+	double relNodeHeight;
+	double factor;
+
+	factor = (foo - 1) * ave.getElement().getNumValue() / span;
+
+	relNodeWidth = nodeWidth / foo;
+	relNodeHeight = nodeHeight / foo;
+
+	relNodeWidth = relNodeWidth + relNodeWidth * factor;
+	relNodeHeight = relNodeHeight + relNodeHeight * factor;
+
+	ave.setSize(relNodeWidth, relNodeHeight);
+    }
+    
+    public void setRelativeElementSize(double span){
+	
+    }
+
 }

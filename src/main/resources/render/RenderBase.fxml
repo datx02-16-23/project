@@ -27,6 +27,9 @@
          <font>
             <Font name="System Italic" size="8.0" />
          </font>
+         <padding>
+            <Insets left="4.0" />
+         </padding>
       </Label>
       <Pane fx:id="content" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" />
       <StackPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="NEVER">
