@@ -12,7 +12,7 @@ public final class Debug {
 	/**
 	 * {@link System#err} is used to print basic information.
 	 */
-	public static boolean TRACING = true;
+	public static boolean TRACING = false;
 	
 	/**
 	 * {@link System#out} is used to print verbose information.

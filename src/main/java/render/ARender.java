@@ -17,10 +17,7 @@ import contract.operation.OperationCounter.OperationCounterHaver;
 import gui.Main;
 import gui.dialog.VisualDialog;
 import javafx.animation.FillTransition;
-import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
-import javafx.animation.Transition;
-import javafx.animation.TranslateTransitionBuilder;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
@@ -489,6 +486,9 @@ public abstract class ARender extends Pane {
 		return;
 	    }
 
+	    nodeWidth = nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : nodeWidth;
+	    nodeHeight = nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : nodeHeight;
+	    
 	    Platform.runLater(new Runnable() {
 		@Override
 		public void run() {
@@ -514,8 +514,10 @@ public abstract class ARender extends Pane {
 	    this.hSpace = hSpace + sign * Const.ELEMENT_HSPACE_DELTA;
 	    this.vSpace = vSpace + sign * Const.ELEMENT_VSPACE_DELTA;
 
+	    nodeWidth = nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : nodeWidth;
+	    nodeHeight = nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : nodeHeight;
+	    
 	    this.repaintAll();
-
 	});
     }
 

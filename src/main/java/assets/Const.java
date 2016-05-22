@@ -54,6 +54,9 @@ public abstract class Const {
 	public static final double ELEMENT_HEIGHT_DELTA = ELEMENT_SIZE_DELTA;
 	public static final double ELEMENT_HSPACE_DELTA = 0.3;
 	public static final double ELEMENT_VSPACE_DELTA = 0.3;
+	
+	public static final double MIN_NODE_HEIGHT = 0.001;
+	public static final double MIN_NODE_WIDTH = 5;
 
 	/**
 	 * Suggested minimum margin for renders.
