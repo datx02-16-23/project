@@ -71,7 +71,6 @@ public class Array extends DataStructure {
      *            A BoundaryChangeListener.
      */
     public void setListener(MinMaxListener listener) {
-	System.out.println("listener set");
 	this.mmListener = listener;
     }
 
@@ -469,25 +468,18 @@ public class Array extends DataStructure {
      */
     private void checkMinMaxChanged(double x) {
 	if (mmListener == null) {
-	    System.out.println("listener null");
 	    return;
 	}
-
-	System.out.println("x = " + x);
 	
 	if (x < min) {
 	    min = x;
-	    System.out.println("min changed");
 	    mmListener.minChanged(x);
 	}
 
 	if (x > max) {
 	    max = x;
-	    System.out.println("max changed");
 	    mmListener.maxChanged(x);
 	}
-	System.out.println("-----");
-	System.out.println();
     }
 
     private double min = Double.MAX_VALUE, max = Double.MIN_VALUE;

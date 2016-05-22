@@ -73,14 +73,12 @@ public class BarchartRender extends ARender implements MinMaxListener {
 	if (renderHeight < 0) {
 	    if (struct instanceof Array) {
 		((Array) struct).setListener(this);
-		System.out.println("setting self to lstner");
-		setRestricedSize(0, 0); // Become as small as setSize will permit.
+		setRestricedSize(0, 0); // Become as small as setSize will
+					// permit.
 	    } else {
-		System.out.println("not an array");
 		this.renderHeight = Const.RENDER_HEIGHT;
 	    }
 	} else {
-	    System.out.println("fixed render height");
 	    this.renderHeight = renderHeight;
 	}
     }
@@ -240,7 +238,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
     private void notches() {
 	double lim = padding / 2;
 	int i = 1;
-	
+
 	for (double y = xAxisY - unitHeight; y >= lim; y = y - unitHeight) {
 	    // Notch
 	    Line line = new Line(padding - 3, y, padding + 3, y);
@@ -352,7 +350,6 @@ public class BarchartRender extends ARender implements MinMaxListener {
     @Override
     public void maxChanged(double newMax) {
 	calculateHeight(newMax);
-	System.out.println("maxChanged arraydsadasdjiasdsa");
     }
 
     @Override
@@ -363,9 +360,18 @@ public class BarchartRender extends ARender implements MinMaxListener {
     public void calculateHeight(double v) {
 	double oldHeight = renderHeight;
 	renderHeight = v * unitHeight + padding * 2 + unitHeight / 2;
-	System.out.println(renderHeight);
 	calculateSize();
 	this.init();
+	this.setTranslateY(this.getTranslateY() + (oldHeight - renderHeight));
+    }
+
+    /**
+     * Clear the Render, restoring the background image. Barchart grows up
+     * instead of down, so we gotta fix that here.
+     */
+    public void reset() {
+	double oldHeight = renderHeight;
+	super.reset();
 	this.setTranslateY(this.getTranslateY() + (oldHeight - renderHeight));
     }
 }

@@ -150,12 +150,20 @@ public abstract class ARender extends Pane {
 	this.vSpace = vSpace;
 
 	this.animPane = new Pane();
+	bindAnimPane();
 
 	// Add stacked canvases
 	loadFXML();
 	initDragAndZoom();
 
 	expand();
+    }
+
+    public void bindAnimPane() {
+	this.animPane.translateXProperty().bind(this.translateXProperty());
+	this.animPane.translateYProperty().bind(this.translateYProperty());
+	this.animPane.scaleXProperty().bind(this.scaleXProperty());
+	this.animPane.scaleYProperty().bind(this.scaleYProperty());
     }
 
     private void loadFXML() {
@@ -201,14 +209,14 @@ public abstract class ARender extends Pane {
 
 	afterParentLoadFXML(fxmlLoader);
     }
-    
+
     /**
      * Clear the Render, restoring the background image.
      */
-    public void reset(){
+    public void reset() {
 	contentPane.setBackground(getStructBackground(struct));
 	setRestricedSize(150, 125); // Size of background images
-	
+
 	for (Node n : contentPane.getChildren()) {
 	    ((Pane) n).getChildren().clear();
 	}
@@ -378,7 +386,7 @@ public abstract class ARender extends Pane {
 	    contentPane.setMinSize(width, height);
 	    contentPane.setPrefSize(width, height);
 	    contentPane.setMaxSize(width, height);
-	    
+
 	    height = height < 45 ? 45 : height;
 	    height = height + 45; // Space for header bar.
 	    root.setPrefSize(width, height);
@@ -511,7 +519,8 @@ public abstract class ARender extends Pane {
      */
     public double absX(Element e) {
 	double bx = this.getTranslateX() + this.getLayoutX();
-	return getX(e) + bx;
+//	return this.getX(e) + bx;
+	return this.getX(e);
     }
 
     /**
@@ -524,7 +533,8 @@ public abstract class ARender extends Pane {
      */
     public double absY(Element e) {
 	double by = this.getTranslateY() + this.getLayoutY() + contentPane.getLayoutY();
-	return this.getY(e) + by;
+//	return this.getY(e) + by;
+	return this.getY(e);
     }
 
     /**
