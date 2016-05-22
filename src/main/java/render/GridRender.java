@@ -145,7 +145,7 @@ public class GridRender extends ARender {
 
 		if (dims == null || dims.length == 0) {
 			dims = backup;
-			if(Debug.TRACING){
+			if(Debug.ERR){
 				System.err.println("Size was null or empty for \"" + struct + "\"!");				
 			}
 		} else if (dims.length == 1) {

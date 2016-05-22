@@ -186,7 +186,7 @@ public class Visualization extends StackPane {
 	    if (e != null) {
 		ARender render = this.managerMap.get(struct.identifier).getRender();
 		render.animateToggleScope(e, millis);
-		if (Debug.TRACING) {
+		if (Debug.ERR) {
 		    System.err.println("\nVisualization.animateRemove():");
 		}
 		return;
@@ -223,7 +223,7 @@ public class Visualization extends StackPane {
 	    }
 	}
 
-	if (Debug.TRACING) {
+	if (Debug.ERR) {
 	    System.err.println("\nVisualization.animateReadWrite():");
 	    System.err.println("Has target: " + (tar_e == null ? "false" : tar_render.getDataStructure()));
 	    System.err.println("Has source: " + (src_e == null ? "false" : src_render.getDataStructure()));
@@ -282,7 +282,7 @@ public class Visualization extends StackPane {
 	 * Start animations
 	 */
 
-	if (Debug.TRACING) {
+	if (Debug.ERR) {
 	    System.err.println("\nVisualization.animateSwap():");
 	}
 
@@ -333,17 +333,17 @@ public class Visualization extends StackPane {
 		break;
 	    case bar:
 		xPos = margin + (getWidth() / 3) * sWExpand;
-		yPos = getHeight() - (margin + Const.RENDER_HEIGHT / 3) - margin * 3;
+		yPos = getHeight() - (margin + Const.DEFAULT_RENDER_HEIGHT / 3) - margin * 3;
 		if (southWest > 0) {
 		    sWExpand++;
 		    xPos = margin + (getWidth() / 3) * sWExpand;
-		    yPos = getHeight() - (margin + Const.RENDER_HEIGHT / 3) - margin * 3;
+		    yPos = getHeight() - (margin + Const.DEFAULT_RENDER_HEIGHT / 3) - margin * 3;
 		}
 		southWest++;
 		break;
 	    default:
 		xPos = margin + this.getWidth() * nWExpand;
-		yPos = (margin + Const.RENDER_HEIGHT) * northWest + margin;
+		yPos = (margin + Const.DEFAULT_RENDER_HEIGHT) * northWest + margin;
 		if (!(checkXPos(xPos) & checkYPos(yPos))) {
 		    nWExpand++; // TODO
 		}
@@ -355,7 +355,7 @@ public class Visualization extends StackPane {
 	    // Make sure users can see the render.
 	    if (checkPositions(xPos, yPos) == false) {
 		// Do not remove this printout //RS
-		if (Debug.TRACING) {
+		if (Debug.ERR) {
 		    System.err.println("Using default placement for \"" + arm.getStructure() + "\".");
 		}
 		yPos = margin;

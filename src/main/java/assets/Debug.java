@@ -10,12 +10,12 @@ public final class Debug {
 	}
 	
 	/**
-	 * {@link System#err} is used to print basic information.
+	 * {@link System#err} printouts etc.
 	 */
-	public static boolean TRACING = false;
+	public static boolean ERR = false;
 	
 	/**
-	 * {@link System#out} is used to print verbose information.
+	 * {@link System#out} printouts etc.
 	 */
 	public static boolean OUT = false;
 }

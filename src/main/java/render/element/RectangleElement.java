@@ -48,7 +48,8 @@ public class RectangleElement extends AVElement {
 	}
 
 	@Override
-	public void setSize(double width, double height) {
+	public void setSize(double newWidth, double newHeight) {
+	    super.setSize(newWidth, newHeight);
 	    Rectangle rect = (Rectangle) shape;
 	    rect.setWidth(width);
 	    rect.setHeight(height);

@@ -184,7 +184,7 @@ public abstract class AVElement extends Pane {
 	}
 	this.height = node_height;
 	this.width = node_width;
-	if (Debug.TRACING) {
+	if (Debug.ERR) {
 	    root.setStyle(DEBUG_FXML_ROOT);
 	    this.setStyle(DEBUG_FXML_THIS);
 	}
@@ -229,6 +229,7 @@ public abstract class AVElement extends Pane {
      */
     public void onMouseClicked() {
 	showSelected();
+	Main.console.force("w = " + this.width + ", h = " + this.height);
 	Main.console.info("Statistics for \"" + element + "\":");
 	OperationCounterHaver.printStats(element);
     }

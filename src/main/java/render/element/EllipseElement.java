@@ -49,9 +49,10 @@ public class EllipseElement extends AVElement {
 	}
 
 	@Override
-	public void setSize(double width, double height) {
+	public void setSize(double newWidth, double newHeight) {
+	    super.setSize(newWidth, newHeight);
 	    Ellipse ellipse  = (Ellipse) shape;
-	    ellipse.setRadiusX(width/2);
-	    ellipse.setRadiusY(height/2);
+	    ellipse.setRadiusX(newWidth/2);
+	    ellipse.setRadiusY(newHeight/2);
 	}
 }

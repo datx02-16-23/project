@@ -57,7 +57,7 @@ public abstract class ARenderAnimation {
 	int[] i = ((IndexedElement) e).getIndex();
 	Arrays.copyOf(i, i.length);
 	final AVElement orig = render.visualMap.get(Arrays.toString(i));
-	if (Debug.TRACING) {
+	if (Debug.ERR) {
 	    if (orig == null) {
 		System.err.println(
 			"ARenderAnimation.linear() failure: Could not resolve element " + e + " using: " + render);
@@ -109,7 +109,7 @@ public abstract class ARenderAnimation {
 	int[] i = ((IndexedElement) e).getIndex();
 	Arrays.copyOf(i, i.length);
 	final AVElement orig = render.visualMap.get(Arrays.toString(i));
-	if (Debug.TRACING) {
+	if (Debug.ERR) {
 	    if (orig == null) {
 		System.err.println("ARenderAnimation.stationary() failure: Could not resolve element  " + e
 			+ "  using: " + render);

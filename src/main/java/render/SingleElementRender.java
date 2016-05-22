@@ -27,7 +27,7 @@ public class SingleElementRender extends ARender {
 	super(struct, width, height, 0, 0);
 	this.totWidth = 150;
 	this.totHeight = 150;
-	setRelativeNodeSizes(false, -1);
+	setRelativeNodeSize(false, -1);
     }
 
     public void afterParentLoadFXML(FXMLLoader fxmlLoader) {

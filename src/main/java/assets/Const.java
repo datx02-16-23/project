@@ -35,12 +35,11 @@ public abstract class Const {
 	/**
 	 * Suggested value for renders which prefer a fixed width.
 	 */
-	public static final int RENDER_WIDTH = 400;
+	public static final int DEFAULT_RENDER_WIDTH = 400;
 	/**
 	 * Suggested value for renders which prefer a fixed height.
 	 */
-//	public static final int RENDER_HEIGHT = 250;
-	public static final int RENDER_HEIGHT = 450;
+	public static final int DEFAULT_RENDER_HEIGHT = 400;
 
 	// More suggested values
 	public static final double ELEMENT_SIZE = 50;
@@ -58,6 +57,8 @@ public abstract class Const {
 	public static final double MIN_NODE_HEIGHT = 0.001;
 	public static final double MIN_NODE_WIDTH = 5;
 
+	public static final double DEFAULT_RELATIVE_NODE_FACTOR = 3;
+	
 	/**
 	 * Suggested minimum margin for renders.
 	 */
@@ -68,4 +69,6 @@ public abstract class Const {
 	public static final Background ORPHAN_BACKGROUND = Tools.createOrphanBg();
 	public static final Background TREE_BACKGROUND = Tools.createTreeBg();
 	public static final Border BORDER_MOUSEOVER = Tools.getMOBorder();
+
+	
 }

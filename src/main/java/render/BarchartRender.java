@@ -69,13 +69,13 @@ public class BarchartRender extends ARender implements MinMaxListener {
 		setRestricedSize(0, 0); // Become as small as setSize will
 					// permit.
 	    } else {
-		this.renderHeight = Const.RENDER_HEIGHT;
+		this.renderHeight = Const.DEFAULT_RENDER_HEIGHT;
 	    }
 	} else {
 	    this.renderHeight = renderHeight;
 	}
 
-	this.setRelativeNodeSizes(false, -1);
+	this.setRelativeNodeSize(false, -1);
 	this.reset();
     }
 

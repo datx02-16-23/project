@@ -160,7 +160,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	initDragAndZoom();
 	bindAnimPane();
 
-	setRelativeNodeSizes(true, 3);
+	setRelativeNodeSize(true, Const.DEFAULT_RELATIVE_NODE_FACTOR);
 
 	expand();
     }
@@ -273,7 +273,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
      */
     // @formatter:off
     public void animateToggleScope(Element tar, long millis) {
-	if (Debug.TRACING) {
+	if (Debug.ERR) {
 	    System.err.println("ARender.animateRemove(): " + struct + " is animating.");
 	}
 
@@ -336,7 +336,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	    y2 = tarRender.absY(tar, srcRender);
 	}
 
-	if (Debug.TRACING) {
+	if (Debug.ERR) {
 	    System.err.println("ARender.animateReadWrite(): " + struct + " is animating.");
 	}
 
@@ -352,7 +352,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
 		    AnimationOption.FADE_IN, AnimationOption.GROW, AnimationOption.GHOST).play();
 	}
 
-	if (Debug.TRACING && !hasSource && !hasTarget) {
+	if (Debug.ERR && !hasSource && !hasTarget) {
 	    System.err.println("Failed to resolve target and source.");
 	}
     }
@@ -374,7 +374,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
      */
     // @formatter:off
     public void animateSwap(Element var1, ARender render1, Element var2, ARender render2, long millis) {
-	if (Debug.TRACING) {
+	if (Debug.ERR) {
 	    System.err.println("ARender.animateSwap(): " + struct + " is animating.");
 	}
 
@@ -832,7 +832,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	setRelativeNodeSizes();
     }
 
-    public void setRelativeNodeSizes(boolean value, double foo) {
+    public void setRelativeNodeSize(boolean value, double foo) {
 	if (struct instanceof Array) {
 	    this.relativeNodeSize = value;
 	    if (relativeNodeSize || foo != 0 || foo != 1) {
@@ -864,29 +864,14 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	    return; // No point in making them all the same size again.
 	}
 
-	double relNodeWidth;
-	double relNodeHeight;
-	double factor;
-
-	AVElement ave;
 	for (Node n : defaultNodePane.getChildren()) {
 	    if (n instanceof AVElement) {
-		ave = (AVElement) n;
-
-		factor = (foo - 1) * ave.getElement().getNumValue() / span;
-
-		relNodeWidth = nodeWidth / foo;
-		relNodeHeight = nodeHeight / foo;
-
-		relNodeWidth = relNodeWidth + relNodeWidth * factor;
-		relNodeHeight = relNodeHeight + relNodeHeight * factor;
-
-		ave.setSize(relNodeWidth, relNodeHeight);
+		setRelativeNodeSize((AVElement) n);
 	    }
 	}
     }
 
-    public void setRelativeSize(AVElement ave) {
+    protected void setRelativeNodeSize(AVElement ave) {
 	if (!relativeNodeSize) {
 	    return;
 	}
@@ -895,7 +880,12 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	double max = Math.abs(((Array) struct).getMax());
 
 	double span = min + max;
-	if (span == 0) {
+
+	setRelativeNodeSize(ave, span);
+    }
+
+    protected void setRelativeNodeSize(AVElement ave, double span) {
+	if (!relativeNodeSize || span == 0) {
 	    return; // No point in making them all the same size again.
 	}
 
@@ -912,10 +902,6 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	relNodeHeight = relNodeHeight + relNodeHeight * factor;
 
 	ave.setSize(relNodeWidth, relNodeHeight);
-    }
-    
-    public void setRelativeElementSize(double span){
-	
     }
 
 }

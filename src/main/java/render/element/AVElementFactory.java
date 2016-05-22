@@ -198,7 +198,7 @@ public abstract class AVElementFactory {
 			x = points[xInd];
 			y = points[yInd];
 
-			if (Debug.TRACING) {
+			if (Debug.ERR) {
 				if (x < 0 || x > 1) {
 					System.err.println("Bad x-coordinate at index " + xInd + ": " + x);
 				}

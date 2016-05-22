@@ -77,7 +77,7 @@ public class ARenderManager extends BorderPane implements VisualListener {
 	if (curRender == null) { // Create new render for the structure.
 	    // @formatter:off
 	    curRender = ARenderFactory.resolveRender(struct, Const.ELEMENT_WIDTH, Const.ELEMENT_HEIGHT,
-		    Const.RENDER_WIDTH, Const.RENDER_HEIGHT);
+		    Const.DEFAULT_RENDER_WIDTH, Const.DEFAULT_RENDER_HEIGHT);
 	    // @formatter:on
 	    renders.put(struct.resolveVisual(), curRender);
 	}

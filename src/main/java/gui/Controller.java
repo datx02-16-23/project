@@ -18,6 +18,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import assets.Const;
+import assets.Debug;
 import assets.DefaultProperties;
 import assets.example.Examples;
 import assets.example.Examples.Algorithm;
@@ -47,6 +48,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
@@ -734,6 +736,11 @@ public class Controller implements CommunicatorListener {
 	streamBehaviourMenuButton = (MenuButton) namespace.get("streamBehaviourMenuButton");
 	visualMenu = (Menu) namespace.get("visualMenu");
 	visualMenu.setDisable(true);
+
+	CheckMenuItem debugERR = (CheckMenuItem) namespace.get("debugERR");
+	debugERR.setSelected(Debug.ERR);
+	CheckMenuItem debugOUT = (CheckMenuItem) namespace.get("debugOUT");
+	debugOUT.setSelected(Debug.OUT);
 	
 
 	animationProgressBar = (ProgressBar) fxmlLoader.getNamespace().get("animationProgress");
@@ -1000,5 +1007,13 @@ public class Controller implements CommunicatorListener {
 	// backwardButton.setDisable(backward);
 	restartButton.setDisable(backward);
 	clearButton.setDisable(false);
+    }
+    
+    public void debugERR(){
+	
+    }
+    
+    public void debugOUT(){
+	
     }
 }
