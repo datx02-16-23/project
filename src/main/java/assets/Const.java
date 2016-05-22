@@ -49,6 +49,12 @@ public abstract class Const {
 	public static final double ELEMENT_HSPACE = 2;
 	public static final double ELEMENT_VSPACE = 2;
 
+	public static final double ELEMENT_SIZE_DELTA = 2;
+	public static final double ELEMENT_WIDTH_DELTA = ELEMENT_SIZE_DELTA;
+	public static final double ELEMENT_HEIGHT_DELTA = ELEMENT_SIZE_DELTA;
+	public static final double ELEMENT_HSPACE_DELTA = 0.3;
+	public static final double ELEMENT_VSPACE_DELTA = 0.3;
+
 	/**
 	 * Suggested minimum margin for renders.
 	 */

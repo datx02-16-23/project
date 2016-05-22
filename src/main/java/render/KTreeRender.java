@@ -27,7 +27,7 @@ import render.element.ElementShape;
  */
 public class KTreeRender extends ARender {
 
-    public static final ElementShape DEFAULT_ELEMENT_STYLE = ElementShape.CIRCLE;
+    public static final ElementShape DEFAULT_ELEMENT_STYLE = ElementShape.ELLIPSE;
 
     /**
      * Container for connector lines.
@@ -73,15 +73,15 @@ public class KTreeRender extends ARender {
     public void render() {
 	if (struct.repaintAll) {
 	    struct.repaintAll = false;
-	    init();
+	    repaintAll();
 	}
 	super.render();
     }
 
     @Override
-    public boolean init() {
+    public boolean repaintAll() {
 
-	if (super.init() == false) {
+	if (super.repaintAll() == false) {
 	    return false; // Nothing to render.
 	}
 
@@ -247,8 +247,8 @@ public class KTreeRender extends ARender {
     @Override
     public void calculateSize() {
 	calculateDepthAndBreadth();
-	totWidth = totBreadth * (nodeWidth + hSpace) + hSpace;
-	totHeight = (totDepth + 1) * (nodeHeight + vSpace) + vSpace * 2;
+	totWidth = totBreadth * (nodeWidth + hSpace) + hSpace * 2;
+	totHeight = (totDepth + 1) * (nodeHeight + vSpace) + vSpace;
 	setRestricedSize(totWidth, totHeight);
     }
 

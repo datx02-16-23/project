@@ -120,7 +120,7 @@ public class Visualization extends StackPane {
      */
     public void init() {
 	for (Object rm : managerPane.getChildren()) {
-	    ((ARenderManager) rm).getRender().init();
+	    ((ARenderManager) rm).getRender().repaintAll();
 	}
 
     }

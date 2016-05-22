@@ -28,7 +28,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
     public static final ElementShape ELEMENT_STYLE = ElementShape.BAR_ELEMENT;
 
     // Using instead of default render field names for clarity.
-    private double renderHeight, padding, barWidth, xAxisY, unitHeight;
+    private double renderHeight, padding, xAxisY, unitHeight;
 
     private Pane axes = new Pane();
     // private final CategoryAxis xAxis = new CategoryAxis();
@@ -42,7 +42,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
      * 
      * @param struct
      *            The structure to render.
-     * @param barWidth
+     * @param nodeWidth
      *            Width of the bars.
      * @param renderHeight
      *            Height of the Render itself. A value lower than zero indicates
@@ -56,13 +56,12 @@ public class BarchartRender extends ARender implements MinMaxListener {
      *            Space between bars.
      */
     // TODO: Bars relative to renderHeight when unitSize < 0.
-    public BarchartRender(DataStructure struct, double barWidth, double renderHeight, double unitHeight,
+    public BarchartRender(DataStructure struct, double nodeWidth, double renderHeight, double unitHeight,
 	    double hspace) {
-	super(struct, barWidth, renderHeight, hspace, -1);
+	super(struct, nodeWidth, renderHeight, hspace, -1);
 
 	// Convenient names
-	this.barWidth = barWidth;
-	this.padding = barWidth / 2;
+	this.padding = nodeWidth / 2;
 	this.unitHeight = unitHeight;
 
 	// Axes
@@ -100,7 +99,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
     }
 
     public double getX(int index) {
-	return (barWidth + hSpace) * index + hSpace + padding + 5;
+	return (nodeWidth + hSpace) * index + hSpace + padding + 5;
     }
 
     @Override
@@ -111,13 +110,13 @@ public class BarchartRender extends ARender implements MinMaxListener {
     public void render() {
 	if (struct.repaintAll) {
 	    struct.repaintAll = false;
-	    init();
+	    repaintAll();
 	}
 	super.render();
     }
 
     @Override
-    public boolean init() {
+    public boolean repaintAll() {
 	if (struct.getElements().isEmpty()) {
 	    return false; // Nothing to render.
 	}
@@ -259,7 +258,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
 
     @Override
     public void calculateSize() {
-	totWidth = struct.getElements().size() * (barWidth + hSpace) + padding * 3;
+	totWidth = struct.getElements().size() * (nodeWidth + hSpace) + padding * 3;
 	xAxisY = renderHeight - padding;
 	rightWallX = totWidth - padding;
 	renderHeight = renderHeight < 100 ? 100 : renderHeight;
@@ -268,14 +267,14 @@ public class BarchartRender extends ARender implements MinMaxListener {
 
     @Override
     protected BarchartElement createVisualElement(Element e) {
-	BarchartElement ve = (BarchartElement) AVElementFactory.shape(ELEMENT_STYLE, e, barWidth,
+	BarchartElement ve = (BarchartElement) AVElementFactory.shape(ELEMENT_STYLE, e, nodeWidth,
 		unitHeight * e.getNumValue());
 	return ve;
     }
 
     @Override
     protected AVElement createVisualElement(double value, Color color) {
-	AVElement ve = AVElementFactory.shape(ELEMENT_STYLE, value, color, barWidth, unitHeight * value);
+	AVElement ve = AVElementFactory.shape(ELEMENT_STYLE, value, color, nodeWidth, unitHeight * value);
 	return ve;
     }
 
@@ -336,7 +335,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
 	double y1 = this.absY(src, tarRender);
 
 	double x2 = x1;
-	double y2 = y1 - barWidth / 2;
+	double y2 = y1 - nodeWidth / 2;
 	int[] i = ((IndexedElement) src).getIndex();
 	Arrays.copyOf(i, i.length);
 	final AVElement orig = visualMap.get(Arrays.toString(i));
@@ -364,7 +363,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
 	double oldHeight = renderHeight;
 	renderHeight = v * unitHeight + padding * 2 + unitHeight / 2;
 	calculateSize();
-	this.init();
+	this.repaintAll();
 	this.setTranslateY(this.getTranslateY() + (oldHeight - renderHeight));
     }
 }

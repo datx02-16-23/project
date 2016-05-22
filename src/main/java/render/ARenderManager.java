@@ -108,7 +108,7 @@ public class ARenderManager extends BorderPane implements VisualListener {
 	    curRender.setLayoutY(layoutY);
 	}
 
-	curRender.init();
+	curRender.repaintAll();
 	curRender.updateInfoLabels();
 	animPane.getChildren().remove(curRender.getAnimationPane());
 	animPane.getChildren().add(curRender.getAnimationPane());
@@ -124,7 +124,7 @@ public class ARenderManager extends BorderPane implements VisualListener {
      * Force the current Render to initialise.
      */
     public void init() {
-	curRender.init();
+	curRender.repaintAll();
     }
 
     /**

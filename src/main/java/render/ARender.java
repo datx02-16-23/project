@@ -17,7 +17,11 @@ import contract.operation.OperationCounter.OperationCounterHaver;
 import gui.Main;
 import gui.dialog.VisualDialog;
 import javafx.animation.FillTransition;
+import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
+import javafx.animation.Transition;
+import javafx.animation.TranslateTransitionBuilder;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point3D;
@@ -46,20 +50,20 @@ public abstract class ARender extends Pane {
     /**
      * Width of individual elements bounding boxes.
      */
-    protected final double nodeWidth;
+    protected double nodeWidth;
     /**
      * Height of individual elements bounding boxes.
      */
-    protected final double nodeHeight;
+    protected double nodeHeight;
 
     /**
      * Horizontal space between elements.
      */
-    protected final double hSpace;
+    protected double hSpace;
     /**
      * Vertical space between elements.
      */
-    protected final double vSpace;
+    protected double vSpace;
     /**
      * The width of the render.
      */
@@ -161,10 +165,10 @@ public abstract class ARender extends Pane {
     }
 
     private void bindAnimPane() {
-//	this.animPane.translateXProperty().bind(this.translateXProperty());
-//	this.animPane.translateYProperty().bind(this.translateYProperty());
-//	this.animPane.layoutXProperty().bind(this.layoutXProperty());
-//	this.animPane.layoutYProperty().bind(this.layoutYProperty());
+	// this.animPane.translateXProperty().bind(this.translateXProperty());
+	// this.animPane.translateYProperty().bind(this.translateYProperty());
+	// this.animPane.layoutXProperty().bind(this.layoutXProperty());
+	// this.animPane.layoutYProperty().bind(this.layoutYProperty());
 	this.animPane.scaleXProperty().bind(this.scaleXProperty());
 	this.animPane.scaleYProperty().bind(this.scaleYProperty());
     }
@@ -208,6 +212,10 @@ public abstract class ARender extends Pane {
 	yposLabel = (Label) fxmlLoader.getNamespace().get("ypos");
 	scaleLabel = (Label) fxmlLoader.getNamespace().get("scale");
 
+	// Hint text
+	final Label hintText = (Label) fxmlLoader.getNamespace().get("hintText");
+	hintText.visibleProperty().bind(name.visibleProperty().not());
+
 	getChildren().add(root);
 
 	afterParentLoadFXML(fxmlLoader);
@@ -221,8 +229,8 @@ public abstract class ARender extends Pane {
 	setRestricedSize(150, 125); // Size of background images
 
 	for (Node node : contentPane.getChildren()) {
-	    if(node instanceof Pane){
-		((Pane) node).getChildren().clear();		
+	    if (node instanceof Pane) {
+		((Pane) node).getChildren().clear();
 	    }
 	}
     }
@@ -453,30 +461,65 @@ public abstract class ARender extends Pane {
      *            The parent to apply transformation to.
      */
     private void initDragAndZoom() {
-	/*
-	 * Zoom
-	 */
-	setOnScroll(event -> {
-	    sign = event.getDeltaY() > 0 ? 1 : -1;
+	initMouseWheelResize();
+	initDrag();
+	initArrowResize();
+    }
 
-	    scale = scale + sign * 0.100000000;
-	    if (scale < 0.1) {
-		scale = 0.1;
-		return;
-	    } else if (scale > 4) {
-		scale = 4;
+    private void initArrowResize() {
+	this.setOnKeyPressed(event -> {
+	    if (!event.isControlDown()) {
 		return;
 	    }
-//	    setScaleX(scale);
-//	    setScaleY(scale);
-//	    updateInfoLabels();
-	    System.err.println("Zooming and buggy and has been disabled.");
-	    Main.console.err("Zooming and buggy and has been disabled.");
-	});
 
-	/*
-	 * Drag
-	 */
+	    switch (event.getCode()) {
+	    case UP:
+		this.nodeHeight = nodeHeight + Const.ELEMENT_HEIGHT_DELTA;
+		break;
+	    case DOWN:
+		this.nodeHeight = nodeHeight - Const.ELEMENT_HEIGHT_DELTA;
+		break;
+	    case LEFT:
+		this.nodeWidth = nodeWidth - Const.ELEMENT_WIDTH_DELTA;
+		break;
+	    case RIGHT:
+		this.nodeWidth = nodeWidth + Const.ELEMENT_WIDTH_DELTA;
+		break;
+	    default:
+		return;
+	    }
+
+	    Platform.runLater(new Runnable() {
+		@Override
+		public void run() {
+		    ARender.this.requestFocus();
+		}
+	    });
+
+	    this.repaintAll();
+	});
+    }
+
+    private void initMouseWheelResize() {
+	setOnScroll(event -> {
+	    if (!event.isControlDown()) {
+		return;
+	    }
+
+	    int sign = event.getDeltaY() < 0 ? -1 : 1;
+
+	    this.nodeWidth = nodeWidth + sign * Const.ELEMENT_WIDTH_DELTA;
+	    this.nodeHeight = nodeHeight + sign * Const.ELEMENT_HEIGHT_DELTA;
+
+	    this.hSpace = hSpace + sign * Const.ELEMENT_HSPACE_DELTA;
+	    this.vSpace = vSpace + sign * Const.ELEMENT_VSPACE_DELTA;
+
+	    this.repaintAll();
+
+	});
+    }
+
+    private void initDrag() {
 	// Record a delta distance for the drag and drop operation.
 	setOnMousePressed(event -> {
 	    transX = getTranslateX() - event.getSceneX();
@@ -496,6 +539,7 @@ public abstract class ARender extends Pane {
 	// Set cursor
 	setOnMouseEntered(event -> {
 	    // this.setCursor(Cursor.OPEN_HAND);
+	    this.requestFocus();
 	    if (header.visibleProperty().isBound()) {
 		name.setVisible(false);
 	    }
@@ -528,12 +572,12 @@ public abstract class ARender extends Pane {
      * @return The absolute x-coordinates of e.
      */
     public double absX(Element e, ARender relativeTo) {
-//	double bx = 0;
-//	// if (relativeTo != this && relativeTo != null) {
-//	bx = this.getTranslateX() + this.getLayoutX();
-//	// bx = bx - (relativeTo.getTranslateX() + relativeTo.getLayoutX());
-//	// }
-//	return this.getX(e) + bx;
+	// double bx = 0;
+	// // if (relativeTo != this && relativeTo != null) {
+	// bx = this.getTranslateX() + this.getLayoutX();
+	// // bx = bx - (relativeTo.getTranslateX() + relativeTo.getLayoutX());
+	// // }
+	// return this.getX(e) + bx;
 	double bx = this.getTranslateX() + this.getLayoutX();
 	return getX(e) + bx;
     }
@@ -547,13 +591,14 @@ public abstract class ARender extends Pane {
      * @return The absolute y-coordinates of e.
      */
     public double absY(Element e, ARender relativeTo) {
-//	double by = 0;
-//	// if (relativeTo != this && relativeTo != null) {
-//	by = this.getTranslateY() + this.getLayoutY() + contentPane.getLayoutY();
-//	// by = by - (relativeTo.getTranslateY() + relativeTo.getLayoutY());
-//	// }
-//	return this.getY(e) + by;
-	
+	// double by = 0;
+	// // if (relativeTo != this && relativeTo != null) {
+	// by = this.getTranslateY() + this.getLayoutY() +
+	// contentPane.getLayoutY();
+	// // by = by - (relativeTo.getTranslateY() + relativeTo.getLayoutY());
+	// // }
+	// return this.getY(e) + by;
+
 	double by = this.getTranslateY() + this.getLayoutY() + contentPane.getLayoutY();
 	return this.getY(e) + by;
     }
@@ -567,7 +612,7 @@ public abstract class ARender extends Pane {
      * 
      * @return True if there was anything to draw.
      */
-    public boolean init() {
+    public boolean repaintAll() {
 	if (struct.getElements().isEmpty()) {
 	    return false; // Nothing to draw.
 	}
@@ -766,7 +811,7 @@ public abstract class ARender extends Pane {
     public void setElementStyle(ElementShape newStyle) {
 	if (newStyle != this.elementStyle) {
 	    this.elementStyle = newStyle;
-	    init();
+	    repaintAll();
 	}
     }
 

@@ -41,14 +41,14 @@ public class SingleElementRender extends ARender {
     public void render() {
 	if (struct.repaintAll) {
 	    struct.repaintAll = false;
-	    init();
+	    repaintAll();
 	}
 	super.render();
     }
 
     @Override
-    public boolean init() {
-	if (super.init() == false) {
+    public boolean repaintAll() {
+	if (super.repaintAll() == false) {
 	    return false;
 	}
 	return true;
