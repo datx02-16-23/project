@@ -22,12 +22,12 @@ import com.google.gson.stream.JsonReader;
 
 import assets.Const;
 import contract.AnnotatedVariable;
+import contract.CRoot;
 import contract.Header;
 import contract.Operation;
 import contract.datastructure.DataStructure;
 import contract.datastructure.DataStructureParser;
 import contract.operation.OperationParser;
-import contract.CRoot;
 import gui.Main;
 import io.Communicator.CommunicatorMessage;
 

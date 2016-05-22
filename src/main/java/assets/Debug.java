@@ -6,13 +6,13 @@ package assets;
  */
 public final class Debug {
 	public static void main(String[] args){
-	    //TODO
+	    //TODO Add bugs.
 	}
 	
 	/**
 	 * {@link System#err} is used to print basic information.
 	 */
-	public static boolean ERR = false;
+	public static boolean TRACING = true;
 	
 	/**
 	 * {@link System#out} is used to print verbose information.

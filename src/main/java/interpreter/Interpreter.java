@@ -5,7 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import contract.Operation;
-import contract.operation.*;
+import contract.operation.OP_ReadWrite;
+import contract.operation.OP_Swap;
+import contract.operation.OP_Write;
+import contract.operation.OperationType;
 import gui.Main;
 
 /**

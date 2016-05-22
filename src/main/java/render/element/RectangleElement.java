@@ -39,6 +39,7 @@ public class RectangleElement extends AVElement {
 
 	@Override
 	public void createShape() {
+	    	super.createShape();
 		Rectangle rect = new Rectangle();
 		rect.setStroke(Color.BLACK);
 		rect.setWidth(width);

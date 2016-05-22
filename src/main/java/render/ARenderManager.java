@@ -4,8 +4,8 @@ import java.util.HashMap;
 
 import assets.Const;
 import contract.datastructure.DataStructure;
-import contract.datastructure.VisualType;
 import contract.datastructure.DataStructure.VisualListener;
+import contract.datastructure.VisualType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 

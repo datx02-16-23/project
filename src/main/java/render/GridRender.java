@@ -5,12 +5,12 @@ import contract.datastructure.Array;
 import contract.datastructure.Array.IndexedElement;
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
-import render.element.ElementShape;
-import render.element.AVElement;
-import render.element.AVElementFactory;
 import gui.Main;
 import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
+import render.element.AVElement;
+import render.element.AVElementFactory;
+import render.element.ElementShape;
 
 /**
  * Render drawing data structures with their elements in a grid.
@@ -145,7 +145,7 @@ public class GridRender extends ARender {
 
 		if (dims == null || dims.length == 0) {
 			dims = backup;
-			if(Debug.ERR){
+			if(Debug.TRACING){
 				System.err.println("Size was null or empty for \"" + struct + "\"!");				
 			}
 		} else if (dims.length == 1) {

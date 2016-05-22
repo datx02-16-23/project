@@ -1,10 +1,10 @@
 package multiset.filter;
 
-import net.objecthunter.exp4j.Expression;
-import net.objecthunter.exp4j.ExpressionBuilder;
-
 import java.util.Map;
 import java.util.Set;
+
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 
 /**
  * Created by cb on 21/04/16.

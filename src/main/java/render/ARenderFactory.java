@@ -41,7 +41,12 @@ public abstract class ARenderFactory {
 	    curRender = new GridRender(struct, GridRender.Order.ROW_MAJOR, elemWidth, elemHeight, 3, 3);
 	    break;
 	case tree:
-	    curRender = new KTreeRender(struct, 2, elemWidth, elemHeight, 5, 5);
+	    // curRender = new KTreeRender(struct, 2, elemWidth, elemHeight, 5,
+	    // 5);
+	    curRender = new KTreeRender(struct, 2, elemWidth * 1.5, elemHeight * 1.5, 5, 5); // TODO
+											 // remove
+											 // this
+											 // line
 	    break;
 	case single:
 	    curRender = new SingleElementRender(struct, elemWidth * 2, elemHeight);

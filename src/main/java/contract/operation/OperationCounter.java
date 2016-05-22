@@ -1,6 +1,5 @@
 package contract.operation;
 
-import contract.Operation;
 import gui.Main;
 import javafx.beans.property.SimpleIntegerProperty;
 

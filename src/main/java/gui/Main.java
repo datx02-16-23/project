@@ -1,5 +1,8 @@
 package gui;
 
+import java.io.IOException;
+import java.util.Map;
+
 import assets.Const;
 import assets.example.Examples;
 import assets.example.Examples.Algorithm;
@@ -14,20 +17,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import model.Model;
 import render.Visualization;
-import javafx.scene.control.TextArea;
-
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * Entry class for the GUI.

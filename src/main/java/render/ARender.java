@@ -10,9 +10,9 @@ import java.util.HashMap;
 import assets.Const;
 import assets.Debug;
 import assets.Tools;
+import contract.datastructure.Array.IndexedElement;
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
-import contract.datastructure.Array.IndexedElement;
 import contract.operation.OperationCounter.OperationCounterHaver;
 import gui.Main;
 import gui.dialog.VisualDialog;
@@ -264,7 +264,7 @@ public abstract class ARender extends Pane {
      */
     // @formatter:off
     public void animateToggleScope(Element tar, long millis) {
-	if (Debug.ERR) {
+	if (Debug.TRACING) {
 	    System.err.println("ARender.animateRemove(): " + struct + " is animating.");
 	}
 
@@ -327,7 +327,7 @@ public abstract class ARender extends Pane {
 	    y2 = tarRender.absY(tar, srcRender);
 	}
 
-	if (Debug.ERR) {
+	if (Debug.TRACING) {
 	    System.err.println("ARender.animateReadWrite(): " + struct + " is animating.");
 	}
 
@@ -343,7 +343,7 @@ public abstract class ARender extends Pane {
 		    AnimationOption.FADE_IN, AnimationOption.GROW, AnimationOption.GHOST).play();
 	}
 
-	if (Debug.ERR && !hasSource && !hasTarget) {
+	if (Debug.TRACING && !hasSource && !hasTarget) {
 	    System.err.println("bla");
 	}
     }
@@ -365,7 +365,7 @@ public abstract class ARender extends Pane {
      */
     // @formatter:off
     public void animateSwap(Element var1, ARender render1, Element var2, ARender render2, long millis) {
-	if (Debug.ERR) {
+	if (Debug.TRACING) {
 	    System.err.println("ARender.animateSwap(): " + struct + " is animating.");
 	}
 

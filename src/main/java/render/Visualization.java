@@ -3,13 +3,15 @@ package render;
 import java.util.HashMap;
 
 import assets.Const;
-import assets.Tools;
 import assets.Debug;
+import assets.Tools;
 import contract.Locator;
 import contract.Operation;
-import contract.operation.*;
-import contract.datastructure.*;
+import contract.datastructure.DataStructure;
+import contract.datastructure.Element;
+import contract.operation.OP_ReadWrite;
 import contract.operation.OP_Swap;
+import contract.operation.OP_ToggleScope;
 import gui.Controller;
 import gui.Main;
 import javafx.scene.Node;
@@ -184,7 +186,7 @@ public class Visualization extends StackPane {
 	    if (e != null) {
 		ARender render = this.managerMap.get(struct.identifier).getRender();
 		render.animateToggleScope(e, millis);
-		if (Debug.ERR) {
+		if (Debug.TRACING) {
 		    System.err.println("\nVisualization.animateRemove():");
 		}
 		return;
@@ -221,7 +223,7 @@ public class Visualization extends StackPane {
 	    }
 	}
 
-	if (Debug.ERR) {
+	if (Debug.TRACING) {
 	    System.err.println("\nVisualization.animateReadWrite():");
 	    System.err.println("Has target: " + (tar_e == null ? "false" : tar_render.getDataStructure()));
 	    System.err.println("Has source: " + (src_e == null ? "false" : src_render.getDataStructure()));
@@ -280,7 +282,7 @@ public class Visualization extends StackPane {
 	 * Start animations
 	 */
 
-	if (Debug.ERR) {
+	if (Debug.TRACING) {
 	    System.err.println("\nVisualization.animateSwap():");
 	}
 
@@ -353,7 +355,7 @@ public class Visualization extends StackPane {
 	    // Make sure users can see the render.
 	    if (checkPositions(xPos, yPos) == false) {
 		// Do not remove this printout //RS
-		if (Debug.ERR) {
+		if (Debug.TRACING) {
 		    System.err.println("Using default placement for \"" + arm.getStructure() + "\".");
 		}
 		yPos = margin;

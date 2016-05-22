@@ -3,8 +3,8 @@ package render;
 import java.util.Arrays;
 
 import assets.Debug;
-import contract.datastructure.Element;
 import contract.datastructure.Array.IndexedElement;
+import contract.datastructure.Element;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
@@ -57,7 +57,7 @@ public abstract class ARenderAnimation {
 	int[] i = ((IndexedElement) e).getIndex();
 	Arrays.copyOf(i, i.length);
 	final AVElement orig = render.visualMap.get(Arrays.toString(i));
-	if (Debug.ERR) {
+	if (Debug.TRACING) {
 	    if (orig == null) {
 		System.err.println(
 			"ARenderAnimation.linear() failure: Could not resolve element " + e + " using: " + render);
@@ -109,7 +109,7 @@ public abstract class ARenderAnimation {
 	int[] i = ((IndexedElement) e).getIndex();
 	Arrays.copyOf(i, i.length);
 	final AVElement orig = render.visualMap.get(Arrays.toString(i));
-	if (Debug.ERR) {
+	if (Debug.TRACING) {
 	    if (orig == null) {
 		System.err.println("ARenderAnimation.stationary() failure: Could not resolve element  " + e
 			+ "  using: " + render);

@@ -1,21 +1,14 @@
 package render;
 
-import contract.datastructure.DataStructure;
-
 import java.util.Arrays;
 
 import assets.Const;
-import assets.Tools;
 import contract.datastructure.Array;
 import contract.datastructure.Array.IndexedElement;
 import contract.datastructure.Array.MinMaxListener;
+import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
-import render.element.BarchartElement;
-import render.element.ElementShape;
-import render.ARenderAnimation.AnimationOption;
-import render.element.AVElement;
 import gui.Main;
-import render.element.AVElementFactory;
 import javafx.animation.ParallelTransition;
 import javafx.animation.SequentialTransition;
 import javafx.scene.Node;
@@ -24,6 +17,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polyline;
+import render.ARenderAnimation.AnimationOption;
+import render.element.AVElement;
+import render.element.AVElementFactory;
+import render.element.BarchartElement;
+import render.element.ElementShape;
 
 public class BarchartRender extends ARender implements MinMaxListener {
 
@@ -82,7 +80,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
 	} else {
 	    this.renderHeight = renderHeight;
 	}
-	
+
 	this.reset();
     }
 
@@ -134,7 +132,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
 	contentPane.setBackground(null);
 
 	visualMap.clear();
-	
+
 	calculateSize();
 
 	// Create nodes

@@ -8,6 +8,7 @@ import java.util.Map;
 import assets.Debug;
 import contract.Operation;
 import contract.datastructure.DataStructure;
+import contract.operation.OperationType;
 
 public class Model {
 

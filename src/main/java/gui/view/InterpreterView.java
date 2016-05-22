@@ -4,18 +4,15 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import javax.script.Bindings;
-
 import assets.Const;
 import contract.Operation;
 import contract.operation.OperationType;
-import gui.Main;
 import gui.Controller;
+import gui.Main;
 import interpreter.Interpreter;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;

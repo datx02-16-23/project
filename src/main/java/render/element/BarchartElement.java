@@ -14,98 +14,105 @@ import javafx.scene.shape.Rectangle;
  *
  */
 public class BarchartElement extends RectangleElement {
-	
-	private Rectangle rect;
-	
-	private double unitHeight;
 
-	/**
-	 * Create a static, unbound RectangleElement.
-	 * 
-	 * @param value
-	 *            The initial value.
-	 * @param paint
-	 *            The paint to use.
-	 * @param node_width
-	 *            The width of the node.
-	 * @param node_height
-	 *            The height of the node.
-	 */
-	public BarchartElement(double value, Paint paint, double node_width, double node_height) {
-		super(value, paint, node_width, node_height);
-		this.valueLabel.setTranslateY(-15);
-	}
+    private Rectangle rect;
 
-	/**
-	 * Create a bound visual RectangleElement.
-	 * 
-	 * @param element
-	 *            The Element this VisualElement represents
-	 * @param node_width
-	 *            The width of the node.
-	 * @param node_height
-	 *            The height of the node.
-	 */
-	public BarchartElement(Element element, double node_width, double node_height) {
-		super(element, node_width, node_height);
-		valueLabel.setTranslateY(-15); //Raise slightly does it doesn't cover the x-axis.
-	}
+    private double unitHeight;
 
-	/**
-	 * Set the height of the bar.
-	 * 
-	 * @param unitHeight
-	 *            The new height.
-	 */
-	public void updateUnitHeight(double unitHeight) {
-		this.unitHeight = unitHeight;
-		
-		Rectangle rect = ((Rectangle) shape);
-		rect.heightProperty().bind((element.numProperty.multiply(unitHeight)));
-	}
-	
-	/**
-	 * Adjust the height of the bar.
-	 */
-	public void adjustSize(double value){
-//		rect.heightProperty().unbind();
-//		rect.setHeight(unitHeight*value);
-//		fixPositioning(0);
-	}
+    /**
+     * Create a static, unbound RectangleElement.
+     * 
+     * @param value
+     *            The initial value.
+     * @param paint
+     *            The paint to use.
+     * @param node_width
+     *            The width of the node.
+     * @param node_height
+     *            The height of the node.
+     */
+    public BarchartElement(double value, Paint paint, double node_width, double node_height) {
+	super(value, paint, node_width, node_height);
+	this.valueLabel.setTranslateY(-15);
+    }
 
-	@Override
-	public void createShape() {
-		rect = new Rectangle();
-		rect.setWidth(width);
-		rect.setHeight(height);
-		rect.setStroke(Color.BLACK);
-		
-		fixPositioning(0);
-		shape =  rect;
-	}
+    /**
+     * Create a bound visual RectangleElement.
+     * 
+     * @param element
+     *            The Element this VisualElement represents
+     * @param node_width
+     *            The width of the node.
+     * @param node_height
+     *            The height of the node.
+     */
+    public BarchartElement(Element element, double node_width, double node_height) {
+	super(element, node_width, node_height);
+	valueLabel.setTranslateY(-15); // Raise slightly does it doesn't cover
+				       // the x-axis.
+    }
 
+    /**
+     * Set the height of the bar.
+     * 
+     * @param unitHeight
+     *            The new height.
+     */
+    public void updateUnitHeight(double unitHeight) {
+	this.unitHeight = unitHeight;
 
-	/**
-	 * Set the Y-coordinate of the bottom left of the bar.
-	 * 
-	 * @param y
-	 *            The y coordinate at the bottom of the bar.
-	 */
-	public void setBotY(double y) {
-		layoutYProperty().unbind();
-		fixPositioning(y);
-	}
-	
-	private void fixPositioning(double y){
-		DoubleBinding neg_half_height = rect.heightProperty().divide(2).multiply(-1); //- height/2
-		this.layoutYProperty().bind(neg_half_height.add(y).subtract(Const.ELEMENT_HEIGHT/2)); //TODO fix
-	}
-	
-	public BarchartElement clone(){
-		BarchartElement clone = (BarchartElement) AVElementFactory.clone(this);
-		
-		clone.updateUnitHeight(unitHeight);
-		
-		return clone;
-	}
+	Rectangle rect = ((Rectangle) shape);
+	rect.heightProperty().bind((element.numProperty.multiply(unitHeight)));
+	root.setPrefHeight(unitHeight * element.getNumValue());
+    }
+
+    /**
+     * Adjust the height of the bar.
+     */
+    public void adjustSize(double value) {
+	// rect.heightProperty().unbind();
+	// rect.setHeight(unitHeight*value);
+	// fixPositioning(0);
+    }
+
+    @Override
+    public void createShape() {
+	// super.createShape();
+	root.setPrefWidth(width);
+	root.setPrefHeight(height);
+
+	rect = new Rectangle();
+	rect.setWidth(width);
+	rect.setHeight(height);
+	rect.setStroke(Color.BLACK);
+	shape = rect;
+
+	fixPositioning(0);
+    }
+
+    /**
+     * Set the Y-coordinate of the bottom left of the bar.
+     * 
+     * @param y
+     *            The y coordinate at the bottom of the bar.
+     */
+    public void setBotY(double y) {
+	layoutYProperty().unbind();
+	fixPositioning(y);
+    }
+
+    private void fixPositioning(double y) {
+	DoubleBinding neg_half_height = rect.heightProperty().divide(2).multiply(-1); // -
+										      // height/2
+	this.layoutYProperty().bind(neg_half_height.add(y).subtract(Const.ELEMENT_HEIGHT / 2)); // TODO
+												// fix
+    }
+
+    public BarchartElement clone() {
+	BarchartElement clone = (BarchartElement) AVElementFactory.clone(this);
+
+	clone.updateUnitHeight(unitHeight);
+
+	return clone;
+    }
 }

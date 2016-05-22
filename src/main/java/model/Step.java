@@ -7,7 +7,8 @@ import assets.Debug;
 import contract.Locator;
 import contract.Operation;
 import contract.datastructure.DataStructure;
-import contract.operation.*;
+import contract.operation.Key;
+import contract.operation.OP_Message;
 import gui.Main;
 
 public class Step {

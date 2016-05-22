@@ -1,9 +1,13 @@
 package multiset.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import javafx.collections.ObservableList;
 import multiset.filter.iFilter;
-
-import java.util.*;
 
 public class Model implements iModel {
 

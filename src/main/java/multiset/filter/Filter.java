@@ -1,11 +1,11 @@
 package multiset.filter;
 
-import multiset.model.iValueContainer;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import multiset.model.iValueContainer;
 
 /**
  * Created by cb on 26/04/16.

@@ -2,10 +2,12 @@ package render;
 
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
-import render.element.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
+import render.element.AVElement;
+import render.element.AVElementFactory;
+import render.element.ElementShape;
 
 public class SingleElementRender extends ARender {
 
