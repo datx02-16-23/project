@@ -71,7 +71,7 @@ public class SingleElementRender extends ARender {
      */
     @Override
     public double getX(Element e) {
-	return getNodeWidth() / 2;
+	return 0;
     }
 
     /**

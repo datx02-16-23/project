@@ -2,6 +2,7 @@ package render;
 
 import java.util.Arrays;
 
+import assets.Debug;
 import assets.Tools;
 import contract.datastructure.Array.IndexedElement;
 import contract.datastructure.DataStructure;
@@ -68,10 +69,12 @@ public class KTreeRender extends ARender {
 	this.K = K < 2 ? 2 : K;
 	contentPane.getChildren().add(nodeConnectorLines);
 	nodeConnectorLines.toBack();
+	this.setRelativeNodeSize(Debug.ERR, 2); //TODO remove
     }
 
     public void render() {
 	if (struct.repaintAll) {
+	    setRelativeNodeSize(Debug.ERR, 2); //TODO remove
 	    struct.repaintAll = false;
 	    repaintAll();
 	}

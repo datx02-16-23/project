@@ -21,6 +21,7 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import render.ARender;
 import render.ARenderManager;
 import render.Visualization;
@@ -169,7 +170,20 @@ public abstract class Tools {
 	for (ARenderManager rm : vis.getManagers()) {
 	    ARender r = rm.getRender();
 	    for (Element e : r.getDataStructure().getElements()) {
-		r.getNodes().getChildren().add(new Circle(r.getX(e), r.getY(e), 5));
+		double x = r.getX(e);
+		double y = r.getY(e);
+		double width = r.getPrefWidth();
+		double height = r.getPrefHeight();
+		
+		Line lineX = new Line(x, 0, x, height);
+		lineX.setStroke(Color.HOTPINK);
+		lineX.setOpacity(0.5);
+		
+		Line lineY = new Line(0, y, width, y);
+		lineY.setStroke(Color.HOTPINK);
+		lineY.setOpacity(0.5);
+		
+		r.getNodes().getChildren().addAll(lineX, lineY, new Circle(x, y, 5));
 	    }
 	}
     }

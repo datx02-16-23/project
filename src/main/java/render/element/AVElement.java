@@ -266,13 +266,13 @@ public abstract class AVElement extends Pane {
      * Listener for the onMouseEntered event.
      */
     public void onMouseEntered() {
-	if (Debug.ERR) {
-	    root.setStyle(DEBUG_FXML_ROOT);
-	    this.setStyle(DEBUG_FXML_THIS);
-	} else {
-	    root.setStyle(null);
-	    this.setStyle(null);
-	}
+//	if (Debug.ERR) {
+//	    root.setStyle(DEBUG_FXML_ROOT);
+//	    this.setStyle(DEBUG_FXML_THIS);
+//	} else {
+//	    root.setStyle(null);
+//	    this.setStyle(null);
+//	}
 
 	root.setScaleX(1.20);
 	root.setScaleY(1.20);
