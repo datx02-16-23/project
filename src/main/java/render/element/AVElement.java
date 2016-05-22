@@ -452,16 +452,16 @@ public abstract class AVElement extends Pane {
      *            The new height.
      */
     public void setSize(double newWidth, double newHeight) {
-	if (newWidth != width || newHeight != height) {
-//	    setLayoutX(getLayoutX() + (width - newWidth) / 2);
-//	    setLayoutY(getLayoutY() + (height - newHeight) / 2);
-//	    setTranslateX(getTranslateX() + (width - newWidth) / 2);
-//	    setTranslateY(getTranslateY() + (height - newHeight) / 2);
-
+	if (newWidth != width) {
+	    // Repostion on render.
+	    setLayoutX(getLayoutX() + (this.width - newWidth) / 2);
 	    width = newWidth;
-	    height = newHeight;
-	    root.setPrefSize(width, height);
-
 	}
+	if (newHeight != height) {
+	    // Repostion on render.
+	    setLayoutY(getLayoutY() + (this.height - newHeight) / 2);
+	    height = newHeight;
+	}
+	root.setPrefSize(width, height);
     }
 }

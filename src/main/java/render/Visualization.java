@@ -1,5 +1,6 @@
 package render;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 import assets.Const;
@@ -500,5 +501,9 @@ public class Visualization extends StackPane {
 	for(ARenderManager rm : managerMap.values()){
 	    rm.reset();
 	}
+    }
+    
+    public Collection<ARenderManager> getManagers(){
+	return managerMap.values();
     }
 }

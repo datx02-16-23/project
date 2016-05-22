@@ -20,6 +20,7 @@ import java.util.Set;
 import assets.Const;
 import assets.Debug;
 import assets.DefaultProperties;
+import assets.Tools;
 import assets.example.Examples;
 import assets.example.Examples.Algorithm;
 import contract.Locator;
@@ -79,7 +80,7 @@ import render.Visualization;
  */
 public class Controller implements CommunicatorListener {
 
-    private Visualization modelRender;
+    private Visualization vis;
     private Stage window;
     private final LogStreamManager lsm;
     private final Model model;
@@ -112,10 +113,10 @@ public class Controller implements CommunicatorListener {
     private Button restartButton, clearButton, speedButton;
 
     public Controller(Stage window, LogStreamManager lsm, SourcePanel sourceViewer, Visualization visualization) {
-	this.modelRender = visualization;
-	visualization.setAnimationTime(stepDelay);
+	this.vis = visualization;
+	this.vis.setAnimationTime(stepDelay);
 	this.window = window;
-	model = Model.instance();
+	this.model = Model.instance();
 	this.lsm = lsm;
 	this.lsm.PRETTY_PRINTING = true;
 	this.lsm.setListener(this);
@@ -182,7 +183,7 @@ public class Controller implements CommunicatorListener {
 	visualMenu.getItems().clear();
 	visualMenu.setDisable(true);
 	model.hardClear();
-	modelRender.clear();
+	vis.clear();
 	sourceViewer.clear();
 	operationPanel.clear();
 	setButtons();
@@ -232,7 +233,7 @@ public class Controller implements CommunicatorListener {
     public void restartButtonClicked() {
 	stopAutoPlay();
 	model.reset();
-	modelRender.reset();
+	vis.reset();
 	updatePanels();
 	setButtons();
     }
@@ -254,7 +255,7 @@ public class Controller implements CommunicatorListener {
     private boolean stepModelForward() {
 	boolean result = model.stepForward();
 
-	modelRender.render(model.getLastOp());
+	vis.render(model.getLastOp());
 	startAnimationProgressBar();
 	updatePanels();
 	setButtons();
@@ -268,8 +269,8 @@ public class Controller implements CommunicatorListener {
     public void stepBackwardButtonClicked() {
 	stopAutoPlay();
 	if (model.stepBackward()) {
-	    modelRender.init();
-	    modelRender.render(model.getLastOp());
+	    vis.init();
+	    vis.render(model.getLastOp());
 	    setButtons();
 	    updatePanels();
 	}
@@ -286,7 +287,7 @@ public class Controller implements CommunicatorListener {
 	stepDelaySpeedupFactor = stepDelaySpeedupFactor * 2 % 255;
 	speedButton.setText(stepDelaySpeedupFactor + "x");
 	stepDelay = stepDelayBase / stepDelaySpeedupFactor;
-	modelRender.setAnimationTime(stepDelay);
+	vis.setAnimationTime(stepDelay);
 	if (isPlaying) {
 	    startAutoPlay();
 	}
@@ -316,7 +317,7 @@ public class Controller implements CommunicatorListener {
 	stopAutoPlay();
 	if (interpreterView.show(model.getOperations())) {
 	    model.reset();
-	    modelRender.clearAndCreateVisuals();
+	    vis.clearAndCreateVisuals();
 	    operationPanel.getItems().setAll(model.getOperations());
 	    updatePanels();
 	}
@@ -325,7 +326,7 @@ public class Controller implements CommunicatorListener {
     public void interpretOperationHistory() {
 	interpreterView.fast(model.getOperations());
 	updatePanels();
-	modelRender.clearAndCreateVisuals();
+	vis.clearAndCreateVisuals();
 	operationPanel.getItems().setAll(lsm.getOperations());
     }
 
@@ -360,8 +361,8 @@ public class Controller implements CommunicatorListener {
 	    return;
 	}
 	model.goToStep(index);
-	modelRender.init();
-	modelRender.render(model.getLastOp());
+	vis.init();
+	vis.render(model.getLastOp());
 	operationPanel.update(model.getIndex(), false);
     }
 
@@ -504,8 +505,8 @@ public class Controller implements CommunicatorListener {
 	model.getOperations().addAll(lsm.getOperations());
 	checkOperationIdentifiers(model.getOperations(), model.getStructures());
 	sourceViewer.addSources(lsm.getSources());
-	modelRender.clearAndCreateVisuals();
-	modelRender.render(model.getLastOp());
+	vis.clearAndCreateVisuals();
+	vis.render(model.getLastOp());
 	// Update operation list
 	operationPanel.getItems().addAll(lsm.getOperations());
 	loadVisualMenu();
@@ -616,13 +617,13 @@ public class Controller implements CommunicatorListener {
     private void loadVisualMenu() {
 	MenuItem reset = new MenuItem("Reset Positions");
 	reset.setOnAction(event -> {
-	    modelRender.placeVisuals();
+	    vis.placeVisuals();
 	});
 	visualMenu.getItems().add(reset);
 
 	MenuItem live = new MenuItem("Show Live Stats");
 	live.setOnAction(event -> {
-	    modelRender.showLiveStats();
+	    vis.showLiveStats();
 	});
 	live.setDisable(true);
 	visualMenu.getItems().add(live);
@@ -642,7 +643,7 @@ public class Controller implements CommunicatorListener {
 
     public void openVisualDialog(DataStructure struct) {
 	if (visualDialog.show(struct)) {
-	    modelRender.init();
+	    vis.init();
 	}
     }
 
@@ -1015,5 +1016,9 @@ public class Controller implements CommunicatorListener {
     
     public void debugOUT(Event e){
 	Debug.OUT = ((CheckMenuItem) e.getSource()).isSelected();
+    }
+    
+    public void markElementXY(){
+	Tools.markElementXY(vis);
     }
 }
