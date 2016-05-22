@@ -8,6 +8,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
@@ -19,6 +20,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -46,6 +48,7 @@
                               </MenuItem>
                               <SeparatorMenuItem mnemonicParsing="false" />
                               <MenuItem mnemonicParsing="false" onAction="#closeProgram" text="Close" />
+                              <MenuItem mnemonicParsing="false" text="Unspecified Action" />
                            </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="_Action">
@@ -127,14 +130,26 @@
                                           <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                                        </GridPane.margin>
                                     </Button>
-                                    <Button fx:id="playPauseButton" alignment="CENTER" maxHeight="40.0" maxWidth="60.0" minHeight="40.0" minWidth="60.0" mnemonicParsing="false" onAction="#playPauseButtonClicked" prefHeight="40.0" prefWidth="60.0" text="Play" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
-                                       <font>
-                                          <Font name="System Bold" size="13.0" />
-                                       </font>
+                                    <StackPane GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                        <GridPane.margin>
                                           <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                                        </GridPane.margin>
-                                    </Button>
+                                       <children>
+                                          <ProgressBar fx:id="animationProgress" focusTraversable="false" prefHeight="40.0" prefWidth="60.0" progress="0.0">
+                                             <StackPane.margin>
+                                                <Insets />
+                                             </StackPane.margin>
+                                             <padding>
+                                                <Insets bottom="-1.0" top="-1.0" />
+                                             </padding>
+                                          </ProgressBar>
+                                          <Button fx:id="playPauseButton" alignment="CENTER" maxHeight="40.0" maxWidth="60.0" minHeight="40.0" minWidth="60.0" mnemonicParsing="false" onAction="#playPauseButtonClicked" prefHeight="40.0" prefWidth="60.0" style="-fx-background-color: transparent;" text="Play" textAlignment="CENTER">
+                                             <font>
+                                                <Font name="System Bold" size="13.0" />
+                                             </font>
+                                          </Button>
+                                       </children>
+                                    </StackPane>
                                     <Button fx:id="forwardButton" maxHeight="40.0" maxWidth="60.0" minHeight="40.0" minWidth="60.0" mnemonicParsing="false" onAction="#stepForwardButtonClicked" prefHeight="40.0" prefWidth="60.0" text="Forward" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                                        <font>
                                           <Font name="System Bold" size="9.0" />

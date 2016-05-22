@@ -28,17 +28,14 @@ public class BarchartRender extends ARender implements MinMaxListener {
     public static final ElementShape ELEMENT_STYLE = ElementShape.BAR_ELEMENT;
 
     // Using instead of default render field names for clarity.
-    private double renderHeight, padding, xAxisY;
+    private double renderHeight, padding, xAxisY, rightWallX;
 
     private Pane axes = new Pane();
-    // private final CategoryAxis xAxis = new CategoryAxis();
-    // private final NumberAxis yAxis = new NumberAxis();
-    private double rightWallX;
 
     /**
      * Create a new BarchartRender. If both {@code renderHeight} and
      * {@code nodeHeight} are greater than 0, the bars may stretch outside of
-     * the render depending on element numeric value.
+     * the render depending on element numeric value. TODO UPPDATERA JAVDOC
      * 
      * @param struct
      *            The structure to render.
@@ -51,7 +48,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
      * @param nodeHeight
      *            The height of the bars per unit. A value lower than 0 will
      *            scale all elements relative to {@code renderHeight}, ignoring
-     *            {@code nodeHeight}<b>NOT IMPLEMENTED YET </b>.
+     *            {@code nodeHeight}. <b>NOT IMPLEMENTED YET </b>.
      * @param hspace
      *            Space between bars.
      */
@@ -283,10 +280,9 @@ public class BarchartRender extends ARender implements MinMaxListener {
 
     private void createIndexLabel(Element e) {
 	int[] index = ((IndexedElement) e).getIndex();
-
 	Label info = new Label();
 	info.setLayoutY(xAxisY);
-	info.setLayoutX(this.getX(e) + 5);
+	info.setLayoutX(getX(e) + 5);
 	// info.setLayoutX(100);
 	info.setText(Arrays.toString(index));
 

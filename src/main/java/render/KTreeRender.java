@@ -238,8 +238,6 @@ public class KTreeRender extends ARender {
 	    totDepth++;
 	}
 	totDepth--;
-	// completedSize = lowerLevelSums.get(Double.toString(K) +
-	// lolwut).get(totDepth + 1);
 	completedSize = Tools.lowerLevelSum(totDepth + 1, K);
 	totBreadth = Tools.pow(K, totDepth);
     }

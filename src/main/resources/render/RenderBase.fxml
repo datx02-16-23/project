@@ -23,9 +23,9 @@
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label fx:id="hintText" maxWidth="1.7976931348623157E308" minWidth="0.0" text="Click and hold to drag. Use CTROL + ARROW KEYS  or MOUSE WHEEL to change node size." textOverrun="CLIP" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+      <Label fx:id="hintText" maxWidth="1.7976931348623157E308" minWidth="0.0" text="Click and hold to move. Use CTRL + ARROW KEYS or MOUSE WHEEL to change size. Click an element to show individual statistics." textOverrun="CLIP" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
          <font>
-            <Font size="8.0" />
+            <Font name="System Italic" size="8.0" />
          </font>
       </Label>
       <Pane fx:id="content" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="2" />
