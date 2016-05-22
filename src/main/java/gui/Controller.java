@@ -209,6 +209,7 @@ public class Controller implements CommunicatorListener {
 	public void restartButtonClicked() {
 		stopAutoPlay();
 		model.reset();
+		modelRender.reset();
 		updatePanels();
 		setButtons();
 	}

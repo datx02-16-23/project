@@ -309,13 +309,13 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 	public void setVisual(VisualType vt) {
 		if (vt != visual) {
 			visual = vt;
-			if (listener != null) {
-				listener.visualChanged(vt);
+			if (visualListener != null) {
+				visualListener.visualChanged(vt);
 			}
 		}
 	}
 
-	private transient VisualListener listener;
+	private transient VisualListener visualListener;
 
 	/**
 	 * Interface for listening to changes in the VisualType.
@@ -340,7 +340,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 	 *            A VisualListener.
 	 */
 	public void setListener(VisualListener listener) {
-		this.listener = listener;
+		this.visualListener = listener;
 	}
 
 }

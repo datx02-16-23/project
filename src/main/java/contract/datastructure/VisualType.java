@@ -1,21 +1,21 @@
 package contract.datastructure;
 
 public enum VisualType {
-	/*
+	/**
 	 * Chart type.
 	 */
 	bar("Bar Chart", "bar"),
-	/*
+	/**
 	 * Graph type.
 	 */
 	tree("KTree", "tree"),
-	/*
+	/**
 	 * Grid type.
 	 */
 	grid("Grid", "grid"),
 	box(grid, "box"),
-	/*
-	 * Single element render.
+	/**
+	 * Single element type.
 	 */
 	single("Single Element", "single");
 

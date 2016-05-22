@@ -166,7 +166,7 @@ public class KTreeRender extends ARender {
 			breadth = getBreadth(index, depth);
 			x = getX(breadth, depth);
 		}
-		return x;
+		return x  + hSpace;
 	}
 
 	private double getX(int breadth, int depth) {
@@ -249,7 +249,7 @@ public class KTreeRender extends ARender {
 		calculateDepthAndBreadth();
 		totWidth = totBreadth * (nodeWidth + hSpace) + hSpace;
 		totHeight = (totDepth + 1) * (nodeHeight + vSpace) + vSpace * 2;
-		setSize(totWidth, totHeight);
+		setRestricedSize(totWidth, totHeight);
 	}
 
 	@Override

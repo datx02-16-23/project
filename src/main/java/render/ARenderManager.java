@@ -16,137 +16,145 @@ import javafx.scene.layout.Pane;
  *
  */
 public class ARenderManager extends BorderPane implements VisualListener {
-	/**
-	 * The data structure this thingy is responsible for.
-	 */
-	private final DataStructure struct;
+    /**
+     * The data structure this thingy is responsible for.
+     */
+    private final DataStructure struct;
 
-	/**
-	 * The pane used for animation.
-	 */
-	private final Pane animPane;
+    /**
+     * The pane used for animation.
+     */
+    private final Pane animPane;
 
-	/**
-	 * Mapping of renders for the structure.
-	 */
-	private final HashMap<VisualType, ARender> renders = new HashMap<VisualType, ARender>();
+    /**
+     * Mapping of renders for the structure.
+     */
+    private final HashMap<VisualType, ARender> renders = new HashMap<VisualType, ARender>();
 
-	/**
-	 * The current render for the structure.
-	 */
-	private ARender curRender;
+    /**
+     * The current render for the structure.
+     */
+    private ARender curRender;
 
-	// Used to maintain settings when changing renders.
-	private double scaleX = 1;
-	private double scaleY = 1;
-	private double translateX = 0;
-	private double translateY = 0;
-	private double layoutX = 0;
-	private double layoutY = 0;
-	private ARender prevRender;
+    // Used to maintain settings when changing renders.
+    private double scaleX = 1;
+    private double scaleY = 1;
+    private double translateX = 0;
+    private double translateY = 0;
+    private double layoutX = 0;
+    private double layoutY = 0;
+    private ARender prevRender;
 
-	public boolean translateOnVisualTypeChange = true;
+    public boolean translateOnVisualTypeChange = true;
 
-	/**
-	 * Create a new thingy.
-	 * 
-	 * @param struct
-	 *            The data structure being visualized.
-	 * @param animation_container
-	 *            Container for animation.
-	 */
-	public ARenderManager(DataStructure struct, Pane animation_container) {
-		struct.resolveVisual();
+    /**
+     * Create a new thingy.
+     * 
+     * @param struct
+     *            The data structure being visualized.
+     * @param animation_container
+     *            Container for animation.
+     */
+    public ARenderManager(DataStructure struct, Pane animation_container) {
+	struct.resolveVisual();
 
-		this.struct = struct;
-		this.animPane = animation_container;
-		this.setPickOnBounds(false); // Mouse fix.
+	this.struct = struct;
+	this.animPane = animation_container;
+	this.setPickOnBounds(false); // Mouse fix.
 
-		setRender(struct.visual);
+	setRender(struct.visual);
+    }
+
+    /**
+     * Set the visual type to use for this Structure.
+     * 
+     * @param type
+     *            The type to use.
+     */
+    public void setRender(VisualType type) {
+	curRender = renders.get(type);
+
+	if (curRender == null) { // Create new render for the structure.
+	    // @formatter:off
+	    curRender = ARenderFactory.resolveRender(struct, Const.ELEMENT_WIDTH, Const.ELEMENT_HEIGHT,
+		    Const.RENDER_WIDTH, Const.RENDER_HEIGHT);
+	    // @formatter:on
+	    renders.put(struct.resolveVisual(), curRender);
 	}
 
-	/**
-	 * Set the visual type to use for this Structure.
-	 * 
-	 * @param type
-	 *            The type to use.
-	 */
-	public void setRender(VisualType type) {
-		curRender = renders.get(type);
+	struct.setListener(this);
 
-		if (curRender == null) { // Create new render for the structure.
-			//@formatter:off
-			curRender = ARenderFactory.resolveRender(struct,
-					Const.ELEMENT_WIDTH, Const.ELEMENT_HEIGHT,
-					Const.RENDER_WIDTH, Const.RENDER_HEIGHT);
-			//@formatter:off
-			renders.put(struct.resolveVisual(), curRender);
-		}
+	initRender();
+	setCenter(curRender);
+	if (type == VisualType.single) {
+	    this.toFront(); // Single element renders are small.
+	}
+    }
 
-		struct.setListener(this);
+    private void initRender() {
+	if (translateOnVisualTypeChange && prevRender != null) {
+	    scaleX = prevRender.getScaleX();
+	    scaleY = prevRender.getScaleY();
+	    translateX = prevRender.getTranslateX();
+	    translateY = prevRender.getTranslateY();
+	    layoutX = prevRender.getLayoutX();
+	    layoutY = prevRender.getLayoutY();
 
-		initRender();
-		setCenter(curRender);
-		if (type == VisualType.single) {
-			this.toFront(); // Single element renders are small.
-		}
+	    curRender.setScaleX(scaleX);
+	    curRender.setScaleX(scaleY);
+	    curRender.setTranslateX(translateX);
+	    curRender.setTranslateY(translateY);
+	    curRender.setLayoutX(layoutX);
+	    curRender.setLayoutY(layoutY);
 	}
 
-	private void initRender() {
-		if (translateOnVisualTypeChange && prevRender != null) {
-			scaleX = prevRender.getScaleX();
-			scaleY = prevRender.getScaleY();
-			translateX = prevRender.getTranslateX();
-			translateY = prevRender.getTranslateY();
-			layoutX = prevRender.getLayoutX();
-			layoutY = prevRender.getLayoutY();
+	curRender.init();
+	curRender.updateInfoLabels();
+	animPane.getChildren().remove(curRender.getAnimationPane());
+	animPane.getChildren().add(curRender.getAnimationPane());
+	prevRender = curRender;
+    }
 
-			curRender.setScaleX(scaleX);
-			curRender.setScaleX(scaleY);
-			curRender.setTranslateX(translateX);
-			curRender.setTranslateY(translateY);
-			curRender.setLayoutX(layoutX);
-			curRender.setLayoutY(layoutY);
-		}
+    @Override
+    public void visualChanged(VisualType newVisual) {
+	setRender(newVisual);
+    }
 
-		curRender.init();
-		curRender.updateInfoLabels();
-		animPane.getChildren().remove(curRender.getAnimationPane());
-		animPane.getChildren().add(curRender.getAnimationPane());
-		prevRender = curRender;
+    /**
+     * Force the current Render to initialise.
+     */
+    public void init() {
+	curRender.init();
+    }
+
+    /**
+     * Returns the current Render for the structure.
+     * 
+     * @return The current Render for the structure.
+     */
+    public ARender getRender() {
+	return curRender;
+    }
+
+    public String toString() {
+	return struct.identifier + ": " + renders.values();
+    }
+
+    /**
+     * The data structure this thingy is responsible for.
+     * 
+     * @return A DataStructure.
+     */
+    public DataStructure getStructure() {
+	return struct;
+    }
+
+    /**
+     * Reset the renders held by this manager.
+     */
+    public void reset() {
+	for (ARender r : renders.values()) {
+	    r.reset();
 	}
-
-	@Override
-	public void visualChanged(VisualType newVisual) {
-		this.setRender(newVisual);
-	}
-
-	/**
-	 * Force the current Render to initialise.
-	 */
-	public void init() {
-		curRender.init();
-	}
-
-	/**
-	 * Returns the current Render for the structure.
-	 * 
-	 * @return The current Render for the structure.
-	 */
-	public ARender getRender() {
-		return curRender;
-	}
-
-	public String toString() {
-		return struct.identifier + ": " + renders.values();
-	}
-
-	/**
-	 * The data structure this thingy is responsible for.
-	 * 
-	 * @return A DataStructure.
-	 */
-	public DataStructure getStructure() {
-		return struct;
-	}
+    }
 }

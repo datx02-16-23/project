@@ -134,7 +134,7 @@ public class GridRender extends ARender {
 			totHeight = hSpace + (hSpace + nodeHeight) * dims[0];
 			totWidth = 2 + vSpace + (vSpace + nodeWidth) * dims[1];
 		}
-		setSize(totWidth, totHeight);
+		setRestricedSize(totWidth, totHeight);
 	}
 
 	private void ensureDimensionsSet() {
