@@ -1,34 +1,21 @@
 package assets;
 
-import java.util.regex.Pattern;
-
 /**
- * Debug level setting.
  * @author Richard Sundqvist
  *
  */
 public final class Debug {
 	public static void main(String[] args){
-//		String str = "package.subpackage:class:subclass:subsubclass;watisthis.OK NOW WE STOP";
-		String str = "OK NOW WE STOP";
-		str = str.trim();
-		Pattern p;
-		String a[] = str.split("\\p{Punct}");
-		for(int i = 0; i < a.length; i++){
-			System.out.println(a[i]);
-		}
+	    //TODO
 	}
 	
 	/**
-	 * {@link System#err} is used to print basic debug information.
+	 * {@link System#err} is used to print basic information.
 	 */
-	public static final boolean ERR = false;
+	public static boolean ERR = false;
+	
 	/**
-	 * {@link System#out} is used to print verbose debug information.
+	 * {@link System#out} is used to print verbose information.
 	 */
-	public static final boolean OUT = false;
-	
-	//TODO Add more specific
-	
-
+	public static boolean OUT = false;
 }

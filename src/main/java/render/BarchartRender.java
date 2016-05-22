@@ -304,9 +304,8 @@ public class BarchartRender extends ARender implements MinMaxListener {
      * @return The absolute y-coordinates of e.
      */
     @Override
-    public double absY(Element e) {
-	double by = this.getTranslateY() + this.getLayoutY() + contentPane.getLayoutY();
-	return xAxisY + by;
+    public double absY(Element e, ARender relativeTo) {
+	return super.absX(e, relativeTo) + this.xAxisY;
     }
 
     /**
@@ -329,8 +328,8 @@ public class BarchartRender extends ARender implements MinMaxListener {
 	    return;
 	}
 
-	double x1 = this.absX(src);
-	double y1 = this.absY(src);
+	double x1 = this.absX(src, tarRender);
+	double y1 = this.absY(src, tarRender);
 
 	double x2 = x1;
 	double y2 = y1 - barWidth / 2;

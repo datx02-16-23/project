@@ -150,7 +150,7 @@ public abstract class ARender extends Pane {
 	this.vSpace = vSpace;
 
 	this.animPane = new Pane();
-	bindAnimPane();
+	// bindAnimPane();
 
 	// Add stacked canvases
 	loadFXML();
@@ -263,8 +263,8 @@ public abstract class ARender extends Pane {
 	    System.err.println("ARender.animateRemove(): " + struct + " is animating.");
 	}
 
-	ParallelTransition base = ARenderAnimation.stationary(tar, this.absX(tar), this.absY(tar), millis, this,
-		AnimationOption.GHOST, AnimationOption.FLIP);
+	ParallelTransition base = ARenderAnimation.stationary(tar, this.absX(tar, null), this.absY(tar, null), millis,
+		this, AnimationOption.GHOST, AnimationOption.FLIP);
 
 	base.getNode().setRotationAxis(new Point3D(0, 1, 0));
 
@@ -301,7 +301,7 @@ public abstract class ARender extends Pane {
      * @param tarRender
      *            The render for the target element.
      * @param millis
-     *            The time in milliseconds the animation should last.
+     *            The time the animation should last in milliseconds.
      */
     // @formatter:off
     public void animateReadWrite(Element src, ARender srcRender, Element tar, ARender tarRender, long millis) {
@@ -313,13 +313,13 @@ public abstract class ARender extends Pane {
 	double y2 = -1;
 
 	if (hasSource) {
-	    x1 = srcRender.absX(src);
-	    y1 = srcRender.absY(src);
+	    x1 = srcRender.absX(src, tarRender);
+	    y1 = srcRender.absY(src, tarRender);
 	}
 
 	if (hasTarget) {
-	    x2 = tarRender.absX(tar);
-	    y2 = tarRender.absY(tar);
+	    x2 = tarRender.absX(tar, srcRender);
+	    y2 = tarRender.absY(tar, srcRender);
 	}
 
 	if (Debug.ERR) {
@@ -328,7 +328,6 @@ public abstract class ARender extends Pane {
 
 	if (hasSource && hasTarget) {
 	    ARenderAnimation.linear(tar, x1, y1, x2, y2, millis, tarRender, AnimationOption.GHOST).play();
-	    ;
 	} else if (hasSource) {
 	    // Source only
 	    ARenderAnimation.linear(src, x1, y1, x1, y1 - Const.ELEMENT_HEIGHT * 2, millis, srcRender,
@@ -337,6 +336,10 @@ public abstract class ARender extends Pane {
 	    // Target only
 	    ARenderAnimation.linear(tar, x2, y2 - Const.ELEMENT_HEIGHT * 2, x2, y2, millis, tarRender,
 		    AnimationOption.FADE_IN, AnimationOption.GROW, AnimationOption.GHOST).play();
+	}
+
+	if (Debug.ERR && !hasSource && !hasTarget) {
+	    System.err.println("bla");
 	}
     }
     // @formatter:off
@@ -355,16 +358,16 @@ public abstract class ARender extends Pane {
      * @param millis
      *            The time in milliseconds the animation should last.
      */
-    // formatter:off
+    // @formatter:off
     public void animateSwap(Element var1, ARender render1, Element var2, ARender render2, long millis) {
 	if (Debug.ERR) {
 	    System.err.println("ARender.animateSwap(): " + struct + " is animating.");
 	}
 
-	ARenderAnimation.linear(var1, render1.absX(var2), render2.absY(var2), render2.absX(var1), render1.absY(var1),
-		millis, this, AnimationOption.GHOST).play();
+	ARenderAnimation.linear(var1, render1.absX(var2, render2), render2.absY(var2, render2),
+		render2.absX(var1, render1), render1.absY(var1, render1), millis, this, AnimationOption.GHOST).play();
     }
-    // formatter:on
+    // @formatter:on
 
     /**
      * Calls, setPrefSize, setMaxSize, setWidth and setHeight. Will limit how
@@ -517,10 +520,13 @@ public abstract class ARender extends Pane {
      *            An element owned by this Render.
      * @return The absolute x-coordinates of e.
      */
-    public double absX(Element e) {
-	double bx = this.getTranslateX() + this.getLayoutX();
-//	return this.getX(e) + bx;
-	return this.getX(e);
+    public double absX(Element e, ARender relativeTo) {
+	double bx = 0;
+	// if (relativeTo != this && relativeTo != null) {
+	bx = this.getTranslateX() + this.getLayoutX();
+	// bx = bx - (relativeTo.getTranslateX() + relativeTo.getLayoutX());
+	// }
+	return this.getX(e) + bx;
     }
 
     /**
@@ -531,10 +537,13 @@ public abstract class ARender extends Pane {
      *            An element owned by this Render.
      * @return The absolute y-coordinates of e.
      */
-    public double absY(Element e) {
-	double by = this.getTranslateY() + this.getLayoutY() + contentPane.getLayoutY();
-//	return this.getY(e) + by;
-	return this.getY(e);
+    public double absY(Element e, ARender relativeTo) {
+	double by = 0;
+	// if (relativeTo != this && relativeTo != null) {
+	by = this.getTranslateY() + this.getLayoutY();
+	// by = by - (relativeTo.getTranslateY() + relativeTo.getLayoutY());
+	// }
+	return this.getY(e) + by;
     }
 
     /**
