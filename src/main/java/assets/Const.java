@@ -59,10 +59,8 @@ public abstract class Const {
 
 	public static final double DEFAULT_RELATIVE_NODE_FACTOR = 3;
 	
-	/**
-	 * Suggested minimum margin for renders.
-	 */
-	public static final double RENDER_PADDING = 10;
+	public static final double DEFAULT_RENDER_PADDING = 10;
+	public static final long DEFAULT_ANIMATION_TIME = 5000;
 
 	// More render constants
 	public static final Background ARRAY_BACKGROUND = Tools.createArrayBg();

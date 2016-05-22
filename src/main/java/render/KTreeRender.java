@@ -155,6 +155,7 @@ public class KTreeRender extends ARender {
 	if (e == null || e instanceof IndexedElement == false) {
 	    return -1;
 	}
+	
 	int index = ((IndexedElement) e).getIndex()[0];
 	double x;
 	int breadth, depth;
@@ -166,6 +167,11 @@ public class KTreeRender extends ARender {
 	    breadth = getBreadth(index, depth);
 	    x = getX(breadth, depth);
 	}
+	
+	AVElement ave = visualMap.get(Arrays.toString(((IndexedElement) e).getIndex()));
+	if(ave != null){
+	    x = x + (this.nodeHeight - ave.height)/2;
+	}
 	return x + hSpace;
     }
 
@@ -173,15 +179,16 @@ public class KTreeRender extends ARender {
 	// Stepsize at this depth. Farther from root smaller steps
 	double L = (double) Tools.pow(K, totDepth) / (double) Tools.pow(K, depth);
 	// Apply indentation for every row except the last
-	double indentation = 0;
+	double x = hSpace;
+	
 	if (depth < totDepth) {
-	    indentation = (hSpace + nodeWidth) * ((L - 1) / 2);
+	    x = x + (hSpace + nodeWidth) * ((L - 1) / 2);
 	}
 	// Dont multiply by zero
 	if (breadth > 0) {
-	    return hSpace + indentation + breadth * L * ((hSpace + nodeWidth));
+	    return hSpace + x + breadth * L * ((hSpace + nodeWidth));
 	} else {
-	    return hSpace + indentation;
+	    return hSpace + x;
 	}
     }
 
@@ -196,7 +203,11 @@ public class KTreeRender extends ARender {
 	if (index != 0) {
 	    y = getY(getDepth(index)); // Should not be used for root.
 	}
-
+	//TODO use ave values instead of calculating twice
+	AVElement ave = visualMap.get(Arrays.toString(((IndexedElement) e).getIndex()));
+	if(ave != null){
+	    y = y + (this.nodeHeight - ave.height)/2;
+	}
 	return y;
     }
 

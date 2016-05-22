@@ -22,7 +22,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </StackPane>
-            <Label fx:id="value" alignment="CENTER" contentDisplay="TOP" focusTraversable="false" mouseTransparent="true" style="-fx-background-color: rgba(255, 255, 255, 0.8);" text="VALUE" textAlignment="CENTER" />
+            <Label fx:id="value" alignment="CENTER" contentDisplay="TOP" ellipsisString="!" focusTraversable="false" mouseTransparent="true" style="-fx-background-color: rgba(255, 255, 255, 0.8);" text="VALUE" textAlignment="CENTER" />
          </children>
       </StackPane>
    </children>

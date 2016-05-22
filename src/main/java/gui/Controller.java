@@ -92,7 +92,7 @@ public class Controller implements CommunicatorListener {
     // Autoplay
     private boolean isPlaying = false;
     private int stepDelaySpeedupFactor = 1;
-    private long stepDelayBase = 1500;
+    private long stepDelayBase = Const.DEFAULT_ANIMATION_TIME;
     private long stepDelay = stepDelayBase / stepDelaySpeedupFactor;
     // Settings dialog stuff
     private Stage settingsView;
@@ -1009,11 +1009,11 @@ public class Controller implements CommunicatorListener {
 	clearButton.setDisable(false);
     }
     
-    public void debugERR(){
-	
+    public void debugERR(Event e){
+	Debug.ERR = ((CheckMenuItem) e.getSource()).isSelected();
     }
     
-    public void debugOUT(){
-	
+    public void debugOUT(Event e){
+	Debug.OUT = ((CheckMenuItem) e.getSource()).isSelected();
     }
 }

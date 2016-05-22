@@ -266,6 +266,14 @@ public abstract class AVElement extends Pane {
      * Listener for the onMouseEntered event.
      */
     public void onMouseEntered() {
+	if (Debug.ERR) {
+	    root.setStyle(DEBUG_FXML_ROOT);
+	    this.setStyle(DEBUG_FXML_THIS);
+	} else {
+	    root.setStyle(null);
+	    this.setStyle(null);
+	}
+
 	root.setScaleX(1.20);
 	root.setScaleY(1.20);
 	this.toFront();
@@ -444,8 +452,16 @@ public abstract class AVElement extends Pane {
      *            The new height.
      */
     public void setSize(double newWidth, double newHeight) {
-	width = newWidth;
-	height = newHeight;
-	root.setPrefSize(width, height);
+	if (newWidth != width || newHeight != height) {
+//	    setLayoutX(getLayoutX() + (width - newWidth) / 2);
+//	    setLayoutY(getLayoutY() + (height - newHeight) / 2);
+//	    setTranslateX(getTranslateX() + (width - newWidth) / 2);
+//	    setTranslateY(getTranslateY() + (height - newHeight) / 2);
+
+	    width = newWidth;
+	    height = newHeight;
+	    root.setPrefSize(width, height);
+
+	}
     }
 }

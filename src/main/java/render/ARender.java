@@ -903,5 +903,4 @@ public abstract class ARender extends Pane implements MinMaxListener {
 
 	ave.setSize(relNodeWidth, relNodeHeight);
     }
-
 }

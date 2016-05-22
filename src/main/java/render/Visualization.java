@@ -418,7 +418,7 @@ public class Visualization extends StackPane {
      * @return The minimum acceptable X-Coordinate.
      */
     public double getXMin() {
-	return Const.RENDER_PADDING;
+	return Const.DEFAULT_RENDER_PADDING;
     }
 
     /**
@@ -448,7 +448,7 @@ public class Visualization extends StackPane {
      * @return The minimum acceptable Y-Coordinate.
      */
     public double getYMin() {
-	return Const.RENDER_PADDING;
+	return Const.DEFAULT_RENDER_PADDING;
     }
 
     /**
