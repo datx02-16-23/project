@@ -262,6 +262,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
 	totWidth = struct.getElements().size() * (barWidth + hSpace) + padding * 3;
 	xAxisY = renderHeight - padding;
 	rightWallX = totWidth - padding;
+	renderHeight = renderHeight < 100 ? 100 : renderHeight;
 	setRestricedSize(totWidth, renderHeight);
     }
 

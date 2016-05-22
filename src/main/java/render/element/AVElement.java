@@ -34,6 +34,7 @@ import javafx.util.Duration;
  */
 public abstract class AVElement extends Pane {
 
+    // Should always merge into purple (255, 0, 255)!!
     public static final String DEBUG_FXML_ROOT = "-fx-background-color: rgba(255, 0, 0, 0.3); \n -fx-opacity: 0.8;";
     public static final String DEBUG_FXML_THIS = "-fx-background-color: rgba(0, 0, 255, 0.3); \n -fx-opacity: 0.8;";
     public static final String URL = "/render/FXMLElement.fxml";

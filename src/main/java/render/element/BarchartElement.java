@@ -63,7 +63,8 @@ public class BarchartElement extends RectangleElement {
 
 	Rectangle rect = ((Rectangle) shape);
 	rect.heightProperty().bind((element.numProperty.multiply(unitHeight)));
-	root.setPrefHeight(unitHeight * element.getNumValue());
+	// root.setPrefHeight(unitHeight * element.getNumValue()); //TODO
+	// Uncomment, but fucks up positioning on the Y-axis.
     }
 
     /**
@@ -77,9 +78,8 @@ public class BarchartElement extends RectangleElement {
 
     @Override
     public void createShape() {
-	// super.createShape();
-	root.setPrefWidth(width);
-	root.setPrefHeight(height);
+	// super.createShape(); TODO Uncomment, but fucks up positioning on the
+	// Y-axis.
 
 	rect = new Rectangle();
 	rect.setWidth(width);
