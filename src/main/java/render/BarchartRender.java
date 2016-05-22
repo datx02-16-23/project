@@ -5,6 +5,7 @@ import contract.datastructure.DataStructure;
 import java.util.Arrays;
 
 import assets.Const;
+import assets.Tools;
 import contract.datastructure.Array;
 import contract.datastructure.Array.IndexedElement;
 import contract.datastructure.Array.MinMaxListener;
@@ -81,6 +82,8 @@ public class BarchartRender extends ARender implements MinMaxListener {
 	} else {
 	    this.renderHeight = renderHeight;
 	}
+	
+	this.reset();
     }
 
     @Override
@@ -128,9 +131,10 @@ public class BarchartRender extends ARender implements MinMaxListener {
 	for (Node n : contentPane.getChildren()) {
 	    ((Pane) n).getChildren().clear();
 	}
+	contentPane.setBackground(null);
 
 	visualMap.clear();
-	contentPane.setBackground(null);
+	
 	calculateSize();
 
 	// Create nodes
@@ -305,7 +309,8 @@ public class BarchartRender extends ARender implements MinMaxListener {
      */
     @Override
     public double absY(Element e, ARender relativeTo) {
-	return super.absX(e, relativeTo) + this.xAxisY;
+	double by = this.getTranslateY() + this.getLayoutY() + contentPane.getLayoutY();
+	return this.xAxisY + by;
     }
 
     /**
@@ -361,16 +366,6 @@ public class BarchartRender extends ARender implements MinMaxListener {
 	renderHeight = v * unitHeight + padding * 2 + unitHeight / 2;
 	calculateSize();
 	this.init();
-	this.setTranslateY(this.getTranslateY() + (oldHeight - renderHeight));
-    }
-
-    /**
-     * Clear the Render, restoring the background image. Barchart grows up
-     * instead of down, so we gotta fix that here.
-     */
-    public void reset() {
-	double oldHeight = renderHeight;
-	super.reset();
 	this.setTranslateY(this.getTranslateY() + (oldHeight - renderHeight));
     }
 }

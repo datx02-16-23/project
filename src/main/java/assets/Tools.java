@@ -3,6 +3,7 @@ package assets;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import contract.datastructure.DataStructure;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
@@ -139,5 +140,22 @@ public abstract class Tools {
 	public static String stripQualifiers(String orig) {
 		String a[] = orig.split("\\p{Punct}");
 		return a[a.length - 1];
+	}
+
+	public static Background getRawTypeBackground(DataStructure struct) {
+	    if (struct == null) {
+	        return null;
+	    }
+	
+	    switch (struct.rawType) {
+	    case array:
+	        return Const.ARRAY_BACKGROUND;
+	    case tree:
+	        return Const.TREE_BACKGROUND;
+	    case independentElement:
+	        return Const.ORPHAN_BACKGROUND;
+	    }
+	    
+	    return null;
 	}
 }

@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import assets.Const;
 import assets.Debug;
+import assets.Tools;
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
 import contract.datastructure.Array.IndexedElement;
@@ -25,7 +26,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToolBar;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
@@ -155,13 +155,16 @@ public abstract class ARender extends Pane {
 	// Add stacked canvases
 	loadFXML();
 	initDragAndZoom();
+	bindAnimPane();
 
 	expand();
     }
 
-    public void bindAnimPane() {
-	this.animPane.translateXProperty().bind(this.translateXProperty());
-	this.animPane.translateYProperty().bind(this.translateYProperty());
+    private void bindAnimPane() {
+//	this.animPane.translateXProperty().bind(this.translateXProperty());
+//	this.animPane.translateYProperty().bind(this.translateYProperty());
+//	this.animPane.layoutXProperty().bind(this.layoutXProperty());
+//	this.animPane.layoutYProperty().bind(this.layoutYProperty());
 	this.animPane.scaleXProperty().bind(this.scaleXProperty());
 	this.animPane.scaleYProperty().bind(this.scaleYProperty());
     }
@@ -214,11 +217,13 @@ public abstract class ARender extends Pane {
      * Clear the Render, restoring the background image.
      */
     public void reset() {
-	contentPane.setBackground(getStructBackground(struct));
+	contentPane.setBackground(Tools.getRawTypeBackground(struct));
 	setRestricedSize(150, 125); // Size of background images
 
-	for (Node n : contentPane.getChildren()) {
-	    ((Pane) n).getChildren().clear();
+	for (Node node : contentPane.getChildren()) {
+	    if(node instanceof Pane){
+		((Pane) node).getChildren().clear();		
+	    }
 	}
     }
 
@@ -462,9 +467,11 @@ public abstract class ARender extends Pane {
 		scale = 4;
 		return;
 	    }
-	    setScaleX(scale);
-	    setScaleY(scale);
-	    updateInfoLabels();
+//	    setScaleX(scale);
+//	    setScaleY(scale);
+//	    updateInfoLabels();
+	    System.err.println("Zooming and buggy and has been disabled.");
+	    Main.console.err("Zooming and buggy and has been disabled.");
 	});
 
 	/*
@@ -521,12 +528,14 @@ public abstract class ARender extends Pane {
      * @return The absolute x-coordinates of e.
      */
     public double absX(Element e, ARender relativeTo) {
-	double bx = 0;
-	// if (relativeTo != this && relativeTo != null) {
-	bx = this.getTranslateX() + this.getLayoutX();
-	// bx = bx - (relativeTo.getTranslateX() + relativeTo.getLayoutX());
-	// }
-	return this.getX(e) + bx;
+//	double bx = 0;
+//	// if (relativeTo != this && relativeTo != null) {
+//	bx = this.getTranslateX() + this.getLayoutX();
+//	// bx = bx - (relativeTo.getTranslateX() + relativeTo.getLayoutX());
+//	// }
+//	return this.getX(e) + bx;
+	double bx = this.getTranslateX() + this.getLayoutX();
+	return getX(e) + bx;
     }
 
     /**
@@ -538,11 +547,14 @@ public abstract class ARender extends Pane {
      * @return The absolute y-coordinates of e.
      */
     public double absY(Element e, ARender relativeTo) {
-	double by = 0;
-	// if (relativeTo != this && relativeTo != null) {
-	by = this.getTranslateY() + this.getLayoutY();
-	// by = by - (relativeTo.getTranslateY() + relativeTo.getLayoutY());
-	// }
+//	double by = 0;
+//	// if (relativeTo != this && relativeTo != null) {
+//	by = this.getTranslateY() + this.getLayoutY() + contentPane.getLayoutY();
+//	// by = by - (relativeTo.getTranslateY() + relativeTo.getLayoutY());
+//	// }
+//	return this.getY(e) + by;
+	
+	double by = this.getTranslateY() + this.getLayoutY() + contentPane.getLayoutY();
 	return this.getY(e) + by;
     }
 
@@ -620,23 +632,6 @@ public abstract class ARender extends Pane {
      *            The VisualElement to attach a bell to.
      */
     protected abstract void bellsAndWhistles(Element e, AVElement ve);
-
-    protected static Background getStructBackground(DataStructure struct) {
-	if (struct == null) {
-	    return null;
-	}
-
-	switch (struct.rawType) {
-	case array:
-	    return Const.ARRAY_BACKGROUND;
-	case tree:
-	    return Const.TREE_BACKGROUND;
-	case independentElement:
-	    return Const.ORPHAN_BACKGROUND;
-	default:
-	    return null;
-	}
-    }
 
     /**
      * Print statistics for the structure this render carries.
