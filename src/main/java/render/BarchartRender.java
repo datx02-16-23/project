@@ -361,9 +361,11 @@ public class BarchartRender extends ARender implements MinMaxListener {
     }
 
     public void calculateHeight(double v) {
+	double oldHeight = renderHeight;
 	renderHeight = v * unitHeight + padding * 2 + unitHeight / 2;
 	System.out.println(renderHeight);
 	calculateSize();
 	this.init();
+	this.setTranslateY(this.getTranslateY() + (oldHeight - renderHeight));
     }
 }

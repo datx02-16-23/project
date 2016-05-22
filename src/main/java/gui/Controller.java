@@ -50,14 +50,14 @@ import javafx.stage.*;
 import javafx.util.Duration;
 import model.Model;
 import multiset.MultisetController;
-import render.ModelRender;
+import render.Visualization;
 
 /**
  * GUI controller class.
  */
 public class Controller implements CommunicatorListener {
 
-	private ModelRender modelRender;
+	private Visualization modelRender;
 	private Stage window;
 	private final LogStreamManager lsm;
 	private final Model model;
@@ -88,7 +88,7 @@ public class Controller implements CommunicatorListener {
 	private Button backwardButton, forwardButton, playPauseButton;
 	private Button restartButton, clearButton, speedButton;
 
-	public Controller(Stage window, LogStreamManager lsm, SourcePanel sourceViewer, ModelRender visualization) {
+	public Controller(Stage window, LogStreamManager lsm, SourcePanel sourceViewer, Visualization visualization) {
 		this.modelRender = visualization;
 		visualization.setAnimationTime(stepDelay);
 		this.window = window;

@@ -17,7 +17,7 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import render.ARender;
-import render.ModelRender;
+import render.Visualization;
 
 /**
  * Utility class to reduce clutter.
@@ -31,7 +31,7 @@ public abstract class Tools {
 	} // Not to be instantiated.
 
 	// A FXML pane showing user instructions.
-	public static final ModelRender.HintPane HINT_PANE = new ModelRender.HintPane();
+	public static final Visualization.HintPane HINT_PANE = new Visualization.HintPane();
 
 	/*
 	 * Render base stuff
