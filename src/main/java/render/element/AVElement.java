@@ -66,11 +66,11 @@ public abstract class AVElement extends Pane {
     protected GridPane root;
 
     /**
-     * Width of the node.
+     * Bounding width of the node.
      */
     public double width;
     /**
-     * Height of the node.
+     * Bounding height of the node.
      */
     public double height;
 
@@ -168,8 +168,7 @@ public abstract class AVElement extends Pane {
      * Create a shape to use as the holder of the element value;
      */
     public void createShape() {
-	root.setPrefWidth(this.width);
-	root.setPrefHeight(this.height);
+	root.setPrefSize(width, height);
     }
 
     private void init(double node_width, double node_height) {
@@ -409,15 +408,13 @@ public abstract class AVElement extends Pane {
 
     /**
      * Set the value of this element, applying it to the <b>visual
-     * representation only</b>. The model is not changed. Will call
-     * {@link #adjustSize()} for elements which change based on numeric value.
+     * representation only</b>. The model is not changed.
      * 
      * @param value
      *            A double value to show.
      */
     public void setValue(double value) {
 	valueLabel.setText(" " + value + " ");
-	adjustSize(value);
     }
 
     /**
@@ -436,11 +433,18 @@ public abstract class AVElement extends Pane {
     }
 
     /**
-     * Adjust the size of the Shape used to display the value of this AVElement.
-     * Generally called on unbound elements during animation.
+     * Adjust the size of the Shape used to display the value of this AVElement,
+     * as well as the root. The default implementation of this method only
+     * changes the size of the root.
      * 
-     * @param value
-     *            The new numeric value
+     * @param newWidth
+     *            The new width.
+     * @param newHeight
+     *            The new height.
      */
-    public abstract void adjustSize(double value);
+    public void setSize(double newWidth, double newHeight) {
+	width = newWidth;
+	height = newHeight;
+	root.setPrefSize(width, height);
+    }
 }

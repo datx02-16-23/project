@@ -48,8 +48,9 @@ public class RectangleElement extends AVElement {
 	}
 
 	@Override
-	public void adjustSize(double value) {
-		// TODO Auto-generated method stub
-
+	public void setSize(double width, double height) {
+	    Rectangle rect = (Rectangle) shape;
+	    rect.setWidth(width);
+	    rect.setHeight(height);
 	}
 }

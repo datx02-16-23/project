@@ -10,7 +10,9 @@ import java.util.HashMap;
 import assets.Const;
 import assets.Debug;
 import assets.Tools;
+import contract.datastructure.Array;
 import contract.datastructure.Array.IndexedElement;
+import contract.datastructure.Array.MinMaxListener;
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
 import contract.operation.OperationCounter.OperationCounterHaver;
@@ -37,7 +39,7 @@ import render.ARenderAnimation.AnimationOption;
 import render.element.AVElement;
 import render.element.ElementShape;
 
-public abstract class ARender extends Pane {
+public abstract class ARender extends Pane implements MinMaxListener {
 
     /**
      * The DataStructure this render represents.
@@ -157,6 +159,8 @@ public abstract class ARender extends Pane {
 	loadFXML();
 	initDragAndZoom();
 	bindAnimPane();
+
+	setRelativeNodeSizes(true, 3);
 
 	expand();
     }
@@ -419,6 +423,7 @@ public abstract class ARender extends Pane {
      */
     public void render() {
 	struct.elementsDrawn(Color.WHITE);
+	setRelativeNodeSizes();
     }
 
     /**
@@ -488,7 +493,7 @@ public abstract class ARender extends Pane {
 
 	    nodeWidth = nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : nodeWidth;
 	    nodeHeight = nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : nodeHeight;
-	    
+
 	    Platform.runLater(new Runnable() {
 		@Override
 		public void run() {
@@ -516,7 +521,7 @@ public abstract class ARender extends Pane {
 
 	    nodeWidth = nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : nodeWidth;
 	    nodeHeight = nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : nodeHeight;
-	    
+
 	    this.repaintAll();
 	});
     }
@@ -817,10 +822,70 @@ public abstract class ARender extends Pane {
 	}
     }
 
+    @Override
+    public void maxChanged(double newMax) {
+	setRelativeNodeSizes();
+    }
+
+    @Override
+    public void minChanged(double newMin) {
+	setRelativeNodeSizes();
+    }
+
+    public void setRelativeNodeSizes(boolean value, double foo) {
+	if (struct instanceof Array) {
+	    this.relativeNodeSize = value;
+	    if (relativeNodeSize) {
+		this.foo = foo;
+		((Array) struct).setListener(this);
+	    }
+	} else if (value) {
+	    System.err.println("Relative node sizes only available for arrays.");
+	    this.relativeNodeSize = false;
+	}
+    }
+
     /**
-     * Parse preferences from the {@code DataStructure#visualOptions};
+     * TODO: Javadoc
      */
-    public void load(String optionsString) {
-	// TODO
+    private boolean relativeNodeSize = false;
+    private double foo = 3;
+
+    public void setRelativeNodeSizes() {
+	if (!relativeNodeSize) {
+	    return;
+	}
+
+	double span = Math.abs(((Array) struct).getMax()) + Math.abs(((Array) struct).getMin());
+	if (span == 0) {
+	    return; // No point in making them all the same size again.
+	}
+
+	double relNodeWidth;
+	double relNodeHeight;
+	double factor;
+
+	System.out.println("---------------------------------------");
+	System.out.println("span = " + span);
+
+	AVElement ae;
+	for (Node n : defaultNodePane.getChildren()) {
+	    if (n instanceof AVElement) {
+		ae = (AVElement) n;
+
+		factor = (foo - 1) * ae.getElement().getNumValue() / span;
+		System.out.println();
+		System.out.println("val = " + ae.getElement().getNumValue());
+		System.out.println("factor = " + factor);
+
+		relNodeWidth = nodeWidth / foo;
+		relNodeHeight = nodeHeight / foo;
+
+		relNodeWidth = relNodeWidth + relNodeWidth * factor;
+		relNodeHeight = relNodeHeight + relNodeHeight * factor;
+
+		ae.setSize(relNodeWidth, relNodeHeight);
+	    }
+	}
     }
 }

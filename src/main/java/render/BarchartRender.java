@@ -75,6 +75,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
 	    this.renderHeight = renderHeight;
 	}
 
+	this.setRelativeNodeSizes(false, -1);
 	this.reset();
     }
 
@@ -275,7 +276,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
 
     @Override
     protected void bellsAndWhistles(Element e, AVElement ve) {
-	((BarchartElement) ve).updateUnitHeight(nodeHeight);
+	((BarchartElement) ve).updateSize(nodeHeight, -1);
     }
 
     private void createIndexLabel(Element e) {

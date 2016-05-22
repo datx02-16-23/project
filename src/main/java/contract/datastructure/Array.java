@@ -493,6 +493,22 @@ public class Array extends DataStructure {
 	min = Double.MAX_VALUE;
 	max = Double.MIN_VALUE;
     }
+    
+    /**
+     * The minimum value.
+     * @return The minimum value.
+     */
+    public double getMin(){
+	return min;
+    }
+    
+    /**
+     * The maximum value.
+     * @return The maximum value.
+     */
+    public double getMax(){
+	return max;
+    }
 
     /**
      * Interface for listening to changes in min and max values.

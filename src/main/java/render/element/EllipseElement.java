@@ -41,6 +41,7 @@ public class EllipseElement extends AVElement {
 	public void createShape() {
 		super.createShape();
 		Ellipse ellipse = new Ellipse();
+		//Width and height are the size of the bounding box.
 		ellipse.setRadiusX(width / 2);
 		ellipse.setRadiusY(height / 2);
 		ellipse.setStroke(Color.BLACK);
@@ -48,19 +49,9 @@ public class EllipseElement extends AVElement {
 	}
 
 	@Override
-	public void adjustSize(double value) {
-		// TODO Auto-generated method stub
-		
+	public void setSize(double width, double height) {
+	    Ellipse ellipse  = (Ellipse) shape;
+	    ellipse.setRadiusX(width/2);
+	    ellipse.setRadiusY(height/2);
 	}
-
-//	public EllipseElement clone() {
-//		EllipseElement clone;
-//		if (element == null) {
-//			clone = new EllipseElement(Double.parseDouble(value.getText()), shape.getFill(), node_width, node_height);
-//		} else {
-//			clone = new EllipseElement(element, node_width, node_height);
-//
-//		}
-//		return clone;
-//	}
 }

@@ -50,8 +50,7 @@ public class PolygonElement extends AVElement {
 	}
 
 	@Override
-	public void adjustSize(double value) {
-		// TODO Auto-generated method stub
-		
+	public void setSize(double width, double height) {
+	    System.err.println("Resizing for polygons not yet supported.");
 	}
 }

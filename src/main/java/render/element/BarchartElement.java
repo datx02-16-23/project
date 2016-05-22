@@ -58,7 +58,7 @@ public class BarchartElement extends RectangleElement {
      * @param unitHeight
      *            The new height.
      */
-    public void updateUnitHeight(double unitHeight) {
+    public void updateSize(double unitHeight, double foo) {
 	this.unitHeight = unitHeight;
 
 	Rectangle rect = ((Rectangle) shape);
@@ -67,13 +67,8 @@ public class BarchartElement extends RectangleElement {
 	// Uncomment, but fucks up positioning on the Y-axis.
     }
 
-    /**
-     * Adjust the height of the bar.
-     */
-    public void adjustSize(double value) {
-	// rect.heightProperty().unbind();
-	// rect.setHeight(unitHeight*value);
-	// fixPositioning(0);
+    public void setSize(double width, double height) {
+	//Not used by barcharts.
     }
 
     @Override
@@ -111,7 +106,7 @@ public class BarchartElement extends RectangleElement {
     public BarchartElement clone() {
 	BarchartElement clone = (BarchartElement) AVElementFactory.clone(this);
 
-	clone.updateUnitHeight(unitHeight);
+	clone.updateSize(unitHeight, -1);
 
 	return clone;
     }
