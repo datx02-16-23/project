@@ -113,8 +113,8 @@ public class BarchartRender extends ARender implements MinMaxListener {
 
     @Override
     public boolean repaintAll() {
-	if (struct.getElements().isEmpty()) {
-	    return false; // Nothing to render.
+	if (struct.getElements().isEmpty() || contentPane == null) {
+	    return false; // Nothing to render/not yet initialised.
 	}
 	struct.repaintAll = false;
 
