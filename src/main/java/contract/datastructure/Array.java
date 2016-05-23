@@ -22,11 +22,12 @@ public class Array extends DataStructure {
     /**
      * Version number for this class.
      */
-    private static final long serialVersionUID = Const.VERSION_NUMBER;
-    private transient int[]   capacity;
-    private transient MinMaxListener    mmListener;
-
-    // private transient BoundaryChangeListener listener;
+    private static final long        serialVersionUID = Const.VERSION_NUMBER;
+    
+    private transient int[]          capacity;
+    private transient MinMaxListener mmListener;
+    private transient double min = Double.MAX_VALUE;
+    private transient double max = Double.MIN_VALUE;
 
     /**
      * Construct a new Array with the given parameters.
@@ -70,7 +71,7 @@ public class Array extends DataStructure {
      * Set the listener for this Array.
      *
      * @param listener
-     *            A BoundaryChangeListener.
+     *            A MinMaxListener.
      */
     public void setListener (MinMaxListener listener) {
         mmListener = listener;
@@ -482,9 +483,6 @@ public class Array extends DataStructure {
             mmListener.maxChanged(x);
         }
     }
-
-    private double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
-
     /**
      * Restore default values for min and max.
      */

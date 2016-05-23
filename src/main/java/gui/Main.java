@@ -189,7 +189,7 @@ public class Main extends Application {
          *            The line to print.
          */
         public void force (String force) {
-            print(prepend_force + force);
+            print((force.equals("") ? "" : prepend_force) + force);
         }
 
         /**

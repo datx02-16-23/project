@@ -228,7 +228,9 @@ public abstract class AVElement extends Pane {
      */
     public void onMouseClicked () {
         showSelected();
-        Main.console.force("w = " + width + ", h = " + height);
+        if(Debug.OUT){
+            System.out.println("w = " + width + ", h = " + height);            
+        }
         Main.console.info("Statistics for \"" + element + "\":");
         OperationCounterHaver.printStats(element);
     }

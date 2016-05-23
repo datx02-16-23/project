@@ -48,7 +48,7 @@ public abstract class Const {
     public static final int        DEFAULT_RENDER_HEIGHT        = 400;
 
     public static final double     DEFAULT_RENDER_PADDING       = 5;
-    public static final long       DEFAULT_ANIMATION_TIME       = 3500;
+    public static final long       DEFAULT_ANIMATION_TIME       = 3000;
     public static final double     DEFAULT_RELATIVE_NODE_FACTOR = 2;
 
     public static final double     DEFAULT_ELEMENT_SIZE         = 50;
