@@ -126,17 +126,17 @@ public class GridRender extends ARender {
 		 * Row Major
 		 */
 		if (majorOrder == Order.ROW_MAJOR) {
-			totWidth = vSpace + (vSpace + nodeWidth) * dims[0];
-			totHeight = hSpace + (hSpace + nodeHeight) * dims[1];
+			renderWidth = vSpace + (vSpace + nodeWidth) * dims[0];
+			renderHeight = hSpace + (hSpace + nodeHeight) * dims[1];
 
 			/*
 			 * Column Major
 			 */
 		} else {
-			totHeight = hSpace + (hSpace + nodeHeight) * dims[0];
-			totWidth = 2 + vSpace + (vSpace + nodeWidth) * dims[1];
+			renderHeight = hSpace + (hSpace + nodeHeight) * dims[0];
+			renderWidth = 2 + vSpace + (vSpace + nodeWidth) * dims[1];
 		}
-		setRestricedSize(totWidth, totHeight);
+		setRestricedSize(renderWidth, renderHeight);
 	}
 
 	private void ensureDimensionsSet() {

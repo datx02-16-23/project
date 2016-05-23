@@ -165,7 +165,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
 	axes.getChildren().add(xAxis);
 
 	Polyline xArrow = new Polyline(0, 0, 15, 5, 0, 10);
-	xArrow.setLayoutX(totWidth - 15);
+	xArrow.setLayoutX(renderWidth - 15);
 	xArrow.setLayoutY(xAxisY - 5);
 	xArrow.setStrokeWidth(2);
 	axes.getChildren().add(xArrow);
@@ -221,7 +221,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
 	left.setStrokeWidth(2);
 	left.getStrokeDashArray().addAll(20.0);
 
-	Line right = new Line(totWidth - padding, padding, totWidth - padding, xAxisY);
+	Line right = new Line(renderWidth - padding, padding, renderWidth - padding, xAxisY);
 	right.setStroke(Color.HOTPINK);
 	right.setStrokeWidth(2);
 	right.getStrokeDashArray().addAll(20.0);
@@ -254,11 +254,11 @@ public class BarchartRender extends ARender implements MinMaxListener {
 
     @Override
     public void calculateSize() {
-	totWidth = struct.getElements().size() * (nodeWidth + hSpace) + padding * 3;
+	renderWidth = struct.getElements().size() * (nodeWidth + hSpace) + padding * 3;
 	xAxisY = renderHeight - padding;
-	rightWallX = totWidth - padding;
+	rightWallX = renderWidth - padding;
 	renderHeight = renderHeight < 100 ? 100 : renderHeight;
-	setRestricedSize(totWidth, renderHeight);
+	setRestricedSize(renderWidth, renderHeight);
     }
 
     @Override

@@ -25,8 +25,8 @@ public class SingleElementRender extends ARender {
      */
     public SingleElementRender(DataStructure struct, double width, double height) {
 	super(struct, width, height, 0, 0);
-	this.totWidth = 150;
-	this.totHeight = 150;
+	this.renderWidth = 150;
+	this.renderHeight = 150;
 	setRelativeNodeSize(false, -1);
     }
 
@@ -57,9 +57,9 @@ public class SingleElementRender extends ARender {
 
     @Override
     public void calculateSize() {
-	this.totWidth = 150;
-	this.totHeight = nodeHeight;
-	setRestricedSize(totWidth, totHeight);
+	this.renderWidth = 150;
+	this.renderHeight = nodeHeight;
+	setRestricedSize(renderWidth, renderHeight);
     }
 
     /**

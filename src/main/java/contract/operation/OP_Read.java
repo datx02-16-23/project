@@ -48,7 +48,7 @@ public class OP_Read extends OP_ReadWrite {
 	@Override
 	public void setSource(Locator source) {
 		if (source == null) {
-			throw new IllegalArgumentException("Source cannot be null in a Read operation!");
+			System.err.println("Source be null in Write operation!");
 		}
 		this.operationBody.put(Key.source, source);
 	}

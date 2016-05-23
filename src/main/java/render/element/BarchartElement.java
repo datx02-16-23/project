@@ -99,7 +99,7 @@ public class BarchartElement extends RectangleElement {
     private void fixPositioning(double y) {
 	DoubleBinding neg_half_height = rect.heightProperty().divide(2).multiply(-1); // -
 										      // height/2
-	this.layoutYProperty().bind(neg_half_height.add(y).subtract(Const.ELEMENT_HEIGHT / 2)); // TODO
+	this.layoutYProperty().bind(neg_half_height.add(y).subtract(Const.DEFAULT_ELEMENT_HEIGHT / 2)); // TODO
 												// fix
     }
 

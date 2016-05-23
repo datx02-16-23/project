@@ -36,7 +36,7 @@ public class OP_Write extends OP_ReadWrite {
 	@Override
 	public void setTarget(Locator target) {
 		if (target == null) {
-			throw new IllegalArgumentException("Target cannot be null in a Write operation!");
+			System.err.println("Target null in Write operation!");
 		}
 		this.operationBody.put(Key.target, target);
 	}

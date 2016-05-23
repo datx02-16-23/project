@@ -28,7 +28,7 @@ import render.element.ElementShape;
  */
 public class KTreeRender extends ARender {
 
-    public static final ElementShape DEFAULT_ELEMENT_STYLE = ElementShape.ELLIPSE;
+    public static final ElementShape DEFAULT_ELEMENT_STYLE = ElementShape.RECTANGLE;
 
     /**
      * Container for connector lines.
@@ -69,12 +69,10 @@ public class KTreeRender extends ARender {
 	this.K = K < 2 ? 2 : K;
 	contentPane.getChildren().add(nodeConnectorLines);
 	nodeConnectorLines.toBack();
-	this.setRelativeNodeSize(Debug.ERR, 1.5); //TODO remove
     }
 
     public void render() {
 	if (struct.repaintAll) {
-	    setRelativeNodeSize(Debug.ERR, 2); //TODO remove
 	    struct.repaintAll = false;
 	    repaintAll();
 	}
@@ -118,11 +116,16 @@ public class KTreeRender extends ARender {
 	    Line line = new Line();
 
 	    // Bind start to child..
-	    line.startXProperty().bind(childVis.layoutXProperty());
-	    line.startYProperty().bind(childVis.layoutYProperty());
+	    line.setStartX(childVis.getLayoutX());
+	    line.setStartY(childVis.getLayoutY());
+//	    line.startXProperty().bind(childVis.layoutXProperty());
+//	    line.startYProperty().bind(childVis.layoutYProperty());
+	    
 	    // ..and end to parent.
-	    line.endXProperty().bind(parentVis.layoutXProperty());
-	    line.endYProperty().bind(parentVis.layoutYProperty());
+	    line.setEndX(parentVis.getLayoutX());
+	    line.setEndY(parentVis.getLayoutY());
+//	    line.endXProperty().bind(parentVis.layoutXProperty());
+//	    line.endYProperty().bind(parentVis.layoutYProperty());
 
 	    line.setOpacity(0.5);
 
@@ -196,19 +199,16 @@ public class KTreeRender extends ARender {
 	if (e == null || e instanceof IndexedElement == false) {
 	    return -1;
 	}
+	
 	int index = ((IndexedElement) e).getIndex()[0];
+	
 	double y = 0;
 
 	if (index != 0) {
 	    y = getY(getDepth(index)); // Should not be used for root.
 	}
 	
-	Tools.getAdjustedY(this, e);
-	AVElement ave = visualMap.get(Arrays.toString(((IndexedElement) e).getIndex()));
-	if(ave != null){
-	    y = y + (this.nodeHeight - ave.height)/2;
-	}
-	return y;
+	return y + Tools.getAdjustedY(this, e);
     }
 
     private double getY(int depth) {
@@ -231,7 +231,6 @@ public class KTreeRender extends ARender {
     /**
      * Calculate the depth and breath of the tree.
      */
-    int i = 0;
 
     private void calculateDepthAndBreadth() {
 	if (K < 2) {
@@ -256,9 +255,9 @@ public class KTreeRender extends ARender {
     @Override
     public void calculateSize() {
 	calculateDepthAndBreadth();
-	totWidth = totBreadth * (nodeWidth + hSpace) + hSpace * 2;
-	totHeight = (totDepth + 1) * (nodeHeight + vSpace) + vSpace;
-	setRestricedSize(totWidth, totHeight);
+	renderWidth = totBreadth * (nodeWidth + hSpace) + hSpace * 2;
+	renderHeight = (totDepth + 1) * (nodeHeight + vSpace) + vSpace;
+	setRestricedSize(renderWidth, renderHeight);
     }
 
     @Override

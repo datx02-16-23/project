@@ -40,6 +40,14 @@ import render.element.AVElement;
 import render.element.ElementShape;
 
 public abstract class ARender extends Pane implements MinMaxListener {
+    
+    // ============================================================= //
+    /*
+     * 
+     * Field variables
+     * 
+     */
+    // ============================================================= //
 
     /**
      * The DataStructure this render represents.
@@ -66,11 +74,11 @@ public abstract class ARender extends Pane implements MinMaxListener {
     /**
      * The width of the render.
      */
-    protected double totWidth;
+    protected double renderWidth;
     /**
      * The height of the render.
      */
-    protected double totHeight;
+    protected double renderHeight;
 
     /**
      * A mapping of actual Elements to VisualElements.
@@ -79,6 +87,14 @@ public abstract class ARender extends Pane implements MinMaxListener {
     // new HashMap<Element, VisualElement>();
     protected final HashMap<String, AVElement> visualMap = new HashMap<String, AVElement>();
 
+    // ============================================================= //
+    /*
+     * 
+     * Containers
+     * 
+     */
+    // ============================================================= //
+    
     /**
      * Pane for rendering of visual element nodes. Added to {@link contentPane}
      * automatically.
@@ -115,19 +131,27 @@ public abstract class ARender extends Pane implements MinMaxListener {
      * The element style to use.
      */
     protected ElementShape elementStyle;
+    
+    // ============================================================= //
+    /*
+     * 
+     * Constructors
+     * 
+     */
+    // ============================================================= //
 
     /**
      * Default constructor. Will use default values: <br>
-     * Element width: {@link Const#ELEMENT_HSPACE}<br>
-     * Element height: {@link Const#ELEMENT_HEIGHT}<br>
-     * Element horizontal space: {@link Const#ELEMENT_HSPACE}<br>
-     * Element vertical space: {@link Const#ELEMENT_VSPACE}<br>
+     * Element width: {@link Const#DEFAULT_ELEMENT_HSPACE}<br>
+     * Element height: {@link Const#DEFAULT_ELEMENT_HEIGHT}<br>
+     * Element horizontal space: {@link Const#DEFAULT_ELEMENT_HSPACE}<br>
+     * Element vertical space: {@link Const#DEFAULT_ELEMENT_VSPACE}<br>
      * 
      * @param struct
      *            The DataStructure this Render will draw.
      */
     public ARender(DataStructure struct) {
-	this(struct, Const.ELEMENT_WIDTH, Const.ELEMENT_HEIGHT, Const.ELEMENT_HSPACE, Const.ELEMENT_VSPACE);
+	this(struct, Const.DEFAULT_ELEMENT_WIDTH, Const.DEFAULT_ELEMENT_HEIGHT, Const.DEFAULT_ELEMENT_HSPACE, Const.DEFAULT_ELEMENT_VSPACE);
     }
 
     /**
@@ -223,6 +247,18 @@ public abstract class ARender extends Pane implements MinMaxListener {
     }
 
     /**
+     * Called after the parent class has finished with loading the fxml, in case
+     * the child wants to change anything. The default implementation of this
+     * method does nothing.
+     * 
+     * @param fxmlLoader
+     *            The {@code FXMLLoader} used to load the render.
+     */
+    protected void afterParentLoadFXML(FXMLLoader fxmlLoader) {
+	// Do nothing.
+    }
+
+    /**
      * Clear the Render, restoring the background image.
      */
     public void reset() {
@@ -236,18 +272,6 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	}
     }
 
-    /**
-     * Clled after the parent class has finished with loading the fxml, in case
-     * the child wants to change anything. The default implementation of this
-     * method does nothing.
-     * 
-     * @param fxmlLoader
-     *            The {@code FXMLLoader} used to load the render.
-     */
-    protected void afterParentLoadFXML(FXMLLoader fxmlLoader) {
-	// Do nothing.
-    }
-
     // Make header visible only on mousever.
     protected void bindHeader() {
 	header.visibleProperty().bind(name.visibleProperty().not());
@@ -259,9 +283,13 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	header.visibleProperty().unbind();
     }
 
+    // ============================================================= //
     /*
+     * 
      * Animation
+     * 
      */
+    // ============================================================= //
 
     /**
      * Default animation for a Remove operation.
@@ -344,11 +372,11 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	    ARenderAnimation.linear(tar, x1, y1, x2, y2, millis, tarRender, AnimationOption.GHOST).play();
 	} else if (hasSource) {
 	    // Source only
-	    ARenderAnimation.linear(src, x1, y1, x1, y1 - Const.ELEMENT_HEIGHT * 2, millis, srcRender,
+	    ARenderAnimation.linear(src, x1, y1, x1, y1 - Const.DEFAULT_ELEMENT_HEIGHT * 2, millis, srcRender,
 		    AnimationOption.FADE_OUT, AnimationOption.SHRINK).play();
 	} else {
 	    // Target only
-	    ARenderAnimation.linear(tar, x2, y2 - Const.ELEMENT_HEIGHT * 2, x2, y2, millis, tarRender,
+	    ARenderAnimation.linear(tar, x2, y2 - Const.DEFAULT_ELEMENT_HEIGHT * 2, x2, y2, millis, tarRender,
 		    AnimationOption.FADE_IN, AnimationOption.GROW, AnimationOption.GHOST).play();
 	}
 
@@ -413,6 +441,14 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	    this.setMaxSize(width, height);
 	}
     }
+    
+    // ============================================================= //
+    /*
+     * 
+     * Controls
+     * 
+     */
+    // ============================================================= //
 
     /**
      * Order the Render_FX to draw the elements of the Data Structure it
@@ -425,191 +461,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	struct.elementsDrawn(Color.WHITE);
 	setRelativeNodeSizes();
     }
-
-    /**
-     * Returns the absolute x-coordinate of an element. Returns -1 if the
-     * calculation fails.
-     * 
-     * @param e
-     *            An element to resolve coordinates for.
-     * @return The absolute x-coordinate of the element.
-     */
-    public abstract double getX(Element e);
-
-    /**
-     * Returns the absolute y-coordinate of an element. Returns -1 if the
-     * calculation fails.
-     * 
-     * @param e
-     *            An element to resolve coordinates for.
-     * @return The absolute y-coordinate of the element.
-     */
-    public abstract double getY(Element e);
-
-    /**
-     * Order the render to calculate it's size.
-     */
-    public abstract void calculateSize();
-
-    // Drag and Zoom
-    private double transX, transY;
-    private double scale = 1;
-    private int sign = 1;
-
-    /**
-     * Create listeners to drag and zoom.
-     * 
-     * @param tParent
-     *            The parent to apply transformation to.
-     */
-    private void initDragAndZoom() {
-	initMouseWheelResize();
-	initDrag();
-	initArrowResize();
-    }
-
-    private void initArrowResize() {
-	this.setOnKeyPressed(event -> {
-	    if (!event.isControlDown()) {
-		return;
-	    }
-
-	    switch (event.getCode()) {
-	    case UP:
-		this.setNodeHeight(nodeHeight + Const.ELEMENT_HEIGHT_DELTA);
-		break;
-	    case DOWN:
-		this.setNodeHeight(nodeHeight - Const.ELEMENT_HEIGHT_DELTA);
-		break;
-	    case LEFT:
-		this.setNodeWidth(nodeWidth - Const.ELEMENT_WIDTH_DELTA);
-		break;
-	    case RIGHT:
-		this.setNodeWidth(nodeWidth + Const.ELEMENT_WIDTH_DELTA);
-		break;
-	    default:
-		return;
-	    }
-
-	    setNodeWidth(nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : nodeWidth);
-	    setNodeHeight(nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : nodeHeight);
-
-	    Platform.runLater(new Runnable() {
-		@Override
-		public void run() {
-		    ARender.this.requestFocus();
-		}
-	    });
-
-	    this.repaintAll();
-	});
-    }
-
-    private void initMouseWheelResize() {
-	setOnScroll(event -> {
-	    if (!event.isControlDown()) {
-		return;
-	    }
-
-	    int sign = event.getDeltaY() < 0 ? -1 : 1;
-
-	    this.setNodeWidth(nodeWidth + sign * Const.ELEMENT_WIDTH_DELTA);
-	    this.setNodeHeight(nodeHeight + sign * Const.ELEMENT_HEIGHT_DELTA);
-
-	    this.hSpace = hSpace + sign * Const.ELEMENT_HSPACE_DELTA;
-	    this.vSpace = vSpace + sign * Const.ELEMENT_VSPACE_DELTA;
-
-	    setNodeWidth(nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : nodeWidth);
-	    setNodeHeight(nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : nodeHeight);
-
-	    this.repaintAll();
-	});
-    }
-
-    private void initDrag() {
-	// Record a delta distance for the drag and drop operation.
-	setOnMousePressed(event -> {
-	    transX = getTranslateX() - event.getSceneX();
-	    transY = getTranslateY() - event.getSceneY();
-	    setCursor(Cursor.CLOSED_HAND);
-	});
-	// Restore cursor
-	setOnMouseReleased(event -> {
-	    setCursor(null);
-	});
-	// Translate canvases
-	setOnMouseDragged(event -> {
-	    setTranslateX(event.getSceneX() + transX);
-	    setTranslateY(event.getSceneY() + transY);
-	    updateInfoLabels();
-	});
-	// Set cursor
-	setOnMouseEntered(event -> {
-	    // this.setCursor(Cursor.OPEN_HAND);
-	    this.requestFocus();
-	    if (header.visibleProperty().isBound()) {
-		name.setVisible(false);
-	    }
-	    setBorder(Const.BORDER_MOUSEOVER);
-	});
-	setOnMouseExited(event -> {
-	    // this.setCursor(null);
-	    if (header.visibleProperty().isBound()) {
-		name.setVisible(true);
-	    }
-	    setBorder(null);
-	});
-    }
-
-    /**
-     * Returns the DataStructure held by this Render.
-     * 
-     * @return The DataStructure held by this Render.
-     */
-    public DataStructure getDataStructure() {
-	return struct;
-    }
-
-    /**
-     * Returns the absolute x-coordinate for the element e. Returns -1 if the
-     * calculation fails.
-     * 
-     * @param e
-     *            An element owned by this Render.
-     * @return The absolute x-coordinates of e.
-     */
-    public double absX(Element e, ARender relativeTo) {
-	// double bx = 0;
-	// // if (relativeTo != this && relativeTo != null) {
-	// bx = this.getTranslateX() + this.getLayoutX();
-	// // bx = bx - (relativeTo.getTranslateX() + relativeTo.getLayoutX());
-	// // }
-	// return this.getX(e) + bx;
-	double bx = this.getTranslateX() + this.getLayoutX();
-	return getX(e) + bx;
-    }
-
-    /**
-     * Returns the absolute y-coordinate for the element e. Returns -1 if the
-     * calculation fails.
-     * 
-     * @param e
-     *            An element owned by this Render.
-     * @return The absolute y-coordinates of e.
-     */
-    public double absY(Element e, ARender relativeTo) {
-	// double by = 0;
-	// // if (relativeTo != this && relativeTo != null) {
-	// by = this.getTranslateY() + this.getLayoutY() +
-	// contentPane.getLayoutY();
-	// // by = by - (relativeTo.getTranslateY() + relativeTo.getLayoutY());
-	// // }
-	// return this.getY(e) + by;
-
-	double by = this.getTranslateY() + this.getLayoutY() + contentPane.getLayoutY();
-	return this.getY(e) + by;
-    }
-
+    
     /**
      * Force the Render to initialise all elements. This method will attempt
      * create elements and add them to the standard pane. It will clear the
@@ -652,39 +504,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
 
 	return true;
     }
-
-    /**
-     * Create a bound node element in whatever style the Render prefers to use.
-     * 
-     * @param e
-     *            The element to bind.
-     * @return A new bound VisualElement.
-     */
-    protected abstract AVElement createVisualElement(Element e);
-
-    /**
-     * Create an unbound node element in whatever style the Render prefers to
-     * use.
-     * 
-     * @param value
-     *            The value of the element.
-     * @param color
-     *            The colour of the element.
-     * @return A new unbound VisualElement.
-     */
-    protected abstract AVElement createVisualElement(double value, Color color);
-
-    /**
-     * Decorator method used to attach bells and whistles to the current
-     * element. {@link #init} will called this method on every element.
-     * 
-     * @param e
-     *            The element to attach a whistle to.
-     * @param ve
-     *            The VisualElement to attach a bell to.
-     */
-    protected abstract void bellsAndWhistles(Element e, AVElement ve);
-
+    
     /**
      * Print statistics for the structure this render carries.
      */
@@ -693,29 +513,18 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	OperationCounterHaver.printStats(struct);
     }
 
+    /**
+     * Show options for the render.
+     */
     public void showOptions() {
 	VisualDialog vd = new VisualDialog(null);
 	vd.show(struct);
     }
-
-    // Center on button when hiding or showing.
-    private double conbwhs = 0;
-    // Used to hide other buttons when minimising.
-    protected final ArrayList<Node> optionalHeaderContent = new ArrayList<Node>();
-
-    public void toggleHidden(Event e) {
-	ToggleButton tb = (ToggleButton) e.getSource();
-
-	if (tb.isSelected()) {
-	    tb.setText("Show");
-	    collapse();
-	} else {
-	    tb.setText("Hide");
-	    expand();
-	}
-    }
-
-    private void collapse() {
+    
+    /**
+     * Minimize the render, leaving only the header bar visible.
+     */
+    public void collapse() {
 	// Make the render expand and collapse and NE corner.
 	conbwhs = contentPane.getPrefWidth() - 150;
 	setTranslateX(getTranslateX() + conbwhs);
@@ -732,7 +541,10 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	contentPane.setVisible(false);
     }
 
-    private void expand() {
+    /**
+     * Expand the render to full size.
+     */
+    public void expand() {
 	contentPane.setVisible(true);
 	setTranslateX(getTranslateX() - conbwhs);
 	bindHeader();
@@ -745,6 +557,66 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	}
 	for (Node n : optionalHeaderContent) {
 	    n.setVisible(true);
+	}
+    }
+
+    // ============================================================= //
+    /*
+     * 
+     * Getters and Setters
+     * 
+     */
+    // ============================================================= //
+    
+    /**
+     * Returns the DataStructure held by this Render.
+     * 
+     * @return The DataStructure held by this Render.
+     */
+    public DataStructure getDataStructure() {
+	return struct;
+    }
+
+    /**
+     * Returns the absolute x-coordinate for the element e. Returns -1 if the
+     * calculation fails.
+     * 
+     * @param e
+     *            An element owned by this Render.
+     * @return The absolute x-coordinates of e.
+     */
+    public double absX(Element e, ARender relativeTo) {
+	double bx = this.getTranslateX() + this.getLayoutX();
+	return getX(e) + bx;
+    }
+
+    /**
+     * Returns the absolute y-coordinate for the element e. Returns -1 if the
+     * calculation fails.
+     * 
+     * @param e
+     *            An element owned by this Render.
+     * @return The absolute y-coordinates of e.
+     */
+    public double absY(Element e, ARender relativeTo) {
+	double by = this.getTranslateY() + this.getLayoutY() + contentPane.getLayoutY();
+	return this.getY(e) + by;
+    }
+
+    // Center on button when hiding or showing.
+    private double conbwhs = 0;
+    // Used to hide other buttons when minimising.
+    protected final ArrayList<Node> optionalHeaderContent = new ArrayList<Node>();
+
+    public void toggleHidden(Event e) {
+	ToggleButton tb = (ToggleButton) e.getSource();
+
+	if (tb.isSelected()) {
+	    tb.setText("Show");
+	    collapse();
+	} else {
+	    tb.setText("Hide");
+	    expand();
 	}
     }
 
@@ -785,7 +657,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
     public void renderFailure() {
 	if (playFailureSound) {
 	    playFailureSound = false;
-	    URL resource = getClass().getResource("/assets/sad_trombone.mp3");
+	    URL resource = getClass().getResource("/assets/shortcircuit.mp3");
 	    Media media = new Media(resource.toString());
 	    MediaPlayer mp3 = new MediaPlayer(media);
 	    mp3.play();
@@ -820,16 +692,6 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	    this.elementStyle = newStyle;
 	    repaintAll();
 	}
-    }
-
-    @Override
-    public void maxChanged(double newMax) {
-	setRelativeNodeSizes();
-    }
-
-    @Override
-    public void minChanged(double newMin) {
-	setRelativeNodeSizes();
     }
 
     public void setRelativeNodeSize(boolean value, double foo) {
@@ -921,5 +783,204 @@ public abstract class ARender extends Pane implements MinMaxListener {
     public boolean setNodeWidth(double nodeWidth) {
 	this.nodeWidth = nodeWidth;
 	return repaintAll();
+    }
+    
+    // ============================================================= //
+    /*
+     * 
+     * Sizing and moving. TODO: Move into assets package.
+     * 
+     */
+    // ============================================================= //
+
+    private double transX, transY;
+    private double scale = 1;
+
+    /**
+     * Create listeners to drag and zoom.
+     * 
+     * @param tParent
+     *            The parent to apply transformation to.
+     */
+    private void initDragAndZoom() {
+	initArrowResize();
+	initMouseWheelResize();
+	initDrag();
+    }
+
+    private void initArrowResize() {
+	this.setOnKeyPressed(event -> {
+	    if (!event.isControlDown()) {
+		return;
+	    }
+
+	    switch (event.getCode()) {
+	    case UP:
+		this.setNodeHeight(nodeHeight + Const.DEFAULT_ELEMENT_HEIGHT_DELTA);
+		break;
+	    case DOWN:
+		this.setNodeHeight(nodeHeight - Const.DEFAULT_ELEMENT_HEIGHT_DELTA);
+		break;
+	    case LEFT:
+		this.setNodeWidth(nodeWidth - Const.DEFAULT_ELEMENT_WIDTH_DELTA);
+		break;
+	    case RIGHT:
+		this.setNodeWidth(nodeWidth + Const.DEFAULT_ELEMENT_WIDTH_DELTA);
+		break;
+	    default:
+		return;
+	    }
+
+	    setNodeWidth(nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : nodeWidth);
+	    setNodeHeight(nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : nodeHeight);
+
+	    Platform.runLater(new Runnable() {
+		@Override
+		public void run() {
+		    ARender.this.requestFocus();
+		}
+	    });
+
+	    this.repaintAll();
+	});
+    }
+
+    private void initMouseWheelResize() {
+	setOnScroll(event -> {
+	    if (!event.isControlDown()) {
+		return;
+	    }
+
+	    int sign = event.getDeltaY() < 0 ? -1 : 1;
+
+	    this.setNodeWidth(nodeWidth + sign * Const.DEFAULT_ELEMENT_WIDTH_DELTA);
+	    this.setNodeHeight(nodeHeight + sign * Const.DEFAULT_ELEMENT_HEIGHT_DELTA);
+
+	    this.hSpace = hSpace + sign * Const.DEFAULT_ELEMENT_HSPACE_DELTA;
+	    this.vSpace = vSpace + sign * Const.DEFAULT_ELEMENT_VSPACE_DELTA;
+
+	    setNodeWidth(nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : nodeWidth);
+	    setNodeHeight(nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : nodeHeight);
+
+	    this.repaintAll();
+	});
+    }
+
+    private void initDrag() {
+	// Record a delta distance for the drag and drop operation.
+	setOnMousePressed(event -> {
+	    transX = getTranslateX() - event.getSceneX();
+	    transY = getTranslateY() - event.getSceneY();
+	    setCursor(Cursor.CLOSED_HAND);
+	});
+	// Restore cursor
+	setOnMouseReleased(event -> {
+	    setCursor(null);
+	});
+	// Translate canvases
+	setOnMouseDragged(event -> {
+	    setTranslateX(event.getSceneX() + transX);
+	    setTranslateY(event.getSceneY() + transY);
+	    updateInfoLabels();
+	});
+	// Set cursor
+	setOnMouseEntered(event -> {
+	    // this.setCursor(Cursor.OPEN_HAND);
+	    this.requestFocus();
+	    if (header.visibleProperty().isBound()) {
+		name.setVisible(false);
+	    }
+	    setBorder(Const.BORDER_MOUSEOVER);
+	});
+	setOnMouseExited(event -> {
+	    // this.setCursor(null);
+	    if (header.visibleProperty().isBound()) {
+		name.setVisible(true);
+	    }
+	    setBorder(null);
+	});
+    }
+    
+    // ============================================================= //
+    /*
+     * 
+     * Abstract methods
+     * 
+     */
+    // ============================================================= //
+    
+    /**
+     * Returns the absolute x-coordinate of an element. Returns -1 if the
+     * calculation fails.
+     * 
+     * @param e
+     *            An element to resolve coordinates for.
+     * @return The absolute x-coordinate of the element.
+     */
+    public abstract double getX(Element e);
+
+    /**
+     * Returns the absolute y-coordinate of an element. Returns -1 if the
+     * calculation fails.
+     * 
+     * @param e
+     *            An element to resolve coordinates for.
+     * @return The absolute y-coordinate of the element.
+     */
+    public abstract double getY(Element e);
+
+    /**
+     * Order the render to calculate it's size.
+     */
+    public abstract void calculateSize();
+    
+    /**
+     * Create a bound node element in whatever style the Render prefers to use.
+     * 
+     * @param e
+     *            The element to bind.
+     * @return A new bound VisualElement.
+     */
+    protected abstract AVElement createVisualElement(Element e);
+
+    /**
+     * Create an unbound node element in whatever style the Render prefers to
+     * use.
+     * 
+     * @param value
+     *            The value of the element.
+     * @param color
+     *            The colour of the element.
+     * @return A new unbound VisualElement.
+     */
+    protected abstract AVElement createVisualElement(double value, Color color);
+
+    /**
+     * Decorator method used to attach bells and whistles to the current
+     * element. {@link #init} will called this method on every element.
+     * 
+     * @param e
+     *            The element to attach a whistle to.
+     * @param ve
+     *            The VisualElement to attach a bell to.
+     */
+    protected abstract void bellsAndWhistles(Element e, AVElement ve);
+    
+    // ============================================================= //
+    /*
+     * 
+     * Interface methods
+     * 
+     */
+    // ============================================================= //
+
+    @Override
+    public void maxChanged(double newMax) {
+	setRelativeNodeSizes();
+    }
+
+    @Override
+    public void minChanged(double newMin) {
+	setRelativeNodeSizes();
     }
 }

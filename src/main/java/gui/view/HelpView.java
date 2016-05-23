@@ -89,9 +89,9 @@ public class HelpView {
 			// Create box
 			final Box box = new Box();
 			box.setMaterial(new PhongMaterial((Color) ot.color));
-			box.setWidth(Const.ELEMENT_WIDTH);
-			box.setHeight(Const.ELEMENT_HEIGHT);
-			box.setDepth(Const.ELEMENT_WIDTH + Const.ELEMENT_HEIGHT);
+			box.setWidth(Const.DEFAULT_ELEMENT_WIDTH);
+			box.setHeight(Const.DEFAULT_ELEMENT_HEIGHT);
+			box.setDepth(Const.DEFAULT_ELEMENT_WIDTH + Const.DEFAULT_ELEMENT_HEIGHT);
 			box.setOnMouseClicked(event -> {
 				about(ot);
 				boxClicked(box);
@@ -144,7 +144,7 @@ public class HelpView {
 
 	private void about(OperationType ot) {
 		if (playsound) {
-			URL resource = getClass().getResource("/assets/sad_trombone.mp3");
+			URL resource = getClass().getResource("/assets/shortcircuit.mp3");
 			Media media = new Media(resource.toString());
 			MediaPlayer mp3 = new MediaPlayer(media);
 			mp3.play();
