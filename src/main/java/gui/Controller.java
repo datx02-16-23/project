@@ -571,15 +571,15 @@ public class Controller implements CommunicatorListener {
             }
         }
 
-        // Check to see if any are unused.
-        Set<String> allNames = new HashSet<String>(structNames);
-        allNames.retainAll(opNames);
-        
-        for(String s : allNames){
-            System.err.println("Ignored unused data structure: " + structs.get(s));
-            Main.console.err("Ignored unused data structure: " + structs.get(s));
-            structs.remove(s);
-        }
+//        // Check to see if any are unused.
+//        Set<String> allNames = new HashSet<String>(structNames);
+//        allNames.retainAll(opNames);
+//        
+//        for(String s : allNames){
+//            System.err.println("Ignored unused data structure: " + structs.get(s));
+//            Main.console.err("Ignored unused data structure: " + structs.get(s));
+//            structs.remove(s);
+//        }
     }
 
     private boolean checkCollision (Map<String, DataStructure> oldStructs, Map<String, DataStructure> newStructs) {
