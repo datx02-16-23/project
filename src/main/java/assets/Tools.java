@@ -146,6 +146,7 @@ public abstract class Tools {
      */
     public static String stripQualifiers(String orig) {
 	String a[] = orig.split("\\p{Punct}");
+	a = orig.split(" ");
 	return a[a.length - 1];
     }
 
