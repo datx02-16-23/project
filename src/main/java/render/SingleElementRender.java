@@ -30,8 +30,7 @@ public class SingleElementRender extends ARender {
         this.setRelativeNodeSize(false, -1);
     }
 
-    @Override
-    public void afterParentLoadFXML (FXMLLoader fxmlLoader) {
+    @Override public void afterParentLoadFXML (FXMLLoader fxmlLoader) {
         // Make it a little smaller.
         String style = "-fx-font-size: 12; \n fx-font-weight: bold;";
         Label name2 = (Label) fxmlLoader.getNamespace().get("name_mo");
@@ -39,8 +38,7 @@ public class SingleElementRender extends ARender {
         this.name.setStyle(style);
     }
 
-    @Override
-    public void render () {
+    @Override public void render () {
         if (this.struct.repaintAll) {
             this.struct.repaintAll = false;
             this.repaintAll();
@@ -48,16 +46,14 @@ public class SingleElementRender extends ARender {
         super.render();
     }
 
-    @Override
-    public boolean repaintAll () {
+    @Override public boolean repaintAll () {
         if (super.repaintAll() == false) {
             return false;
         }
         return true;
     }
 
-    @Override
-    public void calculateSize () {
+    @Override public void calculateSize () {
         this.renderWidth = 150;
         this.renderHeight = this.nodeHeight;
         this.setRestricedSize(this.renderWidth, this.renderHeight);
@@ -70,8 +66,7 @@ public class SingleElementRender extends ARender {
      *            An element.
      * @return 0 regardless of e.
      */
-    @Override
-    public double getX (Element e) {
+    @Override public double getX (Element e) {
         return 0;
     }
 
@@ -82,26 +77,22 @@ public class SingleElementRender extends ARender {
      *            An element.
      * @return 0 regardless of e.
      */
-    @Override
-    public double getY (Element e) {
+    @Override public double getY (Element e) {
         return 0; // Always 0.
     }
 
-    @Override
-    protected AVElement createVisualElement (Element e) {
+    @Override protected AVElement createVisualElement (Element e) {
         AVElement re = AVElementFactory.shape(DEFAULT_ELEMENT_STYLE, e, this.nodeWidth, this.nodeHeight);
         return re;
     }
 
-    @Override
-    protected AVElement createVisualElement (double value, Color color) {
+    @Override protected AVElement createVisualElement (double value, Color color) {
         AVElement re = AVElementFactory.shape(DEFAULT_ELEMENT_STYLE, value, color, this.nodeWidth, this.nodeHeight);
         re.setInfoPos(null);
         return re;
     }
 
-    @Override
-    protected void bellsAndWhistles (Element e, AVElement ve) {
+    @Override protected void bellsAndWhistles (Element e, AVElement ve) {
         // System.out.println("single: bells shape = " + ve.getShape());
     }
 }

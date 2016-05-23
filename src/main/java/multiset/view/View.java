@@ -21,8 +21,7 @@ public class View implements iView {
         this.canvas = canvas;
     }
 
-    @Override
-    public void render () {
+    @Override public void render () {
         this.clear();
         for (Ball b : this.model.getBalls()) {
             this.paintBall(b);

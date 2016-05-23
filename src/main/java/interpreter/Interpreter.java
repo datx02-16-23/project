@@ -65,7 +65,7 @@ public class Interpreter {
     /**
      * Returns the high order routine currently in use. See static declarations
      * of this class for possible routines.
-     * 
+     *
      * @return The high order routine currently in use.
      */
     public int getHighOrderRoutine () {
@@ -75,7 +75,7 @@ public class Interpreter {
     /**
      * Set the routine for handling high level operation if they are found in
      * the operations list when interpreting.
-     * 
+     *
      * @param newRoutine
      *            The new routine.
      */
@@ -89,7 +89,7 @@ public class Interpreter {
 
     /**
      * Add a test case to the Interpreter.
-     * 
+     *
      * @param testCase
      *            The test case to add.
      */
@@ -107,7 +107,7 @@ public class Interpreter {
     /**
      * Remove a given testCase. When this method returns, the testcase is
      * guaranteed to be removed.
-     * 
+     *
      * @param testCase
      *            The testcase to remove.
      */
@@ -126,7 +126,7 @@ public class Interpreter {
      * Attempt to consolidate the supplied list of operations. Returns True if
      * the size of the list has changed as a result on the attempted
      * consolidation. The list provided as argument will not be changed.
-     * 
+     *
      * @param operationsToConsolidate
      *            The operations to consolidate.
      * @return A consolidated list of operations.
@@ -143,7 +143,7 @@ public class Interpreter {
      * consolidation. <br>
      * <b>NOTE:</b> The list given by the argument {@code operations} will be
      * modified by this method!
-     * 
+     *
      * @param listToConsolidate
      *            The List to consolidate.
      * @return The number operations creates.
@@ -229,7 +229,7 @@ public class Interpreter {
     /**
      * Try to expend the current working set. Messages are immediately added to
      * high level operations, as are initialization.
-     * 
+     *
      * @return False if the working set could not be expanded.
      */
     private Operation candidate;
@@ -303,7 +303,7 @@ public class Interpreter {
     /**
      * Returns true if the operation is a read or write operation, thus being
      * capable of inheriting OP_ReadWrite.
-     * 
+     *
      * @param op
      *            The operation to test.
      * @return True if the operation is a read/write operation. False otherwise.
@@ -316,7 +316,7 @@ public class Interpreter {
      * Attempt to consolidate the working set held by this Interpreter. Will
      * return true and add the new operation to processedOperations if
      * successful. Will not clear the working set.
-     * 
+     *
      * @return True if workingSet was successfully consolidated, false
      *         otherwise.
      */
@@ -332,7 +332,7 @@ public class Interpreter {
 
     /**
      * Returns a list of all active test cases for this Consolidator.
-     * 
+     *
      * @return A list of all active test cases for this Consolidator.
      */
     public List<OperationType> getTestCases () {
@@ -341,7 +341,7 @@ public class Interpreter {
 
     /**
      * Returns the Consolidator used by the interpreter.
-     * 
+     *
      * @return The Consolidator used by the interpreter.
      */
     public Consolidator getConsolidator () {
@@ -350,7 +350,7 @@ public class Interpreter {
 
     /**
      * Set the Consolidator used by this interpreter.
-     * 
+     *
      * @param newConsolidator
      *            A new Consolidator to use.
      */

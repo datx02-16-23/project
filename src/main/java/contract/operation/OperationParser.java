@@ -41,7 +41,7 @@ public abstract class OperationParser {
     @SuppressWarnings("unchecked")
     /**
      * Unpack the arrayVariable used as target/source in some operations.
-     * 
+     *
      * @param arrayVariable
      *            The array variable to unpack.
      * @return An array variable, if parsing was successful. Null otherwise.
@@ -140,7 +140,7 @@ public abstract class OperationParser {
     /**
      * Naive implementation to flatten a multi-dimensional list into a single
      * dimension.
-     * 
+     *
      * @param list
      *            The multi-dimensional list to flatten.
      * @param ack
@@ -168,8 +168,7 @@ public abstract class OperationParser {
         return ensureDoubleArray(op.operationBody.get(Key.value));
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private static double[] ensureDoubleArray (Object object) {
+    @SuppressWarnings({ "unchecked", "rawtypes" }) private static double[] ensureDoubleArray (Object object) {
         if (object == null) {
             return null;
         }
@@ -207,14 +206,13 @@ public abstract class OperationParser {
 
     /**
      * Convert a List of ints or doubles to an array of ints.
-     * 
+     *
      * @param listOrArray
      *            Should be an int array, or an ArrayList of Integers or
      *            Doubles.
      * @return An array of ints, or null.
      */
-    @SuppressWarnings("unchecked")
-    public static int[] ensureIntArray (Object listOrArray) {
+    @SuppressWarnings("unchecked") public static int[] ensureIntArray (Object listOrArray) {
         if (listOrArray == null) {
             return null;
         }

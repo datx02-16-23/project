@@ -51,8 +51,7 @@ public class InterpreterView implements InvalidationListener {
     private final Button                    moveToBeforeButton;
     private final Button                    keepButton;
 
-    @SuppressWarnings("unchecked")
-    public InterpreterView (Stage parent) {
+    @SuppressWarnings("unchecked") public InterpreterView (Stage parent) {
         this.parent = parent;
         this.interpreter = new Interpreter();
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/view/InterpreterView.fxml"));
@@ -108,7 +107,7 @@ public class InterpreterView implements InvalidationListener {
 
     /**
      * Show the Interpreter View.
-     * 
+     *
      * @param ops
      *            The list of operations to use.
      * @return True if the interpreted operations should be kept, false
@@ -173,7 +172,7 @@ public class InterpreterView implements InvalidationListener {
 
     /**
      * Stylize routine names.
-     * 
+     *
      * @return A stylized routine name.
      */
     private String translateInterpreterRoutine () {
@@ -260,8 +259,7 @@ public class InterpreterView implements InvalidationListener {
         this.afterCount.setText("" + this.afterItems.size());
     }
 
-    @Override
-    public void invalidated (Observable o) {
+    @Override public void invalidated (Observable o) {
         this.beforeCount.setText("" + this.beforeItems.size());
         this.afterCount.setText("" + this.afterItems.size());
     }

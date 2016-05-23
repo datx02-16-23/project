@@ -41,7 +41,7 @@ import render.element.ElementShape;
 
 /**
  * Base class for renders.
- * 
+ *
  * @author Richard
  *
  */
@@ -684,8 +684,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
         return this.visualMap;
     }
 
-    @Override
-    public String toString () {
+    @Override public String toString () {
         return this.getClass().getSimpleName() + " (" + this.struct + ")";
     }
 
@@ -978,13 +977,11 @@ public abstract class ARender extends Pane implements MinMaxListener {
      */
     // ============================================================= //
 
-    @Override
-    public void maxChanged (double newMax) {
+    @Override public void maxChanged (double newMax) {
         this.setRelativeNodeSizes();
     }
 
-    @Override
-    public void minChanged (double newMin) {
+    @Override public void minChanged (double newMin) {
         this.setRelativeNodeSizes();
     }
 }

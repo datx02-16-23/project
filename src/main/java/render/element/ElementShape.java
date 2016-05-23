@@ -40,7 +40,7 @@ public enum ElementShape {
     /**
      * Returns a ElementStyle at random excluding {@link ElementShape#RANDOM}
      * and {@link ElementShape#POLYGON}.
-     * 
+     *
      * @return A random ElementStyle.
      */
     public static ElementShape random () {
@@ -55,7 +55,7 @@ public enum ElementShape {
 
     /**
      * Returns a random polygon style.
-     * 
+     *
      * @return A random ElementStyle of style polygon.
      */
     public static ElementShape randomPolygon () {

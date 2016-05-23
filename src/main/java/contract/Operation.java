@@ -49,7 +49,7 @@ public class Operation implements Serializable {
 
     /**
      * /** Create a new Operation.
-     * 
+     *
      * @param operation
      *            The literal name of the operation, such as "init" (initialize)
      *            or "read".
@@ -97,8 +97,7 @@ public class Operation implements Serializable {
         return this.operation.toString().toUpperCase();
     }
 
-    @Override
-    public String toString () {
+    @Override public String toString () {
         return this.operationBody == null ? "null" : this.operationBody.toString();
     }
 }

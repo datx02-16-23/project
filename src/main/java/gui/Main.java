@@ -45,8 +45,7 @@ public class Main extends Application {
     private Controller       controller;
     private LogStreamManager lsm;
 
-    @Override
-    public void start (Stage primaryStage) throws Exception {
+    @Override public void start (Stage primaryStage) throws Exception {
         this.lsm = new LogStreamManager(Const.PROGRAM_NAME + "_GUI");
         primaryStage.setTitle(Const.PROGRAM_NAME);
         // Create a Group view for the AV.
@@ -109,8 +108,7 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-    @Override
-    public void stop () {
+    @Override public void stop () {
         if (this.controller != null) {
             this.controller.stopAutoPlay(); // Kill autoplay thread.
         }
@@ -124,7 +122,7 @@ public class Main extends Application {
     /**
      * Printout of error messages and warnings from the program. Strings only.
      * Use Object toString to print them.
-     * 
+     *
      * @author Richard Sundqvist
      *
      */
@@ -148,7 +146,7 @@ public class Main extends Application {
 
         /**
          * Print a regular line to the GUI console.
-         * 
+         *
          * @param info
          *            The line to prine.
          */
@@ -161,7 +159,7 @@ public class Main extends Application {
 
         /**
          * Print an error to the GUI console.
-         * 
+         *
          * @param err
          *            The error to print.
          */
@@ -174,7 +172,7 @@ public class Main extends Application {
 
         /**
          * Print a debug String. Generally DISABLED.
-         * 
+         *
          * @param debug
          *            A debug String to print.
          */
@@ -186,7 +184,7 @@ public class Main extends Application {
 
         /**
          * Print a line regardless of settings.
-         * 
+         *
          * @param force
          *            The line to print.
          */
@@ -196,7 +194,7 @@ public class Main extends Application {
 
         /**
          * Print the given String. Runs on JavaFX Application thread.
-         * 
+         *
          * @param string
          *            The string to print to the console.
          */
@@ -206,7 +204,7 @@ public class Main extends Application {
 
         /**
          * Enable or disable information printouts.
-         * 
+         *
          * @param value
          *            The setting to apply.
          */
@@ -219,7 +217,7 @@ public class Main extends Application {
 
         /**
          * Enable or disable Quiet Mode.
-         * 
+         *
          * @param value
          *            The setting to apply.
          */
@@ -230,7 +228,7 @@ public class Main extends Application {
 
         /**
          * Enable or disable debug printouts.
-         * 
+         *
          * @param value
          *            The setting to apply.
          */
@@ -243,7 +241,7 @@ public class Main extends Application {
 
         /**
          * Enable or disable error printouts.
-         * 
+         *
          * @param value
          *            The setting to apply.
          */

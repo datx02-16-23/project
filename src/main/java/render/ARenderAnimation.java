@@ -163,7 +163,7 @@ public abstract class ARenderAnimation {
 
         /**
          * Add transitions for the given options to the parent transition.
-         * 
+         *
          * @param orig
          *            The original element. Will not change, but <b>must not be
          *            null.</b>

@@ -9,7 +9,7 @@ public class PolygonElement extends AVElement {
 
     /**
      * Create a static, unbound RectangleElement.
-     * 
+     *
      * @param value
      *            The initial value.
      * @param paint
@@ -28,7 +28,7 @@ public class PolygonElement extends AVElement {
 
     /**
      * Create a bound visual RectangleElement.
-     * 
+     *
      * @param element
      *            The Element this VisualElement represents
      * @param node_width
@@ -42,15 +42,13 @@ public class PolygonElement extends AVElement {
         super(element, node_width, node_height, points);
     }
 
-    @Override
-    public void createShape () {
+    @Override public void createShape () {
         super.createShape();
         this.shape = new Polygon(this.points);
         this.shape.setStroke(Color.BLACK);
     }
 
-    @Override
-    public void setSize (double width, double height) {
+    @Override public void setSize (double width, double height) {
         System.err.println("Resizing for polygons not yet supported.");
     }
 }

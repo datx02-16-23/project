@@ -26,7 +26,7 @@ public class IndependentElement extends Array {
 
     /**
      * Create a new IndependentElement.
-     * 
+     *
      * @param identifier
      *            The identifier for this IndependentElement.
      * @param abstractType
@@ -42,7 +42,7 @@ public class IndependentElement extends Array {
 
     /**
      * Set the element held by this IndependentElement.
-     * 
+     *
      * @param newElement
      *            The new element to be held by this IndependentElement.
      */
@@ -53,7 +53,7 @@ public class IndependentElement extends Array {
 
     /**
      * Initialize an element with value 0.
-     * 
+     *
      * @param value
      *            The value to initialize with.
      */
@@ -65,7 +65,7 @@ public class IndependentElement extends Array {
 
     /**
      * Get the value held by the element contained in this IndependentElement.
-     * 
+     *
      * @return The value held by the element contained in this
      *         IndependentElement.
      */
@@ -76,21 +76,18 @@ public class IndependentElement extends Array {
         return this.elements.get(0).getNumValue();
     }
 
-    @Override
-    public void clear () {
+    @Override public void clear () {
         this.elements.clear();
         this.oc.reset();
         this.repaintAll = true;
     }
 
-    @Override
-    public void applyOperation (Operation op) {
+    @Override public void applyOperation (Operation op) {
         super.applyOperation(op);
         this.repaintAll = true;
     }
 
-    @Override
-    protected void executeSwap (OP_Swap op) {
+    @Override protected void executeSwap (OP_Swap op) {
         Element e = this.elements.get(0);
         if (op.getVar1().identifier.equals(this.identifier)) {
             e.setValue(op.getValue() [0]);
@@ -105,8 +102,7 @@ public class IndependentElement extends Array {
         }
     }
 
-    @Override
-    protected void executeRW (OP_ReadWrite op) {
+    @Override protected void executeRW (OP_ReadWrite op) {
         if (this.elements.isEmpty()) {
             this.initElement(op.getValue() [0]);
         }
@@ -124,14 +120,12 @@ public class IndependentElement extends Array {
         }
     }
 
-    @Override
-    public VisualType resolveVisual () {
+    @Override public VisualType resolveVisual () {
         this.setVisual(VisualType.single);
         return VisualType.single;
     }
 
-    @Override
-    public IndexedElement getElement (Locator locator) {
+    @Override public IndexedElement getElement (Locator locator) {
         if (locator == null) {
             return null;
         }
@@ -143,8 +137,7 @@ public class IndependentElement extends Array {
         }
     }
 
-    @Override
-    public String toString () {
+    @Override public String toString () {
         StringBuilder sb = new StringBuilder();
         sb.append("\"" + Tools.stripQualifiers(this.identifier) + "\": " + this.rawType);
         return sb.toString();

@@ -54,7 +54,7 @@ public class AnnotatedVariable implements Serializable {
 
     /**
      * Creates a new AnnotatedVariable.
-     * 
+     *
      * @param identifier
      *            The identifier for this variable.
      * @param rawType
@@ -78,8 +78,7 @@ public class AnnotatedVariable implements Serializable {
         this.attributes = attributes == null ? new HashMap<String, Object>() : attributes;
     }
 
-    @Override
-    public String toString () {
+    @Override public String toString () {
         StringBuilder sb = new StringBuilder();
         sb.append(this.getClass().getSimpleName() + " \"" + this.identifier + "\": rawType = " + this.rawType
                 + ", abstractType = " + this.abstractType + ", visual = " + this.visual);

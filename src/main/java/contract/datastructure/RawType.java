@@ -33,7 +33,7 @@ public enum RawType {
 
     /**
      * Parse a json string.
-     * 
+     *
      * @param json
      *            The string to parse
      * @return The corresponding RawType, if applicable. Null otherwise.
@@ -47,14 +47,13 @@ public enum RawType {
         return null;
     }
 
-    @Override
-    public String toString () {
+    @Override public String toString () {
         return this.pretty;
     }
 
     /**
      * The abstract type of the data structure, if applicable.
-     * 
+     *
      * @author Richard Sundqvist
      *
      */
@@ -69,14 +68,13 @@ public enum RawType {
             this.json = json;
         }
 
-        @Override
-        public String toString () {
+        @Override public String toString () {
             return this.pretty;
         }
 
         /**
          * Parse a json string.
-         * 
+         *
          * @param json
          *            The string to parse
          * @return The corresponding RawType, if applicable. Null otherwise.

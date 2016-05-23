@@ -43,8 +43,7 @@ public class Vector {
         return new Vector(this.x + b.getX(), this.y + b.getY());
     }
 
-    @Override
-    public String toString () {
+    @Override public String toString () {
         return "X: " + this.x + "\tY: " + this.y;
     }
 

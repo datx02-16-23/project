@@ -9,7 +9,7 @@ public class RectangleElement extends AVElement {
 
     /**
      * Create a static, unbound RectangleElement.
-     * 
+     *
      * @param value
      *            The initial value.
      * @param paint
@@ -25,7 +25,7 @@ public class RectangleElement extends AVElement {
 
     /**
      * Create a bound visual RectangleElement.
-     * 
+     *
      * @param element
      *            The Element this VisualElement represents
      * @param node_width
@@ -37,8 +37,7 @@ public class RectangleElement extends AVElement {
         super(element, node_width, node_height);
     }
 
-    @Override
-    public void createShape () {
+    @Override public void createShape () {
         super.createShape();
         Rectangle rect = new Rectangle();
         rect.setStroke(Color.BLACK);
@@ -47,8 +46,7 @@ public class RectangleElement extends AVElement {
         this.shape = rect;
     }
 
-    @Override
-    public void setSize (double newWidth, double newHeight) {
+    @Override public void setSize (double newWidth, double newHeight) {
         super.setSize(newWidth, newHeight);
         Rectangle rect = (Rectangle) this.shape;
         rect.setWidth(this.width);

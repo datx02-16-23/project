@@ -68,7 +68,7 @@ public class VisualDialog {
 
     /**
      * Show the visualisation options dialog for a given structure.
-     * 
+     *
      * @param struct
      *            A DataStructure.
      * @return True if the visualisation options have changed, false otherwise.

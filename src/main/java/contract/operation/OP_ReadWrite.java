@@ -24,7 +24,7 @@ public abstract class OP_ReadWrite extends Operation {
     /**
      * Create a new ReadWrite operation. Note that you must set the target,
      * source and value.
-     * 
+     *
      * @param operation
      *            The name of the operation. Should be "read" or "write".
      */
@@ -40,7 +40,7 @@ public abstract class OP_ReadWrite extends Operation {
     /**
      * Set the target variable for this ReadWrite operation. The identifier of
      * the variable should be previously declared in the header.
-     * 
+     *
      * @param target
      *            The target variable for this ReadWrite operation.
      */
@@ -51,7 +51,7 @@ public abstract class OP_ReadWrite extends Operation {
     /**
      * Set the source variable for this ReadWrite operation. The identifier of
      * the variable should be previously declared in the header.
-     * 
+     *
      * @param source
      *            The source variable for this ReadWrite operation.
      */
@@ -63,7 +63,7 @@ public abstract class OP_ReadWrite extends Operation {
      * Set the value(s) which were ReadWrite from {@code source}. This should be
      * the value of {@code target} and the specified index after operation
      * execution, if applicable.
-     * 
+     *
      * @param value
      *            Set the value(s) which were ReadWrite from {@code source}.
      */
@@ -71,8 +71,7 @@ public abstract class OP_ReadWrite extends Operation {
         this.operationBody.put(Key.value, value);
     }
 
-    @Override
-    public String toString () {
+    @Override public String toString () {
         Locator source = this.getSource();
         Locator target = this.getTarget();
         String sourceStr;

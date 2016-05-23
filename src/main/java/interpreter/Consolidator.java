@@ -12,7 +12,7 @@ import contract.operation.OperationType;
 /**
  * A Consolidator attempts to consolidate low level (read/write) operations into
  * higher level operations.
- * 
+ *
  * @author Richard Sundqvist
  *
  */
@@ -29,8 +29,7 @@ public class Consolidator {
     /**
      * Create a new Consolidator with the default types.
      */
-    @SuppressWarnings("unchecked")
-    public Consolidator () {
+    @SuppressWarnings("unchecked") public Consolidator () {
         this.invokers = new ArrayList[MAX_SIZE];
         for (int i = 0; i < MAX_SIZE; i++) {
             this.invokers [i] = new ArrayList<Consolidable>();
@@ -48,7 +47,7 @@ public class Consolidator {
     /**
      * Returns true if the type of the OperationType given as argument is among
      * the test cases used by this Consolidator.
-     * 
+     *
      * @param testCase
      *            The OperationType to test.
      * @return True if the test case type is among the tested, false otherwise.
@@ -66,7 +65,7 @@ public class Consolidator {
     /**
      * Adds another Consolidable for this Consolidator. Will not any any
      * Consolidable type more than once.
-     * 
+     *
      * @param newConsolidable
      *            The Consolidable to add.
      */
@@ -91,7 +90,7 @@ public class Consolidator {
     /**
      * Attempt to consolidate the working set supplied. Returns a consolidated
      * operation if successful, null otherwise.
-     * 
+     *
      * @param rwList
      *            The list of read/write operations to consolidate.
      * @return A consolidated operation if successful, null otherwise.
@@ -110,7 +109,7 @@ public class Consolidator {
     /**
      * Returns the maximum number of read/write operations this Consolidator
      * will use.
-     * 
+     *
      * @return The maximum number of read/write operations this Consolidator
      *         will use.
      */
@@ -124,7 +123,7 @@ public class Consolidator {
     /**
      * Returns the minimum number of read/write operations this Consolidator
      * will use.
-     * 
+     *
      * @return The minimum number of read/write operations this Consolidator
      *         will use.
      */
@@ -138,7 +137,7 @@ public class Consolidator {
     /**
      * Print a human-readable list of all the Operation types this Consolidator
      * tests.
-     * 
+     *
      * @return A human-readable list of all the Operation types this
      *         Consolidator tests.
      */
@@ -156,7 +155,7 @@ public class Consolidator {
     /**
      * Remove a given testCase. When this method returns, the testcase is
      * guaranteed to be removed.
-     * 
+     *
      * @param testCase
      *            The testcase to remove.
      * @param rwCount

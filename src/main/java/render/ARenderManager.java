@@ -137,8 +137,7 @@ public class ARenderManager extends BorderPane implements VisualListener {
         return this.struct;
     }
 
-    @Override
-    public String toString () {
+    @Override public String toString () {
         return this.struct.identifier + ": " + this.renders.values();
     }
 
@@ -198,8 +197,7 @@ public class ARenderManager extends BorderPane implements VisualListener {
      */
     // ============================================================= //
 
-    @Override
-    public void visualChanged (VisualType newVisual) {
+    @Override public void visualChanged (VisualType newVisual) {
         this.setRender(newVisual);
     }
 }

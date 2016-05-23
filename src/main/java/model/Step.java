@@ -39,7 +39,7 @@ public class Step {
 
     /**
      * Apply an operation to the model.
-     * 
+     *
      * @param op
      *            The operation to apply.
      * @return 0 if the operation should be applied.

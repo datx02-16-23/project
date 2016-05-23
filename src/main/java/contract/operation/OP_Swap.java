@@ -29,7 +29,7 @@ public class OP_Swap extends Operation implements Consolidable {
     /**
      * Set var1 for this Swap operation. The identifier of the variable should
      * be previously declared in the header.
-     * 
+     *
      * @param var1
      *            Variable 1 for this Swap operation.
      */
@@ -40,7 +40,7 @@ public class OP_Swap extends Operation implements Consolidable {
     /**
      * Set var2 for this Swap operation. The identifier of the variable should
      * be previously declared in the header.
-     * 
+     *
      * @param var2
      *            Variable 2 for this Swap operation.
      */
@@ -51,7 +51,7 @@ public class OP_Swap extends Operation implements Consolidable {
     /**
      * The values contained at var1 and var2 respectively, AFTER this Swap
      * operation has been executed.
-     * 
+     *
      * @param values
      *            The values in var1 and var2 after execution.
      */
@@ -71,21 +71,19 @@ public class OP_Swap extends Operation implements Consolidable {
         return (double[]) this.operationBody.get(Key.value);
     }
 
-    @Override
-    public String toString () {
+    @Override public String toString () {
         return "SWAP: " + this.getVar1().toString() + " <-> " + this.getVar2().toString();
     }
 
     /**
      * Attempt to create a Swap operation from 3 read/write operations.
-     * 
+     *
      * @param rwList
      *            The list of 3 read/write operations to test.
      * @return A new Swap operation if the given testSet is a valid
      *         decomposition of a Swap operation, null otherwise.
      */
-    @Override
-    public Operation consolidate (List<OP_ReadWrite> rwList) {
+    @Override public Operation consolidate (List<OP_ReadWrite> rwList) {
         if (rwList.size() != 3) {
             throw new IllegalArgumentException("Swap operations are composed of 3 read/write operations.");
         }
@@ -131,13 +129,11 @@ public class OP_Swap extends Operation implements Consolidable {
         return op_swap;
     }
 
-    @Override
-    public int getRWcount () {
+    @Override public int getRWcount () {
         return 3;
     }
 
-    @Override
-    public String toSimpleString () {
+    @Override public String toSimpleString () {
         return this.toString();
     }
 }

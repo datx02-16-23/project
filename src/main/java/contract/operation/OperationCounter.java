@@ -26,7 +26,7 @@ public class OperationCounter {
 
     /**
      * Returns the the Writes property.
-     * 
+     *
      * @return the Writes property.
      */
     public SimpleIntegerProperty writesProperty () {
@@ -35,7 +35,7 @@ public class OperationCounter {
 
     /**
      * Returns the the Swaps property.
-     * 
+     *
      * @return the Swaps property.
      */
     public SimpleIntegerProperty swapsProperty () {
@@ -44,7 +44,7 @@ public class OperationCounter {
 
     /**
      * Returns the the Removes property.
-     * 
+     *
      * @return the Removes property.
      */
     public SimpleIntegerProperty removesProperty () {
@@ -53,7 +53,7 @@ public class OperationCounter {
 
     /**
      * Returns the Messages property.
-     * 
+     *
      * @return the Messages property.
      */
     public SimpleIntegerProperty messagesProperty () {
@@ -62,7 +62,7 @@ public class OperationCounter {
 
     /**
      * Count an operation. Calls {@code countOperation(OperationType type)}.
-     * 
+     *
      * @param op
      *            The operation to count.
      */
@@ -72,7 +72,7 @@ public class OperationCounter {
 
     /**
      * Count an operation type.
-     * 
+     *
      * @param type
      *            The count to count.
      */
@@ -101,7 +101,7 @@ public class OperationCounter {
 
     /**
      * Returns the number of Read operations.
-     * 
+     *
      * @return The number of Read operations.
      */
     public int getReads () {
@@ -110,7 +110,7 @@ public class OperationCounter {
 
     /**
      * Returns the number of Writes operations.
-     * 
+     *
      * @return The number of Writes operations.
      */
     public int getWrites () {
@@ -119,7 +119,7 @@ public class OperationCounter {
 
     /**
      * Returns the number of Swap operations.
-     * 
+     *
      * @return The number of Swap operations.
      */
     public int getSwap () {
@@ -128,7 +128,7 @@ public class OperationCounter {
 
     /**
      * Returns the number of Remove operations.
-     * 
+     *
      * @return The number of Remove operations.
      */
     public int getRemove () {
@@ -137,7 +137,7 @@ public class OperationCounter {
 
     /**
      * Returns the number of Message operations.
-     * 
+     *
      * @return The number of Message operations.
      */
     public int getMessage () {
@@ -169,14 +169,14 @@ public class OperationCounter {
     /**
      * Interface for classes which count the {@link #Operation}'s performed on
      * it.
-     * 
+     *
      * @author Richard Sundqvist
      *
      */
     public interface OperationCounterHaver {
         /**
          * Returns the OperationCounter for this OperationCounterHaver.
-         * 
+         *
          * @return An OperationCounter
          */
         public OperationCounter getCounter ();
@@ -184,7 +184,7 @@ public class OperationCounter {
         /**
          * Print stats for a OperationCounterHaver using the
          * {@link #printStats()} method.
-         * 
+         *
          * @param och
          *            The OperationCounterHaver whose counter should be used.
          */

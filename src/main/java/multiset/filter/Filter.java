@@ -24,11 +24,10 @@ public class Filter implements iFilter {
     /**
      * Evaluates the expression with given two inputs, tries both values as both
      * variables in expression
-     * 
+     *
      * @return The set of iValueContainers that remains after the evaluation
      */
-    @Override
-    public Set<iValueContainer> filter (iValueContainer a, iValueContainer b) {
+    @Override public Set<iValueContainer> filter (iValueContainer a, iValueContainer b) {
         this.setVars(a, b);
         if (this.conditional.evaluate()) {
             return this.evaluate(a, b);

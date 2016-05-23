@@ -10,7 +10,7 @@ public abstract class GsonContructor {
     /**
      * Returns a Gson instance with all the required bells and whistles
      * attached.
-     * 
+     *
      * @return A Gson instance that works properly.
      */
     public static Gson build () {
@@ -20,7 +20,7 @@ public abstract class GsonContructor {
     /**
      * Returns a Gson instance with all the required bells and whistles
      * attached.
-     * 
+     *
      * @param prettyPrinting
      *            Set to True to enable human-readable output.
      * @return A Gson instance that works properly.

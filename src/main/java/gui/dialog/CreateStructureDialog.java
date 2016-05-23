@@ -102,7 +102,7 @@ public class CreateStructureDialog {
 
     /**
      * Show the DataStructure creation dialog.
-     * 
+     *
      * @param identifier
      *            The name of the new structure.
      * @return A new DataStructure. Returns {@code null} if the user cancelled.

@@ -4,7 +4,7 @@ public interface CommunicatorListener {
 
     /**
      * Called when a Cummunicator receives a message.
-     * 
+     *
      * @param messageType
      *            The type of message received.
      */

@@ -59,7 +59,7 @@ public class LogStreamManager implements CommunicatorListener {
      * Creates a new LogStreamManager. <br>
      * <b>LogStreamManager will not unwrap streamed messages if the listener is
      * null.</b>
-     * 
+     *
      * @param agentDescriptor
      *            The name of the agent using this LogStreamManager, such as
      *            "JavaAnnotationProcessor".
@@ -72,7 +72,7 @@ public class LogStreamManager implements CommunicatorListener {
      * Creates a new LogStreamManager. <br>
      * <b>LogStreamManager will not unwrap streamed messages if the listener is
      * null.</b>
-     * 
+     *
      * @param suppressIncoming
      *            If {@code true}, most incoming messages will be ignored.
      * @param agentDescriptor
@@ -88,7 +88,7 @@ public class LogStreamManager implements CommunicatorListener {
 
     /**
      * Returns the map of known structures held by this LogStreamManager.
-     * 
+     *
      * @return The list of known structures used by this LogStreamManager.
      */
     public Map<String, DataStructure> getDataStructures () {
@@ -97,7 +97,7 @@ public class LogStreamManager implements CommunicatorListener {
 
     /**
      * Set the map of known variables used by this LogStreamManager.
-     * 
+     *
      * @param newDataStrutures
      *            A new map of known variables to be used by this
      *            LogStreamManager.
@@ -108,7 +108,7 @@ public class LogStreamManager implements CommunicatorListener {
 
     /**
      * Returns the list of operations used by this LogStreamManager.
-     * 
+     *
      * @return The list of operations used by this LogStreamManager.
      */
     public List<Operation> getOperations () {
@@ -117,7 +117,7 @@ public class LogStreamManager implements CommunicatorListener {
 
     /**
      * Set the list of operations used by this LogStreamManager.
-     * 
+     *
      * @param operations
      *            A new list of operations to be used by this LogStreamManager.
      */
@@ -127,7 +127,7 @@ public class LogStreamManager implements CommunicatorListener {
 
     /**
      * Returns the source map held by this LogStreamManager.
-     * 
+     *
      * @return The source map held by this LogStreamManager.
      */
     public Map<String, List<String>> getSources () {
@@ -136,7 +136,7 @@ public class LogStreamManager implements CommunicatorListener {
 
     /**
      * Set the source map held by this LogStreamManager.
-     * 
+     *
      * @param newSources
      *            The new source map to be held by this LogStreamManager.
      */
@@ -146,7 +146,7 @@ public class LogStreamManager implements CommunicatorListener {
 
     /**
      * Read a log file from the file specified by {@code filePath}.
-     * 
+     *
      * @param filePath
      *            Location of the file to read.
      * @return {@code true} if the log was successfully read. {@code false}
@@ -158,7 +158,7 @@ public class LogStreamManager implements CommunicatorListener {
 
     /**
      * Read, unwrap and store data from a JSON log file.
-     * 
+     *
      * @param logFile
      *            The file to read.
      * @return {@code true} if the log was successfully read. {@code false}
@@ -180,7 +180,7 @@ public class LogStreamManager implements CommunicatorListener {
 
     /**
      * Returns the Communicator used by this LogStreamManager.
-     * 
+     *
      * @return The Communicator used by this LogStreamManager.
      */
     public Communicator getCommunicator () {
@@ -192,7 +192,7 @@ public class LogStreamManager implements CommunicatorListener {
      * LogStreamManager. Set the public variable {@code PRETTY_PRINTING} to true
      * to enable human-readable output. Will generate a filename automatically
      * on the form YY-MM-DD_HHMMSS.
-     * 
+     *
      * @param targetDir
      *            The directory to print the log file.
      */
@@ -205,7 +205,7 @@ public class LogStreamManager implements CommunicatorListener {
      * LogStreamManager. Set the public variable {@code PRETTY_PRINTING} to true
      * to enable human-readable output. Will generate a filename automatically
      * on the form YY-MM-DD_HHMMSS.
-     * 
+     *
      * @param target
      *            The location and file name of the file to print.
      */
@@ -218,7 +218,7 @@ public class LogStreamManager implements CommunicatorListener {
      * LogStreamManager. Set the public variable {@code PRETTY_PRINTING} to true
      * to enable human-readable output. If {@code autoName} is true, a file name
      * on the form "YY-MM-DD_HHMMSS.json" will be generated.
-     * 
+     *
      * @param targetPath
      *            The location to print the log file.
      * @param autoName
@@ -234,7 +234,7 @@ public class LogStreamManager implements CommunicatorListener {
     /**
      * Stream the data held by this LogStreamManager using the current
      * Communicator.
-     * 
+     *
      * @return True if data was successfully streamed.
      */
     public boolean streamLogData () {
@@ -248,7 +248,7 @@ public class LogStreamManager implements CommunicatorListener {
      * Stream the data held by this LogStreamManager using the current
      * Communicator, then clear data. Data will be cleared only if successful
      * (this method returns true).
-     * 
+     *
      * @return True if data was successfully streamed.
      */
     public boolean streamAndClearLogData () {
@@ -264,7 +264,7 @@ public class LogStreamManager implements CommunicatorListener {
     /**
      * Stream the given Wrapper using the Communicator carried by this
      * LogStreamManager.
-     * 
+     *
      * @param wrapper
      *            The Wrapper to stream.
      * @return True if successful, false otherwise.
@@ -276,7 +276,7 @@ public class LogStreamManager implements CommunicatorListener {
     /**
      * Stream the given Wrapper using the Communicator carried by this
      * LogStreamManager.
-     * 
+     *
      * @param operation
      *            The Operation to stream.
      * @return True if successful, false otherwise.
@@ -290,7 +290,7 @@ public class LogStreamManager implements CommunicatorListener {
     /**
      * Stream the given JSON string using the Communicator carried by this
      * LogStreamManager.
-     * 
+     *
      * @param json
      *            The JSON String to stream.
      * @return True if successful, false otherwise.
@@ -302,7 +302,7 @@ public class LogStreamManager implements CommunicatorListener {
     /**
      * Stream the given Operation list using the Communicator carried by this
      * LogStreamManager.
-     * 
+     *
      * @param operations
      *            The operations to stream.
      * @return True if successful, false otherwise.
@@ -314,7 +314,7 @@ public class LogStreamManager implements CommunicatorListener {
     /**
      * Stream the given AnnotatedVariable using the Communicator carried by this
      * LogStreamManager.
-     * 
+     *
      * @param annotatedVariable
      *            The Wrapper to stream.
      * @return True if successful, false otherwise.
@@ -329,7 +329,7 @@ public class LogStreamManager implements CommunicatorListener {
     /**
      * Stream the given Wrapper using the Communicator carried by this
      * LogStreamManager.
-     * 
+     *
      * @param wrappers
      *            The Wrappers to stream.
      * @return True if ALL wrappers successfully sent, false otherwise.
@@ -374,7 +374,7 @@ public class LogStreamManager implements CommunicatorListener {
      * Print the operations and header container in the wrapper given as
      * argument. Set the public variable PRETTY_PRINTING to true to enable
      * human-readable output.
-     * 
+     *
      * @param targetPath
      *            The location to print the log file.
      * @param wrapper
@@ -410,7 +410,7 @@ public class LogStreamManager implements CommunicatorListener {
 
     /**
      * Unwrap a wrapper, add contents to knownVariables and operations.
-     * 
+     *
      * @param wrapper
      *            The wrapper to unwrap.
      * @return True if the wrapper was successfully unwrapped. False otherwise.
@@ -438,7 +438,7 @@ public class LogStreamManager implements CommunicatorListener {
 
     /**
      * Unwrap a JSON string and store the contents.
-     * 
+     *
      * @param json
      *            THE JSON string to process.
      * @return True if the string was successfully parsed and stored. False
@@ -449,8 +449,7 @@ public class LogStreamManager implements CommunicatorListener {
         return this.unwrap(w);
     }
 
-    @Override
-    public void messageReceived (short messageType) {
+    @Override public void messageReceived (short messageType) {
         if (this.listener == null) {
             return;
         }
@@ -498,7 +497,7 @@ public class LogStreamManager implements CommunicatorListener {
     /**
      * Set the CommunicatorListener which will be notified when this
      * Communicator accepts a message.
-     * 
+     *
      * @param newListener
      *            The new CommunicatorListener.
      */

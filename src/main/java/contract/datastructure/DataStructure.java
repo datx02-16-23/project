@@ -59,8 +59,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
      */
     protected transient final OperationCounter        oc               = new OperationCounter();
 
-    @Override
-    public OperationCounter getCounter () {
+    @Override public OperationCounter getCounter () {
         return this.oc;
     }
 
@@ -78,7 +77,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
     /**
      * Returns the list of elements held by this DataStructure. Used when
      * drawing the elements.
-     * 
+     *
      * @return The list of elements held by this DataStructure.
      */
     public ObservableList<Element> getElements () {
@@ -92,7 +91,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 
     /**
      * Apply an operation to the structure
-     * 
+     *
      * @param op
      *            The operation to be apply.
      */
@@ -117,7 +116,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 
     /**
      * Execute a read/write operation.
-     * 
+     *
      * @param op
      *            The operation to execute.
      */
@@ -125,14 +124,13 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 
     /**
      * Execute a swap operation.
-     * 
+     *
      * @param op
      *            The operation to execute.
      */
     protected abstract void executeSwap (OP_Swap op);
 
-    @Override
-    public String toString () {
+    @Override public String toString () {
         StringBuilder sb = new StringBuilder();
         sb.append("\"" + Tools.stripQualifiers(this.identifier) + "\": " + this.rawType + " [");
 
@@ -150,7 +148,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
      * <br>
      * <b>NOTE:</b> Implementations should call setVisual() to notify listeners
      * of any changes.
-     * 
+     *
      * @return The Visual to use for this DataStructure.
      */
     public abstract VisualType resolveVisual ();
@@ -160,7 +158,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
      * different colour. All elements which were in the list when this method is
      * called are copied to the list returned by {@code getResetElements}. The
      * list should be cleared manually once drawing is done.
-     * 
+     *
      * @return A list of elements which have been modified.
      */
     public ObservableList<Element> getModifiedElements () {
@@ -171,7 +169,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
      * A list of elements which were modified but have already been drawn as
      * such. Their colours should be reset. As the list is never cleared, it
      * should be done manually once elements have been drawn.
-     * 
+     *
      * @return A list of elements whose colour should be reset.
      */
     public ObservableList<Element> getResetElements () {
@@ -190,7 +188,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 
     /**
      * Returns the list of inactive elements.
-     * 
+     *
      * @return The list of inactive elements.
      */
     public ObservableList<Element> getInactiveElements () {
@@ -201,7 +199,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
      * Indicate to the DataStructure that the lists returned by
      * {@code getModifiedElements()} <b>and</b> {@code getResetElements} have
      * been drawn.
-     * 
+     *
      * @param paint
      *            The color to use for this element after reset. Null defaults
      *            to white.
@@ -224,7 +222,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 
     /**
      * Returns an element based on a Locator.
-     * 
+     *
      * @param locator
      *            The locator for the Element.
      * @return An element if it could be found, null otherwise.
@@ -236,7 +234,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
      * element as target, the element will be reactivated. If the target of the
      * Remove operation has an identifier equalling the identifier of this
      * DataStructure but no index, the entire structure will become inactive.
-     * 
+     *
      * @param op
      *            A Remove operation.
      */
@@ -267,7 +265,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 
     /**
      * Returns True if this structure is active. False otherwise.
-     * 
+     *
      * @return True if this structure is active.
      */
     public boolean isActive () {
@@ -276,7 +274,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 
     /**
      * Set the active status of this DataStructure.
-     * 
+     *
      * @param value
      *            The new active status of this DataStructure.
      */
@@ -306,7 +304,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 
     /**
      * Set the VisualType.
-     * 
+     *
      * @param vt
      *            The new VisualType.
      */
@@ -323,14 +321,14 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 
     /**
      * Interface for listening to changes in the VisualType.
-     * 
+     *
      * @author Richard Sundqvist
      *
      */
     public static interface VisualListener {
         /**
          * Called when the VisualType of the DataStructure changes.
-         * 
+         *
          * @param newVisual
          *            The new VisualType.
          */
@@ -339,7 +337,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 
     /**
      * Set a listener to be notified when the visual type changes.
-     * 
+     *
      * @param listener
      *            A VisualListener.
      */

@@ -9,14 +9,14 @@ public interface Communicator {
     /**
      * Returns the first received Wrapper in queue. Returns null if the queue is
      * empty.
-     * 
+     *
      * @return The first received Wrapper in queue.
      */
     public CRoot popQueuedMessage ();
 
     /**
      * Returns the all received Wrappers in queue.
-     * 
+     *
      * @return The all received Wrappers in queue.
      */
     public List<CRoot> getAllQueuedMessages ();
@@ -24,7 +24,7 @@ public interface Communicator {
     /**
      * /** Send the given Wrapper to all everyone listening on the current
      * channel.
-     * 
+     *
      * @param outgoing
      *            The Wrapper to send.
      * @return True if message was sent, false otherwise.
@@ -33,7 +33,7 @@ public interface Communicator {
 
     /**
      * Send all Wrappers to everyone listening on the current channel.
-     * 
+     *
      * @param outgoing
      *            The list of Wrappers to send.
      * @return True if all wrappers were successfully sent.
@@ -49,7 +49,7 @@ public interface Communicator {
      * Send the given String to all everyone listening on the current channel.
      * <br>
      * <b>NOTE:</b> JSONString must be a valid serialisation of a Wrapper.
-     * 
+     *
      * @param JSONString
      *            The JSON String to send.
      * @return True if the String was successfully sent. False otherwise.
@@ -62,7 +62,7 @@ public interface Communicator {
     /**
      * Wrapper for messages sent and recevied by implementations of the
      * Communicator interface.
-     * 
+     *
      * @author Richard Sundqvist
      *
      */
@@ -114,7 +114,7 @@ public interface Communicator {
 
         /**
          * Construct a new MavserMessage.
-         * 
+         *
          * @param payload
          *            They payload for this message. May be null.
          * @param senderId

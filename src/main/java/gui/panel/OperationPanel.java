@@ -28,8 +28,7 @@ public class OperationPanel extends Pane {
     private final MultipleSelectionModel<Operation> selectionModel;
     private final FocusModel<Operation>             focusModel;
 
-    @SuppressWarnings("unchecked")
-    public OperationPanel (Controller controller) {
+    @SuppressWarnings("unchecked") public OperationPanel (Controller controller) {
         this.controller = controller;
         // Load content
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/panel/OperationListPanel.fxml"));
@@ -66,7 +65,7 @@ public class OperationPanel extends Pane {
     /**
      * Update the list position, focus and highlight. Update counters and
      * progress bar.
-     * 
+     *
      * @param index
      *            The index to select.
      * @param jump
@@ -89,7 +88,7 @@ public class OperationPanel extends Pane {
 
     /**
      * Returns the items shown by this OperationPanel.
-     * 
+     *
      * @return The items shown by this OperationPanel.
      */
     public ObservableList<Operation> getItems () {
@@ -98,7 +97,7 @@ public class OperationPanel extends Pane {
 
     /**
      * Returns the index of the selected Operation.
-     * 
+     *
      * @return The index of the selected Operation.
      */
     public int getIndex () {
@@ -107,7 +106,7 @@ public class OperationPanel extends Pane {
 
     /**
      * Returns the of the selected Operation.
-     * 
+     *
      * @return The selected Operation.
      */
     public Operation getOperation () {

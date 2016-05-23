@@ -9,7 +9,7 @@ public class EllipseElement extends AVElement {
 
     /**
      * Create a static, unbound EllipseElement.
-     * 
+     *
      * @param value
      *            The initial value.
      * @param paint
@@ -25,7 +25,7 @@ public class EllipseElement extends AVElement {
 
     /**
      * Create a bound visual EllipseElement.
-     * 
+     *
      * @param element
      *            The Element this VisualElement represents
      * @param node_width
@@ -37,8 +37,7 @@ public class EllipseElement extends AVElement {
         super(element, node_width, node_height);
     }
 
-    @Override
-    public void createShape () {
+    @Override public void createShape () {
         super.createShape();
         Ellipse ellipse = new Ellipse();
         // Width and height are the size of the bounding box.
@@ -48,8 +47,7 @@ public class EllipseElement extends AVElement {
         this.shape = ellipse;
     }
 
-    @Override
-    public void setSize (double newWidth, double newHeight) {
+    @Override public void setSize (double newWidth, double newHeight) {
         super.setSize(newWidth, newHeight);
         Ellipse ellipse = (Ellipse) this.shape;
         ellipse.setRadiusX(newWidth / 2);

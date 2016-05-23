@@ -8,7 +8,7 @@ public class SingleElement extends RectangleElement {
 
     /**
      * Create a static, unbound RectangleElement.
-     * 
+     *
      * @param value
      *            The initial value.
      * @param paint
@@ -24,7 +24,7 @@ public class SingleElement extends RectangleElement {
 
     /**
      * Create a bound visual RectangleElement.
-     * 
+     *
      * @param element
      *            The Element this VisualElement represents
      * @param node_width
@@ -36,8 +36,7 @@ public class SingleElement extends RectangleElement {
         super(element, node_width, node_height);
     }
 
-    @Override
-    public void createShape () {
+    @Override public void createShape () {
         super.createShape();
         Rectangle rect = (Rectangle) this.shape;
         rect.setArcWidth(this.width / 3);

@@ -36,7 +36,7 @@ public abstract class DataStructureParser {
 
     /**
      * Unpack an IndependentElement data structure variable.
-     * 
+     *
      * @param av
      *            The variable to unpack.
      * @return An unpacked IndependentElement.
@@ -47,7 +47,7 @@ public abstract class DataStructureParser {
 
     /**
      * Unpack an Array data structure variable.
-     * 
+     *
      * @param av
      *            The variable to unpack.
      * @return An unpacked Array.

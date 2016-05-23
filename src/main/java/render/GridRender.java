@@ -28,7 +28,7 @@ public class GridRender extends ARender {
 
     /**
      * Creates a new GridRender.
-     * 
+     *
      * @param struct
      *            The structure to render.
      * @param width
@@ -47,8 +47,7 @@ public class GridRender extends ARender {
         this.setRelativeNodeSize(true, 2);
     }
 
-    @Override
-    public void render () {
+    @Override public void render () {
         if (this.struct.repaintAll) {
             this.struct.repaintAll = false;
             this.repaintAll();
@@ -56,8 +55,7 @@ public class GridRender extends ARender {
         super.render();
     }
 
-    @Override
-    public boolean repaintAll () {
+    @Override public boolean repaintAll () {
 
         if (super.repaintAll() == false) {
             return false; // Nothing to render.
@@ -75,8 +73,7 @@ public class GridRender extends ARender {
         return true;
     }
 
-    @Override
-    public double getX (Element e) {
+    @Override public double getX (Element e) {
         if (e == null || e instanceof IndexedElement == false) {
             return -1;
         }
@@ -96,8 +93,7 @@ public class GridRender extends ARender {
         return this.hSpace + (this.hSpace + this.nodeWidth) * column;
     }
 
-    @Override
-    public double getY (Element e) {
+    @Override public double getY (Element e) {
         if (e == null || e instanceof IndexedElement == false) {
             return -1;
         }
@@ -118,8 +114,7 @@ public class GridRender extends ARender {
         return this.vSpace + (this.vSpace + this.nodeHeight) * row;
     }
 
-    @Override
-    public void calculateSize () {
+    @Override public void calculateSize () {
 
         this.ensureDimensionsSet();
 
@@ -176,7 +171,7 @@ public class GridRender extends ARender {
         /**
          * Returns the Order corresponding to the given option number. Defaults
          * to ROW_MAJOR for unknown option numbers.
-         * 
+         *
          * @param optionNbr
          *            The option to resolve an order for.
          * @return An Order.
@@ -191,8 +186,7 @@ public class GridRender extends ARender {
         }
     }
 
-    @Override
-    protected AVElement createVisualElement (Element e) {
+    @Override protected AVElement createVisualElement (Element e) {
         this.elementStyle = this.elementStyle == null ? DEFAULT_ELEMENT_STYLE : this.elementStyle;
 
         AVElement re = AVElementFactory.shape(this.elementStyle, e, this.nodeWidth, this.nodeHeight);
@@ -201,8 +195,7 @@ public class GridRender extends ARender {
         return re;
     }
 
-    @Override
-    protected AVElement createVisualElement (double value, Color color) {
+    @Override protected AVElement createVisualElement (double value, Color color) {
         this.elementStyle = this.elementStyle == null ? DEFAULT_ELEMENT_STYLE : this.elementStyle;
 
         AVElement re = AVElementFactory.shape(this.elementStyle, value, color, this.nodeWidth, this.nodeHeight);
@@ -210,8 +203,7 @@ public class GridRender extends ARender {
         return re;
     }
 
-    @Override
-    protected void bellsAndWhistles (Element e, AVElement ve) {
+    @Override protected void bellsAndWhistles (Element e, AVElement ve) {
         // System.out.println("grid: baw shape = " + ve.getShape());
     }
 }

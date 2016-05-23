@@ -13,7 +13,7 @@ public interface iModel {
     /**
      * Returns a list of shape representations of the model. Used by the
      * multiset.model.BouncingBalls class to draw the model.
-     * 
+     *
      * @return the model as shape objects
      */
     public List<Ball> getBalls ();
@@ -21,7 +21,7 @@ public interface iModel {
     /**
      * Changes the state of the model using the Euler method by simulating
      * deltaT units of time.
-     * 
+     *
      * @param deltaT
      *            the amount of time to simulate
      */

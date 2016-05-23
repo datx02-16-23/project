@@ -647,8 +647,7 @@ public class Controller implements CommunicatorListener {
     /**
      * Method for reception of streamed messages.
      */
-    @Override
-    public void messageReceived (short messageType) {
+    @Override public void messageReceived (short messageType) {
         if (messageType >= 10) {
             JGroupCommunicator jgc = (JGroupCommunicator) this.lsm.getCommunicator();
             this.connectedView.update(jgc.getMemberStrings(), jgc.allKnownEntities());

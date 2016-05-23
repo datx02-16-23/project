@@ -101,7 +101,7 @@ public class ExamplesDialog {
 
     /**
      * Show and wait for user input. Returns a (possibly empty) double[].
-     * 
+     *
      * @param name
      *            The name of the algoritm.
      * @return An array of doubles.

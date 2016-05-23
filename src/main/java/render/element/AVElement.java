@@ -360,8 +360,7 @@ public abstract class AVElement extends Pane {
      * @param pos
      *            The new position for the info label.
      */
-    @SuppressWarnings("incomplete-switch")
-    public void setInfoPos (Pos pos) {
+    @SuppressWarnings("incomplete-switch") public void setInfoPos (Pos pos) {
         this.infoPos = pos;
 
         if (this.infoPos == null) {
@@ -436,8 +435,7 @@ public abstract class AVElement extends Pane {
         this.valueLabel.setText(" " + value + " ");
     }
 
-    @Override
-    public AVElement clone () {
+    @Override public AVElement clone () {
         return AVElementFactory.clone(this);
     }
 

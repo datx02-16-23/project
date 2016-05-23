@@ -68,13 +68,11 @@ public class BarchartElement extends RectangleElement {
         // Uncomment, but fucks up positioning on the Y-axis.
     }
 
-    @Override
-    public void setSize (double width, double height) {
+    @Override public void setSize (double width, double height) {
         // Not used by barcharts.
     }
 
-    @Override
-    public void createShape () {
+    @Override public void createShape () {
         // super.createShape(); TODO Uncomment, but fucks up positioning on the
         // Y-axis.
 
@@ -105,8 +103,7 @@ public class BarchartElement extends RectangleElement {
         // fix
     }
 
-    @Override
-    public BarchartElement clone () {
+    @Override public BarchartElement clone () {
         BarchartElement clone = (BarchartElement) AVElementFactory.clone(this);
 
         clone.updateSize(this.unitHeight, -1);

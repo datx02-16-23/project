@@ -137,8 +137,7 @@ public class Array extends DataStructure {
         this.checkMinMaxChanged(initMax);
     }
 
-    @Override
-    public void clear () {
+    @Override public void clear () {
         this.elements.clear();
         this.clearElementLists();
         this.resetMinMax();
@@ -146,8 +145,7 @@ public class Array extends DataStructure {
         this.repaintAll = true;
     }
 
-    @Override
-    protected void executeSwap (OP_Swap op) {
+    @Override protected void executeSwap (OP_Swap op) {
         Locator var1 = op.getVar1();
         Locator var2 = op.getVar2();
         IndexedElement var1Element = this.getElement(var1);
@@ -170,8 +168,7 @@ public class Array extends DataStructure {
         }
     }
 
-    @Override
-    protected void executeRW (OP_ReadWrite op) {
+    @Override protected void executeRW (OP_ReadWrite op) {
         double[] value = op.getValue();
         if (value == null || value.length < 1) {
             Main.console.err("Bad value in operation: " + op);
@@ -255,12 +252,14 @@ public class Array extends DataStructure {
      */
     public int[] getIndexInNDimensions (int linearIndex, final int[] dimensionSizes) {
         int[] index = new int[dimensionSizes.length];
-        /*
+        /**
          * http://stackoverflow.com/questions/14015556/how-to-map-the-indexes-of
-         * -a-matrix-to-a-1-dimensional-array-c Matrix has size, n by m. That is
-         * i = [0, n-1] and j = [0, m-1]. matrix[i][j] = array[i*m + j]. For
-         * higher dimension, this idea generalizes, i.e. for a 3D matrix L by N
-         * by M: matrix[i][j][k] = array[i*(N*M) + j*M + k]
+         * -a-matrix-to-a-1-dimensional-array-c <br>
+         * <br>
+         * Matrix has size, n by m. That is i = [0, n-1] and j = [0, m-1].
+         * matrix[i][j] = array[i*m + j]. For higher dimension, this idea
+         * generalizes, i.e. for a 3D matrix L by N by M: matrix[i][j][k] =
+         * array[i*(N*M) + j*M + k]
          */
         for (int currDim = 0; currDim < dimensionSizes.length; currDim++) {
             index [currDim] = linearIndex;
@@ -301,8 +300,7 @@ public class Array extends DataStructure {
      * @return The element at the location specified by the given locator, if it
      *         was valid. Null otherwise.
      */
-    @Override
-    public IndexedElement getElement (Locator locator) {
+    @Override public IndexedElement getElement (Locator locator) {
         if (locator == null || locator.identifier.equals(this.identifier) == false) {
             return null;
         }
@@ -363,7 +361,7 @@ public class Array extends DataStructure {
 
         /**
          * Construct a new ArrayElement with the given value and index.
-         * 
+         *
          * @param value
          *            The value for this ArrayElement.
          * @param index
@@ -378,8 +376,7 @@ public class Array extends DataStructure {
                 709, 719, 727, 733 };
 
         // TODO
-        @Override
-        public int hashCode () {
+        @Override public int hashCode () {
             if (this.index == null) {
                 return -1;
             }
@@ -393,7 +390,7 @@ public class Array extends DataStructure {
 
         /**
          * Get the index of this ArrayElement.
-         * 
+         *
          * @return The index of this ArrayElement.
          */
         public int[] getIndex () {
@@ -402,7 +399,7 @@ public class Array extends DataStructure {
 
         /**
          * Set the index of this ArrayElement.
-         * 
+         *
          * @param newIndex
          *            The new index of this ArrayElement.
          */
@@ -412,12 +409,11 @@ public class Array extends DataStructure {
 
         /**
          * Returns true if value and index are equal, false otherwise.
-         * 
+         *
          * @param obj
          *            The object to compare this ArrayVariable to.
          */
-        @Override
-        public boolean equals (Object obj) {
+        @Override public boolean equals (Object obj) {
             if (obj == this) {
                 return true;
             }
@@ -429,8 +425,7 @@ public class Array extends DataStructure {
         }
 
         // TODO
-        @Override
-        public String toString () {
+        @Override public String toString () {
             // return hashCode() + "";
             return Arrays.toString(this.index) + " = " + this.getNumValue();
         }
@@ -446,8 +441,7 @@ public class Array extends DataStructure {
      *
      * @return The {@link #VisualType} to use for this Array.
      */
-    @Override
-    public VisualType resolveVisual () {
+    @Override public VisualType resolveVisual () {
         if (this.visual != null) {
             return this.visual;
 
@@ -502,7 +496,7 @@ public class Array extends DataStructure {
 
     /**
      * The minimum value.
-     * 
+     *
      * @return The minimum value.
      */
     public double getMin () {
@@ -511,7 +505,7 @@ public class Array extends DataStructure {
 
     /**
      * The maximum value.
-     * 
+     *
      * @return The maximum value.
      */
     public double getMax () {
@@ -527,7 +521,7 @@ public class Array extends DataStructure {
     public interface MinMaxListener {
         /**
          * Called when the min value changes.
-         * 
+         *
          * @param newMax
          *            The new maximum.
          */
@@ -535,7 +529,7 @@ public class Array extends DataStructure {
 
         /**
          * Called when the max value changes.
-         * 
+         *
          * @param newMin
          *            The new minimum.
          * @param diff

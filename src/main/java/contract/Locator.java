@@ -29,7 +29,7 @@ public class Locator implements Serializable {
 
     /**
      * Create a new Locator with a given identifier and index.
-     * 
+     *
      * @param identifier
      *            The identifier for this variable.
      * @param index
@@ -41,13 +41,11 @@ public class Locator implements Serializable {
         this.index = index;
     }
 
-    @Override
-    public String toString () {
+    @Override public String toString () {
         return Tools.stripQualifiers(this.identifier) + (this.index == null ? "" : Arrays.toString(this.index));
     }
 
-    @Override
-    public boolean equals (Object other) {
+    @Override public boolean equals (Object other) {
         if (this == other) {
             return true;
         }
@@ -60,7 +58,7 @@ public class Locator implements Serializable {
 
     /**
      * Compares the index only, ignoring identifier.
-     * 
+     *
      * @param other
      *            The other Locator to compare.
      * @return True if the index of this and other are equal, false otherwise.
@@ -71,7 +69,7 @@ public class Locator implements Serializable {
 
     /**
      * Compares the index only, ignoring identifier.
-     * 
+     *
      * @param other
      *            The index to compare.
      * @return True if the index of this and other are equal, false otherwise.

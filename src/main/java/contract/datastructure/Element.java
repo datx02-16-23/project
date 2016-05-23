@@ -75,7 +75,7 @@ public abstract class Element implements OperationCounterHaver {
 
     /**
      * Returns the numeric value held by this Element.
-     * 
+     *
      * @return The value held by this Element.
      */
     public final double getNumValue () {
@@ -85,7 +85,7 @@ public abstract class Element implements OperationCounterHaver {
     /**
      * Get the display value held by this Element. Returns the numeric value if
      * not found.
-     * 
+     *
      * @return The display value held by this Element
      */
     public String getStringValue () {
@@ -94,7 +94,7 @@ public abstract class Element implements OperationCounterHaver {
 
     /**
      * Set the numeric value held by this Element.
-     * 
+     *
      * @param newValue
      *            the new value for this Element.
      */
@@ -115,7 +115,7 @@ public abstract class Element implements OperationCounterHaver {
 
     /**
      * Set the display value held by this Element.
-     * 
+     *
      */
     public final void setValue (String newValue) {
         if (this.stringValue.equals(newValue) == false) {
@@ -126,7 +126,7 @@ public abstract class Element implements OperationCounterHaver {
 
     /**
      * Returns the paint with which to draw this Element.
-     * 
+     *
      * @return The paint with which to draw this Element.
      */
     public final Paint getPaint () {
@@ -135,7 +135,7 @@ public abstract class Element implements OperationCounterHaver {
 
     /**
      * Indicate to the element that it it has been involved in an operation.
-     * 
+     *
      * @param op
      *            The operation type which was applied.
      */
@@ -149,7 +149,7 @@ public abstract class Element implements OperationCounterHaver {
 
     /**
      * Set the Paint for this element.
-     * 
+     *
      * @param c
      *            The paint to use
      */
@@ -170,7 +170,7 @@ public abstract class Element implements OperationCounterHaver {
      * <br>
      * {@link Double#NEGATIVE_INFINITY} indicates that the value has never been
      * set using {@link #setValue(double)}.
-     * 
+     *
      * @return The previous value.
      */
     public final double restoreValue () {
@@ -181,15 +181,14 @@ public abstract class Element implements OperationCounterHaver {
     /**
      * Returns the last numeric value of this element, without restoring it as
      * done by {@link #restoreValue()}.
-     * 
+     *
      * @return The previous value.
      */
     public final double getPrevNumValue () {
         return this.prevNumValue;
     }
 
-    @Override
-    public OperationCounter getCounter () {
+    @Override public OperationCounter getCounter () {
         return this.oc;
     }
 }

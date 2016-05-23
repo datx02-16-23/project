@@ -26,7 +26,7 @@ public class OP_Message extends Operation {
 
     /**
      * Simply calls setValue().
-     * 
+     *
      * @param message
      *            The message to attach to this OP_Message.
      */
@@ -40,7 +40,7 @@ public class OP_Message extends Operation {
 
     /**
      * Set the value(s) with which to initialize this variable.
-     * 
+     *
      * @param value
      *            The value(s) with which to initialize this variable.
      */
@@ -52,8 +52,7 @@ public class OP_Message extends Operation {
         return (String) this.operationBody.get(Key.value);
     }
 
-    @Override
-    public String toString () {
+    @Override public String toString () {
         return "MESSAGE: \"" + this.getValue() + "\"";
     }
 }

@@ -20,7 +20,7 @@ public abstract class AVElementFactory {
 
     /**
      * Create a VisualElement bound to an {@link #Element}.
-     * 
+     *
      * @param shape
      *            The shape of the element.
      * @param e
@@ -72,9 +72,9 @@ public abstract class AVElementFactory {
     }
 
     /**
-     * 
+     *
      * /** Create an unbound VisualElement.
-     * 
+     *
      * @param shape
      *            The shape of the element.
      * @param value
@@ -127,7 +127,7 @@ public abstract class AVElementFactory {
 
     /**
      * Create a VisualElement bound to an {@link #Element}.
-     * 
+     *
      * @param shape
      *            The shape of the element.
      * @param e
@@ -146,9 +146,9 @@ public abstract class AVElementFactory {
     }
 
     /**
-     * 
+     *
      * /** Create an unbound polygon.
-     * 
+     *
      * @param shape
      *            The shape of the element.
      * @param value
@@ -175,9 +175,9 @@ public abstract class AVElementFactory {
      * Creates the points for a relative polygon. Values in {@code points} are
      * scaled using the width and height arguments. All values in {@code points}
      * should lie in [0, 1].<br>
-     * 
+     *
      * The original list is not changed.
-     * 
+     *
      * @param w
      *            The width of the polgyon.
      * @param h
@@ -226,17 +226,17 @@ public abstract class AVElementFactory {
     }
 
     /*
-     * 
-     * 
+     *
+     *
      * Supporter classes.
-     * 
-     * 
+     *
+     *
      */
 
     /**
      * Attempt to a visual element. Should not be used unless there is no other
      * alternative.
-     * 
+     *
      * @param orig
      *            The original element.
      * @return A clone of the original element.

@@ -85,8 +85,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
         this.reset();
     }
 
-    @Override
-    public double getX (Element e) {
+    @Override public double getX (Element e) {
         if (e == null || e instanceof IndexedElement == false) {
             return -1;
         }
@@ -104,13 +103,11 @@ public class BarchartRender extends ARender implements MinMaxListener {
         return (this.nodeWidth + this.hSpace) * index + this.hSpace + this.padding + 5;
     }
 
-    @Override
-    public double getY (Element e) {
+    @Override public double getY (Element e) {
         return this.xAxisY + 100; // TODO
     }
 
-    @Override
-    public void render () {
+    @Override public void render () {
         if (this.struct.repaintAll) {
             this.struct.repaintAll = false;
             this.repaintAll();
@@ -118,8 +115,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
         super.render();
     }
 
-    @Override
-    public boolean repaintAll () {
+    @Override public boolean repaintAll () {
         if (this.struct.getElements().isEmpty() || this.contentPane == null) {
             return false; // Nothing to render/not yet initialised.
         }
@@ -260,8 +256,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
         }
     }
 
-    @Override
-    public void calculateSize () {
+    @Override public void calculateSize () {
         this.renderWidth = this.struct.getElements().size() * (this.nodeWidth + this.hSpace) + this.padding * 3;
         this.xAxisY = this.renderHeight - this.padding;
         this.rightWallX = this.renderWidth - this.padding;
@@ -269,21 +264,18 @@ public class BarchartRender extends ARender implements MinMaxListener {
         this.setRestricedSize(this.renderWidth, this.renderHeight);
     }
 
-    @Override
-    protected BarchartElement createVisualElement (Element e) {
+    @Override protected BarchartElement createVisualElement (Element e) {
         BarchartElement ve = (BarchartElement) AVElementFactory.shape(ELEMENT_STYLE, e, this.nodeWidth,
                 this.nodeHeight * e.getNumValue());
         return ve;
     }
 
-    @Override
-    protected AVElement createVisualElement (double value, Color color) {
+    @Override protected AVElement createVisualElement (double value, Color color) {
         AVElement ve = AVElementFactory.shape(ELEMENT_STYLE, value, color, this.nodeWidth, this.nodeHeight * value);
         return ve;
     }
 
-    @Override
-    protected void bellsAndWhistles (Element e, AVElement ve) {
+    @Override protected void bellsAndWhistles (Element e, AVElement ve) {
         ((BarchartElement) ve).updateSize(this.nodeHeight, -1);
     }
 
@@ -308,8 +300,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
      *            An element owned by this BarcharRender.
      * @return The absolute y-coordinates of e.
      */
-    @Override
-    public double absY (Element e, ARender relativeTo) {
+    @Override public double absY (Element e, ARender relativeTo) {
         double by = this.getTranslateY() + this.getLayoutY() + this.contentPane.getLayoutY();
         return this.xAxisY + by;
     }
@@ -328,8 +319,8 @@ public class BarchartRender extends ARender implements MinMaxListener {
      * @param millis
      *            The time in milliseconds the animation should last.
      */
-    @Override
-    public void animateReadWrite (Element src, ARender srcRender, Element tar, ARender tarRender, long millis) {
+    @Override public void animateReadWrite (Element src, ARender srcRender, Element tar, ARender tarRender,
+            long millis) {
         if (tar != null || src == null) {
             super.animateReadWrite(src, srcRender, tar, tarRender, millis);
             return;
@@ -353,13 +344,11 @@ public class BarchartRender extends ARender implements MinMaxListener {
         st.play();
     }
 
-    @Override
-    public void maxChanged (double newMax) {
+    @Override public void maxChanged (double newMax) {
         this.calculateHeight(newMax);
     }
 
-    @Override
-    public void minChanged (double newMin) {
+    @Override public void minChanged (double newMin) {
         // TODO
     }
 

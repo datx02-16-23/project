@@ -30,8 +30,7 @@ public class Model implements iModel {
         }
     }
 
-    @Override
-    public void tick (double deltaT) {
+    @Override public void tick (double deltaT) {
         this.handleCollisions(deltaT);
         this.moveBalls(deltaT);
     }
@@ -152,8 +151,7 @@ public class Model implements iModel {
         }
     }
 
-    @Override
-    public List<Ball> getBalls () {
+    @Override public List<Ball> getBalls () {
         return this.balls;
     }
 }

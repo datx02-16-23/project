@@ -103,8 +103,7 @@ public class KTreeRender extends ARender {
      */
     // ============================================================= //
 
-    @Override
-    public void render () {
+    @Override public void render () {
         if (this.struct.repaintAll) {
             this.struct.repaintAll = false;
             this.repaintAll();
@@ -112,8 +111,7 @@ public class KTreeRender extends ARender {
         super.render();
     }
 
-    @Override
-    public boolean repaintAll () {
+    @Override public boolean repaintAll () {
 
         if (super.repaintAll() == false) {
             return false; // Nothing to render.
@@ -152,8 +150,7 @@ public class KTreeRender extends ARender {
      * @param childVis
      *            The child node visual.
      */
-    @Override
-    protected void bellsAndWhistles (Element ae, AVElement childVis) {
+    @Override protected void bellsAndWhistles (Element ae, AVElement childVis) {
         // System.out.println("ktree: baw shape = " + childVis.getShape());
 
         new IndexedElement(0, new int[] { (((IndexedElement) ae).getIndex() [0] - 1) / this.K });
@@ -210,8 +207,7 @@ public class KTreeRender extends ARender {
         }
     }
 
-    @Override
-    public double getX (Element e) {
+    @Override public double getX (Element e) {
         if (e == null || e instanceof IndexedElement == false) {
             return -1;
         }
@@ -249,8 +245,7 @@ public class KTreeRender extends ARender {
         }
     }
 
-    @Override
-    public double getY (Element e) {
+    @Override public double getY (Element e) {
         if (e == null || e instanceof IndexedElement == false) {
             return -1;
         }
@@ -307,16 +302,14 @@ public class KTreeRender extends ARender {
         this.totBreadth = Tools.pow(this.K, this.totDepth);
     }
 
-    @Override
-    public void calculateSize () {
+    @Override public void calculateSize () {
         this.calculateDepthAndBreadth();
         this.renderWidth = this.totBreadth * (this.nodeWidth + this.hSpace) + this.hSpace * 2;
         this.renderHeight = (this.totDepth + 1) * (this.nodeHeight + this.vSpace) + this.vSpace;
         this.setRestricedSize(this.renderWidth, this.renderHeight);
     }
 
-    @Override
-    protected AVElement createVisualElement (Element e) {
+    @Override protected AVElement createVisualElement (Element e) {
         this.elementStyle = this.elementStyle == null ? DEFAULT_ELEMENT_STYLE : this.elementStyle;
         AVElement ve = AVElementFactory.shape(this.elementStyle, e, this.nodeWidth, this.nodeHeight);
         ve.setInfoPos(Pos.TOP_LEFT);
@@ -324,8 +317,7 @@ public class KTreeRender extends ARender {
         return ve;
     }
 
-    @Override
-    protected AVElement createVisualElement (double value, Color color) {
+    @Override protected AVElement createVisualElement (double value, Color color) {
         this.elementStyle = this.elementStyle == null ? DEFAULT_ELEMENT_STYLE : this.elementStyle;
         AVElement ve = AVElementFactory.shape(this.elementStyle, value, color, this.nodeWidth, this.nodeHeight);
         ve.setInfoPos(null);

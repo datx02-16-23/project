@@ -56,7 +56,7 @@ public class IdentifierCollisionDialog {
     }
 
     /**
-     * 
+     *
      * @param oldStructs
      * @param newStructs
      * @return

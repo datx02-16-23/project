@@ -30,7 +30,7 @@ public enum VisualType {
 
     /**
      * Constructor for enums which dont have their own render.
-     * 
+     *
      * @param original
      *            The original VisualType.
      * @param json
@@ -45,7 +45,7 @@ public enum VisualType {
     /**
      * Returns the VisualType corresponding to the stylish name (VisualType.
      * <type>.name).
-     * 
+     *
      * @param pretty
      *            The name to resolve.
      * @return A VisualType, or null if the stylish name was unknown.
@@ -59,14 +59,13 @@ public enum VisualType {
         return null;
     }
 
-    @Override
-    public String toString () {
+    @Override public String toString () {
         return this.pretty;
     }
 
     /**
      * Returns the VisualType corresponding to the json name.
-     * 
+     *
      * @param json
      *            The name to resolve.
      * @return A VisualType, or null if the stylish name was unknown.

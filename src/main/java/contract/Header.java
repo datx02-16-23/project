@@ -37,7 +37,7 @@ public class Header implements Serializable {
     /**
      * Create a Header item with the given version number and map of annotated
      * variables. Version 0 is reserved for when the version number is unknown.
-     * 
+     *
      * @param version
      *            The version number for this file.
      * @param annotatedVariables
@@ -65,11 +65,10 @@ public class Header implements Serializable {
     /**
      * Returns the sources contained in the metadata of this Header, if found.
      * Null otherwise.
-     * 
+     *
      * @return A Map of source names as keys and their lines as a List.
      */
-    @SuppressWarnings("unchecked")
-    public final Map<String, List<String>> getSources () {
+    @SuppressWarnings("unchecked") public final Map<String, List<String>> getSources () {
         if (this.sources == null) {
             return null;
         }
@@ -82,8 +81,7 @@ public class Header implements Serializable {
         return sources;
     }
 
-    @Override
-    public String toString () {
+    @Override public String toString () {
         return "Header: v = " + this.version + ", annotatedVariables = " + this.annotatedVariables;
     }
 }

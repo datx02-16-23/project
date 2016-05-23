@@ -26,7 +26,7 @@ public class CRoot implements Serializable {
 
     /**
      * Create a new Wrapper with the given header and body.
-     * 
+     *
      * @param header
      *            Header data for the file. Contains version number and variable
      *            declarations.
@@ -38,8 +38,7 @@ public class CRoot implements Serializable {
         this.body = body;
     }
 
-    @Override
-    public String toString () {
+    @Override public String toString () {
         return "header = " + this.header + ",\n" + "body = " + this.body;
     }
 }

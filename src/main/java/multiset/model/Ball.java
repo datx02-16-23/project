@@ -43,8 +43,7 @@ public class Ball implements iValueContainer {
         return this.r * this.r * Math.PI;
     }
 
-    @Override
-    public String toString () {
+    @Override public String toString () {
         return this.x + ", " + this.y + "\t" + this.vx + ", " + this.vy;
     }
 
@@ -84,8 +83,7 @@ public class Ball implements iValueContainer {
         this.vy = vy;
     }
 
-    @Override
-    public double getValue () {
+    @Override public double getValue () {
         return this.value;
     }
 }

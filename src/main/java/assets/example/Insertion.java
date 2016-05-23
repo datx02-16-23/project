@@ -12,8 +12,8 @@ class Insertion {
      * Generate a log file for Insertion Sort on the given data. <br>
      * <b>Source: </b>
      * {@link http://mathbits.com/MathBits/Java/arrays/InsertionSort.htm}
-     * 
-     * 
+     *
+     *
      * @param data
      *            The data to run the algorithm on.
      * @return The operations performed by the algorithm on the given data.

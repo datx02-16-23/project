@@ -25,7 +25,7 @@ public abstract class Examples {
 
     /**
      * Run an algorithm.
-     * 
+     *
      * @param algo
      *            The algorithm to load.
      * @param data
@@ -63,7 +63,7 @@ public abstract class Examples {
 
     /**
      * The algorithms known to this Examples thingy.
-     * 
+     *
      * @author Richard Sundqvist
      *
      */

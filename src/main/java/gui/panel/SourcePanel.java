@@ -106,8 +106,7 @@ public class SourcePanel extends TabPane {
      * @param op
      *            The Operation to show.
      */
-    @SuppressWarnings("unchecked")
-    public void show (Operation op) {
+    @SuppressWarnings("unchecked") public void show (Operation op) {
         if (op == null || op.source == null) {
             return;
         }
@@ -136,8 +135,7 @@ public class SourcePanel extends TabPane {
         return this.sources;
     }
 
-    @Deprecated
-    private void initTab () {
+    @Deprecated private void initTab () {
         Tab newTab = new Tab();
         newTab.setText("sample_source.java");
         // Build ListView

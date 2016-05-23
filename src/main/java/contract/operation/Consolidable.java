@@ -19,7 +19,7 @@ public interface Consolidable {
      * Attempt to consolidate a list of read/write operations. The method should
      * behave as it were static, that is the state of the calling initialization
      * should not matter.
-     * 
+     *
      * @param rwList
      *            The list to attempt consolidation on.
      * @return A high level operation if the supplied list could be
@@ -31,7 +31,7 @@ public interface Consolidable {
      * Returns the number of primitive (read/write) operations this high level
      * operation consists of. The method should behave as it were static, that
      * is the state of the calling initialization should not matter.
-     * 
+     *
      * @return The number of primitive (read/write) operations this high level
      *         operation consists of.
      */

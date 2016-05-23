@@ -104,7 +104,7 @@ public class MultisetController {
 
     /**
      * Load assets from theMultisetController FXML loader namespace.
-     * 
+     *
      * @param namespace
      *            The namespace of the FXML loader.
      */
