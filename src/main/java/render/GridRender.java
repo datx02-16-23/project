@@ -92,7 +92,7 @@ public class GridRender extends ARender {
 	}
 
 	private double getX(int column) {
-		return hSpace + (hSpace + getNodeWidth()) * column;
+		return hSpace + (hSpace + nodeWidth) * column;
 	}
 
 	@Override
@@ -114,7 +114,7 @@ public class GridRender extends ARender {
 	}
 
 	private double getY(int row) {
-		return vSpace + (vSpace + getNodeHeight()) * row;
+		return vSpace + (vSpace + nodeHeight) * row;
 	}
 
 	@Override
@@ -126,15 +126,15 @@ public class GridRender extends ARender {
 		 * Row Major
 		 */
 		if (majorOrder == Order.ROW_MAJOR) {
-			totWidth = vSpace + (vSpace + getNodeWidth()) * dims[0];
-			totHeight = hSpace + (hSpace + getNodeHeight()) * dims[1];
+			totWidth = vSpace + (vSpace + nodeWidth) * dims[0];
+			totHeight = hSpace + (hSpace + nodeHeight) * dims[1];
 
 			/*
 			 * Column Major
 			 */
 		} else {
-			totHeight = hSpace + (hSpace + getNodeHeight()) * dims[0];
-			totWidth = 2 + vSpace + (vSpace + getNodeWidth()) * dims[1];
+			totHeight = hSpace + (hSpace + nodeHeight) * dims[0];
+			totWidth = 2 + vSpace + (vSpace + nodeWidth) * dims[1];
 		}
 		setRestricedSize(totWidth, totHeight);
 	}
@@ -194,7 +194,7 @@ public class GridRender extends ARender {
 	protected AVElement createVisualElement(Element e) {
 		elementStyle = elementStyle == null ? DEFAULT_ELEMENT_STYLE : elementStyle;
 		
-		AVElement re = AVElementFactory.shape(elementStyle, e, getNodeWidth(), getNodeHeight());
+		AVElement re = AVElementFactory.shape(elementStyle, e, nodeWidth, nodeHeight);
 		re.setInfoPos(Pos.BOTTOM_CENTER);
 		re.setInfoArray(((IndexedElement) e).getIndex());
 		return re;
@@ -204,7 +204,7 @@ public class GridRender extends ARender {
 	protected AVElement createVisualElement(double value, Color color) {
 		elementStyle = elementStyle == null ? DEFAULT_ELEMENT_STYLE : elementStyle;
 		
-		AVElement re = AVElementFactory.shape(elementStyle, value, color, getNodeWidth(), getNodeHeight());
+		AVElement re = AVElementFactory.shape(elementStyle, value, color, nodeWidth, nodeHeight);
 		re.setInfoPos(null);
 		return re;
 	}

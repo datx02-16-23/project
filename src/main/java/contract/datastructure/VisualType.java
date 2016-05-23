@@ -5,25 +5,29 @@ public enum VisualType {
 	 * Chart type.
 	 */
 	bar("Bar Chart", "bar"),
+	barchart(bar, "bar chart", "barchart"),
 	/**
 	 * Special Graph type.
 	 */
 	tree("K-Tree", "tree"),
+	binaryTree(tree, "binary tree", "binarytree", "bintree"),
 	/**
 	 * Grid type.
 	 */
 	grid("Grid", "grid"),
 	box(grid, "box"),
+	matrix(grid, "matrix"),
 	/**
 	 * Single element type.
 	 */
-	single("Single Element", "single");
+	single("Single Element", "single"),
+	element(single, "element", "independentElement");
 
 	public transient final String pretty;
-	public transient final String json;
+	public transient final String[] json;
 	public transient final boolean isClone;
 
-	private VisualType(String pretty, String json) {
+	private VisualType(String pretty, String... json) {
 		this.pretty = pretty;
 		this.json = json;
 		this.isClone = false;
@@ -34,9 +38,9 @@ public enum VisualType {
 	 * @param original The original VisualType.
 	 * @param json The json string for this VisualType.
 	 */
-	private VisualType(VisualType original, String json){
+	private VisualType(VisualType original, String... json){
 		this.pretty = original.pretty;
-		this.json = original.json;
+		this.json = json;
 		isClone = true;
 	}
 

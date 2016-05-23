@@ -49,11 +49,11 @@ public abstract class ARender extends Pane implements MinMaxListener {
     /**
      * Width of individual elements bounding boxes.
      */
-    private double nodeWidth;
+    protected double nodeWidth;
     /**
      * Height of individual elements bounding boxes.
      */
-    private double nodeHeight;
+    protected double nodeHeight;
 
     /**
      * Horizontal space between elements.
@@ -147,8 +147,8 @@ public abstract class ARender extends Pane implements MinMaxListener {
     public ARender(DataStructure struct, double nodeWidth, double nodeHeight, double hSpace, double vSpace) {
 	this.struct = struct;
 
-	this.setNodeWidth(nodeWidth);
-	this.setNodeHeight(nodeHeight);
+	this.nodeWidth = nodeWidth;
+	this.nodeHeight = nodeHeight;
 	this.hSpace = hSpace;
 	this.vSpace = vSpace;
 
@@ -476,23 +476,23 @@ public abstract class ARender extends Pane implements MinMaxListener {
 
 	    switch (event.getCode()) {
 	    case UP:
-		this.setNodeHeight(getNodeHeight() + Const.ELEMENT_HEIGHT_DELTA);
+		this.setNodeHeight(nodeHeight + Const.ELEMENT_HEIGHT_DELTA);
 		break;
 	    case DOWN:
-		this.setNodeHeight(getNodeHeight() - Const.ELEMENT_HEIGHT_DELTA);
+		this.setNodeHeight(nodeHeight - Const.ELEMENT_HEIGHT_DELTA);
 		break;
 	    case LEFT:
-		this.setNodeWidth(getNodeWidth() - Const.ELEMENT_WIDTH_DELTA);
+		this.setNodeWidth(nodeWidth - Const.ELEMENT_WIDTH_DELTA);
 		break;
 	    case RIGHT:
-		this.setNodeWidth(getNodeWidth() + Const.ELEMENT_WIDTH_DELTA);
+		this.setNodeWidth(nodeWidth + Const.ELEMENT_WIDTH_DELTA);
 		break;
 	    default:
 		return;
 	    }
 
-	    setNodeWidth(getNodeWidth() < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : getNodeWidth());
-	    setNodeHeight(getNodeHeight() < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : getNodeHeight());
+	    setNodeWidth(nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : nodeWidth);
+	    setNodeHeight(nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : nodeHeight);
 
 	    Platform.runLater(new Runnable() {
 		@Override
@@ -513,14 +513,14 @@ public abstract class ARender extends Pane implements MinMaxListener {
 
 	    int sign = event.getDeltaY() < 0 ? -1 : 1;
 
-	    this.setNodeWidth(getNodeWidth() + sign * Const.ELEMENT_WIDTH_DELTA);
-	    this.setNodeHeight(getNodeHeight() + sign * Const.ELEMENT_HEIGHT_DELTA);
+	    this.setNodeWidth(nodeWidth + sign * Const.ELEMENT_WIDTH_DELTA);
+	    this.setNodeHeight(nodeHeight + sign * Const.ELEMENT_HEIGHT_DELTA);
 
 	    this.hSpace = hSpace + sign * Const.ELEMENT_HSPACE_DELTA;
 	    this.vSpace = vSpace + sign * Const.ELEMENT_VSPACE_DELTA;
 
-	    setNodeWidth(getNodeWidth() < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : getNodeWidth());
-	    setNodeHeight(getNodeHeight() < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : getNodeHeight());
+	    setNodeWidth(nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : nodeWidth);
+	    setNodeHeight(nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : nodeHeight);
 
 	    this.repaintAll();
 	});
@@ -836,7 +836,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	if (struct instanceof Array) {
 	    this.relativeNodeSize = value;
 	    if (relativeNodeSize || foo != 0 || foo != 1) {
-		this.foo = foo;
+		this.minMaxSizeFactor = foo;
 		((Array) struct).setListener(this);
 	    }
 	} else if (value) {
@@ -849,7 +849,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
      * TODO: Javadoc
      */
     private boolean relativeNodeSize = false;
-    private double foo;
+    private double minMaxSizeFactor;
 
     public void setRelativeNodeSizes() {
 	if (!relativeNodeSize) {
@@ -893,11 +893,11 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	double relNodeHeight;
 	double factor;
 
-	factor = (foo - 1) * ave.getElement().getNumValue() / span;
-	factor = factor > 1 ? 1 : factor; // For elements whose value are not set by the model.
+	factor = (minMaxSizeFactor - 1) * ave.getElement().getNumValue() / span;
+	factor = factor < 1 ? factor : 1; // Cap at 1 for nodes with the value set outside model.
 
-	relNodeWidth = getNodeWidth() / foo;
-	relNodeHeight = getNodeHeight() / foo;
+	relNodeWidth = this.nodeWidth / minMaxSizeFactor;
+	relNodeHeight = this.nodeHeight / minMaxSizeFactor;
 
 	relNodeWidth = relNodeWidth + relNodeWidth * factor;
 	relNodeHeight = relNodeHeight + relNodeHeight * factor;

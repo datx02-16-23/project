@@ -69,7 +69,7 @@ public class KTreeRender extends ARender {
 	this.K = K < 2 ? 2 : K;
 	contentPane.getChildren().add(nodeConnectorLines);
 	nodeConnectorLines.toBack();
-	this.setRelativeNodeSize(Debug.ERR, 2); //TODO remove
+	this.setRelativeNodeSize(Debug.ERR, 1.5); //TODO remove
     }
 
     public void render() {
@@ -110,8 +110,8 @@ public class KTreeRender extends ARender {
 	AVElement parentVis = visualMap
 		.get(Arrays.toString(new int[] { (((IndexedElement) ae).getIndex()[0] - 1) / K }));
 
-	double dx = getNodeWidth() / 2;
-	double dy = getNodeHeight() / 2;
+	double dx = nodeWidth / 2;
+	double dy = nodeHeight / 2;
 
 	// Connect child to parent
 	if (parentVis != null) {
@@ -164,7 +164,7 @@ public class KTreeRender extends ARender {
 	int breadth, depth;
 	if (index == 0) { // Root element
 	    double p = Tools.pow(K, totDepth) / 2;
-	    x = hSpace + (hSpace + getNodeWidth()) * (p) - ((K + 1) % 2) * (getNodeWidth() + hSpace) / 2;
+	    x = hSpace + (hSpace + nodeWidth) * (p) - ((K + 1) % 2) * (nodeWidth + hSpace) / 2;
 	} else {
 	    depth = getDepth(index);
 	    breadth = getBreadth(index, depth);
@@ -181,11 +181,11 @@ public class KTreeRender extends ARender {
 	double x = hSpace;
 	
 	if (depth < totDepth) {
-	    x = x + (hSpace + getNodeWidth()) * ((L - 1) / 2);
+	    x = x + (hSpace + nodeWidth) * ((L - 1) / 2);
 	}
 	// Dont multiply by zero
 	if (breadth > 0) {
-	    return hSpace + x + breadth * L * ((hSpace + getNodeWidth()));
+	    return hSpace + x + breadth * L * ((hSpace + nodeWidth));
 	} else {
 	    return hSpace + x;
 	}
@@ -206,13 +206,13 @@ public class KTreeRender extends ARender {
 	Tools.getAdjustedY(this, e);
 	AVElement ave = visualMap.get(Arrays.toString(((IndexedElement) e).getIndex()));
 	if(ave != null){
-	    y = y + (this.getNodeHeight() - ave.height)/2;
+	    y = y + (this.nodeHeight - ave.height)/2;
 	}
 	return y;
     }
 
     private double getY(int depth) {
-	return depth * (getNodeHeight() + vSpace);
+	return depth * (nodeHeight + vSpace);
     }
 
     private int getDepth(int index) {
@@ -256,15 +256,15 @@ public class KTreeRender extends ARender {
     @Override
     public void calculateSize() {
 	calculateDepthAndBreadth();
-	totWidth = totBreadth * (getNodeWidth() + hSpace) + hSpace * 2;
-	totHeight = (totDepth + 1) * (getNodeHeight() + vSpace) + vSpace;
+	totWidth = totBreadth * (nodeWidth + hSpace) + hSpace * 2;
+	totHeight = (totDepth + 1) * (nodeHeight + vSpace) + vSpace;
 	setRestricedSize(totWidth, totHeight);
     }
 
     @Override
     protected AVElement createVisualElement(Element e) {
 	elementStyle = elementStyle == null ? DEFAULT_ELEMENT_STYLE : elementStyle;
-	AVElement ve = AVElementFactory.shape(elementStyle, e, getNodeWidth(), getNodeHeight());
+	AVElement ve = AVElementFactory.shape(elementStyle, e, nodeWidth, nodeHeight);
 	ve.setInfoPos(Pos.TOP_LEFT);
 	ve.setInfoArray(((IndexedElement) e).getIndex());
 	return ve;
@@ -273,7 +273,7 @@ public class KTreeRender extends ARender {
     @Override
     protected AVElement createVisualElement(double value, Color color) {
 	elementStyle = elementStyle == null ? DEFAULT_ELEMENT_STYLE : elementStyle;
-	AVElement ve = AVElementFactory.shape(elementStyle, value, color, getNodeWidth(), getNodeHeight());
+	AVElement ve = AVElementFactory.shape(elementStyle, value, color, nodeWidth, nodeHeight);
 	ve.setInfoPos(null);
 	return ve;
     }

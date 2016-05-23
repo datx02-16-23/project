@@ -95,7 +95,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
     }
 
     public double getX(int index) {
-	return (getNodeWidth() + hSpace) * index + hSpace + padding + 5;
+	return (nodeWidth + hSpace) * index + hSpace + padding + 5;
     }
 
     @Override
@@ -236,7 +236,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
 	double lim = padding / 2;
 	int i = 1;
 
-	for (double y = xAxisY - getNodeHeight(); y >= lim; y = y - getNodeHeight()) {
+	for (double y = xAxisY - nodeHeight; y >= lim; y = y - nodeHeight) {
 	    // Notch
 	    Line line = new Line(padding - 3, y, padding + 3, y);
 	    axes.getChildren().add(line);
@@ -254,7 +254,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
 
     @Override
     public void calculateSize() {
-	totWidth = struct.getElements().size() * (getNodeWidth() + hSpace) + padding * 3;
+	totWidth = struct.getElements().size() * (nodeWidth + hSpace) + padding * 3;
 	xAxisY = renderHeight - padding;
 	rightWallX = totWidth - padding;
 	renderHeight = renderHeight < 100 ? 100 : renderHeight;
@@ -263,20 +263,20 @@ public class BarchartRender extends ARender implements MinMaxListener {
 
     @Override
     protected BarchartElement createVisualElement(Element e) {
-	BarchartElement ve = (BarchartElement) AVElementFactory.shape(ELEMENT_STYLE, e, getNodeWidth(),
-		getNodeHeight() * e.getNumValue());
+	BarchartElement ve = (BarchartElement) AVElementFactory.shape(ELEMENT_STYLE, e, nodeWidth,
+		nodeHeight * e.getNumValue());
 	return ve;
     }
 
     @Override
     protected AVElement createVisualElement(double value, Color color) {
-	AVElement ve = AVElementFactory.shape(ELEMENT_STYLE, value, color, getNodeWidth(), getNodeHeight() * value);
+	AVElement ve = AVElementFactory.shape(ELEMENT_STYLE, value, color, nodeWidth, nodeHeight * value);
 	return ve;
     }
 
     @Override
     protected void bellsAndWhistles(Element e, AVElement ve) {
-	((BarchartElement) ve).updateSize(getNodeHeight(), -1);
+	((BarchartElement) ve).updateSize(nodeHeight, -1);
     }
 
     private void createIndexLabel(Element e) {
@@ -330,7 +330,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
 	double y1 = this.absY(src, tarRender);
 
 	double x2 = x1;
-	double y2 = y1 - getNodeWidth() / 2;
+	double y2 = y1 - nodeWidth / 2;
 	int[] i = ((IndexedElement) src).getIndex();
 	Arrays.copyOf(i, i.length);
 	final AVElement orig = visualMap.get(Arrays.toString(i));
@@ -356,7 +356,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
 
     public void calculateHeight(double v) {
 	double oldHeight = renderHeight;
-	renderHeight = v * getNodeHeight() + padding * 2 + getNodeHeight() / 2;
+	renderHeight = v * nodeHeight + padding * 2 + nodeHeight / 2;
 	calculateSize();
 	this.repaintAll();
 	this.setTranslateY(this.getTranslateY() + (oldHeight - renderHeight));
