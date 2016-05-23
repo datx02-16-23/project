@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 import assets.Const;
+import assets.Tools;
 
 /**
  * A variable used by the {@code Operation} class.
@@ -42,7 +43,7 @@ public class Locator implements Serializable {
 
 	@Override
 	public String toString() {
-		return identifier + (index == null ? "" : Arrays.toString(index));
+		return Tools.stripQualifiers(identifier) + (index == null ? "" : Arrays.toString(index));
 	}
 
 	@Override

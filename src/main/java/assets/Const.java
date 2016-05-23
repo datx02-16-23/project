@@ -13,6 +13,8 @@ public abstract class Const {
     private Const() {
     } // Not to be instantiated.
 
+    public static final long VERSION_NUMBER = Long.MAX_VALUE;
+
     /*
      * Misc strings and stuff
      */
@@ -20,11 +22,10 @@ public abstract class Const {
     public static final String PROGRAM_NAME = CONTRACT_NAME + ": JavaFX Desktop Visualization";
     public static final String PROJECT_SLOGAN = "Abstract Visualization of Programs";
     public static final String PROPERTIES_FILE_NAME = "config.properties";
-    public static final String DEFAULT_CHANNEL = "mavser_stream";
+    public static final String DEFAULT_CHANNEL = "mavster_stream";
     // Credits
     public static final String[] DEVELOPER_NAMES = { "Johan GERDIN", "Ivar \"Cannonbait\" JOSEFSSON", "Dennis JONSSON",
 	    "Simon SMITH", "Richard \"Whisp\" SUNDQVIST" };
-    public static final long VERSION_NUMBER = Long.MAX_VALUE;
 
     // ============================================================= //
     /*
@@ -43,7 +44,7 @@ public abstract class Const {
      */
     public static final int DEFAULT_RENDER_HEIGHT = 400;
 
-    public static final double DEFAULT_RENDER_PADDING = 10;
+    public static final double DEFAULT_RENDER_PADDING = 5;
     public static final long DEFAULT_ANIMATION_TIME = 5000;
     public static final double DEFAULT_RELATIVE_NODE_FACTOR = 3;
 
