@@ -295,7 +295,7 @@ public class Visualization extends StackPane {
      * Attempt to place visuals with minimal overlap. Will return {@code false}
      * if placement failed. Note that {@code true} does not guarantee that there
      * is no overlap between renders.
-     *
+     * 
      * @return False if placement failed.
      */
     public boolean placeVisuals () {
@@ -306,87 +306,85 @@ public class Visualization extends StackPane {
         double xPos = 0;
         double yPos = 0;
 
-    // @formatter:off
-	int northWest = 0;
-	int nWExpand = 0; // Default.
-	int southWest = 0;
-	int sWExpand = 0; // Bar Chart.
-	int northEast = 0;
-	int nEExpand = 0; // Single elements.
-	for (Node node : managerPane.getChildren()) {
-	    arm = (ARenderManager) node;
+        //@formatter:off
+        int northWest = 0; int nWExpand = 0; // Default.
+        int southWest = 0; int sWExpand = 0; // Bar Chart.
+        int northEast = 0; int nEExpand = 0; // Single elements.
+        int southEast = 0; int sEExpand = 0; // Not used at the moment.
+        //@formatter:on
 
-	    switch (arm.getStructure().visual) {
-	    case single:
-		yPos = northEast * arm.getRender().getHeight() + margin;
-		xPos = getWidth() - (arm.getRender().getWidth() + margin) * (nEExpand + 1);
-		if (!(checkXPos(xPos) && checkYPos(yPos))) {
-		    northEast = 0;
-		    nEExpand++;
-		    yPos = northEast * arm.getRender().getHeight() + margin;
-		    xPos = getWidth() - arm.getRender().getWidth() * (nEExpand + 1) - margin;
-		}
-		northEast++;
-		break;
-	    case bar:
-		xPos = margin + getWidth() / 2 * sWExpand;
-		yPos = getHeight() - (margin + arm.getRender().getHeight()) * southWest - margin * 2;
-		if (southWest > 0) {
-		    sWExpand++;
-		    xPos = margin + arm.getRender().getWidth() * sWExpand;
-		    yPos = getHeight() - (margin + arm.getRender().getHeight()) - margin * 2;
-		}
-		southWest++;
-		break;
-	    default:
-		xPos = margin + getWidth() * nWExpand;
-		yPos = (margin + arm.getRender().getHeight()) * northWest + margin;
-		if (!(checkXPos(xPos) & checkYPos(yPos))) {
-		    nWExpand++; // TODO
-		}
-		northWest++;
-		break;
+        for (Node node : managerPane.getChildren()) {
+            arm = (ARenderManager) node;
 
-	    }
+            switch (arm.getStructure().visual) {
+            case single:
+                yPos = northEast * 120 + margin;
+                xPos = getWidth() - (150 + margin) * (nEExpand + 1);
+                if (!(checkXPos(xPos) && checkYPos(yPos))) {
+                    northEast = 0;
+                    nEExpand++;
+                    yPos = northEast * 120 + margin;
+                    xPos = getWidth() - 150 * (nEExpand + 1) - margin;
+                }
+                northEast++;
+                break;
+            case bar:
+                xPos = margin + this.getWidth() * sWExpand;
+                yPos = getHeight() - 125 - (Const.DEFAULT_RENDER_HEIGHT) * (southWest) - margin;
+                if (!(checkXPos(xPos) && checkYPos(yPos))) {
+                    sWExpand++; // TODO
+                }
+                southWest++;
+                break;
+            default:
+                xPos = margin + this.getWidth() * nWExpand;
+                yPos = (margin + Const.DEFAULT_RENDER_HEIGHT) * northWest + margin;
+                if (!(checkXPos(xPos) & checkYPos(yPos))) {
+                    nWExpand++; // TODO
+                }
+                northWest++;
+                break;
 
-	    // Make sure users can see the render.
-	    if (checkPositions(xPos, yPos) == false) {
-		// Do not remove this printout //RS
-		if (Debug.ERR) {
-		    System.err.println("Using default placement for \"" + arm.getStructure() + "\".");
-		}
-		yPos = margin;
-		xPos = margin;
-		successful = false;
-	    }
+            }
 
-	    arm.getRender().setTranslateX(xPos);
-	    arm.getRender().setTranslateY(yPos);
-	    // arm.getRender().setLayoutX(transX);
-	    // arm.getRender().setLayoutY(transY);
-	    arm.getRender().updateInfoLabels();
-	}
+            // Make sure users can see the render.
+            if (checkPositions(xPos, yPos) == false) {
+                // Do not remove this printout //RS
+                if (Debug.ERR) {
+                    System.err.println("Using default placement for \"" + arm.getStructure() + "\".");
+                }
+                yPos = margin;
+                xPos = margin;
+                successful = false;
+            }
 
-	return successful;
+            arm.getRender().setTranslateX(xPos);
+            arm.getRender().setTranslateY(yPos);
+            // arm.getRender().setLayoutX(transX);
+            // arm.getRender().setLayoutY(transY);
+            arm.getRender().updateInfoLabels();
+        }
+
+        return successful;
     }
 
-    private boolean checkPositions(double xPos, double yPos) {
-	boolean result = true;
+    private boolean checkPositions (double xPos, double yPos) {
+        boolean result = true;
 
-	if (checkXPos(xPos) == false) {
-	    if (Debug.OUT) {
-		System.err.println("Bad X-Coordinate: " + xPos + " not in " + xRange() + ".");
-	    }
-	    result = false;
-	}
-	if (checkYPos(yPos) == false) {
-	    if (Debug.OUT) {
-		System.err.println("Bad Y-Coordinate: " + yPos + " not in " + yRange() + ".");
-	    }
-	    result = false;
-	}
+        if (checkXPos(xPos) == false) {
+            if (Debug.OUT) {
+                System.out.println("Bad X-Coordinate: " + xPos + " not in " + xRange() + ".");
+            }
+            result = false;
+        }
+        if (checkYPos(yPos) == false) {
+            if (Debug.OUT) {
+                System.out.println("Bad Y-Coordinate: " + yPos + " not in " + yRange() + ".");
+            }
+            result = false;
+        }
 
-	return result;
+        return result;
     }
 
     /**
@@ -396,8 +394,8 @@ public class Visualization extends StackPane {
      *            An x-coordinate.
      * @return True if the coordinate good, false otherwise.
      */
-    public boolean checkXPos(double xPos) {
-	return !(xPos < getXMin() || xPos > getXMax());
+    public boolean checkXPos (double xPos) {
+        return !(xPos < getXMin() || xPos > getXMax());
     }
 
     /**
@@ -405,8 +403,8 @@ public class Visualization extends StackPane {
      *
      * @return The maximum acceptable X-Coordinate.
      */
-    public double getXMax() {
-	return getWidth() - 100;
+    public double getXMax () {
+        return getWidth() - 50;
     }
 
     /**
@@ -414,8 +412,8 @@ public class Visualization extends StackPane {
      *
      * @return The minimum acceptable X-Coordinate.
      */
-    public double getXMin() {
-	return Const.DEFAULT_RENDER_PADDING;
+    public double getXMin () {
+        return Const.DEFAULT_RENDER_PADDING;
     }
 
     /**
@@ -426,8 +424,8 @@ public class Visualization extends StackPane {
      * @return True if the coordinate good, false otherwise.
      */
 
-    public boolean checkYPos(double yPos) {
-	return !(yPos < getYMin() || yPos > getYMax());
+    public boolean checkYPos (double yPos) {
+        return !(yPos < getYMin() || yPos > getYMax());
     }
 
     /**
@@ -435,8 +433,8 @@ public class Visualization extends StackPane {
      *
      * @return The maximum acceptable Y-Coordinate.
      */
-    public double getYMax() {
-	return getHeight() - 100;
+    public double getYMax () {
+        return getHeight() - 50;
     }
 
     /**
@@ -444,8 +442,8 @@ public class Visualization extends StackPane {
      *
      * @return The minimum acceptable Y-Coordinate.
      */
-    public double getYMin() {
-	return Const.DEFAULT_RENDER_PADDING;
+    public double getYMin () {
+        return Const.DEFAULT_RENDER_PADDING;
     }
 
     /**
@@ -453,8 +451,8 @@ public class Visualization extends StackPane {
      *
      * @return A String representing the range
      */
-    public String xRange() {
-	return "[" + getXMin() + ", " + getXMax() + "]";
+    public String xRange () {
+        return "[" + getXMin() + ", " + getXMax() + "]";
     }
 
     /**
@@ -462,8 +460,8 @@ public class Visualization extends StackPane {
      *
      * @return A String representing the range
      */
-    public String yRange() {
-	return "[" + getYMin() + ", " + getYMax() + "]";
+    public String yRange () {
+        return "[" + getYMin() + ", " + getYMax() + "]";
     }
 
     /**
@@ -474,32 +472,32 @@ public class Visualization extends StackPane {
      */
     public static class HintPane extends Pane {
 
-	public HintPane() {
-	    Image image = new Image(Controller.class.getResourceAsStream("/assets/upload.png"));
-	    setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT,
-		    BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-		    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false))));
-	    setVisible(true);
-	}
+        public HintPane () {
+            Image image = new Image(Controller.class.getResourceAsStream("/assets/upload.png"));
+            setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
+                    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false))));
+            setVisible(true);
+        }
     }
 
     /**
      * Create a render which shows live updating statistics for the model.
      */
-    public void showLiveStats() {
-	Main.console.force("Visualization.showLiveStats() not implemnted yet");
+    public void showLiveStats () {
+        Main.console.force("Visualization.showLiveStats() not implemnted yet");
     }
 
     /**
      * Reset the renders' states.
      */
-    public void reset() {
-	for(ARenderManager rm : managerMap.values()){
-	    rm.reset();
-	}
+    public void reset () {
+        for (ARenderManager rm : managerMap.values()) {
+            rm.reset();
+        }
     }
 
-    public Collection<ARenderManager> getManagers(){
-	return managerMap.values();
+    public Collection<ARenderManager> getManagers () {
+        return managerMap.values();
     }
 }

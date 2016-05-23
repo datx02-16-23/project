@@ -577,7 +577,7 @@ public class Controller implements CommunicatorListener {
 //        
 //        for(String s : allNames){
 //            System.err.println("Ignored unused data structure: " + structs.get(s));
-//            Main.console.err("Ignored unused data structure: " + structs.get(s));
+//            Main.console.err("Ignored  unused data structure: " + structs.get(s));
 //            structs.remove(s);
 //        }
     }

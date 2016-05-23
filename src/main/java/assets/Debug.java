@@ -17,5 +17,5 @@ public final class Debug {
     /**
      * {@link System#out} printouts etc.
      */
-    public static boolean OUT = false;
+    public static boolean OUT = true;
 }
