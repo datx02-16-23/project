@@ -64,7 +64,6 @@ public abstract class AVElementFactory {
             return shape(ElementShape.random(), e, pri, sec);
         case POLYGON: // Pick a polygon at random if no points are provided.
             return shape(ElementShape.randomPolygon(), e, pri, sec);
-
         }
 
         vis.elemShape = shape;

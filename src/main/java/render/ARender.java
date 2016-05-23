@@ -191,7 +191,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
         initDragAndZoom();
         bindAnimPane();
 
-        this.setRelativeNodeSize(true, Const.DEFAULT_RELATIVE_NODE_FACTOR);
+        setRelativeNodeSize(Const.DEFAULT_RELATIVE_NODE_FACTOR);
 
         expand();
     }
@@ -697,16 +697,22 @@ public abstract class ARender extends Pane implements MinMaxListener {
         }
     }
 
-    public void setRelativeNodeSize (boolean value, double foo) {
-        if (struct instanceof Array) {
-            relativeNodeSize = value;
-            if (relativeNodeSize || foo != 0 || foo != 1) {
-                minMaxSizeFactor = foo;
-                ((Array) struct).setListener(this);
-            }
-        } else if (value) {
-            System.err.println("Relative node sizes only available for arrays.");
-            relativeNodeSize = false;
+    /**
+     * Set the relative node size for the render. If {@code factor == 2}, the
+     * largest element will be twice as large as the smallest. Relation is
+     * inversed for {@code 0 < factor < 1}.<br>
+     * <br>
+     * Will disable for {@code factor <= 0} and {@code factor == 1}
+     * 
+     * @param factor
+     *            The min-max size factor for this render.
+     */
+    public void setRelativeNodeSize (double factor) {
+        relativeNodeSize = (factor >= 0 && factor != 1);
+
+        if (relativeNodeSize && struct instanceof Array) {
+            this.factor = factor;
+            ((Array) struct).setListener(this);
         }
     }
 
@@ -714,7 +720,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
      * TODO: Javadoc
      */
     private boolean relativeNodeSize = false;
-    private double  minMaxSizeFactor;
+    private double  factor;
 
     public void setRelativeNodeSizes () {
         if (!relativeNodeSize) {
@@ -723,11 +729,6 @@ public abstract class ARender extends Pane implements MinMaxListener {
 
         double min = Math.abs(((Array) struct).getMin());
         double max = Math.abs(((Array) struct).getMax());
-
-        double span = min + max;
-        if (span == 0) {
-            return; // No point in making them all the same size again.
-        }
 
         for (Node n : defaultNodePane.getChildren()) {
             if (n instanceof AVElement) {
@@ -750,23 +751,23 @@ public abstract class ARender extends Pane implements MinMaxListener {
     }
 
     protected void setRelativeNodeSize (AVElement ave, double span) {
-        if (!relativeNodeSize || span == 0) {
-            return; // No point in making them all the same size again.
+        if (!relativeNodeSize) {
+            return;
         }
 
         double relNodeWidth;
         double relNodeHeight;
-        double factor;
+        double fact;
 
-        factor = (minMaxSizeFactor - 1) * ave.getElement().getNumValue() / span;
-        factor = factor < 1 ? factor : 1; // Cap at 1 for nodes with the value
-                                          // set outside model.
+        // Cap at 1 for nodes with the value set outside model.
+        fact = (factor - 1) * ave.getElement().getNumValue() / span;
+        fact = fact < 1 ? fact : 1;
 
-        relNodeWidth = nodeWidth / minMaxSizeFactor;
-        relNodeHeight = nodeHeight / minMaxSizeFactor;
+        relNodeWidth = nodeWidth / factor;
+        relNodeHeight = nodeHeight / factor;
 
-        relNodeWidth = relNodeWidth + relNodeWidth * factor;
-        relNodeHeight = relNodeHeight + relNodeHeight * factor;
+        relNodeWidth = relNodeWidth + relNodeWidth * fact;
+        relNodeHeight = relNodeHeight + relNodeHeight * fact;
 
         ave.setSize(relNodeWidth, relNodeHeight);
     }

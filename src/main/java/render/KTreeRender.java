@@ -251,10 +251,10 @@ public class KTreeRender extends ARender {
 
         int index = ((IndexedElement) e).getIndex() [0];
 
-        double y = 0;
+        double y = vSpace;
 
         if (index != 0) {
-            y = this.getY(getDepth(index)); // Should not be used for root.
+            y = y + this.getY(getDepth(index)); // Should not be used for root.
         }
 
         return y + Tools.getAdjustedY(this, e);
@@ -284,9 +284,10 @@ public class KTreeRender extends ARender {
     private void calculateDepthAndBreadth () {
         if (K < 2) {
             return;
-            // Fixed infinite recursion case caused by
-            // superconstructor call before K could be validated by local
-            // constructor.
+            /*
+             * Fixed infinite recursion case caused by superconstructor call
+             * before K could be validated by local constructor.
+             */
         }
 
         double structSize = struct.getElements().size();

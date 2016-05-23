@@ -318,29 +318,29 @@ public class Visualization extends StackPane {
 
 	    switch (arm.getStructure().visual) {
 	    case single:
-		yPos = northEast * 120 + margin;
-		xPos = getWidth() - (150 + margin) * (nEExpand + 1);
+		yPos = northEast * arm.getRender().getHeight() + margin;
+		xPos = getWidth() - (arm.getRender().getWidth() + margin) * (nEExpand + 1);
 		if (!(checkXPos(xPos) && checkYPos(yPos))) {
 		    northEast = 0;
 		    nEExpand++;
-		    yPos = northEast * 120 + margin;
-		    xPos = getWidth() - 150 * (nEExpand + 1) - margin;
+		    yPos = northEast * arm.getRender().getHeight() + margin;
+		    xPos = getWidth() - arm.getRender().getWidth() * (nEExpand + 1) - margin;
 		}
 		northEast++;
 		break;
 	    case bar:
-		xPos = margin + getWidth() / 3 * sWExpand;
-		yPos = getHeight() - (margin + Const.DEFAULT_RENDER_HEIGHT / 3) - margin * 3;
+		xPos = margin + getWidth() / 2 * sWExpand;
+		yPos = getHeight() - (margin + arm.getRender().getHeight()) * southWest - margin * 2;
 		if (southWest > 0) {
 		    sWExpand++;
-		    xPos = margin + getWidth() / 3 * sWExpand;
-		    yPos = getHeight() - (margin + Const.DEFAULT_RENDER_HEIGHT / 3) - margin * 3;
+		    xPos = margin + arm.getRender().getWidth() * sWExpand;
+		    yPos = getHeight() - (margin + arm.getRender().getHeight()) - margin * 2;
 		}
 		southWest++;
 		break;
 	    default:
 		xPos = margin + getWidth() * nWExpand;
-		yPos = (margin + Const.DEFAULT_RENDER_HEIGHT) * northWest + margin;
+		yPos = (margin + arm.getRender().getHeight()) * northWest + margin;
 		if (!(checkXPos(xPos) & checkYPos(yPos))) {
 		    nWExpand++; // TODO
 		}

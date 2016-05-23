@@ -15,22 +15,25 @@ public abstract class Const {
 
     public static final long       VERSION_NUMBER               = Long.MAX_VALUE;
 
-    /*
-     * Misc strings and stuff
-     */
     public static final String     CONTRACT_NAME                = "Leharas";
     public static final String     PROGRAM_NAME                 = CONTRACT_NAME + ": JavaFX Desktop Visualization";
     public static final String     PROJECT_SLOGAN               = "Abstract Visualization of Programs";
     public static final String     PROPERTIES_FILE_NAME         = "config.properties";
     public static final String     DEFAULT_CHANNEL              = "mavster_stream";
     // Credits
-    public static final String[]   DEVELOPER_NAMES              = { "Johan GERDIN", "Ivar \"Cannonbait\" JOSEFSSON",
-            "Dennis JONSSON", "Simon SMITH", "Richard \"Whisp\" SUNDQVIST" };
+    public static final String[]   DEVELOPER_NAMES              = {
+            //@formatter:off
+                                                                   "Johan GERDIN",
+                                                                   "Ivar \"Cannonbait\" JOSEFSSON",
+                                                                   "Dennis JONSSON",
+                                                                   "Simon SMITH",
+                                                                   "Richard \"Whisp\" SUNDQVIST"};
+                                                                   //@formatter:on
 
     // ============================================================= //
     /*
      *
-     * Render constants
+     * Render
      *
      */
     // ============================================================= //
@@ -45,12 +48,9 @@ public abstract class Const {
     public static final int        DEFAULT_RENDER_HEIGHT        = 400;
 
     public static final double     DEFAULT_RENDER_PADDING       = 5;
-    public static final long       DEFAULT_ANIMATION_TIME       = 5000;
-    public static final double     DEFAULT_RELATIVE_NODE_FACTOR = 3;
+    public static final long       DEFAULT_ANIMATION_TIME       = 3500;
+    public static final double     DEFAULT_RELATIVE_NODE_FACTOR = 2;
 
-    /*
-     * More suggested values
-     */
     public static final double     DEFAULT_ELEMENT_SIZE         = 50;
     public static final double     DEFAULT_ELEMENT_WIDTH        = DEFAULT_ELEMENT_SIZE;
     public static final double     DEFAULT_ELEMENT_HEIGHT       = DEFAULT_ELEMENT_SIZE;

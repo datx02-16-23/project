@@ -44,7 +44,6 @@ public class GridRender extends ARender {
             double vspace) {
         super(struct, width, height, hspace, vspace);
         this.majorOrder = majorOrder;
-        this.setRelativeNodeSize(true, 2);
     }
 
     @Override public void render () {
