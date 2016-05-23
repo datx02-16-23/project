@@ -29,6 +29,14 @@ import render.element.ElementShape;
 public class KTreeRender extends ARender {
 
     public static final ElementShape DEFAULT_ELEMENT_STYLE = ElementShape.RECTANGLE;
+    
+    // ============================================================= //
+    /*
+     * 
+     * Field Variables
+     * 
+     */
+    // ============================================================= //
 
     /**
      * Container for connector lines.
@@ -46,6 +54,14 @@ public class KTreeRender extends ARender {
      * total capacity for a tree with this depth.
      */
     private int totDepth, totBreadth, completedSize;
+    
+    // ============================================================= //
+    /*
+     * 
+     * Constructors
+     * 
+     */
+    // ============================================================= //
 
     /**
      * Create a new KTreeRender with K children and one parent. Will set K = 2
@@ -70,6 +86,14 @@ public class KTreeRender extends ARender {
 	contentPane.getChildren().add(nodeConnectorLines);
 	nodeConnectorLines.toBack();
     }
+    
+    // ============================================================= //
+    /*
+     * 
+     * Controls
+     * 
+     */
+    // ============================================================= //
 
     public void render() {
 	if (struct.repaintAll) {
@@ -89,6 +113,14 @@ public class KTreeRender extends ARender {
 	createGhosts(defaultNodePane.getChildren().size());
 	return true;
     }
+    
+    // ============================================================= //
+    /*
+     * 
+     * Interface methods
+     * 
+     */
+    // ============================================================= //
 
     /**
      * Connect a node to its parent.
