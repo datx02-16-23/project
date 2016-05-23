@@ -35,108 +35,114 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-import render.ARenderAnimation.AnimationOption;
+import render.ARenderAnimation.Effect;
 import render.element.AVElement;
 import render.element.ElementShape;
 
+/**
+ * Base class for renders.
+ * 
+ * @author Richard
+ *
+ */
 public abstract class ARender extends Pane implements MinMaxListener {
-    
+
     // ============================================================= //
     /*
-     * 
+     *
      * Field variables
-     * 
+     *
      */
     // ============================================================= //
 
     /**
      * The DataStructure this render represents.
      */
-    protected final DataStructure struct;
+    protected final DataStructure              struct;
 
     /**
      * Width of individual elements bounding boxes.
      */
-    protected double nodeWidth;
+    protected double                           nodeWidth;
     /**
      * Height of individual elements bounding boxes.
      */
-    protected double nodeHeight;
+    protected double                           nodeHeight;
 
     /**
      * Horizontal space between elements.
      */
-    protected double hSpace;
+    protected double                           hSpace;
     /**
      * Vertical space between elements.
      */
-    protected double vSpace;
+    protected double                           vSpace;
     /**
      * The width of the render.
      */
-    protected double renderWidth;
+    protected double                           renderWidth;
     /**
      * The height of the render.
      */
-    protected double renderHeight;
+    protected double                           renderHeight;
 
     /**
      * A mapping of actual Elements to VisualElements.
      */
     // protected final HashMap<Element, VisualElement> visualMap =
     // new HashMap<Element, VisualElement>();
-    protected final HashMap<String, AVElement> visualMap = new HashMap<String, AVElement>();
+    protected final HashMap<String, AVElement> visualMap       = new HashMap<String, AVElement>();
 
     // ============================================================= //
     /*
-     * 
+     *
      * Containers
-     * 
+     *
      */
     // ============================================================= //
-    
+
     /**
      * Pane for rendering of visual element nodes. Added to {@link contentPane}
      * automatically.
      */
-    protected final Pane defaultNodePane = new Pane();
+    protected final Pane                       defaultNodePane = new Pane();
     /**
      * The content pane for the render. By default, a Pane for nodes (
      * {@link #defaultNodePane}) will be added, but renders can add their own
      * panes to {@code contentPane} if need be.
      */
-    protected Pane contentPane;
+    protected Pane                             contentPane;
 
     /**
      * The pane used when drawing animated elements.
      */
-    public final Pane animPane;
+    public final Pane                          animPane;
     /**
      * The root for the FXML Render.
      */
-    protected GridPane root;
+    protected GridPane                         root;
     /**
      * Name label.
      */
-    protected Label name;
+    protected Label                            name;
     /**
      * Header bar.
      */
-    protected Node header;
+    protected Node                             header;
     /**
      * Info labels.
      */
-    protected Label xposLabel, yposLabel, scaleLabel;
+    protected Label                            xposLabel, yposLabel, scaleLabel;
     /**
      * The element style to use.
      */
-    protected ElementShape elementStyle;
-    
+    protected ElementShape                     elementStyle;
+
     // ============================================================= //
     /*
-     * 
+     *
      * Constructors
-     * 
+     *
      */
     // ============================================================= //
 
@@ -146,17 +152,18 @@ public abstract class ARender extends Pane implements MinMaxListener {
      * Element height: {@link Const#DEFAULT_ELEMENT_HEIGHT}<br>
      * Element horizontal space: {@link Const#DEFAULT_ELEMENT_HSPACE}<br>
      * Element vertical space: {@link Const#DEFAULT_ELEMENT_VSPACE}<br>
-     * 
+     *
      * @param struct
      *            The DataStructure this Render will draw.
      */
-    public ARender(DataStructure struct) {
-	this(struct, Const.DEFAULT_ELEMENT_WIDTH, Const.DEFAULT_ELEMENT_HEIGHT, Const.DEFAULT_ELEMENT_HSPACE, Const.DEFAULT_ELEMENT_VSPACE);
+    public ARender (DataStructure struct) {
+        this(struct, Const.DEFAULT_ELEMENT_WIDTH, Const.DEFAULT_ELEMENT_HEIGHT, Const.DEFAULT_ELEMENT_HSPACE,
+                Const.DEFAULT_ELEMENT_VSPACE);
     }
 
     /**
      * Creates a new Render.
-     * 
+     *
      * @param struct
      *            The structure to render.
      * @param nodeWidth
@@ -168,132 +175,132 @@ public abstract class ARender extends Pane implements MinMaxListener {
      * @param vSpace
      *            The vertical space between elements in this Render.
      */
-    public ARender(DataStructure struct, double nodeWidth, double nodeHeight, double hSpace, double vSpace) {
-	this.struct = struct;
+    public ARender (DataStructure struct, double nodeWidth, double nodeHeight, double hSpace, double vSpace) {
+        this.struct = struct;
 
-	this.nodeWidth = nodeWidth;
-	this.nodeHeight = nodeHeight;
-	this.hSpace = hSpace;
-	this.vSpace = vSpace;
+        this.nodeWidth = nodeWidth;
+        this.nodeHeight = nodeHeight;
+        this.hSpace = hSpace;
+        this.vSpace = vSpace;
 
-	this.animPane = new Pane();
-	// bindAnimPane();
+        this.animPane = new Pane();
+        // bindAnimPane();
 
-	// Add stacked canvases
-	loadFXML();
-	initDragAndZoom();
-	bindAnimPane();
+        // Add stacked canvases
+        this.loadFXML();
+        this.initDragAndZoom();
+        this.bindAnimPane();
 
-	setRelativeNodeSize(true, Const.DEFAULT_RELATIVE_NODE_FACTOR);
+        this.setRelativeNodeSize(true, Const.DEFAULT_RELATIVE_NODE_FACTOR);
 
-	expand();
+        this.expand();
     }
 
-    private void bindAnimPane() {
-	// this.animPane.translateXProperty().bind(this.translateXProperty());
-	// this.animPane.translateYProperty().bind(this.translateYProperty());
-	// this.animPane.layoutXProperty().bind(this.layoutXProperty());
-	// this.animPane.layoutYProperty().bind(this.layoutYProperty());
-	this.animPane.scaleXProperty().bind(this.scaleXProperty());
-	this.animPane.scaleYProperty().bind(this.scaleYProperty());
+    private void bindAnimPane () {
+        // this.animPane.translateXProperty().bind(this.translateXProperty());
+        // this.animPane.translateYProperty().bind(this.translateYProperty());
+        // this.animPane.layoutXProperty().bind(this.layoutXProperty());
+        // this.animPane.layoutYProperty().bind(this.layoutYProperty());
+        this.animPane.scaleXProperty().bind(this.scaleXProperty());
+        this.animPane.scaleYProperty().bind(this.scaleYProperty());
     }
 
-    private void loadFXML() {
-	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/render/RenderBase.fxml"));
-	fxmlLoader.setController(this);
+    private void loadFXML () {
+        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/render/RenderBase.fxml"));
+        fxmlLoader.setController(this);
 
-	try {
-	    root = (GridPane) fxmlLoader.load();
-	} catch (IOException e) {
-	    e.printStackTrace();
-	    return;
-	}
-	root.setMinSize(150, 20);
+        try {
+            this.root = (GridPane) fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        this.root.setMinSize(150, 20);
 
-	// Content pane
-	contentPane = (Pane) fxmlLoader.getNamespace().get("content");
-	contentPane.getChildren().add(defaultNodePane);
-	reset();
+        // Content pane
+        this.contentPane = (Pane) fxmlLoader.getNamespace().get("content");
+        this.contentPane.getChildren().add(this.defaultNodePane);
+        this.reset();
 
-	// Name labels
-	name = (Label) fxmlLoader.getNamespace().get("name");
-	name.setText(struct.toString());
-	Label name_mo = (Label) fxmlLoader.getNamespace().get("name_mo");
-	name_mo.textProperty().bind(name.textProperty());
+        // Name labels
+        this.name = (Label) fxmlLoader.getNamespace().get("name");
+        this.name.setText(this.struct.toString());
+        Label name_mo = (Label) fxmlLoader.getNamespace().get("name_mo");
+        name_mo.textProperty().bind(this.name.textProperty());
 
-	ToolBar headerButtonBar = (ToolBar) fxmlLoader.getNamespace().get("buttons");
-	for (Node node : headerButtonBar.getItems()) {
-	    if (node instanceof ToggleButton == false) {
-		optionalHeaderContent.add(node);
-	    }
-	}
-	header = (Node) fxmlLoader.getNamespace().get("header");
-	bindHeader();
+        ToolBar headerButtonBar = (ToolBar) fxmlLoader.getNamespace().get("buttons");
+        for (Node node : headerButtonBar.getItems()) {
+            if (node instanceof ToggleButton == false) {
+                this.optionalHeaderContent.add(node);
+            }
+        }
+        this.header = (Node) fxmlLoader.getNamespace().get("header");
+        this.bindHeader();
 
-	// Info labels
-	name = (Label) fxmlLoader.getNamespace().get("name");
-	name.setText(struct.toString());
-	xposLabel = (Label) fxmlLoader.getNamespace().get("xpos");
-	yposLabel = (Label) fxmlLoader.getNamespace().get("ypos");
-	scaleLabel = (Label) fxmlLoader.getNamespace().get("scale");
+        // Info labels
+        this.name = (Label) fxmlLoader.getNamespace().get("name");
+        this.name.setText(this.struct.toString());
+        this.xposLabel = (Label) fxmlLoader.getNamespace().get("xpos");
+        this.yposLabel = (Label) fxmlLoader.getNamespace().get("ypos");
+        this.scaleLabel = (Label) fxmlLoader.getNamespace().get("scale");
 
-	// Hint text
-	final Label hintText = (Label) fxmlLoader.getNamespace().get("hintText");
-	hintText.visibleProperty().bind(name.visibleProperty().not());
+        // Hint text
+        final Label hintText = (Label) fxmlLoader.getNamespace().get("hintText");
+        hintText.visibleProperty().bind(this.name.visibleProperty().not());
 
-	getChildren().add(root);
+        this.getChildren().add(this.root);
 
-	afterParentLoadFXML(fxmlLoader);
+        this.afterParentLoadFXML(fxmlLoader);
     }
 
     /**
      * Called after the parent class has finished with loading the fxml, in case
      * the child wants to change anything. The default implementation of this
      * method does nothing.
-     * 
+     *
      * @param fxmlLoader
      *            The {@code FXMLLoader} used to load the render.
      */
-    protected void afterParentLoadFXML(FXMLLoader fxmlLoader) {
-	// Do nothing.
+    protected void afterParentLoadFXML (FXMLLoader fxmlLoader) {
+        // Do nothing.
     }
 
     /**
      * Clear the Render, restoring the background image.
      */
-    public void reset() {
-	contentPane.setBackground(Tools.getRawTypeBackground(struct));
-	setRestricedSize(150, 125); // Size of background images
+    public void reset () {
+        this.contentPane.setBackground(Tools.getRawTypeBackground(this.struct));
+        this.setRestricedSize(150, 125); // Size of background images
 
-	for (Node node : contentPane.getChildren()) {
-	    if (node instanceof Pane) {
-		((Pane) node).getChildren().clear();
-	    }
-	}
+        for (Node node : this.contentPane.getChildren()) {
+            if (node instanceof Pane) {
+                ((Pane) node).getChildren().clear();
+            }
+        }
     }
 
     // Make header visible only on mousever.
-    protected void bindHeader() {
-	header.visibleProperty().bind(name.visibleProperty().not());
+    protected void bindHeader () {
+        this.header.visibleProperty().bind(this.name.visibleProperty().not());
     }
 
     // Make header visible and enable manual setting of visiblity
-    protected void unbindHeader() {
-	name.setVisible(false);
-	header.visibleProperty().unbind();
+    protected void unbindHeader () {
+        this.name.setVisible(false);
+        this.header.visibleProperty().unbind();
     }
 
     // ============================================================= //
     /*
-     * 
+     *
      * Animation
-     * 
+     *
      */
     // ============================================================= //
 
     /**
      * Default animation for a Remove operation.
-     * 
+     *
      * @param remove
      *            The operation to animate.
      * @param millis
@@ -302,11 +309,11 @@ public abstract class ARender extends Pane implements MinMaxListener {
     // @formatter:off
     public void animateToggleScope(Element tar, long millis) {
 	if (Debug.ERR) {
-	    System.err.println("ARender.animateRemove(): " + struct + " is animating.");
+	    System.err.println("ARender.animateRemove(): " + this.struct + " is animating.");
 	}
 
 	ParallelTransition base = ARenderAnimation.stationary(tar, this.absX(tar, null), this.absY(tar, null), millis,
-		this, AnimationOption.GHOST, AnimationOption.FLIP);
+		this, Effect.GHOST, Effect.FLIP);
 
 	base.getNode().setRotationAxis(new Point3D(0, 1, 0));
 
@@ -318,7 +325,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
 
 	ft.setOnFinished(event -> {
 	    int[] i = ((IndexedElement) tar).getIndex();
-	    AVElement orig = visualMap.get(Arrays.toString(i));
+	    AVElement orig = this.visualMap.get(Arrays.toString(i));
 
 	    orig.setRotationAxis(new Point3D(0, 1, 0));
 
@@ -333,7 +340,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
 
     /**
      * Default animations for a read or write.
-     * 
+     *
      * @param src
      *            The source element.
      * @param srcRender
@@ -365,19 +372,19 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	}
 
 	if (Debug.ERR) {
-	    System.err.println("ARender.animateReadWrite(): " + struct + " is animating.");
+	    System.err.println("ARender.animateReadWrite(): " + this.struct + " is animating.");
 	}
 
 	if (hasSource && hasTarget) {
-	    ARenderAnimation.linear(tar, x1, y1, x2, y2, millis, tarRender, AnimationOption.GHOST).play();
+	    ARenderAnimation.linear(tar, x1, y1, x2, y2, millis, tarRender, Effect.GHOST).play();
 	} else if (hasSource) {
 	    // Source only
 	    ARenderAnimation.linear(src, x1, y1, x1, y1 - Const.DEFAULT_ELEMENT_HEIGHT * 2, millis, srcRender,
-		    AnimationOption.FADE_OUT, AnimationOption.SHRINK).play();
+		    Effect.FADE_OUT, Effect.SHRINK).play();
 	} else {
 	    // Target only
 	    ARenderAnimation.linear(tar, x2, y2 - Const.DEFAULT_ELEMENT_HEIGHT * 2, x2, y2, millis, tarRender,
-		    AnimationOption.FADE_IN, AnimationOption.GROW, AnimationOption.GHOST).play();
+		    Effect.FADE_IN, Effect.GROW, Effect.GHOST).play();
 	}
 
 	if (Debug.ERR && !hasSource && !hasTarget) {
@@ -388,7 +395,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
 
     /**
      * Default animation of a swap between two elements.
-     * 
+     *
      * @param var1
      *            The first element.
      * @param render1
@@ -403,50 +410,50 @@ public abstract class ARender extends Pane implements MinMaxListener {
     // @formatter:off
     public void animateSwap(Element var1, ARender render1, Element var2, ARender render2, long millis) {
 	if (Debug.ERR) {
-	    System.err.println("ARender.animateSwap(): " + struct + " is animating.");
+	    System.err.println("ARender.animateSwap(): " + this.struct + " is animating.");
 	}
 
 	ARenderAnimation.linear(var1, render1.absX(var2, render2), render2.absY(var2, render2),
-		render2.absX(var1, render1), render1.absY(var1, render1), millis, this, AnimationOption.GHOST).play();
+		render2.absX(var1, render1), render1.absY(var1, render1), millis, this, Effect.GHOST).play();
     }
     // @formatter:on
 
     /**
      * Calls, setPrefSize, setMaxSize, setWidth and setHeight. Will limit how
      * small the render can become.
-     * 
+     *
      * @param width
      *            The width of this Render.
      * @param height
      *            The height of this Render.
      */
-    protected void setRestricedSize(double width, double height) {
+    protected void setRestricedSize (double width, double height) {
 
-	// contentPane not visible indicates that the render is hidden.
-	if (contentPane.isVisible()) {
-	    // Minimum permitted size for aesthetic reasons.
-	    width = width < 150 ? 150 : width;
-	    height = height < 0 ? 0 : height;
+        // contentPane not visible indicates that the render is hidden.
+        if (this.contentPane.isVisible()) {
+            // Minimum permitted size for aesthetic reasons.
+            width = width < 150 ? 150 : width;
+            height = height < 0 ? 0 : height;
 
-	    contentPane.setMinSize(width, height);
-	    contentPane.setPrefSize(width, height);
-	    contentPane.setMaxSize(width, height);
+            this.contentPane.setMinSize(width, height);
+            this.contentPane.setPrefSize(width, height);
+            this.contentPane.setMaxSize(width, height);
 
-	    height = height < 45 ? 45 : height;
-	    height = height + 45; // Space for header bar.
-	    root.setPrefSize(width, height);
-	    root.setMaxSize(width, height);
+            height = height < 45 ? 45 : height;
+            height = height + 45; // Space for header bar.
+            this.root.setPrefSize(width, height);
+            this.root.setMaxSize(width, height);
 
-	    this.setPrefSize(width, height);
-	    this.setMaxSize(width, height);
-	}
+            this.setPrefSize(width, height);
+            this.setMaxSize(width, height);
+        }
     }
-    
+
     // ============================================================= //
     /*
-     * 
+     *
      * Controls
-     * 
+     *
      */
     // ============================================================= //
 
@@ -454,199 +461,199 @@ public abstract class ARender extends Pane implements MinMaxListener {
      * Order the Render_FX to draw the elements of the Data Structure it
      * carries. <br>
      * The default implementation only calls:
-     * 
+     *
      * <b>{@code struct.elementsDrawn(Color.WHITE);}</b>
      */
-    public void render() {
-	struct.elementsDrawn(Color.WHITE);
-	setRelativeNodeSizes();
+    public void render () {
+        this.struct.elementsDrawn(Color.WHITE);
+        this.setRelativeNodeSizes();
     }
-    
+
     /**
      * Force the Render to initialise all elements. This method will attempt
      * create elements and add them to the standard pane. It will clear the
      * children of all children in {@link #contentPane} before beginning.
      * {@link #bellsAndWhistles} will be called on every element.
-     * 
-     * 
+     *
+     *
      * @return True if there was anything to draw.
      */
-    public boolean repaintAll() {
-	if (struct.getElements().isEmpty() || contentPane == null) {
-	    return false; // Nothing to draw/contentPane not yet loaded.
-	}
-	struct.repaintAll = false;
+    public boolean repaintAll () {
+        if (this.struct.getElements().isEmpty() || this.contentPane == null) {
+            return false; // Nothing to draw/contentPane not yet loaded.
+        }
+        this.struct.repaintAll = false;
 
-	/*
-	 * Clear the nodes from all content Panes.
-	 */
-	for (Node n : contentPane.getChildren()) {
-	    ((Pane) n).getChildren().clear();
-	}
+        /*
+         * Clear the nodes from all content Panes.
+         */
+        for (Node n : this.contentPane.getChildren()) {
+            ((Pane) n).getChildren().clear();
+        }
 
-	visualMap.clear();
-	contentPane.setBackground(null);
-	calculateSize();
+        this.visualMap.clear();
+        this.contentPane.setBackground(null);
+        this.calculateSize();
 
-	// Create nodes
-	AVElement newVis;
+        // Create nodes
+        AVElement newVis;
 
-	for (Element e : struct.getElements()) {
-	    newVis = createVisualElement(e);
-	    newVis.setLayoutX(getX(e));
-	    newVis.setLayoutY(getY(e));
+        for (Element e : this.struct.getElements()) {
+            newVis = this.createVisualElement(e);
+            newVis.setLayoutX(this.getX(e));
+            newVis.setLayoutY(this.getY(e));
 
-	    defaultNodePane.getChildren().add(newVis);
-	    visualMap.put(Arrays.toString(((IndexedElement) e).getIndex()), newVis);
+            this.defaultNodePane.getChildren().add(newVis);
+            this.visualMap.put(Arrays.toString(((IndexedElement) e).getIndex()), newVis);
 
-	    bellsAndWhistles(e, newVis);
-	}
+            this.bellsAndWhistles(e, newVis);
+        }
 
-	return true;
+        return true;
     }
-    
+
     /**
      * Print statistics for the structure this render carries.
      */
-    public void printStats() {
-	Main.console.info("Statistics for \"" + struct + "\":");
-	OperationCounterHaver.printStats(struct);
+    public void printStats () {
+        Main.console.info("Statistics for \"" + this.struct + "\":");
+        OperationCounterHaver.printStats(this.struct);
     }
 
     /**
      * Show options for the render.
      */
-    public void showOptions() {
-	VisualDialog vd = new VisualDialog(null);
-	vd.show(struct);
+    public void showOptions () {
+        VisualDialog vd = new VisualDialog(null);
+        vd.show(this.struct);
     }
-    
+
     /**
      * Minimize the render, leaving only the header bar visible.
      */
-    public void collapse() {
-	// Make the render expand and collapse and NE corner.
-	conbwhs = contentPane.getPrefWidth() - 150;
-	setTranslateX(getTranslateX() + conbwhs);
+    public void collapse () {
+        // Make the render expand and collapse and NE corner.
+        this.conbwhs = this.contentPane.getPrefWidth() - 150;
+        this.setTranslateX(this.getTranslateX() + this.conbwhs);
 
-	// Show only header
-	root.setPrefSize(150, 20);
-	root.setMaxSize(150, 20);
-	this.setPrefSize(150, 20);
-	this.setMaxSize(150, 20);
-	unbindHeader();
-	for (Node n : optionalHeaderContent) {
-	    n.setVisible(false);
-	}
-	contentPane.setVisible(false);
+        // Show only header
+        this.root.setPrefSize(150, 20);
+        this.root.setMaxSize(150, 20);
+        this.setPrefSize(150, 20);
+        this.setMaxSize(150, 20);
+        this.unbindHeader();
+        for (Node n : this.optionalHeaderContent) {
+            n.setVisible(false);
+        }
+        this.contentPane.setVisible(false);
     }
 
     /**
      * Expand the render to full size.
      */
-    public void expand() {
-	contentPane.setVisible(true);
-	setTranslateX(getTranslateX() - conbwhs);
-	bindHeader();
-	calculateSize(); // Size recalculation is disabled while hidden.
+    public void expand () {
+        this.contentPane.setVisible(true);
+        this.setTranslateX(this.getTranslateX() - this.conbwhs);
+        this.bindHeader();
+        this.calculateSize(); // Size recalculation is disabled while hidden.
 
-	if (contentPane.getBackground() == null) {
-	    calculateSize();
-	} else {
-	    setRestricedSize(150, 90);
-	}
-	for (Node n : optionalHeaderContent) {
-	    n.setVisible(true);
-	}
+        if (this.contentPane.getBackground() == null) {
+            this.calculateSize();
+        } else {
+            this.setRestricedSize(150, 90);
+        }
+        for (Node n : this.optionalHeaderContent) {
+            n.setVisible(true);
+        }
     }
 
     // ============================================================= //
     /*
-     * 
+     *
      * Getters and Setters
-     * 
+     *
      */
     // ============================================================= //
-    
+
     /**
      * Returns the DataStructure held by this Render.
-     * 
+     *
      * @return The DataStructure held by this Render.
      */
-    public DataStructure getDataStructure() {
-	return struct;
+    public DataStructure getDataStructure () {
+        return this.struct;
     }
 
     /**
      * Returns the absolute x-coordinate for the element e. Returns -1 if the
      * calculation fails.
-     * 
+     *
      * @param e
      *            An element owned by this Render.
      * @return The absolute x-coordinates of e.
      */
-    public double absX(Element e, ARender relativeTo) {
-	double bx = this.getTranslateX() + this.getLayoutX();
-	return getX(e) + bx;
+    public double absX (Element e, ARender relativeTo) {
+        double bx = this.getTranslateX() + this.getLayoutX();
+        return this.getX(e) + bx;
     }
 
     /**
      * Returns the absolute y-coordinate for the element e. Returns -1 if the
      * calculation fails.
-     * 
+     *
      * @param e
      *            An element owned by this Render.
      * @return The absolute y-coordinates of e.
      */
-    public double absY(Element e, ARender relativeTo) {
-	double by = this.getTranslateY() + this.getLayoutY() + contentPane.getLayoutY();
-	return this.getY(e) + by;
+    public double absY (Element e, ARender relativeTo) {
+        double by = this.getTranslateY() + this.getLayoutY() + this.contentPane.getLayoutY();
+        return this.getY(e) + by;
     }
 
     // Center on button when hiding or showing.
-    private double conbwhs = 0;
+    private double                  conbwhs               = 0;
     // Used to hide other buttons when minimising.
     protected final ArrayList<Node> optionalHeaderContent = new ArrayList<Node>();
 
-    public void toggleHidden(Event e) {
-	ToggleButton tb = (ToggleButton) e.getSource();
+    public void toggleHidden (Event e) {
+        ToggleButton tb = (ToggleButton) e.getSource();
 
-	if (tb.isSelected()) {
-	    tb.setText("Show");
-	    collapse();
-	} else {
-	    tb.setText("Hide");
-	    expand();
-	}
+        if (tb.isSelected()) {
+            tb.setText("Show");
+            this.collapse();
+        } else {
+            tb.setText("Hide");
+            this.expand();
+        }
     }
 
     /**
      * Returns the Pane used to draw element nodes.
-     * 
+     *
      * @return The Pane used to draw element nodes.
      */
-    public Pane getNodes() {
-	return defaultNodePane;
+    public Pane getNodes () {
+        return this.defaultNodePane;
     }
 
     /**
      * Returns the Pane used for drawing animated elements.
-     * 
+     *
      * @param animPane
      *            The used Pane for animation.
      */
-    public Pane getAnimationPane() {
-	return this.animPane;
+    public Pane getAnimationPane () {
+        return this.animPane;
     }
 
     /**
      * Update info labels in the header.
      */
-    public void updateInfoLabels() {
-	DecimalFormat df = new DecimalFormat("#0.00");
-	xposLabel.setText("XPos: " + (int) (getTranslateX() + 0.5));
-	yposLabel.setText("| YPos: " + (int) (getTranslateY() + 0.5));
-	scaleLabel.setText("| Scale: " + df.format(scale));
+    public void updateInfoLabels () {
+        DecimalFormat df = new DecimalFormat("#0.00");
+        this.xposLabel.setText("XPos: " + (int) (this.getTranslateX() + 0.5));
+        this.yposLabel.setText("| YPos: " + (int) (this.getTranslateY() + 0.5));
+        this.scaleLabel.setText("| Scale: " + df.format(this.scale));
     }
 
     private boolean playFailureSound = true;
@@ -654,333 +661,330 @@ public abstract class ARender extends Pane implements MinMaxListener {
     /**
      * Makes the header red when something goes wrong.
      */
-    public void renderFailure() {
-	if (playFailureSound) {
-	    playFailureSound = false;
-	    URL resource = getClass().getResource("/assets/shortcircuit.mp3");
-	    Media media = new Media(resource.toString());
-	    MediaPlayer mp3 = new MediaPlayer(media);
-	    mp3.play();
+    public void renderFailure () {
+        if (this.playFailureSound) {
+            this.playFailureSound = false;
+            URL resource = this.getClass().getResource("/assets/shortcircuit.mp3");
+            Media media = new Media(resource.toString());
+            MediaPlayer mp3 = new MediaPlayer(media);
+            mp3.play();
 
-	    header.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
-	    contentPane.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
-	    Main.console.err("Render Failure in " + this.toString() + ".");
-	}
+            this.header.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
+            this.contentPane.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
+            Main.console.err("Render Failure in " + this.toString() + ".");
+        }
     }
 
     /**
      * Returns the visual map for this Render.
-     * 
+     *
      * @return The visual map for this Render.
      */
-    public HashMap<String, AVElement> getVisualMap() {
-	return visualMap;
+    public HashMap<String, AVElement> getVisualMap () {
+        return this.visualMap;
     }
 
-    public String toString() {
-	return this.getClass().getSimpleName() + " (" + this.struct + ")";
+    @Override
+    public String toString () {
+        return this.getClass().getSimpleName() + " (" + this.struct + ")";
     }
 
     /**
      * Set the currently used element style.
-     * 
+     *
      * @param newStyle
      *            The new Style to use.
      */
-    public void setElementStyle(ElementShape newStyle) {
-	if (newStyle != this.elementStyle) {
-	    this.elementStyle = newStyle;
-	    repaintAll();
-	}
+    public void setElementStyle (ElementShape newStyle) {
+        if (newStyle != this.elementStyle) {
+            this.elementStyle = newStyle;
+            this.repaintAll();
+        }
     }
 
-    public void setRelativeNodeSize(boolean value, double foo) {
-	if (struct instanceof Array) {
-	    this.relativeNodeSize = value;
-	    if (relativeNodeSize || foo != 0 || foo != 1) {
-		this.minMaxSizeFactor = foo;
-		((Array) struct).setListener(this);
-	    }
-	} else if (value) {
-	    System.err.println("Relative node sizes only available for arrays.");
-	    this.relativeNodeSize = false;
-	}
+    public void setRelativeNodeSize (boolean value, double foo) {
+        if (this.struct instanceof Array) {
+            this.relativeNodeSize = value;
+            if (this.relativeNodeSize || foo != 0 || foo != 1) {
+                this.minMaxSizeFactor = foo;
+                ((Array) this.struct).setListener(this);
+            }
+        } else if (value) {
+            System.err.println("Relative node sizes only available for arrays.");
+            this.relativeNodeSize = false;
+        }
     }
 
     /**
      * TODO: Javadoc
      */
     private boolean relativeNodeSize = false;
-    private double minMaxSizeFactor;
+    private double  minMaxSizeFactor;
 
-    public void setRelativeNodeSizes() {
-	if (!relativeNodeSize) {
-	    return;
-	}
+    public void setRelativeNodeSizes () {
+        if (!this.relativeNodeSize) {
+            return;
+        }
 
-	double min = Math.abs(((Array) struct).getMin());
-	double max = Math.abs(((Array) struct).getMax());
+        double min = Math.abs(((Array) this.struct).getMin());
+        double max = Math.abs(((Array) this.struct).getMax());
 
-	double span = min + max;
-	if (span == 0) {
-	    return; // No point in making them all the same size again.
-	}
+        double span = min + max;
+        if (span == 0) {
+            return; // No point in making them all the same size again.
+        }
 
-	for (Node n : defaultNodePane.getChildren()) {
-	    if (n instanceof AVElement) {
-		setRelativeNodeSize((AVElement) n);
-	    }
-	}
+        for (Node n : this.defaultNodePane.getChildren()) {
+            if (n instanceof AVElement) {
+                this.setRelativeNodeSize((AVElement) n);
+            }
+        }
     }
 
-    protected void setRelativeNodeSize(AVElement ave) {
-	if (!relativeNodeSize) {
-	    return;
-	}
+    protected void setRelativeNodeSize (AVElement ave) {
+        if (!this.relativeNodeSize) {
+            return;
+        }
 
-	double min = Math.abs(((Array) struct).getMin());
-	double max = Math.abs(((Array) struct).getMax());
+        double min = Math.abs(((Array) this.struct).getMin());
+        double max = Math.abs(((Array) this.struct).getMax());
 
-	double span = min + max;
+        double span = min + max;
 
-	setRelativeNodeSize(ave, span);
+        this.setRelativeNodeSize(ave, span);
     }
 
-    protected void setRelativeNodeSize(AVElement ave, double span) {
-	if (!relativeNodeSize || span == 0) {
-	    return; // No point in making them all the same size again.
-	}
+    protected void setRelativeNodeSize (AVElement ave, double span) {
+        if (!this.relativeNodeSize || span == 0) {
+            return; // No point in making them all the same size again.
+        }
 
-	double relNodeWidth;
-	double relNodeHeight;
-	double factor;
+        double relNodeWidth;
+        double relNodeHeight;
+        double factor;
 
-	factor = (minMaxSizeFactor - 1) * ave.getElement().getNumValue() / span;
-	factor = factor < 1 ? factor : 1; // Cap at 1 for nodes with the value set outside model.
+        factor = (this.minMaxSizeFactor - 1) * ave.getElement().getNumValue() / span;
+        factor = factor < 1 ? factor : 1; // Cap at 1 for nodes with the value
+                                          // set outside model.
 
-	relNodeWidth = this.nodeWidth / minMaxSizeFactor;
-	relNodeHeight = this.nodeHeight / minMaxSizeFactor;
+        relNodeWidth = this.nodeWidth / this.minMaxSizeFactor;
+        relNodeHeight = this.nodeHeight / this.minMaxSizeFactor;
 
-	relNodeWidth = relNodeWidth + relNodeWidth * factor;
-	relNodeHeight = relNodeHeight + relNodeHeight * factor;
+        relNodeWidth = relNodeWidth + relNodeWidth * factor;
+        relNodeHeight = relNodeHeight + relNodeHeight * factor;
 
-	ave.setSize(relNodeWidth, relNodeHeight);
+        ave.setSize(relNodeWidth, relNodeHeight);
     }
 
-    public double getNodeHeight() {
-	return nodeHeight;
+    public double getNodeHeight () {
+        return this.nodeHeight;
     }
 
-    public boolean setNodeHeight(double nodeHeight) {
-	this.nodeHeight = nodeHeight;
-	return repaintAll();
+    public boolean setNodeHeight (double nodeHeight) {
+        this.nodeHeight = nodeHeight;
+        return this.repaintAll();
     }
 
-    public double getNodeWidth() {
-	return nodeWidth;
+    public double getNodeWidth () {
+        return this.nodeWidth;
     }
 
-    public boolean setNodeWidth(double nodeWidth) {
-	this.nodeWidth = nodeWidth;
-	return repaintAll();
+    public boolean setNodeWidth (double nodeWidth) {
+        this.nodeWidth = nodeWidth;
+        return this.repaintAll();
     }
-    
+
     // ============================================================= //
     /*
-     * 
+     *
      * Sizing and moving. TODO: Move into assets package.
-     * 
+     *
      */
     // ============================================================= //
 
-    private double transX, transY;
-    private double scale = 1;
+    private double       transX, transY;
+    private final double scale = 1;
 
     /**
      * Create listeners to drag and zoom.
-     * 
+     *
      * @param tParent
      *            The parent to apply transformation to.
      */
-    private void initDragAndZoom() {
-	initArrowResize();
-	initMouseWheelResize();
-	initDrag();
+    private void initDragAndZoom () {
+        this.initArrowResize();
+        this.initMouseWheelResize();
+        this.initDrag();
     }
 
-    private void initArrowResize() {
-	this.setOnKeyPressed(event -> {
-	    if (!event.isControlDown()) {
-		return;
-	    }
+    private void initArrowResize () {
+        this.setOnKeyPressed(event -> {
+            if (!event.isControlDown()) {
+                return;
+            }
 
-	    switch (event.getCode()) {
-	    case UP:
-		this.setNodeHeight(nodeHeight + Const.DEFAULT_ELEMENT_HEIGHT_DELTA);
-		break;
-	    case DOWN:
-		this.setNodeHeight(nodeHeight - Const.DEFAULT_ELEMENT_HEIGHT_DELTA);
-		break;
-	    case LEFT:
-		this.setNodeWidth(nodeWidth - Const.DEFAULT_ELEMENT_WIDTH_DELTA);
-		break;
-	    case RIGHT:
-		this.setNodeWidth(nodeWidth + Const.DEFAULT_ELEMENT_WIDTH_DELTA);
-		break;
-	    default:
-		return;
-	    }
+            switch (event.getCode()) {
+            case UP:
+                this.setNodeHeight(this.nodeHeight + Const.DEFAULT_ELEMENT_HEIGHT_DELTA);
+                break;
+            case DOWN:
+                this.setNodeHeight(this.nodeHeight - Const.DEFAULT_ELEMENT_HEIGHT_DELTA);
+                break;
+            case LEFT:
+                this.setNodeWidth(this.nodeWidth - Const.DEFAULT_ELEMENT_WIDTH_DELTA);
+                break;
+            case RIGHT:
+                this.setNodeWidth(this.nodeWidth + Const.DEFAULT_ELEMENT_WIDTH_DELTA);
+                break;
+            default:
+                return;
+            }
 
-	    setNodeWidth(nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : nodeWidth);
-	    setNodeHeight(nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : nodeHeight);
+            this.setNodeWidth(this.nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : this.nodeWidth);
+            this.setNodeHeight(this.nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : this.nodeHeight);
 
-	    Platform.runLater(new Runnable() {
-		@Override
-		public void run() {
-		    ARender.this.requestFocus();
-		}
-	    });
+            Platform.runLater( () -> ARender.this.requestFocus());
 
-	    this.repaintAll();
-	});
+            this.repaintAll();
+        });
     }
 
-    private void initMouseWheelResize() {
-	setOnScroll(event -> {
-	    if (!event.isControlDown()) {
-		return;
-	    }
+    private void initMouseWheelResize () {
+        this.setOnScroll(event -> {
+            if (!event.isControlDown()) {
+                return;
+            }
 
-	    int sign = event.getDeltaY() < 0 ? -1 : 1;
+            int sign = event.getDeltaY() < 0 ? -1 : 1;
 
-	    this.setNodeWidth(nodeWidth + sign * Const.DEFAULT_ELEMENT_WIDTH_DELTA);
-	    this.setNodeHeight(nodeHeight + sign * Const.DEFAULT_ELEMENT_HEIGHT_DELTA);
+            this.setNodeWidth(this.nodeWidth + sign * Const.DEFAULT_ELEMENT_WIDTH_DELTA);
+            this.setNodeHeight(this.nodeHeight + sign * Const.DEFAULT_ELEMENT_HEIGHT_DELTA);
 
-	    this.hSpace = hSpace + sign * Const.DEFAULT_ELEMENT_HSPACE_DELTA;
-	    this.vSpace = vSpace + sign * Const.DEFAULT_ELEMENT_VSPACE_DELTA;
+            this.hSpace = this.hSpace + sign * Const.DEFAULT_ELEMENT_HSPACE_DELTA;
+            this.vSpace = this.vSpace + sign * Const.DEFAULT_ELEMENT_VSPACE_DELTA;
 
-	    setNodeWidth(nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : nodeWidth);
-	    setNodeHeight(nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : nodeHeight);
+            this.setNodeWidth(this.nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : this.nodeWidth);
+            this.setNodeHeight(this.nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : this.nodeHeight);
 
-	    this.repaintAll();
-	});
+            this.repaintAll();
+        });
     }
 
-    private void initDrag() {
-	// Record a delta distance for the drag and drop operation.
-	setOnMousePressed(event -> {
-	    transX = getTranslateX() - event.getSceneX();
-	    transY = getTranslateY() - event.getSceneY();
-	    setCursor(Cursor.CLOSED_HAND);
-	});
-	// Restore cursor
-	setOnMouseReleased(event -> {
-	    setCursor(null);
-	});
-	// Translate canvases
-	setOnMouseDragged(event -> {
-	    setTranslateX(event.getSceneX() + transX);
-	    setTranslateY(event.getSceneY() + transY);
-	    updateInfoLabels();
-	});
-	// Set cursor
-	setOnMouseEntered(event -> {
-	    // this.setCursor(Cursor.OPEN_HAND);
-	    this.requestFocus();
-	    if (header.visibleProperty().isBound()) {
-		name.setVisible(false);
-	    }
-	    setBorder(Const.BORDER_MOUSEOVER);
-	});
-	setOnMouseExited(event -> {
-	    // this.setCursor(null);
-	    if (header.visibleProperty().isBound()) {
-		name.setVisible(true);
-	    }
-	    setBorder(null);
-	});
+    private void initDrag () {
+        // Record a delta distance for the drag and drop operation.
+        this.setOnMousePressed(event -> {
+            this.transX = this.getTranslateX() - event.getSceneX();
+            this.transY = this.getTranslateY() - event.getSceneY();
+            this.setCursor(Cursor.CLOSED_HAND);
+        });
+        // Restore cursor
+        this.setOnMouseReleased(event -> {
+            this.setCursor(null);
+        });
+        // Translate canvases
+        this.setOnMouseDragged(event -> {
+            this.setTranslateX(event.getSceneX() + this.transX);
+            this.setTranslateY(event.getSceneY() + this.transY);
+            this.updateInfoLabels();
+        });
+        // Set cursor
+        this.setOnMouseEntered(event -> {
+            // this.setCursor(Cursor.OPEN_HAND);
+            this.requestFocus();
+            if (this.header.visibleProperty().isBound()) {
+                this.name.setVisible(false);
+            }
+            this.setBorder(Const.BORDER_MOUSEOVER);
+        });
+        this.setOnMouseExited(event -> {
+            // this.setCursor(null);
+            if (this.header.visibleProperty().isBound()) {
+                this.name.setVisible(true);
+            }
+            this.setBorder(null);
+        });
     }
-    
+
     // ============================================================= //
     /*
-     * 
+     *
      * Abstract methods
-     * 
+     *
      */
     // ============================================================= //
-    
+
     /**
      * Returns the absolute x-coordinate of an element. Returns -1 if the
      * calculation fails.
-     * 
+     *
      * @param e
      *            An element to resolve coordinates for.
      * @return The absolute x-coordinate of the element.
      */
-    public abstract double getX(Element e);
+    public abstract double getX (Element e);
 
     /**
      * Returns the absolute y-coordinate of an element. Returns -1 if the
      * calculation fails.
-     * 
+     *
      * @param e
      *            An element to resolve coordinates for.
      * @return The absolute y-coordinate of the element.
      */
-    public abstract double getY(Element e);
+    public abstract double getY (Element e);
 
     /**
      * Order the render to calculate it's size.
      */
-    public abstract void calculateSize();
-    
+    public abstract void calculateSize ();
+
     /**
      * Create a bound node element in whatever style the Render prefers to use.
-     * 
+     *
      * @param e
      *            The element to bind.
      * @return A new bound VisualElement.
      */
-    protected abstract AVElement createVisualElement(Element e);
+    protected abstract AVElement createVisualElement (Element e);
 
     /**
      * Create an unbound node element in whatever style the Render prefers to
      * use.
-     * 
+     *
      * @param value
      *            The value of the element.
      * @param color
      *            The colour of the element.
      * @return A new unbound VisualElement.
      */
-    protected abstract AVElement createVisualElement(double value, Color color);
+    protected abstract AVElement createVisualElement (double value, Color color);
 
     /**
      * Decorator method used to attach bells and whistles to the current
      * element. {@link #init} will called this method on every element.
-     * 
+     *
      * @param e
      *            The element to attach a whistle to.
      * @param ve
      *            The VisualElement to attach a bell to.
      */
-    protected abstract void bellsAndWhistles(Element e, AVElement ve);
-    
+    protected abstract void bellsAndWhistles (Element e, AVElement ve);
+
     // ============================================================= //
     /*
-     * 
+     *
      * Interface methods
-     * 
+     *
      */
     // ============================================================= //
 
     @Override
-    public void maxChanged(double newMax) {
-	setRelativeNodeSizes();
+    public void maxChanged (double newMax) {
+        this.setRelativeNodeSizes();
     }
 
     @Override
-    public void minChanged(double newMin) {
-	setRelativeNodeSizes();
+    public void minChanged (double newMin) {
+        this.setRelativeNodeSizes();
     }
 }

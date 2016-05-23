@@ -80,269 +80,266 @@ import render.Visualization;
  */
 public class Controller implements CommunicatorListener {
 
-    private Visualization vis;
-    private Stage window;
-    private final LogStreamManager lsm;
-    private final Model model;
+    private final Visualization             vis;
+    private final Stage                     window;
+    private final LogStreamManager          lsm;
+    private final Model                     model;
     // Controls
-    private Menu visualMenu;
-    private MenuButton streamBehaviourMenuButton;
+    private Menu                            visualMenu;
+    private MenuButton                      streamBehaviourMenuButton;
     // Stream behaviour
-    private boolean streamAlwaysShowLastOperation = true;
-    private boolean streamStartAutoplay = false;
+    private boolean                         streamAlwaysShowLastOperation = true;
+    private boolean                         streamStartAutoplay           = false;
     // Autoplay
-    private boolean isPlaying = false;
-    private int stepDelaySpeedupFactor = 1;
-    private long stepDelayBase = Const.DEFAULT_ANIMATION_TIME;
-    private long stepDelay = stepDelayBase / stepDelaySpeedupFactor;
+    private boolean                         isPlaying                     = false;
+    private int                             stepDelaySpeedupFactor        = 1;
+    private long                            stepDelayBase                 = Const.DEFAULT_ANIMATION_TIME;
+    private long                            stepDelay                     = this.stepDelayBase
+            / this.stepDelaySpeedupFactor;
     // Settings dialog stuff
-    private Stage settingsView;
+    private Stage                           settingsView;
     // Views, panels, dialogs
-    private final ConnectedView connectedView;
-    private final InterpreterView interpreterView;
-    private final SourcePanel sourceViewer;
-    private final OperationPanel operationPanel;
-    private final ExamplesDialog examplesDialog;
-    private final VisualDialog visualDialog;
-    private final CreateStructureDialog createStructureDialog;
+    private final ConnectedView             connectedView;
+    private final InterpreterView           interpreterView;
+    private final SourcePanel               sourceViewer;
+    private final OperationPanel            operationPanel;
+    private final ExamplesDialog            examplesDialog;
+    private final VisualDialog              visualDialog;
+    private final CreateStructureDialog     createStructureDialog;
     private final IdentifierCollisionDialog icd;
-    private HelpView helpView;
+    private final HelpView                  helpView;
     // Buttons
-    private Button backwardButton, forwardButton, playPauseButton;
-    private ProgressBar animationProgressBar;
-    private Button restartButton, clearButton, speedButton;
+    private Button                          backwardButton, forwardButton, playPauseButton;
+    private ProgressBar                     animationProgressBar;
+    private Button                          restartButton, clearButton, speedButton;
 
-    public Controller(Stage window, LogStreamManager lsm, SourcePanel sourceViewer, Visualization visualization) {
-	this.vis = visualization;
-	this.vis.setAnimationTime(stepDelay);
-	this.window = window;
-	this.model = Model.instance();
-	this.lsm = lsm;
-	this.lsm.PRETTY_PRINTING = true;
-	this.lsm.setListener(this);
-	this.sourceViewer = sourceViewer;
-	this.operationPanel = new OperationPanel(this);
-	this.examplesDialog = new ExamplesDialog(window);
-	this.visualDialog = new VisualDialog(window);
-	this.createStructureDialog = new CreateStructureDialog(window);
-	this.connectedView = new ConnectedView(window, (JGroupCommunicator) lsm.getCommunicator());
-	this.icd = new IdentifierCollisionDialog(window);
-	this.helpView = new HelpView(window);
-	initSettingsPane();
-	interpreterView = new InterpreterView(window);
-	loadProperties();
+    public Controller (Stage window, LogStreamManager lsm, SourcePanel sourceViewer, Visualization visualization) {
+        this.vis = visualization;
+        this.vis.setAnimationTime(this.stepDelay);
+        this.window = window;
+        this.model = Model.instance();
+        this.lsm = lsm;
+        this.lsm.PRETTY_PRINTING = true;
+        this.lsm.setListener(this);
+        this.sourceViewer = sourceViewer;
+        this.operationPanel = new OperationPanel(this);
+        this.examplesDialog = new ExamplesDialog(window);
+        this.visualDialog = new VisualDialog(window);
+        this.createStructureDialog = new CreateStructureDialog(window);
+        this.connectedView = new ConnectedView(window, (JGroupCommunicator) lsm.getCommunicator());
+        this.icd = new IdentifierCollisionDialog(window);
+        this.helpView = new HelpView(window);
+        this.initSettingsPane();
+        this.interpreterView = new InterpreterView(window);
+        this.loadProperties();
     }
 
-    public void showSettings() {
-	// Playback speed
-	perSecField.setText(df.format(1000.0 / stepDelayBase));
-	timeBetweenField.setText(df.format(stepDelayBase));
-	toggleAutorunStream.setSelected(streamAlwaysShowLastOperation);
-	// Size and show
-	settingsView.setWidth(this.window.getWidth() * 0.75);
-	settingsView.setHeight(this.window.getHeight() * 0.75);
-	settingsView.show();
+    public void showSettings () {
+        // Playback speed
+        this.perSecField.setText(this.df.format(1000.0 / this.stepDelayBase));
+        this.timeBetweenField.setText(this.df.format(this.stepDelayBase));
+        this.toggleAutorunStream.setSelected(this.streamAlwaysShowLastOperation);
+        // Size and show
+        this.settingsView.setWidth(this.window.getWidth() * 0.75);
+        this.settingsView.setHeight(this.window.getHeight() * 0.75);
+        this.settingsView.show();
     }
 
-    public void showMultiset() {
-	new MultisetController(window);
+    public void showMultiset () {
+        new MultisetController(this.window);
     }
 
     private CheckBox toggleAutorunStream;
 
-    public void toggleAutorunStream() {
-	streamAlwaysShowLastOperation = toggleAutorunStream.isSelected();
-	unsavedChanged();
+    public void toggleAutorunStream () {
+        this.streamAlwaysShowLastOperation = this.toggleAutorunStream.isSelected();
+        this.unsavedChanged();
     }
 
-    public void jumpToEndClicked(Event e) {
-	streamBehaviourMenuButton.setText(">>");
-	Main.console.info("Model will always display the latest operation streamed operation.");
-	streamAlwaysShowLastOperation = true;
-	streamStartAutoplay = false;
+    public void jumpToEndClicked (Event e) {
+        this.streamBehaviourMenuButton.setText(">>");
+        Main.console.info("Model will always display the latest operation streamed operation.");
+        this.streamAlwaysShowLastOperation = true;
+        this.streamStartAutoplay = false;
     }
 
-    public void continueClicked(Event e) {
-	streamBehaviourMenuButton.setText(">");
-	Main.console.info("Autoplay will start when a streamed operation has been received.");
-	streamAlwaysShowLastOperation = false;
-	streamStartAutoplay = true;
+    public void continueClicked (Event e) {
+        this.streamBehaviourMenuButton.setText(">");
+        Main.console.info("Autoplay will start when a streamed operation has been received.");
+        this.streamAlwaysShowLastOperation = false;
+        this.streamStartAutoplay = true;
     }
 
-    public void doNothingClicked(Event e) {
-	streamBehaviourMenuButton.setText("=");
-	Main.console.info("Streaming will not force model progression.");
-	streamAlwaysShowLastOperation = false;
-	streamStartAutoplay = false;
+    public void doNothingClicked (Event e) {
+        this.streamBehaviourMenuButton.setText("=");
+        Main.console.info("Streaming will not force model progression.");
+        this.streamAlwaysShowLastOperation = false;
+        this.streamStartAutoplay = false;
     }
 
     /**
      * Clear everything.
      */
-    public void clearButtonClicked() {
-	visualMenu.getItems().clear();
-	visualMenu.setDisable(true);
-	model.hardClear();
-	vis.clear();
-	sourceViewer.clear();
-	operationPanel.clear();
-	setButtons();
+    public void clearButtonClicked () {
+        this.visualMenu.getItems().clear();
+        this.visualMenu.setDisable(true);
+        this.model.hardClear();
+        this.vis.clear();
+        this.sourceViewer.clear();
+        this.operationPanel.clear();
+        this.setButtons();
     }
 
     /**
      * Starts playing or pause the AV animation.
      */
-    public void playPauseButtonClicked() {
-	if (!isPlaying) {
-	    startAutoPlay();
-	} else {
-	    stopAutoPlay();
-	}
+    public void playPauseButtonClicked () {
+        if (!this.isPlaying) {
+            this.startAutoPlay();
+        } else {
+            this.stopAutoPlay();
+        }
     }
 
     private Timeline autoplayTimeline;
 
-    public void startAutoPlay() {
-	playPauseButton.setText("Pause");
-	if (autoplayTimeline != null) {
-	    autoplayTimeline.stop();
-	}
-	isPlaying = true;
-	stepForwardButtonClicked();
-	autoplayTimeline = new Timeline();
-	autoplayTimeline.getKeyFrames().add(new KeyFrame(Duration.millis(stepDelay), event -> {
-	    if (stepForwardButtonClicked() == false) {
-		stopAutoPlay();
-	    }
-	}));
-	autoplayTimeline.setCycleCount(Animation.INDEFINITE);
-	autoplayTimeline.play();
+    public void startAutoPlay () {
+        this.playPauseButton.setText("Pause");
+        if (this.autoplayTimeline != null) {
+            this.autoplayTimeline.stop();
+        }
+        this.isPlaying = true;
+        this.stepForwardButtonClicked();
+        this.autoplayTimeline = new Timeline();
+        this.autoplayTimeline.getKeyFrames().add(new KeyFrame(Duration.millis(this.stepDelay), event -> {
+            if (this.stepForwardButtonClicked() == false) {
+                this.stopAutoPlay();
+            }
+        }));
+        this.autoplayTimeline.setCycleCount(Animation.INDEFINITE);
+        this.autoplayTimeline.play();
     }
 
-    public void stopAutoPlay() {
-	if (autoplayTimeline != null) {
-	    autoplayTimeline.stop();
-	    playPauseButton.setText("Play");
-	    isPlaying = false;
-	}
+    public void stopAutoPlay () {
+        if (this.autoplayTimeline != null) {
+            this.autoplayTimeline.stop();
+            this.playPauseButton.setText("Play");
+            this.isPlaying = false;
+        }
     }
 
     /**
      * Restart the AV animation.
      */
-    public void restartButtonClicked() {
-	stopAutoPlay();
-	model.reset();
-	vis.reset();
-	updatePanels();
-	setButtons();
+    public void restartButtonClicked () {
+        this.stopAutoPlay();
+        this.model.reset();
+        this.vis.reset();
+        this.updatePanels();
+        this.setButtons();
     }
 
     /**
      * Listener for the Forward button.
-     * 
+     *
      * @return The value of stepModelForward().
      */
-    public boolean stepForwardButtonClicked() {
-	return stepModelForward();
+    public boolean stepForwardButtonClicked () {
+        return this.stepModelForward();
     }
 
     /**
      * Steps the model forward and forces any ongoing animations to cancel.
-     * 
+     *
      * @return True if the model could progress. False otherwise.
      */
-    private boolean stepModelForward() {
-	boolean result = model.stepForward();
+    private boolean stepModelForward () {
+        boolean result = this.model.stepForward();
 
-	vis.render(model.getLastOp());
-	startAnimationProgressBar();
-	updatePanels();
-	setButtons();
+        this.vis.render(this.model.getLastOp());
+        this.startAnimationProgressBar();
+        this.updatePanels();
+        this.setButtons();
 
-	return result;
+        return result;
     }
 
     /**
      * Step the animation backward
      */
-    public void stepBackwardButtonClicked() {
-	stopAutoPlay();
-	if (model.stepBackward()) {
-	    vis.init();
-	    vis.render(model.getLastOp());
-	    setButtons();
-	    updatePanels();
-	}
+    public void stepBackwardButtonClicked () {
+        this.stopAutoPlay();
+        if (this.model.stepBackward()) {
+            this.vis.init();
+            this.vis.render(this.model.getLastOp());
+            this.setButtons();
+            this.updatePanels();
+        }
     }
 
     /**
      * Change the animation speed
      */
-    public void changeSpeedButtonClicked() {
-	boolean isPlaying = this.isPlaying;
-	if (isPlaying) {
-	    stopAutoPlay();
-	}
-	stepDelaySpeedupFactor = stepDelaySpeedupFactor * 2 % 255;
-	speedButton.setText(stepDelaySpeedupFactor + "x");
-	stepDelay = stepDelayBase / stepDelaySpeedupFactor;
-	vis.setAnimationTime(stepDelay);
-	if (isPlaying) {
-	    startAutoPlay();
-	}
+    public void changeSpeedButtonClicked () {
+        boolean isPlaying = this.isPlaying;
+        if (isPlaying) {
+            this.stopAutoPlay();
+        }
+        this.stepDelaySpeedupFactor = this.stepDelaySpeedupFactor * 2 % 255;
+        this.speedButton.setText(this.stepDelaySpeedupFactor + "x");
+        this.stepDelay = this.stepDelayBase / this.stepDelaySpeedupFactor;
+        this.vis.setAnimationTime(this.stepDelay);
+        if (isPlaying) {
+            this.startAutoPlay();
+        }
     }
 
-    public void changeSpeedButtonRightClicked() {
-	boolean isPlaying = this.isPlaying;
-	if (isPlaying) {
-	    stopAutoPlay();
-	}
-	for (int i = 0; i < 7; i++) {
-	    changeSpeedButtonClicked();
-	}
-	if (isPlaying) {
-	    startAutoPlay();
-	}
+    public void changeSpeedButtonRightClicked () {
+        boolean isPlaying = this.isPlaying;
+        if (isPlaying) {
+            this.stopAutoPlay();
+        }
+        for (int i = 0; i < 7; i++) {
+            this.changeSpeedButtonClicked();
+        }
+        if (isPlaying) {
+            this.startAutoPlay();
+        }
     }
 
-    public void aboutProgram() {
-	Main.console.info("Placeholder: A project by ");
-	for (String name : Const.DEVELOPER_NAMES) {
-	    Main.console.info(name + ", ");
-	}
+    public void aboutProgram () {
+        Main.console.info("Placeholder: A project by ");
+        for (String name : Const.DEVELOPER_NAMES) {
+            Main.console.info(name + ", ");
+        }
     }
 
-    public void openInterpreterView() {
-	stopAutoPlay();
-	if (interpreterView.show(model.getOperations())) {
-	    model.reset();
-	    vis.clearAndCreateVisuals();
-	    operationPanel.getItems().setAll(model.getOperations());
-	    updatePanels();
-	}
+    public void openInterpreterView () {
+        this.stopAutoPlay();
+        if (this.interpreterView.show(this.model.getOperations())) {
+            this.model.reset();
+            this.vis.clearAndCreateVisuals();
+            this.operationPanel.getItems().setAll(this.model.getOperations());
+            this.updatePanels();
+        }
     }
 
-    public void interpretOperationHistory() {
-	interpreterView.fast(model.getOperations());
-	updatePanels();
-	vis.clearAndCreateVisuals();
-	operationPanel.getItems().setAll(lsm.getOperations());
+    public void interpretOperationHistory () {
+        this.interpreterView.fast(this.model.getOperations());
+        this.updatePanels();
+        this.vis.clearAndCreateVisuals();
+        this.operationPanel.getItems().setAll(this.lsm.getOperations());
     }
 
     /**
      * Update SourcePanel and OperationPanel.
      */
-    private void updatePanels() {
-	Platform.runLater(new Runnable() {
-
-	    @Override
-	    public void run() {
-		int index = model.getIndex();
-		sourceViewer.show(model.getLastOp());
-		operationPanel.update(index, true);
-	    }
-	});
+    private void updatePanels () {
+        Platform.runLater( () -> {
+            int index = Controller.this.model.getIndex();
+            Controller.this.sourceViewer.show(Controller.this.model.getLastOp());
+            Controller.this.operationPanel.update(index, true);
+        });
     }
 
     /*
@@ -351,403 +348,398 @@ public class Controller implements CommunicatorListener {
     /**
      * Jump to the given index. {@code index} less than 0 jumps to start,
      * {@code index} greater than {@code size} jumps to end.
-     * 
+     *
      * @param index
      *            The index to jump to.
      */
-    public void goToStep(int index) {
-	if (1 < 2) {
-	    System.err.println("goToStep() is buggy and has been disabled.");
-	    return;
-	}
-	model.goToStep(index);
-	vis.init();
-	vis.render(model.getLastOp());
-	operationPanel.update(model.getIndex(), false);
+    public void goToStep (int index) {
+        if (false) { // TODO
+            System.err.println("goToStep() is buggy and has been disabled.");
+            return;
+        }
+        this.model.goToStep(index);
+        this.vis.init();
+        this.vis.render(this.model.getLastOp());
+        this.operationPanel.update(this.model.getIndex(), false);
     }
 
-    public void inspectSelection() {
-	Main.console.force("Not implemented.");
+    public void inspectSelection () {
+        Main.console.force("Not implemented.");
     }
 
-    public void gotoSelection() {
-	goToStep(operationPanel.getIndex());
+    public void gotoSelection () {
+        this.goToStep(this.operationPanel.getIndex());
     }
 
-    public void doubleClickGoTo() {
-	goToStep(operationPanel.getIndex());
+    public void doubleClickGoTo () {
+        this.goToStep(this.operationPanel.getIndex());
     }
 
     /*
      * Operation Panel end.
      */
     private DecimalFormat df;
-    private Label settingsSaveState;
+    private Label         settingsSaveState;
 
-    private void initSettingsPane() {
-	df = new DecimalFormat("#.####");
-	FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/SettingsView.fxml"));
-	fxmlLoader.setController(this);
-	settingsView = new Stage();
-	settingsView.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_settings.png")));
-	settingsView.initModality(Modality.APPLICATION_MODAL);
-	settingsView.setTitle(Const.PROGRAM_NAME + ": Settings and Preferences");
-	settingsView.initOwner(this.window);
-	GridPane p = null;
-	try {
-	    p = fxmlLoader.load();
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
-	settingsView.setOnCloseRequest(event -> {
-	    event.consume(); // Better to do this now than missing it later.
-	    revertSettings();
-	});
-	// Get namespace items
-	// Save state label
-	settingsSaveState = (Label) fxmlLoader.getNamespace().get("settingsSaveState");
-	// Playpack speed
-	timeBetweenField = (TextField) fxmlLoader.getNamespace().get("timeBetweenField");
-	perSecField = (TextField) fxmlLoader.getNamespace().get("perSecField");
-	toggleAutorunStream = (CheckBox) fxmlLoader.getNamespace().get("toggleAutorunStream");
+    private void initSettingsPane () {
+        this.df = new DecimalFormat("#.####");
+        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/view/SettingsView.fxml"));
+        fxmlLoader.setController(this);
+        this.settingsView = new Stage();
+        this.settingsView.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_settings.png")));
+        this.settingsView.initModality(Modality.APPLICATION_MODAL);
+        this.settingsView.setTitle(Const.PROGRAM_NAME + ": Settings and Preferences");
+        this.settingsView.initOwner(this.window);
+        GridPane p = null;
+        try {
+            p = fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        this.settingsView.setOnCloseRequest(event -> {
+            event.consume(); // Better to do this now than missing it later.
+            this.revertSettings();
+        });
+        // Get namespace items
+        // Save state label
+        this.settingsSaveState = (Label) fxmlLoader.getNamespace().get("settingsSaveState");
+        // Playpack speed
+        this.timeBetweenField = (TextField) fxmlLoader.getNamespace().get("timeBetweenField");
+        this.perSecField = (TextField) fxmlLoader.getNamespace().get("perSecField");
+        this.toggleAutorunStream = (CheckBox) fxmlLoader.getNamespace().get("toggleAutorunStream");
 
-	p.setPrefWidth(this.window.getWidth() * 0.75);
-	p.setPrefHeight(this.window.getHeight() * 0.75);
-	Scene dialogScene = new Scene(p, this.window.getWidth() * 0.75, this.window.getHeight() * 0.75);
-	settingsView.setScene(dialogScene);
+        p.setPrefWidth(this.window.getWidth() * 0.75);
+        p.setPrefHeight(this.window.getHeight() * 0.75);
+        Scene dialogScene = new Scene(p, this.window.getWidth() * 0.75, this.window.getHeight() * 0.75);
+        this.settingsView.setScene(dialogScene);
     }
 
     private Timeline animationProgressTimeline;
-    private double animationProgress = 0;
+    private double   animationProgress = 0;
 
-    private void buildAnimationProgressIndicator() {
-	animationProgressBar.disableProperty().bind(playPauseButton.disableProperty());
-	animationProgressTimeline = new Timeline();
-	animationProgressTimeline.setCycleCount(99);
-	animationProgressTimeline.setOnFinished(event -> {
-	    animationProgressBar.setProgress(0);
-	});
+    private void buildAnimationProgressIndicator () {
+        this.animationProgressBar.disableProperty().bind(this.playPauseButton.disableProperty());
+        this.animationProgressTimeline = new Timeline();
+        this.animationProgressTimeline.setCycleCount(99);
+        this.animationProgressTimeline.setOnFinished(event -> {
+            this.animationProgressBar.setProgress(0);
+        });
     }
 
-    private void startAnimationProgressBar() {
-	animationProgressTimeline.stop();
-	animationProgressTimeline.getKeyFrames().clear();
-	animationProgress = 0.1;
-	KeyFrame kf = new KeyFrame(Duration.millis(stepDelay / 100), event -> {
-	    animationProgressBar.setProgress(animationProgress);
-	    animationProgress = animationProgress + 0.01;
-	});
-	animationProgressTimeline.getKeyFrames().add(kf);
-	animationProgressTimeline.playFromStart();
+    private void startAnimationProgressBar () {
+        this.animationProgressTimeline.stop();
+        this.animationProgressTimeline.getKeyFrames().clear();
+        this.animationProgress = 0.1;
+        KeyFrame kf = new KeyFrame(Duration.millis(this.stepDelay / 100), event -> {
+            this.animationProgressBar.setProgress(this.animationProgress);
+            this.animationProgress = this.animationProgress + 0.01;
+        });
+        this.animationProgressTimeline.getKeyFrames().add(kf);
+        this.animationProgressTimeline.playFromStart();
     }
 
-    public void connectedToChannel() {
-	connectedView.show();
+    public void connectedToChannel () {
+        this.connectedView.show();
     }
 
     /**
      * Used for closing the GUI properly.
      */
-    public void closeProgram() {
-	lsm.close();
-	window.close();
+    public void closeProgram () {
+        this.lsm.close();
+        this.window.close();
     }
 
     /**
      * Used for choosing a file to Visualize.
      */
-    public void openFileChooser() {
-	FileChooser fc = new FileChooser();
-	fc.setInitialDirectory(new File(System.getProperty("user.home")));
-	fc.setTitle("Open OI-File");
-	fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON-Files", "*.json"),
-		new FileChooser.ExtensionFilter("All Files", "*.*"));
-	File source = fc.showOpenDialog(window);
-	if (source != null) {
-	    readLog(source);
-	}
+    public void openFileChooser () {
+        FileChooser fc = new FileChooser();
+        fc.setInitialDirectory(new File(System.getProperty("user.home")));
+        fc.setTitle("Open OI-File");
+        fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON-Files", "*.json"),
+                new FileChooser.ExtensionFilter("All Files", "*.*"));
+        File source = fc.showOpenDialog(this.window);
+        if (source != null) {
+            this.readLog(source);
+        }
     }
 
     /**
      * Helper function for {@link #openFileChooser() openFileChooser}
-     * 
+     *
      * @param file
      *            The file to load.
      */
-    public void readLog(File file) {
-	lsm.clearData();
-	boolean success = lsm.readLog(file);
-	if (success) {
-	    loadFromLSM();
-	    lsm.clearData();
-	    Main.console.info("Import successful: " + file);
-	} else {
-	    Main.console.err("Import failed: " + file);
-	}
+    public void readLog (File file) {
+        this.lsm.clearData();
+        boolean success = this.lsm.readLog(file);
+        if (success) {
+            this.loadFromLSM();
+            this.lsm.clearData();
+            Main.console.info("Import successful: " + file);
+        } else {
+            Main.console.err("Import failed: " + file);
+        }
     }
 
     private boolean always_clear_old = false;
-    private boolean always_keep_old = false;
+    private boolean always_keep_old  = false;
 
     /**
      * Load the current data from LSM. Does not clear any data.
      */
-    public void loadFromLSM() {
-	// Add operations to model and create Render visuals, then draw them.
-	Map<String, DataStructure> oldStructs = model.getStructures();
-	Map<String, DataStructure> newStructs = lsm.getDataStructures();
-	if (checkCollision(oldStructs, newStructs) == false) {
-	    return;
-	}
-	oldStructs.putAll(newStructs);
-	visualMenu.getItems().clear();
-	visualMenu.setDisable(newStructs.isEmpty());
-	model.getOperations().addAll(lsm.getOperations());
-	checkOperationIdentifiers(model.getOperations(), model.getStructures());
-	sourceViewer.addSources(lsm.getSources());
-	vis.clearAndCreateVisuals();
-	vis.render(model.getLastOp());
-	// Update operation list
-	operationPanel.getItems().addAll(lsm.getOperations());
-	loadVisualMenu();
-	updatePanels();
-	setButtons();
+    public void loadFromLSM () {
+        // Add operations to model and create Render visuals, then draw them.
+        Map<String, DataStructure> oldStructs = this.model.getStructures();
+        Map<String, DataStructure> newStructs = this.lsm.getDataStructures();
+        if (this.checkCollision(oldStructs, newStructs) == false) {
+            return;
+        }
+        oldStructs.putAll(newStructs);
+        this.visualMenu.getItems().clear();
+        this.visualMenu.setDisable(newStructs.isEmpty());
+        this.model.getOperations().addAll(this.lsm.getOperations());
+        this.checkOperationIdentifiers(this.model.getOperations(), this.model.getStructures());
+        this.sourceViewer.addSources(this.lsm.getSources());
+        this.vis.clearAndCreateVisuals();
+        this.vis.render(this.model.getLastOp());
+        // Update operation list
+        this.operationPanel.getItems().addAll(this.lsm.getOperations());
+        this.loadVisualMenu();
+        this.updatePanels();
+        this.setButtons();
     }
 
-    private void checkOperationIdentifiers(List<Operation> ops, Map<String, DataStructure> structs) {
-	HashSet<String> opsIdentifiers = new HashSet<String>();
-	/*
-	 * Gather all operation identifiers.
-	 */
-	for (Operation op : ops) {
-	    String identifier;
-	    Locator locator;
-	    DataStructure struct;
-	    switch (op.operation) {
-	    case message:
-		break;
-	    case read:
-	    case write:
-		locator = ((Locator) op.operationBody.get(Key.source));
-		if (locator != null) {
-		    struct = structs.get(locator.identifier);
-		    if (struct == null) {
-			opsIdentifiers.add(locator.identifier);
-		    }
-		}
-		locator = ((Locator) op.operationBody.get(Key.target));
-		if (locator != null) {
-		    identifier = locator.identifier;
-		    struct = structs.get(identifier);
-		    if (struct == null) {
-			opsIdentifiers.add(locator.identifier);
-		    }
-		}
-		break;
-	    case swap:
-		break;
-	    case remove:
-		identifier = ((Locator) op.operationBody.get(Key.target)).identifier;
-		struct = structs.get(identifier);
-		if (struct == null) {
-		    opsIdentifiers.add(identifier);
-		}
-		break;
-	    }
-	}
-	Set<String> keyset = structs.keySet();
-	DataStructure newStruct;
-	for (String identifier : opsIdentifiers) {
-	    if (keyset.contains(identifier) == false) {
-		newStruct = createStructureDialog.show(identifier);
-		if (newStruct != null) {
-		    structs.put(newStruct.identifier, newStruct);
-		}
-	    }
-	}
+    private void checkOperationIdentifiers (List<Operation> ops, Map<String, DataStructure> structs) {
+        HashSet<String> opsIdentifiers = new HashSet<String>();
+        /*
+         * Gather all operation identifiers.
+         */
+        for (Operation op : ops) {
+            String identifier;
+            Locator locator;
+            DataStructure struct;
+            switch (op.operation) {
+            case message:
+                break;
+            case read:
+            case write:
+                locator = (Locator) op.operationBody.get(Key.source);
+                if (locator != null) {
+                    struct = structs.get(locator.identifier);
+                    if (struct == null) {
+                        opsIdentifiers.add(locator.identifier);
+                    }
+                }
+                locator = (Locator) op.operationBody.get(Key.target);
+                if (locator != null) {
+                    identifier = locator.identifier;
+                    struct = structs.get(identifier);
+                    if (struct == null) {
+                        opsIdentifiers.add(locator.identifier);
+                    }
+                }
+                break;
+            case swap:
+                break;
+            case remove:
+                identifier = ((Locator) op.operationBody.get(Key.target)).identifier;
+                struct = structs.get(identifier);
+                if (struct == null) {
+                    opsIdentifiers.add(identifier);
+                }
+                break;
+            }
+        }
+        Set<String> keyset = structs.keySet();
+        DataStructure newStruct;
+        for (String identifier : opsIdentifiers) {
+            if (keyset.contains(identifier) == false) {
+                newStruct = this.createStructureDialog.show(identifier);
+                if (newStruct != null) {
+                    structs.put(newStruct.identifier, newStruct);
+                }
+            }
+        }
     }
 
-    private boolean checkCollision(Map<String, DataStructure> oldStructs, Map<String, DataStructure> newStructs) {
-	checkCollison: for (String newKey : newStructs.keySet()) {
-	    for (String oldKey : oldStructs.keySet()) {
-		if (oldKey.equals(newKey)) {
-		    Main.console.force("ERROR: Data Structure identifier collision:");
-		    Main.console.force("Known structures: " + model.getStructures().values());
-		    Main.console.force("New structures: " + lsm.getDataStructures().values());
-		    if (always_clear_old) {
-			Main.console.force("Known structures cleared.");
-			clearButtonClicked();
-			break checkCollison;
-		    } else if (always_keep_old) {
-			Main.console.force("New structures rejected.");
-			lsm.clearData();
-			return false;
-		    } else {
-			java.awt.Toolkit.getDefaultToolkit().beep();
-			short routine = icd.show(oldStructs.values(), oldStructs.values());
-			switch (routine) {
-			// Clear old structures, import new
-			case IdentifierCollisionDialog.ALWAYS_CLEAR_OLD:
-			    always_clear_old = true;
-			    clearButtonClicked();
-			    Main.console.force("Conflicting structures will overrwrite existing for this session.");
-			    break checkCollison;
-			case IdentifierCollisionDialog.CLEAR_OLD:
-			    clearButtonClicked();
-			    Main.console.force("Known structures cleared.");
-			    break checkCollison;
-			// Reject new structures
-			case IdentifierCollisionDialog.ALWAYS_KEEP_OLD:
-			    always_keep_old = true;
-			    Main.console.force("Conflicting structures will be rejected for this session.");
-			    lsm.clearData();
-			    return false;
-			case IdentifierCollisionDialog.KEEP_OLD:
-			    Main.console.force("New structures rejected.");
-			    lsm.clearData();
-			    return false;
-			}
-		    }
-		}
-	    }
-	}
-	return true;
+    private boolean checkCollision (Map<String, DataStructure> oldStructs, Map<String, DataStructure> newStructs) {
+        checkCollison: for (String newKey : newStructs.keySet()) {
+            for (String oldKey : oldStructs.keySet()) {
+                if (oldKey.equals(newKey)) {
+                    Main.console.force("ERROR: Data Structure identifier collision:");
+                    Main.console.force("Known structures: " + this.model.getStructures().values());
+                    Main.console.force("New structures: " + this.lsm.getDataStructures().values());
+                    if (this.always_clear_old) {
+                        Main.console.force("Known structures cleared.");
+                        this.clearButtonClicked();
+                        break checkCollison;
+                    } else if (this.always_keep_old) {
+                        Main.console.force("New structures rejected.");
+                        this.lsm.clearData();
+                        return false;
+                    } else {
+                        java.awt.Toolkit.getDefaultToolkit().beep();
+                        short routine = this.icd.show(oldStructs.values(), oldStructs.values());
+                        switch (routine) {
+                        // Clear old structures, import new
+                        case IdentifierCollisionDialog.ALWAYS_CLEAR_OLD:
+                            this.always_clear_old = true;
+                            this.clearButtonClicked();
+                            Main.console.force("Conflicting structures will overrwrite existing for this session.");
+                            break checkCollison;
+                        case IdentifierCollisionDialog.CLEAR_OLD:
+                            this.clearButtonClicked();
+                            Main.console.force("Known structures cleared.");
+                            break checkCollison;
+                        // Reject new structures
+                        case IdentifierCollisionDialog.ALWAYS_KEEP_OLD:
+                            this.always_keep_old = true;
+                            Main.console.force("Conflicting structures will be rejected for this session.");
+                            this.lsm.clearData();
+                            return false;
+                        case IdentifierCollisionDialog.KEEP_OLD:
+                            Main.console.force("New structures rejected.");
+                            this.lsm.clearData();
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 
-    private void loadVisualMenu() {
-	MenuItem reset = new MenuItem("Reset Positions");
-	reset.setOnAction(event -> {
-	    vis.placeVisuals();
-	});
-	visualMenu.getItems().add(reset);
+    private void loadVisualMenu () {
+        MenuItem reset = new MenuItem("Reset Positions");
+        reset.setOnAction(event -> {
+            this.vis.placeVisuals();
+        });
+        this.visualMenu.getItems().add(reset);
 
-	MenuItem live = new MenuItem("Show Live Stats");
-	live.setOnAction(event -> {
-	    vis.showLiveStats();
-	});
-	live.setDisable(true);
-	visualMenu.getItems().add(live);
+        MenuItem live = new MenuItem("Show Live Stats");
+        live.setOnAction(event -> {
+            this.vis.showLiveStats();
+        });
+        live.setDisable(true);
+        this.visualMenu.getItems().add(live);
 
-	visualMenu.getItems().add(new SeparatorMenuItem());
+        this.visualMenu.getItems().add(new SeparatorMenuItem());
 
-	MenuItem struct_mi;
-	for (DataStructure struct : model.getStructures().values()) {
-	    struct_mi = new MenuItem();
-	    struct_mi.setText(struct.identifier + ": " + struct.rawType.toString().toUpperCase());
-	    struct_mi.setOnAction(event -> {
-		openVisualDialog(struct);
-	    });
-	    visualMenu.getItems().add(struct_mi);
-	}
+        MenuItem struct_mi;
+        for (DataStructure struct : this.model.getStructures().values()) {
+            struct_mi = new MenuItem();
+            struct_mi.setText(struct.identifier + ": " + struct.rawType.toString().toUpperCase());
+            struct_mi.setOnAction(event -> {
+                this.openVisualDialog(struct);
+            });
+            this.visualMenu.getItems().add(struct_mi);
+        }
     }
 
-    public void openVisualDialog(DataStructure struct) {
-	if (visualDialog.show(struct)) {
-	    vis.init();
-	}
+    public void openVisualDialog (DataStructure struct) {
+        if (this.visualDialog.show(struct)) {
+            this.vis.init();
+        }
     }
 
     /**
      * Method for reception of streamed messages.
      */
     @Override
-    public void messageReceived(short messageType) {
-	if (messageType >= 10) {
-	    JGroupCommunicator jgc = (JGroupCommunicator) lsm.getCommunicator();
-	    connectedView.update(jgc.getMemberStrings(), jgc.allKnownEntities());
-	    return;
-	}
-	Platform.runLater(new Runnable() {
+    public void messageReceived (short messageType) {
+        if (messageType >= 10) {
+            JGroupCommunicator jgc = (JGroupCommunicator) this.lsm.getCommunicator();
+            this.connectedView.update(jgc.getMemberStrings(), jgc.allKnownEntities());
+            return;
+        }
+        Platform.runLater( () -> {
+            Controller.this.loadFromLSM();
+            Controller.this.lsm.clearData();
 
-	    @Override
-	    public void run() {
-		loadFromLSM();
-		lsm.clearData();
+            if (Controller.this.streamAlwaysShowLastOperation) {
+                Controller.this.model.goToEnd();
+                Controller.this.stepForwardButtonClicked();
+            } else if (Controller.this.streamStartAutoplay) {
+                Controller.this.startAutoPlay();
+            }
 
-		if (streamAlwaysShowLastOperation) {
-		    model.goToEnd();
-		    stepForwardButtonClicked();
-		} else if (streamStartAutoplay) {
-		    startAutoPlay();
-		}
-
-		updatePanels();
-	    }
-	});
+            Controller.this.updatePanels();
+        });
     }
 
-    public void openDestinationChooser() {
-	FileChooser fc = new FileChooser();
-	fc.setInitialDirectory(new File(System.getProperty("user.home")));
-	fc.setTitle("Save OI-File");
-	DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd_HHmmss");
-	Calendar cal = Calendar.getInstance();
-	fc.setInitialFileName(dateFormat.format(cal.getTime()));
-	fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON-Files", "*.json"),
-		new FileChooser.ExtensionFilter("All Files", "*.*"));
-	File target = fc.showSaveDialog(this.window);
-	if (target == null) {
-	    return;
-	}
-	lsm.setOperations(model.getOperations());
-	lsm.setDataStructures(model.getStructures());
-	lsm.setSources(sourceViewer.getSources());
-	boolean old = lsm.PRETTY_PRINTING;
-	lsm.PRETTY_PRINTING = model.getOperations().size() > 100;
-	lsm.printLog(target);
-	lsm.PRETTY_PRINTING = old;
+    public void openDestinationChooser () {
+        FileChooser fc = new FileChooser();
+        fc.setInitialDirectory(new File(System.getProperty("user.home")));
+        fc.setTitle("Save OI-File");
+        DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd_HHmmss");
+        Calendar cal = Calendar.getInstance();
+        fc.setInitialFileName(dateFormat.format(cal.getTime()));
+        fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON-Files", "*.json"),
+                new FileChooser.ExtensionFilter("All Files", "*.*"));
+        File target = fc.showSaveDialog(this.window);
+        if (target == null) {
+            return;
+        }
+        this.lsm.setOperations(this.model.getOperations());
+        this.lsm.setDataStructures(this.model.getStructures());
+        this.lsm.setSources(this.sourceViewer.getSources());
+        boolean old = this.lsm.PRETTY_PRINTING;
+        this.lsm.PRETTY_PRINTING = this.model.getOperations().size() > 100;
+        this.lsm.printLog(target);
+        this.lsm.PRETTY_PRINTING = old;
     }
 
-    public void propertiesFailed(Exception exception) {
-	if (exception != null) {
-	    Main.console.err(exception.getMessage());
-	}
-	FXMLLoader loader = new FXMLLoader(getClass().getResource("/dialog/PropertiesAlertDialog.fxml"));
-	Stage stage = new Stage();
-	GridPane p = null;
-	try {
-	    p = loader.load();
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
-	Scene dialogScene = new Scene(p);
-	stage.setOnCloseRequest(event -> {
-	    event.consume();
-	    stage.close();
-	});
-	Button close = (Button) loader.getNamespace().get("closeAlert");
-	close.setOnAction(event -> {
-	    event.consume();
-	    stage.close();
-	});
-	stage.setScene(dialogScene);
-	stage.toFront();
-	stage.show();
+    public void propertiesFailed (Exception exception) {
+        if (exception != null) {
+            Main.console.err(exception.getMessage());
+        }
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/dialog/PropertiesAlertDialog.fxml"));
+        Stage stage = new Stage();
+        GridPane p = null;
+        try {
+            p = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene dialogScene = new Scene(p);
+        stage.setOnCloseRequest(event -> {
+            event.consume();
+            stage.close();
+        });
+        Button close = (Button) loader.getNamespace().get("closeAlert");
+        close.setOnAction(event -> {
+            event.consume();
+            stage.close();
+        });
+        stage.setScene(dialogScene);
+        stage.toFront();
+        stage.show();
     }
 
-    public void loadMainViewFxID(FXMLLoader fxmlLoader) {
-	ObservableMap<String, Object> namespace = fxmlLoader.getNamespace();
-	// Load from main view namespace
-	playPauseButton = (Button) namespace.get("playPauseButton");
-	restartButton = (Button) namespace.get("restartButton");
-	backwardButton = (Button) namespace.get("backwardButton");
-	forwardButton = (Button) namespace.get("forwardButton");
-	clearButton = (Button) namespace.get("clearButton");
-	speedButton = (Button) namespace.get("speedButton");
-	streamBehaviourMenuButton = (MenuButton) namespace.get("streamBehaviourMenuButton");
-	visualMenu = (Menu) namespace.get("visualMenu");
-	visualMenu.setDisable(true);
+    public void loadMainViewFxID (FXMLLoader fxmlLoader) {
+        ObservableMap<String, Object> namespace = fxmlLoader.getNamespace();
+        // Load from main view namespace
+        this.playPauseButton = (Button) namespace.get("playPauseButton");
+        this.restartButton = (Button) namespace.get("restartButton");
+        this.backwardButton = (Button) namespace.get("backwardButton");
+        this.forwardButton = (Button) namespace.get("forwardButton");
+        this.clearButton = (Button) namespace.get("clearButton");
+        this.speedButton = (Button) namespace.get("speedButton");
+        this.streamBehaviourMenuButton = (MenuButton) namespace.get("streamBehaviourMenuButton");
+        this.visualMenu = (Menu) namespace.get("visualMenu");
+        this.visualMenu.setDisable(true);
 
-	CheckMenuItem debugERR = (CheckMenuItem) namespace.get("debugERR");
-	debugERR.setSelected(Debug.ERR);
-	CheckMenuItem debugOUT = (CheckMenuItem) namespace.get("debugOUT");
-	debugOUT.setSelected(Debug.OUT);
-	
+        CheckMenuItem debugERR = (CheckMenuItem) namespace.get("debugERR");
+        debugERR.setSelected(Debug.ERR);
+        CheckMenuItem debugOUT = (CheckMenuItem) namespace.get("debugOUT");
+        debugOUT.setSelected(Debug.OUT);
 
-	animationProgressBar = (ProgressBar) fxmlLoader.getNamespace().get("animationProgress");
-	buildAnimationProgressIndicator();
-	
-	setButtons();
+        this.animationProgressBar = (ProgressBar) fxmlLoader.getNamespace().get("animationProgress");
+        this.buildAnimationProgressIndicator();
+
+        this.setButtons();
     }
 
     /*
@@ -756,125 +748,125 @@ public class Controller implements CommunicatorListener {
     private boolean settingsChanged = false;
 
     // Commit changes to file.
-    public void saveSettings() {
-	if (settingsChanged) {
-	    saveProperties();
-	    noUnsavedChanges();
-	}
-	settingsView.close();
+    public void saveSettings () {
+        if (this.settingsChanged) {
+            this.saveProperties();
+            this.noUnsavedChanges();
+        }
+        this.settingsView.close();
     }
 
     // Reload settings from file.
-    public void revertSettings() {
-	if (settingsChanged) {
-	    loadProperties();
-	    noUnsavedChanges();
-	}
-	settingsView.close();
+    public void revertSettings () {
+        if (this.settingsChanged) {
+            this.loadProperties();
+            this.noUnsavedChanges();
+        }
+        this.settingsView.close();
     }
 
-    private void noUnsavedChanges() {
-	settingsChanged = false;
-	settingsSaveState.setText("No unsaved changes.");
-	settingsSaveState.setTextFill(Color.web("#00c8ff"));
+    private void noUnsavedChanges () {
+        this.settingsChanged = false;
+        this.settingsSaveState.setText("No unsaved changes.");
+        this.settingsSaveState.setTextFill(Color.web("#00c8ff"));
     }
 
-    private void unsavedChanged() {
-	settingsChanged = true;
-	settingsSaveState.setText("Unsaved changes.");
-	settingsSaveState.setTextFill(Color.web("#ff0000"));
+    private void unsavedChanged () {
+        this.settingsChanged = true;
+        this.settingsSaveState.setText("Unsaved changes.");
+        this.settingsSaveState.setTextFill(Color.web("#ff0000"));
     }
 
     // Playback speed
     private TextField perSecField;
 
-    public void setPlayBackOpsPerSec(Event e) {
-	long newSpeed;
-	try {
-	    perSecField.setStyle("-fx-control-inner-background: white;");
-	    newSpeed = Long.parseLong(perSecField.getText());
-	} catch (Exception exc) {
-	    // NaN
-	    perSecField.setStyle("-fx-control-inner-background: #C40000;");
-	    return;
-	}
-	if (newSpeed <= 0) {
-	    perSecField.setText("invalid");
-	    perSecField.selectAll();
-	    return;
-	}
-	// Valid input. Change other button and speed variable.
-	perSecField.setText(df.format(newSpeed));// BLA
-	timeBetweenField.setText(df.format((1000.0 / newSpeed)));
-	stepDelayBase = (1000L / newSpeed);
-	stepDelay = stepDelayBase / stepDelaySpeedupFactor;
-	unsavedChanged();
+    public void setPlayBackOpsPerSec (Event e) {
+        long newSpeed;
+        try {
+            this.perSecField.setStyle("-fx-control-inner-background: white;");
+            newSpeed = Long.parseLong(this.perSecField.getText());
+        } catch (Exception exc) {
+            // NaN
+            this.perSecField.setStyle("-fx-control-inner-background: #C40000;");
+            return;
+        }
+        if (newSpeed <= 0) {
+            this.perSecField.setText("invalid");
+            this.perSecField.selectAll();
+            return;
+        }
+        // Valid input. Change other button and speed variable.
+        this.perSecField.setText(this.df.format(newSpeed));// BLA
+        this.timeBetweenField.setText(this.df.format(1000.0 / newSpeed));
+        this.stepDelayBase = 1000L / newSpeed;
+        this.stepDelay = this.stepDelayBase / this.stepDelaySpeedupFactor;
+        this.unsavedChanged();
     }
 
     private TextField timeBetweenField;
 
-    public void setPlaybackTimeBetweenOperations(Event e) {
-	long newSpeed;
-	try {
-	    perSecField.setStyle("-fx-control-inner-background: white;");
-	    newSpeed = Long.parseLong(timeBetweenField.getText());
-	} catch (Exception exc) {
-	    // NaN
-	    perSecField.setStyle("-fx-control-inner-background: #C40000;");
-	    return;
-	}
-	if (newSpeed < 0) {
-	    timeBetweenField.setText("invalid");
-	    perSecField.selectAll();
-	    return;
-	}
-	// Valid input. Change other button and speed variable.
-	perSecField.setText(df.format(1000.0 / newSpeed));
-	timeBetweenField.setText(df.format(newSpeed));
-	stepDelayBase = newSpeed;
-	stepDelay = stepDelayBase / stepDelaySpeedupFactor;
-	unsavedChanged();
+    public void setPlaybackTimeBetweenOperations (Event e) {
+        long newSpeed;
+        try {
+            this.perSecField.setStyle("-fx-control-inner-background: white;");
+            newSpeed = Long.parseLong(this.timeBetweenField.getText());
+        } catch (Exception exc) {
+            // NaN
+            this.perSecField.setStyle("-fx-control-inner-background: #C40000;");
+            return;
+        }
+        if (newSpeed < 0) {
+            this.timeBetweenField.setText("invalid");
+            this.perSecField.selectAll();
+            return;
+        }
+        // Valid input. Change other button and speed variable.
+        this.perSecField.setText(this.df.format(1000.0 / newSpeed));
+        this.timeBetweenField.setText(this.df.format(newSpeed));
+        this.stepDelayBase = newSpeed;
+        this.stepDelay = this.stepDelayBase / this.stepDelaySpeedupFactor;
+        this.unsavedChanged();
     }
 
-    public Properties tryLoadProperties() {
-	InputStream inputStream = getClass().getClassLoader().getResourceAsStream(Const.PROPERTIES_FILE_NAME);
-	if (inputStream == null) {
-	    Main.console.err("Failed to open properties file.");
-	    propertiesFailed(null);
-	    return DefaultProperties.get();
-	}
-	Properties properties = new Properties();
-	try {
-	    properties.load(inputStream);
-	    inputStream.close();
-	    return properties;
-	} catch (IOException e) {
-	    propertiesFailed(e);
-	    Main.console.err("Property file I/O failed.");
-	    return DefaultProperties.get();
-	}
+    public Properties tryLoadProperties () {
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(Const.PROPERTIES_FILE_NAME);
+        if (inputStream == null) {
+            Main.console.err("Failed to open properties file.");
+            this.propertiesFailed(null);
+            return DefaultProperties.get();
+        }
+        Properties properties = new Properties();
+        try {
+            properties.load(inputStream);
+            inputStream.close();
+            return properties;
+        } catch (IOException e) {
+            this.propertiesFailed(e);
+            Main.console.err("Property file I/O failed.");
+            return DefaultProperties.get();
+        }
     }
 
     // Load settings
-    public void loadProperties() {
-	Properties properties = tryLoadProperties();
-	stepDelayBase = Long.parseLong(properties.getProperty("playbackStepDelay"));
-	stepDelay = stepDelayBase; // Speedup factor is 1 at startup.
-	streamAlwaysShowLastOperation = Boolean.parseBoolean(properties.getProperty("autoPlayOnIncomingStream"));
+    public void loadProperties () {
+        Properties properties = this.tryLoadProperties();
+        this.stepDelayBase = Long.parseLong(properties.getProperty("playbackStepDelay"));
+        this.stepDelay = this.stepDelayBase; // Speedup factor is 1 at startup.
+        this.streamAlwaysShowLastOperation = Boolean.parseBoolean(properties.getProperty("autoPlayOnIncomingStream"));
     }
 
     // Save settings
-    public void saveProperties() {
-	Properties properties = new Properties();
-	properties.setProperty("playbackStepDelay", "" + stepDelayBase);
-	properties.setProperty("autoPlayOnIncomingStream", "" + streamAlwaysShowLastOperation);
-	try {
-	    URL url = getClass().getClassLoader().getResource(Const.PROPERTIES_FILE_NAME);
-	    OutputStream outputStream = new FileOutputStream(new File(url.toURI()));
-	    properties.store(outputStream, Const.PROGRAM_NAME + " user preferences.");
-	} catch (Exception e) {
-	    propertiesFailed(e);
-	}
+    public void saveProperties () {
+        Properties properties = new Properties();
+        properties.setProperty("playbackStepDelay", "" + this.stepDelayBase);
+        properties.setProperty("autoPlayOnIncomingStream", "" + this.streamAlwaysShowLastOperation);
+        try {
+            URL url = this.getClass().getClassLoader().getResource(Const.PROPERTIES_FILE_NAME);
+            OutputStream outputStream = new FileOutputStream(new File(url.toURI()));
+            properties.store(outputStream, Const.PROGRAM_NAME + " user preferences.");
+        } catch (Exception e) {
+            this.propertiesFailed(e);
+        }
     }
     /*
      * End settings
@@ -885,140 +877,140 @@ public class Controller implements CommunicatorListener {
      */
     private boolean oooooOOoooOOOooooOOoooed = false;
 
-    public void oooooOOoooOOOooooOOooo(Event e) {
-	// Sound: https://www.youtube.com/watch?v=inli9ukUKIs
-	URL resource = getClass().getResource("/assets/oooooOOoooOOOooooOOooo.mp3");
-	Media media = new Media(resource.toString());
-	MediaPlayer mediaPlayer = new MediaPlayer(media);
-	mediaPlayer.play();
-	Main.console.info("GET SPoooooOOoooOOOooooOOoooKED!");
-	if (!oooooOOoooOOOooooOOoooed) {
-	    Button spooky = (Button) e.getSource();
-	    spooky.setBlendMode(BlendMode.SRC_OVER);
-	    // Image:
-	    // https://pixabay.com/en/ghost-white-spooky-scary-ghostly-157985/
-	    Image img = new Image(getClass().getResourceAsStream("/assets/oooooOOoooOOOooooOOooo.png"));
-	    spooky.setGraphic(new ImageView(img));
-	    oooooOOoooOOOooooOOoooed = true;
-	    window.setTitle("SpoooooOOoooOOOooooOOoookster!");
-	}
+    public void oooooOOoooOOOooooOOooo (Event e) {
+        // Sound: https://www.youtube.com/watch?v=inli9ukUKIs
+        URL resource = this.getClass().getResource("/assets/oooooOOoooOOOooooOOooo.mp3");
+        Media media = new Media(resource.toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.play();
+        Main.console.info("GET SPoooooOOoooOOOooooOOoooKED!");
+        if (!this.oooooOOoooOOOooooOOoooed) {
+            Button spooky = (Button) e.getSource();
+            spooky.setBlendMode(BlendMode.SRC_OVER);
+            // Image:
+            // https://pixabay.com/en/ghost-white-spooky-scary-ghostly-157985/
+            Image img = new Image(this.getClass().getResourceAsStream("/assets/oooooOOoooOOOooooOOooo.png"));
+            spooky.setGraphic(new ImageView(img));
+            this.oooooOOoooOOOooooOOoooed = true;
+            this.window.setTitle("SpoooooOOoooOOOooooOOoookster!");
+        }
     }
 
     // Fulhack
-    public OperationPanel getOperationPanel() {
-	return operationPanel;
+    public OperationPanel getOperationPanel () {
+        return this.operationPanel;
     }
 
     /**
      * Load an example.
-     * 
+     *
      * @param algo
      *            The algorithm to run.
      */
-    public void loadExample(Algorithm algo) {
-	double[] data = examplesDialog.show(algo.name);
-	if (data == null) {
-	    return;
-	}
-	Main.console.force("Not implemented yet. Sorry :/");
-	Main.console.info("Running " + algo.name + " on: " + Arrays.toString(data));
-	String json = Examples.getExample(algo, data);
-	if (json != null) {
-	    lsm.clearData();
-	    lsm.unwrap(json);
-	    loadFromLSM();
-	    lsm.clearData();
-	}
+    public void loadExample (Algorithm algo) {
+        double[] data = this.examplesDialog.show(algo.name);
+        if (data == null) {
+            return;
+        }
+        Main.console.force("Not implemented yet. Sorry :/");
+        Main.console.info("Running " + algo.name + " on: " + Arrays.toString(data));
+        String json = Examples.getExample(algo, data);
+        if (json != null) {
+            this.lsm.clearData();
+            this.lsm.unwrap(json);
+            this.loadFromLSM();
+            this.lsm.clearData();
+        }
     }
 
     /*
      * Console controls.
      */
-    public void toggleQuietMode(Event e) {
-	CheckBox cb = (CheckBox) e.getSource();
-	Main.console.setQuiet(cb.isSelected());
+    public void toggleQuietMode (Event e) {
+        CheckBox cb = (CheckBox) e.getSource();
+        Main.console.setQuiet(cb.isSelected());
     }
 
-    public void toggleInformation(Event e) {
-	CheckBox cb = (CheckBox) e.getSource();
-	Main.console.setInfo(cb.isSelected());
+    public void toggleInformation (Event e) {
+        CheckBox cb = (CheckBox) e.getSource();
+        Main.console.setInfo(cb.isSelected());
     }
 
-    public void toggleError(Event e) {
-	CheckBox cb = (CheckBox) e.getSource();
-	Main.console.setError(cb.isSelected());
+    public void toggleError (Event e) {
+        CheckBox cb = (CheckBox) e.getSource();
+        Main.console.setError(cb.isSelected());
     }
 
-    public void toggleDebug(Event e) {
-	CheckBox cb = (CheckBox) e.getSource();
-	Main.console.setDebug(cb.isSelected());
+    public void toggleDebug (Event e) {
+        CheckBox cb = (CheckBox) e.getSource();
+        Main.console.setDebug(cb.isSelected());
     }
 
-    public void clearConsole() {
-	Main.console.clear();
+    public void clearConsole () {
+        Main.console.clear();
     }
     /*
      * Console controls end.
      */
 
-    public void dragDropped(DragEvent event) {
-	Dragboard db = event.getDragboard();
-	boolean hasFiles = db.hasFiles();
-	if (hasFiles) {
-	    for (File file : db.getFiles()) {
-		readLog(file);
-	    }
-	}
-	event.setDropCompleted(hasFiles);
-	event.consume();
+    public void dragDropped (DragEvent event) {
+        Dragboard db = event.getDragboard();
+        boolean hasFiles = db.hasFiles();
+        if (hasFiles) {
+            for (File file : db.getFiles()) {
+                this.readLog(file);
+            }
+        }
+        event.setDropCompleted(hasFiles);
+        event.consume();
     }
 
-    public void dragOver(DragEvent event) {
-	Dragboard db = event.getDragboard();
-	if (db.hasFiles()) {
-	    event.acceptTransferModes(TransferMode.COPY);
-	} else {
-	    event.consume();
-	}
+    public void dragOver (DragEvent event) {
+        Dragboard db = event.getDragboard();
+        if (db.hasFiles()) {
+            event.acceptTransferModes(TransferMode.COPY);
+        } else {
+            event.consume();
+        }
     }
 
-    public void showHelp() {
-	helpView.show();
+    public void showHelp () {
+        this.helpView.show();
     }
 
     /**
      * Set enable/disable on buttons.
      */
-    public void setButtons() {
-	// TODO: Use a property in Model instead.
-	// Model clear?
-	if (model.isHardCleared()) {
-	    playPauseButton.setDisable(true);
-	    animationProgressBar.setProgress(0);
-	    forwardButton.setDisable(true);
-	    // backwardButton.setDisable(true);
-	    restartButton.setDisable(true);
-	    clearButton.setDisable(true);
-	    return;
-	}
-	boolean forward = !model.tryStepForward();
-	playPauseButton.setDisable(forward);
-	forwardButton.setDisable(forward);
-	boolean backward = !model.tryStepBackward();
-	// backwardButton.setDisable(backward);
-	restartButton.setDisable(backward);
-	clearButton.setDisable(false);
+    public void setButtons () {
+        // TODO: Use a property in Model instead.
+        // Model clear?
+        if (this.model.isHardCleared()) {
+            this.playPauseButton.setDisable(true);
+            this.animationProgressBar.setProgress(0);
+            this.forwardButton.setDisable(true);
+            // backwardButton.setDisable(true);
+            this.restartButton.setDisable(true);
+            this.clearButton.setDisable(true);
+            return;
+        }
+        boolean forward = !this.model.tryStepForward();
+        this.playPauseButton.setDisable(forward);
+        this.forwardButton.setDisable(forward);
+        boolean backward = !this.model.tryStepBackward();
+        // backwardButton.setDisable(backward);
+        this.restartButton.setDisable(backward);
+        this.clearButton.setDisable(false);
     }
-    
-    public void debugERR(Event e){
-	Debug.ERR = ((CheckMenuItem) e.getSource()).isSelected();
+
+    public void debugERR (Event e) {
+        Debug.ERR = ((CheckMenuItem) e.getSource()).isSelected();
     }
-    
-    public void debugOUT(Event e){
-	Debug.OUT = ((CheckMenuItem) e.getSource()).isSelected();
+
+    public void debugOUT (Event e) {
+        Debug.OUT = ((CheckMenuItem) e.getSource()).isSelected();
     }
-    
-    public void markElementXY(){
-	Tools.markElementXY(vis);
+
+    public void markElementXY () {
+        Tools.markElementXY(this.vis);
     }
 }

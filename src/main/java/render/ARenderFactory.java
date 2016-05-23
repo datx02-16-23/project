@@ -4,14 +4,14 @@ import contract.datastructure.DataStructure;
 
 public abstract class ARenderFactory {
 
-    private ARenderFactory() {
+    private ARenderFactory () {
     } // Not to be instantiated.
 
     /**
      * Determines and creates a Render for use by this DataStructure. Some
      * parameters may be ignored, depending on the render desired by
      * {@code struct}.
-     * 
+     *
      * @param struct
      *            The DataStructure to create a Render for.
      *

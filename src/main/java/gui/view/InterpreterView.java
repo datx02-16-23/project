@@ -30,243 +30,243 @@ import javafx.stage.Stage;
 
 /**
  * Controller and model for the Interpreter view.
- * 
+ *
  * @author Richard Sundqvist
  *
  */
 public class InterpreterView implements InvalidationListener {
 
-	private final ObservableList<Operation> beforeItems, afterItems;
-	private Map<String, Object> namespace;
-	private Stage root;
-	private TextField beforeCount, afterCount;
-	private final Interpreter interpreter;
-	private final Stage parent;
-	private boolean keep;
-	/**
-	 * Items received from the caller of show ().
-	 */
-	private List<Operation> receivedItems;
-	private Button interpretButton;
-	private Button moveToBeforeButton;
-	private Button keepButton;
+    private final ObservableList<Operation> beforeItems, afterItems;
+    private final Map<String, Object>       namespace;
+    private final Stage                     root;
+    private final TextField                 beforeCount, afterCount;
+    private final Interpreter               interpreter;
+    private final Stage                     parent;
+    private boolean                         keep;
+    /**
+     * Items received from the caller of show ().
+     */
+    private List<Operation>                 receivedItems;
+    private final Button                    interpretButton;
+    private final Button                    moveToBeforeButton;
+    private final Button                    keepButton;
 
-	@SuppressWarnings("unchecked")
-	public InterpreterView(Stage parent) {
-		this.parent = parent;
-		interpreter = new Interpreter();
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/InterpreterView.fxml"));
-		fxmlLoader.setController(this);
-		root = new Stage();
-		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
-		root.initModality(Modality.APPLICATION_MODAL);
-		root.setTitle(Const.PROGRAM_NAME + ": Interpreter");
-		root.initOwner(this.parent);
-		GridPane p = null;
-		try {
-			p = fxmlLoader.load();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		// Buttons
-		root.setOnCloseRequest(event -> {
-			event.consume(); // Better to do this now than missing it later.
-			discardInterpreted();
-		});
-		// High order routine
-		interpreterRoutineChooser = (ChoiceBox<String>) fxmlLoader.getNamespace().get("routineChooser");
-		interpreterRoutineChooser.getSelectionModel().selectedItemProperty().addListener(event -> {
-			interpreterRoutineChooser();
-		});
-		interpreterRoutineChooser.setItems(
-				FXCollections.observableArrayList("Discard", "Flush Set", "Keep Set", "Deconstruct", "Abort"));
-		namespace = fxmlLoader.getNamespace();
-		// Lists
-		ListView<Operation> interpreterBefore = (ListView<Operation>) namespace.get("interpreterBefore");
-		ListView<Operation> interpreterAfter = (ListView<Operation>) namespace.get("interpreterAfter");
-		beforeItems = interpreterBefore.getItems();
-		afterItems = interpreterAfter.getItems();
-		beforeItems.addListener(this);
-		afterItems.addListener(this);
-		
-		// Counters
-		beforeCount = (TextField) namespace.get("beforeCount");
-		afterCount = (TextField) namespace.get("afterCount");
-		
-		//Button enabling
-		interpretButton = (Button) namespace.get("interpretButton");
-		moveToBeforeButton = (Button) namespace.get("moveToBeforeButton");
-		keepButton = (Button) namespace.get("keepButton");
-		keepButton.disableProperty().bind(moveToBeforeButton.disabledProperty());
-		
-		// Size and build
-		p.setPrefWidth(this.parent.getWidth() * 0.75);
-		p.setPrefHeight(this.parent.getHeight() * 0.75);
-		Scene dialogScene = new Scene(p, this.parent.getWidth() * 0.75, this.parent.getHeight() * 0.75);
-		root.setScene(dialogScene);
-	}
+    @SuppressWarnings("unchecked")
+    public InterpreterView (Stage parent) {
+        this.parent = parent;
+        this.interpreter = new Interpreter();
+        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/view/InterpreterView.fxml"));
+        fxmlLoader.setController(this);
+        this.root = new Stage();
+        this.root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
+        this.root.initModality(Modality.APPLICATION_MODAL);
+        this.root.setTitle(Const.PROGRAM_NAME + ": Interpreter");
+        this.root.initOwner(this.parent);
+        GridPane p = null;
+        try {
+            p = fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // Buttons
+        this.root.setOnCloseRequest(event -> {
+            event.consume(); // Better to do this now than missing it later.
+            this.discardInterpreted();
+        });
+        // High order routine
+        this.interpreterRoutineChooser = (ChoiceBox<String>) fxmlLoader.getNamespace().get("routineChooser");
+        this.interpreterRoutineChooser.getSelectionModel().selectedItemProperty().addListener(event -> {
+            this.interpreterRoutineChooser();
+        });
+        this.interpreterRoutineChooser.setItems(
+                FXCollections.observableArrayList("Discard", "Flush Set", "Keep Set", "Deconstruct", "Abort"));
+        this.namespace = fxmlLoader.getNamespace();
+        // Lists
+        ListView<Operation> interpreterBefore = (ListView<Operation>) this.namespace.get("interpreterBefore");
+        ListView<Operation> interpreterAfter = (ListView<Operation>) this.namespace.get("interpreterAfter");
+        this.beforeItems = interpreterBefore.getItems();
+        this.afterItems = interpreterAfter.getItems();
+        this.beforeItems.addListener(this);
+        this.afterItems.addListener(this);
 
-	/**
-	 * Show the Interpreter View.
-	 * 
-	 * @param ops
-	 *            The list of operations to use.
-	 * @return True if the interpreted operations should be kept, false
-	 *         otherwise.
-	 */
-	public boolean show(List<Operation> ops) {
-		interpretButton.setDisable(ops.isEmpty());
-		moveToBeforeButton.setDisable(true);
-		receivedItems = ops;
-		beforeItems.setAll(receivedItems);
-		interpreterRoutineChooser.getSelectionModel().select(translateInterpreterRoutine());
-		afterItems.clear();
-		loadTestCases();
-		// Set size and show
-		root.setWidth(this.parent.getWidth() * 0.75);
-		root.setHeight(this.parent.getHeight() * 0.75);
-		root.showAndWait();
-		return keep;
-	}
+        // Counters
+        this.beforeCount = (TextField) this.namespace.get("beforeCount");
+        this.afterCount = (TextField) this.namespace.get("afterCount");
 
-	private void loadTestCases() {
-		VBox casesBox = (VBox) namespace.get("casesBox");
-		casesBox.getChildren().clear();
-		List<OperationType> selectedTypes = interpreter.getTestCases();
-		Insets insets = new Insets(2, 0, 2, 5);
-		// Create CheckBoxes for all Consolidate operation types
-		for (OperationType type : OperationType.values()) {
-			if (!type.consolidable) {
-				continue;
-			}
-			CheckBox cb = new CheckBox(type.toString());
-			cb.setOnAction(event -> {
-				if (cb.isSelected()) {
-					interpreter.addTestCase(type);
-				} else {
-					interpreter.removeTestCase(type);
-				}
-			});
-			if (selectedTypes.contains(type)) {
-				cb.setSelected(true);
-			} else {
-				cb.setSelected(false);
-			}
-			cb.setPadding(insets);
-			casesBox.getChildren().add(cb);
-		}
-	}
+        // Button enabling
+        this.interpretButton = (Button) this.namespace.get("interpretButton");
+        this.moveToBeforeButton = (Button) this.namespace.get("moveToBeforeButton");
+        this.keepButton = (Button) this.namespace.get("keepButton");
+        this.keepButton.disableProperty().bind(this.moveToBeforeButton.disabledProperty());
 
-	/**
-	 * Listener for the "Keep" button.
-	 */
-	public void keepInterpreted() {
-		if (afterItems.isEmpty() == false) {
-			receivedItems.clear();
-			receivedItems.addAll(afterItems);
-			keep = true;
-			root.close();
-		} else {
-			keep = false;
-		}
-	}
+        // Size and build
+        p.setPrefWidth(this.parent.getWidth() * 0.75);
+        p.setPrefHeight(this.parent.getHeight() * 0.75);
+        Scene dialogScene = new Scene(p, this.parent.getWidth() * 0.75, this.parent.getHeight() * 0.75);
+        this.root.setScene(dialogScene);
+    }
 
-	/**
-	 * Stylize routine names.
-	 * 
-	 * @return A stylized routine name.
-	 */
-	private String translateInterpreterRoutine() {
-		switch (interpreter.getHighOrderRoutine()) {
-		case Interpreter.DISCARD:
-			return "Discard";
-		case Interpreter.FLUSH_SET_ADD_HIGH:
-			return "Flush Set";
-		case Interpreter.KEEP_SET_ADD_HIGH:
-			return "Keep Set";
-		case Interpreter.DECONSTRUCT:
-			return "Deconstruct";
-		case Interpreter.ABORT:
-			return "Abort";
-		default:
-			throw new IllegalArgumentException();
-		}
-	}
+    /**
+     * Show the Interpreter View.
+     * 
+     * @param ops
+     *            The list of operations to use.
+     * @return True if the interpreted operations should be kept, false
+     *         otherwise.
+     */
+    public boolean show (List<Operation> ops) {
+        this.interpretButton.setDisable(ops.isEmpty());
+        this.moveToBeforeButton.setDisable(true);
+        this.receivedItems = ops;
+        this.beforeItems.setAll(this.receivedItems);
+        this.interpreterRoutineChooser.getSelectionModel().select(this.translateInterpreterRoutine());
+        this.afterItems.clear();
+        this.loadTestCases();
+        // Set size and show
+        this.root.setWidth(this.parent.getWidth() * 0.75);
+        this.root.setHeight(this.parent.getHeight() * 0.75);
+        this.root.showAndWait();
+        return this.keep;
+    }
 
-	/**
-	 * Listener for the "Discard" button.
-	 */
-	public void discardInterpreted() {
-		keep = false;
-		root.close();
-	}
+    private void loadTestCases () {
+        VBox casesBox = (VBox) this.namespace.get("casesBox");
+        casesBox.getChildren().clear();
+        List<OperationType> selectedTypes = this.interpreter.getTestCases();
+        Insets insets = new Insets(2, 0, 2, 5);
+        // Create CheckBoxes for all Consolidate operation types
+        for (OperationType type : OperationType.values()) {
+            if (!type.consolidable) {
+                continue;
+            }
+            CheckBox cb = new CheckBox(type.toString());
+            cb.setOnAction(event -> {
+                if (cb.isSelected()) {
+                    this.interpreter.addTestCase(type);
+                } else {
+                    this.interpreter.removeTestCase(type);
+                }
+            });
+            if (selectedTypes.contains(type)) {
+                cb.setSelected(true);
+            } else {
+                cb.setSelected(false);
+            }
+            cb.setPadding(insets);
+            casesBox.getChildren().add(cb);
+        }
+    }
 
-	private ChoiceBox<String> interpreterRoutineChooser;
-	private int newRoutine = -1;
+    /**
+     * Listener for the "Keep" button.
+     */
+    public void keepInterpreted () {
+        if (this.afterItems.isEmpty() == false) {
+            this.receivedItems.clear();
+            this.receivedItems.addAll(this.afterItems);
+            this.keep = true;
+            this.root.close();
+        } else {
+            this.keep = false;
+        }
+    }
 
-	private void interpreterRoutineChooser() {
-		String choice = interpreterRoutineChooser.getSelectionModel().getSelectedItem();
-		switch (choice) {
-		case "Discard":
-			newRoutine = Interpreter.DISCARD;
-			break;
-		case "Flush Set":
-			newRoutine = Interpreter.FLUSH_SET_ADD_HIGH;
-			break;
-		case "Keep Set":
-			newRoutine = Interpreter.KEEP_SET_ADD_HIGH;
-			break;
-		case "Deconstruct":
-			newRoutine = Interpreter.DECONSTRUCT;
-			break;
-		case "Abort":
-			newRoutine = Interpreter.ABORT;
-			break;
-		}
-		if (newRoutine != interpreter.getHighOrderRoutine()) {
-			interpreter.setHighOrderRoutine(newRoutine);
-			// saveProperties();
-		}
-	}
+    /**
+     * Stylize routine names.
+     * 
+     * @return A stylized routine name.
+     */
+    private String translateInterpreterRoutine () {
+        switch (this.interpreter.getHighOrderRoutine()) {
+        case Interpreter.DISCARD:
+            return "Discard";
+        case Interpreter.FLUSH_SET_ADD_HIGH:
+            return "Flush Set";
+        case Interpreter.KEEP_SET_ADD_HIGH:
+            return "Keep Set";
+        case Interpreter.DECONSTRUCT:
+            return "Deconstruct";
+        case Interpreter.ABORT:
+            return "Abort";
+        default:
+            throw new IllegalArgumentException();
+        }
+    }
 
-	/**
-	 * onAction for the "{@literal<}--" button.
-	 */
-	public void moveToBefore() {
-		moveToBeforeButton.setDisable(true);
-		interpretButton.setDisable(false);
-		if (afterItems.isEmpty() == false) {
-			beforeItems.setAll(afterItems);
-			afterItems.clear();
-		}
-	}
+    /**
+     * Listener for the "Discard" button.
+     */
+    public void discardInterpreted () {
+        this.keep = false;
+        this.root.close();
+    }
 
-	/**
-	 * onAction for the "Interpret" button.
-	 */
-	public void interpret() {
-		interpretButton.setDisable(true);
-		moveToBeforeButton.setDisable(false);
-		afterItems.clear();
-		afterItems.addAll(beforeItems);
-		int n = interpreter.consolidate(afterItems);
-		if (n < 1) {
-			Main.console.info("Interpretation did not return any new operations.");
-		} else {
-			Main.console.info("Interpretation returned " + n + " new operation(s)." + " List size reduced by "
-					+ (beforeItems.size() - afterItems.size()) + ", going from " + beforeItems.size() + " to "
-					+ afterItems.size() + ".");
-		}
-		afterCount.setText("" + afterItems.size());
-	}
+    private final ChoiceBox<String> interpreterRoutineChooser;
+    private int                     newRoutine = -1;
 
-	@Override
-	public void invalidated(Observable o) {
-		beforeCount.setText("" + beforeItems.size());
-		afterCount.setText("" + afterItems.size());
-	}
+    private void interpreterRoutineChooser () {
+        String choice = this.interpreterRoutineChooser.getSelectionModel().getSelectedItem();
+        switch (choice) {
+        case "Discard":
+            this.newRoutine = Interpreter.DISCARD;
+            break;
+        case "Flush Set":
+            this.newRoutine = Interpreter.FLUSH_SET_ADD_HIGH;
+            break;
+        case "Keep Set":
+            this.newRoutine = Interpreter.KEEP_SET_ADD_HIGH;
+            break;
+        case "Deconstruct":
+            this.newRoutine = Interpreter.DECONSTRUCT;
+            break;
+        case "Abort":
+            this.newRoutine = Interpreter.ABORT;
+            break;
+        }
+        if (this.newRoutine != this.interpreter.getHighOrderRoutine()) {
+            this.interpreter.setHighOrderRoutine(this.newRoutine);
+            // saveProperties();
+        }
+    }
 
-	public void fast(List<Operation> ops) {
-		interpreter.consolidate(ops);
-	}
+    /**
+     * onAction for the "{@literal<}--" button.
+     */
+    public void moveToBefore () {
+        this.moveToBeforeButton.setDisable(true);
+        this.interpretButton.setDisable(false);
+        if (this.afterItems.isEmpty() == false) {
+            this.beforeItems.setAll(this.afterItems);
+            this.afterItems.clear();
+        }
+    }
+
+    /**
+     * onAction for the "Interpret" button.
+     */
+    public void interpret () {
+        this.interpretButton.setDisable(true);
+        this.moveToBeforeButton.setDisable(false);
+        this.afterItems.clear();
+        this.afterItems.addAll(this.beforeItems);
+        int n = this.interpreter.consolidate(this.afterItems);
+        if (n < 1) {
+            Main.console.info("Interpretation did not return any new operations.");
+        } else {
+            Main.console.info("Interpretation returned " + n + " new operation(s)." + " List size reduced by "
+                    + (this.beforeItems.size() - this.afterItems.size()) + ", going from " + this.beforeItems.size()
+                    + " to " + this.afterItems.size() + ".");
+        }
+        this.afterCount.setText("" + this.afterItems.size());
+    }
+
+    @Override
+    public void invalidated (Observable o) {
+        this.beforeCount.setText("" + this.beforeItems.size());
+        this.afterCount.setText("" + this.afterItems.size());
+    }
+
+    public void fast (List<Operation> ops) {
+        this.interpreter.consolidate(ops);
+    }
 }

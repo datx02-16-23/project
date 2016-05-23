@@ -23,99 +23,99 @@ import javafx.stage.Stage;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class CreateStructureDialog {
 
-	private final Stage parent, root;
-	private final ChoiceBox rawType;
-	private final Label name;
-	// Volatile
-	private RawType raw;
-	private RawType.AbstractType abs;
-	private VisualType vis;
-	private DataStructure struct;
-	private String identifier;
+    private final Stage          parent, root;
+    private final ChoiceBox      rawType;
+    private final Label          name;
+    // Volatile
+    private RawType              raw;
+    private RawType.AbstractType abs;
+    private VisualType           vis;
+    private DataStructure        struct;
+    private String               identifier;
 
-	public CreateStructureDialog(Stage parent) {
-		this.parent = parent;
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/dialog/CreateStructureDialog.fxml"));
-		fxmlLoader.setController(this);
-		root = new Stage();
-		root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
-		root.initModality(Modality.APPLICATION_MODAL);
-		root.setTitle(Const.PROGRAM_NAME + ": Create Data Structure");
-		root.initOwner(this.parent);
-		GridPane p = null;
-		try {
-			p = fxmlLoader.load();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.exit(-1);
-		}
-		root.setOnCloseRequest(event -> {
-			event.consume();
-			closeButton();
-		});
-		/*
-		 * Raw Type
-		 */
-		rawType = (ChoiceBox) fxmlLoader.getNamespace().get("rawType");
-		rawType.setItems(FXCollections.observableArrayList(RawType.values()));
-		rawType.getSelectionModel().select(RawType.independentElement);
-		rawType.setOnAction(event -> {
-			chooseRawType();
-		});
-		/*
-		 * Build.
-		 */
-		name = (Label) fxmlLoader.getNamespace().get("name");
-		Scene dialogScene = new Scene(p, p.getPrefWidth() - 5, p.getPrefHeight());
-		root.setScene(dialogScene);
-		root.setResizable(false);
-	}
+    public CreateStructureDialog (Stage parent) {
+        this.parent = parent;
+        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/dialog/CreateStructureDialog.fxml"));
+        fxmlLoader.setController(this);
+        this.root = new Stage();
+        this.root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
+        this.root.initModality(Modality.APPLICATION_MODAL);
+        this.root.setTitle(Const.PROGRAM_NAME + ": Create Data Structure");
+        this.root.initOwner(this.parent);
+        GridPane p = null;
+        try {
+            p = fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+        this.root.setOnCloseRequest(event -> {
+            event.consume();
+            this.closeButton();
+        });
+        /*
+         * Raw Type
+         */
+        this.rawType = (ChoiceBox) fxmlLoader.getNamespace().get("rawType");
+        this.rawType.setItems(FXCollections.observableArrayList(RawType.values()));
+        this.rawType.getSelectionModel().select(RawType.independentElement);
+        this.rawType.setOnAction(event -> {
+            this.chooseRawType();
+        });
+        /*
+         * Build.
+         */
+        this.name = (Label) fxmlLoader.getNamespace().get("name");
+        Scene dialogScene = new Scene(p, p.getPrefWidth() - 5, p.getPrefHeight());
+        this.root.setScene(dialogScene);
+        this.root.setResizable(false);
+    }
 
-	private void chooseRawType() {
-		raw = (RawType) rawType.getSelectionModel().getSelectedItem();
-	}
+    private void chooseRawType () {
+        this.raw = (RawType) this.rawType.getSelectionModel().getSelectedItem();
+    }
 
-	public void closeButton() {
-		root.close();
-	}
+    public void closeButton () {
+        this.root.close();
+    }
 
-	public void okButton() {
-		createStruct();
-		root.close();
-	}
+    public void okButton () {
+        this.createStruct();
+        this.root.close();
+    }
 
-	private void createStruct() {
-		raw = (RawType) rawType.getSelectionModel().getSelectedItem();
-		switch (raw) {
-		case array:
-			struct = new Array(identifier, abs, vis, null);
-			break;
-		case tree:
-			struct = null;
-			Main.console.err("Not supported yet.");
-			break;
-		case independentElement:
-			struct = new IndependentElement(identifier, abs, vis, null);
-			break;
-		}
-	}
+    private void createStruct () {
+        this.raw = (RawType) this.rawType.getSelectionModel().getSelectedItem();
+        switch (this.raw) {
+        case array:
+            this.struct = new Array(this.identifier, this.abs, this.vis, null);
+            break;
+        case tree:
+            this.struct = null;
+            Main.console.err("Not supported yet.");
+            break;
+        case independentElement:
+            this.struct = new IndependentElement(this.identifier, this.abs, this.vis, null);
+            break;
+        }
+    }
 
-	/**
-	 * Show the DataStructure creation dialog.
-	 * 
-	 * @param identifier
-	 *            The name of the new structure.
-	 * @return A new DataStructure. Returns {@code null} if the user cancelled.
-	 */
-	public DataStructure show(String identifier) {
-		this.identifier = identifier;
-		struct = null;
-		name.setText("Create Variable: \"" + identifier + "\"");
-		root.showAndWait();
-		return struct;
-	}
+    /**
+     * Show the DataStructure creation dialog.
+     * 
+     * @param identifier
+     *            The name of the new structure.
+     * @return A new DataStructure. Returns {@code null} if the user cancelled.
+     */
+    public DataStructure show (String identifier) {
+        this.identifier = identifier;
+        this.struct = null;
+        this.name.setText("Create Variable: \"" + identifier + "\"");
+        this.root.showAndWait();
+        return this.struct;
+    }
 
-	public void allOrphan() {
-		// TODO: implement
-	}
+    public void allOrphan () {
+        // TODO: implement
+    }
 }

@@ -9,7 +9,7 @@ public class RangePatterns {
 
     private ArrayList<Double> rangeList;
 
-    public RangePatterns(String stringInput){
+    public RangePatterns (String stringInput) {
         stringInput = stringInput.trim();
 
         if (stringInput.contains("-")) {
@@ -17,28 +17,27 @@ public class RangePatterns {
             if (split.length != 2) {
                 throw new IllegalArgumentException("Missing -");
             }
-            final String firstEx = split[0].replace(" ", "");
-            final String secondEx = split[1].replace(" ", "");
+            final String firstEx = split [0].replace(" ", "");
+            final String secondEx = split [1].replace(" ", "");
 
             Double lowerRange = Double.valueOf(firstEx);
             Double UpperRange = Double.valueOf(secondEx);
 
-            rangeList = new ArrayList<>();
+            this.rangeList = new ArrayList<>();
             for (double e = lowerRange; e <= UpperRange; e++) {
-                rangeList.add(e);
+                this.rangeList.add(e);
             }
-        }
-        else {
+        } else {
             String[] split = stringInput.split(",");
 
-            rangeList = new ArrayList<>();
+            this.rangeList = new ArrayList<>();
             for (int i = 0; i < split.length; i++) {
-                rangeList.add(Double.valueOf(split[i].replace(" ", "")));
+                this.rangeList.add(Double.valueOf(split [i].replace(" ", "")));
             }
         }
     }
 
-    public ArrayList<Double> getList(){
-        return rangeList;
+    public ArrayList<Double> getList () {
+        return this.rangeList;
     }
 }
