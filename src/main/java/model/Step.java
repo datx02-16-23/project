@@ -59,9 +59,7 @@ public class Step {
             locator = (Locator) op.operationBody.get(Key.source);
             if (locator != null) {
                 struct = structs.get(locator.identifier);
-                if (struct == null) {
-                    Main.console.err("WARNING: Undeclared variable \"" + locator.identifier + "\" in " + op);
-                } else {
+                if (struct != null) {
                     struct.applyOperation(op);
                 }
             }
@@ -69,9 +67,7 @@ public class Step {
             locator = (Locator) op.operationBody.get(Key.target);
             if (locator != null) {
                 struct = structs.get(locator.identifier);
-                if (struct == null) {
-                    Main.console.err("WARNING: Undeclared variable \"" + locator.identifier + "\" in " + op);
-                } else {
+                if (struct != null) {
                     struct.applyOperation(op);
                 }
             }
@@ -86,9 +82,7 @@ public class Step {
         case remove:
             locator = (Locator) op.operationBody.get(Key.target);
             struct = structs.get(locator.identifier);
-            if (struct == null) {
-                Main.console.err("WARNING: Undeclared variable \"" + locator.identifier + "\" in " + op);
-            } else {
+            if (struct != null) {
                 struct.applyOperation(op);
             }
             break;

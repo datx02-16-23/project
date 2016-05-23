@@ -512,12 +512,11 @@ public class Controller implements CommunicatorListener {
         updatePanels();
         setButtons();
     }
-    
+
     private void checkOperationIdentifiers (List<Operation> ops, Map<String, DataStructure> structs) {
-        HashSet<String> opsIdentifiers = new HashSet<String>();
-        /*
-         * Gather all operation identifiers.
-         */
+        HashSet<String> opNames = new HashSet<String>();
+
+        // Gather all operation identifiers.
         for (Operation op : ops) {
             String identifier;
             Locator locator;
@@ -531,7 +530,7 @@ public class Controller implements CommunicatorListener {
                 if (locator != null) {
                     struct = structs.get(locator.identifier);
                     if (struct == null) {
-                        opsIdentifiers.add(locator.identifier);
+                        opNames.add(locator.identifier);
                     }
                 }
                 locator = (Locator) op.operationBody.get(Key.target);
@@ -539,7 +538,7 @@ public class Controller implements CommunicatorListener {
                     identifier = locator.identifier;
                     struct = structs.get(identifier);
                     if (struct == null) {
-                        opsIdentifiers.add(locator.identifier);
+                        opNames.add(locator.identifier);
                     }
                 }
                 break;
@@ -549,37 +548,37 @@ public class Controller implements CommunicatorListener {
                 identifier = ((Locator) op.operationBody.get(Key.target)).identifier;
                 struct = structs.get(identifier);
                 if (struct == null) {
-                    opsIdentifiers.add(identifier);
+                    opNames.add(identifier);
                 }
                 break;
             }
         }
-        
-        
-        Set<String> keySet = structs.keySet();
-        ArrayList<String> usedKeys = new ArrayList<String>();
-        ArrayList<String> uselessKeys = new ArrayList<String>(keySet);
-        
+
+        // Check too see if any are missing.
+        Set<String> structNames = structs.keySet();
+
         DataStructure newStruct;
-        for (String identifier : opsIdentifiers) {
-            if (keySet.contains(identifier) == false) {
+        for (String identifier : opNames) {
+            
+            if (!structNames.contains(identifier)) {
+                
+                // Key not found - create a structure?
                 newStruct = createStructureDialog.show(identifier);
+                
                 if (newStruct != null) {
                     structs.put(newStruct.identifier, newStruct);
                 }
-            } else {
-                usedKeys.add(identifier);
             }
         }
+
+        // Check to see if any are unused.
+        Set<String> allNames = new HashSet<String>(structNames);
+        allNames.retainAll(opNames);
         
-        uselessKeys.removeAll(usedKeys);
-        
-        for(String identifier : uselessKeys){
-            if(Debug.ERR){
-                System.err.println("Ignored unused data structure: " + structs.get(identifier));
-            }
-            Main.console.force("Ignored unused data structure: " + structs.get(identifier));
-            structs.remove(identifier);
+        for(String s : allNames){
+            System.err.println("Ignored unused data structure: " + structs.get(s));
+            Main.console.err("Ignored unused data structure: " + structs.get(s));
+            structs.remove(s);
         }
     }
 
