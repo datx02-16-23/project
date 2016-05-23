@@ -16,6 +16,15 @@ import javafx.scene.layout.Pane;
  *
  */
 public class ARenderManager extends BorderPane implements VisualListener {
+
+    // ============================================================= //
+    /*
+     * 
+     * Field variables
+     * 
+     */
+    // ============================================================= //
+
     /**
      * The data structure this thingy is responsible for.
      */
@@ -47,6 +56,14 @@ public class ARenderManager extends BorderPane implements VisualListener {
 
     public boolean translateOnVisualTypeChange = true;
 
+    // ============================================================= //
+    /*
+     * 
+     * Constructors
+     * 
+     */
+    // ============================================================= //
+
     /**
      * Create a new thingy.
      * 
@@ -64,6 +81,14 @@ public class ARenderManager extends BorderPane implements VisualListener {
 
 	setRender(struct.visual);
     }
+
+    // ============================================================= //
+    /*
+     * 
+     * Setters and Getters
+     * 
+     */
+    // ============================================================= //
 
     /**
      * Set the visual type to use for this Structure.
@@ -90,6 +115,41 @@ public class ARenderManager extends BorderPane implements VisualListener {
 	    this.toFront(); // Single element renders are small.
 	}
     }
+    
+
+    /**
+     * Returns the current Render for the structure.
+     * 
+     * @return The current Render for the structure.
+     */
+    public ARender getRender() {
+	if (curRender == null) {
+	    setRender(struct.resolveVisual());
+	}
+	return curRender;
+    }
+
+
+    /**
+     * The data structure this thingy is responsible for.
+     * 
+     * @return A DataStructure.
+     */
+    public DataStructure getStructure() {
+	return struct;
+    }
+
+    public String toString() {
+	return struct.identifier + ": " + renders.values();
+    }
+
+    // ============================================================= //
+    /*
+     * 
+     * Controls
+     * 
+     */
+    // ============================================================= //
 
     private void initRender() {
 	if (translateOnVisualTypeChange && prevRender != null) {
@@ -114,11 +174,7 @@ public class ARenderManager extends BorderPane implements VisualListener {
 	animPane.getChildren().add(curRender.getAnimationPane());
 	prevRender = curRender;
     }
-
-    @Override
-    public void visualChanged(VisualType newVisual) {
-	setRender(newVisual);
-    }
+    
 
     /**
      * Force the current Render to initialise.
@@ -128,36 +184,24 @@ public class ARenderManager extends BorderPane implements VisualListener {
     }
 
     /**
-     * Returns the current Render for the structure.
-     * 
-     * @return The current Render for the structure.
-     */
-    public ARender getRender() {
-	if(curRender == null){
-	    setRender(struct.resolveVisual());
-	}
-	return curRender;
-    }
-
-    public String toString() {
-	return struct.identifier + ": " + renders.values();
-    }
-
-    /**
-     * The data structure this thingy is responsible for.
-     * 
-     * @return A DataStructure.
-     */
-    public DataStructure getStructure() {
-	return struct;
-    }
-
-    /**
      * Reset the renders held by this manager.
      */
     public void reset() {
 	for (ARender r : renders.values()) {
 	    r.reset();
 	}
+    }
+    
+    // ============================================================= //
+    /*
+     * 
+     * Interface methods
+     * 
+     */
+    // ============================================================= //
+
+    @Override
+    public void visualChanged(VisualType newVisual) {
+	setRender(newVisual);
     }
 }
