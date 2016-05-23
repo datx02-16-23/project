@@ -30,18 +30,18 @@ public class Consolidator {
      * Create a new Consolidator with the default types.
      */
     @SuppressWarnings("unchecked") public Consolidator () {
-        this.invokers = new ArrayList[MAX_SIZE];
+        invokers = new ArrayList[MAX_SIZE];
         for (int i = 0; i < MAX_SIZE; i++) {
-            this.invokers [i] = new ArrayList<Consolidable>();
+            invokers [i] = new ArrayList<Consolidable>();
         }
-        this.addDefaultInvokers();
+        addDefaultInvokers();
     }
 
     /**
      * Add the default invokers to the list of possible consolidatons.
      */
     private void addDefaultInvokers () {
-        this.addConsolidable(new OP_Swap());
+        addConsolidable(new OP_Swap());
     }
 
     /**
@@ -53,7 +53,7 @@ public class Consolidator {
      * @return True if the test case type is among the tested, false otherwise.
      */
     public boolean checkTestCase (OperationType testCase) {
-        List<OperationType> testCases = this.getTestCases();
+        List<OperationType> testCases = getTestCases();
         for (OperationType ot : testCases) {
             if (ot == testCase) {
                 return true;
@@ -71,20 +71,20 @@ public class Consolidator {
      */
     public void addConsolidable (Consolidable newConsolidable) {
         int rwCount = newConsolidable.getRWcount();
-        if (rwCount < this.minimumSetSize) {
-            this.minimumSetSize = rwCount;
+        if (rwCount < minimumSetSize) {
+            minimumSetSize = rwCount;
         }
-        if (rwCount > this.maximumSetSize) {
-            this.maximumSetSize = rwCount;
+        if (rwCount > maximumSetSize) {
+            maximumSetSize = rwCount;
         }
         Operation newOp = (Operation) newConsolidable;
-        for (Consolidable c : this.invokers [rwCount]) {
+        for (Consolidable c : invokers [rwCount]) {
             Operation op = (Operation) c;
             if (newOp.operation == op.operation) {
                 return;
             }
         }
-        this.invokers [rwCount].add(newConsolidable);
+        invokers [rwCount].add(newConsolidable);
     }
 
     /**
@@ -97,7 +97,7 @@ public class Consolidator {
      */
     public Operation attemptConsolidate (List<OP_ReadWrite> rwList) {
         Operation consolidatedOperation = null;
-        for (Consolidable c : this.invokers [rwList.size()]) {
+        for (Consolidable c : invokers [rwList.size()]) {
             consolidatedOperation = c.consolidate(rwList);
             if (consolidatedOperation != null) {
                 return consolidatedOperation;
@@ -114,10 +114,10 @@ public class Consolidator {
      *         will use.
      */
     public int getMaximumSetSize () {
-        if (this.minimumSetSize == Integer.MIN_VALUE) {
+        if (minimumSetSize == Integer.MIN_VALUE) {
             return -1;
         }
-        return this.maximumSetSize;
+        return maximumSetSize;
     }
 
     /**
@@ -128,10 +128,10 @@ public class Consolidator {
      *         will use.
      */
     public int getMinimumSetSize () {
-        if (this.minimumSetSize == Integer.MAX_VALUE) {
+        if (minimumSetSize == Integer.MAX_VALUE) {
             return -1;
         }
-        return this.minimumSetSize;
+        return minimumSetSize;
     }
 
     /**
@@ -144,7 +144,7 @@ public class Consolidator {
     public List<OperationType> getTestCases () {
         ArrayList<OperationType> simpleNames = new ArrayList<OperationType>();
         for (int i = 0; i < MAX_SIZE; i++) {
-            for (Consolidable c : this.invokers [i]) {
+            for (Consolidable c : invokers [i]) {
                 Operation op = (Operation) c;
                 simpleNames.add(op.operation);
             }
@@ -163,7 +163,7 @@ public class Consolidator {
      */
     public void removeTestCase (OperationType testCase, int rwCount) {
         Consolidable victim = null;
-        for (Consolidable c : this.invokers [rwCount]) {
+        for (Consolidable c : invokers [rwCount]) {
             Operation op = (Operation) c;
             if (testCase == op.operation) {
                 victim = c;
@@ -171,13 +171,13 @@ public class Consolidator {
             }
         }
         if (victim != null) {
-            this.invokers [rwCount].remove(victim);
+            invokers [rwCount].remove(victim);
         }
-        if (victim.getRWcount() == this.maximumSetSize) {
-            this.recalculateMaxSetSize();
+        if (victim.getRWcount() == maximumSetSize) {
+            recalculateMaxSetSize();
         }
-        if (victim.getRWcount() == this.minimumSetSize) {
-            this.recalculateMinSetSize();
+        if (victim.getRWcount() == minimumSetSize) {
+            recalculateMinSetSize();
         }
     }
 
@@ -185,11 +185,11 @@ public class Consolidator {
      * Recalculate the maximum set size used by the Consolidator.
      */
     private void recalculateMaxSetSize () {
-        this.maximumSetSize = Integer.MIN_VALUE;
+        maximumSetSize = Integer.MIN_VALUE;
         for (int i = 0; i < MAX_SIZE; i++) {
-            for (Consolidable c : this.invokers [i]) {
-                if (c.getRWcount() > this.maximumSetSize) {
-                    this.maximumSetSize = c.getRWcount();
+            for (Consolidable c : invokers [i]) {
+                if (c.getRWcount() > maximumSetSize) {
+                    maximumSetSize = c.getRWcount();
                 }
             }
         }
@@ -199,11 +199,11 @@ public class Consolidator {
      * Recalculate the minimum set size used by the Consolidator.
      */
     private void recalculateMinSetSize () {
-        this.minimumSetSize = Integer.MAX_VALUE;
+        minimumSetSize = Integer.MAX_VALUE;
         for (int i = 0; i < MAX_SIZE; i++) {
-            for (Consolidable c : this.invokers [i]) {
-                if (c.getRWcount() > this.minimumSetSize) {
-                    this.minimumSetSize = c.getRWcount();
+            for (Consolidable c : invokers [i]) {
+                if (c.getRWcount() > minimumSetSize) {
+                    minimumSetSize = c.getRWcount();
                 }
             }
         }

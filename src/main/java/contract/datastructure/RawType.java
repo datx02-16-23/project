@@ -28,7 +28,7 @@ public enum RawType {
     private RawType (String pretty, String json, AbstractType... absType) {
         this.pretty = pretty;
         this.json = json;
-        this.absTypes = absType;
+        absTypes = absType;
     }
 
     /**
@@ -48,7 +48,7 @@ public enum RawType {
     }
 
     @Override public String toString () {
-        return this.pretty;
+        return pretty;
     }
 
     /**
@@ -69,7 +69,7 @@ public enum RawType {
         }
 
         @Override public String toString () {
-            return this.pretty;
+            return pretty;
         }
 
         /**

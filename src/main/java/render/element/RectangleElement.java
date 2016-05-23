@@ -41,15 +41,15 @@ public class RectangleElement extends AVElement {
         super.createShape();
         Rectangle rect = new Rectangle();
         rect.setStroke(Color.BLACK);
-        rect.setWidth(this.width);
-        rect.setHeight(this.height);
-        this.shape = rect;
+        rect.setWidth(width);
+        rect.setHeight(height);
+        shape = rect;
     }
 
     @Override public void setSize (double newWidth, double newHeight) {
         super.setSize(newWidth, newHeight);
-        Rectangle rect = (Rectangle) this.shape;
-        rect.setWidth(this.width);
-        rect.setHeight(this.height);
+        Rectangle rect = (Rectangle) shape;
+        rect.setWidth(width);
+        rect.setHeight(height);
     }
 }

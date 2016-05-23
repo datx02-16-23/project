@@ -80,9 +80,9 @@ public class AnnotatedVariable implements Serializable {
 
     @Override public String toString () {
         StringBuilder sb = new StringBuilder();
-        sb.append(this.getClass().getSimpleName() + " \"" + this.identifier + "\": rawType = " + this.rawType
-                + ", abstractType = " + this.abstractType + ", visual = " + this.visual);
-        sb.append(", attributes = " + this.attributes);
+        sb.append(this.getClass().getSimpleName() + " \"" + identifier + "\": rawType = " + rawType
+                + ", abstractType = " + abstractType + ", visual = " + visual);
+        sb.append(", attributes = " + attributes);
         return sb.toString();
     }
 }

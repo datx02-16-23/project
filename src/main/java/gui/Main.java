@@ -46,15 +46,15 @@ public class Main extends Application {
     private LogStreamManager lsm;
 
     @Override public void start (Stage primaryStage) throws Exception {
-        this.lsm = new LogStreamManager(Const.PROGRAM_NAME + "_GUI");
+        lsm = new LogStreamManager(Const.PROGRAM_NAME + "_GUI");
         primaryStage.setTitle(Const.PROGRAM_NAME);
         // Create a Group view for the AV.
         Visualization modelRender = new Visualization(Model.instance());
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/Root.fxml"));
         SourcePanel sourceViewer = new SourcePanel();
-        this.controller = new Controller(primaryStage, this.lsm, sourceViewer, modelRender);
-        OperationPanel operationPanel = this.controller.getOperationPanel();
-        fxmlLoader.setController(this.controller);
+        controller = new Controller(primaryStage, lsm, sourceViewer, modelRender);
+        OperationPanel operationPanel = controller.getOperationPanel();
+        fxmlLoader.setController(controller);
         // Load and get the root layout.
         VBox root;
         try {
@@ -81,7 +81,7 @@ public class Main extends Application {
         for (Algorithm algo : Examples.Algorithm.values()) {
             MenuItem algoButton = new MenuItem(algo.name);
             algoButton.setOnAction(event -> {
-                this.controller.loadExample(algo);
+                controller.loadExample(algo);
             });
             examples.getItems().add(algoButton);
         }
@@ -96,12 +96,12 @@ public class Main extends Application {
         GridPane visualizationPane = (GridPane) namespace.get("visualizationPane");
         visualizationPane.add(modelRender, 0, 0);
         // Load needed components of from main view in Controller.
-        this.controller.loadMainViewFxID(fxmlLoader);
+        controller.loadMainViewFxID(fxmlLoader);
         // Load main window
         scene.getStylesheets().add(this.getClass().getResource("/VisualizerStyle.css").toExternalForm());
         primaryStage.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
-            this.controller.closeProgram();
+            controller.closeProgram();
         });
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/assets/icon.png")));
         primaryStage.setScene(scene);
@@ -109,10 +109,10 @@ public class Main extends Application {
     }
 
     @Override public void stop () {
-        if (this.controller != null) {
-            this.controller.stopAutoPlay(); // Kill autoplay thread.
+        if (controller != null) {
+            controller.stopAutoPlay(); // Kill autoplay thread.
         }
-        this.lsm.close();
+        lsm.close();
     }
 
     public static void main (String[] args) {
@@ -141,7 +141,7 @@ public class Main extends Application {
         public GUIConsole (TextArea consoleTextArea) {
             this.consoleTextArea = consoleTextArea;
             consoleTextArea.setEditable(false);
-            this.init();
+            init();
         }
 
         /**
@@ -151,10 +151,10 @@ public class Main extends Application {
          *            The line to prine.
          */
         public void info (String info) {
-            if (this.quiet || !this.info) {
+            if (quiet || !this.info) {
                 return;
             }
-            this.print(prepend_info + info);
+            print(prepend_info + info);
         }
 
         /**
@@ -164,10 +164,10 @@ public class Main extends Application {
          *            The error to print.
          */
         public void err (String err) {
-            if (this.quiet || !this.err) {
+            if (quiet || !this.err) {
                 return;
             }
-            this.print(prepend_err + err);
+            print(prepend_err + err);
         }
 
         /**
@@ -177,8 +177,8 @@ public class Main extends Application {
          *            A debug String to print.
          */
         public void debug (String debug) {
-            if (this.quiet || !this.debug) {
-                this.print(prepend_debug + debug);
+            if (quiet || !this.debug) {
+                print(prepend_debug + debug);
             }
         }
 
@@ -189,7 +189,7 @@ public class Main extends Application {
          *            The line to print.
          */
         public void force (String force) {
-            this.print(prepend_force + force);
+            print(prepend_force + force);
         }
 
         /**
@@ -209,9 +209,9 @@ public class Main extends Application {
          *            The setting to apply.
          */
         public void setInfo (boolean value) {
-            this.info = value;
-            if (!this.quiet) {
-                this.print(prepend_info + "Information printouts " + (this.info ? "ENABLED." : "DISABLED."));
+            info = value;
+            if (!quiet) {
+                print(prepend_info + "Information printouts " + (info ? "ENABLED." : "DISABLED."));
             }
         }
 
@@ -222,8 +222,8 @@ public class Main extends Application {
          *            The setting to apply.
          */
         public void setQuiet (boolean value) {
-            this.quiet = value;
-            this.force("Quiet Mode " + (this.quiet ? "ENABLED." : "DISABLED."));
+            quiet = value;
+            force("Quiet Mode " + (quiet ? "ENABLED." : "DISABLED."));
         }
 
         /**
@@ -233,9 +233,9 @@ public class Main extends Application {
          *            The setting to apply.
          */
         public void setDebug (boolean value) {
-            this.debug = value;
-            if (!this.quiet) {
-                this.print(prepend_debug + "Debug printouts " + (this.debug ? "ENABLED." : "DISABLED."));
+            debug = value;
+            if (!quiet) {
+                print(prepend_debug + "Debug printouts " + (debug ? "ENABLED." : "DISABLED."));
             }
         }
 
@@ -246,9 +246,9 @@ public class Main extends Application {
          *            The setting to apply.
          */
         public void setError (boolean value) {
-            this.err = value;
-            if (!this.quiet) {
-                this.print(prepend_err + "Error printouts " + (this.err ? "ENABLED." : "DISABLED."));
+            err = value;
+            if (!quiet) {
+                print(prepend_err + "Error printouts " + (err ? "ENABLED." : "DISABLED."));
             }
         }
 
@@ -268,7 +268,7 @@ public class Main extends Application {
          * Clear the console.
          */
         public void clear () {
-            this.init();
+            init();
         }
     }
 }

@@ -28,14 +28,14 @@ public class Filter implements iFilter {
      * @return The set of iValueContainers that remains after the evaluation
      */
     @Override public Set<iValueContainer> filter (iValueContainer a, iValueContainer b) {
-        this.setVars(a, b);
-        if (this.conditional.evaluate()) {
-            return this.evaluate(a, b);
+        setVars(a, b);
+        if (conditional.evaluate()) {
+            return evaluate(a, b);
         }
 
-        this.setVars(b, a);
-        if (this.conditional.evaluate()) {
-            return this.evaluate(b, a);
+        setVars(b, a);
+        if (conditional.evaluate()) {
+            return evaluate(b, a);
         }
 
         Set<iValueContainer> remains = new HashSet<>();
@@ -46,9 +46,9 @@ public class Filter implements iFilter {
 
     private Set<iValueContainer> evaluate (iValueContainer a, iValueContainer b) {
         Set<iValueContainer> values = new HashSet<>();
-        if (this.result.equals(this.input.getFirstVar())) {
+        if (result.equals(input.getFirstVar())) {
             values.add(a);
-        } else if (this.result.equals(this.input.getSecondVar())) {
+        } else if (result.equals(input.getSecondVar())) {
             values.add(b);
         }
         if (values.size() == 0) {
@@ -59,9 +59,9 @@ public class Filter implements iFilter {
 
     private Map<String, Double> setVars (iValueContainer a, iValueContainer b) {
         Map<String, Double> vars = new HashMap<>();
-        vars.put(this.input.getFirstVar(), a.getValue());
-        vars.put(this.input.getSecondVar(), b.getValue());
-        this.conditional.setVariables(vars);
+        vars.put(input.getFirstVar(), a.getValue());
+        vars.put(input.getSecondVar(), b.getValue());
+        conditional.setVariables(vars);
         return vars;
     }
 }

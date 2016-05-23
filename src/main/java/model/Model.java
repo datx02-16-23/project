@@ -64,11 +64,11 @@ public class Model {
     public Model (String name) {
         this.name = name;
 
-        this.atomicOperations = new ArrayList<Operation>();
-        this.allOperations = new ArrayList<Operation>();
-        this.step = new Step();
-        this.index = 0;
-        this.inInitialState = true;
+        atomicOperations = new ArrayList<Operation>();
+        allOperations = new ArrayList<Operation>();
+        step = new Step();
+        index = 0;
+        inInitialState = true;
     }
 
     /**
@@ -79,27 +79,27 @@ public class Model {
     }
 
     public void reset () {
-        this.index = 0;
-        this.step.reset();
+        index = 0;
+        step.reset();
     }
 
     /**
      * Restore the model to its initial state.
      */
     public void clear () {
-        this.index = 0;
-        this.step.reset();
-        this.atomicOperations.clear();
+        index = 0;
+        step.reset();
+        atomicOperations.clear();
     }
 
     /**
      * Wipe the model clean.
      */
     public void hardClear () {
-        this.index = 0;
-        this.step = new Step();
-        this.atomicOperations.clear();
-        this.inInitialState = true;
+        index = 0;
+        step = new Step();
+        atomicOperations.clear();
+        inInitialState = true;
     }
 
     /**
@@ -108,7 +108,7 @@ public class Model {
      * @return True if the model can step forward. False otherwise.
      */
     public boolean tryStepForward () {
-        return this.atomicOperations != null && this.index < this.atomicOperations.size();
+        return atomicOperations != null && index < atomicOperations.size();
     }
 
     /**
@@ -117,7 +117,7 @@ public class Model {
      * @return True if the model can step backward. False otherwise.
      */
     public boolean tryStepBackward () {
-        return this.index != 0;
+        return index != 0;
     }
 
     /**
@@ -127,12 +127,12 @@ public class Model {
      *         otherwise.
      */
     public boolean stepForward () {
-        if (this.tryStepForward()) {
-            this.step.applyOperation(this.atomicOperations.get(this.index));
+        if (tryStepForward()) {
+            step.applyOperation(atomicOperations.get(index));
             if (Debug.OUT) {
-                System.out.print("Model.stepForward(): index = " + this.index + " -> ");
+                System.out.print("Model.stepForward(): index = " + index + " -> ");
             }
-            this.index += 1;
+            index += 1;
             return true;
         }
         return false;
@@ -146,11 +146,11 @@ public class Model {
      *         otherwise.
      */
     public boolean stepBackward () {
-        if (this.tryStepBackward()) {
-            int oldIndex = this.index - 1;
-            this.reset(); // Can't go backwards: Start from the beginning
-            while (this.index < oldIndex) {
-                this.stepForward();
+        if (tryStepBackward()) {
+            int oldIndex = index - 1;
+            reset(); // Can't go backwards: Start from the beginning
+            while (index < oldIndex) {
+                stepForward();
             }
             return true;
         }
@@ -166,19 +166,19 @@ public class Model {
      */
     public void goToStep (int toStepNo) {
         if (toStepNo <= 0) {
-            this.reset();
+            reset();
             return;
-        } else if (toStepNo >= this.atomicOperations.size()) {
-            toStepNo = this.atomicOperations.size();
+        } else if (toStepNo >= atomicOperations.size()) {
+            toStepNo = atomicOperations.size();
         }
         // Begin
-        if (toStepNo < this.index) {
-            this.reset(); // Can't go backwards: Start from the beginning
-            while (this.index < toStepNo) {
-                this.stepForward();
+        if (toStepNo < index) {
+            reset(); // Can't go backwards: Start from the beginning
+            while (index < toStepNo) {
+                stepForward();
             }
-        } else if (toStepNo > this.index) {
-            this.goToEnd();
+        } else if (toStepNo > index) {
+            goToEnd();
         }
 
     }
@@ -196,10 +196,10 @@ public class Model {
             return;
         }
         structs.values().forEach(DataStructure::clear);
-        this.step = new Step(new HashMap<String, DataStructure>(structs));
-        this.atomicOperations.clear();
-        this.atomicOperations.addAll(ops);
-        this.index = 0;
+        step = new Step(new HashMap<String, DataStructure>(structs));
+        atomicOperations.clear();
+        atomicOperations.addAll(ops);
+        index = 0;
     }
 
     /**
@@ -208,7 +208,7 @@ public class Model {
      * @return The most recently executed Operation. May be null.
      */
     public Operation getLastOp () {
-        return this.step.getLastOp();
+        return step.getLastOp();
     }
 
     /**
@@ -217,7 +217,7 @@ public class Model {
      * @return The current index.
      */
     public int getIndex () {
-        return this.index;
+        return index;
     }
 
     /**
@@ -226,7 +226,7 @@ public class Model {
     public void goToEnd () {
         boolean success;
         do {
-            success = this.stepForward();
+            success = stepForward();
         } while (success);
     }
 
@@ -238,7 +238,7 @@ public class Model {
      * @return The DataStructure map held by this Model.
      */
     public Map<String, DataStructure> getStructures () {
-        return this.step.getStructures();
+        return step.getStructures();
     }
 
     /**
@@ -249,7 +249,7 @@ public class Model {
      * @return The Operation list held by this Model.
      */
     public List<Operation> getOperations () {
-        return this.atomicOperations;
+        return atomicOperations;
     }
 
     /**
@@ -260,9 +260,9 @@ public class Model {
      *            The new list of operations to use.
      */
     public void setOperations (List<Operation> newOperations) {
-        this.atomicOperations.clear();
-        this.atomicOperations.addAll(newOperations);
-        this.index = 0;
+        atomicOperations.clear();
+        atomicOperations.addAll(newOperations);
+        index = 0;
     }
 
     /**
@@ -272,7 +272,7 @@ public class Model {
      * @return True if this Model is in its initial state.
      */
     public boolean isHardCleared () {
-        this.inInitialState = this.step.getStructures().isEmpty() && this.atomicOperations.isEmpty();
-        return this.inInitialState;
+        inInitialState = step.getStructures().isEmpty() && atomicOperations.isEmpty();
+        return inInitialState;
     }
 }

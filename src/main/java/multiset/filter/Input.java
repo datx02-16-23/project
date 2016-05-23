@@ -16,22 +16,22 @@ public class Input {
         if (split.length != 2) {
             throw new IllegalArgumentException();
         }
-        this.firstVar = split [0].replace(" ", "");
-        this.secondVar = split [1].replace(" ", "");
+        firstVar = split [0].replace(" ", "");
+        secondVar = split [1].replace(" ", "");
     }
 
     public String getFirstVar () {
-        return this.firstVar;
+        return firstVar;
     }
 
     public String getSecondVar () {
-        return this.secondVar;
+        return secondVar;
     }
 
     public Set<String> getVars () {
         Set<String> vars = new HashSet<>();
-        vars.add(this.firstVar);
-        vars.add(this.secondVar);
+        vars.add(firstVar);
+        vars.add(secondVar);
         return vars;
     }
 

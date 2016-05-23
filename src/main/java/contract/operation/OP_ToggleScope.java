@@ -21,14 +21,14 @@ public class OP_ToggleScope extends OP_ReadWrite {
      *            The target variable for this Remove operation.
      */
     @Override public void setTarget (Locator target) {
-        this.operationBody.put(Key.target, target);
+        operationBody.put(Key.target, target);
     }
 
     @Override public String toString () {
-        return super.operation.toString().toUpperCase() + ": " + this.getTarget().toString();
+        return super.operation.toString().toUpperCase() + ": " + getTarget().toString();
     }
 
     @Override public Locator getTarget () {
-        return (Locator) this.operationBody.get(Key.target);
+        return (Locator) operationBody.get(Key.target);
     }
 }

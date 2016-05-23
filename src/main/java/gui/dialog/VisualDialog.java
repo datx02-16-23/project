@@ -27,43 +27,43 @@ public class VisualDialog {
     public VisualDialog (Stage parent) {
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/dialog/VisualDialog.fxml"));
         fxmlLoader.setController(this);
-        this.root = new Stage();
-        this.root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
-        this.root.initModality(Modality.APPLICATION_MODAL);
-        this.root.setTitle(Const.PROGRAM_NAME + ": Choose Visualisation");
-        this.root.initOwner(parent);
+        root = new Stage();
+        root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
+        root.initModality(Modality.APPLICATION_MODAL);
+        root.setTitle(Const.PROGRAM_NAME + ": Choose Visualisation");
+        root.initOwner(parent);
         GridPane p = null;
         try {
             p = fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.root.setOnCloseRequest(event -> {
+        root.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
-            this.closeButton();
+            closeButton();
         });
 
-        this.visualTypeChoiceBox = (ChoiceBox) fxmlLoader.getNamespace().get("choice");
+        visualTypeChoiceBox = (ChoiceBox) fxmlLoader.getNamespace().get("choice");
         for (VisualType vt : VisualType.values()) {
             if (!vt.isClone) {
-                this.visualTypeChoiceBox.getItems().add(vt);
+                visualTypeChoiceBox.getItems().add(vt);
             }
         }
 
-        this.name = (Label) fxmlLoader.getNamespace().get("name");
+        name = (Label) fxmlLoader.getNamespace().get("name");
         Scene dialogScene = new Scene(p, p.getPrefWidth(), p.getPrefHeight());
-        this.root.setScene(dialogScene);
-        this.root.setResizable(false);
+        root.setScene(dialogScene);
+        root.setResizable(false);
     }
 
     public void closeButton () {
-        this.changed = false;
-        this.root.close();
+        changed = false;
+        root.close();
     }
 
     public void okButton () {
-        this.struct.setVisual((VisualType) this.visualTypeChoiceBox.getSelectionModel().getSelectedItem());
-        this.root.close();
+        struct.setVisual((VisualType) visualTypeChoiceBox.getSelectionModel().getSelectedItem());
+        root.close();
     }
 
     /**
@@ -75,9 +75,9 @@ public class VisualDialog {
      */
     public boolean show (DataStructure struct) {
         this.struct = struct;
-        this.name.setText(struct.toString());
-        this.root.showAndWait();
-        this.visualTypeChoiceBox.getSelectionModel().select(struct.resolveVisual());
-        return this.changed;
+        name.setText(struct.toString());
+        root.showAndWait();
+        visualTypeChoiceBox.getSelectionModel().select(struct.resolveVisual());
+        return changed;
     }
 }

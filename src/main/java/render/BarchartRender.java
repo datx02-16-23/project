@@ -63,16 +63,16 @@ public class BarchartRender extends ARender implements MinMaxListener {
         super(struct, nodeWidth, nodeHeight, hspace, 0);
 
         // Convenient names
-        this.padding = nodeWidth / 2;
+        padding = nodeWidth / 2;
 
         // Axes
-        this.axes.setMouseTransparent(true);
-        this.contentPane.getChildren().add(this.axes);
+        axes.setMouseTransparent(true);
+        contentPane.getChildren().add(axes);
 
         if (renderHeight < 0) {
             if (struct instanceof Array) {
                 ((Array) struct).setListener(this);
-                this.setRestricedSize(0, 0); // Become as small as setSize will
+                setRestricedSize(0, 0); // Become as small as setSize will
                 // permit.
             } else {
                 this.renderHeight = Const.DEFAULT_RENDER_HEIGHT;
@@ -82,7 +82,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
         }
 
         this.setRelativeNodeSize(false, -1);
-        this.reset();
+        reset();
     }
 
     @Override public double getX (Element e) {
@@ -91,67 +91,67 @@ public class BarchartRender extends ARender implements MinMaxListener {
         }
         int[] index = ((IndexedElement) e).getIndex();
         if (index == null || index.length == 0) {
-            System.err.println("Invalid index for element " + e + " in \"" + this.struct + "\".");
-            Main.console.err("Invalid index for element " + e + " in \"" + this.struct + "\".");
-            this.renderFailure();
+            System.err.println("Invalid index for element " + e + " in \"" + struct + "\".");
+            Main.console.err("Invalid index for element " + e + " in \"" + struct + "\".");
+            renderFailure();
             return -1;
         }
         return this.getX(index [0]);
     }
 
     public double getX (int index) {
-        return (this.nodeWidth + this.hSpace) * index + this.hSpace + this.padding + 5;
+        return (nodeWidth + hSpace) * index + hSpace + padding + 5;
     }
 
     @Override public double getY (Element e) {
-        return this.xAxisY + 100; // TODO
+        return xAxisY + 100; // TODO
     }
 
     @Override public void render () {
-        if (this.struct.repaintAll) {
-            this.struct.repaintAll = false;
-            this.repaintAll();
+        if (struct.repaintAll) {
+            struct.repaintAll = false;
+            repaintAll();
         }
         super.render();
     }
 
     @Override public boolean repaintAll () {
-        if (this.struct.getElements().isEmpty() || this.contentPane == null) {
+        if (struct.getElements().isEmpty() || contentPane == null) {
             return false; // Nothing to render/not yet initialised.
         }
-        this.struct.repaintAll = false;
+        struct.repaintAll = false;
 
         /*
          * Clear the nodes from all content Panes.
          */
-        for (Node n : this.contentPane.getChildren()) {
+        for (Node n : contentPane.getChildren()) {
             ((Pane) n).getChildren().clear();
         }
-        this.contentPane.setBackground(null);
+        contentPane.setBackground(null);
 
-        this.visualMap.clear();
+        visualMap.clear();
 
-        this.calculateSize();
+        calculateSize();
 
         // Create nodes
         BarchartElement newVis;
 
-        for (Element e : this.struct.getElements()) {
+        for (Element e : struct.getElements()) {
             newVis = this.createVisualElement(e);
             newVis.setLayoutX(this.getX(e));
 
-            this.defaultNodePane.getChildren().add(newVis);
-            this.visualMap.put(Arrays.toString(((IndexedElement) e).getIndex()), newVis);
-            this.bellsAndWhistles(e, newVis);
+            defaultNodePane.getChildren().add(newVis);
+            visualMap.put(Arrays.toString(((IndexedElement) e).getIndex()), newVis);
+            bellsAndWhistles(e, newVis);
         }
-        this.positionBars();
-        this.drawAxes();
+        positionBars();
+        drawAxes();
         return true;
     }
 
     private void positionBars () {
-        for (Node node : this.defaultNodePane.getChildren()) {
-            ((BarchartElement) node).setBotY(this.xAxisY + 5); // TODO fix
+        for (Node node : defaultNodePane.getChildren()) {
+            ((BarchartElement) node).setBotY(xAxisY + 5); // TODO fix
         }
     }
 
@@ -163,42 +163,42 @@ public class BarchartRender extends ARender implements MinMaxListener {
         /*
          * X-Axis
          */
-        Line xAxis = new Line(0, this.xAxisY, this.rightWallX + 5, this.xAxisY);
+        Line xAxis = new Line(0, xAxisY, rightWallX + 5, xAxisY);
         xAxis.setStrokeWidth(2);
-        this.axes.getChildren().add(xAxis);
+        axes.getChildren().add(xAxis);
 
         Polyline xArrow = new Polyline(0, 0, 15, 5, 0, 10);
-        xArrow.setLayoutX(this.renderWidth - 15);
-        xArrow.setLayoutY(this.xAxisY - 5);
+        xArrow.setLayoutX(renderWidth - 15);
+        xArrow.setLayoutY(xAxisY - 5);
         xArrow.setStrokeWidth(2);
-        this.axes.getChildren().add(xArrow);
+        axes.getChildren().add(xArrow);
 
         Label xLabel = new Label("Value");
-        xLabel.setLayoutX(this.padding * 1.5);
+        xLabel.setLayoutX(padding * 1.5);
         xLabel.setLayoutY(-7);
-        this.axes.getChildren().add(xLabel);
+        axes.getChildren().add(xLabel);
 
         /*
          * Y-Axis
          */
-        Line yAxis = new Line(this.padding, this.padding / 2, this.padding, this.renderHeight);
+        Line yAxis = new Line(padding, padding / 2, padding, renderHeight);
         yAxis.setStrokeWidth(2);
-        this.axes.getChildren().add(yAxis);
-        this.notches();
-        for (Element e : this.struct.getElements()) {
-            this.createIndexLabel(e);
+        axes.getChildren().add(yAxis);
+        notches();
+        for (Element e : struct.getElements()) {
+            createIndexLabel(e);
         }
 
         Polyline yArrow = new Polyline(0, 15, 5, 0, 10, 15);
         yArrow.setStrokeWidth(2);
-        yArrow.setLayoutX(this.padding - 5);
+        yArrow.setLayoutX(padding - 5);
         yArrow.setLayoutY(-5);
-        this.axes.getChildren().add(yArrow);
+        axes.getChildren().add(yArrow);
 
         Label yLabel = new Label("Index");
-        yLabel.setLayoutX(this.rightWallX);
-        yLabel.setLayoutY(this.xAxisY + 2);
-        this.axes.getChildren().add(yLabel);
+        yLabel.setLayoutX(rightWallX);
+        yLabel.setLayoutY(xAxisY + 2);
+        axes.getChildren().add(yLabel);
 
         // showDeveloperGuides();
     }
@@ -209,23 +209,22 @@ public class BarchartRender extends ARender implements MinMaxListener {
      */
     public void drawDeveloperGuides () {
 
-        Line roof = new Line(this.padding, this.padding, this.rightWallX, this.padding);
+        Line roof = new Line(padding, padding, rightWallX, padding);
         roof.setStroke(Color.HOTPINK);
         roof.setStrokeWidth(2);
         roof.getStrokeDashArray().addAll(20.0);
 
-        Line floor = new Line(this.padding, this.xAxisY, this.rightWallX, this.xAxisY);
+        Line floor = new Line(padding, xAxisY, rightWallX, xAxisY);
         floor.setStrokeWidth(2);
         floor.setStroke(Color.HOTPINK);
         floor.getStrokeDashArray().addAll(20.0);
 
-        Line left = new Line(this.padding, this.padding, this.padding, this.xAxisY);
+        Line left = new Line(padding, padding, padding, xAxisY);
         left.setStroke(Color.HOTPINK);
         left.setStrokeWidth(2);
         left.getStrokeDashArray().addAll(20.0);
 
-        Line right = new Line(this.renderWidth - this.padding, this.padding, this.renderWidth - this.padding,
-                this.xAxisY);
+        Line right = new Line(renderWidth - padding, padding, renderWidth - padding, xAxisY);
         right.setStroke(Color.HOTPINK);
         right.setStrokeWidth(2);
         right.getStrokeDashArray().addAll(20.0);
@@ -233,17 +232,17 @@ public class BarchartRender extends ARender implements MinMaxListener {
         Pane guides = new Pane();
         guides.getChildren().addAll(roof, floor, left, right);
         guides.setOpacity(0.9);
-        this.contentPane.getChildren().add(guides);
+        contentPane.getChildren().add(guides);
     }
 
     private void notches () {
-        double lim = this.padding / 2;
+        double lim = padding / 2;
         int i = 1;
 
-        for (double y = this.xAxisY - this.nodeHeight; y >= lim; y = y - this.nodeHeight) {
+        for (double y = xAxisY - nodeHeight; y >= lim; y = y - nodeHeight) {
             // Notch
-            Line line = new Line(this.padding - 3, y, this.padding + 3, y);
-            this.axes.getChildren().add(line);
+            Line line = new Line(padding - 3, y, padding + 3, y);
+            axes.getChildren().add(line);
 
             // Value
             Label value = new Label();
@@ -252,44 +251,44 @@ public class BarchartRender extends ARender implements MinMaxListener {
 
             value.setText(i++ + "");
 
-            this.axes.getChildren().add(value);
+            axes.getChildren().add(value);
         }
     }
 
     @Override public void calculateSize () {
-        this.renderWidth = this.struct.getElements().size() * (this.nodeWidth + this.hSpace) + this.padding * 3;
-        this.xAxisY = this.renderHeight - this.padding;
-        this.rightWallX = this.renderWidth - this.padding;
-        this.renderHeight = this.renderHeight < 100 ? 100 : this.renderHeight;
-        this.setRestricedSize(this.renderWidth, this.renderHeight);
+        renderWidth = struct.getElements().size() * (nodeWidth + hSpace) + padding * 3;
+        xAxisY = renderHeight - padding;
+        rightWallX = renderWidth - padding;
+        renderHeight = renderHeight < 100 ? 100 : renderHeight;
+        setRestricedSize(renderWidth, renderHeight);
     }
 
     @Override protected BarchartElement createVisualElement (Element e) {
-        BarchartElement ve = (BarchartElement) AVElementFactory.shape(ELEMENT_STYLE, e, this.nodeWidth,
-                this.nodeHeight * e.getNumValue());
+        BarchartElement ve = (BarchartElement) AVElementFactory.shape(ELEMENT_STYLE, e, nodeWidth,
+                nodeHeight * e.getNumValue());
         return ve;
     }
 
     @Override protected AVElement createVisualElement (double value, Color color) {
-        AVElement ve = AVElementFactory.shape(ELEMENT_STYLE, value, color, this.nodeWidth, this.nodeHeight * value);
+        AVElement ve = AVElementFactory.shape(ELEMENT_STYLE, value, color, nodeWidth, nodeHeight * value);
         return ve;
     }
 
     @Override protected void bellsAndWhistles (Element e, AVElement ve) {
-        ((BarchartElement) ve).updateSize(this.nodeHeight, -1);
+        ((BarchartElement) ve).updateSize(nodeHeight, -1);
     }
 
     private void createIndexLabel (Element e) {
         int[] index = ((IndexedElement) e).getIndex();
         Label info = new Label();
-        info.setLayoutY(this.xAxisY);
+        info.setLayoutY(xAxisY);
         info.setLayoutX(this.getX(e) + 5);
         // info.setLayoutX(100);
         info.setText(Arrays.toString(index));
 
         info.setMouseTransparent(true);
 
-        this.axes.getChildren().add(info);
+        axes.getChildren().add(info);
     }
 
     /**
@@ -301,8 +300,8 @@ public class BarchartRender extends ARender implements MinMaxListener {
      * @return The absolute y-coordinates of e.
      */
     @Override public double absY (Element e, ARender relativeTo) {
-        double by = this.getTranslateY() + this.getLayoutY() + this.contentPane.getLayoutY();
-        return this.xAxisY + by;
+        double by = getTranslateY() + getLayoutY() + contentPane.getLayoutY();
+        return xAxisY + by;
     }
 
     /**
@@ -326,14 +325,14 @@ public class BarchartRender extends ARender implements MinMaxListener {
             return;
         }
 
-        double x1 = this.absX(src, tarRender);
-        double y1 = this.absY(src, tarRender);
+        double x1 = absX(src, tarRender);
+        double y1 = absY(src, tarRender);
 
         double x2 = x1;
-        double y2 = y1 - this.nodeWidth / 2;
+        double y2 = y1 - nodeWidth / 2;
         int[] i = ((IndexedElement) src).getIndex();
         Arrays.copyOf(i, i.length);
-        final AVElement orig = this.visualMap.get(Arrays.toString(i));
+        final AVElement orig = visualMap.get(Arrays.toString(i));
         orig.setGhost(true);
 
         ParallelTransition up = ARenderAnimation.linear(src, x1, y1, x2, y2, millis / 3, this);
@@ -345,7 +344,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
     }
 
     @Override public void maxChanged (double newMax) {
-        this.calculateHeight(newMax);
+        calculateHeight(newMax);
     }
 
     @Override public void minChanged (double newMin) {
@@ -353,10 +352,10 @@ public class BarchartRender extends ARender implements MinMaxListener {
     }
 
     public void calculateHeight (double v) {
-        double oldHeight = this.renderHeight;
-        this.renderHeight = v * this.nodeHeight + this.padding * 2 + this.nodeHeight / 2;
-        this.calculateSize();
-        this.repaintAll();
-        this.setTranslateY(this.getTranslateY() + (oldHeight - this.renderHeight));
+        double oldHeight = renderHeight;
+        renderHeight = v * nodeHeight + padding * 2 + nodeHeight / 2;
+        calculateSize();
+        repaintAll();
+        setTranslateY(getTranslateY() + (oldHeight - renderHeight));
     }
 }

@@ -55,11 +55,11 @@ public class Interpreter {
      * getConsolidatedOperations() methods to interpret lists of operations.
      */
     public Interpreter () {
-        this.before = new LinkedList<Operation>();
-        this.after = new LinkedList<Operation>();
-        this.workingSet = new LinkedList<OP_ReadWrite>();
-        this.highOrderRoutine = FLUSH_SET_ADD_HIGH;
-        this.consolidator = new Consolidator();
+        before = new LinkedList<Operation>();
+        after = new LinkedList<Operation>();
+        workingSet = new LinkedList<OP_ReadWrite>();
+        highOrderRoutine = FLUSH_SET_ADD_HIGH;
+        consolidator = new Consolidator();
     }
 
     /**
@@ -69,7 +69,7 @@ public class Interpreter {
      * @return The high order routine currently in use.
      */
     public int getHighOrderRoutine () {
-        return this.highOrderRoutine;
+        return highOrderRoutine;
     }
 
     /**
@@ -84,7 +84,7 @@ public class Interpreter {
             Main.console.err("INTERPRETER: setHighOrderRoutine(): Invalid high-order routine.");
             return;
         }
-        this.highOrderRoutine = newRoutine;
+        highOrderRoutine = newRoutine;
     }
 
     /**
@@ -96,7 +96,7 @@ public class Interpreter {
     public void addTestCase (OperationType testCase) {
         switch (testCase) {
         case swap:
-            this.consolidator.addConsolidable(new OP_Swap());
+            consolidator.addConsolidable(new OP_Swap());
             break;
         default:
             Main.console.err("Cannot consolidate OperationType: " + testCase.toString().toUpperCase());
@@ -114,7 +114,7 @@ public class Interpreter {
     public void removeTestCase (OperationType testCase) {
         switch (testCase) {
         case swap:
-            this.consolidator.removeTestCase(testCase, new OP_Swap().getRWcount());
+            consolidator.removeTestCase(testCase, new OP_Swap().getRWcount());
             break;
         default:
             Main.console.err("Unknown Consolidable type: " + testCase);
@@ -149,28 +149,28 @@ public class Interpreter {
      * @return The number operations creates.
      */
     public int consolidate (List<Operation> listToConsolidate) {
-        this.count = 0;
-        if (this.highOrderRoutine == ABORT) {
+        count = 0;
+        if (highOrderRoutine == ABORT) {
             for (Operation op : listToConsolidate) {
                 if (op.operation == OperationType.message) {
                     continue; // Acceptable non read/write operation found.
-                } else if (this.isReadOrWrite(op) == false) {
+                } else if (isReadOrWrite(op) == false) {
                     Main.console.info("ABORT: High level operation found: " + op);
-                    return this.count;
+                    return count;
                 }
             }
         }
         // Clean up data from previous executions
-        this.before.clear();
-        this.after.clear();
-        this.workingSet.clear();
+        before.clear();
+        after.clear();
+        workingSet.clear();
         // Set before list and begin
-        this.before.addAll(listToConsolidate);
+        before.addAll(listToConsolidate);
         this.consolidate();
         // Transfer result to operations
         listToConsolidate.clear();
-        listToConsolidate.addAll(this.after);
-        return this.count;
+        listToConsolidate.addAll(after);
+        return count;
     }
 
     /**
@@ -179,41 +179,41 @@ public class Interpreter {
      * 0.
      */
     private void consolidate () {
-        int minWorkingSetSize = this.consolidator.getMinimumSetSize();
-        int maxWorkingSetSize = this.consolidator.getMaximumSetSize();
+        int minWorkingSetSize = consolidator.getMinimumSetSize();
+        int maxWorkingSetSize = consolidator.getMaximumSetSize();
         if (minWorkingSetSize < 0 || maxWorkingSetSize < 0) {
-            this.after.addAll(this.before);
+            after.addAll(before);
             return; // No operations in Consolidator.
         }
         // Continue until all operations are handled
-        outer: while (this.before.isEmpty() == false || this.workingSet.isEmpty() == false) {
-            while (this.workingSet.size() < minWorkingSetSize) {
-                if (this.tryExpandWorkingSet() == false) {
+        outer: while (before.isEmpty() == false || workingSet.isEmpty() == false) {
+            while (workingSet.size() < minWorkingSetSize) {
+                if (tryExpandWorkingSet() == false) {
                     break outer;
                 }
             }
             // Expand working set and attempt consolidation.
-            while (this.workingSet.size() <= maxWorkingSetSize) {
-                if (this.attemptConsolidateWorkingSet() == true) { // Attempt to
-                                                                   // consolidate
-                                                                   // the set.
-                    this.workingSet.clear();
+            while (workingSet.size() <= maxWorkingSetSize) {
+                if (attemptConsolidateWorkingSet() == true) { // Attempt to
+                                                              // consolidate
+                                                              // the set.
+                    workingSet.clear();
                     continue outer; // Working set converted to a more complex
                                     // operation. Begin work on new set.
                 }
-                if (this.tryExpandWorkingSet() == false) {
+                if (tryExpandWorkingSet() == false) {
                     break outer;
                 }
             }
             // Add the first operation of working set to consolidated
             // operations.
-            this.after.add(this.workingSet.removeFirst());
+            after.add(workingSet.removeFirst());
             // Reduce the working set.
-            while (this.workingSet.size() > minWorkingSetSize) {
-                this.reduceWorkingSet();
+            while (workingSet.size() > minWorkingSetSize) {
+                reduceWorkingSet();
             }
         }
-        this.after.addAll(this.workingSet);
+        after.addAll(workingSet);
     }
 
     /**
@@ -223,7 +223,7 @@ public class Interpreter {
     private void reduceWorkingSet () {
         // Add the last element of working set to the first position in low
         // level operations.
-        this.before.addFirst(this.workingSet.removeLast());
+        before.addFirst(workingSet.removeLast());
     }
 
     /**
@@ -235,42 +235,42 @@ public class Interpreter {
     private Operation candidate;
 
     private boolean tryExpandWorkingSet () {
-        if (this.before.isEmpty()) {
+        if (before.isEmpty()) {
             return false;
         }
-        this.candidate = this.before.remove(0);
-        if (this.candidate.operation == OperationType.message) {
-            this.keepSet_addCandidate();
-            return this.tryExpandWorkingSet();
-        } else if (this.candidate.operation == OperationType.write) {
-            OP_Write write_candidate = (OP_Write) this.candidate;
+        candidate = before.remove(0);
+        if (candidate.operation == OperationType.message) {
+            keepSet_addCandidate();
+            return tryExpandWorkingSet();
+        } else if (candidate.operation == OperationType.write) {
+            OP_Write write_candidate = (OP_Write) candidate;
             if (write_candidate.getValue().length > 1) {
-                this.flushSet_addCandidate();
-                return this.tryExpandWorkingSet();
+                flushSet_addCandidate();
+                return tryExpandWorkingSet();
             }
         }
-        if (this.isReadOrWrite(this.candidate) == false) {
-            this.handleHighLevelOperation();
-            return this.tryExpandWorkingSet();
+        if (isReadOrWrite(candidate) == false) {
+            handleHighLevelOperation();
+            return tryExpandWorkingSet();
         }
         // Add the read/write operation to the working set.
-        this.workingSet.add((OP_ReadWrite) this.candidate);
+        workingSet.add((OP_ReadWrite) candidate);
         return true;
     }
 
     private void handleHighLevelOperation () {
-        switch (this.highOrderRoutine) {
+        switch (highOrderRoutine) {
         case KEEP_SET_ADD_HIGH:
-            this.keepSet_addCandidate();
+            keepSet_addCandidate();
             break;
         case FLUSH_SET_ADD_HIGH:
-            this.flushSet_addCandidate();
+            flushSet_addCandidate();
             break;
         case DISCARD:
-            this.tryExpandWorkingSet();
+            tryExpandWorkingSet();
             break;
         case DECONSTRUCT:
-            this.deconstruct();
+            deconstruct();
             break;
         }
     }
@@ -287,7 +287,7 @@ public class Interpreter {
      * the current working set.
      */
     private void keepSet_addCandidate () {
-        this.after.add(this.candidate);
+        after.add(candidate);
     }
 
     /**
@@ -295,9 +295,9 @@ public class Interpreter {
      * operation as well.
      */
     private void flushSet_addCandidate () {
-        this.after.addAll(this.workingSet);
-        this.after.add(this.candidate);
-        this.workingSet.clear();
+        after.addAll(workingSet);
+        after.add(candidate);
+        workingSet.clear();
     }
 
     /**
@@ -321,10 +321,10 @@ public class Interpreter {
      *         otherwise.
      */
     private boolean attemptConsolidateWorkingSet () {
-        Operation consolidatedOperation = this.consolidator.attemptConsolidate(this.workingSet);
+        Operation consolidatedOperation = consolidator.attemptConsolidate(workingSet);
         if (consolidatedOperation != null) {
-            this.after.add(consolidatedOperation);
-            this.count++;
+            after.add(consolidatedOperation);
+            count++;
             return true;
         }
         return false;
@@ -336,7 +336,7 @@ public class Interpreter {
      * @return A list of all active test cases for this Consolidator.
      */
     public List<OperationType> getTestCases () {
-        return this.consolidator.getTestCases();
+        return consolidator.getTestCases();
     }
 
     /**
@@ -345,7 +345,7 @@ public class Interpreter {
      * @return The Consolidator used by the interpreter.
      */
     public Consolidator getConsolidator () {
-        return this.consolidator;
+        return consolidator;
     }
 
     /**
@@ -355,6 +355,6 @@ public class Interpreter {
      *            A new Consolidator to use.
      */
     public void setConsolidator (Consolidator newConsolidator) {
-        this.consolidator = newConsolidator;
+        consolidator = newConsolidator;
     }
 }

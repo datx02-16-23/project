@@ -42,7 +42,7 @@ public class Locator implements Serializable {
     }
 
     @Override public String toString () {
-        return Tools.stripQualifiers(this.identifier) + (this.index == null ? "" : Arrays.toString(this.index));
+        return Tools.stripQualifiers(identifier) + (index == null ? "" : Arrays.toString(index));
     }
 
     @Override public boolean equals (Object other) {
@@ -53,7 +53,7 @@ public class Locator implements Serializable {
             return false;
         }
         Locator rhs = (Locator) other;
-        return this.identifier.equals(rhs.identifier) && Arrays.equals(this.index, rhs.index);
+        return identifier.equals(rhs.identifier) && Arrays.equals(index, rhs.index);
     }
 
     /**
@@ -64,7 +64,7 @@ public class Locator implements Serializable {
      * @return True if the index of this and other are equal, false otherwise.
      */
     public boolean indexEquals (Locator other) {
-        return Arrays.equals(this.index, other.index);
+        return Arrays.equals(index, other.index);
     }
 
     /**
@@ -75,6 +75,6 @@ public class Locator implements Serializable {
      * @return True if the index of this and other are equal, false otherwise.
      */
     public boolean indexEquals (int[] other) {
-        return Arrays.equals(this.index, other);
+        return Arrays.equals(index, other);
     }
 }

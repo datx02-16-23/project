@@ -25,7 +25,7 @@ public enum VisualType {
     private VisualType (String pretty, String... json) {
         this.pretty = pretty;
         this.json = json;
-        this.isClone = false;
+        isClone = false;
     }
 
     /**
@@ -37,9 +37,9 @@ public enum VisualType {
      *            The json string for this VisualType.
      */
     private VisualType (VisualType original, String... json) {
-        this.pretty = original.pretty;
+        pretty = original.pretty;
         this.json = json;
-        this.isClone = true;
+        isClone = true;
     }
 
     /**
@@ -60,7 +60,7 @@ public enum VisualType {
     }
 
     @Override public String toString () {
-        return this.pretty;
+        return pretty;
     }
 
     /**

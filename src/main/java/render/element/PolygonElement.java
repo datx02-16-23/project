@@ -44,8 +44,8 @@ public class PolygonElement extends AVElement {
 
     @Override public void createShape () {
         super.createShape();
-        this.shape = new Polygon(this.points);
-        this.shape.setStroke(Color.BLACK);
+        shape = new Polygon(points);
+        shape.setStroke(Color.BLACK);
     }
 
     @Override public void setSize (double width, double height) {

@@ -81,9 +81,9 @@ public class Operation implements Serializable {
     public String printOperationBody () {
         StringBuilder builder = new StringBuilder();
         builder.append("{");
-        for (Key key : this.operationBody.keySet()) {
-            if (this.operationBody.get(key) != null) {
-                builder.append("\"" + key + "\": " + this.operationBody.get(key).toString() + ",\n");
+        for (Key key : operationBody.keySet()) {
+            if (operationBody.get(key) != null) {
+                builder.append("\"" + key + "\": " + operationBody.get(key).toString() + ",\n");
             } else {
                 builder.append("\"" + key + "\": NULL");
             }
@@ -94,10 +94,10 @@ public class Operation implements Serializable {
     }
 
     public String toSimpleString () {
-        return this.operation.toString().toUpperCase();
+        return operation.toString().toUpperCase();
     }
 
     @Override public String toString () {
-        return this.operationBody == null ? "null" : this.operationBody.toString();
+        return operationBody == null ? "null" : operationBody.toString();
     }
 }

@@ -47,8 +47,8 @@ public class IndependentElement extends Array {
      *            The new element to be held by this IndependentElement.
      */
     public void setElement (Element newElement) {
-        this.elements.clear();
-        this.elements.add(newElement);
+        elements.clear();
+        elements.add(newElement);
     }
 
     /**
@@ -59,8 +59,8 @@ public class IndependentElement extends Array {
      */
     public void initElement (double value) {
         Element init = new Array.IndexedElement(value, new int[] { 0 });
-        this.elements.clear();
-        this.elements.add(init);
+        elements.clear();
+        elements.add(init);
     }
 
     /**
@@ -70,58 +70,58 @@ public class IndependentElement extends Array {
      *         IndependentElement.
      */
     public double getNumericValue () {
-        if (this.elements.isEmpty()) {
+        if (elements.isEmpty()) {
             return 0;
         }
-        return this.elements.get(0).getNumValue();
+        return elements.get(0).getNumValue();
     }
 
     @Override public void clear () {
-        this.elements.clear();
-        this.oc.reset();
-        this.repaintAll = true;
+        elements.clear();
+        oc.reset();
+        repaintAll = true;
     }
 
     @Override public void applyOperation (Operation op) {
         super.applyOperation(op);
-        this.repaintAll = true;
+        repaintAll = true;
     }
 
     @Override protected void executeSwap (OP_Swap op) {
-        Element e = this.elements.get(0);
-        if (op.getVar1().identifier.equals(this.identifier)) {
+        Element e = elements.get(0);
+        if (op.getVar1().identifier.equals(identifier)) {
             e.setValue(op.getValue() [0]);
             e.count(OperationType.swap);
-            this.oc.count(OperationType.swap);
+            oc.count(OperationType.swap);
             return;
-        } else if (op.getVar2().identifier.equals(this.identifier)) {
+        } else if (op.getVar2().identifier.equals(identifier)) {
             e.setValue(op.getValue() [1]);
             e.count(OperationType.swap);
-            this.oc.count(OperationType.swap);
+            oc.count(OperationType.swap);
             return;
         }
     }
 
     @Override protected void executeRW (OP_ReadWrite op) {
-        if (this.elements.isEmpty()) {
-            this.initElement(op.getValue() [0]);
+        if (elements.isEmpty()) {
+            initElement(op.getValue() [0]);
         }
-        Element e = this.elements.get(0);
-        if (op.getTarget() != null && op.getTarget().identifier.equals(this.identifier)) {
+        Element e = elements.get(0);
+        if (op.getTarget() != null && op.getTarget().identifier.equals(identifier)) {
             e.setValue(op.getValue() [0]);
-            this.modifiedElements.add(e);
+            modifiedElements.add(e);
             e.count(OperationType.write);
-            this.oc.count(OperationType.write);
+            oc.count(OperationType.write);
             return;
-        } else if (op.getSource() != null && op.getSource().identifier.equals(this.identifier)) {
-            this.modifiedElements.add(e);
+        } else if (op.getSource() != null && op.getSource().identifier.equals(identifier)) {
+            modifiedElements.add(e);
             e.count(OperationType.read);
-            this.oc.count(OperationType.read);
+            oc.count(OperationType.read);
         }
     }
 
     @Override public VisualType resolveVisual () {
-        this.setVisual(VisualType.single);
+        setVisual(VisualType.single);
         return VisualType.single;
     }
 
@@ -130,8 +130,8 @@ public class IndependentElement extends Array {
             return null;
         }
 
-        if (locator.identifier.equals(this.identifier) && !this.elements.isEmpty()) {
-            return (IndexedElement) this.elements.get(0);
+        if (locator.identifier.equals(identifier) && !elements.isEmpty()) {
+            return (IndexedElement) elements.get(0);
         } else {
             return null;
         }
@@ -139,7 +139,7 @@ public class IndependentElement extends Array {
 
     @Override public String toString () {
         StringBuilder sb = new StringBuilder();
-        sb.append("\"" + Tools.stripQualifiers(this.identifier) + "\": " + this.rawType);
+        sb.append("\"" + Tools.stripQualifiers(identifier) + "\": " + rawType);
         return sb.toString();
     }
 }

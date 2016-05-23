@@ -23,21 +23,21 @@ public class RangePatterns {
             Double lowerRange = Double.valueOf(firstEx);
             Double UpperRange = Double.valueOf(secondEx);
 
-            this.rangeList = new ArrayList<>();
+            rangeList = new ArrayList<>();
             for (double e = lowerRange; e <= UpperRange; e++) {
-                this.rangeList.add(e);
+                rangeList.add(e);
             }
         } else {
             String[] split = stringInput.split(",");
 
-            this.rangeList = new ArrayList<>();
+            rangeList = new ArrayList<>();
             for (int i = 0; i < split.length; i++) {
-                this.rangeList.add(Double.valueOf(split [i].replace(" ", "")));
+                rangeList.add(Double.valueOf(split [i].replace(" ", "")));
             }
         }
     }
 
     public ArrayList<Double> getList () {
-        return this.rangeList;
+        return rangeList;
     }
 }

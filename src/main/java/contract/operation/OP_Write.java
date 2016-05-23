@@ -37,7 +37,7 @@ public class OP_Write extends OP_ReadWrite {
         if (target == null) {
             System.err.println("Target null in Write operation!");
         }
-        this.operationBody.put(Key.target, target);
+        operationBody.put(Key.target, target);
     }
 
     /**
@@ -48,7 +48,7 @@ public class OP_Write extends OP_ReadWrite {
      *            The source variable for this Write operation.
      */
     @Override public void setSource (Locator source) {
-        this.operationBody.put(Key.source, source);
+        operationBody.put(Key.source, source);
     }
 
     /**
@@ -59,18 +59,18 @@ public class OP_Write extends OP_ReadWrite {
      *            Set the value(s) written to {@code target}.
      */
     @Override public void setValue (double[] value) {
-        this.operationBody.put(Key.value, value);
+        operationBody.put(Key.value, value);
     }
 
     @Override public Locator getTarget () {
-        return (Locator) this.operationBody.get(Key.target);
+        return (Locator) operationBody.get(Key.target);
     }
 
     @Override public Locator getSource () {
-        return (Locator) this.operationBody.get(Key.source);
+        return (Locator) operationBody.get(Key.source);
     }
 
     @Override public double[] getValue () {
-        return (double[]) this.operationBody.get(Key.value);
+        return (double[]) operationBody.get(Key.value);
     }
 }

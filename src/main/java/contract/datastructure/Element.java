@@ -79,7 +79,7 @@ public abstract class Element implements OperationCounterHaver {
      * @return The value held by this Element.
      */
     public final double getNumValue () {
-        return this.numValue;
+        return numValue;
     }
 
     /**
@@ -89,7 +89,7 @@ public abstract class Element implements OperationCounterHaver {
      * @return The display value held by this Element
      */
     public String getStringValue () {
-        return this.stringValue;
+        return stringValue;
     }
 
     /**
@@ -99,16 +99,16 @@ public abstract class Element implements OperationCounterHaver {
      *            the new value for this Element.
      */
     public final void setValue (double newValue) {
-        this.prevNumValue = this.numValue;
+        prevNumValue = numValue;
 
-        if (this.numValue != newValue || newValue == Double.NaN) {
-            this.numValue = newValue;
-            this.numProperty.set(newValue);
+        if (numValue != newValue || newValue == Double.NaN) {
+            numValue = newValue;
+            numProperty.set(newValue);
 
             if (newValue != Double.NaN) {
-                this.stringProperty.setValue(" " + this.numValue + " ");
+                stringProperty.setValue(" " + numValue + " ");
             } else {
-                this.fillProperty.set(Color.BLACK);
+                fillProperty.set(Color.BLACK);
             }
         }
     }
@@ -118,9 +118,9 @@ public abstract class Element implements OperationCounterHaver {
      *
      */
     public final void setValue (String newValue) {
-        if (this.stringValue.equals(newValue) == false) {
-            this.stringValue = newValue;
-            this.stringProperty.setValue(this.stringValue);
+        if (stringValue.equals(newValue) == false) {
+            stringValue = newValue;
+            stringProperty.setValue(stringValue);
         }
     }
 
@@ -130,7 +130,7 @@ public abstract class Element implements OperationCounterHaver {
      * @return The paint with which to draw this Element.
      */
     public final Paint getPaint () {
-        return this.paint;
+        return paint;
     }
 
     /**
@@ -140,8 +140,8 @@ public abstract class Element implements OperationCounterHaver {
      *            The operation type which was applied.
      */
     public final void count (OperationType ot) {
-        this.oc.count(ot);
-        this.setColor(ot.color);
+        oc.count(ot);
+        setColor(ot.color);
         if (ot == OperationType.remove) {
             this.setValue(Double.NaN);
         }
@@ -154,8 +154,8 @@ public abstract class Element implements OperationCounterHaver {
      *            The paint to use
      */
     public final void setColor (Paint c) {
-        this.paint = c;
-        this.fillProperty.setValue(this.paint);
+        paint = c;
+        fillProperty.setValue(paint);
     }
 
     /**
@@ -174,8 +174,8 @@ public abstract class Element implements OperationCounterHaver {
      * @return The previous value.
      */
     public final double restoreValue () {
-        this.setValue(this.prevNumValue);
-        return this.prevNumValue;
+        this.setValue(prevNumValue);
+        return prevNumValue;
     }
 
     /**
@@ -185,10 +185,10 @@ public abstract class Element implements OperationCounterHaver {
      * @return The previous value.
      */
     public final double getPrevNumValue () {
-        return this.prevNumValue;
+        return prevNumValue;
     }
 
     @Override public OperationCounter getCounter () {
-        return this.oc;
+        return oc;
     }
 }

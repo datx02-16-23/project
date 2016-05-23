@@ -33,7 +33,7 @@ public class BarchartElement extends RectangleElement {
      */
     public BarchartElement (double value, Paint paint, double node_width, double node_height) {
         super(value, paint, node_width, node_height);
-        this.valueLabel.setTranslateY(-15);
+        valueLabel.setTranslateY(-15);
     }
 
     /**
@@ -48,8 +48,8 @@ public class BarchartElement extends RectangleElement {
      */
     public BarchartElement (Element element, double node_width, double node_height) {
         super(element, node_width, node_height);
-        this.valueLabel.setTranslateY(-15); // Raise slightly does it doesn't
-                                            // cover
+        valueLabel.setTranslateY(-15); // Raise slightly does it doesn't
+                                       // cover
         // the x-axis.
     }
 
@@ -62,8 +62,8 @@ public class BarchartElement extends RectangleElement {
     public void updateSize (double unitHeight, double foo) {
         this.unitHeight = unitHeight;
 
-        Rectangle rect = (Rectangle) this.shape;
-        rect.heightProperty().bind(this.element.numProperty.multiply(unitHeight));
+        Rectangle rect = (Rectangle) shape;
+        rect.heightProperty().bind(element.numProperty.multiply(unitHeight));
         // root.setPrefHeight(unitHeight * element.getNumValue()); //TODO
         // Uncomment, but fucks up positioning on the Y-axis.
     }
@@ -76,13 +76,13 @@ public class BarchartElement extends RectangleElement {
         // super.createShape(); TODO Uncomment, but fucks up positioning on the
         // Y-axis.
 
-        this.rect = new Rectangle();
-        this.rect.setWidth(this.width);
-        this.rect.setHeight(this.height);
-        this.rect.setStroke(Color.BLACK);
-        this.shape = this.rect;
+        rect = new Rectangle();
+        rect.setWidth(width);
+        rect.setHeight(height);
+        rect.setStroke(Color.BLACK);
+        shape = rect;
 
-        this.fixPositioning(0);
+        fixPositioning(0);
     }
 
     /**
@@ -92,21 +92,21 @@ public class BarchartElement extends RectangleElement {
      *            The y coordinate at the bottom of the bar.
      */
     public void setBotY (double y) {
-        this.layoutYProperty().unbind();
-        this.fixPositioning(y);
+        layoutYProperty().unbind();
+        fixPositioning(y);
     }
 
     private void fixPositioning (double y) {
-        DoubleBinding neg_half_height = this.rect.heightProperty().divide(2).multiply(-1); // -
+        DoubleBinding neg_half_height = rect.heightProperty().divide(2).multiply(-1); // -
         // height/2
-        this.layoutYProperty().bind(neg_half_height.add(y).subtract(Const.DEFAULT_ELEMENT_HEIGHT / 2)); // TODO
+        layoutYProperty().bind(neg_half_height.add(y).subtract(Const.DEFAULT_ELEMENT_HEIGHT / 2)); // TODO
         // fix
     }
 
     @Override public BarchartElement clone () {
         BarchartElement clone = (BarchartElement) AVElementFactory.clone(this);
 
-        clone.updateSize(this.unitHeight, -1);
+        clone.updateSize(unitHeight, -1);
 
         return clone;
     }

@@ -39,6 +39,6 @@ public class CRoot implements Serializable {
     }
 
     @Override public String toString () {
-        return "header = " + this.header + ",\n" + "body = " + this.body;
+        return "header = " + header + ",\n" + "body = " + body;
     }
 }

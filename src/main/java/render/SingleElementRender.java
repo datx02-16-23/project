@@ -25,8 +25,8 @@ public class SingleElementRender extends ARender {
      */
     public SingleElementRender (DataStructure struct, double width, double height) {
         super(struct, width, height, 0, 0);
-        this.renderWidth = 150;
-        this.renderHeight = 150;
+        renderWidth = 150;
+        renderHeight = 150;
         this.setRelativeNodeSize(false, -1);
     }
 
@@ -35,13 +35,13 @@ public class SingleElementRender extends ARender {
         String style = "-fx-font-size: 12; \n fx-font-weight: bold;";
         Label name2 = (Label) fxmlLoader.getNamespace().get("name_mo");
         name2.setStyle(style);
-        this.name.setStyle(style);
+        name.setStyle(style);
     }
 
     @Override public void render () {
-        if (this.struct.repaintAll) {
-            this.struct.repaintAll = false;
-            this.repaintAll();
+        if (struct.repaintAll) {
+            struct.repaintAll = false;
+            repaintAll();
         }
         super.render();
     }
@@ -54,9 +54,9 @@ public class SingleElementRender extends ARender {
     }
 
     @Override public void calculateSize () {
-        this.renderWidth = 150;
-        this.renderHeight = this.nodeHeight;
-        this.setRestricedSize(this.renderWidth, this.renderHeight);
+        renderWidth = 150;
+        renderHeight = nodeHeight;
+        setRestricedSize(renderWidth, renderHeight);
     }
 
     /**
@@ -82,12 +82,12 @@ public class SingleElementRender extends ARender {
     }
 
     @Override protected AVElement createVisualElement (Element e) {
-        AVElement re = AVElementFactory.shape(DEFAULT_ELEMENT_STYLE, e, this.nodeWidth, this.nodeHeight);
+        AVElement re = AVElementFactory.shape(DEFAULT_ELEMENT_STYLE, e, nodeWidth, nodeHeight);
         return re;
     }
 
     @Override protected AVElement createVisualElement (double value, Color color) {
-        AVElement re = AVElementFactory.shape(DEFAULT_ELEMENT_STYLE, value, color, this.nodeWidth, this.nodeHeight);
+        AVElement re = AVElementFactory.shape(DEFAULT_ELEMENT_STYLE, value, color, nodeWidth, nodeHeight);
         re.setInfoPos(null);
         return re;
     }

@@ -43,7 +43,7 @@ public class Array extends DataStructure {
     public Array (String identifier, RawType.AbstractType abstractType, VisualType visual,
             Map<String, Object> attributes) {
         super(identifier, RawType.array, abstractType, visual, attributes);
-        this.capacity = this.getCapacity();
+        capacity = getCapacity();
     }
 
     /**
@@ -73,7 +73,7 @@ public class Array extends DataStructure {
      *            A BoundaryChangeListener.
      */
     public void setListener (MinMaxListener listener) {
-        this.mmListener = listener;
+        mmListener = listener;
     }
 
     /**
@@ -87,40 +87,39 @@ public class Array extends DataStructure {
 
     private void init (OP_ReadWrite rw) {
 
-        this.repaintAll = true;
-        this.elements.clear();
+        repaintAll = true;
+        elements.clear();
 
         double[] values = rw.getValue();
 
-        if (this.capacity == null) { // Fall back to size declared in header
-            this.capacity = this.getCapacity();
+        if (capacity == null) { // Fall back to size declared in header
+            capacity = getCapacity();
         }
-        if (this.capacity == null) { // Use size of values as a last resort.
-            this.capacity = new int[] { values.length };
+        if (capacity == null) { // Use size of values as a last resort.
+            capacity = new int[] { values.length };
         }
 
         // Initialize specified by the values argument of the init operation.
         int linearIndex = 0;
         for (; linearIndex < values.length; linearIndex++) {
-            IndexedElement ae = new IndexedElement(values [linearIndex],
-                    this.getIndexInNDimensions(linearIndex, this.capacity));
+            IndexedElement ae = new IndexedElement(values [linearIndex], getIndexInNDimensions(linearIndex, capacity));
             ae.count(OperationType.write);
-            this.putElement(ae);
+            putElement(ae);
         }
 
         // Initialise elements without given values to 0.
         int linearTotal = 1;
-        for (int i = 0; i < this.capacity.length; i++) {
-            linearTotal = linearTotal * this.capacity [i];
+        for (int i = 0; i < capacity.length; i++) {
+            linearTotal = linearTotal * capacity [i];
         }
 
         for (linearIndex++; linearIndex < linearTotal; linearIndex++) {
-            IndexedElement ae = new IndexedElement(0.0, this.getIndexInNDimensions(linearIndex, this.capacity));
-            this.modifiedElements.add(ae);
+            IndexedElement ae = new IndexedElement(0.0, getIndexInNDimensions(linearIndex, capacity));
+            modifiedElements.add(ae);
             ae.count(OperationType.write);
-            this.putElement(ae);
+            putElement(ae);
         }
-        this.modifiedElements.addAll(this.elements);
+        modifiedElements.addAll(elements);
 
         // Dont spam the listener.
         double initMin = values [0];
@@ -133,16 +132,16 @@ public class Array extends DataStructure {
                 initMin = values [i];
             }
         }
-        this.checkMinMaxChanged(initMin);
-        this.checkMinMaxChanged(initMax);
+        checkMinMaxChanged(initMin);
+        checkMinMaxChanged(initMax);
     }
 
     @Override public void clear () {
-        this.elements.clear();
-        this.clearElementLists();
-        this.resetMinMax();
-        this.oc.reset();
-        this.repaintAll = true;
+        elements.clear();
+        clearElementLists();
+        resetMinMax();
+        oc.reset();
+        repaintAll = true;
     }
 
     @Override protected void executeSwap (OP_Swap op) {
@@ -152,19 +151,19 @@ public class Array extends DataStructure {
         if (var1Element != null) {
             var1Element.setValue(op.getValue() [0]);
             var1Element.count(OperationType.swap);
-            this.modifiedElements.add(var1Element);
-            this.inactiveElements.remove(var1Element);
-            this.oc.count(OperationType.swap);
-            this.checkMinMaxChanged(op.getValue() [0]);
+            modifiedElements.add(var1Element);
+            inactiveElements.remove(var1Element);
+            oc.count(OperationType.swap);
+            checkMinMaxChanged(op.getValue() [0]);
         }
         IndexedElement var2Element = this.getElement(var2);
         if (var2Element != null) {
             var2Element.setValue(op.getValue() [1]);
             var2Element.count(OperationType.swap);
-            this.modifiedElements.add(var2Element);
-            this.inactiveElements.remove(var2Element);
-            this.oc.count(OperationType.swap);
-            this.checkMinMaxChanged(op.getValue() [1]);
+            modifiedElements.add(var2Element);
+            inactiveElements.remove(var2Element);
+            oc.count(OperationType.swap);
+            checkMinMaxChanged(op.getValue() [1]);
         }
     }
 
@@ -176,11 +175,11 @@ public class Array extends DataStructure {
         }
 
         if (value.length > 1) {
-            this.init(op);
+            init(op);
             return;
         }
 
-        this.oc.count(op.operation); // Update structure count
+        oc.count(op.operation); // Update structure count
 
         Locator target = op.getTarget();
         Locator source = op.getSource();
@@ -188,54 +187,54 @@ public class Array extends DataStructure {
         /*
          * Write operation targeting this Array.
          */
-        if (target != null && target.identifier.equals(this.identifier)) {
+        if (target != null && target.identifier.equals(identifier)) {
             IndexedElement targetElement = this.getElement(target);
 
             if (targetElement != null) {
                 // Element was found
-                this.modifiedElements.add(targetElement);
-                this.inactiveElements.remove(targetElement);
+                modifiedElements.add(targetElement);
+                inactiveElements.remove(targetElement);
 
                 targetElement.setValue(value [0]);
                 targetElement.count(OperationType.write);
-                this.checkMinMaxChanged(op.getValue() [0]);
+                checkMinMaxChanged(op.getValue() [0]);
             } else {
                 // Create the element
                 IndexedElement newElement = new IndexedElement(value [0],
-                        target.index == null ? new int[] { this.elements.size() } : target.index);
-                this.modifiedElements.add(newElement);
-                this.putElement(newElement);
+                        target.index == null ? new int[] { elements.size() } : target.index);
+                modifiedElements.add(newElement);
+                putElement(newElement);
 
                 newElement.count(OperationType.write);
-                this.repaintAll = true;
-                this.checkMinMaxChanged(op.getValue() [0]);
+                repaintAll = true;
+                checkMinMaxChanged(op.getValue() [0]);
             }
         }
 
         /*
          * Read operation targeting this Array.
          */
-        if (source != null && source.identifier.equals(this.identifier)) {
+        if (source != null && source.identifier.equals(identifier)) {
             IndexedElement sourceElement = this.getElement(source);
 
             // Element was found
             if (sourceElement != null) {
-                this.modifiedElements.add(sourceElement);
-                this.inactiveElements.remove(sourceElement);
+                modifiedElements.add(sourceElement);
+                inactiveElements.remove(sourceElement);
 
                 sourceElement.setValue(value [0]);
                 sourceElement.count(OperationType.read);
-                this.checkMinMaxChanged(op.getValue() [0]);
+                checkMinMaxChanged(op.getValue() [0]);
             } else {
                 // Create the element
                 IndexedElement newElement = new IndexedElement(value [0],
-                        source.index == null ? new int[] { this.elements.size() } : source.index);
-                this.modifiedElements.add(newElement);
-                this.putElement(newElement);
+                        source.index == null ? new int[] { elements.size() } : source.index);
+                modifiedElements.add(newElement);
+                putElement(newElement);
 
                 newElement.count(OperationType.read);
-                this.repaintAll = true;
-                this.checkMinMaxChanged(op.getValue() [0]);
+                repaintAll = true;
+                checkMinMaxChanged(op.getValue() [0]);
             }
         }
     }
@@ -268,9 +267,9 @@ public class Array extends DataStructure {
                 if (otherDim == currDim) {
                     continue; // Don't subtract self.
                 }
-                index [currDim] = index [currDim] - index [otherDim] * this.higherDimSizesProduct(otherDim);
+                index [currDim] = index [currDim] - index [otherDim] * higherDimSizesProduct(otherDim);
             }
-            index [currDim] = index [currDim] / this.higherDimSizesProduct(currDim);
+            index [currDim] = index [currDim] / higherDimSizesProduct(currDim);
         }
         return index;
     }
@@ -286,8 +285,8 @@ public class Array extends DataStructure {
      */
     private int higherDimSizesProduct (int dim) {
         int product = 1;
-        for (int i = dim + 1; i < this.capacity.length; i++) {
-            product = product * this.capacity [i];
+        for (int i = dim + 1; i < capacity.length; i++) {
+            product = product * capacity [i];
         }
         return product;
     }
@@ -301,7 +300,7 @@ public class Array extends DataStructure {
      *         was valid. Null otherwise.
      */
     @Override public IndexedElement getElement (Locator locator) {
-        if (locator == null || locator.identifier.equals(this.identifier) == false) {
+        if (locator == null || locator.identifier.equals(identifier) == false) {
             return null;
         }
         return this.getElement(locator.index);
@@ -316,7 +315,7 @@ public class Array extends DataStructure {
      *         otherwise.
      */
     public IndexedElement getElement (int[] index) {
-        for (Element e : this.elements) {
+        for (Element e : elements) {
             IndexedElement ae = (IndexedElement) e;
             if (Arrays.equals(index, ae.index)) {
                 return ae; // Found the element with the same index.
@@ -340,12 +339,12 @@ public class Array extends DataStructure {
             if (newElement.getNumValue() == old.getNumValue()) {
                 return null;
             }
-            int replacedElementIndex = this.elements.indexOf(old);
-            this.elements.remove(old);
-            this.elements.add(replacedElementIndex, newElement);
+            int replacedElementIndex = elements.indexOf(old);
+            elements.remove(old);
+            elements.add(replacedElementIndex, newElement);
         }
 
-        this.elements.add(newElement);
+        elements.add(newElement);
         return old;
     }
 
@@ -369,7 +368,7 @@ public class Array extends DataStructure {
          */
         public IndexedElement (double value, int[] index) {
             this.setValue(value);
-            this.setIndex(index);
+            setIndex(index);
         }
 
         private final int primes[] = { 607, 613, 617, 619, 631, 641, 643, 647, 653, 659, 661, 673, 677, 683, 691, 701,
@@ -377,13 +376,13 @@ public class Array extends DataStructure {
 
         // TODO
         @Override public int hashCode () {
-            if (this.index == null) {
+            if (index == null) {
                 return -1;
             }
 
             int indexHash = 0;
-            for (int i = 0; i < this.index.length; i++) {
-                indexHash = this.index [i] * this.primes [i];
+            for (int i = 0; i < index.length; i++) {
+                indexHash = index [i] * primes [i];
             }
             return indexHash;
         }
@@ -394,7 +393,7 @@ public class Array extends DataStructure {
          * @return The index of this ArrayElement.
          */
         public int[] getIndex () {
-            return this.index;
+            return index;
         }
 
         /**
@@ -404,7 +403,7 @@ public class Array extends DataStructure {
          *            The new index of this ArrayElement.
          */
         public void setIndex (int[] newIndex) {
-            this.index = newIndex;
+            index = newIndex;
         }
 
         /**
@@ -421,13 +420,13 @@ public class Array extends DataStructure {
                 return false;
             }
             IndexedElement rhs = (IndexedElement) obj;
-            return this.getNumValue() == rhs.getNumValue() && Arrays.equals(this.index, rhs.index);
+            return getNumValue() == rhs.getNumValue() && Arrays.equals(index, rhs.index);
         }
 
         // TODO
         @Override public String toString () {
             // return hashCode() + "";
-            return Arrays.toString(this.index) + " = " + this.getNumValue();
+            return Arrays.toString(index) + " = " + getNumValue();
         }
     }
 
@@ -442,24 +441,24 @@ public class Array extends DataStructure {
      * @return The {@link #VisualType} to use for this Array.
      */
     @Override public VisualType resolveVisual () {
-        if (this.visual != null) {
-            return this.visual;
+        if (visual != null) {
+            return visual;
 
-        } else if (this.abstractType != null) {
-            if (this.abstractType == AbstractType.tree) {
-                this.visual = VisualType.tree;
+        } else if (abstractType != null) {
+            if (abstractType == AbstractType.tree) {
+                visual = VisualType.tree;
             }
 
         } else {
-            int[] capacity = this.getCapacity();
+            int[] capacity = getCapacity();
             if (capacity == null || capacity.length <= 1) {
-                this.visual = VisualType.bar;
+                visual = VisualType.bar;
             } else {
-                this.visual = VisualType.box;
+                visual = VisualType.box;
             }
         }
-        this.setVisual(this.visual);
-        return this.visual;
+        setVisual(visual);
+        return visual;
     }
 
     /**
@@ -469,18 +468,18 @@ public class Array extends DataStructure {
      *            The value to test.
      */
     private void checkMinMaxChanged (double x) {
-        if (this.mmListener == null) {
+        if (mmListener == null) {
             return;
         }
 
-        if (x < this.min) {
-            this.min = x;
-            this.mmListener.minChanged(x);
+        if (x < min) {
+            min = x;
+            mmListener.minChanged(x);
         }
 
-        if (x > this.max) {
-            this.max = x;
-            this.mmListener.maxChanged(x);
+        if (x > max) {
+            max = x;
+            mmListener.maxChanged(x);
         }
     }
 
@@ -490,8 +489,8 @@ public class Array extends DataStructure {
      * Restore default values for min and max.
      */
     private void resetMinMax () {
-        this.min = Double.MAX_VALUE;
-        this.max = Double.MIN_VALUE;
+        min = Double.MAX_VALUE;
+        max = Double.MIN_VALUE;
     }
 
     /**
@@ -500,7 +499,7 @@ public class Array extends DataStructure {
      * @return The minimum value.
      */
     public double getMin () {
-        return this.min;
+        return min;
     }
 
     /**
@@ -509,7 +508,7 @@ public class Array extends DataStructure {
      * @return The maximum value.
      */
     public double getMax () {
-        return this.max;
+        return max;
     }
 
     /**

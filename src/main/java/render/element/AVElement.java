@@ -93,12 +93,12 @@ public abstract class AVElement extends Pane {
      *            containing the layout for the element.
      */
     public AVElement (double value, Paint style, double node_width, double node_height) {
-        this.element = null;
-        this.points = null;
-        this.init(node_width, node_height);
+        element = null;
+        points = null;
+        init(node_width, node_height);
 
-        this.valueLabel.setText("" + value);
-        this.shape.setFill(style);
+        valueLabel.setText("" + value);
+        shape.setFill(style);
     }
 
     /**
@@ -115,12 +115,12 @@ public abstract class AVElement extends Pane {
      */
     public AVElement (Element element, double node_width, double node_height) {
         this.element = element;
-        this.points = null;
-        this.init(node_width, node_height);
+        points = null;
+        init(node_width, node_height);
 
         // Automatic updating of value
-        this.valueLabel.textProperty().bind(element.stringProperty);
-        this.shape.fillProperty().bind(element.fillProperty);
+        valueLabel.textProperty().bind(element.stringProperty);
+        shape.fillProperty().bind(element.fillProperty);
     }
 
     /**
@@ -136,12 +136,12 @@ public abstract class AVElement extends Pane {
      *            The height of the node.
      */
     public AVElement (double value, Paint style, double node_width, double node_height, double[] points) {
-        this.element = null;
+        element = null;
         this.points = points;
-        this.init(node_width, node_height);
+        init(node_width, node_height);
 
-        this.valueLabel.setText("" + value);
-        this.shape.setFill(style);
+        valueLabel.setText("" + value);
+        shape.setFill(style);
     }
 
     /**
@@ -157,18 +157,18 @@ public abstract class AVElement extends Pane {
     public AVElement (Element element, double node_width, double node_height, double[] points) {
         this.element = element;
         this.points = points;
-        this.init(node_width, node_height);
+        init(node_width, node_height);
 
         // Automatic updating of value
-        this.valueLabel.textProperty().bind(element.stringProperty);
-        this.shape.fillProperty().bind(element.fillProperty);
+        valueLabel.textProperty().bind(element.stringProperty);
+        shape.fillProperty().bind(element.fillProperty);
     }
 
     /**
      * Create a shape to use as the holder of the element value;
      */
     public void createShape () {
-        this.root.setPrefSize(this.width, this.height);
+        root.setPrefSize(width, height);
     }
 
     private void init (double node_width, double node_height) {
@@ -177,32 +177,32 @@ public abstract class AVElement extends Pane {
         fxmlLoader.setController(this);
 
         try {
-            this.root = (GridPane) fxmlLoader.load();
+            root = (GridPane) fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(-1);
         }
-        this.height = node_height;
-        this.width = node_width;
+        height = node_height;
+        width = node_width;
         if (Debug.ERR) {
-            this.root.setStyle(DEBUG_FXML_ROOT);
-            this.setStyle(DEBUG_FXML_THIS);
+            root.setStyle(DEBUG_FXML_ROOT);
+            setStyle(DEBUG_FXML_THIS);
         }
 
         // Container for the value
         Pane shapePane = (Pane) fxmlLoader.getNamespace().get("shape");
         shapePane.setCursor(Cursor.HAND);
-        this.createShape();
-        this.shape.setPickOnBounds(true);
+        createShape();
+        shape.setPickOnBounds(true);
         shapePane.setPickOnBounds(true);
-        shapePane.getChildren().add(this.shape);
+        shapePane.getChildren().add(shape);
 
-        this.valueLabel = (Label) fxmlLoader.getNamespace().get("value");
+        valueLabel = (Label) fxmlLoader.getNamespace().get("value");
 
-        this.infoLabel.setMouseTransparent(true);
-        this.infoLabel.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
-        this.root.getChildren().add(this.infoLabel);
-        this.getChildren().add(this.root);
+        infoLabel.setMouseTransparent(true);
+        infoLabel.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
+        root.getChildren().add(infoLabel);
+        getChildren().add(root);
     }
 
     /**
@@ -211,7 +211,7 @@ public abstract class AVElement extends Pane {
      * @return The element this VisualElement represents.
      */
     public Element getElement () {
-        return this.element;
+        return element;
     }
 
     /**
@@ -220,17 +220,17 @@ public abstract class AVElement extends Pane {
      * @return The shape containing the element.
      */
     public Shape getElementShape () {
-        return this.shape;
+        return shape;
     }
 
     /**
      * Listener for the onMouseClicked event.
      */
     public void onMouseClicked () {
-        this.showSelected();
-        Main.console.force("w = " + this.width + ", h = " + this.height);
-        Main.console.info("Statistics for \"" + this.element + "\":");
-        OperationCounterHaver.printStats(this.element);
+        showSelected();
+        Main.console.force("w = " + width + ", h = " + height);
+        Main.console.info("Statistics for \"" + element + "\":");
+        OperationCounterHaver.printStats(element);
     }
 
     /**
@@ -239,23 +239,23 @@ public abstract class AVElement extends Pane {
     private void showSelected () {
 
         // Rotate.
-        this.shape.setRotate(0);
-        RotateTransition rotate = new RotateTransition(Duration.millis(150), this.shape);
+        shape.setRotate(0);
+        RotateTransition rotate = new RotateTransition(Duration.millis(150), shape);
         rotate.setFromAngle(-8);
         rotate.setToAngle(8);
         rotate.setCycleCount(6);
         rotate.setAutoReverse(true);
         rotate.setOnFinished(event -> {
-            this.shape.setRotate(0);
+            shape.setRotate(0);
         });
         rotate.play();
 
         // Border - cannot see rotation on circular elements :).
-        this.shape.setStrokeWidth(5);
-        StrokeTransition stroke = new StrokeTransition(Duration.millis(900), this.shape, Color.BLACK, Color.SKYBLUE);
+        shape.setStrokeWidth(5);
+        StrokeTransition stroke = new StrokeTransition(Duration.millis(900), shape, Color.BLACK, Color.SKYBLUE);
         stroke.setOnFinished(event -> {
-            this.shape.setStrokeWidth(1);
-            this.shape.setStroke(Color.BLACK);
+            shape.setStrokeWidth(1);
+            shape.setStroke(Color.BLACK);
         });
         stroke.setAutoReverse(true);
         stroke.play();
@@ -273,18 +273,18 @@ public abstract class AVElement extends Pane {
         // this.setStyle(null);
         // }
 
-        this.root.setScaleX(1.20);
-        this.root.setScaleY(1.20);
-        this.toFront();
+        root.setScaleX(1.20);
+        root.setScaleY(1.20);
+        toFront();
     }
 
     /**
      * Listener for the onMouseExited event.
      */
     public void onMouseExited () {
-        this.root.setScaleX(1);
-        this.root.setScaleY(1);
-        this.shape.setStrokeWidth(1);
+        root.setScaleX(1);
+        root.setScaleY(1);
+        shape.setStrokeWidth(1);
     }
 
     /**
@@ -295,20 +295,20 @@ public abstract class AVElement extends Pane {
      *            The new value.
      */
     public void setGhost (boolean ghost) {
-        if (ghost != this.valueLabel.isVisible()) {
+        if (ghost != valueLabel.isVisible()) {
             return; // Ghost status not changed.
         }
         if (ghost) {
-            this.setMouseTransparent(true);
-            this.shape.fillProperty().unbind();
-            this.shape.setFill(Color.TRANSPARENT);
-            this.shape.getStrokeDashArray().addAll(5.0);
-            this.valueLabel.setVisible(false);
+            setMouseTransparent(true);
+            shape.fillProperty().unbind();
+            shape.setFill(Color.TRANSPARENT);
+            shape.getStrokeDashArray().addAll(5.0);
+            valueLabel.setVisible(false);
         } else {
-            this.setMouseTransparent(false);
-            this.shape.fillProperty().bind(this.element.fillProperty);
-            this.shape.getStrokeDashArray().clear();
-            this.valueLabel.setVisible(true);
+            setMouseTransparent(false);
+            shape.fillProperty().bind(element.fillProperty);
+            shape.getStrokeDashArray().clear();
+            valueLabel.setVisible(true);
         }
     }
 
@@ -316,8 +316,8 @@ public abstract class AVElement extends Pane {
      * Unbind the element, leaving it in whatever state is is currently in.
      */
     public void unbind () {
-        this.valueLabel.textProperty().unbind();
-        this.shape.fillProperty().unbind();
+        valueLabel.textProperty().unbind();
+        shape.fillProperty().unbind();
     }
 
     /**
@@ -327,7 +327,7 @@ public abstract class AVElement extends Pane {
      *            The array to show.
      */
     public void setInfoArray (int[] array) {
-        this.setInfoText(Arrays.toString(array));
+        setInfoText(Arrays.toString(array));
     }
 
     /**
@@ -337,7 +337,7 @@ public abstract class AVElement extends Pane {
      *            The new visibility setting.
      */
     public void setInfoVisible (boolean visible) {
-        this.infoLabel.setVisible(visible);
+        infoLabel.setVisible(visible);
     }
 
     /**
@@ -348,9 +348,9 @@ public abstract class AVElement extends Pane {
      *            The text to render.
      */
     public void setInfoText (String text) {
-        this.infoLabel.setText(text);
-        this.setInfoVisible(true);
-        this.setInfoPos(this.infoPos == null ? Pos.BOTTOM_CENTER : this.infoPos);
+        infoLabel.setText(text);
+        setInfoVisible(true);
+        setInfoPos(infoPos == null ? Pos.BOTTOM_CENTER : infoPos);
     }
 
     /**
@@ -361,15 +361,15 @@ public abstract class AVElement extends Pane {
      *            The new position for the info label.
      */
     @SuppressWarnings("incomplete-switch") public void setInfoPos (Pos pos) {
-        this.infoPos = pos;
+        infoPos = pos;
 
-        if (this.infoPos == null) {
-            this.setInfoVisible(false);
+        if (infoPos == null) {
+            setInfoVisible(false);
             return;
         } else {
-            this.setInfoVisible(true);
+            setInfoVisible(true);
         }
-        String text = this.infoLabel.getText();
+        String text = infoLabel.getText();
 
         if (text.length() == 0) {
             return;
@@ -387,30 +387,30 @@ public abstract class AVElement extends Pane {
 
         switch (pos.getHpos()) {
         case LEFT:
-            tx = -(this.width / 2 + textW);
+            tx = -(width / 2 + textW);
             break;
         case CENTER:
             // tx already 0.
             break;
         case RIGHT:
-            tx = this.width / 2 + textW;
+            tx = width / 2 + textW;
             break;
         }
 
         switch (pos.getVpos()) {
         case BOTTOM:
-            ty = this.height / 2 + textH;
+            ty = height / 2 + textH;
             break;
         case CENTER:
             // ty already 0.
             break;
         case TOP:
-            ty = -(this.height / 2 + textH);
+            ty = -(height / 2 + textH);
             break;
         }
 
-        this.infoLabel.setTranslateX(tx);
-        this.infoLabel.setTranslateY(ty);
+        infoLabel.setTranslateX(tx);
+        infoLabel.setTranslateY(ty);
     }
 
     /**
@@ -421,7 +421,7 @@ public abstract class AVElement extends Pane {
      *            A double value to show.
      */
     public void setValue (double value) {
-        this.valueLabel.setText(" " + value + " ");
+        valueLabel.setText(" " + value + " ");
     }
 
     /**
@@ -432,7 +432,7 @@ public abstract class AVElement extends Pane {
      *            A String value to show.
      */
     public void setValue (String value) {
-        this.valueLabel.setText(" " + value + " ");
+        valueLabel.setText(" " + value + " ");
     }
 
     @Override public AVElement clone () {
@@ -450,16 +450,16 @@ public abstract class AVElement extends Pane {
      *            The new height.
      */
     public void setSize (double newWidth, double newHeight) {
-        if (newWidth != this.width) {
+        if (newWidth != width) {
             // Repostion on render.
-            this.setLayoutX(this.getLayoutX() + (this.width - newWidth) / 2);
-            this.width = newWidth;
+            setLayoutX(getLayoutX() + (width - newWidth) / 2);
+            width = newWidth;
         }
-        if (newHeight != this.height) {
+        if (newHeight != height) {
             // Repostion on render.
-            this.setLayoutY(this.getLayoutY() + (this.height - newHeight) / 2);
-            this.height = newHeight;
+            setLayoutY(getLayoutY() + (height - newHeight) / 2);
+            height = newHeight;
         }
-        this.root.setPrefSize(this.width, this.height);
+        root.setPrefSize(width, height);
     }
 }

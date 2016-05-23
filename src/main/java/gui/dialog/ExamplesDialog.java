@@ -31,43 +31,43 @@ public class ExamplesDialog {
         this.parent = parent;
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/dialog/ExamplesDialog.fxml"));
         fxmlLoader.setController(this);
-        this.root = new Stage();
-        this.root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
-        this.root.initModality(Modality.APPLICATION_MODAL);
-        this.root.setTitle(Const.PROGRAM_NAME + ": Example");
-        this.root.initOwner(this.parent);
+        root = new Stage();
+        root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
+        root.initModality(Modality.APPLICATION_MODAL);
+        root.setTitle(Const.PROGRAM_NAME + ": Example");
+        root.initOwner(this.parent);
         GridPane p = null;
         try {
             p = fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.root.setOnCloseRequest(event -> {
+        root.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
-            this.closeButton();
+            closeButton();
         });
         fxmlLoader.getNamespace();
-        this.input = (TextField) fxmlLoader.getNamespace().get("input");
-        this.input.setOnKeyTyped(event -> {
-            this.validateInput();
+        input = (TextField) fxmlLoader.getNamespace().get("input");
+        input.setOnKeyTyped(event -> {
+            validateInput();
         });
-        this.mirror = (TextField) fxmlLoader.getNamespace().get("mirror");
-        this.status = (Label) fxmlLoader.getNamespace().get("status");
-        this.name = (Label) fxmlLoader.getNamespace().get("name");
-        this.run = (Button) fxmlLoader.getNamespace().get("run");
+        mirror = (TextField) fxmlLoader.getNamespace().get("mirror");
+        status = (Label) fxmlLoader.getNamespace().get("status");
+        name = (Label) fxmlLoader.getNamespace().get("name");
+        run = (Button) fxmlLoader.getNamespace().get("run");
         Scene dialogScene = new Scene(p, p.getPrefWidth() - 5, p.getPrefHeight());
-        this.root.setScene(dialogScene);
-        this.root.setResizable(false);
+        root.setScene(dialogScene);
+        root.setResizable(false);
     }
 
     private boolean validateInput () {
         String input = this.input.getText();
         if (input.length() == 0) {
-            this.data = EMPTY;
-            this.mirror.setText("[]");
-            this.status.setText("INPUT VALID");
-            this.status.setTextFill(STATUS_OK);
-            this.run.setDisable(false);
+            data = EMPTY;
+            mirror.setText("[]");
+            status.setText("INPUT VALID");
+            status.setTextFill(STATUS_OK);
+            run.setDisable(false);
             return true;
         }
         input = input.replaceAll("\\s+", "");
@@ -83,19 +83,19 @@ public class ExamplesDialog {
             try {
                 doubles [i] = Double.parseDouble(doubles_string [i]);
             } catch (Exception e) {
-                this.status.setText("INPUT INVALID");
-                this.status.setTextFill(STATUS_ERR);
-                this.mirror.clear();
-                this.data = null;
-                this.run.setDisable(true);
+                status.setText("INPUT INVALID");
+                status.setTextFill(STATUS_ERR);
+                mirror.clear();
+                data = null;
+                run.setDisable(true);
                 return false;
             }
         }
-        this.data = doubles;
-        this.mirror.setText(Arrays.toString(doubles));
-        this.status.setText("INPUT VALID");
-        this.status.setTextFill(STATUS_OK);
-        this.run.setDisable(false);
+        data = doubles;
+        mirror.setText(Arrays.toString(doubles));
+        status.setText("INPUT VALID");
+        status.setTextFill(STATUS_OK);
+        run.setDisable(false);
         return true;
     }
 
@@ -107,26 +107,26 @@ public class ExamplesDialog {
      * @return An array of doubles.
      */
     public double[] show (String name) {
-        this.validateInput();
+        validateInput();
         this.name.setText(name);
         // Wait for user input.
-        this.root.showAndWait();
-        if (this.data == null) {
-            this.input.clear();
+        root.showAndWait();
+        if (data == null) {
+            input.clear();
             return null;
         } else {
-            return this.data;
+            return data;
         }
     }
 
     public void closeButton () {
-        this.input.clear();
-        this.mirror.clear();
-        this.data = null;
-        this.root.close();
+        input.clear();
+        mirror.clear();
+        data = null;
+        root.close();
     }
 
     public void okButton () {
-        this.root.close();
+        root.close();
     }
 }

@@ -22,21 +22,21 @@ public class View implements iView {
     }
 
     @Override public void render () {
-        this.clear();
-        for (Ball b : this.model.getBalls()) {
-            this.paintBall(b);
+        clear();
+        for (Ball b : model.getBalls()) {
+            paintBall(b);
         }
 
     }
 
     private void clear () {
-        GraphicsContext gc = this.canvas.getGraphicsContext2D();
+        GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Color.WHEAT);
-        gc.fillRect(0, 0, this.canvas.getWidth(), this.canvas.getHeight());
+        gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
     private void paintBall (Ball b) {
-        GraphicsContext gc = this.canvas.getGraphicsContext2D();
+        GraphicsContext gc = canvas.getGraphicsContext2D();
 
         // Draw ball
         gc.setFill(Color.RED);

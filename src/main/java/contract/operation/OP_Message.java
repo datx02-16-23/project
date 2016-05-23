@@ -31,11 +31,11 @@ public class OP_Message extends Operation {
      *            The message to attach to this OP_Message.
      */
     public void setMessage (String message) {
-        this.setValue(message);
+        setValue(message);
     }
 
     public String getMessage () {
-        return this.getValue();
+        return getValue();
     }
 
     /**
@@ -45,14 +45,14 @@ public class OP_Message extends Operation {
      *            The value(s) with which to initialize this variable.
      */
     public void setValue (String value) {
-        this.operationBody.put(Key.value, value);
+        operationBody.put(Key.value, value);
     }
 
     public String getValue () {
-        return (String) this.operationBody.get(Key.value);
+        return (String) operationBody.get(Key.value);
     }
 
     @Override public String toString () {
-        return "MESSAGE: \"" + this.getValue() + "\"";
+        return "MESSAGE: \"" + getValue() + "\"";
     }
 }

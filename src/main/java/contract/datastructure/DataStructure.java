@@ -60,7 +60,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
     protected transient final OperationCounter        oc               = new OperationCounter();
 
     @Override public OperationCounter getCounter () {
-        return this.oc;
+        return oc;
     }
 
     /**
@@ -81,7 +81,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
      * @return The list of elements held by this DataStructure.
      */
     public ObservableList<Element> getElements () {
-        return this.elements;
+        return elements;
     }
 
     /**
@@ -99,19 +99,19 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
         switch (op.operation) {
         case read:
         case write:
-            this.executeRW((OP_ReadWrite) op);
+            executeRW((OP_ReadWrite) op);
             break;
         case swap:
-            this.executeSwap((OP_Swap) op);
+            executeSwap((OP_Swap) op);
             break;
         case remove:
-            this.executeRemove((OP_ToggleScope) op);
+            executeRemove((OP_ToggleScope) op);
             return;
         default:
             Main.console.err("OperationType \"" + op.operation + "\" unknown.");
             break;
         }
-        this.setActive(true);
+        setActive(true);
     }
 
     /**
@@ -132,10 +132,10 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
 
     @Override public String toString () {
         StringBuilder sb = new StringBuilder();
-        sb.append("\"" + Tools.stripQualifiers(this.identifier) + "\": " + this.rawType + " [");
+        sb.append("\"" + Tools.stripQualifiers(identifier) + "\": " + rawType + " [");
 
-        sb.append(this.abstractType + ", ");
-        sb.append(this.visual);
+        sb.append(abstractType + ", ");
+        sb.append(visual);
         sb.append("]");
 
         return sb.toString();
@@ -162,7 +162,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
      * @return A list of elements which have been modified.
      */
     public ObservableList<Element> getModifiedElements () {
-        return this.modifiedElements;
+        return modifiedElements;
     }
 
     /**
@@ -173,7 +173,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
      * @return A list of elements whose colour should be reset.
      */
     public ObservableList<Element> getResetElements () {
-        return this.resetElements;
+        return resetElements;
     }
 
     /**
@@ -181,9 +181,9 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
      * {@code inactiveElements()}lists.
      */
     public void clearElementLists () {
-        this.modifiedElements.clear();
-        this.resetElements.clear();
-        this.inactiveElements.clear();
+        modifiedElements.clear();
+        resetElements.clear();
+        inactiveElements.clear();
     }
 
     /**
@@ -192,7 +192,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
      * @return The list of inactive elements.
      */
     public ObservableList<Element> getInactiveElements () {
-        return this.inactiveElements;
+        return inactiveElements;
     }
 
     /**
@@ -208,16 +208,16 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
         paint = paint == null ? Color.WHITE : paint;
 
         // Do not reset elements which were modified again.
-        this.resetElements.removeAll(this.modifiedElements);
+        resetElements.removeAll(modifiedElements);
         // Inactive elements should not have their colour reset.
-        this.resetElements.removeAll(this.inactiveElements);
+        resetElements.removeAll(inactiveElements);
 
-        for (Element e : this.resetElements) {
+        for (Element e : resetElements) {
             e.setColor(paint);
         }
 
-        this.resetElements.setAll(this.modifiedElements);
-        this.modifiedElements.clear();
+        resetElements.setAll(modifiedElements);
+        modifiedElements.clear();
     }
 
     /**
@@ -244,20 +244,20 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
         /*
          * Entire structure
          */
-        if (target.identifier.equals(this.identifier) && target.index == null) {
-            this.toggleActive();
+        if (target.identifier.equals(identifier) && target.index == null) {
+            toggleActive();
             return;
         }
 
         /*
          * Single element
          */
-        Element e = this.getElement(target);
+        Element e = getElement(target);
         if (e != null) {
-            if (this.inactiveElements.remove(e)) {
-                this.resetElements.add(e); // Reactive element
+            if (inactiveElements.remove(e)) {
+                resetElements.add(e); // Reactive element
             } else {
-                this.inactiveElements.add(e);
+                inactiveElements.add(e);
                 e.count(OperationType.remove);
             }
         }
@@ -269,7 +269,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
      * @return True if this structure is active.
      */
     public boolean isActive () {
-        return this.active;
+        return active;
     }
 
     /**
@@ -279,8 +279,8 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
      *            The new active status of this DataStructure.
      */
     public void setActive (boolean value) {
-        if (value != this.active) {
-            this.toggleActive();
+        if (value != active) {
+            toggleActive();
         }
     }
 
@@ -288,18 +288,18 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
      * Set the entire structure active or inactive
      */
     public void toggleActive () {
-        this.active = !this.active;
+        active = !active;
 
-        if (this.active) { // Reactive the structure.
-            for (Element e : this.elements) {
+        if (active) { // Reactive the structure.
+            for (Element e : elements) {
                 e.restoreValue();
             }
         } else { // Deactiveate the structure.
-            for (Element e : this.elements) {
+            for (Element e : elements) {
                 e.count(OperationType.remove);
             }
         }
-        this.repaintAll = true;
+        repaintAll = true;
     }
 
     /**
@@ -309,10 +309,10 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
      *            The new VisualType.
      */
     public void setVisual (VisualType vt) {
-        if (vt != this.visual) {
-            this.visual = vt;
-            if (this.visualListener != null) {
-                this.visualListener.visualChanged(vt);
+        if (vt != visual) {
+            visual = vt;
+            if (visualListener != null) {
+                visualListener.visualChanged(vt);
             }
         }
     }
@@ -342,7 +342,7 @@ public abstract class DataStructure extends AnnotatedVariable implements Operati
      *            A VisualListener.
      */
     public void setListener (VisualListener listener) {
-        this.visualListener = listener;
+        visualListener = listener;
     }
 
 }

@@ -41,15 +41,15 @@ public class EllipseElement extends AVElement {
         super.createShape();
         Ellipse ellipse = new Ellipse();
         // Width and height are the size of the bounding box.
-        ellipse.setRadiusX(this.width / 2);
-        ellipse.setRadiusY(this.height / 2);
+        ellipse.setRadiusX(width / 2);
+        ellipse.setRadiusY(height / 2);
         ellipse.setStroke(Color.BLACK);
-        this.shape = ellipse;
+        shape = ellipse;
     }
 
     @Override public void setSize (double newWidth, double newHeight) {
         super.setSize(newWidth, newHeight);
-        Ellipse ellipse = (Ellipse) this.shape;
+        Ellipse ellipse = (Ellipse) shape;
         ellipse.setRadiusX(newWidth / 2);
         ellipse.setRadiusY(newHeight / 2);
     }

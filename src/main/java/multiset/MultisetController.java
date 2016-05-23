@@ -44,52 +44,52 @@ public class MultisetController {
 
     public MultisetController (Stage window) {
         this.window = window;
-        this.previousScene = window.getScene();
-        this.fxmlLoader = new FXMLLoader(this.getClass().getResource("/view/MultisetView.fxml"));
-        this.fxmlLoader.setController(this);
+        previousScene = window.getScene();
+        fxmlLoader = new FXMLLoader(this.getClass().getResource("/view/MultisetView.fxml"));
+        fxmlLoader.setController(this);
         VBox p = null;
         try {
-            p = this.fxmlLoader.load();
+            p = fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.loadNamespaceItems(this.fxmlLoader.getNamespace());
+        loadNamespaceItems(fxmlLoader.getNamespace());
 
         window.setScene(new Scene(p));
-        this.timeline = new Timeline();
-        this.setupTimeline();
+        timeline = new Timeline();
+        setupTimeline();
     }
 
     private void setupTimeline () {
         final int renderTime = 17; // In ms
-        this.timeline.getKeyFrames().add(new KeyFrame(Duration.millis(renderTime), actionEvent -> {
-            this.model.tick(renderTime);
-            this.view.render();
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(renderTime), actionEvent -> {
+            model.tick(renderTime);
+            view.render();
         }));
-        this.timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.setCycleCount(Animation.INDEFINITE);
     }
 
     /**
      * Called when the "Back" button is pressed.
      */
     public void goBackPressed () {
-        this.timeline.stop();
-        this.window.setScene(this.previousScene);
+        timeline.stop();
+        window.setScene(previousScene);
     }
 
     /**
      * Called when the "Go!" button is pressed. (or enter is pressed...)
      */
     public void run () {
-        this.timeline.stop();
-        Canvas ballCanvas = (Canvas) this.fxmlLoader.getNamespace().get("ballCanvas");
+        timeline.stop();
+        Canvas ballCanvas = (Canvas) fxmlLoader.getNamespace().get("ballCanvas");
 
-        iFilter filter = new Filter(this.input.getText(), this.output.getText(), this.cond.getText());
-        ArrayList<Double> list = new RangePatterns(this.range.getText()).getList();
-        this.model = new Model(ballCanvas.getWidth(), ballCanvas.getHeight(), filter, list, this.items);
-        this.view = new View(this.model, ballCanvas);
+        iFilter filter = new Filter(input.getText(), output.getText(), cond.getText());
+        ArrayList<Double> list = new RangePatterns(range.getText()).getList();
+        model = new Model(ballCanvas.getWidth(), ballCanvas.getHeight(), filter, list, items);
+        view = new View(model, ballCanvas);
 
-        this.timeline.play();
+        timeline.play();
     }
 
     /**
@@ -97,7 +97,7 @@ public class MultisetController {
      */
     public void keyListener (KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
-            this.run(); // Run animation
+            run(); // Run animation
             event.consume(); // "You shall not pass! (for safety reasons)"
         }
     }
@@ -109,16 +109,16 @@ public class MultisetController {
      *            The namespace of the FXML loader.
      */
     private void loadNamespaceItems (Map<String, Object> namespace) {
-        this.input = (TextField) namespace.get("input");
-        this.output = (TextField) namespace.get("output");
-        this.cond = (TextField) namespace.get("cond");
-        this.range = (TextField) namespace.get("range");
+        input = (TextField) namespace.get("input");
+        output = (TextField) namespace.get("output");
+        cond = (TextField) namespace.get("cond");
+        range = (TextField) namespace.get("range");
 
         // List stuff
-        this.history = (ListView<String>) namespace.get("collisionHistory");
-        this.items = FXCollections.observableArrayList();
-        this.history.setItems(this.items);
-        this.items.add("History:");
+        history = (ListView<String>) namespace.get("collisionHistory");
+        items = FXCollections.observableArrayList();
+        history.setItems(items);
+        items.add("History:");
     }
 
 }

@@ -16,14 +16,14 @@ public class RgbColor {
     }
 
     public double getR () {
-        return this.r;
+        return r;
     }
 
     public double getG () {
-        return this.g;
+        return g;
     }
 
     public double getB () {
-        return this.b;
+        return b;
     }
 }

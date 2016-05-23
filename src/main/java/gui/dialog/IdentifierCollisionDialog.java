@@ -30,29 +30,29 @@ public class IdentifierCollisionDialog {
         this.parent = parent;
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/dialog/IdentifierCollisionDialog.fxml"));
         fxmlLoader.setController(this);
-        this.root = new Stage();
-        this.root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
-        this.root.initModality(Modality.APPLICATION_MODAL);
-        this.root.setTitle(Const.PROGRAM_NAME + ": Identifier Collision");
-        this.root.initOwner(this.parent);
+        root = new Stage();
+        root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
+        root.initModality(Modality.APPLICATION_MODAL);
+        root.setTitle(Const.PROGRAM_NAME + ": Identifier Collision");
+        root.initOwner(this.parent);
         GridPane p = null;
         try {
             p = fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.root.setOnCloseRequest(event -> {
+        root.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
-            this.answer = KEEP_OLD;
-            this.root.close();
+            answer = KEEP_OLD;
+            root.close();
         });
         fxmlLoader.getNamespace();
-        this.oldStructs = (TextField) fxmlLoader.getNamespace().get("oldStructs");
-        this.newStructs = (TextField) fxmlLoader.getNamespace().get("newStructs");
-        this.memory = (CheckBox) fxmlLoader.getNamespace().get("memory");
+        oldStructs = (TextField) fxmlLoader.getNamespace().get("oldStructs");
+        newStructs = (TextField) fxmlLoader.getNamespace().get("newStructs");
+        memory = (CheckBox) fxmlLoader.getNamespace().get("memory");
         Scene dialogScene = new Scene(p, p.getPrefWidth() - 5, p.getPrefHeight());
-        this.root.setScene(dialogScene);
-        this.root.setResizable(false);
+        root.setScene(dialogScene);
+        root.setResizable(false);
     }
 
     /**
@@ -64,25 +64,25 @@ public class IdentifierCollisionDialog {
     public short show (Collection<DataStructure> oldStructs, Collection<DataStructure> newStructs) {
         this.oldStructs.setText(oldStructs.toString());
         this.newStructs.setText(newStructs.toString());
-        this.root.showAndWait();
-        return this.answer;
+        root.showAndWait();
+        return answer;
     }
 
     public void reject_old () {
-        if (this.memory.isSelected()) {
-            this.answer = ALWAYS_CLEAR_OLD;
+        if (memory.isSelected()) {
+            answer = ALWAYS_CLEAR_OLD;
         } else {
-            this.answer = CLEAR_OLD;
+            answer = CLEAR_OLD;
         }
-        this.root.close();
+        root.close();
     }
 
     public void keep_old () {
-        if (this.memory.isSelected()) {
-            this.answer = ALWAYS_KEEP_OLD;
+        if (memory.isSelected()) {
+            answer = ALWAYS_KEEP_OLD;
         } else {
-            this.answer = KEEP_OLD;
+            answer = KEEP_OLD;
         }
-        this.root.close();
+        root.close();
     }
 }

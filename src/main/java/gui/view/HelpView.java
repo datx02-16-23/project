@@ -41,40 +41,40 @@ public class HelpView {
      */
     public HelpView (Window owner) {
         this.owner = owner;
-        this.init();
+        init();
     }
 
     private void init () {
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/view/HelpView.fxml"));
         fxmlLoader.setController(this);
 
-        this.stage.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon.png")));
-        this.stage.initModality(Modality.NONE);
-        this.stage.setTitle(Const.PROGRAM_NAME + ": Help");
-        this.stage.initOwner(this.owner);
+        stage.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon.png")));
+        stage.initModality(Modality.NONE);
+        stage.setTitle(Const.PROGRAM_NAME + ": Help");
+        stage.initOwner(owner);
         try {
-            this.root = fxmlLoader.load();
+            root = fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.stage.setOnCloseRequest(event -> {
+        stage.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
-            this.stopBoxRotation();
+            stopBoxRotation();
             ;
-            this.stage.close();
+            stage.close();
         });
 
-        this.createCubes(fxmlLoader);
+        createCubes(fxmlLoader);
 
-        Scene dialogScene = new Scene(this.root, this.owner.getWidth() * 0.75, this.owner.getHeight() * 0.75);
-        this.stage.setScene(dialogScene);
+        Scene dialogScene = new Scene(root, owner.getWidth() * 0.75, owner.getHeight() * 0.75);
+        stage.setScene(dialogScene);
     }
 
     public void show () {
-        this.startBoxRotation();
-        this.stage.show();
-        this.stage.setWidth(this.owner.getWidth() * 0.75);
-        this.stage.setHeight(this.owner.getHeight() * 0.75);
+        startBoxRotation();
+        stage.show();
+        stage.setWidth(owner.getWidth() * 0.75);
+        stage.setHeight(owner.getHeight() * 0.75);
     }
 
     private void createCubes (FXMLLoader fxmlLoader) {
@@ -93,8 +93,8 @@ public class HelpView {
             box.setHeight(Const.DEFAULT_ELEMENT_HEIGHT);
             box.setDepth(Const.DEFAULT_ELEMENT_WIDTH + Const.DEFAULT_ELEMENT_HEIGHT);
             box.setOnMouseClicked(event -> {
-                this.about(ot);
-                this.boxClicked(box);
+                about(ot);
+                boxClicked(box);
             });
 
             // Randomise rotation
@@ -111,7 +111,7 @@ public class HelpView {
             RotateTransition rt = new RotateTransition(Duration.seconds(10), box);
             rt.setByAngle(360);
             rt.setCycleCount(Animation.INDEFINITE);
-            this.rotTransitions.add(rt);
+            rotTransitions.add(rt);
 
             /*
              * Create label
@@ -143,42 +143,42 @@ public class HelpView {
     private boolean playsound = true;
 
     private void about (OperationType ot) {
-        if (this.playsound) {
+        if (playsound) {
             URL resource = this.getClass().getResource("/assets/shortcircuit.mp3");
             Media media = new Media(resource.toString());
             MediaPlayer mp3 = new MediaPlayer(media);
             mp3.play();
             Main.console.err("Operation info not implemented yet.");
-            this.playsound = false;
+            playsound = false;
         }
 
-        this.root.setCenter(new Label(ot.name()));
+        root.setCenter(new Label(ot.name()));
     }
 
     private final ArrayList<RotateTransition> rotTransitions = new ArrayList<RotateTransition>();
 
     private void stopBoxRotation () {
-        for (RotateTransition rt : this.rotTransitions) {
+        for (RotateTransition rt : rotTransitions) {
             rt.stop();
         }
     }
 
     private void startBoxRotation () {
-        for (RotateTransition rt : this.rotTransitions) {
+        for (RotateTransition rt : rotTransitions) {
             rt.play();
         }
     }
 
     public void aboutArray () {
-        this.root.setCenter(new Label("Arrays r gud"));
+        root.setCenter(new Label("Arrays r gud"));
     }
 
     public void aboutOrphan () {
-        this.root.setCenter(new Label("orphans r gudder"));
+        root.setCenter(new Label("orphans r gudder"));
     }
 
     public void aboutTree () {
-        this.root.setCenter(new Label("tress r guddest"));
+        root.setCenter(new Label("tress r guddest"));
     }
 
     public void onMouseClicked (Event me) {

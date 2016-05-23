@@ -21,7 +21,7 @@ public class OperationCounter {
      * @return The reads property.
      */
     public SimpleIntegerProperty readsProperty () {
-        return this.read;
+        return read;
     }
 
     /**
@@ -30,7 +30,7 @@ public class OperationCounter {
      * @return the Writes property.
      */
     public SimpleIntegerProperty writesProperty () {
-        return this.write;
+        return write;
     }
 
     /**
@@ -39,7 +39,7 @@ public class OperationCounter {
      * @return the Swaps property.
      */
     public SimpleIntegerProperty swapsProperty () {
-        return this.swap;
+        return swap;
     }
 
     /**
@@ -48,7 +48,7 @@ public class OperationCounter {
      * @return the Removes property.
      */
     public SimpleIntegerProperty removesProperty () {
-        return this.remove;
+        return remove;
     }
 
     /**
@@ -57,7 +57,7 @@ public class OperationCounter {
      * @return the Messages property.
      */
     public SimpleIntegerProperty messagesProperty () {
-        return this.message;
+        return message;
     }
 
     /**
@@ -67,7 +67,7 @@ public class OperationCounter {
      *            The operation to count.
      */
     public void count (OperationType op) {
-        this.countOperation(op);
+        countOperation(op);
     }
 
     /**
@@ -79,19 +79,19 @@ public class OperationCounter {
     public void countOperation (OperationType type) {
         switch (type) {
         case message:
-            this.message.setValue(this.message.getValue() + 1);
+            message.setValue(message.getValue() + 1);
             break;
         case read:
-            this.read.setValue(this.read.getValue() + 1);
+            read.setValue(read.getValue() + 1);
             break;
         case remove:
-            this.remove.setValue(this.remove.getValue() + 1);
+            remove.setValue(remove.getValue() + 1);
             break;
         case swap:
-            this.swap.setValue(this.swap.getValue() + 1);
+            swap.setValue(swap.getValue() + 1);
             break;
         case write:
-            this.write.setValue(this.write.getValue() + 1);
+            write.setValue(write.getValue() + 1);
             break;
         default:
             break;
@@ -105,7 +105,7 @@ public class OperationCounter {
      * @return The number of Read operations.
      */
     public int getReads () {
-        return this.read.get();
+        return read.get();
     }
 
     /**
@@ -114,7 +114,7 @@ public class OperationCounter {
      * @return The number of Writes operations.
      */
     public int getWrites () {
-        return this.write.get();
+        return write.get();
     }
 
     /**
@@ -123,7 +123,7 @@ public class OperationCounter {
      * @return The number of Swap operations.
      */
     public int getSwap () {
-        return this.swap.get();
+        return swap.get();
     }
 
     /**
@@ -132,7 +132,7 @@ public class OperationCounter {
      * @return The number of Remove operations.
      */
     public int getRemove () {
-        return this.remove.get();
+        return remove.get();
     }
 
     /**
@@ -141,27 +141,27 @@ public class OperationCounter {
      * @return The number of Message operations.
      */
     public int getMessage () {
-        return this.message.get();
+        return message.get();
     }
 
     /**
      * Reset the counter.
      */
     public void reset () {
-        this.read.set(0);
-        this.write.set(0);
-        this.swap.set(0);
-        this.remove.set(0);
-        this.message.set(0);
+        read.set(0);
+        write.set(0);
+        swap.set(0);
+        remove.set(0);
+        message.set(0);
     }
 
     /**
      * Print the recorded statistics using the {@link #GUIConsole}.
      */
     public void printStats () {
-        Main.console.info("Read: " + this.read.intValue());
-        Main.console.info("Write: " + this.write.intValue());
-        Main.console.info("Swap: " + this.swap.intValue());
+        Main.console.info("Read: " + read.intValue());
+        Main.console.info("Write: " + write.intValue());
+        Main.console.info("Swap: " + swap.intValue());
         // Main.console.info("Remove: " + remove.intValue());
         // Main.console.info("Message: " + message.intValue());
     }

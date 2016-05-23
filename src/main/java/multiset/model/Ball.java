@@ -17,58 +17,58 @@ public class Ball implements iValueContainer {
         this.vy = vy;
         this.r = r;
         this.value = value;
-        this.color = new RgbColor();
+        color = new RgbColor();
     }
 
     public boolean collidesWith (Ball ball) {
-        double xDiff = this.getX() - ball.getX();
-        double yDiff = this.getY() - ball.getY();
+        double xDiff = getX() - ball.getX();
+        double yDiff = getY() - ball.getY();
         double distance = Math.sqrt(xDiff * xDiff + yDiff * yDiff);
-        return distance < this.getR() + ball.getR();
+        return distance < getR() + ball.getR();
     }
 
     public void move (double deltaT) {
-        this.x += this.vx * deltaT;
-        this.y += this.vy * deltaT;
+        x += vx * deltaT;
+        y += vy * deltaT;
     }
 
     public void setGravity (boolean value) {
     }
 
     public RgbColor getColor () {
-        return this.color;
+        return color;
     }
 
     public double getMass () {
-        return this.r * this.r * Math.PI;
+        return r * r * Math.PI;
     }
 
     @Override public String toString () {
-        return this.x + ", " + this.y + "\t" + this.vx + ", " + this.vy;
+        return x + ", " + y + "\t" + vx + ", " + vy;
     }
 
     public Vector getMovementVector () {
-        return new Vector(this.vx, this.vy);
+        return new Vector(vx, vy);
     }
 
     public double getX () {
-        return this.x;
+        return x;
     }
 
     public double getY () {
-        return this.y;
+        return y;
     }
 
     public double getR () {
-        return this.r;
+        return r;
     }
 
     public double getVx () {
-        return this.vx;
+        return vx;
     }
 
     public double getVy () {
-        return this.vy;
+        return vy;
     }
 
     public void setX (double x) {
@@ -84,6 +84,6 @@ public class Ball implements iValueContainer {
     }
 
     @Override public double getValue () {
-        return this.value;
+        return value;
     }
 }

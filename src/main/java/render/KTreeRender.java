@@ -29,7 +29,7 @@ import render.element.ElementShape;
  */
 public class KTreeRender extends ARender {
 
-    public static final ElementShape DEFAULT_ELEMENT_STYLE = ElementShape.RECTANGLE;
+    public static final ElementShape DEFAULT_ELEMENT_STYLE = ElementShape.ELLIPSE;
 
     // ============================================================= //
     /*
@@ -91,8 +91,8 @@ public class KTreeRender extends ARender {
     public KTreeRender (DataStructure struct, int K, double width, double height, double hspace, double vspace) {
         super(struct, width, height, hspace, vspace);
         this.K = K < 2 ? 2 : K;
-        this.contentPane.getChildren().add(this.nodeConnectorLines);
-        this.nodeConnectorLines.toBack();
+        contentPane.getChildren().add(nodeConnectorLines);
+        nodeConnectorLines.toBack();
     }
 
     // ============================================================= //
@@ -104,9 +104,9 @@ public class KTreeRender extends ARender {
     // ============================================================= //
 
     @Override public void render () {
-        if (this.struct.repaintAll) {
-            this.struct.repaintAll = false;
-            this.repaintAll();
+        if (struct.repaintAll) {
+            struct.repaintAll = false;
+            repaintAll();
         }
         super.render();
     }
@@ -117,7 +117,7 @@ public class KTreeRender extends ARender {
             return false; // Nothing to render.
         }
 
-        this.createGhosts(this.defaultNodePane.getChildren().size());
+        createGhosts(defaultNodePane.getChildren().size());
         return true;
     }
 
@@ -130,7 +130,7 @@ public class KTreeRender extends ARender {
     public void setK (int K) {
         if (this.K != K) {
             this.K = K;
-            this.repaintAll();
+            repaintAll();
         }
     }
 
@@ -153,14 +153,14 @@ public class KTreeRender extends ARender {
     @Override protected void bellsAndWhistles (Element ae, AVElement childVis) {
         // System.out.println("ktree: baw shape = " + childVis.getShape());
 
-        new IndexedElement(0, new int[] { (((IndexedElement) ae).getIndex() [0] - 1) / this.K });
+        new IndexedElement(0, new int[] { (((IndexedElement) ae).getIndex() [0] - 1) / K });
 
         // VisualElement parentVis = visualElementsMapping.get(parent_clone);
-        AVElement parentVis = this.visualMap
-                .get(Arrays.toString(new int[] { (((IndexedElement) ae).getIndex() [0] - 1) / this.K }));
+        AVElement parentVis = visualMap
+                .get(Arrays.toString(new int[] { (((IndexedElement) ae).getIndex() [0] - 1) / K }));
 
-        double dx = this.nodeWidth / 2;
-        double dy = this.nodeHeight / 2;
+        double dx = nodeWidth / 2;
+        double dy = nodeHeight / 2;
 
         // Connect child to parent
         if (parentVis != null) {
@@ -183,7 +183,7 @@ public class KTreeRender extends ARender {
             line.setTranslateX(dx);
             line.setTranslateY(dy);
 
-            this.nodeConnectorLines.getChildren().add(line);
+            nodeConnectorLines.getChildren().add(line);
         }
     }
 
@@ -195,15 +195,15 @@ public class KTreeRender extends ARender {
      */
     private void createGhosts (int index) {
         AVElement ghostVis = null;
-        for (; index < this.completedSize; index++) {
+        for (; index < completedSize; index++) {
             IndexedElement ghostElem = new IndexedElement(Double.MAX_VALUE, new int[] { index });
             ghostVis = this.createVisualElement(ghostElem);
             ghostVis.setLayoutX(this.getX(ghostElem));
             ghostVis.setLayoutY(this.getY(ghostElem));
             ghostVis.setGhost(true);
-            this.bellsAndWhistles(ghostElem, ghostVis);
+            bellsAndWhistles(ghostElem, ghostVis);
             ghostVis.setInfoPos(Pos.CENTER);
-            this.defaultNodePane.getChildren().add(ghostVis);
+            defaultNodePane.getChildren().add(ghostVis);
         }
     }
 
@@ -216,32 +216,31 @@ public class KTreeRender extends ARender {
         double x;
         int breadth, depth;
         if (index == 0) { // Root element
-            double p = Tools.pow(this.K, this.totDepth) / 2;
-            x = this.hSpace + (this.hSpace + this.nodeWidth) * p
-                    - (this.K + 1) % 2 * (this.nodeWidth + this.hSpace) / 2;
+            double p = Tools.pow(K, totDepth) / 2;
+            x = hSpace + (hSpace + nodeWidth) * p - (K + 1) % 2 * (nodeWidth + hSpace) / 2;
         } else {
-            depth = this.getDepth(index);
-            breadth = this.getBreadth(index, depth);
+            depth = getDepth(index);
+            breadth = getBreadth(index, depth);
             x = this.getX(breadth, depth);
         }
 
-        return x + this.hSpace + Tools.getAdjustedX(this, e);
+        return x + hSpace + Tools.getAdjustedX(this, e);
     }
 
     private double getX (int breadth, int depth) {
         // Stepsize at this depth. Farther from root smaller steps
-        double L = (double) Tools.pow(this.K, this.totDepth) / (double) Tools.pow(this.K, depth);
+        double L = (double) Tools.pow(K, totDepth) / (double) Tools.pow(K, depth);
         // Apply indentation for every row except the last
-        double x = this.hSpace;
+        double x = hSpace;
 
-        if (depth < this.totDepth) {
-            x = x + (this.hSpace + this.nodeWidth) * ((L - 1) / 2);
+        if (depth < totDepth) {
+            x = x + (hSpace + nodeWidth) * ((L - 1) / 2);
         }
         // Dont multiply by zero
         if (breadth > 0) {
-            return this.hSpace + x + breadth * L * (this.hSpace + this.nodeWidth);
+            return hSpace + x + breadth * L * (hSpace + nodeWidth);
         } else {
-            return this.hSpace + x;
+            return hSpace + x;
         }
     }
 
@@ -255,27 +254,27 @@ public class KTreeRender extends ARender {
         double y = 0;
 
         if (index != 0) {
-            y = this.getY(this.getDepth(index)); // Should not be used for root.
+            y = this.getY(getDepth(index)); // Should not be used for root.
         }
 
         return y + Tools.getAdjustedY(this, e);
     }
 
     private double getY (int depth) {
-        return depth * (this.nodeHeight + this.vSpace);
+        return depth * (nodeHeight + vSpace);
     }
 
     private int getDepth (int index) {
         int depth = 1;
         // Calculate depth and breadth
-        while (Tools.lowerLevelSum(depth, this.K) <= index) {
+        while (Tools.lowerLevelSum(depth, K) <= index) {
             depth++;
         }
         return depth - 1;
     }
 
     private int getBreadth (int index, int depth) {
-        return index - Tools.lowerLevelSum(depth, this.K);
+        return index - Tools.lowerLevelSum(depth, K);
     }
 
     /**
@@ -283,43 +282,43 @@ public class KTreeRender extends ARender {
      */
 
     private void calculateDepthAndBreadth () {
-        if (this.K < 2) {
+        if (K < 2) {
             return;
             // Fixed infinite recursion case caused by
             // superconstructor call before K could be validated by local
             // constructor.
         }
 
-        double structSize = this.struct.getElements().size();
-        this.totDepth = 0;
+        double structSize = struct.getElements().size();
+        totDepth = 0;
 
         // Calculate the minimum depth which can hold all elements of the array.
-        while (Tools.lowerLevelSum(this.totDepth, this.K) < structSize) {
-            this.totDepth++;
+        while (Tools.lowerLevelSum(totDepth, K) < structSize) {
+            totDepth++;
         }
-        this.totDepth--;
-        this.completedSize = Tools.lowerLevelSum(this.totDepth + 1, this.K);
-        this.totBreadth = Tools.pow(this.K, this.totDepth);
+        totDepth--;
+        completedSize = Tools.lowerLevelSum(totDepth + 1, K);
+        totBreadth = Tools.pow(K, totDepth);
     }
 
     @Override public void calculateSize () {
-        this.calculateDepthAndBreadth();
-        this.renderWidth = this.totBreadth * (this.nodeWidth + this.hSpace) + this.hSpace * 2;
-        this.renderHeight = (this.totDepth + 1) * (this.nodeHeight + this.vSpace) + this.vSpace;
-        this.setRestricedSize(this.renderWidth, this.renderHeight);
+        calculateDepthAndBreadth();
+        renderWidth = totBreadth * (nodeWidth + hSpace) + hSpace * 3;
+        renderHeight = (totDepth + 1) * (nodeHeight + vSpace) + vSpace;
+        setRestricedSize(renderWidth, renderHeight);
     }
 
     @Override protected AVElement createVisualElement (Element e) {
-        this.elementStyle = this.elementStyle == null ? DEFAULT_ELEMENT_STYLE : this.elementStyle;
-        AVElement ve = AVElementFactory.shape(this.elementStyle, e, this.nodeWidth, this.nodeHeight);
+        elementStyle = elementStyle == null ? DEFAULT_ELEMENT_STYLE : elementStyle;
+        AVElement ve = AVElementFactory.shape(elementStyle, e, nodeWidth, nodeHeight);
         ve.setInfoPos(Pos.TOP_LEFT);
         ve.setInfoArray(((IndexedElement) e).getIndex());
         return ve;
     }
 
     @Override protected AVElement createVisualElement (double value, Color color) {
-        this.elementStyle = this.elementStyle == null ? DEFAULT_ELEMENT_STYLE : this.elementStyle;
-        AVElement ve = AVElementFactory.shape(this.elementStyle, value, color, this.nodeWidth, this.nodeHeight);
+        elementStyle = elementStyle == null ? DEFAULT_ELEMENT_STYLE : elementStyle;
+        AVElement ve = AVElementFactory.shape(elementStyle, value, color, nodeWidth, nodeHeight);
         ve.setInfoPos(null);
         return ve;
     }

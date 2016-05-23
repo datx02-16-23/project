@@ -70,35 +70,35 @@ public class Visualization extends StackPane {
         this.model = model;
 
         // Shared animation space
-        this.animationPane.setMouseTransparent(true);
-        this.animationPane.maxWidth(Double.MAX_VALUE);
-        this.animationPane.maxHeight(Double.MAX_VALUE);
-        this.useAnimation = true;
+        animationPane.setMouseTransparent(true);
+        animationPane.maxWidth(Double.MAX_VALUE);
+        animationPane.maxHeight(Double.MAX_VALUE);
+        useAnimation = true;
 
         // Add stacked canvases
-        this.getChildren().addAll(Tools.HINT_PANE, this.managerPane, this.animationPane);
+        getChildren().addAll(Tools.HINT_PANE, managerPane, animationPane);
     }
 
     /**
      * Clear the visualization.
      */
     public void clear () {
-        this.managerMap.clear();
-        this.managerPane.getChildren().clear();
-        this.animationPane.getChildren().clear();
+        managerMap.clear();
+        managerPane.getChildren().clear();
+        animationPane.getChildren().clear();
         Tools.HINT_PANE.setVisible(true);
     }
 
     public void clearAndCreateVisuals () {
-        this.clear();
-        for (DataStructure struct : this.model.getStructures().values()) {
-            ARenderManager manager = new ARenderManager(struct, this.animationPane);
-            this.managerPane.getChildren().add(manager);
-            this.managerMap.put(struct.identifier, manager);
+        clear();
+        for (DataStructure struct : model.getStructures().values()) {
+            ARenderManager manager = new ARenderManager(struct, animationPane);
+            managerPane.getChildren().add(manager);
+            managerMap.put(struct.identifier, manager);
         }
         // overlay.expandAll();
-        this.placeVisuals();
-        Tools.HINT_PANE.setVisible(this.managerPane.getChildren().isEmpty());
+        placeVisuals();
+        Tools.HINT_PANE.setVisible(managerPane.getChildren().isEmpty());
     }
 
     /**
@@ -108,11 +108,11 @@ public class Visualization extends StackPane {
      *            An operation to animate.
      */
     public void render (Operation op) {
-        for (Object rm : this.managerPane.getChildren()) {
+        for (Object rm : managerPane.getChildren()) {
             ((ARenderManager) rm).getRender().render();
         }
-        if (this.useAnimation && op != null) {
-            this.animate(op);
+        if (useAnimation && op != null) {
+            animate(op);
         }
     }
 
@@ -120,7 +120,7 @@ public class Visualization extends StackPane {
      * Force Render initialisation.
      */
     public void init () {
-        for (Object rm : this.managerPane.getChildren()) {
+        for (Object rm : managerPane.getChildren()) {
             ((ARenderManager) rm).getRender().repaintAll();
         }
 
@@ -145,7 +145,7 @@ public class Visualization extends StackPane {
      *            The new animation option.
      */
     public void setAnimate (boolean value) {
-        this.useAnimation = value;
+        useAnimation = value;
     }
 
     /**
@@ -161,13 +161,13 @@ public class Visualization extends StackPane {
         switch (op.operation) {
         case read:
         case write:
-            this.animateReadWrite((OP_ReadWrite) op);
+            animateReadWrite((OP_ReadWrite) op);
             break;
         case remove:
-            this.animateToggleScope((OP_ToggleScope) op);
+            animateToggleScope((OP_ToggleScope) op);
             break;
         case swap:
-            this.animateSwap((OP_Swap) op);
+            animateSwap((OP_Swap) op);
             break;
         default:
             // Do nothing.
@@ -182,11 +182,11 @@ public class Visualization extends StackPane {
         /**
          * Var1 params
          */
-        for (DataStructure struct : this.model.getStructures().values()) {
+        for (DataStructure struct : model.getStructures().values()) {
             e = struct.getElement(tar);
             if (e != null) {
-                ARender render = this.managerMap.get(struct.identifier).getRender();
-                render.animateToggleScope(e, this.millis);
+                ARender render = managerMap.get(struct.identifier).getRender();
+                render.animateToggleScope(e, millis);
                 if (Debug.ERR) {
                     System.err.println("\nVisualization.animateRemove():");
                 }
@@ -206,20 +206,20 @@ public class Visualization extends StackPane {
         /**
          * Source paraeters
          */
-        for (DataStructure struct : this.model.getStructures().values()) {
+        for (DataStructure struct : model.getStructures().values()) {
             src_e = struct.getElement(source);
             if (src_e != null) {
-                src_render = this.managerMap.get(struct.identifier).getRender();
+                src_render = managerMap.get(struct.identifier).getRender();
                 break; // Source found
             }
         }
         /**
          * Target paraeters
          */
-        for (DataStructure struct : this.model.getStructures().values()) {
+        for (DataStructure struct : model.getStructures().values()) {
             tar_e = struct.getElement(target);
             if (tar_e != null) {
-                tar_render = this.managerMap.get(struct.identifier).getRender();
+                tar_render = managerMap.get(struct.identifier).getRender();
                 break; // Target found
             }
         }
@@ -235,13 +235,13 @@ public class Visualization extends StackPane {
          */
         if (src_e != null && tar_e != null) {
             // Render data transfer between two known structures
-            tar_render.animateReadWrite(src_e, src_render, tar_e, tar_render, this.millis);
+            tar_render.animateReadWrite(src_e, src_render, tar_e, tar_render, millis);
         } else if (tar_e == null && src_e != null) {
             // Render read without target
-            src_render.animateReadWrite(src_e, src_render, null, null, this.millis);
+            src_render.animateReadWrite(src_e, src_render, null, null, millis);
         } else if (src_e == null && tar_e != null) {
             // Render write without source
-            tar_render.animateReadWrite(null, null, tar_e, tar_render, this.millis);
+            tar_render.animateReadWrite(null, null, tar_e, tar_render, millis);
         }
     }
 
@@ -262,20 +262,20 @@ public class Visualization extends StackPane {
         /**
          * Var1 params
          */
-        for (DataStructure struct : this.model.getStructures().values()) {
+        for (DataStructure struct : model.getStructures().values()) {
             v1_e = struct.getElement(var1);
             if (v1_e != null) {
-                v1_render = this.managerMap.get(struct.identifier).getRender();
+                v1_render = managerMap.get(struct.identifier).getRender();
                 break;
             }
         }
         /**
          * Var2 params
          */
-        for (DataStructure struct : this.model.getStructures().values()) {
+        for (DataStructure struct : model.getStructures().values()) {
             v2_e = struct.getElement(var2);
             if (v2_e != null) {
-                v2_render = this.managerMap.get(struct.identifier).getRender();
+                v2_render = managerMap.get(struct.identifier).getRender();
                 break;
             }
         }
@@ -287,8 +287,8 @@ public class Visualization extends StackPane {
             System.err.println("\nVisualization.animateSwap():");
         }
 
-        v1_render.animateSwap(v1_e, v1_render, v2_e, v2_render, this.millis);
-        v2_render.animateSwap(v2_e, v2_render, v1_e, v1_render, this.millis);
+        v1_render.animateSwap(v1_e, v1_render, v2_e, v2_render, millis);
+        v2_render.animateSwap(v2_e, v2_render, v1_e, v1_render, millis);
     }
 
     /**
@@ -313,35 +313,35 @@ public class Visualization extends StackPane {
 	int sWExpand = 0; // Bar Chart.
 	int northEast = 0;
 	int nEExpand = 0; // Single elements.
-	for (Node node : this.managerPane.getChildren()) {
+	for (Node node : managerPane.getChildren()) {
 	    arm = (ARenderManager) node;
 
 	    switch (arm.getStructure().visual) {
 	    case single:
 		yPos = northEast * 120 + margin;
-		xPos = this.getWidth() - (150 + margin) * (nEExpand + 1);
-		if (!(this.checkXPos(xPos) && this.checkYPos(yPos))) {
+		xPos = getWidth() - (150 + margin) * (nEExpand + 1);
+		if (!(checkXPos(xPos) && checkYPos(yPos))) {
 		    northEast = 0;
 		    nEExpand++;
 		    yPos = northEast * 120 + margin;
-		    xPos = this.getWidth() - 150 * (nEExpand + 1) - margin;
+		    xPos = getWidth() - 150 * (nEExpand + 1) - margin;
 		}
 		northEast++;
 		break;
 	    case bar:
-		xPos = margin + this.getWidth() / 3 * sWExpand;
-		yPos = this.getHeight() - (margin + Const.DEFAULT_RENDER_HEIGHT / 3) - margin * 3;
+		xPos = margin + getWidth() / 3 * sWExpand;
+		yPos = getHeight() - (margin + Const.DEFAULT_RENDER_HEIGHT / 3) - margin * 3;
 		if (southWest > 0) {
 		    sWExpand++;
-		    xPos = margin + this.getWidth() / 3 * sWExpand;
-		    yPos = this.getHeight() - (margin + Const.DEFAULT_RENDER_HEIGHT / 3) - margin * 3;
+		    xPos = margin + getWidth() / 3 * sWExpand;
+		    yPos = getHeight() - (margin + Const.DEFAULT_RENDER_HEIGHT / 3) - margin * 3;
 		}
 		southWest++;
 		break;
 	    default:
-		xPos = margin + this.getWidth() * nWExpand;
+		xPos = margin + getWidth() * nWExpand;
 		yPos = (margin + Const.DEFAULT_RENDER_HEIGHT) * northWest + margin;
-		if (!(this.checkXPos(xPos) & this.checkYPos(yPos))) {
+		if (!(checkXPos(xPos) & checkYPos(yPos))) {
 		    nWExpand++; // TODO
 		}
 		northWest++;
@@ -350,7 +350,7 @@ public class Visualization extends StackPane {
 	    }
 
 	    // Make sure users can see the render.
-	    if (this.checkPositions(xPos, yPos) == false) {
+	    if (checkPositions(xPos, yPos) == false) {
 		// Do not remove this printout //RS
 		if (Debug.ERR) {
 		    System.err.println("Using default placement for \"" + arm.getStructure() + "\".");
@@ -373,15 +373,15 @@ public class Visualization extends StackPane {
     private boolean checkPositions(double xPos, double yPos) {
 	boolean result = true;
 
-	if (this.checkXPos(xPos) == false) {
+	if (checkXPos(xPos) == false) {
 	    if (Debug.OUT) {
-		System.err.println("Bad X-Coordinate: " + xPos + " not in " + this.xRange() + ".");
+		System.err.println("Bad X-Coordinate: " + xPos + " not in " + xRange() + ".");
 	    }
 	    result = false;
 	}
-	if (this.checkYPos(yPos) == false) {
+	if (checkYPos(yPos) == false) {
 	    if (Debug.OUT) {
-		System.err.println("Bad Y-Coordinate: " + yPos + " not in " + this.yRange() + ".");
+		System.err.println("Bad Y-Coordinate: " + yPos + " not in " + yRange() + ".");
 	    }
 	    result = false;
 	}
@@ -397,7 +397,7 @@ public class Visualization extends StackPane {
      * @return True if the coordinate good, false otherwise.
      */
     public boolean checkXPos(double xPos) {
-	return !(xPos < this.getXMin() || xPos > this.getXMax());
+	return !(xPos < getXMin() || xPos > getXMax());
     }
 
     /**
@@ -406,7 +406,7 @@ public class Visualization extends StackPane {
      * @return The maximum acceptable X-Coordinate.
      */
     public double getXMax() {
-	return this.getWidth() - 100;
+	return getWidth() - 100;
     }
 
     /**
@@ -427,7 +427,7 @@ public class Visualization extends StackPane {
      */
 
     public boolean checkYPos(double yPos) {
-	return !(yPos < this.getYMin() || yPos > this.getYMax());
+	return !(yPos < getYMin() || yPos > getYMax());
     }
 
     /**
@@ -436,7 +436,7 @@ public class Visualization extends StackPane {
      * @return The maximum acceptable Y-Coordinate.
      */
     public double getYMax() {
-	return this.getHeight() - 100;
+	return getHeight() - 100;
     }
 
     /**
@@ -454,7 +454,7 @@ public class Visualization extends StackPane {
      * @return A String representing the range
      */
     public String xRange() {
-	return "[" + this.getXMin() + ", " + this.getXMax() + "]";
+	return "[" + getXMin() + ", " + getXMax() + "]";
     }
 
     /**
@@ -463,7 +463,7 @@ public class Visualization extends StackPane {
      * @return A String representing the range
      */
     public String yRange() {
-	return "[" + this.getYMin() + ", " + this.getYMax() + "]";
+	return "[" + getYMin() + ", " + getYMax() + "]";
     }
 
     /**
@@ -476,10 +476,10 @@ public class Visualization extends StackPane {
 
 	public HintPane() {
 	    Image image = new Image(Controller.class.getResourceAsStream("/assets/upload.png"));
-	    this.setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT,
+	    setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT,
 		    BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
 		    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false))));
-	    this.setVisible(true);
+	    setVisible(true);
 	}
     }
 
@@ -494,12 +494,12 @@ public class Visualization extends StackPane {
      * Reset the renders' states.
      */
     public void reset() {
-	for(ARenderManager rm : this.managerMap.values()){
+	for(ARenderManager rm : managerMap.values()){
 	    rm.reset();
 	}
     }
 
     public Collection<ARenderManager> getManagers(){
-	return this.managerMap.values();
+	return managerMap.values();
     }
 }

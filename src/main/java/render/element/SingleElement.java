@@ -38,9 +38,9 @@ public class SingleElement extends RectangleElement {
 
     @Override public void createShape () {
         super.createShape();
-        Rectangle rect = (Rectangle) this.shape;
-        rect.setArcWidth(this.width / 3);
-        rect.setArcHeight(this.height / 3);
+        Rectangle rect = (Rectangle) shape;
+        rect.setArcWidth(width / 3);
+        rect.setArcHeight(height / 3);
     }
 
 }

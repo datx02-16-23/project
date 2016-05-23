@@ -18,11 +18,11 @@ public enum Bdc {
     }
 
     public String getRepresentation () {
-        return this.representation;
+        return representation;
     }
 
     public iBdc getBdc () {
-        return this.bdc;
+        return bdc;
     }
 
     public static iBdc getBdc (String representation) {

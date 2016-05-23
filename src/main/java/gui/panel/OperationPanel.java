@@ -41,25 +41,25 @@ public class OperationPanel extends Pane {
             System.exit(-1);
         }
         // Content size
-        root.prefHeightProperty().bind(this.heightProperty());
-        root.prefWidthProperty().bind(this.widthProperty());
+        root.prefHeightProperty().bind(heightProperty());
+        root.prefWidthProperty().bind(widthProperty());
         Map<String, Object> namespace = fxmlLoader.getNamespace();
-        this.currOpTextField = (TextField) namespace.get("currOpTextField");
-        this.currOpTextField.setOnAction(event -> {
-            this.textFieldOnAction();
+        currOpTextField = (TextField) namespace.get("currOpTextField");
+        currOpTextField.setOnAction(event -> {
+            textFieldOnAction();
         });
         // Fetch namespace items
-        this.totNrOfOpLabel = (Label) namespace.get("totNrOfOpLabel");
-        this.opProgress = (ProgressBar) namespace.get("opProgress");
-        this.operationHistory = (ListView<Operation>) namespace.get("operationHistory");
+        totNrOfOpLabel = (Label) namespace.get("totNrOfOpLabel");
+        opProgress = (ProgressBar) namespace.get("opProgress");
+        operationHistory = (ListView<Operation>) namespace.get("operationHistory");
         // List stuff
-        this.items = FXCollections.observableArrayList();
-        this.operationHistory.setItems(this.items);
-        this.selectionModel = this.operationHistory.getSelectionModel();
-        this.focusModel = this.operationHistory.getFocusModel();
+        items = FXCollections.observableArrayList();
+        operationHistory.setItems(items);
+        selectionModel = operationHistory.getSelectionModel();
+        focusModel = operationHistory.getFocusModel();
         // Finishing touches and build
-        this.opProgress.setProgress(-1); // Make the thingy bounce
-        this.getChildren().add(root);
+        opProgress.setProgress(-1); // Make the thingy bounce
+        getChildren().add(root);
     }
 
     /**
@@ -74,16 +74,16 @@ public class OperationPanel extends Pane {
     public void update (int index, boolean jump) {
         // List selection and position
         if (jump) {
-            this.selectionModel.select(index);
-            this.focusModel.focus(index);
-            this.operationHistory.scrollTo(index - 1);
+            selectionModel.select(index);
+            focusModel.focus(index);
+            operationHistory.scrollTo(index - 1);
         }
-        this.currOpTextField.setText("" + index);
-        int totItems = this.items.size();
-        this.totNrOfOpLabel.setText("/ " + totItems);
+        currOpTextField.setText("" + index);
+        int totItems = items.size();
+        totNrOfOpLabel.setText("/ " + totItems);
         // Progress bar
         double progress = totItems == 0 ? -1 : (double) index / (double) totItems;
-        this.opProgress.setProgress(progress);
+        opProgress.setProgress(progress);
     }
 
     /**
@@ -92,7 +92,7 @@ public class OperationPanel extends Pane {
      * @return The items shown by this OperationPanel.
      */
     public ObservableList<Operation> getItems () {
-        return this.items;
+        return items;
     }
 
     /**
@@ -101,7 +101,7 @@ public class OperationPanel extends Pane {
      * @return The index of the selected Operation.
      */
     public int getIndex () {
-        return this.selectionModel.getSelectedIndex();
+        return selectionModel.getSelectedIndex();
     }
 
     /**
@@ -110,7 +110,7 @@ public class OperationPanel extends Pane {
      * @return The selected Operation.
      */
     public Operation getOperation () {
-        return this.selectionModel.getSelectedItem();
+        return selectionModel.getSelectedItem();
     }
 
     /**
@@ -119,20 +119,20 @@ public class OperationPanel extends Pane {
     private void textFieldOnAction () {
         int index;
         try {
-            this.currOpTextField.setStyle("-fx-control-inner-background: white;");
-            index = Integer.parseInt(this.currOpTextField.getText());
+            currOpTextField.setStyle("-fx-control-inner-background: white;");
+            index = Integer.parseInt(currOpTextField.getText());
         } catch (Exception exc) {
             // NaN
-            this.currOpTextField.setStyle("-fx-control-inner-background: #C40000;");
+            currOpTextField.setStyle("-fx-control-inner-background: #C40000;");
             return;
         }
-        this.controller.goToStep(index);
+        controller.goToStep(index);
     }
 
     public void clear () {
-        this.items.clear();
-        this.totNrOfOpLabel.setText("/ 0");
-        this.currOpTextField.setText("0");
-        this.opProgress.setProgress(-1);
+        items.clear();
+        totNrOfOpLabel.setText("/ 0");
+        currOpTextField.setText("0");
+        opProgress.setProgress(-1);
     }
 }

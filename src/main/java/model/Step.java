@@ -16,7 +16,7 @@ public class Step {
     private Operation                        lastOp;
 
     public Step () {
-        this.structs = new HashMap<>();
+        structs = new HashMap<>();
     }
 
     public Step (Map<String, DataStructure> structs) {
@@ -24,17 +24,17 @@ public class Step {
     }
 
     public void reset () {
-        this.lastOp = null;
-        this.structs.values().forEach(DataStructure::clear);
+        lastOp = null;
+        structs.values().forEach(DataStructure::clear);
     }
 
     public Map<String, DataStructure> getStructures () {
         // Should do a deep copy
-        return this.structs;
+        return structs;
     }
 
     public Operation getLastOp () {
-        return this.lastOp;
+        return lastOp;
     }
 
     /**
@@ -58,7 +58,7 @@ public class Step {
 
             locator = (Locator) op.operationBody.get(Key.source);
             if (locator != null) {
-                struct = this.structs.get(locator.identifier);
+                struct = structs.get(locator.identifier);
                 if (struct == null) {
                     Main.console.err("WARNING: Undeclared variable \"" + locator.identifier + "\" in " + op);
                 } else {
@@ -68,7 +68,7 @@ public class Step {
 
             locator = (Locator) op.operationBody.get(Key.target);
             if (locator != null) {
-                struct = this.structs.get(locator.identifier);
+                struct = structs.get(locator.identifier);
                 if (struct == null) {
                     Main.console.err("WARNING: Undeclared variable \"" + locator.identifier + "\" in " + op);
                 } else {
@@ -78,14 +78,14 @@ public class Step {
             break;
         case swap:
             locator = (Locator) op.operationBody.get(Key.var1);
-            this.structs.get(locator.identifier).applyOperation(op);
+            structs.get(locator.identifier).applyOperation(op);
 
             locator = (Locator) op.operationBody.get(Key.var2);
-            this.structs.get(locator.identifier).applyOperation(op);
+            structs.get(locator.identifier).applyOperation(op);
             break;
         case remove:
             locator = (Locator) op.operationBody.get(Key.target);
-            struct = this.structs.get(locator.identifier);
+            struct = structs.get(locator.identifier);
             if (struct == null) {
                 Main.console.err("WARNING: Undeclared variable \"" + locator.identifier + "\" in " + op);
             } else {
@@ -101,6 +101,6 @@ public class Step {
             System.out.print("Step.applyOperation(): " + op + "\n");
         }
 
-        this.lastOp = op;
+        lastOp = op;
     }
 }

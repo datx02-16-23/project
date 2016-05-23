@@ -15,9 +15,9 @@ public class Conditional {
     private final iBdc       bdc;
 
     public Conditional (String conditional, Set<String> variables) {
-        String lhs = this.extractLhs(conditional);
-        String rhs = this.extractRhs(conditional);
-        String bdc = this.extractBdc(conditional);
+        String lhs = extractLhs(conditional);
+        String rhs = extractRhs(conditional);
+        String bdc = extractBdc(conditional);
         this.lhs = new ExpressionBuilder(lhs).variables(variables).build();
         this.rhs = new ExpressionBuilder(rhs).variables(variables).build();
         this.bdc = Bdc.getBdc(bdc);
@@ -25,12 +25,12 @@ public class Conditional {
     }
 
     public void setVariables (Map<String, Double> variables) {
-        this.lhs.setVariables(variables);
-        this.rhs.setVariables(variables);
+        lhs.setVariables(variables);
+        rhs.setVariables(variables);
     }
 
     public boolean evaluate () {
-        return this.bdc.compare(this.lhs.evaluate(), this.rhs.evaluate());
+        return bdc.compare(lhs.evaluate(), rhs.evaluate());
     }
 
     private String extractLhs (String conditional) {

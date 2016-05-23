@@ -183,17 +183,17 @@ public abstract class ARender extends Pane implements MinMaxListener {
         this.hSpace = hSpace;
         this.vSpace = vSpace;
 
-        this.animPane = new Pane();
+        animPane = new Pane();
         // bindAnimPane();
 
         // Add stacked canvases
-        this.loadFXML();
-        this.initDragAndZoom();
-        this.bindAnimPane();
+        loadFXML();
+        initDragAndZoom();
+        bindAnimPane();
 
         this.setRelativeNodeSize(true, Const.DEFAULT_RELATIVE_NODE_FACTOR);
 
-        this.expand();
+        expand();
     }
 
     private void bindAnimPane () {
@@ -201,8 +201,8 @@ public abstract class ARender extends Pane implements MinMaxListener {
         // this.animPane.translateYProperty().bind(this.translateYProperty());
         // this.animPane.layoutXProperty().bind(this.layoutXProperty());
         // this.animPane.layoutYProperty().bind(this.layoutYProperty());
-        this.animPane.scaleXProperty().bind(this.scaleXProperty());
-        this.animPane.scaleYProperty().bind(this.scaleYProperty());
+        animPane.scaleXProperty().bind(scaleXProperty());
+        animPane.scaleYProperty().bind(scaleYProperty());
     }
 
     private void loadFXML () {
@@ -210,47 +210,47 @@ public abstract class ARender extends Pane implements MinMaxListener {
         fxmlLoader.setController(this);
 
         try {
-            this.root = (GridPane) fxmlLoader.load();
+            root = (GridPane) fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
             return;
         }
-        this.root.setMinSize(150, 20);
+        root.setMinSize(150, 20);
 
         // Content pane
-        this.contentPane = (Pane) fxmlLoader.getNamespace().get("content");
-        this.contentPane.getChildren().add(this.defaultNodePane);
-        this.reset();
+        contentPane = (Pane) fxmlLoader.getNamespace().get("content");
+        contentPane.getChildren().add(defaultNodePane);
+        reset();
 
         // Name labels
-        this.name = (Label) fxmlLoader.getNamespace().get("name");
-        this.name.setText(this.struct.toString());
+        name = (Label) fxmlLoader.getNamespace().get("name");
+        name.setText(struct.toString());
         Label name_mo = (Label) fxmlLoader.getNamespace().get("name_mo");
-        name_mo.textProperty().bind(this.name.textProperty());
+        name_mo.textProperty().bind(name.textProperty());
 
         ToolBar headerButtonBar = (ToolBar) fxmlLoader.getNamespace().get("buttons");
         for (Node node : headerButtonBar.getItems()) {
             if (node instanceof ToggleButton == false) {
-                this.optionalHeaderContent.add(node);
+                optionalHeaderContent.add(node);
             }
         }
-        this.header = (Node) fxmlLoader.getNamespace().get("header");
-        this.bindHeader();
+        header = (Node) fxmlLoader.getNamespace().get("header");
+        bindHeader();
 
         // Info labels
-        this.name = (Label) fxmlLoader.getNamespace().get("name");
-        this.name.setText(this.struct.toString());
-        this.xposLabel = (Label) fxmlLoader.getNamespace().get("xpos");
-        this.yposLabel = (Label) fxmlLoader.getNamespace().get("ypos");
-        this.scaleLabel = (Label) fxmlLoader.getNamespace().get("scale");
+        name = (Label) fxmlLoader.getNamespace().get("name");
+        name.setText(struct.toString());
+        xposLabel = (Label) fxmlLoader.getNamespace().get("xpos");
+        yposLabel = (Label) fxmlLoader.getNamespace().get("ypos");
+        scaleLabel = (Label) fxmlLoader.getNamespace().get("scale");
 
         // Hint text
         final Label hintText = (Label) fxmlLoader.getNamespace().get("hintText");
-        hintText.visibleProperty().bind(this.name.visibleProperty().not());
+        hintText.visibleProperty().bind(name.visibleProperty().not());
 
-        this.getChildren().add(this.root);
+        getChildren().add(root);
 
-        this.afterParentLoadFXML(fxmlLoader);
+        afterParentLoadFXML(fxmlLoader);
     }
 
     /**
@@ -269,10 +269,10 @@ public abstract class ARender extends Pane implements MinMaxListener {
      * Clear the Render, restoring the background image.
      */
     public void reset () {
-        this.contentPane.setBackground(Tools.getRawTypeBackground(this.struct));
-        this.setRestricedSize(150, 125); // Size of background images
+        contentPane.setBackground(Tools.getRawTypeBackground(struct));
+        setRestricedSize(150, 125); // Size of background images
 
-        for (Node node : this.contentPane.getChildren()) {
+        for (Node node : contentPane.getChildren()) {
             if (node instanceof Pane) {
                 ((Pane) node).getChildren().clear();
             }
@@ -281,13 +281,13 @@ public abstract class ARender extends Pane implements MinMaxListener {
 
     // Make header visible only on mousever.
     protected void bindHeader () {
-        this.header.visibleProperty().bind(this.name.visibleProperty().not());
+        header.visibleProperty().bind(name.visibleProperty().not());
     }
 
     // Make header visible and enable manual setting of visiblity
     protected void unbindHeader () {
-        this.name.setVisible(false);
-        this.header.visibleProperty().unbind();
+        name.setVisible(false);
+        header.visibleProperty().unbind();
     }
 
     // ============================================================= //
@@ -309,10 +309,10 @@ public abstract class ARender extends Pane implements MinMaxListener {
     // @formatter:off
     public void animateToggleScope(Element tar, long millis) {
 	if (Debug.ERR) {
-	    System.err.println("ARender.animateRemove(): " + this.struct + " is animating.");
+	    System.err.println("ARender.animateRemove(): " + struct + " is animating.");
 	}
 
-	ParallelTransition base = ARenderAnimation.stationary(tar, this.absX(tar, null), this.absY(tar, null), millis,
+	ParallelTransition base = ARenderAnimation.stationary(tar, absX(tar, null), absY(tar, null), millis,
 		this, Effect.GHOST, Effect.FLIP);
 
 	base.getNode().setRotationAxis(new Point3D(0, 1, 0));
@@ -325,7 +325,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
 
 	ft.setOnFinished(event -> {
 	    int[] i = ((IndexedElement) tar).getIndex();
-	    AVElement orig = this.visualMap.get(Arrays.toString(i));
+	    AVElement orig = visualMap.get(Arrays.toString(i));
 
 	    orig.setRotationAxis(new Point3D(0, 1, 0));
 
@@ -372,7 +372,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	}
 
 	if (Debug.ERR) {
-	    System.err.println("ARender.animateReadWrite(): " + this.struct + " is animating.");
+	    System.err.println("ARender.animateReadWrite(): " + struct + " is animating.");
 	}
 
 	if (hasSource && hasTarget) {
@@ -410,7 +410,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
     // @formatter:off
     public void animateSwap(Element var1, ARender render1, Element var2, ARender render2, long millis) {
 	if (Debug.ERR) {
-	    System.err.println("ARender.animateSwap(): " + this.struct + " is animating.");
+	    System.err.println("ARender.animateSwap(): " + struct + " is animating.");
 	}
 
 	ARenderAnimation.linear(var1, render1.absX(var2, render2), render2.absY(var2, render2),
@@ -430,22 +430,22 @@ public abstract class ARender extends Pane implements MinMaxListener {
     protected void setRestricedSize (double width, double height) {
 
         // contentPane not visible indicates that the render is hidden.
-        if (this.contentPane.isVisible()) {
+        if (contentPane.isVisible()) {
             // Minimum permitted size for aesthetic reasons.
             width = width < 150 ? 150 : width;
             height = height < 0 ? 0 : height;
 
-            this.contentPane.setMinSize(width, height);
-            this.contentPane.setPrefSize(width, height);
-            this.contentPane.setMaxSize(width, height);
+            contentPane.setMinSize(width, height);
+            contentPane.setPrefSize(width, height);
+            contentPane.setMaxSize(width, height);
 
             height = height < 45 ? 45 : height;
             height = height + 45; // Space for header bar.
-            this.root.setPrefSize(width, height);
-            this.root.setMaxSize(width, height);
+            root.setPrefSize(width, height);
+            root.setMaxSize(width, height);
 
-            this.setPrefSize(width, height);
-            this.setMaxSize(width, height);
+            setPrefSize(width, height);
+            setMaxSize(width, height);
         }
     }
 
@@ -465,8 +465,8 @@ public abstract class ARender extends Pane implements MinMaxListener {
      * <b>{@code struct.elementsDrawn(Color.WHITE);}</b>
      */
     public void render () {
-        this.struct.elementsDrawn(Color.WHITE);
-        this.setRelativeNodeSizes();
+        struct.elementsDrawn(Color.WHITE);
+        setRelativeNodeSizes();
     }
 
     /**
@@ -479,34 +479,32 @@ public abstract class ARender extends Pane implements MinMaxListener {
      * @return True if there was anything to draw.
      */
     public boolean repaintAll () {
-        if (this.struct.getElements().isEmpty() || this.contentPane == null) {
+        if (struct.getElements().isEmpty() || contentPane == null) {
             return false; // Nothing to draw/contentPane not yet loaded.
         }
-        this.struct.repaintAll = false;
+        struct.repaintAll = false;
 
-        /*
-         * Clear the nodes from all content Panes.
-         */
-        for (Node n : this.contentPane.getChildren()) {
+        // Clear the nodes from all content Panes.
+        for (Node n : contentPane.getChildren()) {
             ((Pane) n).getChildren().clear();
         }
 
-        this.visualMap.clear();
-        this.contentPane.setBackground(null);
-        this.calculateSize();
+        visualMap.clear();
+        contentPane.setBackground(null);
+        calculateSize();
 
         // Create nodes
         AVElement newVis;
 
-        for (Element e : this.struct.getElements()) {
+        for (Element e : struct.getElements()) {
             newVis = this.createVisualElement(e);
-            newVis.setLayoutX(this.getX(e));
-            newVis.setLayoutY(this.getY(e));
+            newVis.setLayoutX(getX(e));
+            newVis.setLayoutY(getY(e));
 
-            this.defaultNodePane.getChildren().add(newVis);
-            this.visualMap.put(Arrays.toString(((IndexedElement) e).getIndex()), newVis);
+            defaultNodePane.getChildren().add(newVis);
+            visualMap.put(Arrays.toString(((IndexedElement) e).getIndex()), newVis);
 
-            this.bellsAndWhistles(e, newVis);
+            bellsAndWhistles(e, newVis);
         }
 
         return true;
@@ -516,8 +514,8 @@ public abstract class ARender extends Pane implements MinMaxListener {
      * Print statistics for the structure this render carries.
      */
     public void printStats () {
-        Main.console.info("Statistics for \"" + this.struct + "\":");
-        OperationCounterHaver.printStats(this.struct);
+        Main.console.info("Statistics for \"" + struct + "\":");
+        OperationCounterHaver.printStats(struct);
     }
 
     /**
@@ -525,7 +523,26 @@ public abstract class ARender extends Pane implements MinMaxListener {
      */
     public void showOptions () {
         VisualDialog vd = new VisualDialog(null);
-        vd.show(this.struct);
+        vd.show(struct);
+    }
+
+    /**
+     * Used to hide other buttons when minimising.
+     */
+    protected final ArrayList<Node> optionalHeaderContent = new ArrayList<Node>();
+    // Centre on button when hiding or showing.
+    private double                  conbwhs               = 0;
+
+    public void toggleHidden (Event e) {
+        ToggleButton tb = (ToggleButton) e.getSource();
+
+        if (tb.isSelected()) {
+            tb.setText("Show");
+            collapse();
+        } else {
+            tb.setText("Hide");
+            expand();
+        }
     }
 
     /**
@@ -533,36 +550,36 @@ public abstract class ARender extends Pane implements MinMaxListener {
      */
     public void collapse () {
         // Make the render expand and collapse and NE corner.
-        this.conbwhs = this.contentPane.getPrefWidth() - 150;
-        this.setTranslateX(this.getTranslateX() + this.conbwhs);
+        conbwhs = contentPane.getPrefWidth() - 150;
+        setTranslateX(getTranslateX() + conbwhs);
 
         // Show only header
-        this.root.setPrefSize(150, 20);
-        this.root.setMaxSize(150, 20);
-        this.setPrefSize(150, 20);
-        this.setMaxSize(150, 20);
-        this.unbindHeader();
-        for (Node n : this.optionalHeaderContent) {
+        root.setPrefSize(150, 20);
+        root.setMaxSize(150, 20);
+        setPrefSize(150, 20);
+        setMaxSize(150, 20);
+        unbindHeader();
+        for (Node n : optionalHeaderContent) {
             n.setVisible(false);
         }
-        this.contentPane.setVisible(false);
+        contentPane.setVisible(false);
     }
 
     /**
      * Expand the render to full size.
      */
     public void expand () {
-        this.contentPane.setVisible(true);
-        this.setTranslateX(this.getTranslateX() - this.conbwhs);
-        this.bindHeader();
-        this.calculateSize(); // Size recalculation is disabled while hidden.
+        contentPane.setVisible(true);
+        setTranslateX(getTranslateX() - conbwhs);
+        bindHeader();
+        calculateSize(); // Size recalculation is disabled while hidden.
 
-        if (this.contentPane.getBackground() == null) {
-            this.calculateSize();
+        if (contentPane.getBackground() == null) {
+            calculateSize();
         } else {
-            this.setRestricedSize(150, 90);
+            setRestricedSize(150, 90);
         }
-        for (Node n : this.optionalHeaderContent) {
+        for (Node n : optionalHeaderContent) {
             n.setVisible(true);
         }
     }
@@ -581,7 +598,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
      * @return The DataStructure held by this Render.
      */
     public DataStructure getDataStructure () {
-        return this.struct;
+        return struct;
     }
 
     /**
@@ -593,8 +610,8 @@ public abstract class ARender extends Pane implements MinMaxListener {
      * @return The absolute x-coordinates of e.
      */
     public double absX (Element e, ARender relativeTo) {
-        double bx = this.getTranslateX() + this.getLayoutX();
-        return this.getX(e) + bx;
+        double bx = getTranslateX() + getLayoutX();
+        return getX(e) + bx;
     }
 
     /**
@@ -606,25 +623,8 @@ public abstract class ARender extends Pane implements MinMaxListener {
      * @return The absolute y-coordinates of e.
      */
     public double absY (Element e, ARender relativeTo) {
-        double by = this.getTranslateY() + this.getLayoutY() + this.contentPane.getLayoutY();
-        return this.getY(e) + by;
-    }
-
-    // Center on button when hiding or showing.
-    private double                  conbwhs               = 0;
-    // Used to hide other buttons when minimising.
-    protected final ArrayList<Node> optionalHeaderContent = new ArrayList<Node>();
-
-    public void toggleHidden (Event e) {
-        ToggleButton tb = (ToggleButton) e.getSource();
-
-        if (tb.isSelected()) {
-            tb.setText("Show");
-            this.collapse();
-        } else {
-            tb.setText("Hide");
-            this.expand();
-        }
+        double by = getTranslateY() + getLayoutY() + contentPane.getLayoutY();
+        return getY(e) + by;
     }
 
     /**
@@ -633,7 +633,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
      * @return The Pane used to draw element nodes.
      */
     public Pane getNodes () {
-        return this.defaultNodePane;
+        return defaultNodePane;
     }
 
     /**
@@ -643,7 +643,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
      *            The used Pane for animation.
      */
     public Pane getAnimationPane () {
-        return this.animPane;
+        return animPane;
     }
 
     /**
@@ -651,28 +651,24 @@ public abstract class ARender extends Pane implements MinMaxListener {
      */
     public void updateInfoLabels () {
         DecimalFormat df = new DecimalFormat("#0.00");
-        this.xposLabel.setText("XPos: " + (int) (this.getTranslateX() + 0.5));
-        this.yposLabel.setText("| YPos: " + (int) (this.getTranslateY() + 0.5));
-        this.scaleLabel.setText("| Scale: " + df.format(this.scale));
+        xposLabel.setText("XPos: " + (int) (getTranslateX() + 0.5));
+        yposLabel.setText("| YPos: " + (int) (getTranslateY() + 0.5));
+        scaleLabel.setText("| Scale: " + df.format(scale));
     }
 
-    private boolean playFailureSound = true;
-
     /**
-     * Makes the header red when something goes wrong.
+     * Makes the header red and play a sound when something goes wrong.
      */
     public void renderFailure () {
-        if (this.playFailureSound) {
-            this.playFailureSound = false;
-            URL resource = this.getClass().getResource("/assets/shortcircuit.mp3");
-            Media media = new Media(resource.toString());
-            MediaPlayer mp3 = new MediaPlayer(media);
-            mp3.play();
+        URL resource = this.getClass().getResource("/assets/shortcircuit.mp3");
+        Media media = new Media(resource.toString());
+        MediaPlayer mp3 = new MediaPlayer(media);
+        mp3.play();
 
-            this.header.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
-            this.contentPane.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
-            Main.console.err("Render Failure in " + this.toString() + ".");
-        }
+        header.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
+        contentPane.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
+        Main.console.err("Render Failure in " + toString() + ".");
+
     }
 
     /**
@@ -681,11 +677,11 @@ public abstract class ARender extends Pane implements MinMaxListener {
      * @return The visual map for this Render.
      */
     public HashMap<String, AVElement> getVisualMap () {
-        return this.visualMap;
+        return visualMap;
     }
 
     @Override public String toString () {
-        return this.getClass().getSimpleName() + " (" + this.struct + ")";
+        return this.getClass().getSimpleName() + " (" + struct + ")";
     }
 
     /**
@@ -695,22 +691,22 @@ public abstract class ARender extends Pane implements MinMaxListener {
      *            The new Style to use.
      */
     public void setElementStyle (ElementShape newStyle) {
-        if (newStyle != this.elementStyle) {
-            this.elementStyle = newStyle;
-            this.repaintAll();
+        if (newStyle != elementStyle) {
+            elementStyle = newStyle;
+            repaintAll();
         }
     }
 
     public void setRelativeNodeSize (boolean value, double foo) {
-        if (this.struct instanceof Array) {
-            this.relativeNodeSize = value;
-            if (this.relativeNodeSize || foo != 0 || foo != 1) {
-                this.minMaxSizeFactor = foo;
-                ((Array) this.struct).setListener(this);
+        if (struct instanceof Array) {
+            relativeNodeSize = value;
+            if (relativeNodeSize || foo != 0 || foo != 1) {
+                minMaxSizeFactor = foo;
+                ((Array) struct).setListener(this);
             }
         } else if (value) {
             System.err.println("Relative node sizes only available for arrays.");
-            this.relativeNodeSize = false;
+            relativeNodeSize = false;
         }
     }
 
@@ -721,19 +717,19 @@ public abstract class ARender extends Pane implements MinMaxListener {
     private double  minMaxSizeFactor;
 
     public void setRelativeNodeSizes () {
-        if (!this.relativeNodeSize) {
+        if (!relativeNodeSize) {
             return;
         }
 
-        double min = Math.abs(((Array) this.struct).getMin());
-        double max = Math.abs(((Array) this.struct).getMax());
+        double min = Math.abs(((Array) struct).getMin());
+        double max = Math.abs(((Array) struct).getMax());
 
         double span = min + max;
         if (span == 0) {
             return; // No point in making them all the same size again.
         }
 
-        for (Node n : this.defaultNodePane.getChildren()) {
+        for (Node n : defaultNodePane.getChildren()) {
             if (n instanceof AVElement) {
                 this.setRelativeNodeSize((AVElement) n);
             }
@@ -741,12 +737,12 @@ public abstract class ARender extends Pane implements MinMaxListener {
     }
 
     protected void setRelativeNodeSize (AVElement ave) {
-        if (!this.relativeNodeSize) {
+        if (!relativeNodeSize) {
             return;
         }
 
-        double min = Math.abs(((Array) this.struct).getMin());
-        double max = Math.abs(((Array) this.struct).getMax());
+        double min = Math.abs(((Array) struct).getMin());
+        double max = Math.abs(((Array) struct).getMax());
 
         double span = min + max;
 
@@ -754,7 +750,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
     }
 
     protected void setRelativeNodeSize (AVElement ave, double span) {
-        if (!this.relativeNodeSize || span == 0) {
+        if (!relativeNodeSize || span == 0) {
             return; // No point in making them all the same size again.
         }
 
@@ -762,12 +758,12 @@ public abstract class ARender extends Pane implements MinMaxListener {
         double relNodeHeight;
         double factor;
 
-        factor = (this.minMaxSizeFactor - 1) * ave.getElement().getNumValue() / span;
+        factor = (minMaxSizeFactor - 1) * ave.getElement().getNumValue() / span;
         factor = factor < 1 ? factor : 1; // Cap at 1 for nodes with the value
                                           // set outside model.
 
-        relNodeWidth = this.nodeWidth / this.minMaxSizeFactor;
-        relNodeHeight = this.nodeHeight / this.minMaxSizeFactor;
+        relNodeWidth = nodeWidth / minMaxSizeFactor;
+        relNodeHeight = nodeHeight / minMaxSizeFactor;
 
         relNodeWidth = relNodeWidth + relNodeWidth * factor;
         relNodeHeight = relNodeHeight + relNodeHeight * factor;
@@ -776,21 +772,21 @@ public abstract class ARender extends Pane implements MinMaxListener {
     }
 
     public double getNodeHeight () {
-        return this.nodeHeight;
+        return nodeHeight;
     }
 
     public boolean setNodeHeight (double nodeHeight) {
         this.nodeHeight = nodeHeight;
-        return this.repaintAll();
+        return repaintAll();
     }
 
     public double getNodeWidth () {
-        return this.nodeWidth;
+        return nodeWidth;
     }
 
     public boolean setNodeWidth (double nodeWidth) {
         this.nodeWidth = nodeWidth;
-        return this.repaintAll();
+        return repaintAll();
     }
 
     // ============================================================= //
@@ -811,96 +807,96 @@ public abstract class ARender extends Pane implements MinMaxListener {
      *            The parent to apply transformation to.
      */
     private void initDragAndZoom () {
-        this.initArrowResize();
-        this.initMouseWheelResize();
-        this.initDrag();
+        initArrowResize();
+        initMouseWheelResize();
+        initDrag();
     }
 
     private void initArrowResize () {
-        this.setOnKeyPressed(event -> {
+        setOnKeyPressed(event -> {
             if (!event.isControlDown()) {
                 return;
             }
 
             switch (event.getCode()) {
             case UP:
-                this.setNodeHeight(this.nodeHeight + Const.DEFAULT_ELEMENT_HEIGHT_DELTA);
+                setNodeHeight(nodeHeight + Const.DEFAULT_ELEMENT_HEIGHT_DELTA);
                 break;
             case DOWN:
-                this.setNodeHeight(this.nodeHeight - Const.DEFAULT_ELEMENT_HEIGHT_DELTA);
+                setNodeHeight(nodeHeight - Const.DEFAULT_ELEMENT_HEIGHT_DELTA);
                 break;
             case LEFT:
-                this.setNodeWidth(this.nodeWidth - Const.DEFAULT_ELEMENT_WIDTH_DELTA);
+                setNodeWidth(nodeWidth - Const.DEFAULT_ELEMENT_WIDTH_DELTA);
                 break;
             case RIGHT:
-                this.setNodeWidth(this.nodeWidth + Const.DEFAULT_ELEMENT_WIDTH_DELTA);
+                setNodeWidth(nodeWidth + Const.DEFAULT_ELEMENT_WIDTH_DELTA);
                 break;
             default:
                 return;
             }
 
-            this.setNodeWidth(this.nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : this.nodeWidth);
-            this.setNodeHeight(this.nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : this.nodeHeight);
+            setNodeWidth(nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : nodeWidth);
+            setNodeHeight(nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : nodeHeight);
 
             Platform.runLater( () -> ARender.this.requestFocus());
 
-            this.repaintAll();
+            repaintAll();
         });
     }
 
     private void initMouseWheelResize () {
-        this.setOnScroll(event -> {
+        setOnScroll(event -> {
             if (!event.isControlDown()) {
                 return;
             }
 
             int sign = event.getDeltaY() < 0 ? -1 : 1;
 
-            this.setNodeWidth(this.nodeWidth + sign * Const.DEFAULT_ELEMENT_WIDTH_DELTA);
-            this.setNodeHeight(this.nodeHeight + sign * Const.DEFAULT_ELEMENT_HEIGHT_DELTA);
+            setNodeWidth(nodeWidth + sign * Const.DEFAULT_ELEMENT_WIDTH_DELTA);
+            setNodeHeight(nodeHeight + sign * Const.DEFAULT_ELEMENT_HEIGHT_DELTA);
 
-            this.hSpace = this.hSpace + sign * Const.DEFAULT_ELEMENT_HSPACE_DELTA;
-            this.vSpace = this.vSpace + sign * Const.DEFAULT_ELEMENT_VSPACE_DELTA;
+            hSpace = hSpace + sign * Const.DEFAULT_ELEMENT_HSPACE_DELTA;
+            vSpace = vSpace + sign * Const.DEFAULT_ELEMENT_VSPACE_DELTA;
 
-            this.setNodeWidth(this.nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : this.nodeWidth);
-            this.setNodeHeight(this.nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : this.nodeHeight);
+            setNodeWidth(nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : nodeWidth);
+            setNodeHeight(nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : nodeHeight);
 
-            this.repaintAll();
+            repaintAll();
         });
     }
 
     private void initDrag () {
         // Record a delta distance for the drag and drop operation.
-        this.setOnMousePressed(event -> {
-            this.transX = this.getTranslateX() - event.getSceneX();
-            this.transY = this.getTranslateY() - event.getSceneY();
-            this.setCursor(Cursor.CLOSED_HAND);
+        setOnMousePressed(event -> {
+            transX = getTranslateX() - event.getSceneX();
+            transY = getTranslateY() - event.getSceneY();
+            setCursor(Cursor.CLOSED_HAND);
         });
         // Restore cursor
-        this.setOnMouseReleased(event -> {
-            this.setCursor(null);
+        setOnMouseReleased(event -> {
+            setCursor(null);
         });
         // Translate canvases
-        this.setOnMouseDragged(event -> {
-            this.setTranslateX(event.getSceneX() + this.transX);
-            this.setTranslateY(event.getSceneY() + this.transY);
-            this.updateInfoLabels();
+        setOnMouseDragged(event -> {
+            setTranslateX(event.getSceneX() + transX);
+            setTranslateY(event.getSceneY() + transY);
+            updateInfoLabels();
         });
         // Set cursor
-        this.setOnMouseEntered(event -> {
+        setOnMouseEntered(event -> {
             // this.setCursor(Cursor.OPEN_HAND);
-            this.requestFocus();
-            if (this.header.visibleProperty().isBound()) {
-                this.name.setVisible(false);
+            requestFocus();
+            if (header.visibleProperty().isBound()) {
+                name.setVisible(false);
             }
-            this.setBorder(Const.BORDER_MOUSEOVER);
+            setBorder(Const.BORDER_MOUSEOVER);
         });
-        this.setOnMouseExited(event -> {
+        setOnMouseExited(event -> {
             // this.setCursor(null);
-            if (this.header.visibleProperty().isBound()) {
-                this.name.setVisible(true);
+            if (header.visibleProperty().isBound()) {
+                name.setVisible(true);
             }
-            this.setBorder(null);
+            setBorder(null);
         });
     }
 
@@ -978,10 +974,10 @@ public abstract class ARender extends Pane implements MinMaxListener {
     // ============================================================= //
 
     @Override public void maxChanged (double newMax) {
-        this.setRelativeNodeSizes();
+        setRelativeNodeSizes();
     }
 
     @Override public void minChanged (double newMin) {
-        this.setRelativeNodeSizes();
+        setRelativeNodeSizes();
     }
 }

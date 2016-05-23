@@ -45,7 +45,7 @@ public abstract class OP_ReadWrite extends Operation {
      *            The target variable for this ReadWrite operation.
      */
     public void setTarget (Locator target) {
-        this.operationBody.put(Key.target, target);
+        operationBody.put(Key.target, target);
     }
 
     /**
@@ -56,7 +56,7 @@ public abstract class OP_ReadWrite extends Operation {
      *            The source variable for this ReadWrite operation.
      */
     public void setSource (Locator source) {
-        this.operationBody.put(Key.source, source);
+        operationBody.put(Key.source, source);
     }
 
     /**
@@ -68,12 +68,12 @@ public abstract class OP_ReadWrite extends Operation {
      *            Set the value(s) which were ReadWrite from {@code source}.
      */
     public void setValue (double[] value) {
-        this.operationBody.put(Key.value, value);
+        operationBody.put(Key.value, value);
     }
 
     @Override public String toString () {
-        Locator source = this.getSource();
-        Locator target = this.getTarget();
+        Locator source = getSource();
+        Locator target = getTarget();
         String sourceStr;
         String targetStr;
         // Source and target known
@@ -82,7 +82,7 @@ public abstract class OP_ReadWrite extends Operation {
             targetStr = target.toString();
             // Assume source or target known.
         } else {
-            double[] value = this.getValue();
+            double[] value = getValue();
             String valueStr = value == null ? "?" : Arrays.toString(value);
             // Source unknown
             if (source == null) {
@@ -102,14 +102,14 @@ public abstract class OP_ReadWrite extends Operation {
     }
 
     public Locator getTarget () {
-        return (Locator) this.operationBody.get(Key.target);
+        return (Locator) operationBody.get(Key.target);
     }
 
     public Locator getSource () {
-        return (Locator) this.operationBody.get(Key.source);
+        return (Locator) operationBody.get(Key.source);
     }
 
     public double[] getValue () {
-        return (double[]) this.operationBody.get(Key.value);
+        return (double[]) operationBody.get(Key.value);
     }
 }

@@ -25,11 +25,11 @@ public class ConnectedView {
         this.parent = parent;
         this.jgc = jgc;
         FXMLLoader connectedLoader = new FXMLLoader(this.getClass().getResource("/view/ConnectedView.fxml"));
-        this.root = new Stage();
-        this.root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_connected.png")));
-        this.root.initModality(Modality.APPLICATION_MODAL);
-        this.root.setTitle("Entities View: Channel = \"" + jgc.getChannel() + "\"");
-        this.root.initOwner(parent);
+        root = new Stage();
+        root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_connected.png")));
+        root.initModality(Modality.APPLICATION_MODAL);
+        root.setTitle("Entities View: Channel = \"" + jgc.getChannel() + "\"");
+        root.initOwner(parent);
         SplitPane p = null;
         try {
             p = connectedLoader.load();
@@ -37,29 +37,29 @@ public class ConnectedView {
             e.printStackTrace();
         }
         TextArea top = (TextArea) connectedLoader.getNamespace().get("connectedEntities");
-        top.textProperty().bind(this.currentlyConnected);
+        top.textProperty().bind(currentlyConnected);
         TextArea bottom = (TextArea) connectedLoader.getNamespace().get("allEntities");
-        bottom.textProperty().bind(this.allConnected);
-        this.root.setOnCloseRequest(event -> {
+        bottom.textProperty().bind(allConnected);
+        root.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
             jgc.listenForMemberInfo(false);
-            this.root.close();
+            root.close();
         });
         Scene dialogScene = new Scene(p, parent.getWidth() * 0.75, parent.getHeight() * 0.75);
-        this.root.setScene(dialogScene);
+        root.setScene(dialogScene);
     }
 
     public void show () {
-        this.jgc.listenForMemberInfo(true);
+        jgc.listenForMemberInfo(true);
         StringBuilder sb = new StringBuilder();
-        for (String s : this.jgc.allKnownEntities()) {
+        for (String s : jgc.allKnownEntities()) {
             sb.append(s + "\n");
         }
-        this.allConnected.set(sb.toString());
+        allConnected.set(sb.toString());
         // Set size and show
-        this.root.setWidth(this.parent.getWidth() * 0.75);
-        this.root.setHeight(this.parent.getHeight() * 0.75);
-        this.root.show();
+        root.setWidth(parent.getWidth() * 0.75);
+        root.setHeight(parent.getHeight() * 0.75);
+        root.show();
     }
 
     public void update (Collection<String> current, Collection<String> all) {
@@ -67,11 +67,11 @@ public class ConnectedView {
         for (String s : current) {
             sb.append(s + "\n");
         }
-        this.currentlyConnected.set(sb.toString());
+        currentlyConnected.set(sb.toString());
         sb = new StringBuilder();
         for (String s : all) {
             sb.append(s + "\n");
         }
-        this.allConnected.set(sb.toString());
+        allConnected.set(sb.toString());
     }
 }

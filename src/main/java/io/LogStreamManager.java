@@ -80,10 +80,10 @@ public class LogStreamManager implements CommunicatorListener {
      *            "JavaAnnotationProcessor".
      */
     public LogStreamManager (String agentDescriptor, boolean suppressIncoming) {
-        this.communicator = new JGroupCommunicator("LogStreamManager/" + agentDescriptor, this, suppressIncoming);
-        this.dataStructures = new HashMap<String, DataStructure>();
-        this.operations = new ArrayList<Operation>();
-        this.sources = null;
+        communicator = new JGroupCommunicator("LogStreamManager/" + agentDescriptor, this, suppressIncoming);
+        dataStructures = new HashMap<String, DataStructure>();
+        operations = new ArrayList<Operation>();
+        sources = null;
     }
 
     /**
@@ -92,7 +92,7 @@ public class LogStreamManager implements CommunicatorListener {
      * @return The list of known structures used by this LogStreamManager.
      */
     public Map<String, DataStructure> getDataStructures () {
-        return this.dataStructures;
+        return dataStructures;
     }
 
     /**
@@ -103,7 +103,7 @@ public class LogStreamManager implements CommunicatorListener {
      *            LogStreamManager.
      */
     public void setDataStructures (Map<String, DataStructure> newDataStrutures) {
-        this.dataStructures = newDataStrutures;
+        dataStructures = newDataStrutures;
     }
 
     /**
@@ -112,7 +112,7 @@ public class LogStreamManager implements CommunicatorListener {
      * @return The list of operations used by this LogStreamManager.
      */
     public List<Operation> getOperations () {
-        return this.operations;
+        return operations;
     }
 
     /**
@@ -131,7 +131,7 @@ public class LogStreamManager implements CommunicatorListener {
      * @return The source map held by this LogStreamManager.
      */
     public Map<String, List<String>> getSources () {
-        return this.sources;
+        return sources;
     }
 
     /**
@@ -141,7 +141,7 @@ public class LogStreamManager implements CommunicatorListener {
      *            The new source map to be held by this LogStreamManager.
      */
     public void setSources (Map<String, List<String>> newSources) {
-        this.sources = newSources;
+        sources = newSources;
     }
 
     /**
@@ -166,8 +166,8 @@ public class LogStreamManager implements CommunicatorListener {
      */
     public boolean readLog (File logFile) {
         try {
-            this.wrapper = this.gson.fromJson(new JsonReader(new FileReader(logFile)), CRoot.class);
-            return this.unwrap(this.wrapper);
+            wrapper = gson.fromJson(new JsonReader(new FileReader(logFile)), CRoot.class);
+            return this.unwrap(wrapper);
         } catch (JsonIOException e) {
             Main.console.err("JSON IO error: " + e);
         } catch (JsonSyntaxException e) {
@@ -184,7 +184,7 @@ public class LogStreamManager implements CommunicatorListener {
      * @return The Communicator used by this LogStreamManager.
      */
     public Communicator getCommunicator () {
-        return this.communicator;
+        return communicator;
     }
 
     /**
@@ -226,9 +226,9 @@ public class LogStreamManager implements CommunicatorListener {
      */
     public void printLog (String targetPath, boolean autoName) {
         HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
-        annotatedVariables.putAll(this.dataStructures);
-        Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables, this.sources);
-        this.printLog(targetPath, new CRoot(header, this.operations), autoName);
+        annotatedVariables.putAll(dataStructures);
+        Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables, sources);
+        this.printLog(targetPath, new CRoot(header, operations), autoName);
     }
 
     /**
@@ -239,9 +239,9 @@ public class LogStreamManager implements CommunicatorListener {
      */
     public boolean streamLogData () {
         HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
-        annotatedVariables.putAll(this.dataStructures);
+        annotatedVariables.putAll(dataStructures);
         Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables, null);
-        return this.stream(new CRoot(header, this.operations));
+        return this.stream(new CRoot(header, operations));
     }
 
     /**
@@ -252,10 +252,10 @@ public class LogStreamManager implements CommunicatorListener {
      * @return True if data was successfully streamed.
      */
     public boolean streamAndClearLogData () {
-        if (this.streamLogData()) {
-            this.operations.clear();
-            this.dataStructures.clear();
-            this.sources.clear();
+        if (streamLogData()) {
+            operations.clear();
+            dataStructures.clear();
+            sources.clear();
             return true;
         }
         return false;
@@ -270,7 +270,7 @@ public class LogStreamManager implements CommunicatorListener {
      * @return True if successful, false otherwise.
      */
     public boolean stream (CRoot wrapper) {
-        return this.communicator.sendWrapper(wrapper);
+        return communicator.sendWrapper(wrapper);
     }
 
     /**
@@ -296,7 +296,7 @@ public class LogStreamManager implements CommunicatorListener {
      * @return True if successful, false otherwise.
      */
     public boolean stream (String json) {
-        return this.communicator.sendString(json);
+        return communicator.sendString(json);
     }
 
     /**
@@ -337,16 +337,16 @@ public class LogStreamManager implements CommunicatorListener {
     public boolean streamWrappers (List<CRoot> wrappers) {
         boolean allSuccessful = true;
         for (CRoot w : wrappers) {
-            allSuccessful = allSuccessful && this.communicator.sendWrapper(w);
+            allSuccessful = allSuccessful && communicator.sendWrapper(w);
         }
         return allSuccessful;
     }
 
     public void printSimpleLog (String targetPath) {
         HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
-        annotatedVariables.putAll(this.dataStructures);
+        annotatedVariables.putAll(dataStructures);
         Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables, null);
-        this.printSimpleLog(targetPath + "simple.log", new CRoot(header, this.operations));
+        this.printSimpleLog(targetPath + "simple.log", new CRoot(header, operations));
     }
 
     public void printSimpleLog (String targetPath, CRoot wrapper) {
@@ -367,7 +367,7 @@ public class LogStreamManager implements CommunicatorListener {
             i++;
             sb.append("\t" + i + ":\t\t" + op + "\n");
         }
-        this.printString(targetPath, sb.toString());
+        printString(targetPath, sb.toString());
     }
 
     /**
@@ -387,12 +387,12 @@ public class LogStreamManager implements CommunicatorListener {
         DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd_HHmmss");
         Calendar cal = Calendar.getInstance();
         String fileName = autoName ? File.separator + dateFormat.format(cal.getTime()) + ".json" : "";
-        if (this.PRETTY_PRINTING) {
+        if (PRETTY_PRINTING) {
             GSON = new GsonBuilder().setPrettyPrinting().create();
         } else {
-            GSON = this.gson;
+            GSON = gson;
         }
-        this.printString(targetPath + fileName, GSON.toJson(wrapper));
+        printString(targetPath + fileName, GSON.toJson(wrapper));
     }
 
     private void printString (String completePath, String str) {
@@ -423,14 +423,14 @@ public class LogStreamManager implements CommunicatorListener {
                     if (ds == null) {
                         return false;
                     }
-                    this.dataStructures.put(av.identifier, ds);
+                    dataStructures.put(av.identifier, ds);
                 }
             }
-            this.sources = wrapper.header.sources;
+            sources = wrapper.header.sources;
         }
         if (wrapper.body != null) {
             for (Operation op : wrapper.body) {
-                this.operations.add(OperationParser.unpackOperation(op));
+                operations.add(OperationParser.unpackOperation(op));
             }
         }
         return true;
@@ -445,28 +445,28 @@ public class LogStreamManager implements CommunicatorListener {
      *         otherwise.
      */
     public boolean unwrap (String json) {
-        CRoot w = this.gson.fromJson(json, CRoot.class);
+        CRoot w = gson.fromJson(json, CRoot.class);
         return this.unwrap(w);
     }
 
     @Override public void messageReceived (short messageType) {
-        if (this.listener == null) {
+        if (listener == null) {
             return;
         }
         // Handle Wrapper messagess
         if (messageType == CommunicatorMessage.WRAPPER) {
-            List<CRoot> wrappers = this.communicator.getAllQueuedMessages();
+            List<CRoot> wrappers = communicator.getAllQueuedMessages();
             for (CRoot w : wrappers) {
                 if (this.unwrap(w) == false) {
                     return;
                 }
             }
-            if (this.listener != null) {
-                this.listener.messageReceived(CommunicatorMessage.WRAPPER);
+            if (listener != null) {
+                listener.messageReceived(CommunicatorMessage.WRAPPER);
             }
             // Handle Member info messages.
         } else {
-            this.listener.messageReceived(messageType);
+            listener.messageReceived(messageType);
         }
     }
 
@@ -475,23 +475,23 @@ public class LogStreamManager implements CommunicatorListener {
      * clearOperations() and clearKnownVariables().
      */
     public void clearData () {
-        this.sources = null;
-        this.dataStructures.clear();
-        this.operations.clear();
+        sources = null;
+        dataStructures.clear();
+        operations.clear();
     }
 
     /**
      * Clear all operations held by this LogStreamManager.
      */
     public void clearOperations () {
-        this.operations.clear();
+        operations.clear();
     }
 
     /**
      * Clear all known variables held by this LogStreamManager.
      */
     public void clearKnownVariables () {
-        this.dataStructures.clear();
+        dataStructures.clear();
     }
 
     /**
@@ -502,10 +502,10 @@ public class LogStreamManager implements CommunicatorListener {
      *            The new CommunicatorListener.
      */
     public void setListener (CommunicatorListener newListener) {
-        this.listener = newListener;
+        listener = newListener;
     }
 
     public void close () {
-        this.communicator.close();
+        communicator.close();
     }
 }

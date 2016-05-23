@@ -57,9 +57,9 @@ public class Header implements Serializable {
      * {@code annotatedVariables} manually after creation.
      */
     public Header () {
-        this.version = VERSION_UNKNOWN;
-        this.annotatedVariables = new HashMap<String, AnnotatedVariable>();
-        this.sources = new HashMap<String, List<String>>();
+        version = VERSION_UNKNOWN;
+        annotatedVariables = new HashMap<String, AnnotatedVariable>();
+        sources = new HashMap<String, List<String>>();
     }
 
     /**
@@ -69,10 +69,10 @@ public class Header implements Serializable {
      * @return A Map of source names as keys and their lines as a List.
      */
     @SuppressWarnings("unchecked") public final Map<String, List<String>> getSources () {
-        if (this.sources == null) {
+        if (sources == null) {
             return null;
         }
-        Map<String, Object> objectMap = (Map<String, Object>) this.sources.get("sources");
+        Map<String, Object> objectMap = (Map<String, Object>) sources.get("sources");
         Map<String, List<String>> sources = new HashMap<String, List<String>>();
         for (String key : objectMap.keySet()) {
             List<String> lines = (List<String>) objectMap.get(key);
@@ -82,6 +82,6 @@ public class Header implements Serializable {
     }
 
     @Override public String toString () {
-        return "Header: v = " + this.version + ", annotatedVariables = " + this.annotatedVariables;
+        return "Header: v = " + version + ", annotatedVariables = " + annotatedVariables;
     }
 }

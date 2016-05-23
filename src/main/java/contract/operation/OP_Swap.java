@@ -34,7 +34,7 @@ public class OP_Swap extends Operation implements Consolidable {
      *            Variable 1 for this Swap operation.
      */
     public void setVar1 (Locator var1) {
-        this.operationBody.put(Key.var1, var1);
+        operationBody.put(Key.var1, var1);
     }
 
     /**
@@ -45,7 +45,7 @@ public class OP_Swap extends Operation implements Consolidable {
      *            Variable 2 for this Swap operation.
      */
     public void setVar2 (Locator var2) {
-        this.operationBody.put(Key.var2, var2);
+        operationBody.put(Key.var2, var2);
     }
 
     /**
@@ -56,23 +56,23 @@ public class OP_Swap extends Operation implements Consolidable {
      *            The values in var1 and var2 after execution.
      */
     public void setValues (double[] values) {
-        this.operationBody.put(Key.value, values);
+        operationBody.put(Key.value, values);
     }
 
     public Locator getVar1 () {
-        return (Locator) this.operationBody.get(Key.var1);
+        return (Locator) operationBody.get(Key.var1);
     }
 
     public Locator getVar2 () {
-        return (Locator) this.operationBody.get(Key.var2);
+        return (Locator) operationBody.get(Key.var2);
     }
 
     public double[] getValue () {
-        return (double[]) this.operationBody.get(Key.value);
+        return (double[]) operationBody.get(Key.value);
     }
 
     @Override public String toString () {
-        return "SWAP: " + this.getVar1().toString() + " <-> " + this.getVar2().toString();
+        return "SWAP: " + getVar1().toString() + " <-> " + getVar2().toString();
     }
 
     /**
@@ -134,6 +134,6 @@ public class OP_Swap extends Operation implements Consolidable {
     }
 
     @Override public String toSimpleString () {
-        return this.toString();
+        return toString();
     }
 }

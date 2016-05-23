@@ -48,9 +48,9 @@ public class GridRender extends ARender {
     }
 
     @Override public void render () {
-        if (this.struct.repaintAll) {
-            this.struct.repaintAll = false;
-            this.repaintAll();
+        if (struct.repaintAll) {
+            struct.repaintAll = false;
+            repaintAll();
         }
         super.render();
     }
@@ -64,10 +64,10 @@ public class GridRender extends ARender {
         /*
          * Max 2 dimensions.
          */
-        IndexedElement ae = (IndexedElement) this.struct.getElements().get(0);
+        IndexedElement ae = (IndexedElement) struct.getElements().get(0);
         int dimensions = ae.getIndex().length;
         if (dimensions != 2 && dimensions != 1) {
-            Main.console.force("WARNING: Structure " + this.struct + " has declared " + dimensions
+            Main.console.force("WARNING: Structure " + struct + " has declared " + dimensions
                     + " dimensions. MatrixRender supports only one or two dimensions.");
         }
         return true;
@@ -78,8 +78,8 @@ public class GridRender extends ARender {
             return -1;
         }
         int[] index = ((IndexedElement) e).getIndex();
-        double x = this.hSpace;
-        if (this.majorOrder == Order.ROW_MAJOR) {
+        double x = hSpace;
+        if (majorOrder == Order.ROW_MAJOR) {
             x = this.getX(index [0]);
         } else {
             if (index.length == 2) {
@@ -90,7 +90,7 @@ public class GridRender extends ARender {
     }
 
     private double getX (int column) {
-        return this.hSpace + (this.hSpace + this.nodeWidth) * column;
+        return hSpace + (hSpace + nodeWidth) * column;
     }
 
     @Override public double getY (Element e) {
@@ -99,8 +99,8 @@ public class GridRender extends ARender {
         }
 
         int[] index = ((IndexedElement) e).getIndex();
-        double y = this.vSpace;
-        if (this.majorOrder == Order.ROW_MAJOR) {
+        double y = vSpace;
+        if (majorOrder == Order.ROW_MAJOR) {
             if (index.length == 2) {
                 y = this.getY(index [1]);
             }
@@ -111,44 +111,44 @@ public class GridRender extends ARender {
     }
 
     private double getY (int row) {
-        return this.vSpace + (this.vSpace + this.nodeHeight) * row;
+        return vSpace + (vSpace + nodeHeight) * row;
     }
 
     @Override public void calculateSize () {
 
-        this.ensureDimensionsSet();
+        ensureDimensionsSet();
 
         /*
          * Row Major
          */
-        if (this.majorOrder == Order.ROW_MAJOR) {
-            this.renderWidth = this.vSpace + (this.vSpace + this.nodeWidth) * this.dims [0];
-            this.renderHeight = this.hSpace + (this.hSpace + this.nodeHeight) * this.dims [1];
+        if (majorOrder == Order.ROW_MAJOR) {
+            renderWidth = vSpace + (vSpace + nodeWidth) * dims [0];
+            renderHeight = hSpace + (hSpace + nodeHeight) * dims [1];
 
             /*
              * Column Major
              */
         } else {
-            this.renderHeight = this.hSpace + (this.hSpace + this.nodeHeight) * this.dims [0];
-            this.renderWidth = 2 + this.vSpace + (this.vSpace + this.nodeWidth) * this.dims [1];
+            renderHeight = hSpace + (hSpace + nodeHeight) * dims [0];
+            renderWidth = 2 + vSpace + (vSpace + nodeWidth) * dims [1];
         }
-        this.setRestricedSize(this.renderWidth, this.renderHeight);
+        setRestricedSize(renderWidth, renderHeight);
     }
 
     private void ensureDimensionsSet () {
-        int[] backup = new int[] { this.struct.getElements().size(), 1 };
-        Array array = (Array) this.struct;
+        int[] backup = new int[] { struct.getElements().size(), 1 };
+        Array array = (Array) struct;
 
-        this.dims = array.getCapacity();
+        dims = array.getCapacity();
 
-        if (this.dims == null || this.dims.length == 0) {
-            this.dims = backup;
+        if (dims == null || dims.length == 0) {
+            dims = backup;
             if (Debug.ERR) {
-                System.err.println("Size was null or empty for \"" + this.struct + "\"!");
+                System.err.println("Size was null or empty for \"" + struct + "\"!");
             }
-        } else if (this.dims.length == 1) {
-            int[] newSize = { this.dims [0], 1 };
-            this.dims = newSize; // Add 2nd which is used in size calculation.
+        } else if (dims.length == 1) {
+            int[] newSize = { dims [0], 1 };
+            dims = newSize; // Add 2nd which is used in size calculation.
         }
 
         // Else assume dims are okay.
@@ -187,18 +187,18 @@ public class GridRender extends ARender {
     }
 
     @Override protected AVElement createVisualElement (Element e) {
-        this.elementStyle = this.elementStyle == null ? DEFAULT_ELEMENT_STYLE : this.elementStyle;
+        elementStyle = elementStyle == null ? DEFAULT_ELEMENT_STYLE : elementStyle;
 
-        AVElement re = AVElementFactory.shape(this.elementStyle, e, this.nodeWidth, this.nodeHeight);
+        AVElement re = AVElementFactory.shape(elementStyle, e, nodeWidth, nodeHeight);
         re.setInfoPos(Pos.BOTTOM_CENTER);
         re.setInfoArray(((IndexedElement) e).getIndex());
         return re;
     }
 
     @Override protected AVElement createVisualElement (double value, Color color) {
-        this.elementStyle = this.elementStyle == null ? DEFAULT_ELEMENT_STYLE : this.elementStyle;
+        elementStyle = elementStyle == null ? DEFAULT_ELEMENT_STYLE : elementStyle;
 
-        AVElement re = AVElementFactory.shape(this.elementStyle, value, color, this.nodeWidth, this.nodeHeight);
+        AVElement re = AVElementFactory.shape(elementStyle, value, color, nodeWidth, nodeHeight);
         re.setInfoPos(null);
         return re;
     }

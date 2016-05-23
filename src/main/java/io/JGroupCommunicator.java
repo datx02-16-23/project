@@ -98,18 +98,18 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
         this.channel = channel;
         this.listener = listener;
         this.suppressIncoming = suppressIncoming;
-        this.setNativeSenderMode();
-        this.gson = new Gson();
-        this.incomingQueue = new ArrayList<CRoot>();
-        this.allTransmitters = new HashMap<Integer, String>();
+        setNativeSenderMode();
+        gson = new Gson();
+        incomingQueue = new ArrayList<CRoot>();
+        allTransmitters = new HashMap<Integer, String>();
         try {
-            this.jChannel = new JChannel("udp.xml");
-            this.jChannel.connect(this.channel);
-            this.jChannel.setReceiver(this);
+            jChannel = new JChannel("udp.xml");
+            jChannel.connect(this.channel);
+            jChannel.setReceiver(this);
             // Say hello
             Message hello = new Message();
             hello.setObject(new CommunicatorMessage(null, senderId, CommunicatorMessage.HELLO));
-            this.jChannel.send(hello);
+            jChannel.send(hello);
         } catch (Exception e1) {
             e1.printStackTrace();
         }
@@ -121,7 +121,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
      * @return The name of the channel this JGroupCommunicator is connected to.
      */
     public String getChannel () {
-        return this.channel;
+        return channel;
     }
 
     /**
@@ -136,8 +136,8 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
         }
         this.channel = channel;
         try {
-            this.jChannel.disconnect();
-            this.jChannel.connect(this.channel);
+            jChannel.disconnect();
+            jChannel.connect(this.channel);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -148,7 +148,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
      * Wrapper).
      */
     public void setNativeSenderMode () {
-        this.senderMode = SENDER_MODE_NATIVE;
+        senderMode = SENDER_MODE_NATIVE;
     }
 
     /**
@@ -156,7 +156,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
      * serialised as JSON String).
      */
     public void setJSONSenderMode () {
-        this.senderMode = SENDER_MODE_JSON;
+        senderMode = SENDER_MODE_JSON;
     }
 
     /**
@@ -165,7 +165,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
      * @return The sender mode of this JGroupCommunicator.
      */
     public int getSenderMode () {
-        return this.senderMode;
+        return senderMode;
     }
 
     @Override public void receive (Message incoming) {
@@ -175,31 +175,31 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
             return;
         }
         CommunicatorMessage message = (CommunicatorMessage) messageObject;
-        if (message.senderId == this.senderId) {
+        if (message.senderId == senderId) {
             return; // Don't process our own messages.
         }
-        if (this.allTransmitters.keySet().contains(new Integer(message.senderId)) == false) {
-            this.requestMemberInfo(CommunicatorMessage.FIRST_CONTACT);
+        if (allTransmitters.keySet().contains(new Integer(message.senderId)) == false) {
+            requestMemberInfo(CommunicatorMessage.FIRST_CONTACT);
         }
         switch (message.messageType) {
         case CommunicatorMessage.WRAPPER:
-            if (this.suppressIncoming) {
+            if (suppressIncoming) {
                 return;
             }
-            this.addAndFireEvent((CRoot) message.payload);
+            addAndFireEvent((CRoot) message.payload);
             break;
         case CommunicatorMessage.JSON:
-            if (this.suppressIncoming) {
+            if (suppressIncoming) {
                 return;
             }
             try {
-                this.addAndFireEvent(this.gson.fromJson((String) message.payload, CRoot.class));
+                addAndFireEvent(gson.fromJson((String) message.payload, CRoot.class));
             } catch (Exception e) {
                 Main.console.err("JSON String malformed: " + message.payload);
             }
             break;
         default:
-            this.handleInformationExchange((String) message.payload, message.messageType, message.senderId);
+            handleInformationExchange((String) message.payload, message.messageType, message.senderId);
             break;
         }
     }
@@ -207,39 +207,39 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
     private void handleInformationExchange (String member_string, short messageType, int senderId) {
         switch (messageType) {
         case CommunicatorMessage.BROADCAST_CHANNEL_CHECK_IN:
-            this.sendMemberInfo(CommunicatorMessage.CHECKING_IN);
+            sendMemberInfo(CommunicatorMessage.CHECKING_IN);
             break;
         case CommunicatorMessage.FIRST_CONTACT:
-            this.sendMemberInfo(CommunicatorMessage.FIRST_CONTACT_ACK);
+            sendMemberInfo(CommunicatorMessage.FIRST_CONTACT_ACK);
             break;
         case CommunicatorMessage.CHECKING_IN:
-            if (this.listenForMemeberInfo) {
-                this.currentMemberStrings.add(member_string);
-                this.listener.messageReceived(CommunicatorMessage.CHECKING_IN);
+            if (listenForMemeberInfo) {
+                currentMemberStrings.add(member_string);
+                listener.messageReceived(CommunicatorMessage.CHECKING_IN);
             }
             break;
         case CommunicatorMessage.HELLO:
-            this.requestMemberInfo(CommunicatorMessage.FIRST_CONTACT);
+            requestMemberInfo(CommunicatorMessage.FIRST_CONTACT);
             break;
         case CommunicatorMessage.FIRST_CONTACT_ACK:
-            this.allTransmitters.put(new Integer(senderId), member_string);
+            allTransmitters.put(new Integer(senderId), member_string);
             break;
         }
     }
 
     private void requestMemberInfo (short context) {
         Message memberInfo = new Message();
-        memberInfo.setObject(new CommunicatorMessage(null, this.senderId, context));
+        memberInfo.setObject(new CommunicatorMessage(null, senderId, context));
         try {
-            this.jChannel.send(memberInfo);
+            jChannel.send(memberInfo);
         } catch (Exception e) {}
     }
 
     private void sendMemberInfo (short context) {
         Message memberInfo = new Message();
-        memberInfo.setObject(new CommunicatorMessage(this.hierarchy, this.senderId, context));
+        memberInfo.setObject(new CommunicatorMessage(hierarchy, senderId, context));
         try {
-            this.jChannel.send(memberInfo);
+            jChannel.send(memberInfo);
         } catch (Exception e) {}
     }
 
@@ -254,16 +254,16 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
      *            True to enable listening. False to disable.
      */
     public void listenForMemberInfo (boolean value) {
-        this.listenForMemeberInfo = value;
-        if (this.listenForMemeberInfo == false) {
-            this.currentMemberStrings.clear();
+        listenForMemeberInfo = value;
+        if (listenForMemeberInfo == false) {
+            currentMemberStrings.clear();
         } else {
             Message m = new Message();
-            m.setObject(new CommunicatorMessage(null, this.senderId, CommunicatorMessage.BROADCAST_CHANNEL_CHECK_IN));
-            this.currentMemberStrings.add("ME: " + this.hierarchy);
-            this.listener.messageReceived(CommunicatorMessage.CHECKING_IN);
+            m.setObject(new CommunicatorMessage(null, senderId, CommunicatorMessage.BROADCAST_CHANNEL_CHECK_IN));
+            currentMemberStrings.add("ME: " + hierarchy);
+            listener.messageReceived(CommunicatorMessage.CHECKING_IN);
             try {
-                this.jChannel.send(m);
+                jChannel.send(m);
             } catch (Exception e) {}
         }
     }
@@ -276,7 +276,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
      * @return A list of agents connected to the channel.
      */
     public List<String> getMemberStrings () {
-        return this.currentMemberStrings;
+        return currentMemberStrings;
     }
 
     private final List<String> allMemberStrings = new ArrayList<String>();
@@ -289,7 +289,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
      *         with.
      */
     public final List<String> getAllMemberStrings () {
-        return this.allMemberStrings;
+        return allMemberStrings;
     }
 
     /**
@@ -299,7 +299,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
      * @return The first received Wrapper in queue.
      */
     @Override public CRoot popQueuedMessage () {
-        return this.incomingQueue.remove(0);
+        return incomingQueue.remove(0);
     }
 
     /**
@@ -309,9 +309,9 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
      */
     @Override public List<CRoot> getAllQueuedMessages () {
         ArrayList<CRoot> allQueuedMessages = new ArrayList<CRoot>();
-        if (this.incomingQueue.isEmpty() == false) {
-            allQueuedMessages.addAll(this.incomingQueue);
-            this.incomingQueue.clear();
+        if (incomingQueue.isEmpty() == false) {
+            allQueuedMessages.addAll(incomingQueue);
+            incomingQueue.clear();
         }
         return allQueuedMessages;
     }
@@ -324,17 +324,16 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
      */
     @Override public boolean sendWrapper (CRoot outgoing) {
         Message outMessage = new Message();
-        if (this.senderMode == SENDER_MODE_NATIVE) {
-            outMessage.setObject(new CommunicatorMessage(outgoing, this.senderId, CommunicatorMessage.WRAPPER));
-        } else if (this.senderMode == SENDER_MODE_JSON) {
-            outMessage.setObject(
-                    new CommunicatorMessage(this.gson.toJson(outgoing), this.senderId, CommunicatorMessage.JSON));
+        if (senderMode == SENDER_MODE_NATIVE) {
+            outMessage.setObject(new CommunicatorMessage(outgoing, senderId, CommunicatorMessage.WRAPPER));
+        } else if (senderMode == SENDER_MODE_JSON) {
+            outMessage.setObject(new CommunicatorMessage(gson.toJson(outgoing), senderId, CommunicatorMessage.JSON));
         } else {
             Main.console.err("Message could not be sent: Sender mode invalid.");
             return false;
         }
         try {
-            this.jChannel.send(outMessage);
+            jChannel.send(outMessage);
         } catch (Exception e) {
             Main.console.err("Message could not be sent: " + e);
             return false;
@@ -353,9 +352,9 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
      */
     @Override public boolean sendString (String JSONString) {
         Message m = new Message();
-        m.setObject(new CommunicatorMessage(JSONString, this.senderId, CommunicatorMessage.JSON));
+        m.setObject(new CommunicatorMessage(JSONString, senderId, CommunicatorMessage.JSON));
         try {
-            this.jChannel.send(m);
+            jChannel.send(m);
         } catch (Exception e) {
             Main.console.err("Message could not be sent: " + e);
             return false;
@@ -366,7 +365,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
     @Override public boolean sendWrappers (List<CRoot> outgoing) {
         boolean allSuccessful = true;
         for (CRoot w : outgoing) {
-            allSuccessful = allSuccessful && this.sendWrapper(w);
+            allSuccessful = allSuccessful && sendWrapper(w);
         }
         return allSuccessful;
     }
@@ -376,7 +375,7 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
      * prevent resource leaks.
      */
     @Override public void close () {
-        this.jChannel.close();
+        jChannel.close();
     }
 
     /**
@@ -386,11 +385,11 @@ public class JGroupCommunicator extends ReceiverAdapter implements Communicator 
      *            The wrapper to add the the incoming queue.
      */
     private void addAndFireEvent (CRoot w) {
-        this.incomingQueue.add(w);
-        this.listener.messageReceived(CommunicatorMessage.WRAPPER);
+        incomingQueue.add(w);
+        listener.messageReceived(CommunicatorMessage.WRAPPER);
     }
 
     public Collection<String> allKnownEntities () {
-        return this.allTransmitters.values();
+        return allTransmitters.values();
     }
 }
