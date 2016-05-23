@@ -198,7 +198,6 @@ public abstract class AVElement extends Pane {
 	shapePane.getChildren().add(shape);
 
 	valueLabel = (Label) fxmlLoader.getNamespace().get("value");
-	// Double.NaN is used to indicate an element is inactive.
 
 	infoLabel.setMouseTransparent(true);
 	infoLabel.setStyle("-fx-background-color: rgba(255, 255, 255, 0.8);");
@@ -242,8 +241,8 @@ public abstract class AVElement extends Pane {
 	// Rotate.
 	shape.setRotate(0);
 	RotateTransition rotate = new RotateTransition(Duration.millis(150), shape);
-	rotate.setFromAngle(-5);
-	rotate.setToAngle(5);
+	rotate.setFromAngle(-8);
+	rotate.setToAngle(8);
 	rotate.setCycleCount(6);
 	rotate.setAutoReverse(true);
 	rotate.setOnFinished(event -> {

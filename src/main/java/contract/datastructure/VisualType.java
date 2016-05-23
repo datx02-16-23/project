@@ -6,9 +6,9 @@ public enum VisualType {
 	 */
 	bar("Bar Chart", "bar"),
 	/**
-	 * Graph type.
+	 * Special Graph type.
 	 */
-	tree("KTree", "tree"),
+	tree("K-Tree", "tree"),
 	/**
 	 * Grid type.
 	 */
