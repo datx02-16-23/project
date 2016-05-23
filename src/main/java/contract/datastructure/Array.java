@@ -24,7 +24,7 @@ public class Array extends DataStructure {
      */
     private static final long serialVersionUID = Const.VERSION_NUMBER;
     private transient int[]   capacity;
-    private MinMaxListener    mmListener;
+    private transient MinMaxListener    mmListener;
 
     // private transient BoundaryChangeListener listener;
 

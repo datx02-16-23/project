@@ -9,6 +9,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -187,6 +188,7 @@ public class Controller implements CommunicatorListener {
         sourceViewer.clear();
         operationPanel.clear();
         setButtons();
+        window.setTitle(Const.PROGRAM_NAME);
     }
 
     /**
@@ -460,6 +462,7 @@ public class Controller implements CommunicatorListener {
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
         File source = fc.showOpenDialog(window);
         if (source != null) {
+            window.setTitle(Const.PROJECT_NAME + " - " + source);
             readLog(source);
         }
     }
@@ -509,7 +512,7 @@ public class Controller implements CommunicatorListener {
         updatePanels();
         setButtons();
     }
-
+    
     private void checkOperationIdentifiers (List<Operation> ops, Map<String, DataStructure> structs) {
         HashSet<String> opsIdentifiers = new HashSet<String>();
         /*
@@ -551,15 +554,32 @@ public class Controller implements CommunicatorListener {
                 break;
             }
         }
-        Set<String> keyset = structs.keySet();
+        
+        
+        Set<String> keySet = structs.keySet();
+        ArrayList<String> usedKeys = new ArrayList<String>();
+        ArrayList<String> uselessKeys = new ArrayList<String>(keySet);
+        
         DataStructure newStruct;
         for (String identifier : opsIdentifiers) {
-            if (keyset.contains(identifier) == false) {
+            if (keySet.contains(identifier) == false) {
                 newStruct = createStructureDialog.show(identifier);
                 if (newStruct != null) {
                     structs.put(newStruct.identifier, newStruct);
                 }
+            } else {
+                usedKeys.add(identifier);
             }
+        }
+        
+        uselessKeys.removeAll(usedKeys);
+        
+        for(String identifier : uselessKeys){
+            if(Debug.ERR){
+                System.err.println("Ignored unused data structure: " + structs.get(identifier));
+            }
+            Main.console.force("Ignored unused data structure: " + structs.get(identifier));
+            structs.remove(identifier);
         }
     }
 

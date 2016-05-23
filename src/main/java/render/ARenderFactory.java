@@ -33,21 +33,20 @@ public abstract class ARenderFactory {
 	ARender curRender = null;
 
 	switch (struct.visual) {
+	case barchart:
 	case bar:
-	    curRender = new BarchartRender(struct, elemWidth * 0.9, -1, 20, elemWidth / 10);
+	    curRender = new BarchartRender(struct, elemWidth * 0.9, -1, 20, 3);
 	    break;
+	case matrix:
 	case grid:
 	case box:
 	    curRender = new GridRender(struct, GridRender.Order.ROW_MAJOR, elemWidth, elemHeight, 3, 3);
 	    break;
+	case binaryTree:
 	case tree:
-	    // curRender = new KTreeRender(struct, 2, elemWidth, elemHeight, 5,
-	    // 5);
-	    curRender = new KTreeRender(struct, 2, elemWidth * 1.5, elemHeight * 1.5, 5, 5); // TODO
-	    // remove
-	    // this
-	    // line
+	    curRender = new KTreeRender(struct, 2, elemWidth, elemHeight, 5, 5);
 	    break;
+	case element:
 	case single:
 	    curRender = new SingleElementRender(struct, elemWidth * 2, elemHeight);
 	    break;
