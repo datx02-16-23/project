@@ -1,16 +1,18 @@
-package contract.operation;
+package contract.utility;
 
 import contract.Locator;
 import contract.Operation;
+import contract.operation.Key;
+import contract.operation.OperationType;
 
 /**
  * Utility class for operations.
  * @author Richard Sundqvist
  *
  */
-public abstract class OperationUtility {
+public abstract class OpUtils {
 
-    public static Locator getLoactor (Operation op, Key locatorKey) {
+    public static Locator getLocator (Operation op, Key locatorKey) {
         Locator ans = null;
         switch (locatorKey) {
         case source:

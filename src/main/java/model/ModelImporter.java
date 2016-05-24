@@ -13,7 +13,7 @@ import contract.Operation;
 import contract.datastructure.DataStructure;
 import contract.datastructure.IndependentElement;
 import contract.operation.Key;
-import contract.operation.OperationUtility;
+import contract.utility.OpUtils;
 import gui.Main;
 import gui.dialog.CreateStructureDialog;
 import gui.dialog.IdentifierCollisionDialog;
@@ -122,6 +122,7 @@ public class ModelImporter {
 
     /**
      * Attempt to insert structures and operations into a live model.
+     * 
      * @param newStructs
      *            The new data structures to insert.
      * @param newOps
@@ -161,13 +162,15 @@ public class ModelImporter {
 
         // Handle used but undeclared names.
         gatherUsedOperationNames(newOps, newStructs);
-        handleUndeclaredNames(newStructs.keySet());
+        newStructs.putAll(handleUndeclaredNames(newStructs.keySet()));
 
         Map<String, DataStructure> newLiveModelStructures = new HashMap<String, DataStructure>();
+        List<Operation> newLiveModelOperations = new ArrayList<Operation>();
+
         newLiveModelStructures.putAll(liveModel.getStructures());
         newLiveModelStructures.putAll(newStructs);
-
-        List<Operation> newLiveModelOperations = new ArrayList<Operation>();
+        newLiveModelOperations.addAll(liveModel.getOperations());
+        newLiveModelOperations.addAll(newOps);
 
         liveModel.set(newLiveModelStructures, newLiveModelOperations);
         return true;
@@ -181,10 +184,11 @@ public class ModelImporter {
      */
     // ============================================================= //
 
-    private void handleUndeclaredNames (Set<String> newStructNames) {
+    private Map<String, DataStructure> handleUndeclaredNames (Set<String> newStructNames) {
         Set<String> allStructNames = new HashSet<String>();
         allStructNames.addAll(newStructNames);
         allStructNames.addAll(liveModel.getStructures().keySet());
+        Map<String, DataStructure> createdStructures = new HashMap<String, DataStructure>();
 
         DataStructure newStruct;
         System.out.println("used = " + operationStructNames);
@@ -199,12 +203,13 @@ public class ModelImporter {
                     newStruct = ccd.show(identifier);
 
                     if (newStruct != null) {
-                        liveModel.getStructures().put(newStruct.identifier, newStruct);
+                        createdStructures.put(newStruct.identifier, newStruct);
                     }
                 }
             }
-            
+
         }
+        return createdStructures;
     }
 
     private void autoCreateOrphan (String identifier) {
@@ -223,7 +228,7 @@ public class ModelImporter {
             case read:
             case write:
 
-                Locator source = OperationUtility.getLoactor(op, Key.source);
+                Locator source = OpUtils.getLocator(op, Key.source);
                 if (source != null) {
                     DataStructure sourceStruct = structs.get(source.identifier);
                     if (sourceStruct == null) {
@@ -231,7 +236,7 @@ public class ModelImporter {
                     }
                 }
 
-                Locator target = OperationUtility.getLoactor(op, Key.target);
+                Locator target = OpUtils.getLocator(op, Key.target);
                 if (target != null) {
                     DataStructure targetStruct = structs.get(target.identifier);
                     if (targetStruct == null) {
@@ -240,7 +245,7 @@ public class ModelImporter {
                 }
                 break;
             case swap:
-                Locator var1 = OperationUtility.getLoactor(op, Key.var1);
+                Locator var1 = OpUtils.getLocator(op, Key.var1);
 
                 if (var1 != null) {
                     DataStructure var1Struct = structs.get(var1.identifier);
@@ -249,7 +254,7 @@ public class ModelImporter {
                     }
                 }
 
-                Locator var2 = OperationUtility.getLoactor(op, Key.target);
+                Locator var2 = OpUtils.getLocator(op, Key.target);
                 if (var2 != null) {
                     DataStructure var2Struct = structs.get(var2.identifier);
                     if (var2Struct == null) {
@@ -258,7 +263,7 @@ public class ModelImporter {
                 }
                 break;
             case remove:
-                String identifier = OperationUtility.getIdentifier(op);
+                String identifier = OpUtils.getIdentifier(op);
                 DataStructure targetStruct = structs.get(identifier);
                 if (targetStruct == null) {
                     operationStructNames.add(identifier);

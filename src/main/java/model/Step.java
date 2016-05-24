@@ -9,6 +9,7 @@ import contract.Operation;
 import contract.datastructure.DataStructure;
 import contract.operation.Key;
 import contract.operation.OP_Message;
+import contract.utility.OpUtils;
 import gui.Main;
 
 public class Step {
@@ -45,45 +46,41 @@ public class Step {
      * @return 0 if the operation should be applied.
      */
     public void applyOperation (Operation op) {
-        Locator locator;
-        DataStructure struct;
         switch (op.operation) {
+
         case message:
             Main.console.info("MESSAGE: " + ((OP_Message) op).getMessage());
             break;
         case read:
         case write:
-            // Technically not identical, as read will always have a source and
-            // write will always have a target.
-
-            locator = (Locator) op.operationBody.get(Key.source);
-            if (locator != null) {
-                struct = structs.get(locator.identifier);
-                if (struct != null) {
-                    struct.applyOperation(op);
+            Locator source = OpUtils.getLocator(op, Key.source);
+            if (source != null) {
+                DataStructure sourceStruct = structs.get(source.identifier);
+                if (sourceStruct != null) {
+                    sourceStruct.applyOperation(op);
                 }
             }
 
-            locator = (Locator) op.operationBody.get(Key.target);
-            if (locator != null) {
-                struct = structs.get(locator.identifier);
-                if (struct != null) {
-                    struct.applyOperation(op);
+            Locator target = OpUtils.getLocator(op, Key.target);
+            if (target != null) {
+                DataStructure targetStruct = structs.get(target.identifier);
+                if (targetStruct != null) {
+                    targetStruct.applyOperation(op);
                 }
             }
             break;
         case swap:
-            locator = (Locator) op.operationBody.get(Key.var1);
-            structs.get(locator.identifier).applyOperation(op);
+            Locator var1 = OpUtils.getLocator(op, Key.var1);
+            structs.get(var1.identifier).applyOperation(op);
 
-            locator = (Locator) op.operationBody.get(Key.var2);
-            structs.get(locator.identifier).applyOperation(op);
+            Locator var2 = OpUtils.getLocator(op, Key.var2);
+            structs.get(var2.identifier).applyOperation(op);
             break;
         case remove:
-            locator = (Locator) op.operationBody.get(Key.target);
-            struct = structs.get(locator.identifier);
-            if (struct != null) {
-                struct.applyOperation(op);
+            Locator removeTarget = OpUtils.getLocator(op, Key.target);
+            DataStructure targetStruct = structs.get(removeTarget.identifier);
+            if (targetStruct != null) {
+                targetStruct.applyOperation(op);
             }
             break;
         default:

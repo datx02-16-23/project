@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -137,8 +138,8 @@ public class Model {
     }
 
     /**
-     * Step the model backwards. This method will reset the model and call stepForward() index - 1
-     * times.
+     * Step the model backwards. This method will reset the model and call stepForward()
+     * index - 1 times.
      *
      * @return True if the model was successfully moved backward. False otherwise.
      */
@@ -155,8 +156,8 @@ public class Model {
     }
 
     /**
-     * Jump to a given step. Will jump to the beginning if {@code toStepNo < 0}, or to the end if
-     * {@code toStepNo > operations.size()}.
+     * Jump to a given step. Will jump to the beginning if {@code toStepNo < 0}, or to the
+     * end if {@code toStepNo > operations.size()}.
      *
      * @param toStepNo
      *            The step to jump to.
@@ -235,7 +236,7 @@ public class Model {
      * @return The DataStructure map held by this Model.
      */
     public Map<String, DataStructure> getStructures () {
-        return step.getStructures();
+        return Collections.unmodifiableMap(step.getStructures());
     }
 
     /**
@@ -246,12 +247,12 @@ public class Model {
      * @return The Operation list held by this Model.
      */
     public List<Operation> getOperations () {
-        return atomicOperations;
+        return Collections.unmodifiableList(atomicOperations);
     }
 
     /**
-     * Set the Operation list used by this Model, and reset the index. The previous list will be
-     * lost.
+     * Set the Operation list used by this Model, and reset the index. The previous list
+     * will be lost.
      *
      * @param newOperations
      *            The new list of operations to use.
@@ -263,8 +264,8 @@ public class Model {
     }
 
     /**
-     * Returns true if this model has been hard cleared, or if it has not been changed since the the
-     * constructor was called.
+     * Returns true if this model has been hard cleared, or if it has not been changed
+     * since the the constructor was called.
      *
      * @return True if this Model is in its initial state.
      */
