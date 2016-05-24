@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import contract.Locator;
-import contract.Operation;
 import contract.datastructure.DataStructure;
 import contract.datastructure.IndependentElement;
+import contract.json.Locator;
+import contract.json.Operation;
 import contract.operation.Key;
 import contract.utility.OpUtils;
 import gui.Main;

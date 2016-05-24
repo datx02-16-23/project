@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.google.gson.internal.LinkedTreeMap;
 
-import contract.Locator;
-import contract.Operation;
+import contract.json.Locator;
+import contract.json.Operation;
 import contract.operation.Key;
 import contract.operation.OP_Message;
 import contract.operation.OP_Read;

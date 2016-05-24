@@ -2,11 +2,11 @@ package contract.utility;
 
 import java.util.Arrays;
 
-import contract.AnnotatedVariable;
 import contract.datastructure.Array;
 import contract.datastructure.DataStructure;
 import contract.datastructure.IndependentElement;
 import contract.datastructure.RawType;
+import contract.json.AnnotatedVariable;
 import contract.operation.Key;
 import gui.Main;
 

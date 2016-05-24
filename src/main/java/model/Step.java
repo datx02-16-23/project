@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import assets.Debug;
-import contract.Locator;
-import contract.Operation;
 import contract.datastructure.DataStructure;
+import contract.json.Locator;
+import contract.json.Operation;
 import contract.operation.Key;
 import contract.operation.OP_Message;
 import contract.utility.OpUtils;

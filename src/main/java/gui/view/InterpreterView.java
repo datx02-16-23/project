@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import assets.Const;
-import contract.Operation;
 import contract.interpreter.Interpreter;
+import contract.json.Operation;
 import contract.operation.OperationType;
 import gui.Controller;
 import gui.Main;

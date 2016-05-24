@@ -4,8 +4,8 @@ import java.util.Map;
 
 import assets.Const;
 import assets.Tools;
-import contract.Locator;
-import contract.Operation;
+import contract.json.Locator;
+import contract.json.Operation;
 import contract.operation.OP_ReadWrite;
 import contract.operation.OP_Swap;
 import contract.operation.OperationType;

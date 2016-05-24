@@ -21,19 +21,18 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 
 import assets.Const;
-import contract.AnnotatedVariable;
-import contract.Root;
-import contract.Header;
-import contract.Operation;
 import contract.datastructure.DataStructure;
 import contract.io.Communicator.CommunicatorMessage;
+import contract.json.AnnotatedVariable;
+import contract.json.Header;
+import contract.json.Operation;
+import contract.json.Root;
 import contract.utility.DataStructureParser;
 import contract.utility.OperationParser;
-import gui.Main;
 
 /**
- * A LogStreamManager handles communication between processes, components, and the OS file system.
- * <br>
+ * A LogStreamManager handles communication between processes, components, and the OS file
+ * system. <br>
  * <b>LogStreamManager will not unwrap streamed messages if the listener is null.</b>
  *
  * @author Richard Sundqvist
@@ -41,8 +40,8 @@ import gui.Main;
 public class LogStreamManager implements CommunicatorListener {
 
     /**
-     * Set to {@code true} to enable human readable printing of log files. {@code false} by default
-     * to increase performance.
+     * Set to {@code true} to enable human readable printing of log files. {@code false}
+     * by default to increase performance.
      */
     public boolean                     PRETTY_PRINTING = false;
     private final Gson                 gson            = GsonContructor.build();
@@ -146,9 +145,16 @@ public class LogStreamManager implements CommunicatorListener {
      * @param filePath
      *            Location of the file to read.
      * @return {@code true} if the log was successfully read. {@code false} otherwise.
+     * @return {@code true} if the log was successfully read. {@code false} otherwise.
+     * @throws FileNotFoundException
+     *             If {@code logFile} could not be opened.
+     * @throws JsonSyntaxException
+     *             If the file could not be parsed by Gson.
+     * @throws JsonIOException
+     *             When Gson fails to read {@code logFile}.
      */
-    public boolean readLog (String filePath) {
-        return this.readLog(new File(filePath));
+    public boolean readLog (String filePath) throws JsonIOException, JsonSyntaxException, FileNotFoundException {
+        return readLog(new File(filePath));
     }
 
     /**
@@ -157,19 +163,16 @@ public class LogStreamManager implements CommunicatorListener {
      * @param logFile
      *            The file to read.
      * @return {@code true} if the log was successfully read. {@code false} otherwise.
+     * @throws FileNotFoundException
+     *             If {@code logFile} could not be opened.
+     * @throws JsonSyntaxException
+     *             If the file could not be parsed by Gson.
+     * @throws JsonIOException
+     *             When Gson fails to read {@code logFile}.
      */
-    public boolean readLog (File logFile) {
-        try {
-            wrapper = gson.fromJson(new JsonReader(new FileReader(logFile)), Root.class);
-            return this.unwrap(wrapper);
-        } catch (JsonIOException e) {
-            Main.console.err("JSON IO error: " + e);
-        } catch (JsonSyntaxException e) {
-            Main.console.err("JSON syntax error: " + e);
-        } catch (FileNotFoundException e) {
-            Main.console.err("File not found: " + e);
-        }
-        return false;
+    public boolean readLog (File logFile) throws JsonIOException, JsonSyntaxException, FileNotFoundException {
+        wrapper = gson.fromJson(new JsonReader(new FileReader(logFile)), Root.class);
+        return unwrap(wrapper);
     }
 
     /**
@@ -182,44 +185,49 @@ public class LogStreamManager implements CommunicatorListener {
     }
 
     /**
-     * Print the operations and header information currently held by this LogStreamManager. Set the
-     * public variable {@code PRETTY_PRINTING} to true to enable human-readable output. Will
-     * generate a filename automatically on the form YY-MM-DD_HHMMSS.
+     * Print the operations and header information currently held by this
+     * LogStreamManager. Set the public variable {@code PRETTY_PRINTING} to true to enable
+     * human-readable output. Will generate a filename automatically on the form
+     * YY-MM-DD_HHMMSS.
      *
      * @param targetDir
      *            The directory to print the log file.
+     * @throws FileNotFoundException 
      */
-    public void printLogAutoName (File targetDir) {
+    public void printLogAutoName (File targetDir) throws FileNotFoundException {
         this.printLog(targetDir.toString(), true);
     }
 
     /**
-     * Print the operations and header information currently held by this LogStreamManager. Set the
-     * public variable {@code PRETTY_PRINTING} to true to enable human-readable output. Will
-     * generate a filename automatically on the form YY-MM-DD_HHMMSS.
+     * Print the operations and header information currently held by this
+     * LogStreamManager. Set the public variable {@code PRETTY_PRINTING} to true to enable
+     * human-readable output. Will generate a filename automatically on the form
+     * YY-MM-DD_HHMMSS.
      *
      * @param target
      *            The location and file name of the file to print.
+     * @throws FileNotFoundException 
      */
-    public void printLog (File target) {
+    public void printLog (File target) throws FileNotFoundException {
         this.printLog(target.toString(), false);
     }
 
     /**
-     * Print the operations and header information currently held by this LogStreamManager. Set the
-     * public variable {@code PRETTY_PRINTING} to true to enable human-readable output. If
-     * {@code autoName} is true, a file name on the form "YY-MM-DD_HHMMSS.json" will be generated.
+     * Print the operations and header information currently held by this
+     * LogStreamManager. Set the public variable {@code PRETTY_PRINTING} to true to enable
+     * human-readable output. If {@code autoName} is true, a file name on the form
+     * "YY-MM-DD_HHMMSS.json" will be generated.
      *
      * @param targetPath
      *            The location to print the log file.
      * @param autoName
      *            If {@code true} file name will be created automatically.
      */
-    public void printLog (String targetPath, boolean autoName) {
+    public void printLog (String targetPath, boolean autoName) throws FileNotFoundException {
         HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
         annotatedVariables.putAll(dataStructures);
         Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables, sources);
-        this.printLog(targetPath, new Root(header, operations), autoName);
+        printLog(targetPath, new Root(header, operations), autoName);
     }
 
     /**
@@ -235,8 +243,8 @@ public class LogStreamManager implements CommunicatorListener {
     }
 
     /**
-     * Stream the data held by this LogStreamManager using the current Communicator, then clear
-     * data. Data will be cleared only if successful (this method returns true).
+     * Stream the data held by this LogStreamManager using the current Communicator, then
+     * clear data. Data will be cleared only if successful (this method returns true).
      *
      * @return True if data was successfully streamed.
      */
@@ -275,7 +283,8 @@ public class LogStreamManager implements CommunicatorListener {
     }
 
     /**
-     * Stream the given JSON string using the Communicator carried by this LogStreamManager.
+     * Stream the given JSON string using the Communicator carried by this
+     * LogStreamManager.
      *
      * @param json
      *            The JSON String to stream.
@@ -286,7 +295,8 @@ public class LogStreamManager implements CommunicatorListener {
     }
 
     /**
-     * Stream the given Operation list using the Communicator carried by this LogStreamManager.
+     * Stream the given Operation list using the Communicator carried by this
+     * LogStreamManager.
      *
      * @param operations
      *            The operations to stream.
@@ -297,7 +307,8 @@ public class LogStreamManager implements CommunicatorListener {
     }
 
     /**
-     * Stream the given AnnotatedVariable using the Communicator carried by this LogStreamManager.
+     * Stream the given AnnotatedVariable using the Communicator carried by this
+     * LogStreamManager.
      *
      * @param annotatedVariable
      *            The Wrapper to stream.
@@ -325,14 +336,14 @@ public class LogStreamManager implements CommunicatorListener {
         return allSuccessful;
     }
 
-    public void printSimpleLog (String targetPath) {
+    public void printSimpleLog (String targetPath) throws FileNotFoundException {
         HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
         annotatedVariables.putAll(dataStructures);
         Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables, null);
-        this.printSimpleLog(targetPath + "simple.log", new Root(header, operations));
+        printSimpleLog(targetPath + "simple.log", new Root(header, operations));
     }
 
-    public void printSimpleLog (String targetPath, Root wrapper) {
+    public void printSimpleLog (String targetPath, Root wrapper) throws FileNotFoundException {
         StringBuilder sb = new StringBuilder();
         sb.append(
                 "This is a simplified version of the log. It sacrifices completeness for readability and cannot be processed by "
@@ -354,8 +365,8 @@ public class LogStreamManager implements CommunicatorListener {
     }
 
     /**
-     * Print the operations and header container in the wrapper given as argument. Set the public
-     * variable PRETTY_PRINTING to true to enable human-readable output.
+     * Print the operations and header container in the wrapper given as argument. Set the
+     * public variable PRETTY_PRINTING to true to enable human-readable output.
      *
      * @param targetPath
      *            The location to print the log file.
@@ -364,7 +375,7 @@ public class LogStreamManager implements CommunicatorListener {
      * @param autoName
      *            if {@code true}, a name will be automatically generated.
      */
-    public void printLog (String targetPath, Root wrapper, boolean autoName) {
+    public void printLog (String targetPath, Root wrapper, boolean autoName) throws FileNotFoundException {
         Gson GSON;
         DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd_HHmmss");
         Calendar cal = Calendar.getInstance();
@@ -377,17 +388,11 @@ public class LogStreamManager implements CommunicatorListener {
         printString(targetPath + fileName, GSON.toJson(wrapper));
     }
 
-    private void printString (String completePath, String str) {
-        try {
-            PrintStream out = new PrintStream(new FileOutputStream(completePath));
-            Main.console.force("Log printed: " + completePath);
-            out.print(str);
-            out.flush();
-            out.close();
-        } catch (Exception e) {
-            Main.console.err("Printing failed: " + e);
-            e.printStackTrace();
-        }
+    private void printString (String completePath, String str) throws FileNotFoundException {
+        PrintStream out = new PrintStream(new FileOutputStream(completePath));
+        out.print(str);
+        out.flush();
+        out.close();
     }
 
     /**
@@ -452,8 +457,8 @@ public class LogStreamManager implements CommunicatorListener {
     }
 
     /**
-     * Clear list of operations and known variables. Equivalent to calling clearOperations() and
-     * clearKnownVariables().
+     * Clear list of operations and known variables. Equivalent to calling
+     * clearOperations() and clearKnownVariables().
      */
     public void clearData () {
         sources = null;
@@ -476,7 +481,8 @@ public class LogStreamManager implements CommunicatorListener {
     }
 
     /**
-     * Set the CommunicatorListener which will be notified when this Communicator accepts a message.
+     * Set the CommunicatorListener which will be notified when this Communicator accepts
+     * a message.
      *
      * @param newListener
      *            The new CommunicatorListener.

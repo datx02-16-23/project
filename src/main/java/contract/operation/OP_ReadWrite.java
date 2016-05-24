@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import assets.Const;
-import contract.Locator;
-import contract.Operation;
+import contract.json.Locator;
+import contract.json.Operation;
 
 /**
  * A primitive operation from which all other operations on data structures may be constructed.

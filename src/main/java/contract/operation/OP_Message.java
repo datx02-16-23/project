@@ -3,7 +3,7 @@ package contract.operation;
 import java.util.HashMap;
 
 import assets.Const;
-import contract.Operation;
+import contract.json.Operation;
 
 /**
  * Creates an operation to initialize an {@code AnnotatedVariable}.

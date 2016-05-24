@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import contract.Operation;
+import contract.json.Operation;
 import gui.Main;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;

@@ -1,6 +1,6 @@
 package contract.datastructure;
 
-import contract.Operation;
+import contract.json.Operation;
 import contract.operation.OperationType;
 import contract.utility.OperationCounter;
 import contract.utility.OperationCounter.OperationCounterHaver;

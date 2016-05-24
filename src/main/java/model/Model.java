@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import assets.Debug;
-import contract.Operation;
 import contract.datastructure.DataStructure;
+import contract.json.Operation;
 import contract.operation.OperationType;
 
 public class Model {

@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import assets.Const;
-import contract.Locator;
-import contract.Operation;
+import contract.json.Locator;
+import contract.json.Operation;
 
 /**
  * Create a new Swap operation, shifting the values of {@code var1} and {@code var2}.

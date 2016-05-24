@@ -2,7 +2,7 @@ package contract.operation;
 
 import java.util.List;
 
-import contract.Operation;
+import contract.json.Operation;
 
 /**
  * A consolidable element can be broken into a series read/write operations. <br>

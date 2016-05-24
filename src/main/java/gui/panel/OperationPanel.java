@@ -3,7 +3,7 @@ package gui.panel;
 import java.io.IOException;
 import java.util.Map;
 
-import contract.Operation;
+import contract.json.Operation;
 import gui.Controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

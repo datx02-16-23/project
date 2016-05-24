@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import contract.Operation;
+import contract.json.Operation;
 import contract.operation.OP_ReadWrite;
 import contract.operation.OP_Swap;
 import contract.operation.OP_Write;

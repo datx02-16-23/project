@@ -12,7 +12,7 @@ import org.jgroups.ReceiverAdapter;
 import com.google.gson.Gson;
 
 import assets.Const;
-import contract.Root;
+import contract.json.Root;
 import gui.Main;
 
 /**

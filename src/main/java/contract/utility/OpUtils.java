@@ -1,7 +1,7 @@
 package contract.utility;
 
-import contract.Locator;
-import contract.Operation;
+import contract.json.Locator;
+import contract.json.Operation;
 import contract.operation.Key;
 import contract.operation.OperationType;
 

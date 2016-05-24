@@ -1,6 +1,7 @@
 package gui;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +13,9 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Properties;
+
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
 
 import assets.Const;
 import assets.Debug;
@@ -514,7 +518,7 @@ public class Controller implements CommunicatorListener {
     public void openFileChooser () {
         FileChooser fc = new FileChooser();
         fc.setInitialDirectory(new File(System.getProperty("user.home")));
-        fc.setTitle("Open OI-File");
+        fc.setTitle("Open Log File");
         fc.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("JSON-Files", "*.json"),
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
         File source = fc.showOpenDialog(window);
@@ -532,7 +536,12 @@ public class Controller implements CommunicatorListener {
      */
     public void readLog (File file) {
         lsm.clearData();
-        boolean success = lsm.readLog(file);
+        boolean success = false;
+        try {
+            success = lsm.readLog(file);
+        } catch (JsonIOException | JsonSyntaxException | FileNotFoundException e) {
+            Main.console.err("Failed to read log: " + e.getMessage());
+        }
         if (success) {
             loadFromLSM();
             lsm.clearData();
@@ -638,7 +647,7 @@ public class Controller implements CommunicatorListener {
     public void openDestinationChooser () {
         FileChooser fc = new FileChooser();
         fc.setInitialDirectory(new File(System.getProperty("user.home")));
-        fc.setTitle("Save OI-File");
+        fc.setTitle("Save Log File");
         DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd_HHmmss");
         Calendar cal = Calendar.getInstance();
         fc.setInitialFileName(dateFormat.format(cal.getTime()));
@@ -653,7 +662,12 @@ public class Controller implements CommunicatorListener {
         lsm.setSources(sourcePanel.getSources());
         boolean old = lsm.PRETTY_PRINTING;
         lsm.PRETTY_PRINTING = model.getOperations().size() > 100;
-        lsm.printLog(target);
+        try {
+            Main.console.info("Printing log: " + target);
+            lsm.printLog(target);
+        } catch (FileNotFoundException e) {
+            Main.console.err("Printing failed: " + e.getMessage());
+        }
         lsm.PRETTY_PRINTING = old;
     }
 

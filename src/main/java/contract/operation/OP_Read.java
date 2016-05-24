@@ -1,7 +1,7 @@
 package contract.operation;
 
 import assets.Const;
-import contract.Locator;
+import contract.json.Locator;
 
 /**
  * Create a new Read operation.

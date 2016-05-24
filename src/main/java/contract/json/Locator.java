@@ -1,4 +1,4 @@
-package contract;
+package contract.json;
 
 import java.io.Serializable;
 import java.util.Arrays;
