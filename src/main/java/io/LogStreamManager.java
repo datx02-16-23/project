@@ -26,8 +26,8 @@ import contract.CRoot;
 import contract.Header;
 import contract.Operation;
 import contract.datastructure.DataStructure;
-import contract.datastructure.DataStructureParser;
-import contract.operation.OperationParser;
+import contract.utility.DataStructureParser;
+import contract.utility.OperationParser;
 import gui.Main;
 import io.Communicator.CommunicatorMessage;
 

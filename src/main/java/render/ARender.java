@@ -13,9 +13,9 @@ import assets.Tools;
 import contract.datastructure.Array;
 import contract.datastructure.Array.IndexedElement;
 import contract.datastructure.Array.MinMaxListener;
+import contract.utility.OperationCounter.OperationCounterHaver;
 import contract.datastructure.DataStructure;
 import contract.datastructure.Element;
-import contract.operation.OperationCounter.OperationCounterHaver;
 import gui.Main;
 import gui.dialog.VisualDialog;
 import javafx.animation.FillTransition;
@@ -482,7 +482,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
         if (struct.getElements().isEmpty() || contentPane == null) {
             return false; // Nothing to draw/contentPane not yet loaded.
         }
-        struct.repaintAll = false;
+        struct.setRepaintAll(false);
 
         // Clear the nodes from all content Panes.
         for (Node n : contentPane.getChildren()) {

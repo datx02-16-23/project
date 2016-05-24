@@ -107,7 +107,7 @@ public class ARenderManager extends BorderPane implements VisualListener {
             renders.put(struct.resolveVisual(), curRender);
         }
 
-        struct.setListener(this);
+        struct.setVisualListener(this);
 
         initRender();
         setCenter(curRender);

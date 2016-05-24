@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 import assets.Debug;
 import contract.datastructure.Element;
-import contract.operation.OperationCounter.OperationCounterHaver;
+import contract.utility.OperationCounter.OperationCounterHaver;
 import gui.Main;
 import javafx.animation.RotateTransition;
 import javafx.animation.StrokeTransition;

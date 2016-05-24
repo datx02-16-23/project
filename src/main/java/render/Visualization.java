@@ -330,7 +330,7 @@ public class Visualization extends StackPane {
                 break;
             case bar:
                 xPos = margin + this.getWidth() * sWExpand;
-                yPos = getHeight() - 125 - (Const.DEFAULT_RENDER_HEIGHT) * (southWest) - margin;
+                yPos = getHeight() - 125 - (Const.DEFAULT_RENDER_HEIGHT) * (southWest) - margin * 2;
                 if (!(checkXPos(xPos) && checkYPos(yPos))) {
                     sWExpand++; // TODO
                 }

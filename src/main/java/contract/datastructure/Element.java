@@ -1,9 +1,9 @@
 package contract.datastructure;
 
 import contract.Operation;
-import contract.operation.OperationCounter;
-import contract.operation.OperationCounter.OperationCounterHaver;
 import contract.operation.OperationType;
+import contract.utility.OperationCounter;
+import contract.utility.OperationCounter.OperationCounterHaver;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;

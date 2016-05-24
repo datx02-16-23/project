@@ -1,4 +1,4 @@
-package contract.operation;
+package contract.utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,14 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import contract.Locator;
 import contract.Operation;
+import contract.operation.Key;
+import contract.operation.OP_Message;
+import contract.operation.OP_Read;
+import contract.operation.OP_ReadWrite;
+import contract.operation.OP_Swap;
+import contract.operation.OP_ToggleScope;
+import contract.operation.OP_Write;
+import contract.operation.OperationType;
 import gui.Main;
 
 /**

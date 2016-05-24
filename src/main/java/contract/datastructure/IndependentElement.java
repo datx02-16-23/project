@@ -79,12 +79,12 @@ public class IndependentElement extends Array {
     @Override public void clear () {
         elements.clear();
         oc.reset();
-        repaintAll = true;
+        setRepaintAll(true);
     }
 
     @Override public void applyOperation (Operation op) {
         super.applyOperation(op);
-        repaintAll = true;
+        setRepaintAll(true);
     }
 
     @Override protected void executeSwap (OP_Swap op) {

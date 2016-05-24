@@ -47,10 +47,6 @@ public class AnnotatedVariable implements Serializable {
      * size.
      */
     public final Map<String, Object> attributes;
-    /**
-     * A String containing preference data for the renders.
-     */
-    public String                    visualOptions;
 
     /**
      * Creates a new AnnotatedVariable.

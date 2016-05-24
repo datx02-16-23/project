@@ -39,8 +39,8 @@ public class SingleElementRender extends ARender {
     }
 
     @Override public void render () {
-        if (struct.repaintAll) {
-            struct.repaintAll = false;
+        if (struct.isRepaintAll()) {
+            struct.setRepaintAll(false);
             repaintAll();
         }
         super.render();

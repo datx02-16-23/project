@@ -108,8 +108,8 @@ public class BarchartRender extends ARender implements MinMaxListener {
     }
 
     @Override public void render () {
-        if (struct.repaintAll) {
-            struct.repaintAll = false;
+        if (struct.isRepaintAll()) {
+            struct.setRepaintAll(false);
             repaintAll();
         }
         super.render();
@@ -119,7 +119,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
         if (struct.getElements().isEmpty() || contentPane == null) {
             return false; // Nothing to render/not yet initialised.
         }
-        struct.repaintAll = false;
+        struct.setRepaintAll(false);
 
         /*
          * Clear the nodes from all content Panes.

@@ -9,13 +9,14 @@ import contract.datastructure.RawType.AbstractType;
 import contract.operation.OP_ReadWrite;
 import contract.operation.OP_Swap;
 import contract.operation.OperationType;
+import contract.utility.DataStructureParser;
 import gui.Main;
 
 /**
  * A representation of the Array data structure, using doubles as values.
  *
  * @author Richard Sundqvist
- *
+ *z
  */
 public class Array extends DataStructure {
 
@@ -88,7 +89,7 @@ public class Array extends DataStructure {
 
     private void init (OP_ReadWrite rw) {
 
-        repaintAll = true;
+        setRepaintAll(true);
         elements.clear();
 
         double[] values = rw.getValue();
@@ -142,7 +143,7 @@ public class Array extends DataStructure {
         clearElementLists();
         resetMinMax();
         oc.reset();
-        repaintAll = true;
+        setRepaintAll(true);
     }
 
     @Override protected void executeSwap (OP_Swap op) {
@@ -207,7 +208,7 @@ public class Array extends DataStructure {
                 putElement(newElement);
 
                 newElement.count(OperationType.write);
-                repaintAll = true;
+                setRepaintAll(true);
                 checkMinMaxChanged(op.getValue() [0]);
             }
         }
@@ -234,7 +235,7 @@ public class Array extends DataStructure {
                 putElement(newElement);
 
                 newElement.count(OperationType.read);
-                repaintAll = true;
+                setRepaintAll(true);
                 checkMinMaxChanged(op.getValue() [0]);
             }
         }
