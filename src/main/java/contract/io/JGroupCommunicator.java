@@ -1,4 +1,4 @@
-package io;
+package contract.io;
 
 import java.util.ArrayList;
 import java.util.Collection;

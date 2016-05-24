@@ -6,10 +6,10 @@ import java.util.Map;
 
 import assets.Const;
 import contract.Operation;
+import contract.interpreter.Interpreter;
 import contract.operation.OperationType;
 import gui.Controller;
 import gui.Main;
-import interpreter.Interpreter;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;

@@ -3,8 +3,8 @@ package gui.view;
 import java.io.IOException;
 import java.util.Collection;
 
+import contract.io.JGroupCommunicator;
 import gui.Controller;
-import io.JGroupCommunicator;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

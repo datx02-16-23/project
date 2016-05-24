@@ -1,4 +1,4 @@
-package io;
+package contract.io;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,10 +26,10 @@ import contract.Root;
 import contract.Header;
 import contract.Operation;
 import contract.datastructure.DataStructure;
+import contract.io.Communicator.CommunicatorMessage;
 import contract.utility.DataStructureParser;
 import contract.utility.OperationParser;
 import gui.Main;
-import io.Communicator.CommunicatorMessage;
 
 /**
  * A LogStreamManager handles communication between processes, components, and the OS file system.

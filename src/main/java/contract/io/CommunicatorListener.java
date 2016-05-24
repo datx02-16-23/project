@@ -1,4 +1,4 @@
-package io;
+package contract.io;
 
 public interface CommunicatorListener {
 

@@ -1,4 +1,4 @@
-package interpreter;
+package contract.interpreter;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

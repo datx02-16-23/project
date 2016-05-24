@@ -20,6 +20,9 @@ import assets.Tools;
 import assets.example.Examples;
 import assets.example.Examples.Algorithm;
 import contract.datastructure.DataStructure;
+import contract.io.CommunicatorListener;
+import contract.io.JGroupCommunicator;
+import contract.io.LogStreamManager;
 import gui.dialog.ExamplesDialog;
 import gui.dialog.VisualDialog;
 import gui.panel.OperationPanel;
@@ -27,9 +30,6 @@ import gui.panel.SourcePanel;
 import gui.view.ConnectedView;
 import gui.view.HelpView;
 import gui.view.InterpreterView;
-import io.CommunicatorListener;
-import io.JGroupCommunicator;
-import io.LogStreamManager;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -63,7 +63,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Model;
-import model.ModelImporter;
+import model.Loader;
 import multiset.MultisetController;
 import render.Visualization;
 
@@ -106,7 +106,7 @@ public class Controller implements CommunicatorListener {
     private ProgressBar            animationProgressBar;
     private Button                 restartButton, clearButton, speedButton;
 
-    private final ModelImporter    modelImporter;
+    private final Loader    modelImporter;
 
     // ============================================================= //
     /*
@@ -121,7 +121,7 @@ public class Controller implements CommunicatorListener {
         vis.setAnimationTime(stepDelay);
         this.window = window;
         model = Model.instance();
-        modelImporter = new ModelImporter(model);
+        modelImporter = new Loader(model);
         this.lsm = lsm;
         this.lsm.PRETTY_PRINTING = true;
         this.lsm.setListener(this);

@@ -23,7 +23,7 @@ import gui.dialog.IdentifierCollisionDialog;
  * @author Richard
  *
  */
-public class ModelImporter {
+public class Loader {
 
     // ============================================================= //
     /*
@@ -94,7 +94,7 @@ public class ModelImporter {
      * @param liveModel
      *            The live model in use.
      */
-    public ModelImporter (Model liveModel) {
+    public Loader (Model liveModel) {
         this.liveModel = liveModel;
     }
 
@@ -105,6 +105,23 @@ public class ModelImporter {
      *
      */
     // ============================================================= //
+
+    /**
+     * Attempt to insert structures and operations into a model.
+     * 
+     * @param model
+     *            The model to insert into.
+     * @param newOps
+     *            The new operations to insert.
+     * @param newStructs
+     *            The new data structures to insert.
+     * @return {@code false} if {@code model} hasn't changed. True if there is a
+     *         possibility that is has.
+     */
+    public static boolean insertIntoModel (Model targetModel, List<Operation> newOps,
+            Map<String, DataStructure> newStructs) {
+        return new Loader(targetModel).insertIntoLiveModel(newOps, newStructs);
+    }
 
     /**
      * Attempt to insert structures and operations into a live model.

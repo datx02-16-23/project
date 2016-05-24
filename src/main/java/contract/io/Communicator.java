@@ -1,4 +1,4 @@
-package io;
+package contract.io;
 
 import java.io.Serializable;
 import java.util.List;
