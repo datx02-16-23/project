@@ -99,17 +99,14 @@ public class Controller implements CommunicatorListener {
     // Settings dialog stuff
     private Stage                  settingsView;
     // Views, panels, dialogs
-    private final ConnectedView    connectedView;
-    private final InterpreterView  interpreterView;
     private final SourcePanel      sourcePanel;
     private final OperationPanel   operationPanel;
-    private final ExamplesDialog   examplesDialog;
-    private final VisualDialog     visualDialog;
-    private final HelpView         helpView;
+    private final ConnectedView connectedView;
     // Buttons
     private Button                 backwardButton, forwardButton, playPauseButton;
     private ProgressBar            animationProgressBar;
     private Button                 restartButton, clearButton, speedButton;
+
     private final ModelImporter    modelImporter;
 
     public Controller (Stage window, LogStreamManager lsm, SourcePanel sourceViewer, Visualization visualization) {
@@ -121,14 +118,10 @@ public class Controller implements CommunicatorListener {
         this.lsm = lsm;
         this.lsm.PRETTY_PRINTING = true;
         this.lsm.setListener(this);
+        connectedView = new ConnectedView(window, (JGroupCommunicator) lsm.getCommunicator());
         this.sourcePanel = sourceViewer;
         operationPanel = new OperationPanel(this);
-        examplesDialog = new ExamplesDialog(window);
-        visualDialog = new VisualDialog(window);
-        connectedView = new ConnectedView(window, (JGroupCommunicator) lsm.getCommunicator());
-        helpView = new HelpView(window);
         initSettingsPane();
-        interpreterView = new InterpreterView(window);
         loadProperties();
     }
 
@@ -315,6 +308,8 @@ public class Controller implements CommunicatorListener {
 
     public void openInterpreterView () {
         stopAutoPlay();
+        InterpreterView interpreterView = new InterpreterView(window);
+
         if (interpreterView.show(model.getOperations())) {
             model.reset();
             vis.clearAndCreateVisuals();
@@ -324,6 +319,7 @@ public class Controller implements CommunicatorListener {
     }
 
     public void interpretOperationHistory () {
+        InterpreterView interpreterView = new InterpreterView(window);
         interpreterView.fast(model.getOperations());
         updatePanels();
         vis.clearAndCreateVisuals();
@@ -546,6 +542,7 @@ public class Controller implements CommunicatorListener {
     }
 
     public void openVisualDialog (DataStructure struct) {
+        VisualDialog visualDialog = new VisualDialog(window);
         if (visualDialog.show(struct)) {
             vis.init();
         }
@@ -813,6 +810,7 @@ public class Controller implements CommunicatorListener {
      *            The algorithm to run.
      */
     public void loadExample (Algorithm algo) {
+        ExamplesDialog examplesDialog = new ExamplesDialog(window);
         double[] data = examplesDialog.show(algo.name);
         if (data == null) {
             return;
@@ -880,7 +878,7 @@ public class Controller implements CommunicatorListener {
     }
 
     public void showHelp () {
-        helpView.show();
+        new HelpView(window).show();;
     }
 
     /**
