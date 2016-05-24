@@ -72,6 +72,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Model;
+import model.ModelImporter;
 import multiset.MultisetController;
 import render.Visualization;
 
@@ -80,50 +81,50 @@ import render.Visualization;
  */
 public class Controller implements CommunicatorListener {
 
-    private final Visualization         vis;
-    private final Stage                 window;
-    private final LogStreamManager      lsm;
-    private final Model                 model;
+    private final Visualization    vis;
+    private final Stage            window;
+    private final LogStreamManager lsm;
+    private final Model            model;
     // Controls
-    private Menu                        visualMenu;
-    private MenuButton                  streamBehaviourMenuButton;
+    private Menu                   visualMenu;
+    private MenuButton             streamBehaviourMenuButton;
     // Stream behaviour
-    private boolean                     streamAlwaysShowLastOperation = true;
-    private boolean                     streamStartAutoplay           = false;
+    private boolean                streamAlwaysShowLastOperation = true;
+    private boolean                streamStartAutoplay           = false;
     // Autoplay
-    private boolean                     isPlaying                     = false;
-    private int                         stepDelaySpeedupFactor        = 1;
-    private long                        stepDelayBase                 = Const.DEFAULT_ANIMATION_TIME;
-    private long                        stepDelay                     = stepDelayBase / stepDelaySpeedupFactor;
+    private boolean                isPlaying                     = false;
+    private int                    stepDelaySpeedupFactor        = 1;
+    private long                   stepDelayBase                 = Const.DEFAULT_ANIMATION_TIME;
+    private long                   stepDelay                     = stepDelayBase / stepDelaySpeedupFactor;
     // Settings dialog stuff
-    private Stage                       settingsView;
+    private Stage                  settingsView;
     // Views, panels, dialogs
-    private final ConnectedView         connectedView;
-    private final InterpreterView       interpreterView;
-    private final SourcePanel           sourceViewer;
-    private final OperationPanel        operationPanel;
-    private final ExamplesDialog        examplesDialog;
-    private final VisualDialog          visualDialog;
-    private final CreateStructureDialog createStructureDialog;
-    private final HelpView              helpView;
+    private final ConnectedView    connectedView;
+    private final InterpreterView  interpreterView;
+    private final SourcePanel      sourcePanel;
+    private final OperationPanel   operationPanel;
+    private final ExamplesDialog   examplesDialog;
+    private final VisualDialog     visualDialog;
+    private final HelpView         helpView;
     // Buttons
-    private Button                      backwardButton, forwardButton, playPauseButton;
-    private ProgressBar                 animationProgressBar;
-    private Button                      restartButton, clearButton, speedButton;
+    private Button                 backwardButton, forwardButton, playPauseButton;
+    private ProgressBar            animationProgressBar;
+    private Button                 restartButton, clearButton, speedButton;
+    private final ModelImporter    modelImporter;
 
     public Controller (Stage window, LogStreamManager lsm, SourcePanel sourceViewer, Visualization visualization) {
         vis = visualization;
         vis.setAnimationTime(stepDelay);
         this.window = window;
         model = Model.instance();
+        modelImporter = new ModelImporter(model);
         this.lsm = lsm;
         this.lsm.PRETTY_PRINTING = true;
         this.lsm.setListener(this);
-        this.sourceViewer = sourceViewer;
+        this.sourcePanel = sourceViewer;
         operationPanel = new OperationPanel(this);
         examplesDialog = new ExamplesDialog(window);
         visualDialog = new VisualDialog(window);
-        createStructureDialog = new CreateStructureDialog(window);
         connectedView = new ConnectedView(window, (JGroupCommunicator) lsm.getCommunicator());
         helpView = new HelpView(window);
         initSettingsPane();
@@ -182,7 +183,7 @@ public class Controller implements CommunicatorListener {
         visualMenu.setDisable(true);
         model.hardClear();
         vis.clear();
-        sourceViewer.clear();
+        sourcePanel.clear();
         operationPanel.clear();
         setButtons();
         window.setTitle(Const.PROGRAM_NAME);
@@ -335,7 +336,7 @@ public class Controller implements CommunicatorListener {
     private void updatePanels () {
         Platform.runLater( () -> {
             int index = Controller.this.model.getIndex();
-            Controller.this.sourceViewer.show(Controller.this.model.getLastOp());
+            Controller.this.sourcePanel.show(Controller.this.model.getLastOp());
             Controller.this.operationPanel.update(index, true);
         });
     }
@@ -344,8 +345,8 @@ public class Controller implements CommunicatorListener {
      * Operation Panel listeners
      */
     /**
-     * Jump to the given index. {@code index} less than 0 jumps to start, {@code index} greater than
-     * {@code size} jumps to end.
+     * Jump to the given index. {@code index} less than 0 jumps to start, {@code index}
+     * greater than {@code size} jumps to end.
      *
      * @param index
      *            The index to jump to.
@@ -482,28 +483,21 @@ public class Controller implements CommunicatorListener {
         }
     }
 
-    private boolean alwaysClearOld = false;
-    private boolean alwaysKeepOld  = false;
-
     /**
      * Load the current data from LSM. Does not clear any data.
      */
     public void loadFromLSM () {
         // Add operations to model and create Render visuals, then draw them.
-        Map<String, DataStructure> oldStructs = model.getStructures();
-        Map<String, DataStructure> newStructs = lsm.getDataStructures();
-        if (checkCollision(oldStructs, newStructs) == false) {
+
+        boolean modelMayHaveChanged = modelImporter.insertIntoLiveModel(lsm.getOperations(), lsm.getDataStructures());
+        if (modelMayHaveChanged == false) {
             return;
         }
 
-        oldStructs.putAll(newStructs);
-        visualMenu.getItems().clear();
-        visualMenu.setDisable(newStructs.isEmpty());
-        model.getOperations().addAll(lsm.getOperations());
-        checkOperationIdentifiers(model.getOperations(), model.getStructures());
-        sourceViewer.addSources(lsm.getSources());
+        sourcePanel.addSources(lsm.getSources());
         vis.clearAndCreateVisuals();
         vis.render(model.getLastOp());
+
         // Update operation list
         operationPanel.getItems().addAll(lsm.getOperations());
         loadVisualMenu();
@@ -511,124 +505,16 @@ public class Controller implements CommunicatorListener {
         setButtons();
     }
 
-    private void checkOperationIdentifiers (List<Operation> ops, Map<String, DataStructure> structs) {
-        HashSet<String> opNames = new HashSet<String>();
-
-        // Gather all operation identifiers.
-        for (Operation op : ops) {
-            String identifier;
-            Locator locator;
-            DataStructure struct;
-            switch (op.operation) {
-            case message:
-                break;
-            case read:
-            case write:
-                locator = (Locator) op.operationBody.get(Key.source);
-                if (locator != null) {
-                    struct = structs.get(locator.identifier);
-                    if (struct == null) {
-                        opNames.add(locator.identifier);
-                    }
-                }
-                locator = (Locator) op.operationBody.get(Key.target);
-                if (locator != null) {
-                    identifier = locator.identifier;
-                    struct = structs.get(identifier);
-                    if (struct == null) {
-                        opNames.add(locator.identifier);
-                    }
-                }
-                break;
-            case swap:
-                break;
-            case remove:
-                identifier = ((Locator) op.operationBody.get(Key.target)).identifier;
-                struct = structs.get(identifier);
-                if (struct == null) {
-                    opNames.add(identifier);
-                }
-                break;
-            }
-        }
-
-        // Check too see if any are missing.
-        Set<String> structNames = structs.keySet();
-
-        DataStructure newStruct;
-        for (String identifier : opNames) {
-
-            if (!structNames.contains(identifier)) {
-
-                // Key not found - create a structure?
-                newStruct = createStructureDialog.show(identifier);
-
-                if (newStruct != null) {
-                    structs.put(newStruct.identifier, newStruct);
-                }
-            }
-        }
-
-        // // Check to see if any are unused.
-        // Set<String> allNames = new HashSet<String>(structNames);
-        // allNames.retainAll(opNames);
-        //
-        // for(String s : allNames){
-        // System.err.println("Ignored unused data structure: " + structs.get(s));
-        // Main.console.err("Ignored unused data structure: " + structs.get(s));
-        // structs.remove(s);
-        // }
-    }
-
-    private boolean checkCollision (Map<String, DataStructure> oldStructs, Map<String, DataStructure> newStructs) {
-        checkCollison: for (String newKey : newStructs.keySet()) {
-            for (String oldKey : oldStructs.keySet()) {
-                if (oldKey.equals(newKey)) {
-                    Main.console.force("ERROR: Data Structure identifier collision:");
-                    Main.console.force("Known structures: " + model.getStructures().values());
-                    Main.console.force("New structures: " + lsm.getDataStructures().values());
-                    if (alwaysClearOld) {
-                        Main.console.force("Known structures cleared.");
-                        clearButtonClicked();
-                        break checkCollison;
-                    } else if (alwaysKeepOld) {
-                        Main.console.force("New structures rejected.");
-                        lsm.clearData();
-                        return false;
-                    } else {
-                        java.awt.Toolkit.getDefaultToolkit().beep();
-                        // short routine = icd.show(oldStructs.values(), oldStructs.values());
-                        short routine = 0;
-                        switch (routine) {
-                        // Clear old structures, import new
-                        case IdentifierCollisionDialog.ALWAYS_CLEAR_OLD:
-                            alwaysClearOld = true;
-                            clearButtonClicked();
-                            Main.console.force("Conflicting structures will overrwrite existing for this session.");
-                            break checkCollison;
-                        case IdentifierCollisionDialog.CLEAR_OLD:
-                            clearButtonClicked();
-                            Main.console.force("Known structures cleared.");
-                            break checkCollison;
-                        // Reject new structures
-                        case IdentifierCollisionDialog.ALWAYS_KEEP_OLD:
-                            alwaysKeepOld = true;
-                            Main.console.force("Conflicting structures will be rejected for this session.");
-                            lsm.clearData();
-                            return false;
-                        case IdentifierCollisionDialog.KEEP_OLD:
-                            Main.console.force("New structures rejected.");
-                            lsm.clearData();
-                            return false;
-                        }
-                    }
-                }
-            }
-        }
-        return true;
-    }
-
     private void loadVisualMenu () {
+        if (model.getStructures().isEmpty()) {
+            visualMenu.setDisable(true);
+        }
+        visualMenu.setDisable(false);
+        visualMenu.getItems().clear();
+
+        /*
+         * Add static items.
+         */
         MenuItem reset = new MenuItem("Reset Positions");
         reset.setOnAction(event -> {
             vis.placeVisuals();
@@ -643,6 +529,10 @@ public class Controller implements CommunicatorListener {
         visualMenu.getItems().add(live);
 
         visualMenu.getItems().add(new SeparatorMenuItem());
+
+        /*
+         * Add controls for the individual structures.
+         */
 
         MenuItem struct_mi;
         for (DataStructure struct : model.getStructures().values()) {
@@ -700,7 +590,7 @@ public class Controller implements CommunicatorListener {
         }
         lsm.setOperations(model.getOperations());
         lsm.setDataStructures(model.getStructures());
-        lsm.setSources(sourceViewer.getSources());
+        lsm.setSources(sourcePanel.getSources());
         boolean old = lsm.PRETTY_PRINTING;
         lsm.PRETTY_PRINTING = model.getOperations().size() > 100;
         lsm.printLog(target);

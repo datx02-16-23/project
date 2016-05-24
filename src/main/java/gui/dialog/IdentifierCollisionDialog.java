@@ -18,9 +18,9 @@ import javafx.stage.Stage;
 public class IdentifierCollisionDialog {
 
     public static final short KEEP_OLD         = 0;
-    public static final short ALWAYS_KEEP_OLD  = 1;
+    public static final short KEEP_OLD_ALWAYS  = 1;
     public static final short CLEAR_OLD        = 3;
-    public static final short ALWAYS_CLEAR_OLD = 4;
+    public static final short CLEAR_OLD_ALWAYS = 4;
 
     private short             answer;
     private final TextField   oldStructs, newStructs;
@@ -65,7 +65,7 @@ public class IdentifierCollisionDialog {
 
     public void reject_old () {
         if (memory.isSelected()) {
-            answer = ALWAYS_CLEAR_OLD;
+            answer = CLEAR_OLD_ALWAYS;
         } else {
             answer = CLEAR_OLD;
         }
@@ -74,7 +74,7 @@ public class IdentifierCollisionDialog {
 
     public void keep_old () {
         if (memory.isSelected()) {
-            answer = ALWAYS_KEEP_OLD;
+            answer = KEEP_OLD_ALWAYS;
         } else {
             answer = KEEP_OLD;
         }
