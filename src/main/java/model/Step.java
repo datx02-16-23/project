@@ -12,12 +12,12 @@ import contract.operation.OP_Message;
 import contract.utility.OpUtils;
 import gui.Main;
 
-public class Step {
+public class Step  {
     private final Map<String, DataStructure> structs;
     private Operation                        lastOp;
 
     public Step () {
-        structs = new HashMap<>();
+        structs = new HashMap<String, DataStructure>();
     }
 
     public Step (Map<String, DataStructure> structs) {

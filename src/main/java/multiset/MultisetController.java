@@ -144,6 +144,7 @@ public class MultisetController {
         range = (TextField) namespace.get("range");
 
         // List stuff
+        @SuppressWarnings("unchecked")
         ListView<String> listView = (ListView<String>) namespace.get("collisionHistory");
         eventHistory = FXCollections.observableArrayList();
         listView.setItems(eventHistory);

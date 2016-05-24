@@ -308,7 +308,6 @@ public class Visualization extends StackPane {
         int northWest = 0; int nWExpand = 0; // Default.
         int southWest = 0; int sWExpand = 0; // Bar Chart.
         int northEast = 0; int nEExpand = 0; // Single elements.
-        int southEast = 0; int sEExpand = 0; // Not used at the moment.
         //@formatter:on
 
         for (Node node : managerPane.getChildren()) {

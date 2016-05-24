@@ -18,11 +18,11 @@ public class Operation implements Serializable {
      */
     private static final long         serialVersionUID = Const.VERSION_NUMBER;
     /**
-     * The literal name of the operation, such as "init" (initialize) or "read".
+     * The literal name of the operation.
      */
     public final OperationType        operation;
     /**
-     * A map containing the identifier of the field (such as "destination" or "value") and the data
+     * A map containing the identifier of the field (such as "target" or "value") and the data
      * they contained.
      */
     public final HashMap<Key, Object> operationBody;
@@ -30,21 +30,9 @@ public class Operation implements Serializable {
      * The name of the source file this Operation originates from.
      */
     public String                     source;
-    /**
-     * The line number this Operation originates from.
-     */
     public int                        beginLine;
-    /**
-     * The last line of this Operation.
-     */
     public int                        endLine;
-    /**
-     * TODO: Javadoc.
-     */
     public int                        beginColumn;
-    /**
-     * TODO: Javadoc.
-     */
     public int                        endColumn;
 
     /**
@@ -75,21 +63,6 @@ public class Operation implements Serializable {
         this.endLine = endLine;
         this.beginColumn = beginColumn;
         this.endColumn = beginColumn;
-    }
-
-    public String printOperationBody () {
-        StringBuilder builder = new StringBuilder();
-        builder.append("{");
-        for (Key key : operationBody.keySet()) {
-            if (operationBody.get(key) != null) {
-                builder.append("\"" + key + "\": " + operationBody.get(key).toString() + ",\n");
-            } else {
-                builder.append("\"" + key + "\": NULL");
-            }
-        }
-        builder.delete(builder.length() - 2, builder.length());
-        builder.append("}");
-        return builder.toString();
     }
 
     public String toSimpleString () {

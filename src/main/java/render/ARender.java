@@ -719,9 +719,6 @@ public abstract class ARender extends Pane implements MinMaxListener {
             return;
         }
 
-        double min = Math.abs(((Array) struct).getMin());
-        double max = Math.abs(((Array) struct).getMax());
-
         for (Node n : defaultNodePane.getChildren()) {
             if (n instanceof AVElement) {
                 this.setRelativeNodeSize((AVElement) n);
