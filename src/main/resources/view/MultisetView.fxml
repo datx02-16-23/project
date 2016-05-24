@@ -37,7 +37,7 @@
                               <Insets left="10.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField fx:id="input" maxWidth="1.7976931348623157E308" minWidth="300.0" onKeyPressed="#keyListener" prefWidth="300.0" promptText="For example: &quot;m, n&quot;" text="m, n" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="input" maxWidth="1.7976931348623157E308" minWidth="300.0" prefWidth="300.0" promptText="For example: &quot;m, n&quot;" text="m, n" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                   <HBox>
@@ -47,7 +47,7 @@
                               <Insets left="10.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField fx:id="output" maxHeight="25.0" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="300.0" onKeyPressed="#keyListener" prefHeight="25.0" prefWidth="300.0" promptText="The result of your query." HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="output" maxHeight="25.0" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="300.0" prefHeight="25.0" prefWidth="300.0" promptText="The result of your query." HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                   <HBox>
@@ -57,7 +57,7 @@
                               <Insets left="10.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField fx:id="cond" maxWidth="1.7976931348623157E308" minWidth="300.0" onKeyPressed="#keyListener" prefWidth="300.0" promptText="For example: &quot;m &gt; n&quot;" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="cond" maxWidth="1.7976931348623157E308" minWidth="300.0" prefWidth="300.0" promptText="For example: &quot;m &gt; n&quot;" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                   <HBox>
@@ -67,7 +67,7 @@
                               <Insets left="10.0" />
                            </HBox.margin>
                         </Label>
-                        <TextField fx:id="range" maxWidth="1.7976931348623157E308" minWidth="300.0" onKeyPressed="#keyListener" prefWidth="300.0" promptText="For example: &quot;1, 2, 3&quot; or &quot;1-10&quot;" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="range" maxWidth="1.7976931348623157E308" minWidth="300.0" prefWidth="300.0" promptText="For example: &quot;1, 2, 3&quot; or &quot;1-10&quot;" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                </children>
