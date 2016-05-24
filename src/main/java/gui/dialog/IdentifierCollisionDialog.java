@@ -21,6 +21,7 @@ public class IdentifierCollisionDialog {
     public static final short ALWAYS_KEEP_OLD  = 1;
     public static final short CLEAR_OLD        = 3;
     public static final short ALWAYS_CLEAR_OLD = 4;
+
     private short             answer;
     private final TextField   oldStructs, newStructs;
     private final CheckBox    memory;
@@ -55,12 +56,6 @@ public class IdentifierCollisionDialog {
         root.setResizable(false);
     }
 
-    /**
-     *
-     * @param oldStructs
-     * @param newStructs
-     * @return
-     */
     public short show (Collection<DataStructure> oldStructs, Collection<DataStructure> newStructs) {
         this.oldStructs.setText(oldStructs.toString());
         this.newStructs.setText(newStructs.toString());

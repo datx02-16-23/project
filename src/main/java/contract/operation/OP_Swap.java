@@ -8,8 +8,7 @@ import contract.Locator;
 import contract.Operation;
 
 /**
- * Create a new Swap operation, shifting the values of {@code var1} and
- * {@code var2}.
+ * Create a new Swap operation, shifting the values of {@code var1} and {@code var2}.
  */
 public class OP_Swap extends Operation implements Consolidable {
 
@@ -19,16 +18,15 @@ public class OP_Swap extends Operation implements Consolidable {
     private static final long serialVersionUID = Const.VERSION_NUMBER;
 
     /**
-     * Create a new Swap operation. Note that you must set var1, var2, and
-     * value.
+     * Create a new Swap operation. Note that you must set var1, var2, and value.
      */
     public OP_Swap () {
         super(OperationType.swap, new HashMap<Key, Object>(), null, -1, -1, -1, -1);
     }
 
     /**
-     * Set var1 for this Swap operation. The identifier of the variable should
-     * be previously declared in the header.
+     * Set var1 for this Swap operation. The identifier of the variable should be previously
+     * declared in the header.
      *
      * @param var1
      *            Variable 1 for this Swap operation.
@@ -38,8 +36,8 @@ public class OP_Swap extends Operation implements Consolidable {
     }
 
     /**
-     * Set var2 for this Swap operation. The identifier of the variable should
-     * be previously declared in the header.
+     * Set var2 for this Swap operation. The identifier of the variable should be previously
+     * declared in the header.
      *
      * @param var2
      *            Variable 2 for this Swap operation.
@@ -49,8 +47,8 @@ public class OP_Swap extends Operation implements Consolidable {
     }
 
     /**
-     * The values contained at var1 and var2 respectively, AFTER this Swap
-     * operation has been executed.
+     * The values contained at var1 and var2 respectively, AFTER this Swap operation has been
+     * executed.
      *
      * @param values
      *            The values in var1 and var2 after execution.
@@ -80,8 +78,8 @@ public class OP_Swap extends Operation implements Consolidable {
      *
      * @param rwList
      *            The list of 3 read/write operations to test.
-     * @return A new Swap operation if the given testSet is a valid
-     *         decomposition of a Swap operation, null otherwise.
+     * @return A new Swap operation if the given testSet is a valid decomposition of a Swap
+     *         operation, null otherwise.
      */
     @Override public Operation consolidate (List<OP_ReadWrite> rwList) {
         if (rwList.size() != 3) {

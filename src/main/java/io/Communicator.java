@@ -3,33 +3,31 @@ package io;
 import java.io.Serializable;
 import java.util.List;
 
-import contract.CRoot;
+import contract.Root;
 
 public interface Communicator {
     /**
-     * Returns the first received Wrapper in queue. Returns null if the queue is
-     * empty.
+     * Returns the first received Wrapper in queue. Returns null if the queue is empty.
      *
      * @return The first received Wrapper in queue.
      */
-    public CRoot popQueuedMessage ();
+    public Root popQueuedMessage ();
 
     /**
      * Returns the all received Wrappers in queue.
      *
      * @return The all received Wrappers in queue.
      */
-    public List<CRoot> getAllQueuedMessages ();
+    public List<Root> getAllQueuedMessages ();
 
     /**
-     * /** Send the given Wrapper to all everyone listening on the current
-     * channel.
+     * /** Send the given Wrapper to all everyone listening on the current channel.
      *
      * @param outgoing
      *            The Wrapper to send.
      * @return True if message was sent, false otherwise.
      */
-    public boolean sendWrapper (CRoot outgoing);
+    public boolean sendWrapper (Root outgoing);
 
     /**
      * Send all Wrappers to everyone listening on the current channel.
@@ -38,7 +36,7 @@ public interface Communicator {
      *            The list of Wrappers to send.
      * @return True if all wrappers were successfully sent.
      */
-    public boolean sendWrappers (List<CRoot> outgoing);
+    public boolean sendWrappers (List<Root> outgoing);
 
     /**
      * Close any communications that can cause leaks.
@@ -46,8 +44,7 @@ public interface Communicator {
     public void close ();
 
     /**
-     * Send the given String to all everyone listening on the current channel.
-     * <br>
+     * Send the given String to all everyone listening on the current channel. <br>
      * <b>NOTE:</b> JSONString must be a valid serialisation of a Wrapper.
      *
      * @param JSONString
@@ -60,8 +57,7 @@ public interface Communicator {
      * Internal class
      */
     /**
-     * Wrapper for messages sent and recevied by implementations of the
-     * Communicator interface.
+     * Wrapper for messages sent and recevied by implementations of the Communicator interface.
      *
      * @author Richard Sundqvist
      *
@@ -74,13 +70,12 @@ public interface Communicator {
          */
         public static final short WRAPPER                    = 0;
         /**
-         * Message containing a String on the JSON format, which may be
-         * deserialized into a Wrapper.
+         * Message containing a String on the JSON format, which may be deserialized into a Wrapper.
          */
         public static final short JSON                       = 1;
         /**
-         * Sent when the Communicator starts to announce it's presence,
-         * triggering information requests.
+         * Sent when the Communicator starts to announce it's presence, triggering information
+         * requests.
          */
         public static final short HELLO                      = 10;
         /**

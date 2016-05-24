@@ -9,8 +9,8 @@ package render.element;
 public enum ElementShape {
     ELLIPSE, CIRCLE, RECTANGLE, BAR_ELEMENT(false), SQUARE, TRAPEZOID(true), TRIANGLE(true),
     /**
-     * Used for cloning. Will randomly pick {@link #TRAPEZOID} or
-     * {@link #TRIANGLE} if no points are provided.
+     * Used for cloning. Will randomly pick {@link #TRAPEZOID} or {@link #TRIANGLE} if no points are
+     * provided.
      */
     POLYGON(false),
     /**
@@ -38,8 +38,8 @@ public enum ElementShape {
     }
 
     /**
-     * Returns a ElementStyle at random excluding {@link ElementShape#RANDOM}
-     * and {@link ElementShape#POLYGON}.
+     * Returns a ElementStyle at random excluding {@link ElementShape#RANDOM} and
+     * {@link ElementShape#POLYGON}.
      *
      * @return A random ElementStyle.
      */

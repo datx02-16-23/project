@@ -3,8 +3,8 @@ package multiset.model;
 import java.util.List;
 
 /**
- * Your bouncing model model must adhere to this interface in order to make use
- * of the pre-written classes for drawing the model.
+ * Your bouncing model model must adhere to this interface in order to make use of the pre-written
+ * classes for drawing the model.
  *
  * @author Oscar Soderlund
  *
@@ -19,8 +19,7 @@ public interface iModel {
     public List<Ball> getBalls ();
 
     /**
-     * Changes the state of the model using the Euler method by simulating
-     * deltaT units of time.
+     * Changes the state of the model using the Euler method by simulating deltaT units of time.
      *
      * @param deltaT
      *            the amount of time to simulate

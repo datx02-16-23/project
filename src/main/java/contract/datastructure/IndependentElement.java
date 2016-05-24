@@ -11,8 +11,8 @@ import contract.operation.OP_Swap;
 import contract.operation.OperationType;
 
 /**
- * An independent variable holding a single element. May for example be used as
- * a temporary variable when performing a swap.
+ * An independent variable holding a single element. May for example be used as a temporary variable
+ * when performing a swap.
  *
  * @author Richard Sundqvist
  *
@@ -30,8 +30,7 @@ public class IndependentElement extends Array {
      * @param identifier
      *            The identifier for this IndependentElement.
      * @param abstractType
-     *            The <b>raw</b> type of the element held by this
-     *            IndependentElement.
+     *            The <b>raw</b> type of the element held by this IndependentElement.
      * @param visual
      *            The preferred visual style of the IndependentElement.
      */
@@ -66,8 +65,7 @@ public class IndependentElement extends Array {
     /**
      * Get the value held by the element contained in this IndependentElement.
      *
-     * @return The value held by the element contained in this
-     *         IndependentElement.
+     * @return The value held by the element contained in this IndependentElement.
      */
     public double getNumericValue () {
         if (elements.isEmpty()) {

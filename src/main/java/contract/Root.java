@@ -8,15 +8,14 @@ import assets.Const;
 /**
  * Wrapper class for GLO and HOG files on the JSON format.
  */
-public class CRoot implements Serializable {
+public class Root implements Serializable {
 
     /**
      * Version number for this class.
      */
     private static final long    serialVersionUID = Const.VERSION_NUMBER;
     /**
-     * Header data for the file. Contains version number and variable
-     * declarations.
+     * Header data for the file. Contains version number and variable declarations.
      */
     public final Header          header;
     /**
@@ -28,12 +27,11 @@ public class CRoot implements Serializable {
      * Create a new Wrapper with the given header and body.
      *
      * @param header
-     *            Header data for the file. Contains version number and variable
-     *            declarations.
+     *            Header data for the file. Contains version number and variable declarations.
      * @param body
      *            Operations contained in this file.
      */
-    public CRoot (Header header, List<Operation> body) {
+    public Root (Header header, List<Operation> body) {
         this.header = header;
         this.body = body;
     }

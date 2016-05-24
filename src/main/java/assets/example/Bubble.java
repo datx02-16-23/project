@@ -10,8 +10,7 @@ package assets.example;
 abstract class Bubble {
     /**
      * Generate a log file for Bubble Sort on the given data. <br>
-     * <b>Source: </b>
-     * {@link http://mathbits.com/MathBits/Java/arrays/Bubble.htm}
+     * <b>Source: </b> {@link http://mathbits.com/MathBits/Java/arrays/Bubble.htm}
      *
      * @param data
      *            The data to run the algorithm on.

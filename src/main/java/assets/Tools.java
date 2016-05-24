@@ -83,15 +83,14 @@ public abstract class Tools {
     public static final HashMap<Integer, ArrayList<Integer>> lowerLevelSums = new HashMap<Integer, ArrayList<Integer>>();
 
     /**
-     * Memoized function. Calculates the total number of elements above a given
-     * depth and saves it to higherLevelSums.
+     * Memoized function. Calculates the total number of elements above a given depth and saves it
+     * to higherLevelSums.
      *
      * @param targetDepth
      *            The greatest depth to calculate for.
      * @param K
      *            The number of children per node in the tree.
-     * @return The total number of elements above {@code targetDepth} for a
-     *         K-ary tree.
+     * @return The total number of elements above {@code targetDepth} for a K-ary tree.
      */
     public static int lowerLevelSum (int targetDepth, int K) {
         ArrayList<Integer> sums = Tools.lowerLevelSums.get(K);
@@ -137,8 +136,8 @@ public abstract class Tools {
     }
 
     /**
-     * Tries to simplify the variable name. For example,
-     * {@code "package.subpackage.class:var"} becomes {@code "var"}.
+     * Tries to simplify the variable name. For example, {@code "package.subpackage.class:var"}
+     * becomes {@code "var"}.
      *
      * @param orig
      *            A string to simplify.

@@ -28,10 +28,9 @@ public abstract class ARenderAnimation {
     }// Not to be instantiated.
 
     /**
-     * Animate moving an element from <i>(x1, y1)</i> to <i>(x2, y2))</i>.
-     * Calling
-     * {@link ParallelTransition#setOnFinished(javafx.event.EventHandler)} on
-     * the transition returned by this method may have unwanted side effects.
+     * Animate moving an element from <i>(x1, y1)</i> to <i>(x2, y2))</i>. Calling
+     * {@link ParallelTransition#setOnFinished(javafx.event.EventHandler)} on the transition
+     * returned by this method may have unwanted side effects.
      *
      * @param e
      *            The element to animate.
@@ -86,8 +85,8 @@ public abstract class ARenderAnimation {
 
     /**
      * Animate an element without translation. Calling
-     * {@link ParallelTransition#setOnFinished(javafx.event.EventHandler)} on
-     * the transition returned by this method may have unwanted side effects.
+     * {@link ParallelTransition#setOnFinished(javafx.event.EventHandler)} on the transition
+     * returned by this method may have unwanted side effects.
      *
      * @param e
      *            The element to animate.
@@ -147,9 +146,8 @@ public abstract class ARenderAnimation {
          */
         FLIP,
         /**
-         * Turn the element into a ghost until animation is complete. The ghost
-         * will use the old value (and size, if applicable) until animation is
-         * complete.
+         * Turn the element into a ghost until animation is complete. The ghost will use the old
+         * value (and size, if applicable) until animation is complete.
          */
         GHOST,
         /**
@@ -165,17 +163,14 @@ public abstract class ARenderAnimation {
          * Add transitions for the given options to the parent transition.
          *
          * @param orig
-         *            The original element. Will not change, but <b>must not be
-         *            null.</b>
+         *            The original element. Will not change, but <b>must not be null.</b>
          * @param render
-         *            The render which should do the animation. <b>Must not be
-         *            null.</b>
+         *            The render which should do the animation. <b>Must not be null.</b>
          * @param millis
          *            The animation time in milliseconds.
          * @param options
          *            A list of options.
-         * @return A ParallelTransition with child transitions specified by
-         *         {@code options}.
+         * @return A ParallelTransition with child transitions specified by {@code options}.
          */
         public static ParallelTransition buildTransition (AVElement orig, ARender render, long millis,
                 Effect... options) {

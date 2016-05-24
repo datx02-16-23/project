@@ -8,8 +8,8 @@ import contract.operation.Key;
 import contract.operation.OperationType;
 
 /**
- * Abstract wrapper class containing the necessary data to recreate a given
- * operation. Should be inherited to create specific operations.
+ * Abstract wrapper class containing the necessary data to recreate a given operation. Should be
+ * inherited to create specific operations.
  */
 public class Operation implements Serializable {
 
@@ -22,8 +22,8 @@ public class Operation implements Serializable {
      */
     public final OperationType        operation;
     /**
-     * A map containing the identifier of the field (such as "destination" or
-     * "value") and the data they contained.
+     * A map containing the identifier of the field (such as "destination" or "value") and the data
+     * they contained.
      */
     public final HashMap<Key, Object> operationBody;
     /**
@@ -51,11 +51,10 @@ public class Operation implements Serializable {
      * /** Create a new Operation.
      *
      * @param operation
-     *            The literal name of the operation, such as "init" (initialize)
-     *            or "read".
+     *            The literal name of the operation, such as "init" (initialize) or "read".
      * @param operationBody
-     *            A map containing the identifier of the field (such as
-     *            "destination" or "value") and the data they contained.
+     *            A map containing the identifier of the field (such as "destination" or "value")
+     *            and the data they contained.
      * @param source
      *            The source file this operation originates from.
      * @param beginLine

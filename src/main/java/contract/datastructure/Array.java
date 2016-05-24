@@ -15,8 +15,7 @@ import gui.Main;
 /**
  * A representation of the Array data structure, using doubles as values.
  *
- * @author Richard Sundqvist
- *z
+ * @author Richard Sundqvist z
  */
 public class Array extends DataStructure {
 
@@ -24,11 +23,11 @@ public class Array extends DataStructure {
      * Version number for this class.
      */
     private static final long        serialVersionUID = Const.VERSION_NUMBER;
-    
+
     private transient int[]          capacity;
     private transient MinMaxListener mmListener;
-    private transient double min = Double.MAX_VALUE;
-    private transient double max = Double.MIN_VALUE;
+    private transient double         min              = Double.MAX_VALUE;
+    private transient double         max              = Double.MIN_VALUE;
 
     /**
      * Construct a new Array with the given parameters.
@@ -49,8 +48,8 @@ public class Array extends DataStructure {
     }
 
     /**
-     * Construct a new Array with the given parameters. This constructor exists
-     * for use by the IndependentElement structure.
+     * Construct a new Array with the given parameters. This constructor exists for use by the
+     * IndependentElement structure.
      *
      * @param identifier
      *            The identifier for this Array.
@@ -242,8 +241,7 @@ public class Array extends DataStructure {
     }
 
     /**
-     * Given a linear index, returns the index in N dimensions
-     * (dimeionSizes.length).
+     * Given a linear index, returns the index in N dimensions (dimeionSizes.length).
      *
      * @param linearIndex
      *            The linear index.
@@ -257,10 +255,9 @@ public class Array extends DataStructure {
          * http://stackoverflow.com/questions/14015556/how-to-map-the-indexes-of
          * -a-matrix-to-a-1-dimensional-array-c <br>
          * <br>
-         * Matrix has size, n by m. That is i = [0, n-1] and j = [0, m-1].
-         * matrix[i][j] = array[i*m + j]. For higher dimension, this idea
-         * generalizes, i.e. for a 3D matrix L by N by M: matrix[i][j][k] =
-         * array[i*(N*M) + j*M + k]
+         * Matrix has size, n by m. That is i = [0, n-1] and j = [0, m-1]. matrix[i][j] = array[i*m
+         * + j]. For higher dimension, this idea generalizes, i.e. for a 3D matrix L by N by M:
+         * matrix[i][j][k] = array[i*(N*M) + j*M + k]
          */
         for (int currDim = 0; currDim < dimensionSizes.length; currDim++) {
             index [currDim] = linearIndex;
@@ -277,9 +274,9 @@ public class Array extends DataStructure {
     }
 
     /**
-     * Calculate the product of all lower (to the right) dimension sizes. That
-     * is, for dim = 0 in array[i][j][k], dim refers to the dimension indexed by
-     * i and the method returns size[1]*size[2].
+     * Calculate the product of all lower (to the right) dimension sizes. That is, for dim = 0 in
+     * array[i][j][k], dim refers to the dimension indexed by i and the method returns
+     * size[1]*size[2].
      *
      * @param dim
      *            The current dimension.
@@ -298,8 +295,8 @@ public class Array extends DataStructure {
      *
      * @param locator
      *            A Locator to specify the element to retrieve.
-     * @return The element at the location specified by the given locator, if it
-     *         was valid. Null otherwise.
+     * @return The element at the location specified by the given locator, if it was valid. Null
+     *         otherwise.
      */
     @Override public IndexedElement getElement (Locator locator) {
         if (locator == null || locator.identifier.equals(identifier) == false) {
@@ -313,8 +310,7 @@ public class Array extends DataStructure {
      *
      * @param index
      *            The index from which to get an element.
-     * @return The element at the given index if the index was valid, null
-     *         otherwise.
+     * @return The element at the given index if the index was valid, null otherwise.
      */
     public IndexedElement getElement (int[] index) {
         for (Element e : elements) {
@@ -327,8 +323,8 @@ public class Array extends DataStructure {
     }
 
     /**
-     * Add a new element to this Array. If there was already an element at the
-     * index of the new element, the old element will be returned to the caller.
+     * Add a new element to this Array. If there was already an element at the index of the new
+     * element, the old element will be returned to the caller.
      *
      * @param newElement
      *            The element to insert.
@@ -433,12 +429,11 @@ public class Array extends DataStructure {
     }
 
     /**
-     * Resolves the VisualType for this DataStructure. Will check {@code visual}
-     * , {@code abstractType}, and {@code rawType}, in that order. <br>
+     * Resolves the VisualType for this DataStructure. Will check {@code visual} ,
+     * {@code abstractType}, and {@code rawType}, in that order. <br>
      * <br>
-     * Single-dimension Arrays default to {@link VisualType#bar} , higher
-     * dimension Arrays default to {@link VisualType#box}. This method will
-     * always return a type.
+     * Single-dimension Arrays default to {@link VisualType#bar} , higher dimension Arrays default
+     * to {@link VisualType#box}. This method will always return a type.
      *
      * @return The {@link #VisualType} to use for this Array.
      */
@@ -484,6 +479,7 @@ public class Array extends DataStructure {
             mmListener.maxChanged(x);
         }
     }
+
     /**
      * Restore default values for min and max.
      */

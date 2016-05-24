@@ -15,7 +15,7 @@ public abstract class Const {
 
     public static final long       VERSION_NUMBER               = Long.MAX_VALUE;
 
-    public static final String     PROJECT_NAME                = "Lorem Namnsum";
+    public static final String     PROJECT_NAME                 = "Lorem Namnsum";
     public static final String     PROJECT_SLOGAN               = "Abstract Visualization of Programs";
     public static final String     PROGRAM_NAME                 = PROJECT_NAME + " - JavaFX Desktop Visualization";
     public static final String     PROPERTIES_FILE_NAME         = "config.properties";
@@ -48,7 +48,7 @@ public abstract class Const {
     public static final int        DEFAULT_RENDER_HEIGHT        = 400;
 
     public static final double     DEFAULT_RENDER_PADDING       = 5;
-    public static final long       DEFAULT_ANIMATION_TIME       = 3000;
+    public static final long       DEFAULT_ANIMATION_TIME       = 3500;
     public static final double     DEFAULT_RELATIVE_NODE_FACTOR = 2;
 
     public static final double     DEFAULT_ELEMENT_SIZE         = 50;

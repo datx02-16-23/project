@@ -17,12 +17,10 @@ import render.element.ElementShape;
 // TODO Draw arrays with index.length > 1 by getting linear index from Array.
 
 /**
- * A Render for Arrays with abstract type Tree. Can draw any K-ary tree for K >=
- * 2, where K is the number of children a node has (at most). All nodes except
- * root have one parent.<br>
- * All the elements of the supplied DataStruture must have an index[] of length
- * 1. No checking of index length is performed. Behaviour is undefined for
- * index.length != 1.
+ * A Render for Arrays with abstract type Tree. Can draw any K-ary tree for K >= 2, where K is the
+ * number of children a node has (at most). All nodes except root have one parent.<br>
+ * All the elements of the supplied DataStruture must have an index[] of length 1. No checking of
+ * index length is performed. Behaviour is undefined for index.length != 1.
  *
  * @author Richard Sundqvist
  *
@@ -72,8 +70,7 @@ public class KTreeRender extends ARender {
     // ============================================================= //
 
     /**
-     * Create a new KTreeRender with K children and one parent. Will set K = 2
-     * for any K < 2.
+     * Create a new KTreeRender with K children and one parent. Will set K = 2 for any K < 2.
      *
      * @param struct
      *            The structure to draw as an K-ary tree.
@@ -285,8 +282,8 @@ public class KTreeRender extends ARender {
         if (K < 2) {
             return;
             /*
-             * Fixed infinite recursion case caused by superconstructor call
-             * before K could be validated by local constructor.
+             * Fixed infinite recursion case caused by superconstructor call before K could be
+             * validated by local constructor.
              */
         }
 

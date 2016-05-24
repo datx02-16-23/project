@@ -63,8 +63,7 @@ public class OperationPanel extends Pane {
     }
 
     /**
-     * Update the list position, focus and highlight. Update counters and
-     * progress bar.
+     * Update the list position, focus and highlight. Update counters and progress bar.
      *
      * @param index
      *            The index to select.

@@ -102,14 +102,12 @@ public abstract class ARender extends Pane implements MinMaxListener {
     // ============================================================= //
 
     /**
-     * Pane for rendering of visual element nodes. Added to {@link contentPane}
-     * automatically.
+     * Pane for rendering of visual element nodes. Added to {@link contentPane} automatically.
      */
     protected final Pane                       defaultNodePane = new Pane();
     /**
-     * The content pane for the render. By default, a Pane for nodes (
-     * {@link #defaultNodePane}) will be added, but renders can add their own
-     * panes to {@code contentPane} if need be.
+     * The content pane for the render. By default, a Pane for nodes ( {@link #defaultNodePane})
+     * will be added, but renders can add their own panes to {@code contentPane} if need be.
      */
     protected Pane                             contentPane;
 
@@ -254,9 +252,8 @@ public abstract class ARender extends Pane implements MinMaxListener {
     }
 
     /**
-     * Called after the parent class has finished with loading the fxml, in case
-     * the child wants to change anything. The default implementation of this
-     * method does nothing.
+     * Called after the parent class has finished with loading the fxml, in case the child wants to
+     * change anything. The default implementation of this method does nothing.
      *
      * @param fxmlLoader
      *            The {@code FXMLLoader} used to load the render.
@@ -419,8 +416,8 @@ public abstract class ARender extends Pane implements MinMaxListener {
     // @formatter:on
 
     /**
-     * Calls, setPrefSize, setMaxSize, setWidth and setHeight. Will limit how
-     * small the render can become.
+     * Calls, setPrefSize, setMaxSize, setWidth and setHeight. Will limit how small the render can
+     * become.
      *
      * @param width
      *            The width of this Render.
@@ -458,8 +455,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
     // ============================================================= //
 
     /**
-     * Order the Render_FX to draw the elements of the Data Structure it
-     * carries. <br>
+     * Order the Render_FX to draw the elements of the Data Structure it carries. <br>
      * The default implementation only calls:
      *
      * <b>{@code struct.elementsDrawn(Color.WHITE);}</b>
@@ -470,10 +466,9 @@ public abstract class ARender extends Pane implements MinMaxListener {
     }
 
     /**
-     * Force the Render to initialise all elements. This method will attempt
-     * create elements and add them to the standard pane. It will clear the
-     * children of all children in {@link #contentPane} before beginning.
-     * {@link #bellsAndWhistles} will be called on every element.
+     * Force the Render to initialise all elements. This method will attempt create elements and add
+     * them to the standard pane. It will clear the children of all children in {@link #contentPane}
+     * before beginning. {@link #bellsAndWhistles} will be called on every element.
      *
      *
      * @return True if there was anything to draw.
@@ -602,8 +597,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
     }
 
     /**
-     * Returns the absolute x-coordinate for the element e. Returns -1 if the
-     * calculation fails.
+     * Returns the absolute x-coordinate for the element e. Returns -1 if the calculation fails.
      *
      * @param e
      *            An element owned by this Render.
@@ -615,8 +609,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
     }
 
     /**
-     * Returns the absolute y-coordinate for the element e. Returns -1 if the
-     * calculation fails.
+     * Returns the absolute y-coordinate for the element e. Returns -1 if the calculation fails.
      *
      * @param e
      *            An element owned by this Render.
@@ -698,9 +691,8 @@ public abstract class ARender extends Pane implements MinMaxListener {
     }
 
     /**
-     * Set the relative node size for the render. If {@code factor == 2}, the
-     * largest element will be twice as large as the smallest. Relation is
-     * inversed for {@code 0 < factor < 1}.<br>
+     * Set the relative node size for the render. If {@code factor == 2}, the largest element will
+     * be twice as large as the smallest. Relation is inversed for {@code 0 < factor < 1}.<br>
      * <br>
      * Will disable for {@code factor <= 0} and {@code factor == 1}
      * 
@@ -910,8 +902,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
     // ============================================================= //
 
     /**
-     * Returns the absolute x-coordinate of an element. Returns -1 if the
-     * calculation fails.
+     * Returns the absolute x-coordinate of an element. Returns -1 if the calculation fails.
      *
      * @param e
      *            An element to resolve coordinates for.
@@ -920,8 +911,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
     public abstract double getX (Element e);
 
     /**
-     * Returns the absolute y-coordinate of an element. Returns -1 if the
-     * calculation fails.
+     * Returns the absolute y-coordinate of an element. Returns -1 if the calculation fails.
      *
      * @param e
      *            An element to resolve coordinates for.
@@ -944,8 +934,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
     protected abstract AVElement createVisualElement (Element e);
 
     /**
-     * Create an unbound node element in whatever style the Render prefers to
-     * use.
+     * Create an unbound node element in whatever style the Render prefers to use.
      *
      * @param value
      *            The value of the element.
@@ -956,8 +945,8 @@ public abstract class ARender extends Pane implements MinMaxListener {
     protected abstract AVElement createVisualElement (double value, Color color);
 
     /**
-     * Decorator method used to attach bells and whistles to the current
-     * element. {@link #init} will called this method on every element.
+     * Decorator method used to attach bells and whistles to the current element. {@link #init} will
+     * called this method on every element.
      *
      * @param e
      *            The element to attach a whistle to.

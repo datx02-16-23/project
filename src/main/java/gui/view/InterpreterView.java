@@ -110,8 +110,7 @@ public class InterpreterView implements InvalidationListener {
      *
      * @param ops
      *            The list of operations to use.
-     * @return True if the interpreted operations should be kept, false
-     *         otherwise.
+     * @return True if the interpreted operations should be kept, false otherwise.
      */
     public boolean show (List<Operation> ops) {
         interpretButton.setDisable(ops.isEmpty());

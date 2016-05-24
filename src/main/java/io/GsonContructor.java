@@ -8,8 +8,7 @@ public abstract class GsonContructor {
     private static final GsonBuilder gsonBuilder = new GsonBuilder();
 
     /**
-     * Returns a Gson instance with all the required bells and whistles
-     * attached.
+     * Returns a Gson instance with all the required bells and whistles attached.
      *
      * @return A Gson instance that works properly.
      */
@@ -18,8 +17,7 @@ public abstract class GsonContructor {
     }
 
     /**
-     * Returns a Gson instance with all the required bells and whistles
-     * attached.
+     * Returns a Gson instance with all the required bells and whistles attached.
      *
      * @param prettyPrinting
      *            Set to True to enable human-readable output.

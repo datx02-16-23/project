@@ -12,8 +12,8 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
 /**
- * Class and methods for displaying and jumping to relevant source code. Can
- * only highlight full rows.
+ * Class and methods for displaying and jumping to relevant source code. Can only highlight full
+ * rows.
  *
  * @author Richard Sundqvist
  *
@@ -100,8 +100,8 @@ public class SourcePanel extends TabPane {
     }
 
     /**
-     * Jump to the appropriate tab and line number for this Operation. Will
-     * abort if {@code op == null} or {@code op.source == null}.
+     * Jump to the appropriate tab and line number for this Operation. Will abort if
+     * {@code op == null} or {@code op.source == null}.
      *
      * @param op
      *            The Operation to show.

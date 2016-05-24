@@ -12,8 +12,8 @@ import contract.operation.OperationType;
 import gui.Main;
 
 /**
- * An Interpreter attempts to increase the abstraction level of operation logs
- * be consolidating read and write operations into higher level operations.
+ * An Interpreter attempts to increase the abstraction level of operation logs be consolidating read
+ * and write operations into higher level operations.
  *
  * @author Richard Sundqvist
  *
@@ -25,13 +25,12 @@ public class Interpreter {
      */
     public static final int                ABORT              = 0;
     /**
-     * Add any high-level operation found to processedOperations, then continue
-     * on the current working set.
+     * Add any high-level operation found to processedOperations, then continue on the current
+     * working set.
      */
     public static final int                KEEP_SET_ADD_HIGH  = 1;
     /**
-     * Flush the working set into processedOperations, then add the high-level
-     * operation as well.
+     * Flush the working set into processedOperations, then add the high-level operation as well.
      */
     public static final int                FLUSH_SET_ADD_HIGH = 2;
     /**
@@ -50,9 +49,8 @@ public class Interpreter {
     private Consolidator                   consolidator;
 
     /**
-     * Create a new Interpreter with the high order routine set to
-     * FLUSH_SET_ADD_HIGH. Use the setOperations() and
-     * getConsolidatedOperations() methods to interpret lists of operations.
+     * Create a new Interpreter with the high order routine set to FLUSH_SET_ADD_HIGH. Use the
+     * setOperations() and getConsolidatedOperations() methods to interpret lists of operations.
      */
     public Interpreter () {
         before = new LinkedList<Operation>();
@@ -63,8 +61,8 @@ public class Interpreter {
     }
 
     /**
-     * Returns the high order routine currently in use. See static declarations
-     * of this class for possible routines.
+     * Returns the high order routine currently in use. See static declarations of this class for
+     * possible routines.
      *
      * @return The high order routine currently in use.
      */
@@ -73,8 +71,8 @@ public class Interpreter {
     }
 
     /**
-     * Set the routine for handling high level operation if they are found in
-     * the operations list when interpreting.
+     * Set the routine for handling high level operation if they are found in the operations list
+     * when interpreting.
      *
      * @param newRoutine
      *            The new routine.
@@ -105,8 +103,7 @@ public class Interpreter {
     }
 
     /**
-     * Remove a given testCase. When this method returns, the testcase is
-     * guaranteed to be removed.
+     * Remove a given testCase. When this method returns, the testcase is guaranteed to be removed.
      *
      * @param testCase
      *            The testcase to remove.
@@ -123,9 +120,9 @@ public class Interpreter {
     }
 
     /**
-     * Attempt to consolidate the supplied list of operations. Returns True if
-     * the size of the list has changed as a result on the attempted
-     * consolidation. The list provided as argument will not be changed.
+     * Attempt to consolidate the supplied list of operations. Returns True if the size of the list
+     * has changed as a result on the attempted consolidation. The list provided as argument will
+     * not be changed.
      *
      * @param operationsToConsolidate
      *            The operations to consolidate.
@@ -138,11 +135,10 @@ public class Interpreter {
     }
 
     /**
-     * Attempt to consolidate the supplied list of operations. Returns True if
-     * the size of the list has changed as a result on the attempted
-     * consolidation. <br>
-     * <b>NOTE:</b> The list given by the argument {@code operations} will be
-     * modified by this method!
+     * Attempt to consolidate the supplied list of operations. Returns True if the size of the list
+     * has changed as a result on the attempted consolidation. <br>
+     * <b>NOTE:</b> The list given by the argument {@code operations} will be modified by this
+     * method!
      *
      * @param listToConsolidate
      *            The List to consolidate.
@@ -174,9 +170,8 @@ public class Interpreter {
     }
 
     /**
-     * Build and filter working sets until all operations in {@code before} have
-     * been processed. When this method returns, {@code before.size()} will be
-     * 0.
+     * Build and filter working sets until all operations in {@code before} have been processed.
+     * When this method returns, {@code before.size()} will be 0.
      */
     private void consolidate () {
         int minWorkingSetSize = consolidator.getMinimumSetSize();
@@ -217,8 +212,8 @@ public class Interpreter {
     }
 
     /**
-     * Reduce the size of the working set by removing the last element and
-     * adding it first to the list of low level operations.
+     * Reduce the size of the working set by removing the last element and adding it first to the
+     * list of low level operations.
      */
     private void reduceWorkingSet () {
         // Add the last element of working set to the first position in low
@@ -227,8 +222,8 @@ public class Interpreter {
     }
 
     /**
-     * Try to expend the current working set. Messages are immediately added to
-     * high level operations, as are initialization.
+     * Try to expend the current working set. Messages are immediately added to high level
+     * operations, as are initialization.
      *
      * @return False if the working set could not be expanded.
      */
@@ -283,16 +278,15 @@ public class Interpreter {
     }
 
     /**
-     * Add high-level operation found to processedOperations, then continue on
-     * the current working set.
+     * Add high-level operation found to processedOperations, then continue on the current working
+     * set.
      */
     private void keepSet_addCandidate () {
         after.add(candidate);
     }
 
     /**
-     * Flush the working set into processedOperations, then add the high-level
-     * operation as well.
+     * Flush the working set into processedOperations, then add the high-level operation as well.
      */
     private void flushSet_addCandidate () {
         after.addAll(workingSet);
@@ -301,8 +295,8 @@ public class Interpreter {
     }
 
     /**
-     * Returns true if the operation is a read or write operation, thus being
-     * capable of inheriting OP_ReadWrite.
+     * Returns true if the operation is a read or write operation, thus being capable of inheriting
+     * OP_ReadWrite.
      *
      * @param op
      *            The operation to test.
@@ -313,12 +307,10 @@ public class Interpreter {
     }
 
     /**
-     * Attempt to consolidate the working set held by this Interpreter. Will
-     * return true and add the new operation to processedOperations if
-     * successful. Will not clear the working set.
+     * Attempt to consolidate the working set held by this Interpreter. Will return true and add the
+     * new operation to processedOperations if successful. Will not clear the working set.
      *
-     * @return True if workingSet was successfully consolidated, false
-     *         otherwise.
+     * @return True if workingSet was successfully consolidated, false otherwise.
      */
     private boolean attemptConsolidateWorkingSet () {
         Operation consolidatedOperation = consolidator.attemptConsolidate(workingSet);

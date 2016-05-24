@@ -80,37 +80,36 @@ import render.Visualization;
  */
 public class Controller implements CommunicatorListener {
 
-    private final Visualization             vis;
-    private final Stage                     window;
-    private final LogStreamManager          lsm;
-    private final Model                     model;
+    private final Visualization         vis;
+    private final Stage                 window;
+    private final LogStreamManager      lsm;
+    private final Model                 model;
     // Controls
-    private Menu                            visualMenu;
-    private MenuButton                      streamBehaviourMenuButton;
+    private Menu                        visualMenu;
+    private MenuButton                  streamBehaviourMenuButton;
     // Stream behaviour
-    private boolean                         streamAlwaysShowLastOperation = true;
-    private boolean                         streamStartAutoplay           = false;
+    private boolean                     streamAlwaysShowLastOperation = true;
+    private boolean                     streamStartAutoplay           = false;
     // Autoplay
-    private boolean                         isPlaying                     = false;
-    private int                             stepDelaySpeedupFactor        = 1;
-    private long                            stepDelayBase                 = Const.DEFAULT_ANIMATION_TIME;
-    private long                            stepDelay                     = stepDelayBase / stepDelaySpeedupFactor;
+    private boolean                     isPlaying                     = false;
+    private int                         stepDelaySpeedupFactor        = 1;
+    private long                        stepDelayBase                 = Const.DEFAULT_ANIMATION_TIME;
+    private long                        stepDelay                     = stepDelayBase / stepDelaySpeedupFactor;
     // Settings dialog stuff
-    private Stage                           settingsView;
+    private Stage                       settingsView;
     // Views, panels, dialogs
-    private final ConnectedView             connectedView;
-    private final InterpreterView           interpreterView;
-    private final SourcePanel               sourceViewer;
-    private final OperationPanel            operationPanel;
-    private final ExamplesDialog            examplesDialog;
-    private final VisualDialog              visualDialog;
-    private final CreateStructureDialog     createStructureDialog;
-    private final IdentifierCollisionDialog icd;
-    private final HelpView                  helpView;
+    private final ConnectedView         connectedView;
+    private final InterpreterView       interpreterView;
+    private final SourcePanel           sourceViewer;
+    private final OperationPanel        operationPanel;
+    private final ExamplesDialog        examplesDialog;
+    private final VisualDialog          visualDialog;
+    private final CreateStructureDialog createStructureDialog;
+    private final HelpView              helpView;
     // Buttons
-    private Button                          backwardButton, forwardButton, playPauseButton;
-    private ProgressBar                     animationProgressBar;
-    private Button                          restartButton, clearButton, speedButton;
+    private Button                      backwardButton, forwardButton, playPauseButton;
+    private ProgressBar                 animationProgressBar;
+    private Button                      restartButton, clearButton, speedButton;
 
     public Controller (Stage window, LogStreamManager lsm, SourcePanel sourceViewer, Visualization visualization) {
         vis = visualization;
@@ -126,7 +125,6 @@ public class Controller implements CommunicatorListener {
         visualDialog = new VisualDialog(window);
         createStructureDialog = new CreateStructureDialog(window);
         connectedView = new ConnectedView(window, (JGroupCommunicator) lsm.getCommunicator());
-        icd = new IdentifierCollisionDialog(window);
         helpView = new HelpView(window);
         initSettingsPane();
         interpreterView = new InterpreterView(window);
@@ -346,8 +344,8 @@ public class Controller implements CommunicatorListener {
      * Operation Panel listeners
      */
     /**
-     * Jump to the given index. {@code index} less than 0 jumps to start,
-     * {@code index} greater than {@code size} jumps to end.
+     * Jump to the given index. {@code index} less than 0 jumps to start, {@code index} greater than
+     * {@code size} jumps to end.
      *
      * @param index
      *            The index to jump to.
@@ -484,8 +482,8 @@ public class Controller implements CommunicatorListener {
         }
     }
 
-    private boolean always_clear_old = false;
-    private boolean always_keep_old  = false;
+    private boolean alwaysClearOld = false;
+    private boolean alwaysKeepOld  = false;
 
     /**
      * Load the current data from LSM. Does not clear any data.
@@ -497,6 +495,7 @@ public class Controller implements CommunicatorListener {
         if (checkCollision(oldStructs, newStructs) == false) {
             return;
         }
+
         oldStructs.putAll(newStructs);
         visualMenu.getItems().clear();
         visualMenu.setDisable(newStructs.isEmpty());
@@ -558,27 +557,27 @@ public class Controller implements CommunicatorListener {
 
         DataStructure newStruct;
         for (String identifier : opNames) {
-            
+
             if (!structNames.contains(identifier)) {
-                
+
                 // Key not found - create a structure?
                 newStruct = createStructureDialog.show(identifier);
-                
+
                 if (newStruct != null) {
                     structs.put(newStruct.identifier, newStruct);
                 }
             }
         }
 
-//        // Check to see if any are unused.
-//        Set<String> allNames = new HashSet<String>(structNames);
-//        allNames.retainAll(opNames);
-//        
-//        for(String s : allNames){
-//            System.err.println("Ignored unused data structure: " + structs.get(s));
-//            Main.console.err("Ignored  unused data structure: " + structs.get(s));
-//            structs.remove(s);
-//        }
+        // // Check to see if any are unused.
+        // Set<String> allNames = new HashSet<String>(structNames);
+        // allNames.retainAll(opNames);
+        //
+        // for(String s : allNames){
+        // System.err.println("Ignored unused data structure: " + structs.get(s));
+        // Main.console.err("Ignored unused data structure: " + structs.get(s));
+        // structs.remove(s);
+        // }
     }
 
     private boolean checkCollision (Map<String, DataStructure> oldStructs, Map<String, DataStructure> newStructs) {
@@ -588,21 +587,22 @@ public class Controller implements CommunicatorListener {
                     Main.console.force("ERROR: Data Structure identifier collision:");
                     Main.console.force("Known structures: " + model.getStructures().values());
                     Main.console.force("New structures: " + lsm.getDataStructures().values());
-                    if (always_clear_old) {
+                    if (alwaysClearOld) {
                         Main.console.force("Known structures cleared.");
                         clearButtonClicked();
                         break checkCollison;
-                    } else if (always_keep_old) {
+                    } else if (alwaysKeepOld) {
                         Main.console.force("New structures rejected.");
                         lsm.clearData();
                         return false;
                     } else {
                         java.awt.Toolkit.getDefaultToolkit().beep();
-                        short routine = icd.show(oldStructs.values(), oldStructs.values());
+                        // short routine = icd.show(oldStructs.values(), oldStructs.values());
+                        short routine = 0;
                         switch (routine) {
                         // Clear old structures, import new
                         case IdentifierCollisionDialog.ALWAYS_CLEAR_OLD:
-                            always_clear_old = true;
+                            alwaysClearOld = true;
                             clearButtonClicked();
                             Main.console.force("Conflicting structures will overrwrite existing for this session.");
                             break checkCollison;
@@ -612,7 +612,7 @@ public class Controller implements CommunicatorListener {
                             break checkCollison;
                         // Reject new structures
                         case IdentifierCollisionDialog.ALWAYS_KEEP_OLD:
-                            always_keep_old = true;
+                            alwaysKeepOld = true;
                             Main.console.force("Conflicting structures will be rejected for this session.");
                             lsm.clearData();
                             return false;

@@ -23,11 +23,10 @@ import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
 /**
- * A visualisation element. Elements which use the
- * {@code VisualElement(Element element, ..)} constructor are bound to their
- * elements. Using the {@code VisualElement(double value, Paint style, ..)}
- * allows the user to set values manually. Attempting to set values manually on
- * a bound element will cast an exception.
+ * A visualisation element. Elements which use the {@code VisualElement(Element element, ..)}
+ * constructor are bound to their elements. Using the
+ * {@code VisualElement(double value, Paint style, ..)} allows the user to set values manually.
+ * Attempting to set values manually on a bound element will cast an exception.
  *
  * @author Richard Sundqvist
  *
@@ -89,8 +88,8 @@ public abstract class AVElement extends Pane {
      * @param node_width
      *            The width of the node.
      * @param node_height
-     *            The height of the node. * @param fxmlUrl Path to the FXML file
-     *            containing the layout for the element.
+     *            The height of the node. * @param fxmlUrl Path to the FXML file containing the
+     *            layout for the element.
      */
     public AVElement (double value, Paint style, double node_width, double node_height) {
         element = null;
@@ -228,8 +227,8 @@ public abstract class AVElement extends Pane {
      */
     public void onMouseClicked () {
         showSelected();
-        if(Debug.OUT){
-            System.out.println("w = " + width + ", h = " + height);            
+        if (Debug.OUT) {
+            System.out.println("w = " + width + ", h = " + height);
         }
         Main.console.info("Statistics for \"" + element + "\":");
         OperationCounterHaver.printStats(element);
@@ -290,8 +289,8 @@ public abstract class AVElement extends Pane {
     }
 
     /**
-     * Determines whether this element should be shown as a ghost, with no value
-     * and a dashed border.
+     * Determines whether this element should be shown as a ghost, with no value and a dashed
+     * border.
      *
      * @param ghost
      *            The new value.
@@ -343,8 +342,7 @@ public abstract class AVElement extends Pane {
     }
 
     /**
-     * Set text for the label. Will render at {@link Pos#BOTTOM_CENTER} if no
-     * position is specified.
+     * Set text for the label. Will render at {@link Pos#BOTTOM_CENTER} if no position is specified.
      *
      * @param text
      *            The text to render.
@@ -356,8 +354,7 @@ public abstract class AVElement extends Pane {
     }
 
     /**
-     * Set the position of the extra info label. Will hide the label if
-     * {@code pos == null}. <br>
+     * Set the position of the extra info label. Will hide the label if {@code pos == null}. <br>
      *
      * @param pos
      *            The new position for the info label.
@@ -416,8 +413,8 @@ public abstract class AVElement extends Pane {
     }
 
     /**
-     * Set the value of this element, applying it to the <b>visual
-     * representation only</b>. The model is not changed.
+     * Set the value of this element, applying it to the <b>visual representation only</b>. The
+     * model is not changed.
      *
      * @param value
      *            A double value to show.
@@ -427,8 +424,8 @@ public abstract class AVElement extends Pane {
     }
 
     /**
-     * Set the value of this element, applying it to the <b>visual
-     * representation only</b>. The model is not changed.
+     * Set the value of this element, applying it to the <b>visual representation only</b>. The
+     * model is not changed.
      *
      * @param value
      *            A String value to show.
@@ -442,9 +439,8 @@ public abstract class AVElement extends Pane {
     }
 
     /**
-     * Adjust the size of the Shape used to display the value of this AVElement,
-     * as well as the root. The default implementation of this method only
-     * changes the size of the root.
+     * Adjust the size of the Shape used to display the value of this AVElement, as well as the
+     * root. The default implementation of this method only changes the size of the root.
      *
      * @param newWidth
      *            The new width.

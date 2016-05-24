@@ -22,8 +22,8 @@ public class Filter implements iFilter {
     }
 
     /**
-     * Evaluates the expression with given two inputs, tries both values as both
-     * variables in expression
+     * Evaluates the expression with given two inputs, tries both values as both variables in
+     * expression
      *
      * @return The set of iValueContainers that remains after the evaluation
      */

@@ -43,8 +43,7 @@ public enum VisualType {
     }
 
     /**
-     * Returns the VisualType corresponding to the stylish name (VisualType.
-     * <type>.name).
+     * Returns the VisualType corresponding to the stylish name (VisualType. <type>.name).
      *
      * @param pretty
      *            The name to resolve.

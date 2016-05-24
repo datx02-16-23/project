@@ -22,7 +22,7 @@ import com.google.gson.stream.JsonReader;
 
 import assets.Const;
 import contract.AnnotatedVariable;
-import contract.CRoot;
+import contract.Root;
 import contract.Header;
 import contract.Operation;
 import contract.datastructure.DataStructure;
@@ -32,33 +32,31 @@ import gui.Main;
 import io.Communicator.CommunicatorMessage;
 
 /**
- * A LogStreamManager handles communication between processes, components, and
- * the OS file system.<br>
- * <b>LogStreamManager will not unwrap streamed messages if the listener is
- * null.</b>
+ * A LogStreamManager handles communication between processes, components, and the OS file system.
+ * <br>
+ * <b>LogStreamManager will not unwrap streamed messages if the listener is null.</b>
  *
  * @author Richard Sundqvist
  */
 public class LogStreamManager implements CommunicatorListener {
 
     /**
-     * Set to {@code true} to enable human readable printing of log files.
-     * {@code false} by default to increase performance.
+     * Set to {@code true} to enable human readable printing of log files. {@code false} by default
+     * to increase performance.
      */
     public boolean                     PRETTY_PRINTING = false;
     private final Gson                 gson            = GsonContructor.build();
     private final Communicator         communicator;
     private CommunicatorListener       listener;
     // Wrapper fields
-    private CRoot                      wrapper;
+    private Root                       wrapper;
     private Map<String, DataStructure> dataStructures;
     private List<Operation>            operations;
     private Map<String, List<String>>  sources;
 
     /**
      * Creates a new LogStreamManager. <br>
-     * <b>LogStreamManager will not unwrap streamed messages if the listener is
-     * null.</b>
+     * <b>LogStreamManager will not unwrap streamed messages if the listener is null.</b>
      *
      * @param agentDescriptor
      *            The name of the agent using this LogStreamManager, such as
@@ -70,8 +68,7 @@ public class LogStreamManager implements CommunicatorListener {
 
     /**
      * Creates a new LogStreamManager. <br>
-     * <b>LogStreamManager will not unwrap streamed messages if the listener is
-     * null.</b>
+     * <b>LogStreamManager will not unwrap streamed messages if the listener is null.</b>
      *
      * @param suppressIncoming
      *            If {@code true}, most incoming messages will be ignored.
@@ -99,8 +96,7 @@ public class LogStreamManager implements CommunicatorListener {
      * Set the map of known variables used by this LogStreamManager.
      *
      * @param newDataStrutures
-     *            A new map of known variables to be used by this
-     *            LogStreamManager.
+     *            A new map of known variables to be used by this LogStreamManager.
      */
     public void setDataStructures (Map<String, DataStructure> newDataStrutures) {
         dataStructures = newDataStrutures;
@@ -149,8 +145,7 @@ public class LogStreamManager implements CommunicatorListener {
      *
      * @param filePath
      *            Location of the file to read.
-     * @return {@code true} if the log was successfully read. {@code false}
-     *         otherwise.
+     * @return {@code true} if the log was successfully read. {@code false} otherwise.
      */
     public boolean readLog (String filePath) {
         return this.readLog(new File(filePath));
@@ -161,12 +156,11 @@ public class LogStreamManager implements CommunicatorListener {
      *
      * @param logFile
      *            The file to read.
-     * @return {@code true} if the log was successfully read. {@code false}
-     *         otherwise.
+     * @return {@code true} if the log was successfully read. {@code false} otherwise.
      */
     public boolean readLog (File logFile) {
         try {
-            wrapper = gson.fromJson(new JsonReader(new FileReader(logFile)), CRoot.class);
+            wrapper = gson.fromJson(new JsonReader(new FileReader(logFile)), Root.class);
             return this.unwrap(wrapper);
         } catch (JsonIOException e) {
             Main.console.err("JSON IO error: " + e);
@@ -188,10 +182,9 @@ public class LogStreamManager implements CommunicatorListener {
     }
 
     /**
-     * Print the operations and header information currently held by this
-     * LogStreamManager. Set the public variable {@code PRETTY_PRINTING} to true
-     * to enable human-readable output. Will generate a filename automatically
-     * on the form YY-MM-DD_HHMMSS.
+     * Print the operations and header information currently held by this LogStreamManager. Set the
+     * public variable {@code PRETTY_PRINTING} to true to enable human-readable output. Will
+     * generate a filename automatically on the form YY-MM-DD_HHMMSS.
      *
      * @param targetDir
      *            The directory to print the log file.
@@ -201,10 +194,9 @@ public class LogStreamManager implements CommunicatorListener {
     }
 
     /**
-     * Print the operations and header information currently held by this
-     * LogStreamManager. Set the public variable {@code PRETTY_PRINTING} to true
-     * to enable human-readable output. Will generate a filename automatically
-     * on the form YY-MM-DD_HHMMSS.
+     * Print the operations and header information currently held by this LogStreamManager. Set the
+     * public variable {@code PRETTY_PRINTING} to true to enable human-readable output. Will
+     * generate a filename automatically on the form YY-MM-DD_HHMMSS.
      *
      * @param target
      *            The location and file name of the file to print.
@@ -214,10 +206,9 @@ public class LogStreamManager implements CommunicatorListener {
     }
 
     /**
-     * Print the operations and header information currently held by this
-     * LogStreamManager. Set the public variable {@code PRETTY_PRINTING} to true
-     * to enable human-readable output. If {@code autoName} is true, a file name
-     * on the form "YY-MM-DD_HHMMSS.json" will be generated.
+     * Print the operations and header information currently held by this LogStreamManager. Set the
+     * public variable {@code PRETTY_PRINTING} to true to enable human-readable output. If
+     * {@code autoName} is true, a file name on the form "YY-MM-DD_HHMMSS.json" will be generated.
      *
      * @param targetPath
      *            The location to print the log file.
@@ -228,12 +219,11 @@ public class LogStreamManager implements CommunicatorListener {
         HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
         annotatedVariables.putAll(dataStructures);
         Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables, sources);
-        this.printLog(targetPath, new CRoot(header, operations), autoName);
+        this.printLog(targetPath, new Root(header, operations), autoName);
     }
 
     /**
-     * Stream the data held by this LogStreamManager using the current
-     * Communicator.
+     * Stream the data held by this LogStreamManager using the current Communicator.
      *
      * @return True if data was successfully streamed.
      */
@@ -241,13 +231,12 @@ public class LogStreamManager implements CommunicatorListener {
         HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
         annotatedVariables.putAll(dataStructures);
         Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables, null);
-        return this.stream(new CRoot(header, operations));
+        return this.stream(new Root(header, operations));
     }
 
     /**
-     * Stream the data held by this LogStreamManager using the current
-     * Communicator, then clear data. Data will be cleared only if successful
-     * (this method returns true).
+     * Stream the data held by this LogStreamManager using the current Communicator, then clear
+     * data. Data will be cleared only if successful (this method returns true).
      *
      * @return True if data was successfully streamed.
      */
@@ -262,20 +251,18 @@ public class LogStreamManager implements CommunicatorListener {
     }
 
     /**
-     * Stream the given Wrapper using the Communicator carried by this
-     * LogStreamManager.
+     * Stream the given Wrapper using the Communicator carried by this LogStreamManager.
      *
      * @param wrapper
      *            The Wrapper to stream.
      * @return True if successful, false otherwise.
      */
-    public boolean stream (CRoot wrapper) {
+    public boolean stream (Root wrapper) {
         return communicator.sendWrapper(wrapper);
     }
 
     /**
-     * Stream the given Wrapper using the Communicator carried by this
-     * LogStreamManager.
+     * Stream the given Wrapper using the Communicator carried by this LogStreamManager.
      *
      * @param operation
      *            The Operation to stream.
@@ -284,12 +271,11 @@ public class LogStreamManager implements CommunicatorListener {
     public boolean stream (Operation operation) {
         ArrayList<Operation> operations = new ArrayList<Operation>();
         operations.add(operation);
-        return this.stream(new CRoot(null, operations));
+        return this.stream(new Root(null, operations));
     }
 
     /**
-     * Stream the given JSON string using the Communicator carried by this
-     * LogStreamManager.
+     * Stream the given JSON string using the Communicator carried by this LogStreamManager.
      *
      * @param json
      *            The JSON String to stream.
@@ -300,20 +286,18 @@ public class LogStreamManager implements CommunicatorListener {
     }
 
     /**
-     * Stream the given Operation list using the Communicator carried by this
-     * LogStreamManager.
+     * Stream the given Operation list using the Communicator carried by this LogStreamManager.
      *
      * @param operations
      *            The operations to stream.
      * @return True if successful, false otherwise.
      */
     public boolean streamOperations (List<Operation> operations) {
-        return this.stream(new CRoot(null, operations));
+        return this.stream(new Root(null, operations));
     }
 
     /**
-     * Stream the given AnnotatedVariable using the Communicator carried by this
-     * LogStreamManager.
+     * Stream the given AnnotatedVariable using the Communicator carried by this LogStreamManager.
      *
      * @param annotatedVariable
      *            The Wrapper to stream.
@@ -323,20 +307,19 @@ public class LogStreamManager implements CommunicatorListener {
         HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
         annotatedVariables.put(annotatedVariable.identifier, annotatedVariable);
         Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables, null);
-        return this.stream(new CRoot(header, null));
+        return this.stream(new Root(header, null));
     }
 
     /**
-     * Stream the given Wrapper using the Communicator carried by this
-     * LogStreamManager.
+     * Stream the given Wrapper using the Communicator carried by this LogStreamManager.
      *
      * @param wrappers
      *            The Wrappers to stream.
      * @return True if ALL wrappers successfully sent, false otherwise.
      */
-    public boolean streamWrappers (List<CRoot> wrappers) {
+    public boolean streamWrappers (List<Root> wrappers) {
         boolean allSuccessful = true;
-        for (CRoot w : wrappers) {
+        for (Root w : wrappers) {
             allSuccessful = allSuccessful && communicator.sendWrapper(w);
         }
         return allSuccessful;
@@ -346,10 +329,10 @@ public class LogStreamManager implements CommunicatorListener {
         HashMap<String, AnnotatedVariable> annotatedVariables = new HashMap<String, AnnotatedVariable>();
         annotatedVariables.putAll(dataStructures);
         Header header = new Header(Header.VERSION_UNKNOWN, annotatedVariables, null);
-        this.printSimpleLog(targetPath + "simple.log", new CRoot(header, operations));
+        this.printSimpleLog(targetPath + "simple.log", new Root(header, operations));
     }
 
-    public void printSimpleLog (String targetPath, CRoot wrapper) {
+    public void printSimpleLog (String targetPath, Root wrapper) {
         StringBuilder sb = new StringBuilder();
         sb.append(
                 "This is a simplified version of the log. It sacrifices completeness for readability and cannot be processed by "
@@ -371,9 +354,8 @@ public class LogStreamManager implements CommunicatorListener {
     }
 
     /**
-     * Print the operations and header container in the wrapper given as
-     * argument. Set the public variable PRETTY_PRINTING to true to enable
-     * human-readable output.
+     * Print the operations and header container in the wrapper given as argument. Set the public
+     * variable PRETTY_PRINTING to true to enable human-readable output.
      *
      * @param targetPath
      *            The location to print the log file.
@@ -382,7 +364,7 @@ public class LogStreamManager implements CommunicatorListener {
      * @param autoName
      *            if {@code true}, a name will be automatically generated.
      */
-    public void printLog (String targetPath, CRoot wrapper, boolean autoName) {
+    public void printLog (String targetPath, Root wrapper, boolean autoName) {
         Gson GSON;
         DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd_HHmmss");
         Calendar cal = Calendar.getInstance();
@@ -415,7 +397,7 @@ public class LogStreamManager implements CommunicatorListener {
      *            The wrapper to unwrap.
      * @return True if the wrapper was successfully unwrapped. False otherwise.
      */
-    public boolean unwrap (CRoot wrapper) {
+    public boolean unwrap (Root wrapper) {
         if (wrapper.header != null) {
             if (wrapper.header.annotatedVariables != null) {
                 for (AnnotatedVariable av : wrapper.header.annotatedVariables.values()) {
@@ -441,11 +423,10 @@ public class LogStreamManager implements CommunicatorListener {
      *
      * @param json
      *            THE JSON string to process.
-     * @return True if the string was successfully parsed and stored. False
-     *         otherwise.
+     * @return True if the string was successfully parsed and stored. False otherwise.
      */
     public boolean unwrap (String json) {
-        CRoot w = gson.fromJson(json, CRoot.class);
+        Root w = gson.fromJson(json, Root.class);
         return this.unwrap(w);
     }
 
@@ -455,8 +436,8 @@ public class LogStreamManager implements CommunicatorListener {
         }
         // Handle Wrapper messagess
         if (messageType == CommunicatorMessage.WRAPPER) {
-            List<CRoot> wrappers = communicator.getAllQueuedMessages();
-            for (CRoot w : wrappers) {
+            List<Root> wrappers = communicator.getAllQueuedMessages();
+            for (Root w : wrappers) {
                 if (this.unwrap(w) == false) {
                     return;
                 }
@@ -471,8 +452,8 @@ public class LogStreamManager implements CommunicatorListener {
     }
 
     /**
-     * Clear list of operations and known variables. Equivalent to calling
-     * clearOperations() and clearKnownVariables().
+     * Clear list of operations and known variables. Equivalent to calling clearOperations() and
+     * clearKnownVariables().
      */
     public void clearData () {
         sources = null;
@@ -495,8 +476,7 @@ public class LogStreamManager implements CommunicatorListener {
     }
 
     /**
-     * Set the CommunicatorListener which will be notified when this
-     * Communicator accepts a message.
+     * Set the CommunicatorListener which will be notified when this Communicator accepts a message.
      *
      * @param newListener
      *            The new CommunicatorListener.

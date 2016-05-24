@@ -6,8 +6,7 @@ import gui.Main;
  * Generates examples for a given array using the selected algorithm.<br>
  * <br>
  * <b>Sources:</b><br>
- * Insertion Sort: http://mathbits.com/MathBits/Java/arrays/InsertionSort.htm
- * <br>
+ * Insertion Sort: http://mathbits.com/MathBits/Java/arrays/InsertionSort.htm <br>
  * Bubble Sort: http://mathbits.com/MathBits/Java/arrays/Bubble.htm <br>
  * Merge Sort: http://algs4.cs.princeton.edu/14analysis/Mergesort.java.html <br>
  *
@@ -30,8 +29,7 @@ public abstract class Examples {
      *            The algorithm to load.
      * @param data
      *            The data to run it on.
-     * @return The resulting operations of running the given algorithm on the
-     *         data.
+     * @return The resulting operations of running the given algorithm on the data.
      */
     // @VisualizeArg(args = {"", AbstractType.ARRAY})
     public static String getExample (Algorithm algo, double[] data) {

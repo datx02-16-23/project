@@ -168,8 +168,8 @@ public class GridRender extends ARender {
         }
 
         /**
-         * Returns the Order corresponding to the given option number. Defaults
-         * to ROW_MAJOR for unknown option numbers.
+         * Returns the Order corresponding to the given option number. Defaults to ROW_MAJOR for
+         * unknown option numbers.
          *
          * @param optionNbr
          *            The option to resolve an order for.

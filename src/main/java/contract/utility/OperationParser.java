@@ -146,8 +146,7 @@ public abstract class OperationParser {
     // }
 
     /**
-     * Naive implementation to flatten a multi-dimensional list into a single
-     * dimension.
+     * Naive implementation to flatten a multi-dimensional list into a single dimension.
      *
      * @param list
      *            The multi-dimensional list to flatten.
@@ -216,8 +215,7 @@ public abstract class OperationParser {
      * Convert a List of ints or doubles to an array of ints.
      *
      * @param listOrArray
-     *            Should be an int array, or an ArrayList of Integers or
-     *            Doubles.
+     *            Should be an int array, or an ArrayList of Integers or Doubles.
      * @return An array of ints, or null.
      */
     @SuppressWarnings("unchecked") public static int[] ensureIntArray (Object listOrArray) {

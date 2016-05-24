@@ -168,8 +168,7 @@ public class OperationCounter {
     }
 
     /**
-     * Interface for classes which count the {@link #Operation}'s performed on
-     * it.
+     * Interface for classes which count the {@link #Operation}'s performed on it.
      *
      * @author Richard Sundqvist
      *
@@ -183,8 +182,7 @@ public class OperationCounter {
         public OperationCounter getCounter ();
 
         /**
-         * Print stats for a OperationCounterHaver using the
-         * {@link #printStats()} method.
+         * Print stats for a OperationCounterHaver using the {@link #printStats()} method.
          *
          * @param och
          *            The OperationCounterHaver whose counter should be used.

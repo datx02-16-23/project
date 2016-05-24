@@ -10,8 +10,7 @@ class Merge {
 
     /**
      * Generate a log file for Merge Sort on the given data. <br>
-     * <b>Source: </b>
-     * {@link http://algs4.cs.princeton.edu/14analysis/Mergesort.java.html}
+     * <b>Source: </b> {@link http://algs4.cs.princeton.edu/14analysis/Mergesort.java.html}
      *
      * @param data
      *            The data to run the algorithm on.

@@ -120,8 +120,8 @@ public class Main extends Application {
     }
 
     /**
-     * Printout of error messages and warnings from the program. Strings only.
-     * Use Object toString to print them.
+     * Printout of error messages and warnings from the program. Strings only. Use Object toString
+     * to print them.
      *
      * @author Richard Sundqvist
      *

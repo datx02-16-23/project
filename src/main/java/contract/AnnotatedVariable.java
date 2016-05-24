@@ -18,33 +18,29 @@ public class AnnotatedVariable implements Serializable {
      */
     private static final long        serialVersionUID = Const.VERSION_NUMBER;
     /**
-     * The identifier for this variable. For example, the indentifier for the
-     * variable created by the line "{@code int myVar = 1337;}" would be
-     * "{@code myVar}".
+     * The identifier for this variable. For example, the indentifier for the variable created by
+     * the line "{@code int myVar = 1337;}" would be "{@code myVar}".
      */
     public final String              identifier;
     /**
-     * The basic data structure for this variable. May be an array or something
-     * more complicated like a tree or linked list.
+     * The basic data structure for this variable. May be an array or something more complicated
+     * like a tree or linked list.
      */
     public final RawType             rawType;
     /**
-     * The type of data structure this variable logically represents. For
-     * example, a variable could have the {@code rawType} array but the
-     * {@code abstractType} binaryTree.
+     * The type of data structure this variable logically represents. For example, a variable could
+     * have the {@code rawType} array but the {@code abstractType} binaryTree.
      */
     public RawType.AbstractType      abstractType;
     /**
-     * The preferred graphical representation for this variable, such as
-     * BarChart. <br>
+     * The preferred graphical representation for this variable, such as BarChart. <br>
      * <br>
-     * <b>Note</b>: setting this variable using the setVisual() is recommended
-     * as it may be observed.
+     * <b>Note</b>: setting this variable using the setVisual() is recommended as it may be
+     * observed.
      */
     public VisualType                visual;
     /**
-     * A map of attributes and their values for this variable, such as maximum
-     * size.
+     * A map of attributes and their values for this variable, such as maximum size.
      */
     public final Map<String, Object> attributes;
 

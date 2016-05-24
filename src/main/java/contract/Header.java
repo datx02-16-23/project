@@ -21,8 +21,8 @@ public class Header implements Serializable {
      */
     public static final int                     VERSION_UNKNOWN  = 0;
     /**
-     * The version number for this file. Version 0 is reserved for when the
-     * version number is unknown.
+     * The version number for this file. Version 0 is reserved for when the version number is
+     * unknown.
      */
     public final int                            version;
     /**
@@ -35,8 +35,8 @@ public class Header implements Serializable {
     public final Map<String, List<String>>      sources;
 
     /**
-     * Create a Header item with the given version number and map of annotated
-     * variables. Version 0 is reserved for when the version number is unknown.
+     * Create a Header item with the given version number and map of annotated variables. Version 0
+     * is reserved for when the version number is unknown.
      *
      * @param version
      *            The version number for this file.
@@ -52,9 +52,8 @@ public class Header implements Serializable {
     }
 
     /**
-     * Create a {@code Header} object with an unknown version number and no
-     * declared variables. You may populate the HashMap
-     * {@code annotatedVariables} manually after creation.
+     * Create a {@code Header} object with an unknown version number and no declared variables. You
+     * may populate the HashMap {@code annotatedVariables} manually after creation.
      */
     public Header () {
         version = VERSION_UNKNOWN;
@@ -63,8 +62,7 @@ public class Header implements Serializable {
     }
 
     /**
-     * Returns the sources contained in the metadata of this Header, if found.
-     * Null otherwise.
+     * Returns the sources contained in the metadata of this Header, if found. Null otherwise.
      *
      * @return A Map of source names as keys and their lines as a List.
      */

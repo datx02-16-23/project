@@ -10,8 +10,8 @@ import contract.operation.OP_Swap;
 import contract.operation.OperationType;
 
 /**
- * A Consolidator attempts to consolidate low level (read/write) operations into
- * higher level operations.
+ * A Consolidator attempts to consolidate low level (read/write) operations into higher level
+ * operations.
  *
  * @author Richard Sundqvist
  *
@@ -45,8 +45,8 @@ public class Consolidator {
     }
 
     /**
-     * Returns true if the type of the OperationType given as argument is among
-     * the test cases used by this Consolidator.
+     * Returns true if the type of the OperationType given as argument is among the test cases used
+     * by this Consolidator.
      *
      * @param testCase
      *            The OperationType to test.
@@ -63,8 +63,8 @@ public class Consolidator {
     }
 
     /**
-     * Adds another Consolidable for this Consolidator. Will not any any
-     * Consolidable type more than once.
+     * Adds another Consolidable for this Consolidator. Will not any any Consolidable type more than
+     * once.
      *
      * @param newConsolidable
      *            The Consolidable to add.
@@ -88,8 +88,8 @@ public class Consolidator {
     }
 
     /**
-     * Attempt to consolidate the working set supplied. Returns a consolidated
-     * operation if successful, null otherwise.
+     * Attempt to consolidate the working set supplied. Returns a consolidated operation if
+     * successful, null otherwise.
      *
      * @param rwList
      *            The list of read/write operations to consolidate.
@@ -107,11 +107,9 @@ public class Consolidator {
     }
 
     /**
-     * Returns the maximum number of read/write operations this Consolidator
-     * will use.
+     * Returns the maximum number of read/write operations this Consolidator will use.
      *
-     * @return The maximum number of read/write operations this Consolidator
-     *         will use.
+     * @return The maximum number of read/write operations this Consolidator will use.
      */
     public int getMaximumSetSize () {
         if (minimumSetSize == Integer.MIN_VALUE) {
@@ -121,11 +119,9 @@ public class Consolidator {
     }
 
     /**
-     * Returns the minimum number of read/write operations this Consolidator
-     * will use.
+     * Returns the minimum number of read/write operations this Consolidator will use.
      *
-     * @return The minimum number of read/write operations this Consolidator
-     *         will use.
+     * @return The minimum number of read/write operations this Consolidator will use.
      */
     public int getMinimumSetSize () {
         if (minimumSetSize == Integer.MAX_VALUE) {
@@ -135,11 +131,9 @@ public class Consolidator {
     }
 
     /**
-     * Print a human-readable list of all the Operation types this Consolidator
-     * tests.
+     * Print a human-readable list of all the Operation types this Consolidator tests.
      *
-     * @return A human-readable list of all the Operation types this
-     *         Consolidator tests.
+     * @return A human-readable list of all the Operation types this Consolidator tests.
      */
     public List<OperationType> getTestCases () {
         ArrayList<OperationType> simpleNames = new ArrayList<OperationType>();
@@ -153,8 +147,7 @@ public class Consolidator {
     }
 
     /**
-     * Remove a given testCase. When this method returns, the testcase is
-     * guaranteed to be removed.
+     * Remove a given testCase. When this method returns, the testcase is guaranteed to be removed.
      *
      * @param testCase
      *            The testcase to remove.

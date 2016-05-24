@@ -39,22 +39,22 @@ public class BarchartRender extends ARender implements MinMaxListener {
     private final Pane               axes          = new Pane();
 
     /**
-     * Create a new BarchartRender. If both {@code renderHeight} and
-     * {@code nodeHeight} are greater than 0, the bars may stretch outside of
-     * the render depending on element numeric value. TODO UPPDATERA JAVDOC
+     * Create a new BarchartRender. If both {@code renderHeight} and {@code nodeHeight} are greater
+     * than 0, the bars may stretch outside of the render depending on element numeric value. TODO
+     * UPPDATERA JAVDOC
      *
      * @param struct
      *            The structure to render.
      * @param nodeWidth
      *            Width of the bars.
      * @param renderHeight
-     *            Height of the Render itself. A value lower than zero indicates
-     *            that the BarchartRender should update its height
-     *            automatically, ignoring {@code nodeHeight}.
+     *            Height of the Render itself. A value lower than zero indicates that the
+     *            BarchartRender should update its height automatically, ignoring {@code nodeHeight}
+     *            .
      * @param nodeHeight
-     *            The height of the bars per unit. A value lower than 0 will
-     *            scale all elements relative to {@code renderHeight}, ignoring
-     *            {@code nodeHeight}. <b>NOT IMPLEMENTED YET </b>.
+     *            The height of the bars per unit. A value lower than 0 will scale all elements
+     *            relative to {@code renderHeight}, ignoring {@code nodeHeight}. <b>NOT IMPLEMENTED
+     *            YET </b>.
      * @param hspace
      *            Space between bars.
      */
@@ -204,8 +204,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
     }
 
     /**
-     * Draw developer guides where the bar roof, x-axis, y-axis and rightmost
-     * limit should be.
+     * Draw developer guides where the bar roof, x-axis, y-axis and rightmost limit should be.
      */
     public void drawDeveloperGuides () {
 
@@ -292,8 +291,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
     }
 
     /**
-     * Have to override since elements are translated to position them in the
-     * bar.
+     * Have to override since elements are translated to position them in the bar.
      *
      * @param e
      *            An element owned by this BarcharRender.

@@ -17,8 +17,7 @@ public class OP_Message extends Operation {
     private static final OperationType OPERATION        = OperationType.message;
 
     /**
-     * Creates a new Init operation. Note that you must set the target, maxSize
-     * and initial values.
+     * Creates a new Init operation. Note that you must set the target, maxSize and initial values.
      */
     public OP_Message () {
         super(OPERATION, new HashMap<Key, Object>(), null, -1, -1, -1, -1);
