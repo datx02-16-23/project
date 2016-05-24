@@ -13,6 +13,15 @@ public class SingleElementRender extends ARender {
 
     public static final ElementShape DEFAULT_ELEMENT_STYLE = ElementShape.SINGLE;
 
+
+    // ============================================================= //
+    /*
+     *
+     * Constructor
+     *
+     */
+    // ============================================================= //
+    
     /**
      * Create a new SingleElementRender.
      *
@@ -29,6 +38,15 @@ public class SingleElementRender extends ARender {
         renderHeight = 150;
         this.setRelativeNodeSize(-1);
     }
+    
+
+    // ============================================================= //
+    /*
+     *
+     * Superimplementations.
+     *
+     */
+    // ============================================================= //
 
     @Override public void afterParentLoadFXML (FXMLLoader fxmlLoader) {
         // Make it a little smaller.

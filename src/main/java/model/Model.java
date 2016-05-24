@@ -236,7 +236,8 @@ public class Model {
      * @return The DataStructure map held by this Model.
      */
     public Map<String, DataStructure> getStructures () {
-        return Collections.unmodifiableMap(step.getStructures());
+        return step.getStructures();
+//        return Collections.unmodifiableMap(step.getStructures());
     }
 
     /**
@@ -247,7 +248,8 @@ public class Model {
      * @return The Operation list held by this Model.
      */
     public List<Operation> getOperations () {
-        return Collections.unmodifiableList(atomicOperations);
+        return atomicOperations;
+//        return Collections.unmodifiableList(atomicOperations);
     }
 
     /**

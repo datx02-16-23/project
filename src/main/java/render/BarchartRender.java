@@ -27,7 +27,15 @@ public class BarchartRender extends ARender implements MinMaxListener {
 
     public static final ElementShape ELEMENT_STYLE = ElementShape.BAR_ELEMENT;
 
-    // Using instead of default render field names for clarity.
+
+    // ============================================================= //
+    /*
+     *
+     * Field variables
+     *
+     */
+    // ============================================================= //
+    
     private double                   renderHeight;
 
     private final double             padding;
@@ -37,6 +45,15 @@ public class BarchartRender extends ARender implements MinMaxListener {
     private double                   rightWallX;
 
     private final Pane               axes          = new Pane();
+    
+
+    // ============================================================= //
+    /*
+     *
+     * Constructor
+     *
+     */
+    // ============================================================= //
 
     /**
      * Create a new BarchartRender. If both {@code renderHeight} and {@code nodeHeight} are greater
@@ -84,6 +101,15 @@ public class BarchartRender extends ARender implements MinMaxListener {
         this.setRelativeNodeSize(-1);
         reset();
     }
+    
+
+    // ============================================================= //
+    /*
+     *
+     * Superclass Implementations
+     *
+     */
+    // ============================================================= //
 
     @Override public double getX (Element e) {
         if (e == null || e instanceof IndexedElement == false) {
@@ -148,6 +174,15 @@ public class BarchartRender extends ARender implements MinMaxListener {
         drawAxes();
         return true;
     }
+    
+
+    // ============================================================= //
+    /*
+     *
+     * Utility
+     *
+     */
+    // ============================================================= //
 
     private void positionBars () {
         for (Node node : defaultNodePane.getChildren()) {
