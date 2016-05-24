@@ -12,14 +12,12 @@ import gui.Controller;
 import gui.Main;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -72,13 +70,6 @@ public class InterpreterView implements InvalidationListener {
             event.consume(); // Better to do this now than missing it later.
             discardInterpreted();
         });
-        // High order routine
-        interpreterRoutineChooser = (ChoiceBox<String>) fxmlLoader.getNamespace().get("routineChooser");
-        interpreterRoutineChooser.getSelectionModel().selectedItemProperty().addListener(event -> {
-            interpreterRoutineChooser();
-        });
-        interpreterRoutineChooser.setItems(
-                FXCollections.observableArrayList("Discard", "Flush Set", "Keep Set", "Deconstruct", "Abort"));
         namespace = fxmlLoader.getNamespace();
         // Lists
         ListView<Operation> interpreterBefore = (ListView<Operation>) namespace.get("interpreterBefore");
@@ -117,7 +108,6 @@ public class InterpreterView implements InvalidationListener {
         moveToBeforeButton.setDisable(true);
         receivedItems = ops;
         beforeItems.setAll(receivedItems);
-        interpreterRoutineChooser.getSelectionModel().select(translateInterpreterRoutine());
         afterItems.clear();
         loadTestCases();
         // Set size and show
@@ -170,63 +160,12 @@ public class InterpreterView implements InvalidationListener {
     }
 
     /**
-     * Stylize routine names.
-     *
-     * @return A stylized routine name.
-     */
-    private String translateInterpreterRoutine () {
-        switch (interpreter.getHighOrderRoutine()) {
-        case Interpreter.DISCARD:
-            return "Discard";
-        case Interpreter.FLUSH_SET_ADD_HIGH:
-            return "Flush Set";
-        case Interpreter.KEEP_SET_ADD_HIGH:
-            return "Keep Set";
-        case Interpreter.DECONSTRUCT:
-            return "Deconstruct";
-        case Interpreter.ABORT:
-            return "Abort";
-        default:
-            throw new IllegalArgumentException();
-        }
-    }
-
-    /**
      * Listener for the "Discard" button.
      */
     public void discardInterpreted () {
         keep = false;
         root.close();
     }
-
-    private final ChoiceBox<String> interpreterRoutineChooser;
-    private int                     newRoutine = -1;
-
-    private void interpreterRoutineChooser () {
-        String choice = interpreterRoutineChooser.getSelectionModel().getSelectedItem();
-        switch (choice) {
-        case "Discard":
-            newRoutine = Interpreter.DISCARD;
-            break;
-        case "Flush Set":
-            newRoutine = Interpreter.FLUSH_SET_ADD_HIGH;
-            break;
-        case "Keep Set":
-            newRoutine = Interpreter.KEEP_SET_ADD_HIGH;
-            break;
-        case "Deconstruct":
-            newRoutine = Interpreter.DECONSTRUCT;
-            break;
-        case "Abort":
-            newRoutine = Interpreter.ABORT;
-            break;
-        }
-        if (newRoutine != interpreter.getHighOrderRoutine()) {
-            interpreter.setHighOrderRoutine(newRoutine);
-            // saveProperties();
-        }
-    }
-
     /**
      * onAction for the "{@literal<}--" button.
      */

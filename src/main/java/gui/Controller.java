@@ -66,8 +66,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import model.Model;
 import model.Loader;
+import model.Model;
 import multiset.MultisetController;
 import render.Visualization;
 

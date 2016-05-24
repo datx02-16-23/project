@@ -1,5 +1,9 @@
 package multiset;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
+
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -23,10 +27,6 @@ import multiset.model.RangePatterns;
 import multiset.model.iModel;
 import multiset.view.View;
 import multiset.view.iView;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * Created by Smith on 26/04/16.

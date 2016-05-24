@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Separator?>
@@ -86,18 +85,12 @@
             </VBox>
             <VBox prefHeight="300.0" prefWidth="130.0">
                <children>
-                  <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefHeight="20.0" prefWidth="130.0" text="High-Order Routine:" />
-                  <ChoiceBox fx:id="routineChooser" disable="true" prefHeight="25.0" prefWidth="135.0">
-                     <VBox.margin>
-                        <Insets left="3.0" right="3.0" />
-                     </VBox.margin>
-                  </ChoiceBox>
                   <Separator maxWidth="1.7976931348623157E308" prefWidth="200.0">
                      <VBox.margin>
                         <Insets bottom="5.0" top="5.0" />
                      </VBox.margin>
                   </Separator>
-                  <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefHeight="20.0" prefWidth="130.0" text="Testcases:" />
+                  <Label alignment="CENTER" maxHeight="1.7976931348623157E308" prefHeight="20.0" prefWidth="130.0" text="Test Cases:" />
                   <VBox fx:id="casesBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0">
                      <children>
                         <CheckBox mnemonicParsing="false" text="You're not supposed to see this.." />
