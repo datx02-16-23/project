@@ -11,11 +11,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 import assets.Const;
 import assets.Debug;
@@ -23,13 +19,8 @@ import assets.DefaultProperties;
 import assets.Tools;
 import assets.example.Examples;
 import assets.example.Examples.Algorithm;
-import contract.Locator;
-import contract.Operation;
 import contract.datastructure.DataStructure;
-import contract.operation.Key;
-import gui.dialog.CreateStructureDialog;
 import gui.dialog.ExamplesDialog;
-import gui.dialog.IdentifierCollisionDialog;
 import gui.dialog.VisualDialog;
 import gui.panel.OperationPanel;
 import gui.panel.SourcePanel;
@@ -77,9 +68,17 @@ import multiset.MultisetController;
 import render.Visualization;
 
 /**
- * GUI controller class.
+ * Horrendously bloated controller class.
  */
 public class Controller implements CommunicatorListener {
+
+    // ============================================================= //
+    /*
+     *
+     * Field variables
+     *
+     */
+    // ============================================================= //
 
     private final Visualization    vis;
     private final Stage            window;
@@ -101,13 +100,21 @@ public class Controller implements CommunicatorListener {
     // Views, panels, dialogs
     private final SourcePanel      sourcePanel;
     private final OperationPanel   operationPanel;
-    private final ConnectedView connectedView;
+    private final ConnectedView    connectedView;
     // Buttons
     private Button                 backwardButton, forwardButton, playPauseButton;
     private ProgressBar            animationProgressBar;
     private Button                 restartButton, clearButton, speedButton;
 
     private final ModelImporter    modelImporter;
+
+    // ============================================================= //
+    /*
+     *
+     * Constructors
+     *
+     */
+    // ============================================================= //
 
     public Controller (Stage window, LogStreamManager lsm, SourcePanel sourceViewer, Visualization visualization) {
         vis = visualization;
@@ -124,6 +131,92 @@ public class Controller implements CommunicatorListener {
         initSettingsPane();
         loadProperties();
     }
+    
+    
+    private DecimalFormat df;
+    private Label         settingsSaveState;
+
+    private void initSettingsPane () {
+        df = new DecimalFormat("#.####");
+        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/view/SettingsView.fxml"));
+        fxmlLoader.setController(this);
+        settingsView = new Stage();
+        settingsView.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_settings.png")));
+        settingsView.initModality(Modality.APPLICATION_MODAL);
+        settingsView.setTitle(Const.PROGRAM_NAME + ": Settings and Preferences");
+        settingsView.initOwner(window);
+        GridPane p = null;
+        try {
+            p = fxmlLoader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        settingsView.setOnCloseRequest(event -> {
+            event.consume(); // Better to do this now than missing it later.
+            revertSettings();
+        });
+        // Get namespace items
+        // Save state label
+        settingsSaveState = (Label) fxmlLoader.getNamespace().get("settingsSaveState");
+        // Playpack speed
+        timeBetweenField = (TextField) fxmlLoader.getNamespace().get("timeBetweenField");
+        perSecField = (TextField) fxmlLoader.getNamespace().get("perSecField");
+        toggleAutorunStream = (CheckBox) fxmlLoader.getNamespace().get("toggleAutorunStream");
+
+        p.setPrefWidth(window.getWidth() * 0.75);
+        p.setPrefHeight(window.getHeight() * 0.75);
+        Scene dialogScene = new Scene(p, window.getWidth() * 0.75, window.getHeight() * 0.75);
+        settingsView.setScene(dialogScene);
+    }
+
+    public Properties tryLoadProperties () {
+        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(Const.PROPERTIES_FILE_NAME);
+        if (inputStream == null) {
+            Main.console.err("Failed to open properties file.");
+            propertiesFailed(null);
+            return DefaultProperties.get();
+        }
+        Properties properties = new Properties();
+        try {
+            properties.load(inputStream);
+            inputStream.close();
+            return properties;
+        } catch (IOException e) {
+            propertiesFailed(e);
+            Main.console.err("Property file I/O failed.");
+            return DefaultProperties.get();
+        }
+    }
+
+    // Load settings
+    public void loadProperties () {
+        Properties properties = tryLoadProperties();
+        stepDelayBase = Long.parseLong(properties.getProperty("playbackStepDelay"));
+        stepDelay = stepDelayBase; // Speedup factor is 1 at startup.
+        streamAlwaysShowLastOperation = Boolean.parseBoolean(properties.getProperty("autoPlayOnIncomingStream"));
+    }
+
+    // Save settings
+    public void saveProperties () {
+        Properties properties = new Properties();
+        properties.setProperty("playbackStepDelay", "" + stepDelayBase);
+        properties.setProperty("autoPlayOnIncomingStream", "" + streamAlwaysShowLastOperation);
+        try {
+            URL url = this.getClass().getClassLoader().getResource(Const.PROPERTIES_FILE_NAME);
+            OutputStream outputStream = new FileOutputStream(new File(url.toURI()));
+            properties.store(outputStream, Const.PROGRAM_NAME + " user preferences.");
+        } catch (Exception e) {
+            propertiesFailed(e);
+        }
+    }
+
+    // ============================================================= //
+    /*
+     *
+     * Control (FXML onAction receivers.
+     *
+     */
+    // ============================================================= //
 
     public void showSettings () {
         // Playback speed
@@ -241,22 +334,6 @@ public class Controller implements CommunicatorListener {
     }
 
     /**
-     * Steps the model forward and forces any ongoing animations to cancel.
-     *
-     * @return True if the model could progress. False otherwise.
-     */
-    private boolean stepModelForward () {
-        boolean result = model.stepForward();
-
-        vis.render(model.getLastOp());
-        startAnimationProgressBar();
-        updatePanels();
-        setButtons();
-
-        return result;
-    }
-
-    /**
      * Step the animation backward
      */
     public void stepBackwardButtonClicked () {
@@ -326,17 +403,6 @@ public class Controller implements CommunicatorListener {
         operationPanel.getItems().setAll(lsm.getOperations());
     }
 
-    /**
-     * Update SourcePanel and OperationPanel.
-     */
-    private void updatePanels () {
-        Platform.runLater( () -> {
-            int index = Controller.this.model.getIndex();
-            Controller.this.sourcePanel.show(Controller.this.model.getLastOp());
-            Controller.this.operationPanel.update(index, true);
-        });
-    }
-
     /*
      * Operation Panel listeners
      */
@@ -370,43 +436,40 @@ public class Controller implements CommunicatorListener {
         goToStep(operationPanel.getIndex());
     }
 
+    // ============================================================= //
     /*
-     * Operation Panel end.
+     *
+     * Utility
+     *
      */
-    private DecimalFormat df;
-    private Label         settingsSaveState;
+    // ============================================================= //
 
-    private void initSettingsPane () {
-        df = new DecimalFormat("#.####");
-        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/view/SettingsView.fxml"));
-        fxmlLoader.setController(this);
-        settingsView = new Stage();
-        settingsView.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_settings.png")));
-        settingsView.initModality(Modality.APPLICATION_MODAL);
-        settingsView.setTitle(Const.PROGRAM_NAME + ": Settings and Preferences");
-        settingsView.initOwner(window);
-        GridPane p = null;
-        try {
-            p = fxmlLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        settingsView.setOnCloseRequest(event -> {
-            event.consume(); // Better to do this now than missing it later.
-            revertSettings();
+
+    /**
+     * Steps the model forward and forces any ongoing animations to cancel.
+     *
+     * @return True if the model could progress. False otherwise.
+     */
+    private boolean stepModelForward () {
+        boolean result = model.stepForward();
+
+        vis.render(model.getLastOp());
+        startAnimationProgressBar();
+        updatePanels();
+        setButtons();
+
+        return result;
+    }
+    
+    /**
+     * Update SourcePanel and OperationPanel.
+     */
+    private void updatePanels () {
+        Platform.runLater( () -> {
+            int index = Controller.this.model.getIndex();
+            Controller.this.sourcePanel.show(Controller.this.model.getLastOp());
+            Controller.this.operationPanel.update(index, true);
         });
-        // Get namespace items
-        // Save state label
-        settingsSaveState = (Label) fxmlLoader.getNamespace().get("settingsSaveState");
-        // Playpack speed
-        timeBetweenField = (TextField) fxmlLoader.getNamespace().get("timeBetweenField");
-        perSecField = (TextField) fxmlLoader.getNamespace().get("perSecField");
-        toggleAutorunStream = (CheckBox) fxmlLoader.getNamespace().get("toggleAutorunStream");
-
-        p.setPrefWidth(window.getWidth() * 0.75);
-        p.setPrefHeight(window.getHeight() * 0.75);
-        Scene dialogScene = new Scene(p, window.getWidth() * 0.75, window.getHeight() * 0.75);
-        settingsView.setScene(dialogScene);
     }
 
     private Timeline animationProgressTimeline;
@@ -485,7 +548,7 @@ public class Controller implements CommunicatorListener {
     public void loadFromLSM () {
         // Add operations to model and create Render visuals, then draw them.
 
-        boolean modelMayHaveChanged = modelImporter.insertIntoLiveModel(lsm.getOperations(), lsm.getDataStructures());
+        boolean modelMayHaveChanged = modelImporter.insertIntoLiveModel(lsm.getDataStructures(), lsm.getOperations());
         if (modelMayHaveChanged == false) {
             return;
         }
@@ -731,50 +794,6 @@ public class Controller implements CommunicatorListener {
         unsavedChanged();
     }
 
-    public Properties tryLoadProperties () {
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(Const.PROPERTIES_FILE_NAME);
-        if (inputStream == null) {
-            Main.console.err("Failed to open properties file.");
-            propertiesFailed(null);
-            return DefaultProperties.get();
-        }
-        Properties properties = new Properties();
-        try {
-            properties.load(inputStream);
-            inputStream.close();
-            return properties;
-        } catch (IOException e) {
-            propertiesFailed(e);
-            Main.console.err("Property file I/O failed.");
-            return DefaultProperties.get();
-        }
-    }
-
-    // Load settings
-    public void loadProperties () {
-        Properties properties = tryLoadProperties();
-        stepDelayBase = Long.parseLong(properties.getProperty("playbackStepDelay"));
-        stepDelay = stepDelayBase; // Speedup factor is 1 at startup.
-        streamAlwaysShowLastOperation = Boolean.parseBoolean(properties.getProperty("autoPlayOnIncomingStream"));
-    }
-
-    // Save settings
-    public void saveProperties () {
-        Properties properties = new Properties();
-        properties.setProperty("playbackStepDelay", "" + stepDelayBase);
-        properties.setProperty("autoPlayOnIncomingStream", "" + streamAlwaysShowLastOperation);
-        try {
-            URL url = this.getClass().getClassLoader().getResource(Const.PROPERTIES_FILE_NAME);
-            OutputStream outputStream = new FileOutputStream(new File(url.toURI()));
-            properties.store(outputStream, Const.PROGRAM_NAME + " user preferences.");
-        } catch (Exception e) {
-            propertiesFailed(e);
-        }
-    }
-    /*
-     * End settings
-     */
-
     /*
      * How to do sound in JavaFX.
      */
@@ -878,7 +897,8 @@ public class Controller implements CommunicatorListener {
     }
 
     public void showHelp () {
-        new HelpView(window).show();;
+        new HelpView(window).show();
+        ;
     }
 
     /**

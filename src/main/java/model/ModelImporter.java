@@ -117,6 +117,20 @@ public class ModelImporter {
      *         possibility that is has.
      */
     public boolean insertIntoLiveModel (List<Operation> newOps, Map<String, DataStructure> newStructs) {
+        return insertIntoLiveModel(newStructs, newOps);
+    }
+
+    /**
+     * Attempt to insert structures and operations into a live model.
+     * @param newStructs
+     *            The new data structures to insert.
+     * @param newOps
+     *            The new operations to insert.
+     * 
+     * @return {@code false} if the live model hasn't changed. True if there is a
+     *         possibility that is has.
+     */
+    public boolean insertIntoLiveModel (Map<String, DataStructure> newStructs, List<Operation> newOps) {
 
         /*
          * Handle structure name collision.
