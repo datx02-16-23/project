@@ -138,7 +138,7 @@ public class GridRender extends ARender {
         int[] backup = new int[] { struct.getElements().size(), 1 };
         Array array = (Array) struct;
 
-        dims = array.getCapacity();
+        dims = array.getSize();
 
         if (dims == null || dims.length == 0) {
             dims = backup;

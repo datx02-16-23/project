@@ -1,6 +1,5 @@
 package render.element;
 
-import assets.Const;
 import contract.datastructure.Element;
 import javafx.beans.binding.DoubleBinding;
 import javafx.scene.paint.Color;
@@ -99,7 +98,7 @@ public class BarchartElement extends RectangleElement {
     private void fixPositioning (double y) {
         DoubleBinding neg_half_height = rect.heightProperty().divide(2).multiply(-1); // -
         // height/2
-        layoutYProperty().bind(neg_half_height.add(y).subtract(Const.DEFAULT_ELEMENT_HEIGHT / 2)); // TODO
+        layoutYProperty().bind(neg_half_height.add(y).subtract(render.assets.Const.DEFAULT_ELEMENT_HEIGHT / 2)); // TODO
         // fix
     }
 

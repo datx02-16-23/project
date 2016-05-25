@@ -1,9 +1,5 @@
-package assets.example;
+package assets.examples;
 
-// import com.dennisjonsson.annotation.SourcePath;
-
-// @SourcePath(path =
-// "C:/Users/Richard/Documents/datx02-16-23/Bachelor/src/main/java/application/assets/examples")
 abstract class Quick {
     /**
      * Generate a log file for Quick Sort on the given data. <br>

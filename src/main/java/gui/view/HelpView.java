@@ -89,9 +89,9 @@ public class HelpView {
             // Create box
             final Box box = new Box();
             box.setMaterial(new PhongMaterial(ot.color));
-            box.setWidth(Const.DEFAULT_ELEMENT_WIDTH);
-            box.setHeight(Const.DEFAULT_ELEMENT_HEIGHT);
-            box.setDepth(Const.DEFAULT_ELEMENT_WIDTH + Const.DEFAULT_ELEMENT_HEIGHT);
+            box.setWidth(render.assets.Const.DEFAULT_ELEMENT_WIDTH);
+            box.setHeight(render.assets.Const.DEFAULT_ELEMENT_HEIGHT);
+            box.setDepth(render.assets.Const.DEFAULT_ELEMENT_WIDTH + render.assets.Const.DEFAULT_ELEMENT_HEIGHT);
             box.setOnMouseClicked(event -> {
                 about(ot);
                 boxClicked(box);
@@ -186,7 +186,7 @@ public class HelpView {
     }
 
     public void onMouseEntered (Event me) {
-        ((Pane) me.getSource()).setBorder(Const.BORDER_MOUSEOVER);
+        ((Pane) me.getSource()).setBorder(render.assets.Const.BORDER_MOUSEOVER);
     }
 
     public void onMouseExited (Event me) {

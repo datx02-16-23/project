@@ -1,4 +1,4 @@
-package assets.example;
+package assets.examples;
 
 import gui.Main;
 
@@ -70,8 +70,8 @@ public abstract class Examples {
 
         public final String name;
 
-        private Algorithm (String name) {
-            this.name = name;
+        private Algorithm (String prettyName) {
+            this.name = prettyName;
         }
     }
 }

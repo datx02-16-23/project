@@ -2,7 +2,6 @@ package render;
 
 import java.util.Arrays;
 
-import assets.Const;
 import contract.datastructure.Array;
 import contract.datastructure.Array.IndexedElement;
 import contract.datastructure.Array.MinMaxListener;
@@ -92,7 +91,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
                 calculateHeight(((Array) struct).getMax());
                 // permit.
             } else {
-                this.renderHeight = Const.DEFAULT_RENDER_HEIGHT;
+                this.renderHeight = render.assets.Const.DEFAULT_RENDER_HEIGHT;
             }
         } else {
             this.renderHeight = renderHeight;

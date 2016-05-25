@@ -2,7 +2,6 @@ package render;
 
 import java.util.HashMap;
 
-import assets.Const;
 import contract.datastructure.DataStructure;
 import contract.datastructure.DataStructure.VisualListener;
 import contract.datastructure.VisualType;
@@ -101,8 +100,8 @@ public class ARenderManager extends BorderPane implements VisualListener {
 
         if (curRender == null) { // Create new render for the structure.
         // @formatter:off
-	    curRender = ARenderFactory.resolveRender(struct, Const.DEFAULT_ELEMENT_WIDTH, Const.DEFAULT_ELEMENT_HEIGHT,
-		    Const.DEFAULT_RENDER_WIDTH, Const.DEFAULT_RENDER_HEIGHT);
+	    curRender = ARenderFactory.resolveRender(struct, render.assets.Const.DEFAULT_ELEMENT_WIDTH, render.assets.Const.DEFAULT_ELEMENT_HEIGHT,
+		    render.assets.Const.DEFAULT_RENDER_WIDTH, render.assets.Const.DEFAULT_RENDER_HEIGHT);
 	    // @formatter:on
             renders.put(struct.resolveVisual(), curRender);
         }

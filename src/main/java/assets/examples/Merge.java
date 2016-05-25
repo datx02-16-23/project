@@ -1,11 +1,5 @@
-package assets.example;
+package assets.examples;
 
-// import com.dennisjonsson.annotation.SourcePath;
-// import com.dennisjonsson.annotation.VisualizeArg;
-// import com.dennisjonsson.markup.AbstractType;
-//
-// @SourcePath(path =
-// "C:/Users/Richard/Documents/datx02-16-23/Bachelor/src/main/java/application/assets/examples")
 class Merge {
 
     /**
@@ -20,7 +14,6 @@ class Merge {
         mergesort(data);
     }
 
-    // @VisualizeArg(args = {AbstractType.ARRAY, AbstractType.ARRAY})
     private static double[] merge (double[] a, double[] b) {
         double[] c = new double[a.length + b.length];
         int i = 0, j = 0;
@@ -38,7 +31,6 @@ class Merge {
         return c;
     }
 
-    // @VisualizeArg(args = {AbstractType.ARRAY})
     private static double[] mergesort (double[] input) {
         int N = input.length;
         if (N <= 1) {

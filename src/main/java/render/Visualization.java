@@ -3,7 +3,6 @@ package render;
 import java.util.Collection;
 import java.util.HashMap;
 
-import assets.Const;
 import assets.Debug;
 import assets.Tools;
 import contract.datastructure.DataStructure;
@@ -13,15 +12,8 @@ import contract.json.Operation;
 import contract.operation.OP_ReadWrite;
 import contract.operation.OP_Swap;
 import contract.operation.OP_ToggleScope;
-import gui.Controller;
 import gui.Main;
 import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import model.Model;
@@ -42,7 +34,7 @@ public class Visualization extends StackPane {
     /**
      * Animation time in milliseconds.
      */
-    private long                                  millis        = Const.DEFAULT_ANIMATION_TIME;
+    private long                                  millis        = render.assets.Const.DEFAULT_ANIMATION_TIME;
     /**
      * Determines whether operations are animated on the animated_nodes canvas.
      */
@@ -327,7 +319,7 @@ public class Visualization extends StackPane {
                 break;
             case bar:
                 xPos = margin + this.getWidth() * sWExpand;
-                yPos = getHeight() - 125 - (Const.DEFAULT_RENDER_HEIGHT) * (southWest) - margin * 2;
+                yPos = getHeight() - 125 - (render.assets.Const.DEFAULT_RENDER_HEIGHT) * (southWest) - margin * 2;
                 if (!(checkXPos(xPos) && checkYPos(yPos))) {
                     sWExpand++; // TODO
                 }
@@ -335,7 +327,7 @@ public class Visualization extends StackPane {
                 break;
             default:
                 xPos = margin + this.getWidth() * nWExpand;
-                yPos = (margin + Const.DEFAULT_RENDER_HEIGHT) * northWest + margin;
+                yPos = (margin + render.assets.Const.DEFAULT_RENDER_HEIGHT) * northWest + margin;
                 if (!(checkXPos(xPos) & checkYPos(yPos))) {
                     nWExpand++; // TODO
                 }
@@ -410,7 +402,7 @@ public class Visualization extends StackPane {
      * @return The minimum acceptable X-Coordinate.
      */
     public double getXMin () {
-        return Const.DEFAULT_RENDER_PADDING;
+        return render.assets.Const.DEFAULT_RENDER_PADDING;
     }
 
     /**
@@ -440,7 +432,7 @@ public class Visualization extends StackPane {
      * @return The minimum acceptable Y-Coordinate.
      */
     public double getYMin () {
-        return Const.DEFAULT_RENDER_PADDING;
+        return render.assets.Const.DEFAULT_RENDER_PADDING;
     }
 
     /**
@@ -459,23 +451,6 @@ public class Visualization extends StackPane {
      */
     public String yRange () {
         return "[" + getYMin() + ", " + getYMax() + "]";
-    }
-
-    /**
-     * Hint pane for the visualiser window.
-     *
-     * @author Richard Sundqvist
-     *
-     */
-    public static class HintPane extends Pane {
-
-        public HintPane () {
-            Image image = new Image(Controller.class.getResourceAsStream("/assets/upload.png"));
-            setBackground(new Background(new BackgroundImage(image, BackgroundRepeat.NO_REPEAT,
-                    BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER,
-                    new BackgroundSize(BackgroundSize.AUTO, BackgroundSize.AUTO, false, false, true, false))));
-            setVisible(true);
-        }
     }
 
     /**

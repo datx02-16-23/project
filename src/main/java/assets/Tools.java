@@ -25,6 +25,7 @@ import javafx.scene.shape.Line;
 import render.ARender;
 import render.ARenderManager;
 import render.Visualization;
+import render.assets.HintPane;
 import render.element.AVElement;
 
 /**
@@ -39,7 +40,7 @@ public abstract class Tools {
     } // Not to be instantiated.
 
     // A FXML pane showing user instructions.
-    public static final Visualization.HintPane HINT_PANE = new Visualization.HintPane();
+    public static final HintPane HINT_PANE = new HintPane();
 
     /*
      * Render base stuff
@@ -156,11 +157,11 @@ public abstract class Tools {
 
         switch (struct.rawType) {
         case array:
-            return Const.ARRAY_BACKGROUND;
+            return render.assets.Const.ARRAY_BACKGROUND;
         case tree:
-            return Const.TREE_BACKGROUND;
+            return render.assets.Const.TREE_BACKGROUND;
         case independentElement:
-            return Const.ORPHAN_BACKGROUND;
+            return render.assets.Const.ORPHAN_BACKGROUND;
         }
 
         return null;

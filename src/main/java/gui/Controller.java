@@ -2,27 +2,21 @@ package gui;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Properties;
 
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
 import assets.Const;
 import assets.Debug;
-import assets.DefaultProperties;
 import assets.Tools;
-import assets.example.Examples;
-import assets.example.Examples.Algorithm;
+import assets.examples.Examples;
+import assets.examples.Examples.Algorithm;
 import contract.datastructure.DataStructure;
 import contract.io.ComListener;
 import contract.io.JGroupCommunicator;
@@ -45,13 +39,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckMenuItem;
-import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.control.TextField;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -61,13 +53,11 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import model.ModelLoader;
 import model.Model;
+import model.ModelLoader;
 import multiset.MultisetController;
 import render.Visualization;
 
@@ -97,7 +87,7 @@ public class Controller implements ComListener {
     // Autoplay
     private boolean                isPlaying                     = false;
     private int                    stepDelaySpeedupFactor        = 1;
-    private long                   stepDelayBase                 = Const.DEFAULT_ANIMATION_TIME;
+    private long                   stepDelayBase                 = render.assets.Const.DEFAULT_ANIMATION_TIME;
     private long                   stepDelay                     = stepDelayBase / stepDelaySpeedupFactor;
     // Views, panels, dialogs
     private final SourcePanel      sourcePanel;

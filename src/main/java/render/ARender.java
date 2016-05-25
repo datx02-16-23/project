@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import assets.Const;
 import assets.Debug;
 import assets.Tools;
 import contract.datastructure.Array;
@@ -146,17 +145,17 @@ public abstract class ARender extends Pane implements MinMaxListener {
 
     /**
      * Default constructor. Will use default values: <br>
-     * Element width: {@link Const#DEFAULT_ELEMENT_HSPACE}<br>
-     * Element height: {@link Const#DEFAULT_ELEMENT_HEIGHT}<br>
-     * Element horizontal space: {@link Const#DEFAULT_ELEMENT_HSPACE}<br>
-     * Element vertical space: {@link Const#DEFAULT_ELEMENT_VSPACE}<br>
+     * Element width: {@link render.assets.Const#DEFAULT_ELEMENT_HSPACE}<br>
+     * Element height: {@link render.assets.Const#DEFAULT_ELEMENT_HEIGHT}<br>
+     * Element horizontal space: {@link render.assets.Const#DEFAULT_ELEMENT_HSPACE}<br>
+     * Element vertical space: {@link render.assets.Const#DEFAULT_ELEMENT_VSPACE}<br>
      *
      * @param struct
      *            The DataStructure this Render will draw.
      */
     public ARender (DataStructure struct) {
-        this(struct, Const.DEFAULT_ELEMENT_WIDTH, Const.DEFAULT_ELEMENT_HEIGHT, Const.DEFAULT_ELEMENT_HSPACE,
-                Const.DEFAULT_ELEMENT_VSPACE);
+        this(struct, render.assets.Const.DEFAULT_ELEMENT_WIDTH, render.assets.Const.DEFAULT_ELEMENT_HEIGHT, render.assets.Const.DEFAULT_ELEMENT_HSPACE,
+                render.assets.Const.DEFAULT_ELEMENT_VSPACE);
     }
 
     /**
@@ -189,7 +188,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
         initDragAndZoom();
         bindAnimPane();
 
-        setRelativeNodeSize(Const.DEFAULT_RELATIVE_NODE_FACTOR);
+        setRelativeNodeSize(render.assets.Const.DEFAULT_RELATIVE_NODE_FACTOR);
 
         expand();
     }
@@ -376,11 +375,11 @@ public abstract class ARender extends Pane implements MinMaxListener {
 	    ARenderAnimation.linear(tar, x1, y1, x2, y2, millis, tarRender, Effect.GHOST).play();
 	} else if (hasSource) {
 	    // Source only
-	    ARenderAnimation.linear(src, x1, y1, x1, y1 - Const.DEFAULT_ELEMENT_HEIGHT * 2, millis, srcRender,
+	    ARenderAnimation.linear(src, x1, y1, x1, y1 - render.assets.Const.DEFAULT_ELEMENT_HEIGHT * 2, millis, srcRender,
 		    Effect.FADE_OUT, Effect.SHRINK).play();
 	} else {
 	    // Target only
-	    ARenderAnimation.linear(tar, x2, y2 - Const.DEFAULT_ELEMENT_HEIGHT * 2, x2, y2, millis, tarRender,
+	    ARenderAnimation.linear(tar, x2, y2 - render.assets.Const.DEFAULT_ELEMENT_HEIGHT * 2, x2, y2, millis, tarRender,
 		    Effect.FADE_IN, Effect.GROW, Effect.GHOST).play();
 	}
 
@@ -810,23 +809,23 @@ public abstract class ARender extends Pane implements MinMaxListener {
 
             switch (event.getCode()) {
             case UP:
-                setNodeHeight(nodeHeight + Const.DEFAULT_ELEMENT_HEIGHT_DELTA);
+                setNodeHeight(nodeHeight + render.assets.Const.DEFAULT_ELEMENT_HEIGHT_DELTA);
                 break;
             case DOWN:
-                setNodeHeight(nodeHeight - Const.DEFAULT_ELEMENT_HEIGHT_DELTA);
+                setNodeHeight(nodeHeight - render.assets.Const.DEFAULT_ELEMENT_HEIGHT_DELTA);
                 break;
             case LEFT:
-                setNodeWidth(nodeWidth - Const.DEFAULT_ELEMENT_WIDTH_DELTA);
+                setNodeWidth(nodeWidth - render.assets.Const.DEFAULT_ELEMENT_WIDTH_DELTA);
                 break;
             case RIGHT:
-                setNodeWidth(nodeWidth + Const.DEFAULT_ELEMENT_WIDTH_DELTA);
+                setNodeWidth(nodeWidth + render.assets.Const.DEFAULT_ELEMENT_WIDTH_DELTA);
                 break;
             default:
                 return;
             }
 
-            setNodeWidth(nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : nodeWidth);
-            setNodeHeight(nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : nodeHeight);
+            setNodeWidth(nodeWidth < render.assets.Const.MIN_NODE_WIDTH ? render.assets.Const.MIN_NODE_WIDTH : nodeWidth);
+            setNodeHeight(nodeHeight < render.assets.Const.MIN_NODE_HEIGHT ? render.assets.Const.MIN_NODE_HEIGHT : nodeHeight);
 
             Platform.runLater( () -> ARender.this.requestFocus());
 
@@ -842,14 +841,14 @@ public abstract class ARender extends Pane implements MinMaxListener {
 
             int sign = event.getDeltaY() < 0 ? -1 : 1;
 
-            setNodeWidth(nodeWidth + sign * Const.DEFAULT_ELEMENT_WIDTH_DELTA);
-            setNodeHeight(nodeHeight + sign * Const.DEFAULT_ELEMENT_HEIGHT_DELTA);
+            setNodeWidth(nodeWidth + sign * render.assets.Const.DEFAULT_ELEMENT_WIDTH_DELTA);
+            setNodeHeight(nodeHeight + sign * render.assets.Const.DEFAULT_ELEMENT_HEIGHT_DELTA);
 
-            hSpace = hSpace + sign * Const.DEFAULT_ELEMENT_HSPACE_DELTA;
-            vSpace = vSpace + sign * Const.DEFAULT_ELEMENT_VSPACE_DELTA;
+            hSpace = hSpace + sign * render.assets.Const.DEFAULT_ELEMENT_HSPACE_DELTA;
+            vSpace = vSpace + sign * render.assets.Const.DEFAULT_ELEMENT_VSPACE_DELTA;
 
-            setNodeWidth(nodeWidth < Const.MIN_NODE_WIDTH ? Const.MIN_NODE_WIDTH : nodeWidth);
-            setNodeHeight(nodeHeight < Const.MIN_NODE_HEIGHT ? Const.MIN_NODE_HEIGHT : nodeHeight);
+            setNodeWidth(nodeWidth < render.assets.Const.MIN_NODE_WIDTH ? render.assets.Const.MIN_NODE_WIDTH : nodeWidth);
+            setNodeHeight(nodeHeight < render.assets.Const.MIN_NODE_HEIGHT ? render.assets.Const.MIN_NODE_HEIGHT : nodeHeight);
 
             repaintAll();
         });
@@ -879,7 +878,7 @@ public abstract class ARender extends Pane implements MinMaxListener {
             if (header.visibleProperty().isBound()) {
                 name.setVisible(false);
             }
-            setBorder(Const.BORDER_MOUSEOVER);
+            setBorder(render.assets.Const.BORDER_MOUSEOVER);
         });
         setOnMouseExited(event -> {
             // this.setCursor(null);
