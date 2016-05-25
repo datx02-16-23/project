@@ -13,7 +13,7 @@ import contract.datastructure.IndependentElement;
 import contract.json.Locator;
 import contract.json.Operation;
 import contract.operation.Key;
-import contract.utility.OpUtils;
+import contract.utility.OpUtil;
 import gui.Main;
 import gui.dialog.CreateStructureDialog;
 import gui.dialog.IdentifierCollisionDialog;
@@ -224,8 +224,6 @@ public class Loader {
         Map<String, DataStructure> createdStructures = new HashMap<String, DataStructure>();
 
         DataStructure newStruct;
-        System.out.println("used = " + operationStructNames);
-        System.out.println("known = " + allStructNames);
         for (String identifier : operationStructNames) {
 
             if (!allStructNames.contains(identifier)) {
@@ -261,7 +259,7 @@ public class Loader {
             case read:
             case write:
 
-                Locator source = OpUtils.getLocator(op, Key.source);
+                Locator source = OpUtil.getLocator(op, Key.source);
                 if (source != null) {
                     DataStructure sourceStruct = structs.get(source.identifier);
                     if (sourceStruct == null) {
@@ -269,7 +267,7 @@ public class Loader {
                     }
                 }
 
-                Locator target = OpUtils.getLocator(op, Key.target);
+                Locator target = OpUtil.getLocator(op, Key.target);
                 if (target != null) {
                     DataStructure targetStruct = structs.get(target.identifier);
                     if (targetStruct == null) {
@@ -278,7 +276,7 @@ public class Loader {
                 }
                 break;
             case swap:
-                Locator var1 = OpUtils.getLocator(op, Key.var1);
+                Locator var1 = OpUtil.getLocator(op, Key.var1);
 
                 if (var1 != null) {
                     DataStructure var1Struct = structs.get(var1.identifier);
@@ -287,7 +285,7 @@ public class Loader {
                     }
                 }
 
-                Locator var2 = OpUtils.getLocator(op, Key.target);
+                Locator var2 = OpUtil.getLocator(op, Key.target);
                 if (var2 != null) {
                     DataStructure var2Struct = structs.get(var2.identifier);
                     if (var2Struct == null) {
@@ -296,7 +294,7 @@ public class Loader {
                 }
                 break;
             case remove:
-                String identifier = OpUtils.getIdentifier(op);
+                String identifier = OpUtil.getIdentifier(op);
                 DataStructure targetStruct = structs.get(identifier);
                 if (targetStruct == null) {
                     operationStructNames.add(identifier);

@@ -37,7 +37,7 @@ public class OperationPanel extends Pane {
         try {
             root = (VBox) fxmlLoader.load();
         } catch (IOException e) {
-            System.err.println(e);
+            System.err.println("Error in OperationPanel: " + e);
             System.exit(-1);
         }
         // Content size

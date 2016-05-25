@@ -22,13 +22,13 @@ public abstract class Const {
     public static final String     DEFAULT_CHANNEL              = "mavster_stream";
     // Credits
     public static final String[]   DEVELOPER_NAMES              = {
-            //@formatter:off
+    //@formatter:off
                                                                    "Johan GERDIN",
                                                                    "Ivar \"Cannonbait\" JOSEFSSON",
                                                                    "Dennis JONSSON",
                                                                    "Simon SMITH",
                                                                    "Richard \"Whisp\" SUNDQVIST"};
-                                                                   //@formatter:on
+   //@formatter:on
 
     // ============================================================= //
     /*

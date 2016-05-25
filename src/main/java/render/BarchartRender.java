@@ -89,7 +89,7 @@ public class BarchartRender extends ARender implements MinMaxListener {
         if (renderHeight < 0) {
             if (struct instanceof Array) {
                 ((Array) struct).setListener(this);
-                setRestricedSize(0, 0); // Become as small as setSize will
+                calculateHeight(((Array) struct).getMax());
                 // permit.
             } else {
                 this.renderHeight = Const.DEFAULT_RENDER_HEIGHT;
@@ -384,6 +384,10 @@ public class BarchartRender extends ARender implements MinMaxListener {
         // TODO
     }
 
+    /**
+     * Calculate the height of the render.
+     * @param v The maximum value of the array.
+     */
     public void calculateHeight (double v) {
         double oldHeight = renderHeight;
         renderHeight = v * nodeHeight + padding * 2 + nodeHeight / 2;

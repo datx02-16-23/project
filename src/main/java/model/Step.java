@@ -9,7 +9,7 @@ import contract.json.Locator;
 import contract.json.Operation;
 import contract.operation.Key;
 import contract.operation.OP_Message;
-import contract.utility.OpUtils;
+import contract.utility.OpUtil;
 import gui.Main;
 
 public class Step  {
@@ -53,7 +53,7 @@ public class Step  {
             break;
         case read:
         case write:
-            Locator source = OpUtils.getLocator(op, Key.source);
+            Locator source = OpUtil.getLocator(op, Key.source);
             if (source != null) {
                 DataStructure sourceStruct = structs.get(source.identifier);
                 if (sourceStruct != null) {
@@ -61,7 +61,7 @@ public class Step  {
                 }
             }
 
-            Locator target = OpUtils.getLocator(op, Key.target);
+            Locator target = OpUtil.getLocator(op, Key.target);
             if (target != null) {
                 DataStructure targetStruct = structs.get(target.identifier);
                 if (targetStruct != null) {
@@ -70,14 +70,14 @@ public class Step  {
             }
             break;
         case swap:
-            Locator var1 = OpUtils.getLocator(op, Key.var1);
+            Locator var1 = OpUtil.getLocator(op, Key.var1);
             structs.get(var1.identifier).applyOperation(op);
 
-            Locator var2 = OpUtils.getLocator(op, Key.var2);
+            Locator var2 = OpUtil.getLocator(op, Key.var2);
             structs.get(var2.identifier).applyOperation(op);
             break;
         case remove:
-            Locator removeTarget = OpUtils.getLocator(op, Key.target);
+            Locator removeTarget = OpUtil.getLocator(op, Key.target);
             DataStructure targetStruct = structs.get(removeTarget.identifier);
             if (targetStruct != null) {
                 targetStruct.applyOperation(op);

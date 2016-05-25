@@ -24,7 +24,7 @@ import assets.Tools;
 import assets.example.Examples;
 import assets.example.Examples.Algorithm;
 import contract.datastructure.DataStructure;
-import contract.io.CommunicatorListener;
+import contract.io.ComListener;
 import contract.io.JGroupCommunicator;
 import contract.io.LogStreamManager;
 import gui.dialog.ExamplesDialog;
@@ -74,7 +74,7 @@ import render.Visualization;
 /**
  * Horrendously bloated controller class.
  */
-public class Controller implements CommunicatorListener {
+public class Controller implements ComListener {
 
     // ============================================================= //
     /*
@@ -110,7 +110,7 @@ public class Controller implements CommunicatorListener {
     private ProgressBar            animationProgressBar;
     private Button                 restartButton, clearButton, speedButton;
 
-    private final Loader    modelImporter;
+    private final Loader           modelImporter;
 
     // ============================================================= //
     /*
@@ -135,8 +135,7 @@ public class Controller implements CommunicatorListener {
         initSettingsPane();
         loadProperties();
     }
-    
-    
+
     private DecimalFormat df;
     private Label         settingsSaveState;
 
@@ -392,7 +391,7 @@ public class Controller implements CommunicatorListener {
         InterpreterView interpreterView = new InterpreterView(window);
 
         if (interpreterView.show(model.getOperations())) {
-//            Loader.stripUnusedNames(model);
+            // Loader.stripUnusedNames(model);
             System.out.println("sturcs = " + model.getStructures().keySet());
             model.restart();
             vis.clearAndCreateVisuals();
@@ -450,7 +449,6 @@ public class Controller implements CommunicatorListener {
      */
     // ============================================================= //
 
-
     /**
      * Steps the model forward and forces any ongoing animations to cancel.
      *
@@ -466,7 +464,7 @@ public class Controller implements CommunicatorListener {
 
         return result;
     }
-    
+
     /**
      * Update SourcePanel and OperationPanel.
      */
@@ -675,7 +673,7 @@ public class Controller implements CommunicatorListener {
 
     public void propertiesFailed (Exception exception) {
         if (exception != null) {
-            Main.console.err(exception.getMessage());
+            exception.printStackTrace();
         }
         FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/dialog/PropertiesAlertDialog.fxml"));
         Stage stage = new Stage();
