@@ -103,7 +103,7 @@ public class Main extends Application {
             event.consume(); // Better to do this now than missing it later.
             controller.closeProgram();
         });
-        primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/assets/icon.png")));
+        primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/assets/icon.png")));
         primaryStage.setScene(scene);
         primaryStage.show();
     }

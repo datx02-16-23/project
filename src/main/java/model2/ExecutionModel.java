@@ -16,7 +16,8 @@ import contract.utility.OpUtil;
 import gui.Main;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
-import model.Model;
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerWrapper;
 
 /**
  * 
@@ -257,6 +258,7 @@ public class ExecutionModel {
         operations.clear();
         atomicOperations.clear();
 
+        isClear();
         setIndex(-1);
         setAtomicIndex(-1);
     }
@@ -414,6 +416,7 @@ public class ExecutionModel {
         if (dataStructures != null) {
             this.dataStructures.clear();
             this.dataStructures.putAll(dataStructures);
+            isClear();
         }
     }
 
@@ -427,6 +430,7 @@ public class ExecutionModel {
         if (this.operations != null) {
             this.operations.clear();
             this.operations.addAll(operations);
+            isClear();
         }
     }
 
@@ -452,6 +456,7 @@ public class ExecutionModel {
 
             this.atomicOperations.clear();
             this.atomicOperations.addAll(atomicOperations);
+            isClear();
         }
     }
 
@@ -498,19 +503,19 @@ public class ExecutionModel {
     }
 
     private void setIndex (int index) {
-        // TODO property
+        indexPropery.set(index);
         this.index = index;
     }
 
     private void setAtomicIndex (int atomicIndex) {
-        // TODO property
+        atomicIndexProperty.set(atomicIndex);
         this.atomicIndex = atomicIndex;
     }
 
     // ============================================================= //
     /*
      *
-     * Getters and Setters (Properties)
+     * Properties / Getters and Setters
      *
      */
     // ============================================================= //
@@ -518,7 +523,30 @@ public class ExecutionModel {
     private final ReadOnlyBooleanWrapper parallelExecutionProperty = new ReadOnlyBooleanWrapper();
     private final ReadOnlyBooleanWrapper executeNextProperty       = new ReadOnlyBooleanWrapper(false);
     private final ReadOnlyBooleanWrapper executePreviousProperty   = new ReadOnlyBooleanWrapper(false);
-    private final ReadOnlyBooleanWrapper clearProperty             = new ReadOnlyBooleanWrapper(false);
+    private final ReadOnlyBooleanWrapper clearProperty             = new ReadOnlyBooleanWrapper(true);
+
+    private final ReadOnlyIntegerWrapper indexPropery              = new ReadOnlyIntegerWrapper();
+    private final ReadOnlyIntegerWrapper atomicIndexProperty       = new ReadOnlyIntegerWrapper();
+
+    /**
+     * Returns {@code true} if the model is clear, {@code false} otherwise.
+     * 
+     * @return {@code true} if the model is clear, {@code false} otherwise.
+     */
+    private boolean isClear () {
+        boolean isClear = dataStructures.isEmpty() && operations.isEmpty() && atomicOperations.isEmpty();
+        this.clearProperty.set(isClear);
+        return isClear;
+    }
+
+    /**
+     * Returns a property indicating whether this model is cleared.
+     * 
+     * @return A ReadOnlyBooleanProperty.
+     */
+    public ReadOnlyBooleanProperty clearProperty () {
+        return clearProperty.getReadOnlyProperty();
+    }
 
     /**
      * Returns a property indicating whether this model is in parallel execution mode.
@@ -550,11 +578,21 @@ public class ExecutionModel {
     }
 
     /**
-     * Returns a property indicating whether this model is cleared.
+     * Returns a property indicating which index this model is currently at.
      * 
      * @return A ReadOnlyBooleanProperty.
      */
-    public ReadOnlyBooleanProperty clearProperty () {
-        return clearProperty.getReadOnlyProperty();
+    public ReadOnlyIntegerProperty indexProperty () {
+        return indexPropery.getReadOnlyProperty();
+    }
+
+    /**
+     * Returns a property indicating which index this model is currently at in the atomic
+     * operations list.
+     * 
+     * @return A ReadOnlyIntegerProperty.
+     */
+    public ReadOnlyIntegerProperty atomicIndexProperty () {
+        return atomicIndexProperty.getReadOnlyProperty();
     }
 }
