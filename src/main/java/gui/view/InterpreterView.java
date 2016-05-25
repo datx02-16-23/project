@@ -124,7 +124,7 @@ public class InterpreterView implements InvalidationListener {
         Insets insets = new Insets(2, 0, 2, 5);
         // Create CheckBoxes for all Consolidate operation types
         for (OperationType type : OperationType.values()) {
-            if (!type.consolidable) {
+            if (type.numAtomicOperations < 2) {
                 continue;
             }
             CheckBox cb = new CheckBox(type.toString());
@@ -166,6 +166,7 @@ public class InterpreterView implements InvalidationListener {
         keep = false;
         root.close();
     }
+
     /**
      * onAction for the "{@literal<}--" button.
      */

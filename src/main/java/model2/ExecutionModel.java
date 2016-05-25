@@ -160,10 +160,9 @@ public class ExecutionModel {
         Operation op;
 
         if (parallelExecution) {
-            // TODO executeParallel();
-            executeLinear();
+            executeParallel();
         } else {
-            executeLinear();
+            execute();
         }
 
         return executedOperations;
@@ -173,7 +172,29 @@ public class ExecutionModel {
      * Execute the previous operation, if possible.
      */
     public void executePrevious () {
+        execute(getIndex() - 1);
+    }
 
+    /**
+     * Test to see if it is possible to execute the previous operation(s) in in the queue.
+     * 
+     * @return {@code true} if the model can execute backwards, {@code false} otherwise.
+     */
+    public boolean tryExecutePrevious () {
+        boolean tryExecutePrevious = index < operations.size();
+        executeNextProperty.set(tryExecutePrevious);
+        return tryExecutePrevious;
+    }
+
+    /**
+     * Test to see if it is possible to execute the next operation(s) in in the queue.
+     * 
+     * @return {@code true} if the model can execute forward, {@code false} otherwise.
+     */
+    public boolean tryExecuteNext () {
+        boolean tryExecuteNext = index < operations.size();
+        executeNextProperty.set(tryExecuteNext);
+        return tryExecuteNext;
     }
 
     /**
@@ -227,17 +248,27 @@ public class ExecutionModel {
     // ============================================================= //
     /*
      *
-     * Model Execution
+     * Model Progression
      *
      */
     // ============================================================= //
 
     private void executeParallel () {
-
+        // TODO: Implement parallel execution.
+        execute();
     }
 
-    private void executeLinear () {
-
+    /**
+     * Execute the next operation and add it to {@link executedOperations}.
+     */
+    private void execute () {
+        if (tryExecuteNext()) {
+            Operation op = operations.get(index);
+            executedOperations.add(op);
+            execute(op);
+            setIndex(index + 1);
+            setAtomicIndex(atomicIndex + op.operation.numAtomicOperations);
+        }
     }
 
     /**
@@ -441,12 +472,12 @@ public class ExecutionModel {
     }
 
     private void setIndex (int index) {
-        //TODO property
+        // TODO property
         this.index = index;
     }
 
     private void setAtomicIndex (int atomicIndex) {
-        //TODO property
+        // TODO property
         this.atomicIndex = atomicIndex;
     }
 
