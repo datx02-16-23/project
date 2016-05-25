@@ -57,11 +57,11 @@ public class Filter implements iFilter {
         return values;
     }
 
-    private Map<String, Double> setVars (iValueContainer a, iValueContainer b) {
+	  private Map<String, Double> setVars(iValueContainer a, iValueContainer b) {
         Map<String, Double> vars = new HashMap<>();
-        vars.put(input.getFirstVar(), a.getValue());
-        vars.put(input.getSecondVar(), b.getValue());
+        vars.put(input.getFirstVar(), a.getValues().get(0));
+        vars.put(input.getSecondVar(), b.getValues().get(0));
         conditional.setVariables(vars);
-        return vars;
-    }
+		    return vars;
+	  }
 }
