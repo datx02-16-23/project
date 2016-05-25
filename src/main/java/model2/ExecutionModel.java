@@ -28,7 +28,7 @@ public class ExecutionModel {
     /**
      * The default model instance.
      */
-    public static final Model                INSTANCE          = new Model("INSTANCE");
+    public static final ExecutionModel       INSTANCE          = new ExecutionModel("INSTANCE");
 
     // ============================================================= //
     /*

@@ -7,6 +7,7 @@ import assets.Const;
 import assets.examples.Examples;
 import assets.examples.Examples.Algorithm;
 import contract.io.LogStreamManager;
+import gui.panel.ConsolePanel;
 import gui.panel.OperationPanel;
 import gui.panel.SourcePanel;
 import javafx.application.Application;
@@ -35,14 +36,14 @@ public class Main extends Application {
     /**
      * Console for printing system and error messages.
      */
-    public static Console console;
+    public static ConsolePanel console;
     /**
      * Indicates whether the program is being run for the first time.
      */
-    public static boolean    firstRun;
+    public static boolean      firstRun;
 
-    private Controller       controller;
-    private LogStreamManager lsm;
+    private Controller         controller;
+    private LogStreamManager   lsm;
 
     @Override public void start (Stage primaryStage) throws Exception {
         lsm = new LogStreamManager(Const.PROGRAM_NAME + "_GUI");
@@ -63,7 +64,7 @@ public class Main extends Application {
         }
         // Load console
         Map<String, Object> namespace = fxmlLoader.getNamespace();
-        console = new Console((TextArea) namespace.get("console"));
+        console = new ConsolePanel((TextArea) namespace.get("console"));
         // Window size
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
         double windowWidth = screenSize.getWidth() * .9;
@@ -108,9 +109,6 @@ public class Main extends Application {
     }
 
     @Override public void stop () {
-        if (controller != null) {
-            controller.stopAutoPlay(); // Kill autoplay thread.
-        }
         lsm.close();
     }
 

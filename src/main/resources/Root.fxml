@@ -74,9 +74,9 @@
                         </Menu>
                         <Menu fx:id="visualMenu" mnemonicParsing="false" text="Visualization" />
                         <Menu fx:id="examplesMenu" mnemonicParsing="false" text="_Examples" />
-                        <Menu mnemonicParsing="false" text="_Extra">
+                        <Menu disable="true" mnemonicParsing="false" text="_Extra">
                           <items>
-                            <MenuItem mnemonicParsing="false" onAction="#showMultiset" text="Multiset prog.">
+                            <MenuItem mnemonicParsing="false" text="Multiset prog.">
                                  <accelerator>
                                     <KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                                  </accelerator></MenuItem>
