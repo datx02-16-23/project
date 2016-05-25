@@ -1,6 +1,7 @@
 package model2;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,11 +14,11 @@ import contract.operation.Key;
 import contract.operation.OP_Message;
 import contract.operation.OperationType;
 import contract.utility.OpUtil;
-import gui.Main;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
+import gui.Main;
 
 /**
  * 
@@ -458,6 +459,33 @@ public class ExecutionModel {
             this.atomicOperations.addAll(atomicOperations);
             isClear();
         }
+    }
+
+    /**
+     * Returns the list of atomic operations in use by this model.
+     * 
+     * @return A list of atomic operations.
+     */
+    public List<Operation> getAtomicOperations () {
+        return atomicOperations;
+    }
+
+    /**
+     * Returns the list of operations in use by this model.
+     * 
+     * @return A list of operations.
+     */
+    public List<Operation> getOperations () {
+        return operations;
+    }
+
+    /**
+     * Returns the map of data structures in use by this model.
+     * 
+     * @return A map of data structures.
+     */
+    public Map<String, DataStructure> getDataStructures () {
+        return dataStructures;
     }
 
     /**
