@@ -3,9 +3,13 @@ package model2;
 import java.util.List;
 
 import contract.json.Operation;
+import javafx.animation.Animation.Status;
+import javafx.beans.property.ReadOnlyLongProperty;
+import javafx.beans.property.ReadOnlyLongWrapper;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
+import render.assets.Const;
 
 /**
  * ExecutionModel convenience class.
@@ -48,12 +52,22 @@ public class ExecutionModelController {
      * {@code executionTickListener} will be called for each time the
      * {@code operationsExecutedListener} will be called.
      */
-    private int                        tickCount;
+    private int                        executionTickCount;
+
+    /**
+     * The current tick number.
+     */
+    private int                        currentExecutionTick;
 
     /**
      * The tick listener for the controller.
      */
     private ExecutionTickListener      executionTickListener;
+
+    /**
+     * The delay between ticks.
+     */
+    private long                       autoExecutionSpeed;
 
     // ============================================================= //
     /*
@@ -71,6 +85,8 @@ public class ExecutionModelController {
      */
     public ExecutionModelController (ExecutionModel executionModel) {
         this.executionModel = executionModel;
+
+        this.autoExecutionSpeed = Const.DEFAULT_ANIMATION_TIME;
 
         // Auto execution timeline.
         autoExecutionTimeline = new Timeline();
@@ -99,14 +115,22 @@ public class ExecutionModelController {
 
     /**
      * Begin timed execution for the model.
+     */
+    public void startAutoExecution () {
+        startAutoExecution(autoExecutionSpeed);
+    }
+
+    /**
+     * Begin timed execution for the model.
      * 
      * @param millis
      *            The time between executions.
      */
     public void startAutoExecution (long millis) {
-        autoExecutionTimeline.getKeyFrames().clear();
 
         KeyFrame executionFrame = new KeyFrame(Duration.millis(millis), event -> {
+
+            currentExecutionTick = 1; // Reset the tick counter.
 
             if (executionModel.tryExecuteNext()) {
 
@@ -120,16 +144,32 @@ public class ExecutionModelController {
             }
         });
 
-        if (executionTickListener != null) {
-            startExecutionTickUpdates();
-        }
+        startExecutionTickUpdates(millis);
 
+        autoExecutionTimeline.getKeyFrames().clear();
         autoExecutionTimeline.getKeyFrames().add(executionFrame);
         autoExecutionTimeline.play();
     }
 
-    private void startExecutionTickUpdates () {
+    /**
+     * Start execution tick updates, if there is a listener.
+     * 
+     * @param millis
+     *            The time between executions.
+     */
+    private void startExecutionTickUpdates (long millis) {
+        if (executionTickListener != null) {
+            currentExecutionTick = 1;
 
+            KeyFrame executionFrame = new KeyFrame(Duration.millis(millis / executionTickCount), event -> {
+                executionTickListener.update(currentExecutionTick++);
+            });
+
+            executionTickTimeline.setCycleCount(executionTickCount);
+            executionTickTimeline.getKeyFrames().clear();
+            executionTickTimeline.getKeyFrames().add(executionFrame);
+            executionTickTimeline.play();
+        }
     }
 
     /**
@@ -137,12 +177,99 @@ public class ExecutionModelController {
      */
     public void stopAutoExecution () {
         autoExecutionTimeline.stop();
+        executionTickTimeline.stop();
     }
 
     // ============================================================= //
     /*
      *
-     * Control - one for one copies
+     * Setters and Getters
+     *
+     */
+    // ============================================================= //
+
+    /**
+     * Set the auto execution speed in milliseconds. Will stop auto execution, update the
+     * speed, and resume if auto execution was on when this method was called.
+     * 
+     * @param autoExecutionSpeed
+     *            The time between execution calls in milliseconds.
+     * @throws IllegalArgumentException
+     *             If {@code autoExecutionSpeed < 0}.
+     */
+    public void setAutoExecutionSpeed (long autoExecutionSpeed) {
+        if (autoExecutionSpeed < 0) {
+            throw new IllegalArgumentException("Time between executions cannot be less than zero.");
+        }
+
+        boolean wasRunning = autoExecutionTimeline.getStatus() == Status.RUNNING;
+        if (wasRunning) {
+            stopAutoExecution();
+        }
+
+        this.autoExecutionSpeed = autoExecutionSpeed;
+        autoExecutionSpeedProperty.set(autoExecutionSpeed);
+
+        if (wasRunning) {
+            startAutoExecution();
+        }
+    }
+
+    /**
+     * Set the {@link #OperationsExecutedListener} for this controller.
+     * 
+     * @param operationsExecutedListener
+     *            A {@code OperationsExecutedListener}.
+     */
+    public void setOperationsExecutedListener (OperationsExecutedListener operationsExecutedListener) {
+        this.operationsExecutedListener = operationsExecutedListener;
+    }
+
+    /**
+     * Set listener and number of ticks per execution call. That is, the number of times
+     * the the {@code executionTickListener} will be called for each time the
+     * {@code operationsExecutedListener} will be called.
+     *
+     * @param executionTickListener
+     *            An {@code ExecutionTickListener}.
+     * @param tickCount
+     *            The number of ticks per execution cycle.
+     * @throws IllegalArgumentException
+     *             If {@code tickCount < 0}.
+     */
+    public void setExecutionTickListener (ExecutionTickListener executionTickListener, int tickCount) {
+        if (tickCount < 1) {
+            throw new IllegalArgumentException("tickCount cannot be less than zero.");
+        }
+
+        this.executionTickListener = executionTickListener;
+        this.executionTickCount = tickCount;
+    }
+
+    // ============================================================= //
+    /*
+     *
+     * Properties / Getters and Setters
+     *
+     */
+    // ============================================================= //
+
+    private final ReadOnlyLongWrapper autoExecutionSpeedProperty = new ReadOnlyLongWrapper(autoExecutionSpeed);
+
+    /**
+     * Returns a property indicating the time between execution calls when using autoplay,
+     * in milliseconds.
+     * 
+     * @return A ReadOnlyLongProperty.
+     */
+    public ReadOnlyLongProperty autoExecutionSpeedProperty () {
+        return autoExecutionSpeedProperty.getReadOnlyProperty();
+    }
+
+    // ============================================================= //
+    /*
+     *
+     * Control - ExecutionModel wrappers
      *
      */
     // ============================================================= //
