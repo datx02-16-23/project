@@ -58,7 +58,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Model;
 import model.ModelLoader;
-import multiset.MultisetController;
 import render.Visualization;
 
 /**
@@ -132,10 +131,6 @@ public class Controller implements ComListener {
 
     public void showSettings(){
         // TODO
-    }
-    
-    public void showMultiset () {
-        new MultisetController(window);
     }
 
     public void jumpToEndClicked (Event e) {
