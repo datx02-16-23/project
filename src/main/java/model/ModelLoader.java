@@ -23,7 +23,7 @@ import gui.dialog.IdentifierCollisionDialog;
  * @author Richard
  *
  */
-public class Loader {
+public class ModelLoader {
 
     // ============================================================= //
     /*
@@ -94,7 +94,7 @@ public class Loader {
      * @param liveModel
      *            The live model in use.
      */
-    public Loader (Model liveModel) {
+    public ModelLoader (Model liveModel) {
         this.liveModel = liveModel;
     }
 
@@ -120,7 +120,7 @@ public class Loader {
      */
     public static boolean insertIntoModel (Model targetModel, List<Operation> newOps,
             Map<String, DataStructure> newStructs) {
-        return new Loader(targetModel).insertIntoLiveModel(newStructs, newOps);
+        return new ModelLoader(targetModel).insertIntoLiveModel(newStructs, newOps);
     }
     
     /**
@@ -179,7 +179,7 @@ public class Loader {
      *            The model to strip unused names from.
      */
     public static void stripUnusedNames (Model liveModel) {
-        Loader loader = new Loader(liveModel);
+        ModelLoader loader = new ModelLoader(liveModel);
 
         List<Operation> newOps = new ArrayList<Operation>();
         newOps.addAll(liveModel.getOperations());

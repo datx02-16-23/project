@@ -66,7 +66,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import model.Loader;
+import model.ModelLoader;
 import model.Model;
 import multiset.MultisetController;
 import render.Visualization;
@@ -99,8 +99,6 @@ public class Controller implements ComListener {
     private int                    stepDelaySpeedupFactor        = 1;
     private long                   stepDelayBase                 = Const.DEFAULT_ANIMATION_TIME;
     private long                   stepDelay                     = stepDelayBase / stepDelaySpeedupFactor;
-    // Settings dialog stuff
-    private Stage                  settingsView;
     // Views, panels, dialogs
     private final SourcePanel      sourcePanel;
     private final OperationPanel   operationPanel;
@@ -110,7 +108,7 @@ public class Controller implements ComListener {
     private ProgressBar            animationProgressBar;
     private Button                 restartButton, clearButton, speedButton;
 
-    private final Loader           modelImporter;
+    private final ModelLoader           modelLoader;
 
     // ============================================================= //
     /*
@@ -125,122 +123,29 @@ public class Controller implements ComListener {
         vis.setAnimationTime(stepDelay);
         this.window = window;
         model = Model.instance();
-        modelImporter = new Loader(model);
+        modelLoader = new ModelLoader(model);
         this.lsm = lsm;
         this.lsm.PRETTY_PRINTING = true;
         this.lsm.setListener(this);
         connectedView = new ConnectedView(window, (JGroupCommunicator) lsm.getCommunicator());
         this.sourcePanel = sourceViewer;
         operationPanel = new OperationPanel(this);
-        initSettingsPane();
-        loadProperties();
-    }
-
-    private DecimalFormat df;
-    private Label         settingsSaveState;
-
-    private void initSettingsPane () {
-        df = new DecimalFormat("#.####");
-        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/view/SettingsView.fxml"));
-        fxmlLoader.setController(this);
-        settingsView = new Stage();
-        settingsView.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_settings.png")));
-        settingsView.initModality(Modality.APPLICATION_MODAL);
-        settingsView.setTitle(Const.PROGRAM_NAME + ": Settings and Preferences");
-        settingsView.initOwner(window);
-        GridPane p = null;
-        try {
-            p = fxmlLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        settingsView.setOnCloseRequest(event -> {
-            event.consume(); // Better to do this now than missing it later.
-            revertSettings();
-        });
-        // Get namespace items
-        // Save state label
-        settingsSaveState = (Label) fxmlLoader.getNamespace().get("settingsSaveState");
-        // Playpack speed
-        timeBetweenField = (TextField) fxmlLoader.getNamespace().get("timeBetweenField");
-        perSecField = (TextField) fxmlLoader.getNamespace().get("perSecField");
-        toggleAutorunStream = (CheckBox) fxmlLoader.getNamespace().get("toggleAutorunStream");
-
-        p.setPrefWidth(window.getWidth() * 0.75);
-        p.setPrefHeight(window.getHeight() * 0.75);
-        Scene dialogScene = new Scene(p, window.getWidth() * 0.75, window.getHeight() * 0.75);
-        settingsView.setScene(dialogScene);
-    }
-
-    public Properties tryLoadProperties () {
-        InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(Const.PROPERTIES_FILE_NAME);
-        if (inputStream == null) {
-            Main.console.err("Failed to open properties file.");
-            propertiesFailed(null);
-            return DefaultProperties.get();
-        }
-        Properties properties = new Properties();
-        try {
-            properties.load(inputStream);
-            inputStream.close();
-            return properties;
-        } catch (IOException e) {
-            propertiesFailed(e);
-            Main.console.err("Property file I/O failed.");
-            return DefaultProperties.get();
-        }
-    }
-
-    // Load settings
-    public void loadProperties () {
-        Properties properties = tryLoadProperties();
-        stepDelayBase = Long.parseLong(properties.getProperty("playbackStepDelay"));
-        stepDelay = stepDelayBase; // Speedup factor is 1 at startup.
-        streamAlwaysShowLastOperation = Boolean.parseBoolean(properties.getProperty("autoPlayOnIncomingStream"));
-    }
-
-    // Save settings
-    public void saveProperties () {
-        Properties properties = new Properties();
-        properties.setProperty("playbackStepDelay", "" + stepDelayBase);
-        properties.setProperty("autoPlayOnIncomingStream", "" + streamAlwaysShowLastOperation);
-        try {
-            URL url = this.getClass().getClassLoader().getResource(Const.PROPERTIES_FILE_NAME);
-            OutputStream outputStream = new FileOutputStream(new File(url.toURI()));
-            properties.store(outputStream, Const.PROGRAM_NAME + " user preferences.");
-        } catch (Exception e) {
-            propertiesFailed(e);
-        }
     }
 
     // ============================================================= //
     /*
      *
-     * Control (FXML onAction receivers.
+     * Control / FXML onAction()
      *
      */
     // ============================================================= //
 
-    public void showSettings () {
-        // Playback speed
-        perSecField.setText(df.format(1000.0 / stepDelayBase));
-        timeBetweenField.setText(df.format(stepDelayBase));
-        toggleAutorunStream.setSelected(streamAlwaysShowLastOperation);
-        // Size and show
-        settingsView.setWidth(window.getWidth() * 0.75);
-        settingsView.setHeight(window.getHeight() * 0.75);
-        settingsView.show();
+    public void showSettings(){
+        // TODO
     }
-
+    
     public void showMultiset () {
         new MultisetController(window);
-    }
-
-    private CheckBox toggleAutorunStream;
-
-    public void toggleAutorunStream () {
-        streamAlwaysShowLastOperation = toggleAutorunStream.isSelected();
-        unsavedChanged();
     }
 
     public void jumpToEndClicked (Event e) {
@@ -419,7 +324,7 @@ public class Controller implements ComListener {
      *            The index to jump to.
      */
     public void goToStep (int index) {
-        if (true) { // TODO
+        if (index < Integer.MAX_VALUE) { // TODO
             System.err.println("goToStep() is buggy and has been disabled.");
             return;
         }
@@ -557,7 +462,7 @@ public class Controller implements ComListener {
     public void loadFromLSM () {
         // Add operations to model and create Render visuals, then draw them.
 
-        boolean modelMayHaveChanged = modelImporter.insertIntoLiveModel(lsm.getDataStructures(), lsm.getOperations());
+        boolean modelMayHaveChanged = modelLoader.insertIntoLiveModel(lsm.getDataStructures(), lsm.getOperations());
         if (modelMayHaveChanged == false) {
             return;
         }
@@ -720,92 +625,6 @@ public class Controller implements ComListener {
         buildAnimationProgressIndicator();
 
         setButtons();
-    }
-
-    /*
-     * SETTINGS PANEL
-     */
-    private boolean settingsChanged = false;
-
-    // Commit changes to file.
-    public void saveSettings () {
-        if (settingsChanged) {
-            saveProperties();
-            noUnsavedChanges();
-        }
-        settingsView.close();
-    }
-
-    // Reload settings from file.
-    public void revertSettings () {
-        if (settingsChanged) {
-            loadProperties();
-            noUnsavedChanges();
-        }
-        settingsView.close();
-    }
-
-    private void noUnsavedChanges () {
-        settingsChanged = false;
-        settingsSaveState.setText("No unsaved changes.");
-        settingsSaveState.setTextFill(Color.web("#00c8ff"));
-    }
-
-    private void unsavedChanged () {
-        settingsChanged = true;
-        settingsSaveState.setText("Unsaved changes.");
-        settingsSaveState.setTextFill(Color.web("#ff0000"));
-    }
-
-    // Playback speed
-    private TextField perSecField;
-
-    public void setPlayBackOpsPerSec (Event e) {
-        long newSpeed;
-        try {
-            perSecField.setStyle("-fx-control-inner-background: white;");
-            newSpeed = Long.parseLong(perSecField.getText());
-        } catch (Exception exc) {
-            // NaN
-            perSecField.setStyle("-fx-control-inner-background: #C40000;");
-            return;
-        }
-        if (newSpeed <= 0) {
-            perSecField.setText("invalid");
-            perSecField.selectAll();
-            return;
-        }
-        // Valid input. Change other button and speed variable.
-        perSecField.setText(df.format(newSpeed));// BLA
-        timeBetweenField.setText(df.format(1000.0 / newSpeed));
-        stepDelayBase = 1000L / newSpeed;
-        stepDelay = stepDelayBase / stepDelaySpeedupFactor;
-        unsavedChanged();
-    }
-
-    private TextField timeBetweenField;
-
-    public void setPlaybackTimeBetweenOperations (Event e) {
-        long newSpeed;
-        try {
-            perSecField.setStyle("-fx-control-inner-background: white;");
-            newSpeed = Long.parseLong(timeBetweenField.getText());
-        } catch (Exception exc) {
-            // NaN
-            perSecField.setStyle("-fx-control-inner-background: #C40000;");
-            return;
-        }
-        if (newSpeed < 0) {
-            timeBetweenField.setText("invalid");
-            perSecField.selectAll();
-            return;
-        }
-        // Valid input. Change other button and speed variable.
-        perSecField.setText(df.format(1000.0 / newSpeed));
-        timeBetweenField.setText(df.format(newSpeed));
-        stepDelayBase = newSpeed;
-        stepDelay = stepDelayBase / stepDelaySpeedupFactor;
-        unsavedChanged();
     }
 
     /*

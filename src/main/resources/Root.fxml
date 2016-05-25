@@ -49,7 +49,6 @@
                               </MenuItem>
                               <SeparatorMenuItem mnemonicParsing="false" />
                               <MenuItem mnemonicParsing="false" onAction="#closeProgram" text="Close" />
-                              <MenuItem mnemonicParsing="false" text="Unspecified Action" />
                            </items>
                         </Menu>
                         <Menu mnemonicParsing="false" text="_Action">
@@ -86,7 +85,7 @@
                         <Menu mnemonicParsing="false" text="_Help">
                            <items>
                               <MenuItem mnemonicParsing="false" onAction="#showHelp" text="Help" />
-                              <MenuItem mnemonicParsing="false" onAction="#showSettings" text="Settings">
+                              <MenuItem disable="true" mnemonicParsing="false" onAction="#showSettings" text="Settings">
                                  <accelerator>
                                     <KeyCodeCombination alt="UP" code="F10" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                                  </accelerator>
