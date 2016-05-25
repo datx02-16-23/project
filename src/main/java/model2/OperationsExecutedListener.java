@@ -9,7 +9,7 @@ import contract.json.Operation;
  * @author Richard Sundqvist
  *
  */
-public interface ModelExecutionListener {
+public interface OperationsExecutedListener {
 
     /**
      * Called when operations have been executed, altering the model.
