@@ -1,6 +1,7 @@
 package model2;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,8 +14,8 @@ import contract.operation.OP_Message;
 import contract.operation.OperationType;
 import contract.utility.OpUtil;
 import gui.Main;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
 import model.Model;
 
 /**
@@ -27,20 +28,7 @@ public class ExecutionModel {
     /**
      * The default model instance.
      */
-    public static final Model          INSTANCE                  = new Model("INSTANCE");
-
-    // ============================================================= //
-    /*
-     *
-     * Properties
-     *
-     */
-    // ============================================================= //
-
-    private final BooleanProperty      parallelExecutionProperty = new SimpleBooleanProperty();
-    private final BooleanProperty      executeNextProperty       = new SimpleBooleanProperty(false);
-    private final BooleanProperty      executePreviousProperty   = new SimpleBooleanProperty(false);
-    private final BooleanProperty      clearProperty             = new SimpleBooleanProperty(false);
+    public static final Model                INSTANCE          = new Model("INSTANCE");
 
     // ============================================================= //
     /*
@@ -53,7 +41,7 @@ public class ExecutionModel {
     /**
      * The map of data structures in this model.
      */
-    private Map<String, DataStructure> dataStructures;
+    private final Map<String, DataStructure> dataStructures;
 
     /**
      * List of low level operations. <br>
@@ -62,12 +50,7 @@ public class ExecutionModel {
      * {@link OperationType#write}<br>
      * {@link OperationType#message}<br>
      */
-    private List<Operation>            atomicOperations;
-
-    /**
-     * Current operation index for the atomic operations execution list.
-     */
-    private int                        atomicIndex;
+    private final List<Operation>            atomicOperations;
 
     /**
      * List of operations which may include height level, non-atomic operations. <br>
@@ -76,27 +59,32 @@ public class ExecutionModel {
      * {@link OperationType#write}<br>
      * {@link OperationType#message}<br>
      */
-    private List<Operation>            operations;
+    private final List<Operation>            operations;
+
+    /**
+     * Current operation index for the atomic operations execution list.
+     */
+    private int                              atomicIndex;
 
     /**
      * Current operation index.
      */
-    private int                        index;
+    private int                              index;
 
     /**
      * Indicates whether parallel execution is permitted.
      */
-    private boolean                    parallelExecution         = false;
+    private boolean                          parallelExecution = false;
 
     /**
      * The name of the model.
      */
-    public final String                name;
+    public final String                      name;
 
     /**
      * A list of the most recently executed operations.
      */
-    private List<Operation>            executedOperations;
+    private List<Operation>                  executedOperations;
 
     // ============================================================= //
     /*
@@ -116,8 +104,11 @@ public class ExecutionModel {
      */
     public ExecutionModel (String name, boolean parallelExecution) {
         this.name = name;
+        this.dataStructures = new HashMap<String, DataStructure>();
+        this.atomicOperations = new ArrayList<Operation>();
+        this.operations = new ArrayList<Operation>();
 
-        setparallelExecution(parallelExecution);
+        setParallelExecution(parallelExecution);
         setIndex(-1);
         setAtomicIndex(-1);
     }
@@ -169,8 +160,7 @@ public class ExecutionModel {
         Operation op;
 
         if (parallelExecution) {
-            // TODO parallel execution.
-            // executeParallel();
+            // TODO executeParallel();
             executeLinear();
         } else {
             executeLinear();
@@ -195,19 +185,16 @@ public class ExecutionModel {
      * @return A list of the executed operations.
      */
     public List<Operation> execute (int index) {
-        ArrayList<Operation> executedOperations = new ArrayList<Operation>();
 
         if (this.index == index) {
-            // Do nothing.
-
-        } else if (this.index < index) {
-            reset();
-            // TODO
-
-        } else if (this.index > index) {
-            // TODO
-
+            return executedOperations;
         }
+
+        if (this.index < index) {
+            reset();
+        }
+
+        // TODO
 
         return executedOperations;
     }
@@ -229,9 +216,9 @@ public class ExecutionModel {
      * Clear the model.
      */
     public void clear () {
-        dataStructures = null;
-        operations = null;
-        atomicOperations = null;
+        dataStructures.clear();
+        operations.clear();
+        atomicOperations.clear();
 
         setIndex(-1);
         setAtomicIndex(-1);
@@ -367,7 +354,10 @@ public class ExecutionModel {
      *            A map of data structures.
      */
     public void setDataStructures (Map<String, DataStructure> dataStructures) {
-        this.dataStructures = dataStructures;
+        if (dataStructures != null) {
+            this.dataStructures.clear();
+            this.dataStructures.putAll(dataStructures);
+        }
     }
 
     /**
@@ -377,7 +367,10 @@ public class ExecutionModel {
      *            A list of operations.
      */
     public void setOperations (List<Operation> operations) {
-        this.operations = operations;
+        if (this.operations != null) {
+            this.operations.clear();
+            this.operations.addAll(operations);
+        }
     }
 
     /**
@@ -385,17 +378,24 @@ public class ExecutionModel {
      * 
      * @param atomicOperations
      *            A list of atomic operations.
+     * @throws IllegalArgumentException
+     *             If the list contained non-atomic operations.
      */
     public void setAtomicOperations (List<Operation> atomicOperations) {
-        for (Operation op : atomicOperations) {
+        if (this.atomicOperations != null) {
 
-            if (!OpUtil.isAtomic(op)) {
-                int index = atomicOperations.indexOf(op);
-                throw new IllegalArgumentException("Non-atomic operation: " + op + " at index: " + index);
+            // Search for forbidden operation types.
+            for (Operation op : atomicOperations) {
+
+                if (!OpUtil.isAtomic(op)) {
+                    int index = atomicOperations.indexOf(op);
+                    throw new IllegalArgumentException("Non-atomic operation: " + op + " at index: " + index);
+                }
             }
-        }
 
-        this.atomicOperations = atomicOperations;
+            this.atomicOperations.clear();
+            this.atomicOperations.addAll(atomicOperations);
+        }
     }
 
     /**
@@ -413,7 +413,7 @@ public class ExecutionModel {
      * @param parallelExecution
      *            The new parallel execution setting.
      */
-    public void setparallelExecution (boolean parallelExecution) {
+    public void setParallelExecution (boolean parallelExecution) {
         if (this.parallelExecution != parallelExecution) {
 
             this.parallelExecution = parallelExecution;
@@ -441,10 +441,63 @@ public class ExecutionModel {
     }
 
     private void setIndex (int index) {
+        //TODO property
         this.index = index;
     }
 
     private void setAtomicIndex (int atomicIndex) {
+        //TODO property
         this.atomicIndex = atomicIndex;
+    }
+
+    // ============================================================= //
+    /*
+     *
+     * Getters and Setters (Properties)
+     *
+     */
+    // ============================================================= //
+
+    private final ReadOnlyBooleanWrapper parallelExecutionProperty = new ReadOnlyBooleanWrapper();
+    private final ReadOnlyBooleanWrapper executeNextProperty       = new ReadOnlyBooleanWrapper(false);
+    private final ReadOnlyBooleanWrapper executePreviousProperty   = new ReadOnlyBooleanWrapper(false);
+    private final ReadOnlyBooleanWrapper clearProperty             = new ReadOnlyBooleanWrapper(false);
+
+    /**
+     * Returns a property indicating whether this model is in parallel execution mode.
+     * 
+     * @return A ReadOnlyBooleanProperty.
+     */
+    public ReadOnlyBooleanProperty parallelExecutionProperty () {
+        return parallelExecutionProperty.getReadOnlyProperty();
+    }
+
+    /**
+     * Returns a property indicating whether this model is able to execute forwards from
+     * the current index.
+     * 
+     * @return A ReadOnlyBooleanProperty.
+     */
+    public ReadOnlyBooleanProperty executeNextProperty () {
+        return executeNextProperty.getReadOnlyProperty();
+    }
+
+    /**
+     * Returns a property indicating whether this model is able to execute backwards from
+     * the current index.
+     * 
+     * @return A ReadOnlyBooleanProperty.
+     */
+    public ReadOnlyBooleanProperty executePreviousProperty () {
+        return executePreviousProperty.getReadOnlyProperty();
+    }
+
+    /**
+     * Returns a property indicating whether this model is cleared.
+     * 
+     * @return A ReadOnlyBooleanProperty.
+     */
+    public ReadOnlyBooleanProperty clearProperty () {
+        return clearProperty.getReadOnlyProperty();
     }
 }
