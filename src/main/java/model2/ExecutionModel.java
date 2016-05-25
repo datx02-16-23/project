@@ -50,6 +50,7 @@ public class ExecutionModel {
      * {@link OperationType#write}<br>
      * {@link OperationType#message}<br>
      */
+    // TODO Atomic Operations Execution.
     private final List<Operation>            atomicOperations;
 
     /**
@@ -151,28 +152,32 @@ public class ExecutionModel {
     // ============================================================= //
 
     /**
-     * Execute the next operation, if possible.
+     * Execute the next operation, if possible. <br>
+     * <br>
+     * <i> This method will clear the {@link #executedOperations} list.</i>
      * 
-     * @return A list of the operations which were executed.
+     * @return A list containing the executed operations.
      */
     public List<Operation> executeNext () {
-
-        Operation op;
 
         if (parallelExecution) {
             executeParallel();
         } else {
-            execute();
+            executeLinear();
         }
 
         return executedOperations;
     }
 
     /**
-     * Execute the previous operation, if possible.
+     * Execute the previous operation, if possible. <br>
+     * <br>
+     * <i> This method will clear the {@link #executedOperations} list.</i>
+     * 
+     * @return A list containing the executed operations.
      */
-    public void executePrevious () {
-        execute(getIndex() - 1);
+    public List<Operation> executePrevious () {
+        return execute(getIndex() - 1);
     }
 
     /**
@@ -198,24 +203,35 @@ public class ExecutionModel {
     }
 
     /**
-     * Execute the operation(s) at the given index. If the index is lower than the current
-     * index, the model will reset and play fromt he beginning.
+     * Execute the operation(s) up to and including the given index. If the index is lower
+     * than the current index, the model will reset and play from the beginning. Will
+     * execute to the end if {@code index} is greater than the number of operations in the
+     * queue. <br>
+     * <br>
+     * <i> This method will clear the {@link #executedOperations} list.</i>
      * 
-     * @param index
+     * @param toIndex
      *            The index to execute at.
-     * @return A list of the executed operations.
+     * @return A list containing the executed operations.
      */
-    public List<Operation> execute (int index) {
+    public List<Operation> execute (int toIndex) {
+        executedOperations.clear();
 
-        if (this.index == index) {
+        if (index == toIndex) {
             return executedOperations;
         }
 
-        if (this.index < index) {
+        if (index < toIndex) {
             reset();
         }
 
-        // TODO
+        int targetIndex = toIndex < operations.size() ? toIndex : operations.size() - 1;
+
+        if (tryExecuteNext()) {
+            for (int i = 0; i < targetIndex; i++) {
+                execute();
+            }
+        }
 
         return executedOperations;
     }
@@ -253,26 +269,36 @@ public class ExecutionModel {
      */
     // ============================================================= //
 
+    /**
+     * Execute the
+     */
     private void executeParallel () {
         // TODO: Implement parallel execution.
-        execute();
+        executeLinear();
     }
 
     /**
-     * Execute the next operation and add it to {@link executedOperations}.
+     * Execute the next operation.
      */
-    private void execute () {
+    private void executeLinear () {
         if (tryExecuteNext()) {
-            Operation op = operations.get(index);
-            executedOperations.add(op);
-            execute(op);
-            setIndex(index + 1);
-            setAtomicIndex(atomicIndex + op.operation.numAtomicOperations);
+            execute();
         }
     }
 
     /**
-     * Execute an operation to drive the model forward.
+     * Execute the next operation in the queue and add it to {@link executedOperations}.
+     */
+    private void execute () {
+        setIndex(index + 1);
+        Operation op = operations.get(index);
+        setAtomicIndex(atomicIndex + op.operation.numAtomicOperations);
+        executedOperations.add(op);
+        execute(op);
+    }
+
+    /**
+     * Execute an operation.
      *
      * @param op
      *            The operation to execute.
@@ -326,7 +352,7 @@ public class ExecutionModel {
         case remove:
             // ============================================================= //
             /*
-             * TODO
+             * TODO Fix after renaming remove.
              */
             // ============================================================= //
             Locator removeTarget = OpUtil.getLocator(op, Key.target);
