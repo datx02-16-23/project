@@ -12,7 +12,10 @@ import contract.operation.OperationType;
 
 public class Model {
 
-    private static final Model    INSTANCE = new Model("INSTANCE");
+    /**
+     * The default model instance.
+     */
+    public static final Model     INSTANCE = new Model("INSTANCE");
 
     /**
      * List of low level operations. <br>
@@ -30,7 +33,7 @@ public class Model {
      * {@link OperationType#write}<br>
      * {@link OperationType#message}<br>
      */
-    private final List<Operation> allOperations;
+    private final List<Operation> mixedOperations;
     /**
      * The name of the model.
      */
@@ -64,7 +67,7 @@ public class Model {
         this.name = name;
 
         atomicOperations = new ArrayList<Operation>();
-        allOperations = new ArrayList<Operation>();
+        mixedOperations = new ArrayList<Operation>();
         step = new Step();
         index = 0;
         inInitialState = true;
@@ -77,27 +80,19 @@ public class Model {
         this("" + (int) (Math.random() * Integer.MAX_VALUE));
     }
 
-    public void reset () {
+    public void restart () {
         index = 0;
         step.reset();
-    }
-
-    /**
-     * Restore the model to its initial state.
-     */
-    public void clear () {
-        index = 0;
-        step.reset();
-        atomicOperations.clear();
     }
 
     /**
      * Wipe the model clean.
      */
-    public void hardClear () {
+    public void clear () {
         index = 0;
         step = new Step();
         atomicOperations.clear();
+        mixedOperations.clear();
         inInitialState = true;
     }
 
@@ -107,7 +102,7 @@ public class Model {
      * @return True if the model can step forward. False otherwise.
      */
     public boolean tryStepForward () {
-        return atomicOperations != null && index < atomicOperations.size();
+        return index < atomicOperations.size();
     }
 
     /**
@@ -145,7 +140,7 @@ public class Model {
     public boolean stepBackward () {
         if (tryStepBackward()) {
             int oldIndex = index - 1;
-            reset(); // Can't go backwards: Start from the beginning
+            restart(); // Can't go backwards: Start from the beginning
             while (index < oldIndex) {
                 stepForward();
             }
@@ -163,14 +158,14 @@ public class Model {
      */
     public void goToStep (int toStepNo) {
         if (toStepNo <= 0) {
-            reset();
+            restart();
             return;
         } else if (toStepNo >= atomicOperations.size()) {
             toStepNo = atomicOperations.size();
         }
         // Begin
         if (toStepNo < index) {
-            reset(); // Can't go backwards: Start from the beginning
+            restart(); // Can't go backwards: Start from the beginning
             while (index < toStepNo) {
                 stepForward();
             }
@@ -195,6 +190,7 @@ public class Model {
         structs.values().forEach(DataStructure::clear);
         step = new Step(new HashMap<String, DataStructure>(structs));
         atomicOperations.clear();
+        mixedOperations.clear();
         atomicOperations.addAll(ops);
         index = 0;
     }
@@ -228,27 +224,25 @@ public class Model {
     }
 
     /**
-     * Returns the DataStructure map held by this Model.<br>
-     * <br>
-     * <b>Should not be used to add or remove structures!</b>
+     * Returns the DataStructure map held by this Model. Should not be used to add or
+     * remove structures.
      *
      * @return The DataStructure map held by this Model.
      */
     public Map<String, DataStructure> getStructures () {
         return step.getStructures();
-//        return Collections.unmodifiableMap(step.getStructures());
+        // return Collections.unmodifiableMap(step.getStructures());
     }
 
     /**
-     * Returns the Operation list held by this Model.<br>
-     * <br>
-     * <b>Should not be used to add or removed operations!</b>
+     * Returns the Operation list held by this Model. Should not be used to add or removed
+     * operations.
      *
      * @return The Operation list held by this Model.
      */
     public List<Operation> getOperations () {
         return atomicOperations;
-//        return Collections.unmodifiableList(atomicOperations);
+        // return Collections.unmodifiableList(atomicOperations);
     }
 
     /**
@@ -270,8 +264,8 @@ public class Model {
      *
      * @return True if this Model is in its initial state.
      */
-    public boolean isHardCleared () {
-        inInitialState = step.getStructures().isEmpty() && atomicOperations.isEmpty();
+    public boolean isCleared () {
+        inInitialState = step.getStructures().isEmpty() && atomicOperations.isEmpty() && mixedOperations.isEmpty();
         return inInitialState;
     }
 }

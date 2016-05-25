@@ -120,23 +120,9 @@ public class Loader {
      */
     public static boolean insertIntoModel (Model targetModel, List<Operation> newOps,
             Map<String, DataStructure> newStructs) {
-        return new Loader(targetModel).insertIntoLiveModel(newOps, newStructs);
+        return new Loader(targetModel).insertIntoLiveModel(newStructs, newOps);
     }
-
-    /**
-     * Attempt to insert structures and operations into a live model.
-     * 
-     * @param newOps
-     *            The new operations to insert.
-     * @param newStructs
-     *            The new data structures to insert.
-     * @return {@code false} if the live model hasn't changed. True if there is a
-     *         possibility that is has.
-     */
-    public boolean insertIntoLiveModel (List<Operation> newOps, Map<String, DataStructure> newStructs) {
-        return insertIntoLiveModel(newStructs, newOps);
-    }
-
+    
     /**
      * Attempt to insert structures and operations into a live model.
      * 
@@ -181,16 +167,34 @@ public class Loader {
         gatherUsedOperationNames(newOps, newStructs);
         newStructs.putAll(handleUndeclaredNames(newStructs.keySet()));
 
-        Map<String, DataStructure> newLiveModelStructures = new HashMap<String, DataStructure>();
-        List<Operation> newLiveModelOperations = new ArrayList<Operation>();
-
-        newLiveModelStructures.putAll(liveModel.getStructures());
-        newLiveModelStructures.putAll(newStructs);
-        newLiveModelOperations.addAll(liveModel.getOperations());
-        newLiveModelOperations.addAll(newOps);
-
-        liveModel.set(newLiveModelStructures, newLiveModelOperations);
+        // Commit
+        commitToLiveModel(newStructs, newOps);
         return true;
+    }
+
+    /**
+     * Strip all unused variables from a model, without user prompt.
+     * 
+     * @param liveModel
+     *            The model to strip unused names from.
+     */
+    public static void stripUnusedNames (Model liveModel) {
+        Loader loader = new Loader(liveModel);
+
+        List<Operation> newOps = new ArrayList<Operation>();
+        newOps.addAll(liveModel.getOperations());
+        Map<String, DataStructure> newStructs = new HashMap<String, DataStructure>();
+        newStructs.putAll(liveModel.getStructures());
+
+        // Collect usage data.
+        loader.runUseageTest(newOps, newStructs);
+        loader.gatherUsageData(newOps, newStructs);
+
+        loader.setAutoRemoveUnused(true);
+        // Handle unused names.
+        loader.handleUnusedNames(newStructs);
+
+        loader.commitToLiveModel(newStructs, newOps);
     }
 
     // ============================================================= //
@@ -200,6 +204,18 @@ public class Loader {
      *
      */
     // ============================================================= //
+
+    private void commitToLiveModel (Map<String, DataStructure> newStructs, List<Operation> newOps) {
+        Map<String, DataStructure> newLiveModelStructures = new HashMap<String, DataStructure>();
+        List<Operation> newLiveModelOperations = new ArrayList<Operation>();
+
+        newLiveModelStructures.putAll(liveModel.getStructures());
+        newLiveModelStructures.putAll(newStructs);
+        newLiveModelOperations.addAll(liveModel.getOperations());
+        newLiveModelOperations.addAll(newOps);
+
+        liveModel.set(newLiveModelStructures, newLiveModelOperations);
+    }
 
     private Map<String, DataStructure> handleUndeclaredNames (Set<String> newStructNames) {
         Set<String> allStructNames = new HashSet<String>();
@@ -294,7 +310,7 @@ public class Loader {
         boolean abortImport = false;
 
         if (alwaysClearOld) {
-            liveModel.hardClear();
+            liveModel.clear();
             return false;
         } else if (alwaysKeepOld) {
             return true;
@@ -305,7 +321,7 @@ public class Loader {
         case IdentifierCollisionDialog.CLEAR_OLD_ALWAYS:
             alwaysClearOld = true;
         case IdentifierCollisionDialog.CLEAR_OLD:
-            liveModel.hardClear();
+            liveModel.clear();
             abortImport = false;
             break;
 
@@ -401,7 +417,7 @@ public class Loader {
      * @param autoRemoveUnsued
      *            The automatic removal settings.
      */
-    public void setAutoRemoveUnsued (boolean autoRemoveUnsued) {
+    public void setAutoRemoveUnused (boolean autoRemoveUnsued) {
         this.autoRemoveUnsued = autoRemoveUnsued;
     }
 

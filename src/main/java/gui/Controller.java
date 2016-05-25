@@ -271,7 +271,7 @@ public class Controller implements CommunicatorListener {
     public void clearButtonClicked () {
         visualMenu.getItems().clear();
         visualMenu.setDisable(true);
-        model.hardClear();
+        model.clear();
         vis.clear();
         sourcePanel.clear();
         operationPanel.clear();
@@ -322,7 +322,7 @@ public class Controller implements CommunicatorListener {
      */
     public void restartButtonClicked () {
         stopAutoPlay();
-        model.reset();
+        model.restart();
         vis.reset();
         updatePanels();
         setButtons();
@@ -392,7 +392,9 @@ public class Controller implements CommunicatorListener {
         InterpreterView interpreterView = new InterpreterView(window);
 
         if (interpreterView.show(model.getOperations())) {
-            model.reset();
+//            Loader.stripUnusedNames(model);
+            System.out.println("sturcs = " + model.getStructures().keySet());
+            model.restart();
             vis.clearAndCreateVisuals();
             operationPanel.getItems().setAll(model.getOperations());
             updatePanels();
@@ -921,7 +923,7 @@ public class Controller implements CommunicatorListener {
     public void setButtons () {
         // TODO: Use a property in Model instead.
 
-        if (model.isHardCleared()) { // Model clear?
+        if (model.isCleared()) { // Model clear?
             playPauseButton.setDisable(true);
             animationProgressBar.setProgress(0);
             forwardButton.setDisable(true);
