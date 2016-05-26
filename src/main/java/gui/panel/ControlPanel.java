@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Map;
 
-import javafx.beans.binding.BooleanBinding;
-import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -22,7 +20,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import model2.ExecutionModelController;
 import model2.ExecutionTickListener;
-import render.assets.Visualization2;
+import render.Visualization;
 
 /**
  * 
@@ -42,7 +40,7 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
     // ============================================================= //
 
     private final ExecutionModelController emController;
-    private final Visualization2           visualization;
+    private final Visualization            visualization;
     private final ProgressBar              animationProgress;
 
     // ============================================================= //
@@ -53,10 +51,18 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
      */
     // ============================================================= //
 
-    @SuppressWarnings({ "rawtypes", "unchecked" }) public ControlPanel (
-            ExecutionModelController executionModelController, Visualization2 visualization) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    /**
+     * Create a new ControlPanel
+     * 
+     * @param executionModelController
+     *            Used to control the model
+     * @param visualization
+     *            Used to control visualization.
+     */
+    public ControlPanel (ExecutionModelController executionModelController, Visualization visualization) {
 
-        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/panel/ControlPanel.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/panel/ControlPanel.fxml"));
         fxmlLoader.setController(this);
 
         Pane root = null;
@@ -68,10 +74,9 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
         }
         getChildren().add(root);
 
-        setMaxHeight(Double.MAX_VALUE);
-        setStyle("-fx-background-color: red;");
+//        setMaxHeight(Double.MAX_VALUE);
 
-        this.emController = executionModelController;
+        emController = executionModelController;
         emController.setExecutionTickListener(this, tickCount);
         this.visualization = visualization;
 
@@ -109,6 +114,9 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
             //@formatter:off
             @Override public void changed (ObservableValue observable,
                     Object wasAutoExecuting, Object isAutoExecuting) {
+                
+                System.out.println("changed!");
+                
                 if ((Boolean) isAutoExecuting) {
                     play.setText("Pause");
                 } else {
@@ -124,16 +132,6 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
 
         Button back = (Button) namespace.get("back");
         back.disableProperty().bind(emController.getExecutionModel().executePreviousProperty().not());
-
-        // Button restart = (Button) namespace.get("restart");
-        // // TODO
-        // ReadOnlyBooleanProperty epp =
-        // emController.getExecutionModel().executePreviousProperty();
-        // ReadOnlyBooleanProperty cp = emController.getExecutionModel().clearProperty();
-        // restart.disableProperty().bind(epp.or(cp));
-
-        // Button clear = (Button) namespace.get("clear");
-        // clear.disableProperty().bind(emController.getExecutionModel().clearProperty());
 
         // Operation progress bar
         ListView lw = (ListView<Object>) namespace.get("operationList");

@@ -8,7 +8,6 @@ import assets.Const;
 import contract.interpreter.Interpreter;
 import contract.json.Operation;
 import contract.operation.OperationType;
-import gui.Controller;
 import gui.Main;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -55,7 +54,7 @@ public class InterpreterView implements InvalidationListener {
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/view/InterpreterView.fxml"));
         fxmlLoader.setController(this);
         root = new Stage();
-        root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
+        root.getIcons().add(new Image(getClass().getResourceAsStream("/assets/icon_interpreter.png")));
         root.initModality(Modality.APPLICATION_MODAL);
         root.setTitle(Const.PROGRAM_NAME + ": Interpreter");
         root.initOwner(this.parent);

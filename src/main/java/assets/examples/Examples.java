@@ -1,7 +1,5 @@
 package assets.examples;
 
-import gui.Main;
-
 /**
  * Generates examples for a given array using the selected algorithm.<br>
  * <br>
@@ -13,10 +11,6 @@ import gui.Main;
  * @author Richard Sundqvist
  *
  */
-
-// @Include(classes = {"application.assets.examples.Insertion"})
-// @SourcePath(path =
-// "C:/Users/Richard/Documents/datx02-16-23/Bachelor/src/main/java/application/assets/")
 public abstract class Examples {
 
     private static double[] arg;
@@ -31,7 +25,6 @@ public abstract class Examples {
      *            The data to run it on.
      * @return The resulting operations of running the given algorithm on the data.
      */
-    // @VisualizeArg(args = {"", AbstractType.ARRAY})
     public static String getExample (Algorithm algo, double[] data) {
         arg = data;
         switch (algo) {
@@ -48,7 +41,7 @@ public abstract class Examples {
         // Quick.sort(arg);
         // break;
         default:
-            Main.console.err("No such algorithm: " + algo);
+            System.err.println("No such algorithm: " + algo);
             break;
         }
         print();

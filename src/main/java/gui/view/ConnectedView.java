@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Collection;
 
 import contract.io.JGroupCommunicator;
-import gui.Controller;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -26,7 +25,7 @@ public class ConnectedView {
         this.jgc = jgc;
         FXMLLoader connectedLoader = new FXMLLoader(this.getClass().getResource("/view/ConnectedView.fxml"));
         root = new Stage();
-        root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_connected.png")));
+        root.getIcons().add(new Image(getClass().getResourceAsStream("/assets/icon_connected.png")));
         root.initModality(Modality.APPLICATION_MODAL);
         root.setTitle("Entities View: Channel = \"" + jgc.getChannel() + "\"");
         root.initOwner(parent);

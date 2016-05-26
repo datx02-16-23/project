@@ -19,11 +19,11 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="245.0" style="-fx-background-color: #123456;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="245.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" vgap="2.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
          </BorderPane.margin>
          <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" />
@@ -33,7 +33,7 @@
             <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="ALWAYS" />
          </rowConstraints>
          <children>
-            <ListView fx:id="operationList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" onEditCommit="#listViewGoto" prefHeight="299.0" prefWidth="235.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.rowSpan="2147483647" GridPane.vgrow="ALWAYS" />
+            <ListView fx:id="operationList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" onEditCommit="#listViewGoto" prefHeight="299.0" prefWidth="240.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.rowSpan="2147483647" GridPane.vgrow="ALWAYS" />
             <StackPane maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: white;" GridPane.hgrow="ALWAYS">
                <children>
                   <ProgressBar fx:id="modelProgress" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="200.0" />
@@ -148,7 +148,7 @@
             <Insets />
          </opaqueInsets>
          <BorderPane.margin>
-            <Insets bottom="-3.0" left="5.0" right="5.0" top="5.0" />
+            <Insets left="2.0" right="2.0" top="2.0" />
          </BorderPane.margin>
          <padding>
             <Insets left="2.0" right="2.0" />

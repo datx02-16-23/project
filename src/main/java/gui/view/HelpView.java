@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import assets.Const;
 import contract.operation.OperationType;
-import gui.Controller;
 import gui.Main;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
@@ -48,7 +47,7 @@ public class HelpView {
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/view/HelpView.fxml"));
         fxmlLoader.setController(this);
 
-        stage.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon.png")));
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/assets/icon.png")));
         stage.initModality(Modality.NONE);
         stage.setTitle(Const.PROGRAM_NAME + ": Help");
         stage.initOwner(owner);

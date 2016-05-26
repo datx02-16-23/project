@@ -12,8 +12,8 @@ import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyLongProperty;
 import javafx.beans.property.ReadOnlyLongWrapper;
 import javafx.util.Duration;
+import render.Visualization;
 import render.assets.Const;
-import render.assets.Visualization2;
 
 /**
  * ExecutionModel convenience class.
@@ -39,7 +39,7 @@ public class ExecutionModelController implements OperationsExecutedListener {
     /**
      * The visualization used to animate the model.
      */
-    private final Visualization2  visualization;
+    private final Visualization   visualization;
 
     /**
      * Time line used for timed model progression.
@@ -89,7 +89,7 @@ public class ExecutionModelController implements OperationsExecutedListener {
      * @param The
      *            The visualization used to animate.
      */
-    public ExecutionModelController (ExecutionModel executionModel, Visualization2 visualization) {
+    public ExecutionModelController (ExecutionModel executionModel, Visualization visualization) {
         this.executionModel = executionModel;
         this.visualization = visualization;
 
@@ -111,7 +111,7 @@ public class ExecutionModelController implements OperationsExecutedListener {
      * 
      */
     public ExecutionModelController () {
-        this(ExecutionModel.INSTANCE, new Visualization2(ExecutionModel.INSTANCE));
+        this(ExecutionModel.INSTANCE, new Visualization(ExecutionModel.INSTANCE));
     }
 
     // ============================================================= //
@@ -137,6 +137,14 @@ public class ExecutionModelController implements OperationsExecutedListener {
      *            The time between executions.
      */
     public void startAutoExecution (long millis) {
+        // Start immediately.
+        if (executionModel.tryExecuteNext()) {
+            executeNext();
+            startExecutionTickUpdates(millis);
+        } else {
+            stopAutoExecution();
+            executionTickListener.update(0);
+        }
 
         KeyFrame executionFrame = new KeyFrame(Duration.millis(millis), event -> {
 
@@ -145,17 +153,6 @@ public class ExecutionModelController implements OperationsExecutedListener {
             if (executionModel.tryExecuteNext()) {
                 executeNext();
                 startExecutionTickUpdates(millis);
-                System.out.println();
-                System.out.println();
-                System.out.println();
-                System.out.println();
-                System.out.println();
-                System.out.println("execute next!");
-                System.out.println("execute next!");
-                System.out.println("execute next!");
-                System.out.println("execute next!");
-                System.out.println("execute next!");
-                System.out.println("execute next!");
             } else {
                 stopAutoExecution();
                 executionTickListener.update(0);
@@ -164,7 +161,7 @@ public class ExecutionModelController implements OperationsExecutedListener {
 
         autoExecutionTimeline.getKeyFrames().clear();
         autoExecutionTimeline.getKeyFrames().add(executionFrame);
-        autoExecutionTimeline.play();
+        autoExecutionTimeline.playFromStart();
     }
 
     /**
@@ -270,7 +267,7 @@ public class ExecutionModelController implements OperationsExecutedListener {
         }
 
         if (Debug.ERR) {
-            System.err.println("ExecutionTickListener set to " + executionTickListener);
+            System.err.println("executionTickListener = " + executionTickListener);
         }
 
         this.executionTickListener = executionTickListener;
@@ -355,6 +352,7 @@ public class ExecutionModelController implements OperationsExecutedListener {
      * @see model2.ExecutionModel#reset()
      */
     public void reset () {
+        stopAutoExecution();
         visualization.reset();
         executionModel.reset();
     }
@@ -364,6 +362,7 @@ public class ExecutionModelController implements OperationsExecutedListener {
      * @see model2.ExecutionModel#clear()
      */
     public void clear () {
+        stopAutoExecution();
         visualization.clear();
         executionModel.clear();
     }

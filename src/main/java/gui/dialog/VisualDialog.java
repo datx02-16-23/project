@@ -5,7 +5,6 @@ import java.io.IOException;
 import assets.Const;
 import contract.datastructure.DataStructure;
 import contract.datastructure.VisualType;
-import gui.Controller;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
@@ -28,7 +27,7 @@ public class VisualDialog {
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/dialog/VisualDialog.fxml"));
         fxmlLoader.setController(this);
         root = new Stage();
-        root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
+        root.getIcons().add(new Image(getClass().getResourceAsStream("/assets/icon_interpreter.png")));
         root.initModality(Modality.APPLICATION_MODAL);
         root.setTitle(Const.PROGRAM_NAME + ": Choose Visualisation");
         root.initOwner(parent);

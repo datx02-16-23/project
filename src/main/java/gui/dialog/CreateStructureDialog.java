@@ -8,8 +8,6 @@ import contract.datastructure.DataStructure;
 import contract.datastructure.IndependentElement;
 import contract.datastructure.RawType;
 import contract.datastructure.VisualType;
-import gui.Controller;
-import gui.Main;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -38,7 +36,7 @@ public class CreateStructureDialog {
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/dialog/CreateStructureDialog.fxml"));
         fxmlLoader.setController(this);
         root = new Stage();
-        root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
+        root.getIcons().add(new Image(getClass().getResourceAsStream("/assets/icon_interpreter.png")));
         root.initModality(Modality.APPLICATION_MODAL);
         root.setTitle(Const.PROGRAM_NAME + ": Create Data Structure");
         root.initOwner(this.parent);
@@ -92,7 +90,8 @@ public class CreateStructureDialog {
             break;
         case tree:
             struct = null;
-            Main.console.err("Not supported yet.");
+            // TODO trees
+            System.err.println("Raw type tree not supported yet.");
             break;
         case independentElement:
             struct = new IndependentElement(identifier, abs, vis, null);

@@ -198,7 +198,7 @@ public class ExecutionModel {
      * @return {@code true} if the model can execute backwards, {@code false} otherwise.
      */
     public boolean tryExecutePrevious () {
-        boolean tryExecutePrevious = index < operations.size();
+        boolean tryExecutePrevious = index - 1 < operations.size() && index - 1 >= 0 && !operations.isEmpty();
         executeNextProperty.set(tryExecutePrevious);
         return tryExecutePrevious;
     }
@@ -303,7 +303,6 @@ public class ExecutionModel {
      * Execute the next operation in the queue and add it to {@link executedOperations}.
      */
     private void execute () {
-        updateProperties();
         setIndex(index + 1);
         Operation op = operations.get(index);
         setAtomicIndex(atomicIndex + op.operation.numAtomicOperations);
@@ -382,7 +381,7 @@ public class ExecutionModel {
         }
 
         if (Debug.OUT) {
-            System.out.print("Step.applyOperation(): " + op + "\n");
+            System.out.println("ExecutionModel: execute(): " + op);
         }
     }
 
@@ -582,9 +581,14 @@ public class ExecutionModel {
      * Force updating of all properties;
      */
     public void updateProperties () {
-        isClear();
-        tryExecuteNext();
-        tryExecutePrevious();
+        System.out.println();
+        System.out.println("isClear() = " + isClear());
+        System.out.println("tryExecuteNext() = " + tryExecuteNext());
+        System.out.println("tryExecutePrevious() = " + tryExecutePrevious());
+        System.out.println();
+//        isClear();
+//        tryExecuteNext();
+//        tryExecutePrevious();
         setIndex(index);
         setAtomicIndex(atomicIndex);
     }
@@ -596,7 +600,7 @@ public class ExecutionModel {
      */
     private boolean isClear () {
         boolean isClear = dataStructures.isEmpty() && operations.isEmpty() && atomicOperations.isEmpty();
-        this.clearProperty.set(isClear);
+        clearProperty.set(isClear);
         return isClear;
     }
 

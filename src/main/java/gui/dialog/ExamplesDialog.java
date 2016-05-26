@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import assets.Const;
-import gui.Controller;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -29,10 +28,10 @@ public class ExamplesDialog {
 
     public ExamplesDialog (Stage parent) {
         this.parent = parent;
-        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/dialog/ExamplesDialog.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/dialog/ExamplesDialog.fxml"));
         fxmlLoader.setController(this);
         root = new Stage();
-        root.getIcons().add(new Image(Controller.class.getResourceAsStream("/assets/icon_interpreter.png")));
+        root.getIcons().add(new Image(getClass().getResourceAsStream("/assets/icon_interpreter.png")));
         root.initModality(Modality.APPLICATION_MODAL);
         root.setTitle(Const.PROGRAM_NAME + ": Example");
         root.initOwner(this.parent);

@@ -7,21 +7,15 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.input.KeyCodeCombination?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -53,13 +47,12 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="_Action">
                           <items>
-                              <MenuItem mnemonicParsing="false" onAction="#playPauseButtonClicked" text="Play/Pause" />
-                              <MenuItem mnemonicParsing="false" onAction="#stepForwardButtonClicked" text="Forward" />
-                              <MenuItem disable="true" mnemonicParsing="false" onAction="#stepBackwardButtonClicked" text="Backward" />
+                              <MenuItem mnemonicParsing="false" onAction="#play" text="Play/Pause" />
+                              <MenuItem mnemonicParsing="false" onAction="#forward" text="Forward" />
+                              <MenuItem disable="true" mnemonicParsing="false" onAction="#back" text="Backward" />
                               <SeparatorMenuItem mnemonicParsing="false" />
-                              <MenuItem mnemonicParsing="false" onAction="#restartButtonClicked" text="Restart" />
-                              <MenuItem mnemonicParsing="false" onAction="#clearButtonClicked" text="Clear" />
-                              <MenuItem fx:id="speedMenuItem" mnemonicParsing="false" onAction="#changeSpeedButtonClicked" text="Change Speed" />
+                              <MenuItem mnemonicParsing="false" onAction="#restart" text="Restart" />
+                              <MenuItem mnemonicParsing="false" onAction="#clear" text="Clear" />
                               <SeparatorMenuItem mnemonicParsing="false" />
                             <MenuItem disable="true" mnemonicParsing="false" onAction="#interpretOperationHistory" text="Interpret Now">
                                  <accelerator>
@@ -74,14 +67,6 @@
                         </Menu>
                         <Menu fx:id="visualMenu" mnemonicParsing="false" text="Visualization" />
                         <Menu fx:id="examplesMenu" mnemonicParsing="false" text="_Examples" />
-                        <Menu disable="true" mnemonicParsing="false" text="_Extra">
-                          <items>
-                            <MenuItem mnemonicParsing="false" text="Multiset prog.">
-                                 <accelerator>
-                                    <KeyCodeCombination alt="UP" code="M" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                                 </accelerator></MenuItem>
-                          </items>
-                        </Menu>
                         <Menu mnemonicParsing="false" text="_Help">
                            <items>
                               <MenuItem mnemonicParsing="false" onAction="#showHelp" text="Help" />
@@ -103,132 +88,33 @@
                         </Menu>
                      </menus>
                   </MenuBar>
-                  <SplitPane fx:id="splitPane" dividerPositions="0.19966442953020133, 0.49328859060402686" prefHeight="160.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-                    <items>
-                        <AnchorPane fx:id="sourceViewContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" style="-fx-background-color: #123456;" />
-                        <GridPane fx:id="visualizationPane" gridLinesVisible="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="0.0">
+                  <SplitPane dividerPositions="0.0, 0.66" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" VBox.vgrow="ALWAYS">
+                     <items>
+                        <GridPane fx:id="source" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefWidth="0.0" style="-fx-background-color: #123456;">
                           <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" prefWidth="100.0" />
                           </columnConstraints>
                           <rowConstraints>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
                           </rowConstraints>
                         </GridPane>
-                        <VBox fx:id="rightSidePanel" maxHeight="1.7976931348623157E308" maxWidth="260.0" minHeight="100.0" minWidth="10.0" prefWidth="260.0" spacing="10.0">
-                           <padding>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                           </padding>
-                           <children>
-                              <GridPane id="button_panel" fx:id="buttonsGrid" alignment="CENTER" maxHeight="85.0" maxWidth="250.0" minHeight="85.0" minWidth="250.0" prefHeight="85.0" prefWidth="250.0" VBox.vgrow="NEVER">
-                                 <children>
-                                    <Button fx:id="backwardButton" disable="true" maxHeight="40.0" maxWidth="60.0" minHeight="40.0" minWidth="60.0" mnemonicParsing="false" onAction="#stepBackwardButtonClicked" prefHeight="40.0" prefWidth="60.0" text="Backward" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
-                                       <font>
-                                          <Font name="System Bold" size="9.0" />
-                                       </font>
-                                       <GridPane.margin>
-                                          <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
-                                       </GridPane.margin>
-                                    </Button>
-                                    <Button fx:id="restartButton" maxHeight="40.0" maxWidth="60.0" minHeight="40.0" minWidth="60.0" mnemonicParsing="false" onAction="#restartButtonClicked" prefHeight="40.0" prefWidth="60.0" text="Restart" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
-                                       <font>
-                                          <Font name="System Bold" size="9.0" />
-                                       </font>
-                                       <GridPane.margin>
-                                          <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
-                                       </GridPane.margin>
-                                    </Button>
-                                    <StackPane GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
-                                       <GridPane.margin>
-                                          <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
-                                       </GridPane.margin>
-                                       <children>
-                                          <ProgressBar fx:id="animationProgress" focusTraversable="false" prefHeight="40.0" prefWidth="60.0" progress="0.0">
-                                             <StackPane.margin>
-                                                <Insets />
-                                             </StackPane.margin>
-                                             <padding>
-                                                <Insets bottom="-1.0" top="-1.0" />
-                                             </padding>
-                                          </ProgressBar>
-                                          <Button fx:id="playPauseButton" alignment="CENTER" maxHeight="40.0" maxWidth="60.0" minHeight="40.0" minWidth="60.0" mnemonicParsing="false" onAction="#playPauseButtonClicked" prefHeight="40.0" prefWidth="60.0" style="-fx-background-color: transparent;" text="Play" textAlignment="CENTER">
-                                             <font>
-                                                <Font name="System Bold" size="13.0" />
-                                             </font>
-                                          </Button>
-                                       </children>
-                                    </StackPane>
-                                    <Button fx:id="forwardButton" maxHeight="40.0" maxWidth="60.0" minHeight="40.0" minWidth="60.0" mnemonicParsing="false" onAction="#stepForwardButtonClicked" prefHeight="40.0" prefWidth="60.0" text="Forward" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
-                                       <font>
-                                          <Font name="System Bold" size="9.0" />
-                                       </font>
-                                       <GridPane.margin>
-                                          <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
-                                       </GridPane.margin>
-                                    </Button>
-                                    <Button id="speed_button" fx:id="speedButton" maxHeight="40.0" maxWidth="60.0" minHeight="40.0" minWidth="60.0" mnemonicParsing="false" onAction="#changeSpeedButtonClicked" onContextMenuRequested="#changeSpeedButtonRightClicked" prefHeight="40.0" prefWidth="60.0" text="1x" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
-                                       <font>
-                                          <Font size="14.0" />
-                                       </font>
-                                       <GridPane.margin>
-                                          <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
-                                       </GridPane.margin>
-                                    </Button>
-                                    <Button blendMode="DARKEN" maxHeight="40.0" maxWidth="60.0" minHeight="40.0" minWidth="60.0" mnemonicParsing="false" onAction="#oooooOOoooOOOooooOOooo" prefHeight="40.0" prefWidth="60.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
-                                       <GridPane.margin>
-                                          <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
-                                       </GridPane.margin>
-                                       <tooltip>
-                                          <Tooltip text="oooooOOoooOOOooooOOooo" />
-                                       </tooltip></Button>
-                                    <Button fx:id="clearButton" maxHeight="40.0" maxWidth="60.0" minHeight="40.0" minWidth="60.0" mnemonicParsing="false" onAction="#clearButtonClicked" prefHeight="40.0" prefWidth="60.0" text="Clear" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
-                                       <font>
-                                          <Font name="System Bold" size="9.0" />
-                                       </font>
-                                       <GridPane.margin>
-                                          <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
-                                       </GridPane.margin>
-                                    </Button>
-                                    <MenuButton fx:id="streamBehaviourMenuButton" maxHeight="40.0" maxWidth="60.0" minHeight="40.0" minWidth="60.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="60.0" text="&gt;&gt;" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
-                                      <items>
-                                        <MenuItem mnemonicParsing="false" onAction="#jumpToEndClicked" text="(&gt;&gt;) - Jump To End" />
-                                        <MenuItem mnemonicParsing="false" onAction="#continueClicked" text="(&gt;) - Play" />
-                                          <MenuItem mnemonicParsing="false" onAction="#doNothingClicked" text="(=) - Do Nothing" />
-                                      </items>
-                                       <tooltip>
-                                          <Tooltip text="Determines behaviour when received a stream. &quot;Jump To End&quot; skips to the last operation. &quot;Play&quot; enables autoplay but does not skip. &quot;Do Nothing&quot; leaves autoplay settings and model progression to the user." />
-                                       </tooltip>
-                                       <GridPane.margin>
-                                          <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
-                                       </GridPane.margin>
-                                       <padding>
-                                          <Insets left="7.0" />
-                                       </padding>
-                                    </MenuButton>
-                                 </children>
-                                 <columnConstraints>
-                                    <ColumnConstraints />
-                                    <ColumnConstraints />
-                                    <ColumnConstraints />
-                                    <ColumnConstraints />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints />
-                                    <RowConstraints />
-                                 </rowConstraints>
-                                 <opaqueInsets>
-                                    <Insets />
-                                 </opaqueInsets>
-                                 <VBox.margin>
-                                    <Insets />
-                                 </VBox.margin>
-                                 <padding>
-                                    <Insets bottom="2.0" />
-                                 </padding>
-                              </GridPane>
-                              <BorderPane fx:id="operationPanelContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" VBox.vgrow="ALWAYS" />
-                           </children>
-                        </VBox>
-                    </items>
+                        <GridPane fx:id="visualization" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="0.0" prefWidth="0.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                          </rowConstraints>
+                        </GridPane>
+                        <GridPane fx:id="control" maxWidth="245.0" minHeight="100.0" minWidth="0.0" prefWidth="245.0" style="-fx-background-color: #123456;">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="245.0" minWidth="245.0" prefWidth="245.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                          </rowConstraints>
+                        </GridPane>
+                     </items>
                   </SplitPane>
                </children>
                <padding>

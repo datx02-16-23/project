@@ -1,4 +1,4 @@
-package render.assets;
+package render;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -12,12 +12,11 @@ import contract.json.Operation;
 import contract.operation.OP_ReadWrite;
 import contract.operation.OP_Swap;
 import contract.operation.OP_ToggleScope;
-import gui.Main;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import model2.ExecutionModel;
-import render.ARender;
+import render.assets.ARenderManager;
 
 /**
  * Handler class for rendering a ExecutionModel.
@@ -25,7 +24,7 @@ import render.ARender;
  * @author Richard Sundqvist
  *
  */
-public class Visualization2 extends StackPane {
+public class Visualization extends StackPane {
 
     /**
      * Pane for drawing of animated elements.
@@ -35,7 +34,7 @@ public class Visualization2 extends StackPane {
     /**
      * Animation time in milliseconds.
      */
-    private long                                  animationTime        = render.assets.Const.DEFAULT_ANIMATION_TIME;
+    private long                                  animationTime = render.assets.Const.DEFAULT_ANIMATION_TIME;
     /**
      * Determines whether operations are animated on the animated_nodes canvas.
      */
@@ -43,7 +42,7 @@ public class Visualization2 extends StackPane {
     /**
      * The ExecutionModel to visualise.
      */
-    private final ExecutionModel                  ExecutionModel;
+    private final ExecutionModel                  executionModel;
     /**
      * A list of render managers for the data structures.
      */
@@ -56,11 +55,11 @@ public class Visualization2 extends StackPane {
     /**
      * Create a new ExecutionModelRender.
      *
-     * @param ExecutionModel
+     * @param executionModel
      *            The ExecutionModel to render.
      */
-    public Visualization2 (ExecutionModel executionModel) {
-        this.ExecutionModel = executionModel;
+    public Visualization (ExecutionModel executionModel) {
+        this.executionModel = executionModel;
 
         // Shared animation space
         animationPane.setMouseTransparent(true);
@@ -76,6 +75,7 @@ public class Visualization2 extends StackPane {
      * Clear the visualization.
      */
     public void clear () {
+        System.out.println("clear");
         managerMap.clear();
         managerPane.getChildren().clear();
         animationPane.getChildren().clear();
@@ -84,7 +84,7 @@ public class Visualization2 extends StackPane {
 
     public void clearAndCreateVisuals () {
         clear();
-        for (DataStructure struct : ExecutionModel.getDataStructures().values()) {
+        for (DataStructure struct : executionModel.getDataStructures().values()) {
             ARenderManager manager = new ARenderManager(struct, animationPane);
             managerPane.getChildren().add(manager);
             managerMap.put(struct.identifier, manager);
@@ -183,7 +183,7 @@ public class Visualization2 extends StackPane {
         /**
          * Var1 params
          */
-        for (DataStructure struct : ExecutionModel.getDataStructures().values()) {
+        for (DataStructure struct : executionModel.getDataStructures().values()) {
             e = struct.getElement(tar);
             if (e != null) {
                 ARender render = managerMap.get(struct.identifier).getRender();
@@ -207,7 +207,7 @@ public class Visualization2 extends StackPane {
         /**
          * Source paraeters
          */
-        for (DataStructure struct : ExecutionModel.getDataStructures().values()) {
+        for (DataStructure struct : executionModel.getDataStructures().values()) {
             src_e = struct.getElement(source);
             if (src_e != null) {
                 src_render = managerMap.get(struct.identifier).getRender();
@@ -217,9 +217,10 @@ public class Visualization2 extends StackPane {
         /**
          * Target paraeters
          */
-        for (DataStructure struct : ExecutionModel.getDataStructures().values()) {
+        for (DataStructure struct : executionModel.getDataStructures().values()) {
             tar_e = struct.getElement(target);
             if (tar_e != null) {
+                System.out.println("struct.identifier = " + struct.identifier);
                 tar_render = managerMap.get(struct.identifier).getRender();
                 break; // Target found
             }
@@ -263,7 +264,7 @@ public class Visualization2 extends StackPane {
         /**
          * Var1 params
          */
-        for (DataStructure struct : ExecutionModel.getDataStructures().values()) {
+        for (DataStructure struct : executionModel.getDataStructures().values()) {
             v1_e = struct.getElement(var1);
             if (v1_e != null) {
                 v1_render = managerMap.get(struct.identifier).getRender();
@@ -273,7 +274,7 @@ public class Visualization2 extends StackPane {
         /**
          * Var2 params
          */
-        for (DataStructure struct : ExecutionModel.getDataStructures().values()) {
+        for (DataStructure struct : executionModel.getDataStructures().values()) {
             v2_e = struct.getElement(var2);
             if (v2_e != null) {
                 v2_render = managerMap.get(struct.identifier).getRender();
@@ -297,7 +298,7 @@ public class Visualization2 extends StackPane {
      * placement failed. Note that {@code true} does not guarantee that there is no
      * overlap between renders.
      * 
-     * @return False if placement failed.
+     * @return {@code false} if placement failed.
      */
     public boolean placeVisuals () {
         boolean successful = true;
@@ -468,7 +469,7 @@ public class Visualization2 extends StackPane {
      * Create a render which shows live updating statistics for the ExecutionModel.
      */
     public void showLiveStats () {
-        Main.console.force("Visualization.showLiveStats() not implemnted yet");
+        System.err.println("Visualization.showLiveStats() not implemnted yet.");
     }
 
     /**

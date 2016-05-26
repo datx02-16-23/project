@@ -23,10 +23,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import render.ARender;
+import render.Visualization;
 import render.assets.ARenderManager;
 import render.assets.HintPane;
-import render.assets.Visualization;
-import render.assets.Visualization2;
 import render.element.AVElement;
 
 /**
@@ -168,30 +167,7 @@ public abstract class Tools {
         return null;
     }
 
-    // TODO remove
     public static void markElementXY (Visualization vis) {
-        for (ARenderManager rm : vis.getManagers()) {
-            ARender r = rm.getRender();
-            for (Element e : r.getDataStructure().getElements()) {
-                double x = r.getX(e);
-                double y = r.getY(e);
-                double width = r.getPrefWidth();
-                double height = r.getPrefHeight();
-
-                Line lineX = new Line(x, 0, x, height);
-                lineX.setStroke(Color.HOTPINK);
-                lineX.setOpacity(0.5);
-
-                Line lineY = new Line(0, y, width, y);
-                lineY.setStroke(Color.HOTPINK);
-                lineY.setOpacity(0.5);
-
-                r.getNodes().getChildren().addAll(lineX, lineY, new Circle(x, y, 5));
-            }
-        }
-    }
-
-    public static void markElementXY (Visualization2 vis) {
         for (ARenderManager rm : vis.getManagers()) {
             ARender r = rm.getRender();
             for (Element e : r.getDataStructure().getElements()) {
