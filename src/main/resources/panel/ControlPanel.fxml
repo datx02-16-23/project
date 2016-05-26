@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="260.0" style="-fx-background-color: #123456;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="245.0" style="-fx-background-color: #123456;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <GridPane vgap="2.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
@@ -93,8 +93,11 @@
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <CheckBox fx:id="animate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#toggleAnimate" selected="true" text="Animate" />
-                  <Slider fx:id="speedSlider" blockIncrement="50.0" majorTickUnit="2000.0" max="10000.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" min="50.0" minWidth="0.0" minorTickCount="0" nodeOrientation="LEFT_TO_RIGHT" onDragDone="#speedChanged" prefHeight="30.0" prefWidth="109.0" snapToTicks="true" value="2500.0" GridPane.columnIndex="1">
+                  <CheckBox fx:id="animate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#toggleAnimate" selected="true" text="Animate">
+                     <font>
+                        <Font size="11.0" />
+                     </font></CheckBox>
+                  <Slider fx:id="speedSlider" majorTickUnit="2000.0" max="10000.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" min="50.0" minWidth="0.0" minorTickCount="0" nodeOrientation="LEFT_TO_RIGHT" onDragDone="#speedChanged" prefHeight="30.0" prefWidth="109.0" snapToTicks="true" value="2500.0" GridPane.columnIndex="1">
                      <tooltip>
                         <Tooltip text="Playback speed." />
                      </tooltip>
@@ -113,17 +116,29 @@
                   </Button>
                </children>
             </GridPane>
-            <Button fx:id="back" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#back" text="Back" GridPane.rowIndex="1" />
-            <Button fx:id="forward" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#forward" text="Forward" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Button fx:id="back" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#back" text="Back" GridPane.rowIndex="1">
+               <font>
+                  <Font size="11.0" />
+               </font></Button>
+            <Button fx:id="forward" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#forward" text="Forward" GridPane.columnIndex="3" GridPane.rowIndex="1">
+               <font>
+                  <Font size="11.0" />
+               </font></Button>
             <Button fx:id="restart" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#restart" text="Restart">
                <GridPane.margin>
                   <Insets top="2.0" />
                </GridPane.margin>
+               <font>
+                  <Font size="11.0" />
+               </font>
             </Button>
             <Button fx:id="clear" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clear" text="Clear" textFill="RED" GridPane.columnIndex="3">
                <GridPane.margin>
                   <Insets top="2.0" />
                </GridPane.margin>
+               <font>
+                  <Font size="11.0" />
+               </font>
             </Button>
          </children>
          <opaqueInsets>

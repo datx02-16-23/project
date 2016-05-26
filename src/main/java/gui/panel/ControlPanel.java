@@ -62,6 +62,7 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
             root = (Pane) fxmlLoader.load();
         } catch (IOException e) {
             e.printStackTrace();
+            System.exit(-1);
         }
         getChildren().add(root);
 
@@ -102,7 +103,7 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
         restart.disableProperty().bind(epp.and(ncp));
 
         Button clear = (Button) namespace.get("back");
-        back.disableProperty().bind(emController.execModel.clearProperty().not());
+        clear.disableProperty().bind(emController.execModel.clearProperty().not());
 
         // Operation progress bar
         ListView lw = (ListView<Object>) namespace.get("operationList");
@@ -144,7 +145,7 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
         emController.execModel.clear();
     }
 
-    public void animate (Event e) {
+    public void toggleAnimate (Event e) {
         CheckBox cb = (CheckBox) e.getSource();
         visualization.setAnimate(cb.isSelected());
     }
@@ -156,7 +157,7 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
 
     public void oooooOOoooOOOooooOOooo (Event e) {
         Button b = (Button) e.getSource();
-        b.setOpacity(1);
+        b.setOpacity(b.getOpacity() + 0.05);
 
         // https://www.youtube.com/watch?v=inli9ukUKIs
         URL resource = this.getClass().getResource("/assets/oooooOOoooOOOooooOOooo.mp3");
@@ -173,6 +174,7 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
             int index = Integer.parseInt(input);
             emController.execModel.execute(index);
         } catch (Exception exc) {
+            tf.setText("");
             URL resource = this.getClass().getResource("/assets/shortcircuit.mp3");
             Media media = new Media(resource.toString());
             MediaPlayer mediaPlayer = new MediaPlayer(media);

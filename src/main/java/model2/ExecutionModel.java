@@ -86,7 +86,7 @@ public class ExecutionModel {
     /**
      * A list of the most recently executed operations.
      */
-    private List<Operation>                  executedOperations;
+    private final List<Operation>            executedOperations;
 
     // ============================================================= //
     /*
@@ -107,9 +107,10 @@ public class ExecutionModel {
     public ExecutionModel (String name, boolean parallelExecution) {
         this.name = name;
 
-        this.dataStructures = new HashMap<String, DataStructure>();
-        this.atomicOperations = new ArrayList<Operation>();
-        this.operations = new ArrayList<Operation>();
+        dataStructures = new HashMap<String, DataStructure>();
+        atomicOperations = new ArrayList<Operation>();
+        operations = new ArrayList<Operation>();
+        executedOperations = new ArrayList<Operation>();
 
         setParallelExecution(parallelExecution);
         setIndex(-1);
