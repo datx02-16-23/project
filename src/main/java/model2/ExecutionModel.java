@@ -200,7 +200,7 @@ public class ExecutionModel {
      * @return {@code true} if the model can execute forward, {@code false} otherwise.
      */
     public boolean tryExecuteNext () {
-        boolean tryExecuteNext = index < operations.size();
+        boolean tryExecuteNext = index < operations.size() && index >= 0;
         executeNextProperty.set(tryExecuteNext);
         return tryExecuteNext;
     }

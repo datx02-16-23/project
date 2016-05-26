@@ -19,21 +19,22 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
+
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="245.0" style="-fx-background-color: #123456;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
    <center>
-      <GridPane vgap="2.0" BorderPane.alignment="CENTER">
+      <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" vgap="2.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </BorderPane.margin>
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+            <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0" />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="NEVER" />
-            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints fillHeight="false" maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="NEVER" />
+            <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="ALWAYS" />
          </rowConstraints>
          <children>
-            <ListView fx:id="operationList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" onEditCommit="#listViewGoto" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" GridPane.rowSpan="2147483647" />
+            <ListView fx:id="operationList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" onEditCommit="#listViewGoto" prefHeight="299.0" prefWidth="235.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.rowSpan="2147483647" GridPane.vgrow="ALWAYS" />
             <StackPane maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: white;" GridPane.hgrow="ALWAYS">
                <children>
                   <ProgressBar fx:id="modelProgress" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="200.0" />
@@ -70,7 +71,7 @@
             <StackPane GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowSpan="2">
                <children>
                   <ProgressBar fx:id="animationProgress" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="200.0" progress="0.0" />
-                  <Button fx:id="play" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#play" style="-fx-background-color: transparent;" text="Play">
+                  <Button fx:id="play" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#play" style="-fx-background-color: transparent;" text="Pause">
                      <font>
                         <Font name="System Bold" size="21.0" />
                      </font>
@@ -96,7 +97,8 @@
                   <CheckBox fx:id="animate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#toggleAnimate" selected="true" text="Animate">
                      <font>
                         <Font size="11.0" />
-                     </font></CheckBox>
+                     </font>
+                  </CheckBox>
                   <Slider fx:id="speedSlider" majorTickUnit="2000.0" max="10000.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" min="50.0" minWidth="0.0" minorTickCount="0" nodeOrientation="LEFT_TO_RIGHT" onDragDone="#speedChanged" prefHeight="30.0" prefWidth="109.0" snapToTicks="true" value="2500.0" GridPane.columnIndex="1">
                      <tooltip>
                         <Tooltip text="Playback speed." />
@@ -119,11 +121,13 @@
             <Button fx:id="back" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#back" text="Back" GridPane.rowIndex="1">
                <font>
                   <Font size="11.0" />
-               </font></Button>
+               </font>
+            </Button>
             <Button fx:id="forward" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#forward" text="Forward" GridPane.columnIndex="3" GridPane.rowIndex="1">
                <font>
                   <Font size="11.0" />
-               </font></Button>
+               </font>
+            </Button>
             <Button fx:id="restart" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#restart" text="Restart">
                <GridPane.margin>
                   <Insets top="2.0" />
@@ -145,7 +149,7 @@
             <Insets />
          </opaqueInsets>
          <BorderPane.margin>
-            <Insets left="5.0" right="5.0" top="5.0" />
+            <Insets bottom="-3.0" left="5.0" right="5.0" top="5.0" />
          </BorderPane.margin>
          <padding>
             <Insets left="2.0" right="2.0" />

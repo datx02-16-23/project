@@ -31,7 +31,7 @@ public class ExecutionModelController {
     /**
      * The model this controller is responsible for.
      */
-    public final ExecutionModel        execModel;
+    public final ExecutionModel        executionModel;
 
     /**
      * Time line used for timed model progression.
@@ -85,7 +85,7 @@ public class ExecutionModelController {
      *            The model to control.
      */
     public ExecutionModelController (ExecutionModel executionModel) {
-        this.execModel = executionModel;
+        this.executionModel = executionModel;
 
         this.autoExecutionSpeed = Const.DEFAULT_ANIMATION_TIME;
 
@@ -133,9 +133,9 @@ public class ExecutionModelController {
 
             currentExecutionTick = 1; // Reset the tick counter.
 
-            if (execModel.tryExecuteNext()) {
+            if (executionModel.tryExecuteNext()) {
 
-                List<Operation> executedOperations = execModel.executeNext();
+                List<Operation> executedOperations = executionModel.executeNext();
 
                 if (operationsExecutedListener != null) {
                     operationsExecutedListener.operationsExecuted(executedOperations);

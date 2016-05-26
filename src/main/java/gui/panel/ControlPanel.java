@@ -66,6 +66,9 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
         }
         getChildren().add(root);
 
+        setMaxHeight(Double.MAX_VALUE);
+        setStyle("-fx-background-color: red;");
+
         this.emController = executionModelController;
         emController.setExecutionTickListener(this, tickCount);
         this.visualization = visualization;
@@ -89,21 +92,22 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
         // Button binding
 
         Button play = (Button) namespace.get("play");
-        play.disableProperty().bind(emController.execModel.executeNextProperty());
+        play.disableProperty().bind(emController.executionModel.executeNextProperty().not());
 
         Button forward = (Button) namespace.get("forward");
-        forward.disableProperty().bind(emController.execModel.executeNextProperty());
+        forward.disableProperty().bind(emController.executionModel.executeNextProperty().not());
 
         Button back = (Button) namespace.get("back");
-        back.disableProperty().bind(emController.execModel.executePreviousProperty());
+        back.disableProperty().bind(emController.executionModel.executePreviousProperty().not());
 
         Button restart = (Button) namespace.get("restart");
-        ReadOnlyBooleanProperty epp = emController.execModel.executePreviousProperty();
-        BooleanBinding ncp = emController.execModel.clearProperty().not();
-        restart.disableProperty().bind(epp.and(ncp));
+        
+        BooleanBinding nepp = emController.executionModel.executePreviousProperty().not();
+        ReadOnlyBooleanProperty cp = emController.executionModel.clearProperty();
+        restart.disableProperty().bind(nepp.or(cp));
 
         Button clear = (Button) namespace.get("back");
-        clear.disableProperty().bind(emController.execModel.clearProperty().not());
+        clear.disableProperty().bind(emController.executionModel.clearProperty());
 
         // Operation progress bar
         ListView lw = (ListView<Object>) namespace.get("operationList");
@@ -111,7 +115,7 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
         lw.getItems().addListener(new ListChangeListener() {
 
             @Override public void onChanged (Change c) {
-                modelProgress.setProgress(emController.execModel.getIndex() / lw.getItems().size());
+                modelProgress.setProgress(emController.executionModel.getIndex() / lw.getItems().size());
             }
 
         });
@@ -130,19 +134,19 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
     }
 
     public void forward () {
-        emController.execModel.executeNext();
+        emController.executionModel.executeNext();
     }
 
     public void back () {
-        emController.execModel.executePrevious();
+        emController.executionModel.executePrevious();
     }
 
     public void restart () {
-        emController.execModel.reset();
+        emController.executionModel.reset();
     }
 
     public void clear () {
-        emController.execModel.clear();
+        emController.executionModel.clear();
     }
 
     public void toggleAnimate (Event e) {
@@ -153,6 +157,7 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
     public void speedChanged (Event e) {
         Slider s = (Slider) e.getSource();
         emController.setAutoExecutionSpeed((long) s.getValue());
+        System.out.println("new speed = " + s.getValue());
     }
 
     public void oooooOOoooOOOooooOOooo (Event e) {
@@ -172,7 +177,7 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
         String input = tf.getText();
         try {
             int index = Integer.parseInt(input);
-            emController.execModel.execute(index);
+            emController.executionModel.execute(index);
         } catch (Exception exc) {
             tf.setText("");
             URL resource = this.getClass().getResource("/assets/shortcircuit.mp3");
@@ -187,7 +192,7 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
         ListView lw = (ListView) e.getSource();
 
         int index = lw.getSelectionModel().getSelectedIndex();
-        emController.execModel.execute(index);
+        emController.executionModel.execute(index);
     }
 
     // ============================================================= //
