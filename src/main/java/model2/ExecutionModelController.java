@@ -2,12 +2,13 @@ package model2;
 
 import java.util.List;
 
+import assets.Debug;
 import contract.json.Operation;
 import javafx.animation.Animation.Status;
-import javafx.beans.property.ReadOnlyLongProperty;
-import javafx.beans.property.ReadOnlyLongWrapper;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.ReadOnlyLongProperty;
+import javafx.beans.property.ReadOnlyLongWrapper;
 import javafx.util.Duration;
 import render.assets.Const;
 
@@ -30,7 +31,7 @@ public class ExecutionModelController {
     /**
      * The model this controller is responsible for.
      */
-    public final ExecutionModel        executionModel;
+    public final ExecutionModel        execModel;
 
     /**
      * Time line used for timed model progression.
@@ -84,7 +85,7 @@ public class ExecutionModelController {
      *            The model to control.
      */
     public ExecutionModelController (ExecutionModel executionModel) {
-        this.executionModel = executionModel;
+        this.execModel = executionModel;
 
         this.autoExecutionSpeed = Const.DEFAULT_ANIMATION_TIME;
 
@@ -132,9 +133,9 @@ public class ExecutionModelController {
 
             currentExecutionTick = 1; // Reset the tick counter.
 
-            if (executionModel.tryExecuteNext()) {
+            if (execModel.tryExecuteNext()) {
 
-                List<Operation> executedOperations = executionModel.executeNext();
+                List<Operation> executedOperations = execModel.executeNext();
 
                 if (operationsExecutedListener != null) {
                     operationsExecutedListener.operationsExecuted(executedOperations);
@@ -216,12 +217,26 @@ public class ExecutionModelController {
     }
 
     /**
+     * Returns the time between execution calls in milliseconds.
+     * 
+     * @return The time between execution calls in milliseconds.
+     */
+    public long getAutoExecutionSpeed () {
+        return autoExecutionSpeed;
+    }
+
+    /**
      * Set the {@link #OperationsExecutedListener} for this controller.
      * 
      * @param operationsExecutedListener
      *            A {@code OperationsExecutedListener}.
      */
     public void setOperationsExecutedListener (OperationsExecutedListener operationsExecutedListener) {
+
+        if (Debug.OUT) {
+            System.err.println("OperationsExecutedListener set to " + operationsExecutedListener);
+        }
+
         this.operationsExecutedListener = operationsExecutedListener;
     }
 
@@ -240,6 +255,10 @@ public class ExecutionModelController {
     public void setExecutionTickListener (ExecutionTickListener executionTickListener, int tickCount) {
         if (tickCount < 1) {
             throw new IllegalArgumentException("tickCount cannot be less than zero.");
+        }
+
+        if (Debug.OUT) {
+            System.err.println("ExecutionTickListener set to " + executionTickListener);
         }
 
         this.executionTickListener = executionTickListener;

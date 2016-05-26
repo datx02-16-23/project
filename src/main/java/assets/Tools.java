@@ -23,9 +23,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import render.ARender;
-import render.ARenderManager;
-import render.Visualization;
+import render.assets.ARenderManager;
 import render.assets.HintPane;
+import render.assets.Visualization;
 import render.element.AVElement;
 
 /**

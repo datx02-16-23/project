@@ -58,7 +58,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Model;
 import model.ModelLoader;
-import render.Visualization;
+import render.assets.Visualization;
 
 /**
  * Horrendously bloated controller class.
@@ -612,9 +612,6 @@ public class Controller implements ComListener {
         setButtons();
     }
 
-    /*
-     * How to do sound in JavaFX.
-     */
     private boolean oooooOOoooOOOooooOOoooed = false;
 
     public void oooooOOoooOOOooooOOooo (Event e) {

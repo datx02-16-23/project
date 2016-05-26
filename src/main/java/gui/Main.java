@@ -26,7 +26,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import model.Model;
-import render.Visualization;
+import render.assets.Visualization;
 
 /**
  * Entry class for the GUI.

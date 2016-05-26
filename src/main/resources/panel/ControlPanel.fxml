@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="260.0" style="-fx-background-color: #123456;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <GridPane vgap="2.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="NEVER" />
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <ListView fx:id="operationList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" onEditCommit="#listViewGoto" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1" GridPane.rowSpan="2147483647" />
+            <StackPane maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: white;" GridPane.hgrow="ALWAYS">
+               <children>
+                  <ProgressBar fx:id="modelProgress" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="200.0" />
+                  <HBox>
+                     <children>
+                        <TextField fx:id="currOp" maxWidth="1.7976931348623157E308" onAction="#textFieldGoto" style="-fx-background-color: rgba(255, 255, 255, 0.5);" text="0" HBox.hgrow="ALWAYS" />
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: rgba(255, 255, 255, 0.5);" text="/">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="maxOps" editable="false" maxWidth="1.7976931348623157E308" prefWidth="75.0" style="-fx-background-color: rgba(255, 255, 255, 0.5);" text="0" />
+                     </children>
+                  </HBox>
+               </children>
+            </StackPane>
+         </children>
+      </GridPane>
+   </center>
+   <top>
+      <GridPane hgap="2.0" style="-fx-background-color: white;" vgap="2.0" BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <StackPane GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowSpan="2">
+               <children>
+                  <ProgressBar fx:id="animationProgress" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="200.0" progress="0.0" />
+                  <Button fx:id="play" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#play" style="-fx-background-color: transparent;" text="Play">
+                     <font>
+                        <Font name="System Bold" size="21.0" />
+                     </font>
+                     <StackPane.margin>
+                        <Insets />
+                     </StackPane.margin>
+                  </Button>
+               </children>
+               <GridPane.margin>
+                  <Insets bottom="5.0" top="7.0" />
+               </GridPane.margin>
+            </StackPane>
+            <GridPane GridPane.columnSpan="2147483647" GridPane.rowIndex="2">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="75.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="75.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <CheckBox fx:id="animate" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#toggleAnimate" selected="true" text="Animate" />
+                  <Slider fx:id="speedSlider" blockIncrement="50.0" majorTickUnit="2000.0" max="10000.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" min="50.0" minWidth="0.0" minorTickCount="0" nodeOrientation="LEFT_TO_RIGHT" onDragDone="#speedChanged" prefHeight="30.0" prefWidth="109.0" snapToTicks="true" value="2500.0" GridPane.columnIndex="1">
+                     <tooltip>
+                        <Tooltip text="Playback speed." />
+                     </tooltip>
+                  </Slider>
+                  <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#oooooOOoooOOOooooOOooo" opacity="0.02" GridPane.columnIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="2.0" />
+                     </GridPane.margin>
+                     <graphic>
+                        <ImageView fitHeight="25.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../assets/oooooOOoooOOOooooOOooo.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </GridPane>
+            <Button fx:id="back" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#back" text="Back" GridPane.rowIndex="1" />
+            <Button fx:id="forward" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#forward" text="Forward" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Button fx:id="restart" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#restart" text="Restart">
+               <GridPane.margin>
+                  <Insets top="2.0" />
+               </GridPane.margin>
+            </Button>
+            <Button fx:id="clear" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#clear" text="Clear" textFill="RED" GridPane.columnIndex="3">
+               <GridPane.margin>
+                  <Insets top="2.0" />
+               </GridPane.margin>
+            </Button>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <BorderPane.margin>
+            <Insets left="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin>
+         <padding>
+            <Insets left="2.0" right="2.0" />
+         </padding>
+      </GridPane>
+   </top>
+</BorderPane>

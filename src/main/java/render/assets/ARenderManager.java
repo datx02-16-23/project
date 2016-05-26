@@ -1,4 +1,4 @@
-package render;
+package render.assets;
 
 import java.util.HashMap;
 
@@ -7,6 +7,7 @@ import contract.datastructure.DataStructure.VisualListener;
 import contract.datastructure.VisualType;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import render.ARender;
 
 /**
  * Class maintaining visualisations for a structure.

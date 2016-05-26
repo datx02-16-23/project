@@ -1,4 +1,4 @@
-package render;
+package render.assets;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,6 +17,7 @@ import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import model.Model;
+import render.ARender;
 
 /**
  * Handler class for rendering a model.
@@ -119,13 +120,13 @@ public class Visualization extends StackPane {
     }
 
     /**
-     * Set the animation time in milliseconds for all animations. Actual animation time will be
-     * {@code millis * 0.8} to allow rest time after the animation.
+     * Set the animation time in milliseconds for all animations. Actual animation time
+     * will be {@code millis * 0.8} to allow rest time after the animation.
      *
      * @param millis
      *            The new animation time in milliseconds.
      */
-    public final void setAnimationTime (long millis) {
+    public void setAnimationTime (long millis) {
         this.millis = (long) (millis * 0.80000);
     }
 
@@ -137,6 +138,15 @@ public class Visualization extends StackPane {
      */
     public void setAnimate (boolean value) {
         useAnimation = value;
+    }
+
+    /**
+     * Returns the animation setting for the visualization.
+     * 
+     * @return {@code true} if animation is enabled, {@code false} otherwise.
+     */
+    public boolean getAnimate () {
+        return useAnimation;
     }
 
     /**
@@ -283,8 +293,9 @@ public class Visualization extends StackPane {
     }
 
     /**
-     * Attempt to place visuals with minimal overlap. Will return {@code false} if placement failed.
-     * Note that {@code true} does not guarantee that there is no overlap between renders.
+     * Attempt to place visuals with minimal overlap. Will return {@code false} if
+     * placement failed. Note that {@code true} does not guarantee that there is no
+     * overlap between renders.
      * 
      * @return False if placement failed.
      */

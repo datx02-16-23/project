@@ -1,6 +1,5 @@
 package render.assets;
 
-import gui.Controller;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;

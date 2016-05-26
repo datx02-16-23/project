@@ -1,7 +1,6 @@
 package model2;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,11 +13,11 @@ import contract.operation.Key;
 import contract.operation.OP_Message;
 import contract.operation.OperationType;
 import contract.utility.OpUtil;
+import gui.Main;
 import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
-import gui.Main;
 
 /**
  * 
@@ -30,7 +29,7 @@ public class ExecutionModel {
     /**
      * The default model instance.
      */
-    public static final ExecutionModel       INSTANCE          = new ExecutionModel("INSTANCE");
+    public static final ExecutionModel       INSTANCE = new ExecutionModel("INSTANCE");
 
     // ============================================================= //
     /*
@@ -77,7 +76,7 @@ public class ExecutionModel {
     /**
      * Indicates whether parallel execution is permitted.
      */
-    private boolean                          parallelExecution = false;
+    private boolean                          parallelExecution;
 
     /**
      * The name of the model.
@@ -107,6 +106,7 @@ public class ExecutionModel {
      */
     public ExecutionModel (String name, boolean parallelExecution) {
         this.name = name;
+
         this.dataStructures = new HashMap<String, DataStructure>();
         this.atomicOperations = new ArrayList<Operation>();
         this.operations = new ArrayList<Operation>();
@@ -315,6 +315,7 @@ public class ExecutionModel {
              * Message
              */
             // ============================================================= //
+            // TODO: Callback mechanism.
             Main.console.info("MESSAGE: " + ((OP_Message) op).getMessage());
             break;
         case read:
@@ -365,7 +366,7 @@ public class ExecutionModel {
             }
             break;
         default:
-            Main.console.err("Unknown operation type: \"" + op.operation + "\"");
+            System.err.print("Unknown operation type: \"" + op.operation + "\"");
             break;
         }
 

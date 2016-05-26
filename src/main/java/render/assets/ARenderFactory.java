@@ -1,6 +1,11 @@
-package render;
+package render.assets;
 
 import contract.datastructure.DataStructure;
+import render.ARender;
+import render.BarchartRender;
+import render.GridRender;
+import render.KTreeRender;
+import render.SingleElementRender;
 
 public abstract class ARenderFactory {
 
