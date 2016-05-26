@@ -8,7 +8,7 @@ import assets.examples.Examples;
 import assets.examples.Examples.Algorithm;
 import contract.io.LogStreamManager;
 import gui.panel.ConsolPanel;
-import gui.panel.OperationPanel;
+import gui.panel.ControlPanel;
 import gui.panel.SourcePanel;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -25,13 +25,13 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import model.Model;
-import render.assets.Visualization;
+import model2.ExecutionModel;
+import render.assets.Visualization2;
 
 /**
  * Entry class for the GUI.
  */
-public class Main extends Application {
+public class Main2 extends Application {
 
     /**
      * Console for printing system and error messages.
@@ -40,21 +40,21 @@ public class Main extends Application {
     /**
      * Indicates whether the program is being run for the first time.
      */
-    public static boolean      firstRun;
+    public static boolean     firstRun;
 
-    private Controller         controller;
-    private LogStreamManager   lsm;
+    private Controller2       Controller2;
+    private LogStreamManager  lsm;
 
     @Override public void start (Stage primaryStage) throws Exception {
         lsm = new LogStreamManager(Const.PROGRAM_NAME + "_GUI");
         primaryStage.setTitle(Const.PROGRAM_NAME);
         // Create a Group view for the AV.
-        Visualization modelRender = new Visualization(Model.instance());
-        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/Root.fxml"));
+        Visualization2 vis = new Visualization2(ExecutionModel.INSTANCE);
+        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/Root2.fxml"));
         SourcePanel sourceViewer = new SourcePanel();
-        controller = new Controller(primaryStage, lsm, sourceViewer, modelRender);
-        OperationPanel operationPanel = controller.getOperationPanel();
-        fxmlLoader.setController(controller);
+        Controller2 = new Controller2(primaryStage, lsm, sourceViewer, vis);
+        ControlPanel operationPanel = Controller2.getControlPanel();
+        fxmlLoader.setController(Controller2);
         // Load and get the root layout.
         VBox root;
         try {
@@ -74,14 +74,13 @@ public class Main extends Application {
         SplitPane sP = (SplitPane) namespace.get("splitPane");
         BorderPane operationPanelContainer = (BorderPane) namespace.get("operationPanelContainer");
         operationPanelContainer.setCenter(operationPanel);
-        double leftDivider = (((GridPane) namespace.get("buttonsGrid")).getPrefWidth() + 14) / scene.getWidth();
-        sP.setDividerPositions(0, 1 - leftDivider);
+        sP.setDividerPositions(0, 1);
         // Add examples
         Menu examples = (Menu) namespace.get("examplesMenu");
         for (Algorithm algo : Examples.Algorithm.values()) {
             MenuItem algoButton = new MenuItem(algo.name);
             algoButton.setOnAction(event -> {
-                controller.loadExample(algo);
+                Controller2.loadExample(algo);
             });
             examples.getItems().add(algoButton);
         }
@@ -94,14 +93,14 @@ public class Main extends Application {
         AnchorPane.setRightAnchor(sourceViewer, 0.0);
         // Add AV
         GridPane visualizationPane = (GridPane) namespace.get("visualizationPane");
-        visualizationPane.add(modelRender, 0, 0);
-        // Load needed components of from main view in Controller.
-        controller.loadMainViewFxID(fxmlLoader);
+        visualizationPane.add(vis, 0, 0);
+        // Load needed components of from main view in Controller2.
+        Controller2.loadMainViewFxID(fxmlLoader);
         // Load main window
         scene.getStylesheets().add(this.getClass().getResource("/VisualizerStyle.css").toExternalForm());
         primaryStage.setOnCloseRequest(event -> {
             event.consume(); // Better to do this now than missing it later.
-            controller.closeProgram();
+            Controller2.closeProgram();
         });
         primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/assets/icon.png")));
         primaryStage.setScene(scene);

@@ -26,6 +26,7 @@ import render.ARender;
 import render.assets.ARenderManager;
 import render.assets.HintPane;
 import render.assets.Visualization;
+import render.assets.Visualization2;
 import render.element.AVElement;
 
 /**
@@ -84,8 +85,8 @@ public abstract class Tools {
     public static final HashMap<Integer, ArrayList<Integer>> lowerLevelSums = new HashMap<Integer, ArrayList<Integer>>();
 
     /**
-     * Memoized function. Calculates the total number of elements above a given depth and saves it
-     * to higherLevelSums.
+     * Memoized function. Calculates the total number of elements above a given depth and
+     * saves it to higherLevelSums.
      *
      * @param targetDepth
      *            The greatest depth to calculate for.
@@ -137,8 +138,8 @@ public abstract class Tools {
     }
 
     /**
-     * Tries to simplify the variable name. For example, {@code "package.subpackage.class:var"}
-     * becomes {@code "var"}.
+     * Tries to simplify the variable name. For example,
+     * {@code "package.subpackage.class:var"} becomes {@code "var"}.
      *
      * @param orig
      *            A string to simplify.
@@ -167,7 +168,30 @@ public abstract class Tools {
         return null;
     }
 
+    // TODO remove
     public static void markElementXY (Visualization vis) {
+        for (ARenderManager rm : vis.getManagers()) {
+            ARender r = rm.getRender();
+            for (Element e : r.getDataStructure().getElements()) {
+                double x = r.getX(e);
+                double y = r.getY(e);
+                double width = r.getPrefWidth();
+                double height = r.getPrefHeight();
+
+                Line lineX = new Line(x, 0, x, height);
+                lineX.setStroke(Color.HOTPINK);
+                lineX.setOpacity(0.5);
+
+                Line lineY = new Line(0, y, width, y);
+                lineY.setStroke(Color.HOTPINK);
+                lineY.setOpacity(0.5);
+
+                r.getNodes().getChildren().addAll(lineX, lineY, new Circle(x, y, 5));
+            }
+        }
+    }
+
+    public static void markElementXY (Visualization2 vis) {
         for (ARenderManager rm : vis.getManagers()) {
             ARender r = rm.getRender();
             for (Element e : r.getDataStructure().getElements()) {

@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
@@ -20,7 +22,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import model2.ExecutionModelController;
 import model2.ExecutionTickListener;
-import render.assets.Visualization;
+import render.assets.Visualization2;
 
 /**
  * 
@@ -40,7 +42,7 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
     // ============================================================= //
 
     private final ExecutionModelController emController;
-    private final Visualization            visualization;
+    private final Visualization2           visualization;
     private final ProgressBar              animationProgress;
 
     // ============================================================= //
@@ -52,7 +54,7 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
     // ============================================================= //
 
     @SuppressWarnings({ "rawtypes", "unchecked" }) public ControlPanel (
-            ExecutionModelController executionModelController, Visualization visualization) {
+            ExecutionModelController executionModelController, Visualization2 visualization) {
 
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/panel/ControlPanel.fxml"));
         fxmlLoader.setController(this);
@@ -81,10 +83,16 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
 
         Map<String, Object> namespace = fxmlLoader.getNamespace();
 
-        animationProgress = (ProgressBar) namespace.get("ProgressBar");
+        animationProgress = (ProgressBar) namespace.get("animationProgress");
 
         Slider speedSlider = (Slider) namespace.get("speedSlider");
         speedSlider.setValue(emController.getAutoExecutionSpeed());
+        speedSlider.valueProperty().addListener(new ChangeListener() {
+            @Override public void changed (ObservableValue observable, Object oldValue, Object newValue) {
+                emController.setAutoExecutionSpeed((long) speedSlider.getValue());
+                System.out.println("new speed = " + speedSlider.getValue());
+            }
+        });
 
         CheckBox animate = (CheckBox) namespace.get("animate");
         animate.setSelected(visualization.getAnimate());
@@ -101,12 +109,12 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
         back.disableProperty().bind(emController.executionModel.executePreviousProperty().not());
 
         Button restart = (Button) namespace.get("restart");
-        
+
         BooleanBinding nepp = emController.executionModel.executePreviousProperty().not();
         ReadOnlyBooleanProperty cp = emController.executionModel.clearProperty();
         restart.disableProperty().bind(nepp.or(cp));
 
-        Button clear = (Button) namespace.get("back");
+        Button clear = (Button) namespace.get("clear");
         clear.disableProperty().bind(emController.executionModel.clearProperty());
 
         // Operation progress bar
@@ -154,15 +162,9 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
         visualization.setAnimate(cb.isSelected());
     }
 
-    public void speedChanged (Event e) {
-        Slider s = (Slider) e.getSource();
-        emController.setAutoExecutionSpeed((long) s.getValue());
-        System.out.println("new speed = " + s.getValue());
-    }
-
     public void oooooOOoooOOOooooOOooo (Event e) {
         Button b = (Button) e.getSource();
-        b.setOpacity(b.getOpacity() + 0.05);
+        b.setOpacity(0.05);
 
         // https://www.youtube.com/watch?v=inli9ukUKIs
         URL resource = this.getClass().getResource("/assets/oooooOOoooOOOooooOOooo.mp3");

@@ -11,7 +11,7 @@ import javafx.scene.control.TextArea;
  * @author Richard Sundqvist
  *
  */
-public class ConsolePanel {
+public class ConsolPanel {
 
     public static final String PREPEND_FORCE = "\n<>\t";
     public static final String PREPEND_ERR   = "\n>\t";
@@ -41,7 +41,7 @@ public class ConsolePanel {
      */
     // ============================================================= //
     
-    public ConsolePanel (TextArea consoleTextArea) {
+    public ConsolPanel (TextArea consoleTextArea) {
         this.consoleTextArea = consoleTextArea;
         consoleTextArea.setEditable(false);
         init();
@@ -125,7 +125,7 @@ public class ConsolePanel {
      *            The string to print to the console.
      */
     private void print (String string) {
-        Platform.runLater( () -> ConsolePanel.this.consoleTextArea.appendText(string));
+        Platform.runLater( () -> ConsolPanel.this.consoleTextArea.appendText(string));
     }
     
     private void init () {
@@ -137,7 +137,7 @@ public class ConsolePanel {
         }
         sb.replace(sb.length() - 2, sb.length(), "\n");
         String initMessage = sb.toString();
-        Platform.runLater( () -> ConsolePanel.this.consoleTextArea.setText(initMessage));
+        Platform.runLater( () -> ConsolPanel.this.consoleTextArea.setText(initMessage));
     }
     
     // ============================================================= //
