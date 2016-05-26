@@ -26,7 +26,6 @@ public class View implements iView {
 		for (Ball b : model.getBalls()) {
 			paintBall(b);
 		}
-
 	}
 
 	private void clear() {

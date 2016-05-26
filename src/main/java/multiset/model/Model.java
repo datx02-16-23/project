@@ -12,20 +12,35 @@ public class Model implements iModel {
 	private final iFilter filter;
 	private final ObservableList<String> items;
 
-	public Model(double width, double height, iFilter filter, ArrayList<Double> range, ObservableList<String> items) {
+	public Model(double width, double height, iFilter filter, String rangeString, ObservableList<String> items) {
 		this.areaWidth = width;
 		this.areaHeight = height;
 		this.filter = filter;
-
 		this.items = items;
+		List<List<Double>> ranges = generateRanges(rangeString);
 
-		Collections.shuffle(range);
 
-		for (double value : range) {
+
+		for (int i = 0; i < ranges.get(0).size(); i++) {
 			List<Double> values = new ArrayList<>();
-			values.add(value);
+			for (List list:ranges){
+				values.add(((List<Double>)list).get(i));
+			}
 			balls.add(new Ball(Math.random() * 500 + 50, Math.random() * 500 + 50, values));
 		}
+	}
+
+	private List<List<Double>> generateRanges(String rangeString){
+		rangeString = rangeString.replaceAll(" ", "");
+		String divider = "\\),\\(";
+		String[] split = rangeString.split(divider);
+		List<List<Double>> ranges = new ArrayList<>();
+		for (String string:split){
+			String cleanStr = string.replaceAll("\\(", "").replaceAll("\\)", "");
+			ranges.add(new RangePatterns(cleanStr).getList());
+		}
+		return ranges;
+
 	}
 
 	@Override

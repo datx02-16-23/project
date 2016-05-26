@@ -89,8 +89,8 @@ public class MultisetController {
         Canvas ballCanvas = (Canvas) fxmlLoader.getNamespace().get("ballCanvas");
 
         iFilter filter = new Filter(input.getText(), output.getText(), cond.getText());
-        ArrayList<Double> list = new RangePatterns(range.getText()).getList();
-        model = new Model(ballCanvas.getWidth(), ballCanvas.getHeight(), filter, list, eventHistory);
+        //ArrayList<Double> list = new RangePatterns(range.getText()).getList();
+        model = new Model(ballCanvas.getWidth(), ballCanvas.getHeight(), filter, range.getText(), eventHistory);
         view = new View(model, ballCanvas);
 
         // Clear event history
