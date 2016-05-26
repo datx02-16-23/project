@@ -11,6 +11,7 @@ import javafx.beans.property.ReadOnlyLongProperty;
 import javafx.beans.property.ReadOnlyLongWrapper;
 import javafx.util.Duration;
 import render.assets.Const;
+import render.assets.Visualization2;
 
 /**
  * ExecutionModel convenience class.
@@ -18,7 +19,7 @@ import render.assets.Const;
  * @author Richard Sundqvist
  *
  */
-public class ExecutionModelController {
+public class ExecutionModelController implements OperationsExecutedListener {
 
     // ============================================================= //
     /*
@@ -31,44 +32,44 @@ public class ExecutionModelController {
     /**
      * The model this controller is responsible for.
      */
-    public final ExecutionModel        executionModel;
+    private final ExecutionModel  executionModel;
+
+    /**
+     * The visualization used to animate the model.
+     */
+    private final Visualization2  visualization;
 
     /**
      * Time line used for timed model progression.
      */
-    private final Timeline             autoExecutionTimeline;
-
-    /**
-     * The execution listener for the controller.
-     */
-    private OperationsExecutedListener operationsExecutedListener;
+    private final Timeline        autoExecutionTimeline;
 
     /**
      * Time line used for timed model progression.
      */
-    private final Timeline             executionTickTimeline;
+    private final Timeline        executionTickTimeline;
 
     /**
      * The number of ticks per execution call. That is, the number of times the the
      * {@code executionTickListener} will be called for each time the
      * {@code operationsExecutedListener} will be called.
      */
-    private int                        executionTickCount;
+    private int                   executionTickCount;
 
     /**
      * The current tick number.
      */
-    private int                        currentExecutionTick;
+    private int                   currentExecutionTick;
 
     /**
      * The tick listener for the controller.
      */
-    private ExecutionTickListener      executionTickListener;
+    private ExecutionTickListener executionTickListener;
 
     /**
      * The delay between ticks.
      */
-    private long                       autoExecutionSpeed;
+    private long                  autoExecutionSpeed;
 
     // ============================================================= //
     /*
@@ -83,16 +84,18 @@ public class ExecutionModelController {
      * 
      * @param executionModel
      *            The model to control.
+     * @param The
+     *            The visualization used to animate.
      */
-    public ExecutionModelController (ExecutionModel executionModel) {
+    public ExecutionModelController (ExecutionModel executionModel, Visualization2 visualization) {
         this.executionModel = executionModel;
+        this.visualization = visualization;
 
         this.autoExecutionSpeed = Const.DEFAULT_ANIMATION_TIME;
 
         // Auto execution timeline.
         autoExecutionTimeline = new Timeline();
         autoExecutionTimeline.setAutoReverse(false);
-        autoExecutionTimeline.setCycleCount(Timeline.INDEFINITE);
 
         // Auto execution tick timeline.
         executionTickTimeline = new Timeline();
@@ -103,7 +106,7 @@ public class ExecutionModelController {
      * 
      */
     public ExecutionModelController () {
-        this(ExecutionModel.INSTANCE);
+        this(ExecutionModel.INSTANCE, new Visualization2(ExecutionModel.INSTANCE));
     }
 
     // ============================================================= //
@@ -132,20 +135,13 @@ public class ExecutionModelController {
         KeyFrame executionFrame = new KeyFrame(Duration.millis(millis), event -> {
 
             currentExecutionTick = 1; // Reset the tick counter.
-
-            if (executionModel.tryExecuteNext()) {
-
-                List<Operation> executedOperations = executionModel.executeNext();
-
-                if (operationsExecutedListener != null) {
-                    operationsExecutedListener.operationsExecuted(executedOperations);
-                }
-            } else {
+            startExecutionTickUpdates(millis);
+            
+            if (!executionModel.tryExecuteNext()) {
                 stopAutoExecution();
             }
         });
 
-        startExecutionTickUpdates(millis);
 
         autoExecutionTimeline.getKeyFrames().clear();
         autoExecutionTimeline.getKeyFrames().add(executionFrame);
@@ -226,21 +222,6 @@ public class ExecutionModelController {
     }
 
     /**
-     * Set the {@link #OperationsExecutedListener} for this controller.
-     * 
-     * @param operationsExecutedListener
-     *            A {@code OperationsExecutedListener}.
-     */
-    public void setOperationsExecutedListener (OperationsExecutedListener operationsExecutedListener) {
-
-        if (Debug.OUT) {
-            System.err.println("OperationsExecutedListener set to " + operationsExecutedListener);
-        }
-
-        this.operationsExecutedListener = operationsExecutedListener;
-    }
-
-    /**
      * Set listener and number of ticks per execution call. That is, the number of times
      * the the {@code executionTickListener} will be called for each time the
      * {@code operationsExecutedListener} will be called.
@@ -263,6 +244,15 @@ public class ExecutionModelController {
 
         this.executionTickListener = executionTickListener;
         this.executionTickCount = tickCount;
+    }
+
+    /**
+     * Returns the execution model for this controller.
+     * 
+     * @return An {@code ExecutionModel}.
+     */
+    public ExecutionModel getExecutionModel () {
+        return executionModel;
     }
 
     // ============================================================= //
@@ -293,4 +283,54 @@ public class ExecutionModelController {
      */
     // ============================================================= //
 
+    /**
+     * @see model2.ExecutionModel#executeNext()
+     */
+    public void executeNext () {
+        executionModel.executeNext();
+        startExecutionTickUpdates(autoExecutionSpeed);
+    }
+
+    /**
+     * @see model2.ExecutionModel#executePrevious()
+     */
+    public void executePrevious () {
+        executionModel.executePrevious();
+        startExecutionTickUpdates(autoExecutionSpeed);
+    }
+
+    /**
+     * @param toIndex
+     * @return
+     * @see model2.ExecutionModel#execute(int)
+     */
+    public void execute (int toIndex) {
+        executionModel.execute(toIndex);
+        startExecutionTickUpdates(autoExecutionSpeed);
+    }
+
+    /**
+     * 
+     * @see model2.ExecutionModel#reset()
+     */
+    public void reset () {
+        visualization.reset();
+        executionModel.reset();
+    }
+
+    /**
+     * 
+     * @see model2.ExecutionModel#clear()
+     */
+    public void clear () {
+        visualization.clear();
+        executionModel.clear();
+    }
+
+    @Override public void operationsExecuted (List<Operation> executedOperations) {
+        for (Operation op : executedOperations) {
+            visualization.render(op);
+        }
+        executedOperations.clear();
+    }
 }

@@ -100,22 +100,22 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
         // Button binding
 
         Button play = (Button) namespace.get("play");
-        play.disableProperty().bind(emController.executionModel.executeNextProperty().not());
+        play.disableProperty().bind(emController.getExecutionModel().executeNextProperty().not());
 
         Button forward = (Button) namespace.get("forward");
-        forward.disableProperty().bind(emController.executionModel.executeNextProperty().not());
+        forward.disableProperty().bind(emController.getExecutionModel().executeNextProperty().not());
 
         Button back = (Button) namespace.get("back");
-        back.disableProperty().bind(emController.executionModel.executePreviousProperty().not());
+        back.disableProperty().bind(emController.getExecutionModel().executePreviousProperty().not());
 
         Button restart = (Button) namespace.get("restart");
 
-        BooleanBinding nepp = emController.executionModel.executePreviousProperty().not();
-        ReadOnlyBooleanProperty cp = emController.executionModel.clearProperty();
+        BooleanBinding nepp = emController.getExecutionModel().executePreviousProperty().not();
+        ReadOnlyBooleanProperty cp = emController.getExecutionModel().clearProperty();
         restart.disableProperty().bind(nepp.or(cp));
 
         Button clear = (Button) namespace.get("clear");
-        clear.disableProperty().bind(emController.executionModel.clearProperty());
+        clear.disableProperty().bind(emController.getExecutionModel().clearProperty());
 
         // Operation progress bar
         ListView lw = (ListView<Object>) namespace.get("operationList");
@@ -123,7 +123,7 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
         lw.getItems().addListener(new ListChangeListener() {
 
             @Override public void onChanged (Change c) {
-                modelProgress.setProgress(emController.executionModel.getIndex() / lw.getItems().size());
+                modelProgress.setProgress(emController.getExecutionModel().getIndex() / lw.getItems().size());
             }
 
         });
@@ -142,19 +142,19 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
     }
 
     public void forward () {
-        emController.executionModel.executeNext();
+        emController.executeNext();
     }
 
     public void back () {
-        emController.executionModel.executePrevious();
+        emController.executePrevious();
     }
 
     public void restart () {
-        emController.executionModel.reset();
+        emController.reset();
     }
 
     public void clear () {
-        emController.executionModel.clear();
+        emController.clear();
     }
 
     public void toggleAnimate (Event e) {
@@ -179,7 +179,7 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
         String input = tf.getText();
         try {
             int index = Integer.parseInt(input);
-            emController.executionModel.execute(index);
+            emController.execute(index);
         } catch (Exception exc) {
             tf.setText("");
             URL resource = this.getClass().getResource("/assets/shortcircuit.mp3");
@@ -194,7 +194,7 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
         ListView lw = (ListView) e.getSource();
 
         int index = lw.getSelectionModel().getSelectedIndex();
-        emController.executionModel.execute(index);
+        emController.execute(index);
     }
 
     // ============================================================= //
@@ -206,6 +206,7 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
     // ============================================================= //
 
     @Override public void update (int tickNumber) {
-        animationProgress.setProgress(tickNumber / tickCount);
+        System.out.println((double) tickNumber / tickCount);
+        animationProgress.setProgress((double) tickNumber / tickCount);
     }
 }

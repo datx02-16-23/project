@@ -62,7 +62,7 @@ public class Controller2 implements ComListener {
      */
     // ============================================================= //
 
-    private final Visualization2            vis;
+    private final Visualization2           visualization;
     private final Stage                    window;
     private final LogStreamManager         lsm;
 
@@ -84,19 +84,19 @@ public class Controller2 implements ComListener {
      */
     // ============================================================= //
 
-    public Controller2 (Stage window, LogStreamManager lsm, SourcePanel sourceViewer, Visualization2 Visualization2) {
-        vis = Visualization2;
-        vis.setAnimationTime(render.assets.Const.DEFAULT_ANIMATION_TIME);
+    public Controller2 (Stage window, LogStreamManager lsm, SourcePanel sourceViewer, Visualization2 visualization) {
+        this.visualization = visualization;
+        visualization.setAnimationTime(render.assets.Const.DEFAULT_ANIMATION_TIME);
         this.window = window;
         execModel = ExecutionModel.INSTANCE;
         modelLoader = new ModelLoader(execModel);
-        execModelController = new ExecutionModelController(execModel);
+        execModelController = new ExecutionModelController(execModel, visualization);
         this.lsm = lsm;
         this.lsm.PRETTY_PRINTING = true;
         this.lsm.setListener(this);
         connectedView = new ConnectedView(window, (JGroupCommunicator) lsm.getCommunicator());
         this.sourcePanel = sourceViewer;
-        operationPanel = new ControlPanel(execModelController, Visualization2);
+        operationPanel = new ControlPanel(execModelController, visualization);
     }
 
     // ============================================================= //
@@ -122,14 +122,14 @@ public class Controller2 implements ComListener {
             // Loader.stripUnusedNames(model);
             System.out.println("sturcs = " + execModel.getDataStructures().keySet());
             execModel.reset();
-            vis.clearAndCreateVisuals();
+            visualization.clearAndCreateVisuals();
         }
     }
 
     public void interpretOperationHistory () {
         InterpreterView interpreterView = new InterpreterView(window);
         interpreterView.fast(execModel.getOperations());
-        vis.clearAndCreateVisuals();
+        visualization.clearAndCreateVisuals();
     }
 
     // ============================================================= //
@@ -203,7 +203,7 @@ public class Controller2 implements ComListener {
         }
 
         sourcePanel.addSources(lsm.getSources());
-        vis.clearAndCreateVisuals();
+        visualization.clearAndCreateVisuals();
         // vis.render(model.getLastOp()); //TODO
 
         // Update operation list
@@ -222,13 +222,13 @@ public class Controller2 implements ComListener {
          */
         MenuItem reset = new MenuItem("Reset Positions");
         reset.setOnAction(event -> {
-            vis.placeVisuals();
+            visualization.placeVisuals();
         });
         visualMenu.getItems().add(reset);
 
         MenuItem live = new MenuItem("Show Live Stats");
         live.setOnAction(event -> {
-            vis.showLiveStats();
+            visualization.showLiveStats();
         });
         live.setDisable(true);
         visualMenu.getItems().add(live);
@@ -253,7 +253,7 @@ public class Controller2 implements ComListener {
     public void openVisualDialog (DataStructure struct) {
         VisualDialog visualDialog = new VisualDialog(window);
         if (visualDialog.show(struct)) {
-            vis.init();
+            visualization.init();
         }
     }
 
@@ -353,19 +353,19 @@ public class Controller2 implements ComListener {
     }
 
     public void forward () {
-        execModelController.executionModel.executeNext();
+        execModelController.executeNext();
     }
 
     public void back () {
-        execModelController.executionModel.executePrevious();
+        execModelController.executePrevious();
     }
 
     public void restart () {
-        execModelController.executionModel.reset();
+        execModelController.reset();
     }
 
     public void clear () {
-        execModelController.executionModel.clear();
+        execModelController.clear();
     }
 
     /**
@@ -455,6 +455,6 @@ public class Controller2 implements ComListener {
     }
 
     public void markElementXY () {
-        Tools.markElementXY(vis);
+        Tools.markElementXY(visualization);
     }
 }

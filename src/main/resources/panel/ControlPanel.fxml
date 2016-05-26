@@ -98,7 +98,7 @@
                         <Font size="11.0" />
                      </font>
                   </CheckBox>
-                  <Slider fx:id="speedSlider" majorTickUnit="2000.0" max="10000.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" min="50.0" minWidth="0.0" minorTickCount="0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0" prefWidth="109.0" snapToTicks="true" value="2500.0" GridPane.columnIndex="1">
+                  <Slider fx:id="speedSlider" majorTickUnit="10.0" max="10000.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" min="150.0" minWidth="0.0" minorTickCount="0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0" prefWidth="109.0" snapToTicks="true" value="2500.0" GridPane.columnIndex="1">
                      <tooltip>
                         <Tooltip text="Playback speed." />
                      </tooltip>

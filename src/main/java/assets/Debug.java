@@ -12,7 +12,7 @@ public final class Debug {
     /**
      * {@link System#err} printouts etc.
      */
-    public static boolean ERR = false;
+    public static boolean ERR = true;
 
     /**
      * {@link System#out} printouts etc.

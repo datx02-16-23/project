@@ -259,10 +259,10 @@ public class ExecutionModel {
         dataStructures.clear();
         operations.clear();
         atomicOperations.clear();
-
-        isClear();
-        setIndex(-1);
-        setAtomicIndex(-1);
+        
+        this.index = -1;
+        this.atomicIndex = -1;
+        updateProperties();
     }
 
     // ============================================================= //
@@ -386,7 +386,8 @@ public class ExecutionModel {
 
     /**
      * Set the data structures, operations, and atomic operations for this model. Will
-     * keep the current collection if the corresponding argument is {@code null}.
+     * keep the current collection if the corresponding argument is {@code null}. Always
+     * calls {@link #updateProperties()}.
      * 
      * @param dataStructures
      *            A map of data structures.
@@ -407,6 +408,8 @@ public class ExecutionModel {
         if (atomicOperations != null) {
             setAtomicOperations(atomicOperations);
         }
+
+        updateProperties();
     }
 
     /**
@@ -557,6 +560,17 @@ public class ExecutionModel {
 
     private final ReadOnlyIntegerWrapper indexPropery              = new ReadOnlyIntegerWrapper();
     private final ReadOnlyIntegerWrapper atomicIndexProperty       = new ReadOnlyIntegerWrapper();
+
+    /**
+     * Force updating of all properties;
+     */
+    public void updateProperties () {
+        isClear();
+        tryExecuteNext();
+        tryExecutePrevious();
+        setIndex(index);
+        setAtomicIndex(atomicIndex);
+    }
 
     /**
      * Returns {@code true} if the model is clear, {@code false} otherwise.
