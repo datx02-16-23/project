@@ -90,9 +90,12 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
         speedSlider.valueProperty().addListener(new ChangeListener() {
             @Override public void changed (ObservableValue observable, Object oldValue, Object newValue) {
                 emController.setAutoExecutionSpeed((long) speedSlider.getValue());
-                System.out.println("new speed = " + speedSlider.getValue());
             }
         });
+
+        // Panel sizing.
+        root.prefWidthProperty().bind(widthProperty());
+        root.prefHeightProperty().bind(heightProperty());
 
         CheckBox animate = (CheckBox) namespace.get("animate");
         animate.setSelected(visualization.getAnimate());
@@ -101,6 +104,20 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
 
         Button play = (Button) namespace.get("play");
         play.disableProperty().bind(emController.getExecutionModel().executeNextProperty().not());
+        emController.autoExecutingProperty().addListener(new ChangeListener() {
+
+            //@formatter:off
+            @Override public void changed (ObservableValue observable,
+                    Object wasAutoExecuting, Object isAutoExecuting) {
+                if ((Boolean) isAutoExecuting) {
+                    play.setText("Pause");
+                } else {
+                    play.setText("Play");
+                }
+            }
+            //@formatter:on
+
+        });
 
         Button forward = (Button) namespace.get("forward");
         forward.disableProperty().bind(emController.getExecutionModel().executeNextProperty().not());
@@ -108,14 +125,15 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
         Button back = (Button) namespace.get("back");
         back.disableProperty().bind(emController.getExecutionModel().executePreviousProperty().not());
 
-        Button restart = (Button) namespace.get("restart");
+        // Button restart = (Button) namespace.get("restart");
+        // // TODO
+        // ReadOnlyBooleanProperty epp =
+        // emController.getExecutionModel().executePreviousProperty();
+        // ReadOnlyBooleanProperty cp = emController.getExecutionModel().clearProperty();
+        // restart.disableProperty().bind(epp.or(cp));
 
-        BooleanBinding nepp = emController.getExecutionModel().executePreviousProperty().not();
-        ReadOnlyBooleanProperty cp = emController.getExecutionModel().clearProperty();
-        restart.disableProperty().bind(nepp.or(cp));
-
-        Button clear = (Button) namespace.get("clear");
-        clear.disableProperty().bind(emController.getExecutionModel().clearProperty());
+        // Button clear = (Button) namespace.get("clear");
+        // clear.disableProperty().bind(emController.getExecutionModel().clearProperty());
 
         // Operation progress bar
         ListView lw = (ListView<Object>) namespace.get("operationList");
@@ -206,7 +224,6 @@ public class ControlPanel extends Pane implements ExecutionTickListener {
     // ============================================================= //
 
     @Override public void update (int tickNumber) {
-        System.out.println((double) tickNumber / tickCount);
         animationProgress.setProgress((double) tickNumber / tickCount);
     }
 }

@@ -35,7 +35,7 @@ public class Visualization2 extends StackPane {
     /**
      * Animation time in milliseconds.
      */
-    private long                                  millis        = render.assets.Const.DEFAULT_ANIMATION_TIME;
+    private long                                  animationTime        = render.assets.Const.DEFAULT_ANIMATION_TIME;
     /**
      * Determines whether operations are animated on the animated_nodes canvas.
      */
@@ -121,13 +121,13 @@ public class Visualization2 extends StackPane {
 
     /**
      * Set the animation time in milliseconds for all animations. Actual animation time
-     * will be {@code millis * 0.8} to allow rest time after the animation.
+     * will be {@code millis * 0.85} to allow rest time after the animation.
      *
-     * @param millis
+     * @param animationTime
      *            The new animation time in milliseconds.
      */
-    public void setAnimationTime (long millis) {
-        this.millis = (long) (millis * 0.80000);
+    public void setAnimationTime (long animationTime) {
+        this.animationTime = (long) (animationTime * 0.85000);
     }
 
     /**
@@ -187,7 +187,7 @@ public class Visualization2 extends StackPane {
             e = struct.getElement(tar);
             if (e != null) {
                 ARender render = managerMap.get(struct.identifier).getRender();
-                render.animateToggleScope(e, millis);
+                render.animateToggleScope(e, animationTime);
                 if (Debug.ERR) {
                     System.err.println("\nVisualization.animateRemove():");
                 }
@@ -236,13 +236,13 @@ public class Visualization2 extends StackPane {
          */
         if (src_e != null && tar_e != null) {
             // Render data transfer between two known structures
-            tar_render.animateReadWrite(src_e, src_render, tar_e, tar_render, millis);
+            tar_render.animateReadWrite(src_e, src_render, tar_e, tar_render, animationTime);
         } else if (tar_e == null && src_e != null) {
             // Render read without target
-            src_render.animateReadWrite(src_e, src_render, null, null, millis);
+            src_render.animateReadWrite(src_e, src_render, null, null, animationTime);
         } else if (src_e == null && tar_e != null) {
             // Render write without source
-            tar_render.animateReadWrite(null, null, tar_e, tar_render, millis);
+            tar_render.animateReadWrite(null, null, tar_e, tar_render, animationTime);
         }
     }
 
@@ -288,8 +288,8 @@ public class Visualization2 extends StackPane {
             System.err.println("\nVisualization.animateSwap():");
         }
 
-        v1_render.animateSwap(v1_e, v1_render, v2_e, v2_render, millis);
-        v2_render.animateSwap(v2_e, v2_render, v1_e, v1_render, millis);
+        v1_render.animateSwap(v1_e, v1_render, v2_e, v2_render, animationTime);
+        v2_render.animateSwap(v2_e, v2_render, v1_e, v1_render, animationTime);
     }
 
     /**

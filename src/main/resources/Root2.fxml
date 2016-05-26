@@ -98,7 +98,7 @@
                         </Menu>
                      </menus>
                   </MenuBar>
-                  <SplitPane fx:id="splitPane" dividerPositions="0.19966442953020133, 0.49328859060402686" prefHeight="160.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                  <SplitPane fx:id="splitPane" dividerPositions="0.0, 0.1" prefHeight="160.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                     <items>
                         <AnchorPane fx:id="sourceViewContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" style="-fx-background-color: #123456;" />
                         <GridPane fx:id="visualizationPane" gridLinesVisible="true" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="50.0" minWidth="0.0">
@@ -109,7 +109,7 @@
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                         </GridPane>
-                        <BorderPane fx:id="operationPanelContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" style="-fx-background-color: pink;" />
+                        <BorderPane fx:id="operationPanelContainer" maxHeight="1.7976931348623157E308" maxWidth="245.0" minHeight="0.0" minWidth="0.0" style="-fx-background-color: pink;" />
                     </items>
                   </SplitPane>
                </children>

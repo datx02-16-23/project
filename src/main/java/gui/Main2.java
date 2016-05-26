@@ -53,7 +53,7 @@ public class Main2 extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("/Root2.fxml"));
         SourcePanel sourceViewer = new SourcePanel();
         Controller2 = new Controller2(primaryStage, lsm, sourceViewer, vis);
-        ControlPanel operationPanel = Controller2.getControlPanel();
+        ControlPanel controlPanel = Controller2.getControlPanel();
         fxmlLoader.setController(Controller2);
         // Load and get the root layout.
         VBox root;
@@ -70,11 +70,13 @@ public class Main2 extends Application {
         double windowWidth = screenSize.getWidth() * .9;
         double windowHeight = screenSize.getHeight() * .9;
         Scene scene = new Scene(root, windowWidth, windowHeight);
+
         // Extracting some nodes from the fxml:
         SplitPane sP = (SplitPane) namespace.get("splitPane");
         BorderPane operationPanelContainer = (BorderPane) namespace.get("operationPanelContainer");
-        operationPanelContainer.setCenter(operationPanel);
-        sP.setDividerPositions(0, 1);
+        operationPanelContainer.setCenter(controlPanel);
+        
+        sP.setDividerPositions(0, 0.5);
         // Add examples
         Menu examples = (Menu) namespace.get("examplesMenu");
         for (Algorithm algo : Examples.Algorithm.values()) {

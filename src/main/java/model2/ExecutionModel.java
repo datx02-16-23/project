@@ -88,6 +88,11 @@ public class ExecutionModel {
      */
     private final List<Operation>            executedOperations;
 
+    /**
+     * The operations executed listener for the model.
+     */
+    private OperationsExecutedListener       operationsExecutedListener;
+
     // ============================================================= //
     /*
      *
@@ -155,9 +160,7 @@ public class ExecutionModel {
     // ============================================================= //
 
     /**
-     * Execute the next operation, if possible. <br>
-     * <br>
-     * <i> This method will clear the {@link #executedOperations} list.</i>
+     * Execute the next operation, if possible.
      * 
      * @return A list containing the executed operations.
      */
@@ -169,18 +172,24 @@ public class ExecutionModel {
             executeLinear();
         }
 
+        notifyExecutedOperationsListener();
+
         return executedOperations;
     }
 
     /**
-     * Execute the previous operation, if possible. <br>
-     * <br>
-     * <i> This method will clear the {@link #executedOperations} list.</i>
+     * Execute the previous operation, if possible.
      * 
      * @return A list containing the executed operations.
      */
     public List<Operation> executePrevious () {
-        return execute(getIndex() - 1);
+        execute(getIndex() - 1);
+        notifyExecutedOperationsListener();
+        return executedOperations;
+    }
+
+    private void notifyExecutedOperationsListener () {
+        operationsExecutedListener.operationsExecuted(executedOperations);
     }
 
     /**
@@ -200,7 +209,7 @@ public class ExecutionModel {
      * @return {@code true} if the model can execute forward, {@code false} otherwise.
      */
     public boolean tryExecuteNext () {
-        boolean tryExecuteNext = index < operations.size() && index >= 0;
+        boolean tryExecuteNext = index < operations.size() && index >= 0 && !operations.isEmpty();
         executeNextProperty.set(tryExecuteNext);
         return tryExecuteNext;
     }
@@ -259,7 +268,7 @@ public class ExecutionModel {
         dataStructures.clear();
         operations.clear();
         atomicOperations.clear();
-        
+
         this.index = -1;
         this.atomicIndex = -1;
         updateProperties();
@@ -294,6 +303,7 @@ public class ExecutionModel {
      * Execute the next operation in the queue and add it to {@link executedOperations}.
      */
     private void execute () {
+        updateProperties();
         setIndex(index + 1);
         Operation op = operations.get(index);
         setAtomicIndex(atomicIndex + op.operation.numAtomicOperations);
@@ -543,6 +553,13 @@ public class ExecutionModel {
     private void setAtomicIndex (int atomicIndex) {
         atomicIndexProperty.set(atomicIndex);
         this.atomicIndex = atomicIndex;
+    }
+
+    public void setOperationsExecutedListener (OperationsExecutedListener operationsExecutedListener) {
+        if (Debug.ERR) {
+            System.err.println("operationsExecutedListener = " + operationsExecutedListener);
+        }
+        this.operationsExecutedListener = operationsExecutedListener;
     }
 
     // ============================================================= //

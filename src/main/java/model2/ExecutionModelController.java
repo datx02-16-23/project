@@ -7,6 +7,8 @@ import contract.json.Operation;
 import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyLongProperty;
 import javafx.beans.property.ReadOnlyLongWrapper;
 import javafx.util.Duration;
@@ -91,11 +93,14 @@ public class ExecutionModelController implements OperationsExecutedListener {
         this.executionModel = executionModel;
         this.visualization = visualization;
 
-        this.autoExecutionSpeed = Const.DEFAULT_ANIMATION_TIME;
+        executionModel.setOperationsExecutedListener(this);
+
+        autoExecutionSpeed = Const.DEFAULT_ANIMATION_TIME;
 
         // Auto execution timeline.
         autoExecutionTimeline = new Timeline();
         autoExecutionTimeline.setAutoReverse(false);
+        autoExecutionTimeline.setCycleCount(Timeline.INDEFINITE);
 
         // Auto execution tick timeline.
         executionTickTimeline = new Timeline();
@@ -121,6 +126,7 @@ public class ExecutionModelController implements OperationsExecutedListener {
      * Begin timed execution for the model.
      */
     public void startAutoExecution () {
+        autoExecutingProperty.set(true);
         startAutoExecution(autoExecutionSpeed);
     }
 
@@ -135,13 +141,26 @@ public class ExecutionModelController implements OperationsExecutedListener {
         KeyFrame executionFrame = new KeyFrame(Duration.millis(millis), event -> {
 
             currentExecutionTick = 1; // Reset the tick counter.
-            startExecutionTickUpdates(millis);
-            
-            if (!executionModel.tryExecuteNext()) {
+
+            if (executionModel.tryExecuteNext()) {
+                executeNext();
+                startExecutionTickUpdates(millis);
+                System.out.println();
+                System.out.println();
+                System.out.println();
+                System.out.println();
+                System.out.println();
+                System.out.println("execute next!");
+                System.out.println("execute next!");
+                System.out.println("execute next!");
+                System.out.println("execute next!");
+                System.out.println("execute next!");
+                System.out.println("execute next!");
+            } else {
                 stopAutoExecution();
+                executionTickListener.update(0);
             }
         });
-
 
         autoExecutionTimeline.getKeyFrames().clear();
         autoExecutionTimeline.getKeyFrames().add(executionFrame);
@@ -156,6 +175,7 @@ public class ExecutionModelController implements OperationsExecutedListener {
      */
     private void startExecutionTickUpdates (long millis) {
         if (executionTickListener != null) {
+            executionTickTimeline.stop();
             currentExecutionTick = 1;
 
             KeyFrame executionFrame = new KeyFrame(Duration.millis(millis / executionTickCount), event -> {
@@ -165,14 +185,23 @@ public class ExecutionModelController implements OperationsExecutedListener {
             executionTickTimeline.setCycleCount(executionTickCount);
             executionTickTimeline.getKeyFrames().clear();
             executionTickTimeline.getKeyFrames().add(executionFrame);
-            executionTickTimeline.play();
+            executionTickTimeline.playFromStart();
         }
+    }
+
+    @Override public void operationsExecuted (List<Operation> executedOperations) {
+        System.out.println("executedOperations = " + executedOperations);
+        for (Operation op : executedOperations) {
+            visualization.render(op);
+        }
+        executedOperations.clear();
     }
 
     /**
      * Stop timed execution for the model.
      */
     public void stopAutoExecution () {
+        autoExecutingProperty.set(false);
         autoExecutionTimeline.stop();
         executionTickTimeline.stop();
     }
@@ -198,6 +227,8 @@ public class ExecutionModelController implements OperationsExecutedListener {
         if (autoExecutionSpeed < 0) {
             throw new IllegalArgumentException("Time between executions cannot be less than zero.");
         }
+
+        visualization.setAnimationTime(autoExecutionSpeed);
 
         boolean wasRunning = autoExecutionTimeline.getStatus() == Status.RUNNING;
         if (wasRunning) {
@@ -238,7 +269,7 @@ public class ExecutionModelController implements OperationsExecutedListener {
             throw new IllegalArgumentException("tickCount cannot be less than zero.");
         }
 
-        if (Debug.OUT) {
+        if (Debug.ERR) {
             System.err.println("ExecutionTickListener set to " + executionTickListener);
         }
 
@@ -263,7 +294,17 @@ public class ExecutionModelController implements OperationsExecutedListener {
      */
     // ============================================================= //
 
-    private final ReadOnlyLongWrapper autoExecutionSpeedProperty = new ReadOnlyLongWrapper(autoExecutionSpeed);
+    private final ReadOnlyLongWrapper    autoExecutionSpeedProperty = new ReadOnlyLongWrapper(autoExecutionSpeed);
+    private final ReadOnlyBooleanWrapper autoExecutingProperty      = new ReadOnlyBooleanWrapper(false);
+
+    /**
+     * Returns a property indicating whether auto execution is currently on.
+     * 
+     * @return A ReadOnlyLongProperty.
+     */
+    public ReadOnlyBooleanProperty autoExecutingProperty () {
+        return autoExecutingProperty.getReadOnlyProperty();
+    }
 
     /**
      * Returns a property indicating the time between execution calls when using autoplay,
@@ -325,12 +366,5 @@ public class ExecutionModelController implements OperationsExecutedListener {
     public void clear () {
         visualization.clear();
         executionModel.clear();
-    }
-
-    @Override public void operationsExecuted (List<Operation> executedOperations) {
-        for (Operation op : executedOperations) {
-            visualization.render(op);
-        }
-        executedOperations.clear();
     }
 }
