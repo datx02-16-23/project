@@ -15,7 +15,7 @@ import contract.operation.OP_ToggleScope;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import model2.ExecutionModel;
+import model.ExecutionModel;
 import render.assets.ARenderManager;
 
 /**
@@ -75,7 +75,6 @@ public class Visualization extends StackPane {
      * Clear the visualization.
      */
     public void clear () {
-        System.out.println("clear");
         managerMap.clear();
         managerPane.getChildren().clear();
         animationPane.getChildren().clear();
@@ -220,7 +219,6 @@ public class Visualization extends StackPane {
         for (DataStructure struct : executionModel.getDataStructures().values()) {
             tar_e = struct.getElement(target);
             if (tar_e != null) {
-                System.out.println("struct.identifier = " + struct.identifier);
                 tar_render = managerMap.get(struct.identifier).getRender();
                 break; // Target found
             }

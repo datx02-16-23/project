@@ -1,4 +1,4 @@
-package model2;
+package model;
 
 /**
  * 
@@ -12,5 +12,5 @@ public interface ExecutionTickListener {
      * @param tickNumber
      *            The current tick number.
      */
-    public void update (int tickNumber);
+    public void tickUpdate (int tickNumber);
 }

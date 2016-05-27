@@ -22,7 +22,6 @@ import contract.io.JGroupCommunicator;
 import contract.io.LogStreamManager;
 import gui.dialog.ExamplesDialog;
 import gui.dialog.VisualDialog;
-import gui.panel.ControlPanel;
 import gui.panel.SourcePanel;
 import gui.view.ConnectedView;
 import gui.view.HelpView;
@@ -44,14 +43,11 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import model2.ExecutionModel;
-import model2.ExecutionModelController;
-import model2.ModelLoader;
+import model.ExecutionModel;
+import model.ExecutionModelController;
+import model.ModelLoader;
 import render.Visualization;
 
-/**
- * Horrendously bloated controller class.
- */
 public class Controller implements ComListener {
 
     // ============================================================= //
@@ -62,7 +58,7 @@ public class Controller implements ComListener {
      */
     // ============================================================= //
 
-    private final Visualization           visualization;
+    private final Visualization            visualization;
     private final Stage                    primaryStage;
     private final LogStreamManager         lsm;
 
@@ -73,7 +69,6 @@ public class Controller implements ComListener {
     private Menu                           visualMenu;
     // Views, panels, dialogs
     private final SourcePanel              sourcePanel;
-    private final ControlPanel             controlPanel;
     private final ConnectedView            connectedView;
 
     // ============================================================= //
@@ -84,19 +79,23 @@ public class Controller implements ComListener {
      */
     // ============================================================= //
 
-    public Controller (Stage primaryStage, SourcePanel sourcePanel, Visualization visualization, ControlPanel controlPanel) {
-        this.visualization = visualization;
-        visualization.setAnimationTime(render.assets.Const.DEFAULT_ANIMATION_TIME);
+    public Controller (Stage primaryStage, SourcePanel sourcePanel, ExecutionModelController execModelController) {
         this.primaryStage = primaryStage;
-        execModel = ExecutionModel.INSTANCE;
+
+        this.execModelController = execModelController;
+
+        execModel = execModelController.getExecutionModel();
+        visualization = execModelController.getVisualization();
         modelLoader = new ModelLoader(execModel);
-        execModelController = new ExecutionModelController(execModel, visualization);
+        
+        visualization.setAnimationTime(render.assets.Const.DEFAULT_ANIMATION_TIME);
+
         lsm = new LogStreamManager(Const.PROGRAM_NAME);
         lsm.PRETTY_PRINTING = true;
         lsm.setListener(this);
+        
         connectedView = new ConnectedView(primaryStage, (JGroupCommunicator) lsm.getCommunicator());
         this.sourcePanel = sourcePanel;
-        this.controlPanel = controlPanel;
     }
 
     // ============================================================= //
@@ -119,8 +118,6 @@ public class Controller implements ComListener {
         InterpreterView interpreterView = new InterpreterView(primaryStage);
 
         if (interpreterView.show(execModel.getOperations())) {
-            // Loader.stripUnusedNames(model);
-            System.out.println("sturcs = " + execModel.getDataStructures().keySet());
             execModel.reset();
             visualization.clearAndCreateVisuals();
         }
@@ -344,7 +341,7 @@ public class Controller implements ComListener {
     }
 
     public void play () {
-        execModelController.startAutoExecution();
+        execModelController.toggleAutoExecution();
     }
 
     public void forward () {

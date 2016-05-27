@@ -21,20 +21,35 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import model2.ExecutionModel;
-import model2.ExecutionModelController;
+import model.ExecutionModel;
+import model.ExecutionModelController;
 import render.Visualization;
 
 /**
  * Entry class for the GUI.
  */
 public class Main extends Application {
-
+    
+    // ============================================================= //
+    /*
+     * 
+     * Field variables.
+     * 
+     */
+    // ============================================================= //
     /**
      * Console for printing system and error messages.
      */
     public static ConsolePanel console;
     private Controller         controller;
+
+    // ============================================================= //
+    /*
+     * 
+     * Constructors
+     * 
+     */
+    // ============================================================= //
 
     @Override public void start (Stage primaryStage) throws Exception {
 
@@ -47,9 +62,10 @@ public class Main extends Application {
         // ============================================================= //
         SourcePanel sourcePanel = new SourcePanel();
         Visualization visualization = new Visualization(ExecutionModel.INSTANCE);
-        ControlPanel controlPanel = new ControlPanel(new ExecutionModelController(), visualization);
-        
-        controller = new Controller(primaryStage, sourcePanel, visualization, controlPanel);
+        ExecutionModelController emc = new ExecutionModelController(ExecutionModel.INSTANCE, visualization);
+        ControlPanel controlPanel = new ControlPanel(emc, visualization);
+
+        controller = new Controller(primaryStage, sourcePanel, emc);
         fxmlLoader.setController(controller);
 
         // ============================================================= //
@@ -87,13 +103,12 @@ public class Main extends Application {
 
         GridPane visualizationContainer = (GridPane) namespace.get("visualization");
         visualizationContainer.add(visualization, 0, 0);
-        
+
         GridPane controlContainer = (GridPane) namespace.get("control");
         controlContainer.add(controlPanel, 0, 0);
-        
+
         // Load needed components of from main view in Controller.
         controller.loadFXML(fxmlLoader);
-
 
         // ============================================================= //
         /*
@@ -120,6 +135,14 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
+    // ============================================================= //
+    /*
+     * 
+     * The rest.
+     * 
+     */
+    // ============================================================= //
 
     @Override public void stop () {
         controller.closeProgram();

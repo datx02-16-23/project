@@ -33,19 +33,25 @@
             <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" vgrow="ALWAYS" />
          </rowConstraints>
          <children>
-            <ListView fx:id="operationList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" onEditCommit="#listViewGoto" prefHeight="299.0" prefWidth="240.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.rowSpan="2147483647" GridPane.vgrow="ALWAYS" />
+            <ListView fx:id="operationList" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" onEditCommit="#listViewGoto" prefHeight="299.0" prefWidth="240.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.rowSpan="2147483647" GridPane.vgrow="ALWAYS" />
             <StackPane maxWidth="1.7976931348623157E308" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: white;" GridPane.hgrow="ALWAYS">
                <children>
-                  <ProgressBar fx:id="modelProgress" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="200.0" />
+                  <ProgressBar fx:id="modelProgress" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="200.0" progress="0.0" />
                   <HBox>
                      <children>
-                        <TextField fx:id="currOp" maxWidth="1.7976931348623157E308" onAction="#textFieldGoto" style="-fx-background-color: rgba(255, 255, 255, 0.5);" text="0" HBox.hgrow="ALWAYS" />
-                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: rgba(255, 255, 255, 0.5);" text="/">
+                        <TextField fx:id="currentOperationLabel" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" onAction="#textFieldGoto" style="-fx-background-color: transparent;" text="0" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></TextField>
+                        <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: transparent;" text="/">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="maxOps" editable="false" maxWidth="1.7976931348623157E308" prefWidth="75.0" style="-fx-background-color: rgba(255, 255, 255, 0.5);" text="0" />
+                        <TextField fx:id="listSizeLabel" editable="false" maxWidth="1.7976931348623157E308" style="-fx-background-color: transparent;" text="0">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font></TextField>
                      </children>
                   </HBox>
                </children>
@@ -98,7 +104,7 @@
                         <Font size="11.0" />
                      </font>
                   </CheckBox>
-                  <Slider fx:id="speedSlider" majorTickUnit="10.0" max="5000.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" min="150.0" minWidth="0.0" minorTickCount="0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0" prefWidth="109.0" snapToTicks="true" value="2000.0" GridPane.columnIndex="1">
+                  <Slider fx:id="speedSlider" blockIncrement="250.0" majorTickUnit="10.0" max="2000.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" min="10.0" minWidth="0.0" minorTickCount="0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="30.0" prefWidth="109.0" snapToTicks="true" value="500.0" GridPane.columnIndex="1">
                      <tooltip>
                         <Tooltip text="Playback speed." />
                      </tooltip>

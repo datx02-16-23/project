@@ -186,8 +186,10 @@ public class InterpreterView implements InvalidationListener {
         moveToBeforeButton.setDisable(false);
         afterItems.clear();
         afterItems.addAll(beforeItems);
-        int n = interpreter.consolidate(afterItems);
-        if (n < 1) {
+        int n = afterItems.size();
+        interpreter.interpret(afterItems);
+        n = n - afterItems.size();
+        if (n == 0) {
             Main.console.info("Interpretation did not return any new operations.");
         } else {
             Main.console.info("Interpretation returned " + n + " new operation(s)." + " List size reduced by "
@@ -203,6 +205,6 @@ public class InterpreterView implements InvalidationListener {
     }
 
     public void fast (List<Operation> ops) {
-        interpreter.consolidate(ops);
+        interpreter.interpret(ops);
     }
 }

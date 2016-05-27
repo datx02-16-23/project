@@ -15,7 +15,7 @@ public class Const {
      */
     public static final int        DEFAULT_RENDER_HEIGHT        = 400;
     public static final double     DEFAULT_RENDER_PADDING       = 5;
-    public static final long       DEFAULT_ANIMATION_TIME       = 2500;
+    public static final long       DEFAULT_ANIMATION_TIME       = 750;
     public static final double     DEFAULT_RELATIVE_NODE_FACTOR = 2;
     public static final double     DEFAULT_ELEMENT_SIZE         = 50;
     public static final double     DEFAULT_ELEMENT_WIDTH        = DEFAULT_ELEMENT_SIZE;

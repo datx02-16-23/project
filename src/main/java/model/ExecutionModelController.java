@@ -1,4 +1,4 @@
-package model2;
+package model;
 
 import java.util.List;
 
@@ -93,7 +93,7 @@ public class ExecutionModelController implements OperationsExecutedListener {
         this.executionModel = executionModel;
         this.visualization = visualization;
 
-        executionModel.setOperationsExecutedListener(this);
+        executionModel.addOperationsExecutedListener(this);
 
         autoExecutionSpeed = Const.DEFAULT_ANIMATION_TIME;
 
@@ -123,6 +123,17 @@ public class ExecutionModelController implements OperationsExecutedListener {
     // ============================================================= //
 
     /**
+     * Toggle automatic execution.
+     */
+    public void toggleAutoExecution () {
+        if (autoExecutingProperty.get()) {
+            stopAutoExecution();
+        } else {
+            startAutoExecution();
+        }
+    }
+
+    /**
      * Begin timed execution for the model.
      */
     public void startAutoExecution () {
@@ -137,25 +148,18 @@ public class ExecutionModelController implements OperationsExecutedListener {
      *            The time between executions.
      */
     public void startAutoExecution (long millis) {
-        // Start immediately.
-        if (executionModel.tryExecuteNext()) {
-            executeNext();
-            startExecutionTickUpdates(millis);
-        } else {
-            stopAutoExecution();
-            executionTickListener.update(0);
-        }
+        startExecutionTickUpdates(millis);
 
         KeyFrame executionFrame = new KeyFrame(Duration.millis(millis), event -> {
 
             currentExecutionTick = 1; // Reset the tick counter.
-
+            
             if (executionModel.tryExecuteNext()) {
                 executeNext();
                 startExecutionTickUpdates(millis);
             } else {
                 stopAutoExecution();
-                executionTickListener.update(0);
+                executionTickListener.tickUpdate(Integer.MAX_VALUE);
             }
         });
 
@@ -176,7 +180,7 @@ public class ExecutionModelController implements OperationsExecutedListener {
             currentExecutionTick = 1;
 
             KeyFrame executionFrame = new KeyFrame(Duration.millis(millis / executionTickCount), event -> {
-                executionTickListener.update(currentExecutionTick++);
+                executionTickListener.tickUpdate(currentExecutionTick++);
             });
 
             executionTickTimeline.setCycleCount(executionTickCount);
@@ -187,7 +191,6 @@ public class ExecutionModelController implements OperationsExecutedListener {
     }
 
     @Override public void operationsExecuted (List<Operation> executedOperations) {
-        System.out.println("executedOperations = " + executedOperations);
         for (Operation op : executedOperations) {
             visualization.render(op);
         }
@@ -283,6 +286,15 @@ public class ExecutionModelController implements OperationsExecutedListener {
         return executionModel;
     }
 
+    /**
+     * Returns the Visualization used by this controller.
+     * 
+     * @return A Visualization.
+     */
+    public Visualization getVisualization () {
+        return visualization;
+    }
+
     // ============================================================= //
     /*
      *
@@ -322,7 +334,7 @@ public class ExecutionModelController implements OperationsExecutedListener {
     // ============================================================= //
 
     /**
-     * @see model2.ExecutionModel#executeNext()
+     * @see model.ExecutionModel#executeNext()
      */
     public void executeNext () {
         executionModel.executeNext();
@@ -330,7 +342,7 @@ public class ExecutionModelController implements OperationsExecutedListener {
     }
 
     /**
-     * @see model2.ExecutionModel#executePrevious()
+     * @see model.ExecutionModel#executePrevious()
      */
     public void executePrevious () {
         executionModel.executePrevious();
@@ -340,7 +352,7 @@ public class ExecutionModelController implements OperationsExecutedListener {
     /**
      * @param toIndex
      * @return
-     * @see model2.ExecutionModel#execute(int)
+     * @see model.ExecutionModel#execute(int)
      */
     public void execute (int toIndex) {
         executionModel.execute(toIndex);
@@ -349,21 +361,24 @@ public class ExecutionModelController implements OperationsExecutedListener {
 
     /**
      * 
-     * @see model2.ExecutionModel#reset()
+     * @see model.ExecutionModel#reset()
      */
     public void reset () {
         stopAutoExecution();
+        executionTickListener.tickUpdate(0);
         visualization.reset();
         executionModel.reset();
     }
 
     /**
      * 
-     * @see model2.ExecutionModel#clear()
+     * @see model.ExecutionModel#clear()
      */
     public void clear () {
         stopAutoExecution();
+        executionTickListener.tickUpdate(0);
         visualization.clear();
         executionModel.clear();
     }
+
 }

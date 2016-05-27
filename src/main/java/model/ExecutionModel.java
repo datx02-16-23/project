@@ -1,7 +1,6 @@
-package model2;
+package model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +17,9 @@ import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.beans.property.ReadOnlyIntegerWrapper;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 
 /**
  * 
@@ -29,7 +31,7 @@ public class ExecutionModel {
     /**
      * The default model instance.
      */
-    public static final ExecutionModel       INSTANCE = new ExecutionModel("INSTANCE");
+    public static final ExecutionModel                 INSTANCE = new ExecutionModel("INSTANCE");
 
     // ============================================================= //
     /*
@@ -42,7 +44,7 @@ public class ExecutionModel {
     /**
      * The map of data structures in this model.
      */
-    private final Map<String, DataStructure> dataStructures;
+    private final ObservableMap<String, DataStructure> dataStructures;
 
     /**
      * List of low level operations. <br>
@@ -52,7 +54,7 @@ public class ExecutionModel {
      * {@link OperationType#message}<br>
      */
     // TODO Atomic Operations Execution.
-    private final List<Operation>            atomicOperations;
+    private final ObservableList<Operation>            atomicOperations;
 
     /**
      * List of operations which may include height level, non-atomic operations. <br>
@@ -61,37 +63,37 @@ public class ExecutionModel {
      * {@link OperationType#write}<br>
      * {@link OperationType#message}<br>
      */
-    private final List<Operation>            operations;
+    private final ObservableList<Operation>            operations;
 
     /**
      * Current operation index for the atomic operations execution list.
      */
-    private int                              atomicIndex;
+    private int                                        atomicIndex;
 
     /**
      * Current operation index.
      */
-    private int                              index;
+    private int                                        index;
 
     /**
      * Indicates whether parallel execution is permitted.
      */
-    private boolean                          parallelExecution;
+    private boolean                                    parallelExecution;
 
     /**
      * The name of the model.
      */
-    public final String                      name;
+    public final String                                name;
 
     /**
      * A list of the most recently executed operations.
      */
-    private final List<Operation>            executedOperations;
+    private final ObservableList<Operation>            executedOperations;
 
     /**
      * The operations executed listener for the model.
      */
-    private OperationsExecutedListener       operationsExecutedListener;
+    private final List<OperationsExecutedListener>     operationsExecutedListeners;
 
     // ============================================================= //
     /*
@@ -112,10 +114,11 @@ public class ExecutionModel {
     public ExecutionModel (String name, boolean parallelExecution) {
         this.name = name;
 
-        dataStructures = new HashMap<String, DataStructure>();
-        atomicOperations = new ArrayList<Operation>();
-        operations = new ArrayList<Operation>();
-        executedOperations = new ArrayList<Operation>();
+        dataStructures = FXCollections.observableHashMap();
+        atomicOperations = FXCollections.observableArrayList();
+        operations = FXCollections.observableArrayList();
+        executedOperations = FXCollections.observableArrayList();
+        operationsExecutedListeners = new ArrayList<OperationsExecutedListener>();
 
         setParallelExecution(parallelExecution);
         setIndex(-1);
@@ -164,7 +167,8 @@ public class ExecutionModel {
      * 
      * @return A list containing the executed operations.
      */
-    public List<Operation> executeNext () {
+    public ObservableList<Operation> executeNext () {
+        executedOperations.clear();
 
         if (parallelExecution) {
             executeParallel();
@@ -172,7 +176,7 @@ public class ExecutionModel {
             executeLinear();
         }
 
-        notifyExecutedOperationsListener();
+        notifyExecutedOperationsListeners();
 
         return executedOperations;
     }
@@ -182,14 +186,22 @@ public class ExecutionModel {
      * 
      * @return A list containing the executed operations.
      */
-    public List<Operation> executePrevious () {
-        execute(getIndex() - 1);
-        notifyExecutedOperationsListener();
+    public ObservableList<Operation> executePrevious () {
+
+        if (tryExecutePrevious()) {
+            int previousIndex = index - 2;
+            reset();
+            execute(previousIndex);
+        }
+
+        notifyExecutedOperationsListeners();
         return executedOperations;
     }
 
-    private void notifyExecutedOperationsListener () {
-        operationsExecutedListener.operationsExecuted(executedOperations);
+    private void notifyExecutedOperationsListeners () {
+        for (OperationsExecutedListener opl : operationsExecutedListeners) {
+            opl.operationsExecuted(executedOperations);
+        }
     }
 
     /**
@@ -198,8 +210,8 @@ public class ExecutionModel {
      * @return {@code true} if the model can execute backwards, {@code false} otherwise.
      */
     public boolean tryExecutePrevious () {
-        boolean tryExecutePrevious = index - 1 < operations.size() && index - 1 >= 0 && !operations.isEmpty();
-        executeNextProperty.set(tryExecutePrevious);
+        boolean tryExecutePrevious = index > 1 && index < operations.size() + 1;
+        executePreviousProperty.set(tryExecutePrevious);
         return tryExecutePrevious;
     }
 
@@ -209,8 +221,9 @@ public class ExecutionModel {
      * @return {@code true} if the model can execute forward, {@code false} otherwise.
      */
     public boolean tryExecuteNext () {
-        boolean tryExecuteNext = index < operations.size() && index >= 0 && !operations.isEmpty();
+        boolean tryExecuteNext = index >= 0 && index + 1 < operations.size() && !operations.isEmpty();
         executeNextProperty.set(tryExecuteNext);
+        tryExecutePrevious(); // Update backwards property.
         return tryExecuteNext;
     }
 
@@ -218,30 +231,35 @@ public class ExecutionModel {
      * Execute the operation(s) up to and including the given index. If the index is lower
      * than the current index, the model will reset and play from the beginning. Will
      * execute to the end if {@code index} is greater than the number of operations in the
-     * queue. <br>
-     * <br>
-     * <i> This method will clear the {@link #executedOperations} list.</i>
+     * queue.
      * 
      * @param toIndex
      *            The index to execute at.
      * @return A list containing the executed operations.
      */
-    public List<Operation> execute (int toIndex) {
+    public ObservableList<Operation> execute (int toIndex) {
         executedOperations.clear();
 
+        if (toIndex < 0) {
+            toIndex = 0;
+        }
         if (index == toIndex) {
             return executedOperations;
         }
-
         if (index < toIndex) {
             reset();
         }
 
         int targetIndex = toIndex < operations.size() ? toIndex : operations.size() - 1;
+        System.out.println("targetIndex = " + targetIndex);
+        System.out.println("toIndex = " + toIndex);
 
-        if (tryExecuteNext()) {
-            for (int i = 0; i < targetIndex; i++) {
+        for (int i = 0; i <= targetIndex; i++) {
+            if (tryExecuteNext()) {
                 execute();
+            } else {
+                System.out.println("stopped at: " + i);
+                break;
             }
         }
 
@@ -252,13 +270,12 @@ public class ExecutionModel {
      * Reset the model.
      */
     public void reset () {
-        if (dataStructures != null) {
-            dataStructures.values().forEach(dataStructure -> {
-                dataStructure.clear();
-            });
-        }
-        setIndex(0);
-        setAtomicIndex(0);
+        dataStructures.values().forEach(dataStructure -> {
+            dataStructure.clear();
+        });
+        atomicIndex = 0;
+        index = 0;
+        updateProperties();
     }
 
     /**
@@ -269,8 +286,8 @@ public class ExecutionModel {
         operations.clear();
         atomicOperations.clear();
 
-        this.index = -1;
-        this.atomicIndex = -1;
+        index = -1;
+        atomicIndex = -1;
         updateProperties();
     }
 
@@ -294,9 +311,7 @@ public class ExecutionModel {
      * Execute the next operation.
      */
     private void executeLinear () {
-        if (tryExecuteNext()) {
-            execute();
-        }
+        execute();
     }
 
     /**
@@ -304,10 +319,13 @@ public class ExecutionModel {
      */
     private void execute () {
         setIndex(index + 1);
-        Operation op = operations.get(index);
-        setAtomicIndex(atomicIndex + op.operation.numAtomicOperations);
-        executedOperations.add(op);
-        execute(op);
+
+        if (index > 0 && index < operations.size()) {
+            Operation op = operations.get(index);
+            setAtomicIndex(atomicIndex + op.operation.numAtomicOperations);
+            executedOperations.add(op);
+            execute(op);
+        }
     }
 
     /**
@@ -406,7 +424,7 @@ public class ExecutionModel {
      *            A list of atomic operations.
      */
     public void set (Map<String, DataStructure> dataStructures, List<Operation> operations,
-            List<Operation> atomicOperations) {
+            ObservableList<Operation> atomicOperations) {
 
         if (dataStructures != null) {
             setDataStructures(dataStructures);
@@ -418,7 +436,6 @@ public class ExecutionModel {
             setAtomicOperations(atomicOperations);
         }
 
-        updateProperties();
     }
 
     /**
@@ -431,7 +448,7 @@ public class ExecutionModel {
         if (dataStructures != null) {
             this.dataStructures.clear();
             this.dataStructures.putAll(dataStructures);
-            isClear();
+            updateProperties();
         }
     }
 
@@ -445,7 +462,7 @@ public class ExecutionModel {
         if (this.operations != null) {
             this.operations.clear();
             this.operations.addAll(operations);
-            isClear();
+            updateProperties();
         }
     }
 
@@ -458,7 +475,7 @@ public class ExecutionModel {
      *             If the list contained non-atomic operations.
      */
     public void setAtomicOperations (List<Operation> atomicOperations) {
-        if (this.atomicOperations != null) {
+        if (atomicOperations != null) {
 
             // Search for forbidden operation types.
             for (Operation op : atomicOperations) {
@@ -471,7 +488,7 @@ public class ExecutionModel {
 
             this.atomicOperations.clear();
             this.atomicOperations.addAll(atomicOperations);
-            isClear();
+            updateProperties();
         }
     }
 
@@ -480,7 +497,7 @@ public class ExecutionModel {
      * 
      * @return A list of atomic operations.
      */
-    public List<Operation> getAtomicOperations () {
+    public ObservableList<Operation> getAtomicOperations () {
         return atomicOperations;
     }
 
@@ -489,7 +506,7 @@ public class ExecutionModel {
      * 
      * @return A list of operations.
      */
-    public List<Operation> getOperations () {
+    public ObservableList<Operation> getOperations () {
         return operations;
     }
 
@@ -503,11 +520,11 @@ public class ExecutionModel {
     }
 
     /**
-     * Get the parallel execution setting of this model.
+     * Returns the parallel execution setting of this model.
      * 
      * @return {@code true} if parallel execution is enabled, false otherwise.
      */
-    public boolean isparallelExecution () {
+    public boolean isParallelExecution () {
         return parallelExecution;
     }
 
@@ -545,20 +562,38 @@ public class ExecutionModel {
     }
 
     private void setIndex (int index) {
+        if (operations.isEmpty()) {
+            index = -1;
+        } else if (index > operations.size()) {
+            index = operations.size();
+        } else if (index < 0) {
+            index = 0;
+        }
         indexPropery.set(index);
         this.index = index;
     }
 
     private void setAtomicIndex (int atomicIndex) {
+        if (atomicIndex < 0) {
+            atomicIndex = 0;
+        } else if (atomicIndex > atomicOperations.size()) {
+            atomicIndex = atomicOperations.size();
+        }
         atomicIndexProperty.set(atomicIndex);
         this.atomicIndex = atomicIndex;
     }
 
-    public void setOperationsExecutedListener (OperationsExecutedListener operationsExecutedListener) {
+    /**
+     * Add a listener to be called each time operation(s) are executed.
+     * 
+     * @param operationsExecutedListener
+     *            A {@code OperationsExecutedListener}.
+     */
+    public void addOperationsExecutedListener (OperationsExecutedListener operationsExecutedListener) {
         if (Debug.ERR) {
-            System.err.println("operationsExecutedListener = " + operationsExecutedListener);
+            System.err.println("operationsExecutedListener added: " + operationsExecutedListener);
         }
-        this.operationsExecutedListener = operationsExecutedListener;
+        operationsExecutedListeners.add(operationsExecutedListener);
     }
 
     // ============================================================= //
@@ -581,14 +616,9 @@ public class ExecutionModel {
      * Force updating of all properties;
      */
     public void updateProperties () {
-        System.out.println();
-        System.out.println("isClear() = " + isClear());
-        System.out.println("tryExecuteNext() = " + tryExecuteNext());
-        System.out.println("tryExecutePrevious() = " + tryExecutePrevious());
-        System.out.println();
-//        isClear();
-//        tryExecuteNext();
-//        tryExecutePrevious();
+        isClear();
+        tryExecuteNext();
+        tryExecutePrevious();
         setIndex(index);
         setAtomicIndex(atomicIndex);
     }
@@ -645,7 +675,7 @@ public class ExecutionModel {
     /**
      * Returns a property indicating which index this model is currently at.
      * 
-     * @return A ReadOnlyBooleanProperty.
+     * @return A ReadOnlyIntegerProperty.
      */
     public ReadOnlyIntegerProperty indexProperty () {
         return indexPropery.getReadOnlyProperty();

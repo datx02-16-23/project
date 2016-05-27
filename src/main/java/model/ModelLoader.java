@@ -1,4 +1,4 @@
-package model2;
+package model;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -374,7 +374,7 @@ public class ModelLoader {
      *            The map of new structures.
      */
     public void runUseageTest (List<Operation> newOps, Map<String, DataStructure> newStructs) {
-        ExecutionModel testModel = new ExecutionModel();
+        ExecutionModel testModel = new ExecutionModel("testModel " + Math.random()*Integer.MAX_VALUE, true);
         // Add operations and structures from the live model.
         newStructs.putAll(liveModel.getDataStructures());
         newOps.addAll(liveModel.getOperations());
